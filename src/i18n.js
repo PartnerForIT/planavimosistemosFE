@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 i18n
   .use(detector)
   .use(backend)
-  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(initReactI18next)
   .init({
     lng: 'en',
     fallbackLng: 'en',
