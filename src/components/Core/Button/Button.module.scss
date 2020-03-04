@@ -1,0 +1,48 @@
+@import "../variables";
+
+.button {
+  height: 42px;
+  box-shadow: 0 1px 2px rgba(9, 16, 43, 0.03);
+  border-radius: 4px;
+  letter-spacing: -0.17px;
+  color: $white;
+  font-size: $small-font-size;
+  background: $blue-600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: transparent;
+}
+
+.inverse {
+  color: $blue-600;
+  background: linear-gradient(180deg, #fff 0%, rgba(235, 238, 246, 0.99) 100%);
+  border: 1px solid $gray-200;
+}
+
+.big {
+  height: 48px;
+  line-height: 18px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+  padding: 15px 54px;
+}
+
+.normal {
+  line-height: 17px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 30px;
+}
+
+.small {
+  height: 30px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  padding: 5px 20px;
+}
+
+.fullWidth {
+  width: 100%;
+}

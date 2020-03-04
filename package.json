@@ -1,0 +1,73 @@
+{
+  "name": "grownu-fe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test:ci": "CI=true concurrently \"yarn run lint\" \"react-scripts test\"",
+    "test:watch": "concurrently \"yarn run lint -- -w\" \"react-scripts test\"",
+    "lint:eslint": "eslint --ext=jsx,js 'src/**/*.{js,jsx}'",
+    "lint:css": "stylelint --syntax scss \"src/**/*.scss\"",
+    "lint": "yarn run lint:eslint && yarn run lint:css",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public -o build/storybook"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.9.5",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "classnames": "^2.2.6",
+    "i18next": "^19.3.2",
+    "i18next-browser-languagedetector": "^4.0.2",
+    "i18next-xhr-backend": "^3.2.2",
+    "node-sass": "^4.13.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-i18next": "^11.3.3",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.0",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.1.3",
+    "redux-saga-requests": "^0.26.1",
+    "redux-saga-requests-axios": "^0.7.7",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@storybook/addon-actions": "^5.3.4",
+    "@storybook/addon-links": "^5.3.4",
+    "@storybook/addon-viewport": "^5.3.4",
+    "@storybook/addons": "^5.3.4",
+    "@storybook/preset-create-react-app": "^1.5.1",
+    "@storybook/react": "^5.3.4",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "stylelint": "^13.2.0",
+    "stylelint-config-standard": "^20.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
