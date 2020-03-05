@@ -29,7 +29,7 @@ jobs:
     - name: Production Build
       run: |
         yarn build
-    - name: trigger single Job
+    - name: Deploy to Digital Ocean
       uses: appleboy/jenkins-action@master
       with:
         url: ${{ secrets.JENKINS_URL }}
