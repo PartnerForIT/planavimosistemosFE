@@ -17,7 +17,7 @@ describe('Button', () => {
   it('can be of type submit', () => {
     const { getByText } = render(<Button type='submit'>{testLabel}</Button>);
     const element = getByText(testLabel);
-    expect(element.closest('button')).toHaveAttribute('type', 'submit');
+    expect(element.closest('span')).toHaveAttribute('type', 'submit');
   });
 
   it('can be of type reset', () => {

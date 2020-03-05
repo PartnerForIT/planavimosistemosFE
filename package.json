@@ -7,7 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:ci": "CI=true concurrently \"yarn lint\" \"react-scripts test\"",
+    "test:ci": "CI=true react-scripts test",
     "test:watch": "concurrently \"yarn lint -- -w\" \"react-scripts test\"",
     "lint:eslint": "eslint --ext=jsx,js 'src/**/*.{js,jsx}'",
     "lint:css": "stylelint --syntax scss \"src/**/*.scss\"",

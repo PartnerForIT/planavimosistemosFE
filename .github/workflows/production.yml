@@ -22,7 +22,7 @@ jobs:
         yarn install
     - name: Unit Tests
       run: |
-        yarn test
+        yarn test:ci
     - name: Lint
       run: |
         yarn lint
