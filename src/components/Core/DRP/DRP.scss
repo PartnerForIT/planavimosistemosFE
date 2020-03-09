@@ -1,0 +1,72 @@
+.pickerWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dateInput {
+  padding: 8px 12px;
+  border: 1px solid #d0dfef;
+  border-radius: 3px;
+  color: #333945;
+  font-family: "Helvetica Neue";
+  font-size: 16px;
+  width: 128px;
+
+  &:focus {
+    color: #0085ff;
+    border: 1px solid #0085ff;
+    outline: none;
+  }
+}
+
+.to {
+  color: #cbd1d8;
+  font-family: "Helvetica Neue";
+  font-size: 15px;
+  padding: 0 5px;
+}
+
+.calendarIconWrapper {
+  border: 1px solid #d0dfef;
+  border-radius: 4px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #0085ff;
+
+    .calendarIcon {
+      color: #0085ff;
+    }
+  }
+
+  &.active {
+    border-color: #0085ff;
+
+    .calendarIcon {
+      color: #0085ff;
+    }
+  }
+}
+
+.calendarIcon {
+  color: #808f94;
+  padding: 5px;
+}
+
+.definedRanges {
+  position: absolute;
+  top: 50px;
+  width: 275px;
+  border: 1px solid #0085ff;
+  border-radius: 6px;
+  padding: 5px 10px;
+
+  button {
+    margin: 5px 0;
+  }
+}

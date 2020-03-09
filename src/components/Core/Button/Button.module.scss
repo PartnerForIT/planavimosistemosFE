@@ -7,14 +7,14 @@
   letter-spacing: -0.17px;
   color: $white;
   font-size: $small-font-size;
-  background: $blue-600;
+  background: $blue-grownu;
   border: 1px solid transparent;
   cursor: pointer;
   outline: transparent;
 }
 
 .inverse {
-  color: $blue-600;
+  color: $blue-grownu;
   background: linear-gradient(180deg, #fff 0%, rgba(235, 238, 246, 0.99) 100%);
   border: 1px solid $gray-200;
 }
