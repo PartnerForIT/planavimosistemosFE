@@ -31,7 +31,7 @@ const useStyles = makeStyles({
       background: 'rgba(206, 217, 224, 0.5)',
       ':hover': {
         backgroundColor: 'rgba(206, 217, 224, 0.5)',
-      }
+      },
     },
   },
 
