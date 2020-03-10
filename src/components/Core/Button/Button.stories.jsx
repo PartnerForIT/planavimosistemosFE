@@ -47,3 +47,9 @@ export const reset = () => (
     Reset Button
   </Button>
 );
+
+export const disabled = () => (
+  <Button onClick={action('clicked')} disabled inverse>
+    Disabled Button
+  </Button>
+);

@@ -14,9 +14,14 @@
 }
 
 .inverse {
-  color: $blue-grownu;
-  background: linear-gradient(180deg, #fff 0%, rgba(235, 238, 246, 0.99) 100%);
-  border: 1px solid $gray-200;
+  color: #0087ff;
+  background: #fff;
+  border: 1px solid $border;
+}
+
+.disabled {
+  color: #c3d3e3;
+  pointer-events: none;
 }
 
 .big {
