@@ -13,10 +13,11 @@
 }
 
 .button {
-  height: 30px;
-  letter-spacing: -0.17px;
-  color: #0087ff;
+  font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
+  color: #0087ff;
+  letter-spacing: -0.17px;
+  height: 30px;
   background: #fff;
   cursor: pointer;
   outline: transparent;
@@ -27,6 +28,11 @@
   &:first-child {
     border-right: 1px solid #d0dfef;
     border-radius: 4px 0 0 0;
+  }
+
+  &:disabled {
+    color: #c3d3e3;
+    pointer-events: none;
   }
 }
 

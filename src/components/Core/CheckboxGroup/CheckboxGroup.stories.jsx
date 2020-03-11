@@ -3,19 +3,20 @@ import CheckboxGroup from './CheckboxGroup';
 
 const items = [
   {
-    label: 'Item 1',
+    label: 'Employee Name',
+    checked: false,
   },
   {
-    label: 'Item 2',
+    label: 'Employee Name 2',
     checked: true,
   },
   {
-    label: 'Item 3',
+    label: 'Employee Name 3',
     checked: true,
     disabled: true,
   },
   {
-    label: 'Item 4',
+    label: 'Employee Name 4',
     checked: false,
     disabled: true,
   },

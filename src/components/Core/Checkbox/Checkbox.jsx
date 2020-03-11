@@ -75,12 +75,13 @@ const useStyles = makeStyles({
     fontFamily: 'Helvetica Neue, sans-serif',
     fontSize: '16px',
     marginLeft: 0,
+    wordWrap: 'break-word',
+    width: 'calc(100% - 18px)',
   },
 });
 
-export default function StyledCheckbox(props) {
+export default function StyledCheckbox({ label, onChange, ...props }) {
   const classes = useStyles();
-  const { label } = props;
 
   return (
     <FormControlLabel
@@ -96,6 +97,7 @@ export default function StyledCheckbox(props) {
           checkedIcon={<span className={classNames(classes.icon, classes.checkedIcon)} />}
           icon={<span className={classes.icon} />}
           inputProps={{ 'aria-label': '' }}
+          onChange={onChange}
           {...props}
         />
       )}
