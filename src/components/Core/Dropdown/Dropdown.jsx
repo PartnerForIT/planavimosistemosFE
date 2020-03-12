@@ -5,44 +5,34 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import classNames from 'classnames';
 import StyledCheckbox from '../Checkbox/Checkbox';
-// import styles from './Dropdown.module.scss';
+import styles from './Dropdown.module.scss';
 import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 
 const useStyles = makeStyles({
   root: {
-    width: '260px',
     minHeight: '30px',
     boxShadow: 'none',
     borderBottom: '1px solid rgba(112, 112, 112, 0.24)',
   },
 
+  rootExpanded: {
+    margin: '0px !important',
+  },
+
   details: {
     display: 'flex',
     flexDirection: 'column',
-  },
-
-  arrowIcon: {
-    fill: 'none',
-    stroke: '#0085ff',
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-  },
-
-  expandMoreIcon: {
-    color: '#0085ff',
-    fill: '#0085ff',
-    transform: 'rotate(-90deg)',
-  },
-
-  iconExpanded: {
-    transform: 'rotate(90deg)',
+    padding: '0 0 0 20px',
   },
 
   summary: {
     height: '30px',
     minHeight: '30px',
+    paddingLeft: '3px',
+    paddingRight: 0,
   },
 
   expanded: {
@@ -52,6 +42,7 @@ const useStyles = makeStyles({
 });
 
 export default function Dropdown({ label, items }) {
+  const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const classes = useStyles();
@@ -66,7 +57,7 @@ export default function Dropdown({ label, items }) {
         }
         itemsStat.total += 1;
       }
-      return { ...item, checked: !!item.checked };
+      return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
     });
 
     Promise.all(result).then((resultedItems) => {
@@ -77,8 +68,18 @@ export default function Dropdown({ label, items }) {
 
   const selectAll = useCallback((check) => {
     setItemsArray((state) => state.map((item) => {
-      if (!item.disabled) {
-        return { ...item, checked: check };
+      if (item.type === 'group') {
+        item.items.map((checkbox) => {
+          if (!checkbox.disabled) {
+            return { ...checkbox, checked: check };
+          }
+          return { ...checkbox };
+        });
+      } else {
+        if (!item.disabled) {
+          return { ...item, checked: check };
+        }
+        return { ...item };
       }
       return { ...item };
     }));
@@ -117,11 +118,22 @@ export default function Dropdown({ label, items }) {
   //   </SvgIcon>
   // );
 
-  return (
-    <ExpansionPanel className={classes.root}>
+  const renderCheckboxGroup = () => (
+    <CheckboxGroup items={itemsArray} onChange={handleCheckboxChange} />
+  );
+
+  const renderDropdown = () => (
+    <ExpansionPanel
+      classes={{ root: classes.root, expanded: classes.rootExpanded }}
+      onChange={(e, state) => { setExpanded(state); }}
+    >
       <ExpansionPanelSummary
         classes={{ root: classes.summary, expanded: classes.expanded }}
-        expandIcon={<ExpandMoreIcon classes={{ root: classes.expandMoreIcon }} />}
+        expandIcon={(
+          <ExpandMoreIcon
+            className={classNames(styles.expandIcon, expanded ? styles.expandIconExpanded : '')}
+          />
+        )}
         aria-label='Expand'
         aria-controls='additional-actions1-content'
         id='additional-actions1-header'
@@ -135,13 +147,23 @@ export default function Dropdown({ label, items }) {
               onChange={(e) => selectAll(e.target.checked)}
               checked={itemsStat.checked === itemsStat.total}
             />
-)}
+          )}
           label={label}
         />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={classes.details}>
-        <CheckboxGroup items={itemsArray} onChange={handleCheckboxChange} />
+        {
+          itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group'
+            ? itemsArray.map((item, idx) => (
+              <Dropdown key={idx.toString()} label={item.label} items={item.items} />
+            ))
+            : renderCheckboxGroup(itemsArray)
+        }
       </ExpansionPanelDetails>
     </ExpansionPanel>
+  );
+
+  return (
+    renderDropdown()
   );
 }

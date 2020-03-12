@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 const useStyles = makeStyles({
   root: {
     '&:hover': {
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent !important',
     },
   },
 
@@ -68,6 +68,7 @@ const useStyles = makeStyles({
 
   labelRoot: {
     marginLeft: '0px',
+    marginRight: '0px',
   },
 
   label: {

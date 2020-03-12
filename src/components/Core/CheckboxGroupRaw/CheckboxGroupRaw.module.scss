@@ -1,11 +1,12 @@
 .checkboxGroup {
   display: flex;
   flex-direction: column;
-  width: 260px;
+  border-top: 1px solid rgba(112, 112, 112, 0.24);
+  margin-left: 6px;
 }
 
 .contentBox {
   display: flex;
   flex-direction: column;
-  padding: 6px;
+  padding: 6px 6px 6px 0;
 }

@@ -9,3 +9,13 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+.expandIcon {
+  color: #0085ff;
+  fill: #0085ff;
+  transform: rotate(-90deg);
+}
+
+.expandIconExpanded {
+  transform: rotate(180deg) !important;
+}
