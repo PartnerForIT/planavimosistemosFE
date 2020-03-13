@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import classNames from 'classnames';
+import Select from 'react-select';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
-
-// const options = [
-//   { value: 'chocolate', label: 'Chocolate' },
-//   { value: 'strawberry', label: 'Strawberry' },
-//   { value: 'vanilla', label: 'Vanilla' },
-// ];
+import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
+import Button from '../Button/Button';
+import styles from './Select.module.scss';
 
 export default function CustomSelect({ items }) {
   const [itemsArray, setItemsArray] = useState([]);
@@ -51,31 +50,49 @@ export default function CustomSelect({ items }) {
     setItemsArray(setCheckedToAll);
   }, []);
 
-  return (
-    <div>
-      {
-        itemsArray.map((item, idx) => (item.type && item.type === 'group'
-          ? (
-            <Dropdown
-              key={idx.toString()}
-              label={item.label}
-              id={item.id}
-              checked={item.checked}
-              items={item.items}
-              onChange={handleCheckboxChange}
-            />
-          )
-          : (
-            <StyledCheckbox
-              key={idx.toString()}
-              label={item.label}
-              id={item.id}
-              checked={item.checked}
-              disabled={item.disabled}
-              onChange={handleCheckboxChange}
-            />
-          )))
-      }
+  const CustomOption = ({ data }) => (data.type && data.type === 'group'
+    ? (
+      <Dropdown
+        key={data.id.toString()}
+        label={data.label}
+        id={data.id}
+        checked={data.checked}
+        items={data.items}
+        onChange={handleCheckboxChange}
+      />
+    )
+    : (
+      <StyledCheckbox
+        key={data.id.toString()}
+        label={data.label}
+        id={data.id}
+        checked={data.checked}
+        disabled={data.disabled}
+        onChange={handleCheckboxChange}
+      />
+    ));
+
+  const CustomMenu = ({ children }) => (
+    <div className={classNames(styles.contentBox)}>
+      <CheckboxGroup>
+        {children}
+      </CheckboxGroup>
+      <Button fillWidth>Filter</Button>
     </div>
+  );
+
+  return (
+    <Select
+      isMulti
+      placeholder='All employees'
+      onBlur={(e) => e.stopPropogation()}
+      components={{ Option: CustomOption, Menu: CustomMenu }}
+      options={itemsArray}
+      maxMenuHeight={420}
+      blurInputOnSelect={false}
+      closeMenuOnSelect={false}
+      className={classNames(styles.select)}
+      classNamePrefix='select'
+    />
   );
 }

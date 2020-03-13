@@ -4843,7 +4843,7 @@ currently-unhandled@^0.4.1:
 
 custom-react-daterange-picker@sergeyromanovdev/react-daterange-picker:
   version "1.0.5"
-  resolved "https://codeload.github.com/sergeyromanovdev/react-daterange-picker/tar.gz/e1ebc5252bb1052320b8799185ff5d78ab03eb15"
+  resolved "https://codeload.github.com/sergeyromanovdev/react-daterange-picker/tar.gz/23974524bbbb50415afa27a67e1e4043defe9066"
   dependencies:
     "@material-ui/core" "^3.9.2"
     "@material-ui/icons" "^3.0.2"
