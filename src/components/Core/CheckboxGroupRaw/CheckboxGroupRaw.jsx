@@ -20,7 +20,7 @@ export default function CheckboxGroup({ items, onChange }) {
               label={item.label}
               checked={item.checked}
               disabled={item.disabled}
-              onChange={() => onChange(idx)}
+              onChange={() => onChange(item.id)}
             />
           ))
         }

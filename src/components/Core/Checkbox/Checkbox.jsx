@@ -69,6 +69,7 @@ const useStyles = makeStyles({
   labelRoot: {
     marginLeft: '0px',
     marginRight: '0px',
+    display: 'flex',
   },
 
   label: {
@@ -81,7 +82,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StyledCheckbox({ label, onChange, ...props }) {
+export default function StyledCheckbox({
+  label, id, onChange, ...props
+}) {
   const classes = useStyles();
 
   return (
@@ -98,7 +101,7 @@ export default function StyledCheckbox({ label, onChange, ...props }) {
           checkedIcon={<span className={classNames(classes.icon, classes.checkedIcon)} />}
           icon={<span className={classes.icon} />}
           inputProps={{ 'aria-label': '' }}
-          onChange={onChange}
+          onChange={() => onChange(id)}
           {...props}
         />
       )}

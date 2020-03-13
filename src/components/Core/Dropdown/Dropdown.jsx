@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -41,24 +41,31 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Dropdown({ label, items }) {
+export default function Dropdown({
+  label, id, items, checked, onChange,
+}) {
   const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const classes = useStyles();
 
   useEffect(() => {
-    const result = items.map((item) => {
-      if (!item.disabled) {
-        if (item.checked) {
-          itemsStat.checked += 1;
-        } else {
-          itemsStat.unchecked += 1;
+    let result;
+    if (typeof items !== 'undefined') {
+      result = items.map((item) => {
+        if (!item.disabled) {
+          if (item.checked) {
+            itemsStat.checked += 1;
+          } else {
+            itemsStat.unchecked += 1;
+          }
+          itemsStat.total += 1;
         }
-        itemsStat.total += 1;
-      }
-      return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
-    });
+        return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
+      });
+    } else {
+      result = [];
+    }
 
     Promise.all(result).then((resultedItems) => {
       setItemsArray(resultedItems);
@@ -66,45 +73,45 @@ export default function Dropdown({ label, items }) {
     });
   }, [items]);
 
-  const selectAll = useCallback((check) => {
-    setItemsArray((state) => state.map((item) => {
-      if (item.type === 'group') {
-        item.items.map((checkbox) => {
-          if (!checkbox.disabled) {
-            return { ...checkbox, checked: check };
-          }
-          return { ...checkbox };
-        });
-      } else {
-        if (!item.disabled) {
-          return { ...item, checked: check };
-        }
-        return { ...item };
-      }
-      return { ...item };
-    }));
-
-    if (check) {
-      setItemsStat({ ...itemsStat, checked: itemsStat.total, unchecked: 0 });
-    } else {
-      setItemsStat({ ...itemsStat, checked: 0, unchecked: itemsStat.total });
-    }
-  }, [itemsStat]);
-
-  const handleCheckboxChange = useCallback((itemIdx) => {
-    setItemsArray(
-      (state) => state.map((item, idx) => {
-        if (idx === itemIdx) {
-          if (!item.checked) {
-            setItemsStat({ ...itemsStat, checked: itemsStat.checked + 1, unchecked: itemsStat.unchecked - 1 });
-          } else {
-            setItemsStat({ ...itemsStat, checked: itemsStat.checked - 1, unchecked: itemsStat.unchecked + 1 });
-          }
-        }
-        return { ...item, checked: idx === itemIdx ? !item.checked : item.checked };
-      }),
-    );
-  }, [itemsStat]);
+  // const selectAll = useCallback((check) => {
+  //   setItemsArray((state) => state.map((item) => {
+  //     if (item.type === 'group') {
+  //       item.items.map((checkbox) => {
+  //         if (!checkbox.disabled) {
+  //           return { ...checkbox, checked: check };
+  //         }
+  //         return { ...checkbox };
+  //       });
+  //     } else {
+  //       if (!item.disabled) {
+  //         return { ...item, checked: check };
+  //       }
+  //       return { ...item };
+  //     }
+  //     return { ...item };
+  //   }));
+  //
+  //   if (check) {
+  //     setItemsStat({ ...itemsStat, checked: itemsStat.total, unchecked: 0 });
+  //   } else {
+  //     setItemsStat({ ...itemsStat, checked: 0, unchecked: itemsStat.total });
+  //   }
+  // }, [itemsStat]);
+  //
+  // const handleCheckboxChange = useCallback((itemIdx) => {
+  //   setItemsArray(
+  //     (state) => state.map((item, idx) => {
+  //       if (idx === itemIdx) {
+  //         if (!item.checked) {
+  //           setItemsStat({ ...itemsStat, checked: itemsStat.checked + 1, unchecked: itemsStat.unchecked - 1 });
+  //         } else {
+  //           setItemsStat({ ...itemsStat, checked: itemsStat.checked - 1, unchecked: itemsStat.unchecked + 1 });
+  //         }
+  //       }
+  //       return { ...item, checked: idx === itemIdx ? !item.checked : item.checked };
+  //     }),
+  //   );
+  // }, [itemsStat]);
 
   // const ArrowIcon = () => (
   //   <SvgIcon>
@@ -119,7 +126,7 @@ export default function Dropdown({ label, items }) {
   // );
 
   const renderCheckboxGroup = () => (
-    <CheckboxGroup items={itemsArray} onChange={handleCheckboxChange} />
+    <CheckboxGroup items={itemsArray} onChange={onChange} />
   );
 
   const renderDropdown = () => (
@@ -144,8 +151,8 @@ export default function Dropdown({ label, items }) {
           onFocus={(event) => event.stopPropagation()}
           control={(
             <StyledCheckbox
-              onChange={(e) => selectAll(e.target.checked)}
-              checked={itemsStat.checked === itemsStat.total}
+              onChange={() => onChange(id)}
+              checked={checked}
             />
           )}
           label={label}
@@ -155,7 +162,14 @@ export default function Dropdown({ label, items }) {
         {
           itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group'
             ? itemsArray.map((item, idx) => (
-              <Dropdown key={idx.toString()} label={item.label} items={item.items} />
+              <Dropdown
+                key={idx.toString()}
+                label={item.label}
+                id={item.id}
+                checked={item.checked}
+                items={item.items}
+                onChange={onChange}
+              />
             ))
             : renderCheckboxGroup(itemsArray)
         }

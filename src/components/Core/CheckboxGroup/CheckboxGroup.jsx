@@ -3,27 +3,29 @@ import classNames from 'classnames';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroup.module.scss';
 
-export default function CheckboxGroup({ items }) {
+export default function CheckboxGroup({ items, children }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
 
   useEffect(() => {
-    const result = items.map((item) => {
-      if (!item.disabled) {
-        if (item.checked) {
-          itemsStat.checked += 1;
-        } else {
-          itemsStat.unchecked += 1;
+    if (items) {
+      const result = items.map((item) => {
+        if (!item.disabled) {
+          if (item.checked) {
+            itemsStat.checked += 1;
+          } else {
+            itemsStat.unchecked += 1;
+          }
+          itemsStat.total += 1;
         }
-        itemsStat.total += 1;
-      }
-      return { ...item, checked: !!item.checked };
-    });
+        return { ...item, checked: !!item.checked };
+      });
 
-    Promise.all(result).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setItemsStat({ ...itemsStat });
-    });
+      Promise.all(result).then((resultedItems) => {
+        setItemsArray(resultedItems);
+        setItemsStat({ ...itemsStat });
+      });
+    }
   }, [items]);
 
   const selectAll = useCallback((check) => {
@@ -76,7 +78,7 @@ export default function CheckboxGroup({ items }) {
       </div>
       <div className={classNames(styles.contentBox)}>
         {
-          itemsArray.map((item, idx) => (
+          children || itemsArray.map((item, idx) => (
             <StyledCheckbox
               key={idx.toString()}
               label={item.label}
