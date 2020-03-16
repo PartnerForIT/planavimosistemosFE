@@ -11,3 +11,40 @@
 .select {
   width: 330px;
 }
+
+.inputWrapper {
+  position: relative;
+  width: fit-content;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 100%;
+    right: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root Dropdown_expandIcon__1ePQW' focusable='false' fill='%230085ff' width='24' height='24' viewBox='0 0 24 24' aria-hidden='true' role='presentation'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'%3E%3C/path%3E%3C/svg%3E") right center no-repeat;
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transform: rotate(-90deg);
+  }
+}
+
+.inputWrapperOpened::before {
+  transform: rotate(0deg);
+}
+
+.customSelect {
+  width: 330px;
+  height: 36px;
+  border: 1px solid $blue-grownu;
+  border-radius: 4px;
+  outline: none;
+  padding: 5px 20px 5px 10px;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 15px;
+  color: #333945;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
