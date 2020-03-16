@@ -28,6 +28,6 @@ const SearchIcon = () => (
   </SvgIcon>
 );
 
-export const normal = () => <Input icon={<SearchIcon />} />;
+export const normal = () => <Input icon={<SearchIcon />} width='186px' height='36px' />;
 
-export const withoutIcon = () => <Input placeholder='Input without icon' />;
+export const withoutIcon = () => <Input placeholder='Input without icon' width='186px' height='36px' />;

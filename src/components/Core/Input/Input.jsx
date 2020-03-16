@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './Input.module.scss';
 
 const Input = ({
-  disabled, placeholder, icon, width,
+  disabled, placeholder, icon, width, height, ...props
 }) => {
   const classes = classNames(
     styles.input,
@@ -18,11 +18,12 @@ const Input = ({
         </div>
       ) : null}
       <input
-        style={{ width }}
+        style={{ width, height }}
         className={classes}
         type='text'
         placeholder={placeholder || 'Search...'}
         disabled={disabled}
+        {...props}
       />
     </div>
   );
