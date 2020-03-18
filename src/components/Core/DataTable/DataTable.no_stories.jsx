@@ -1,5 +1,4 @@
 import React from 'react';
-import { action } from '@storybook/addon-actions';
 import DataTable from './DataTable';
 
 const data = [
@@ -109,4 +108,4 @@ export default {
   title: 'DataTable',
 };
 
-export const normal = () => <DataTable data={data} columns={columns} onSelectionChange={action('changed')} />;
+export const normal = () => <DataTable data={data} columns={columns} onSelectionChange={console.log} />;
