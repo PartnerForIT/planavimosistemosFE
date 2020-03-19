@@ -13,6 +13,7 @@
 .details {
   min-height: 0;
   overflow: hidden;
+  padding-top: 5px;
   //transform-origin: top;
   //transition: transform 0.26s ease;
 }
@@ -29,14 +30,55 @@
 }
 
 .groupLabel {
+  color: #4d7499;
+  display: flex;
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
-  color: #4d7499;
   background-color: rgba(49, 156, 255, 0.1);
   border-radius: 6px;
   border: none;
   margin-top: 10px;
   padding: 5px 10px;
+
+  .checkboxCell {
+    margin-left: -10px;
+  }
+  
+  .groupLabelText {
+    user-select: none;
+  }
+}
+
+.sortBlock {
+  cursor: pointer;
+  display: flex;
+  user-select: none;
+  
+  svg {
+    width: 18px !important;
+  }
+}
+
+.sortIcon svg {
+  width: 1em !important;
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.checkbox {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.pointer {
   cursor: pointer;
 }
 
@@ -50,6 +92,12 @@
 
 .collapsIconRotated {
   transform: rotate(0deg);
+}
+
+.checkboxCell {
+  width: 50px !important;
+  display: inline-flex;
+  padding: 0 !important;
 }
 
 $table-header: #1976d2;

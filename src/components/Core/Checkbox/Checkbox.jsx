@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles({
   root: {
+    
     '&:hover': {
       backgroundColor: 'transparent !important',
     },
@@ -13,9 +14,10 @@ const useStyles = makeStyles({
 
   icon: {
     borderRadius: 2,
+    border: '1px solid #A2C2E3',
     width: 16,
     height: 16,
-    boxShadow: 'inset 0 0 0 1px rgba(16, 22, 26, 0.2), inset 0 -1px 0 rgba(16, 22, 26, 0.1)',
+    // boxShadow: 'inset 0 0 0 1px rgba(16, 22, 26, 0.2), inset 0 -1px 0 rgba(16, 22, 26, 0.1)',
 
     '$root.Mui-focusVisible &': {
       outline: '2px auto rgba(19, 124, 189, 0.6)',
@@ -101,7 +103,7 @@ export default function StyledCheckbox({
           checkedIcon={<span className={classNames(classes.icon, classes.checkedIcon)} />}
           icon={<span className={classes.icon} />}
           inputProps={{ 'aria-label': '' }}
-          onChange={() => onChange(id)}
+          onChange={(e) => onChange(id, e.target.checked)}
           {...props}
         />
       )}

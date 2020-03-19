@@ -3,19 +3,20 @@ import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import styles from './DTM.module.scss';
+import StyledCheckbox from '../Checkbox/Checkbox';
 
 /**
  * Simple Button encapsulating all design variations
  */
 const Group = ({
-  label, rows, columns, disabled, titleColor,
-  titleBackground,
+  label, rows, columns, ids, disabled, titleColor,
+  titleBackground, selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   const useStyles = makeStyles({
     flexRow: {
-      width: `calc(100% / ${columns.length})`,
+      width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
       textAlign: 'left',
       padding: '0.5em 0.5em',
       color: '#333945',
@@ -57,20 +58,53 @@ const Group = ({
       className={classes}
       disabled={disabled}
     >
-      <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-        className={classNames(styles.groupLabel, classes.labelColor)}
-        onClick={() => setExpanded(!expanded)}
-      >
-        <TriangleIcon className={iconClasses} />
-        {label}
+      <div className={classNames(styles.groupLabel, classes.labelColor)}>
+        {
+          selectable && (
+            <div
+              className={classNames(classes.flexRow, styles.columnName, styles.checkboxCell)}
+              role='columnheader'
+            >
+              <StyledCheckbox
+                id={ids}
+                className={classNames(styles.checkbox)}
+                checked={groupChecked}
+                onChange={onSelect}
+              />
+            </div>
+          )
+        }
+        <span // eslint-disable-line jsx-a11y/no-static-element-interactions
+          onClick={() => setExpanded(!expanded)}
+          className={classNames(styles.pointer)}
+        >
+          <TriangleIcon className={iconClasses} />
+          <span className={classNames(styles.groupLabelText)}>{label}</span>
+        </span>
       </div>
       <div className={detailsClasses}>
         {
-          rows.map((row) => (
-            <div key={row.name} className={classNames(styles.flexTable, styles.row)} role='rowgroup'>
+          rows.map((row, idx) => (
+            <div key={idx.toString()} className={classNames(styles.flexTable, styles.row)} role='rowgroup'>
               {
-                columns.map((column) => (
-                  <div className={classNames(classes.flexRow, styles.cell)} role='cell'>
+                selectable && (
+                  <div className={classNames(classes.flexRow, styles.cell, styles.checkboxCell)} role='cell'>
+                    <StyledCheckbox
+                      id={row.id}
+                      className={classNames(styles.checkbox)}
+                      checked={!!row.checked}
+                      onChange={onSelect}
+                    />
+                  </div>
+                )
+              }
+              {
+                // let fieldIcon = null;
+                // if (fieldIcons[column.field] && fieldIcons[column.field].length) {
+                //   fieldIcon = fieldIcons[column.field].filter((icon) => icon.value === row[column.field])[0].icon;
+                // }
+                columns.map((column, idz) => (
+                  <div key={idz.toString()} className={classNames(classes.flexRow, styles.cell)} role='cell'>
                     {row[column.field]}
                   </div>
                 ))
