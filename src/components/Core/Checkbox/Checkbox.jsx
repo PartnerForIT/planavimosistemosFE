@@ -6,7 +6,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles({
   root: {
-    
     '&:hover': {
       backgroundColor: 'transparent !important',
     },
