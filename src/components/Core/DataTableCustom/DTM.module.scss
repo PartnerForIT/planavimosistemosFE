@@ -4,7 +4,7 @@
   color: #333945;
   display: flex;
   align-items: center;
-  
+
   svg {
     padding-right: 5px;
     width: 18px;
@@ -105,7 +105,7 @@
   width: 8.315px !important;
   height: 10px !important;
   margin-right: 5px;
-  padding-right: 0px !important;
+  padding-right: 0 !important;
 }
 
 .collapsIconRotated {
@@ -130,7 +130,7 @@
   border-bottom-right-radius: 10px;
   margin-top: 40px;
   box-shadow: 0 -4px 20px rgba(62, 69, 82, 0.06);
-  
+
   > * {
     padding: 0 5px;
   }
@@ -160,29 +160,29 @@ div {
   width: 100%;
   border: 1px solid #f5f9fb;
   border-radius: 8px;
-  padding: 0px;
+  padding: 0;
   overflow: hidden;
-  
+
   .header {
     background-color: #edf5fc;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     padding: 0 10px;
   }
-  
+
   .columnName {
     color: #4d7499;
     font-weight: 500;
   }
-  
+
   .simpleTableContent {
     padding: 5px 10px;
   }
-  
+
   .row {
     border-bottom: 1px solid rgba(112, 112, 112, 0.14);
     padding: 0;
-    
+
     &:last-child {
       border-bottom: none;
     }
@@ -190,7 +190,7 @@ div {
 }
 
 .simpleTableContainerHidden {
-  height: 0px;
+  height: 0;
   border: none;
 }
 
