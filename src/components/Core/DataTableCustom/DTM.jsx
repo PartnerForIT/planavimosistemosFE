@@ -8,10 +8,10 @@ import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
 import SortIcon from '../../Icons/SortIcon';
 
-export default function DenseTable({
+export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons,
 }) {
-  // const [allSelected, setAllSelected] = useState(false);
+  const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
 
   useEffect(() => {
@@ -26,6 +26,27 @@ export default function DenseTable({
     };
     setSortOptionsAsc(initSortOptions);
   }, [columns]);
+
+  useEffect(() => {
+    const initData = { checked: 0, total: 0 };
+    const checkAllSelected = () => {
+      data.map((group) => {
+        let checkedNumber = 0;
+        for (let i = 0; i < group.items.length; i += 1) {
+          if (group.items[i].checked) checkedNumber += 1;
+        }
+        if (checkedNumber === group.items.length) {
+          initData.checked += 1;
+          initData.total += 1;
+        } else {
+          initData.total += 1;
+        }
+        return group;
+      });
+      return initData;
+    };
+    setAllSelected(checkAllSelected);
+  }, [data]);
 
   const useStyles = makeStyles({
     flexRow: {
@@ -58,7 +79,7 @@ export default function DenseTable({
               <StyledCheckbox
                 id='all'
                 className={classNames(styles.checkbox)}
-                // checked={allSelected}
+                checked={allSelected.checked === allSelected.total}
                 onChange={onSelect}
               />
             </div>
@@ -96,11 +117,6 @@ export default function DenseTable({
           for (let i = 0; i < group.items.length; i += 1) {
             if (group.items[i].checked) checkedNumber += 1;
           }
-          // if (checkedNumber !== group.items.length && allSelected) {
-          //   setAllSelected(false);
-          // } else if (checkedNumber === group.items.length && !allSelected) {
-          //   setAllSelected(true);
-          // }
           return (
             <Group
               key={idx.toString()}

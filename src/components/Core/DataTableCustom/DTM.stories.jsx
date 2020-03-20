@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { storiesOf } from '@storybook/react';
-// import classNames from 'classnames';
 import DataTable from './DTM';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
