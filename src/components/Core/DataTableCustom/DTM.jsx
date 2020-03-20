@@ -4,9 +4,12 @@ import classNames from 'classnames';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
+import ExcelIcon from '../../Icons/ExcelIcon';
+import PdfIcon from '../../Icons/PdfIcon';
+import SortIcon from '../../Icons/SortIcon';
 
 export default function DenseTable({
-  data, columns, selectable, sortable, onSelect, onSort, sortIcon, fieldIcons,
+  data, columns, selectable, sortable, onSelect, onSort, fieldIcons,
 }) {
   // const [allSelected, setAllSelected] = useState(false);
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
@@ -29,7 +32,7 @@ export default function DenseTable({
       display: 'flex',
       width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
       textAlign: 'left',
-      padding: '0.5em 0.5em',
+      padding: '0 0.5em',
     },
 
     detailsRoot: {
@@ -79,7 +82,7 @@ export default function DenseTable({
                 }
                 { sortable && (
                 <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                  {sortIcon}
+                  <SortIcon />
                 </div>
                 ) }
               </div>
@@ -115,6 +118,10 @@ export default function DenseTable({
           );
         })
       }
+      <div className={classNames(styles.tableFooter)}>
+        <ExcelIcon />
+        <PdfIcon />
+      </div>
     </div>
   );
 }

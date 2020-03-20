@@ -2,6 +2,13 @@
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
   color: #333945;
+  display: flex;
+  align-items: center;
+  
+  svg {
+    padding-right: 5px;
+    width: 18px;
+  }
 }
 
 .columnName {
@@ -35,6 +42,10 @@
   padding: 0 !important;
 }
 
+.groupContainer {
+  padding: 0 10px;
+}
+
 .groupLabel {
   color: #4d7499;
   display: flex;
@@ -43,7 +54,7 @@
   background-color: rgba(49, 156, 255, 0.1);
   border-radius: 6px;
   border: none;
-  margin-top: 10px;
+  margin-top: 5px;
   padding: 5px 10px;
 
   .checkboxCell {
@@ -94,10 +105,35 @@
   width: 8.315px !important;
   height: 10px !important;
   margin-right: 5px;
+  padding-right: 0px !important;
 }
 
 .collapsIconRotated {
   transform: rotate(0deg);
+}
+
+.rowWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.tableFooter {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 46px;
+  padding: 0 10px;
+  background-color: #fff;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-top: 40px;
+  box-shadow: 0 -4px 20px rgba(62, 69, 82, 0.06);
+  
+  > * {
+    padding: 0 5px;
+  }
 }
 
 $table-header: #1976d2;
@@ -115,7 +151,51 @@ div {
   width: 90%;
   border: 1px solid rgba(226, 235, 244, 0.85);
   border-radius: 10px;
-  padding: 10px;
+  padding-top: 10px;
+}
+
+.simpleTableContainer {
+  display: block;
+  margin: 0;
+  width: 100%;
+  border: 1px solid #f5f9fb;
+  border-radius: 8px;
+  padding: 0px;
+  overflow: hidden;
+  
+  .header {
+    background-color: #edf5fc;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0 10px;
+  }
+  
+  .columnName {
+    color: #4d7499;
+    font-weight: 500;
+  }
+  
+  .simpleTableContent {
+    padding: 5px 10px;
+  }
+  
+  .row {
+    border-bottom: 1px solid rgba(112, 112, 112, 0.14);
+    padding: 0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.simpleTableContainerHidden {
+  height: 0px;
+  border: none;
+}
+
+.simpleTableContainerShown {
+  height: auto;
 }
 
 .flagIcon {
@@ -136,10 +216,10 @@ div {
     border: 0;
     //border-bottom: solid 1px $table-border;
 
-    &:hover {
-      background: #f5f5f5;
-      transition: 500ms;
-    }
+    //&:hover {
+    //  background: #f5f5f5;
+    //  transition: 500ms;
+    //}
   }
 }
 
@@ -149,6 +229,7 @@ div {
   flex-flow: row wrap;
   //border-left: solid 1px $table-border;
   transition: 0.5s;
+  padding: 0 10px;
 
   &:first-of-type {
     //border-top: solid 1px $table-header-border;
@@ -165,10 +246,10 @@ div {
     background: $row-bg;
   }
 
-  &:hover {
-    background: #f5f5f5;
-    transition: 500ms;
-  }
+  //&:hover {
+  //  background: #f5f5f5;
+  //  transition: 500ms;
+  //}
 }
 
 .rowspan {
