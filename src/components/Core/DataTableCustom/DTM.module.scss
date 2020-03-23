@@ -142,6 +142,7 @@
 .approvedIconSelected {
   g {
     fill: #fff !important;
+    stroke: #319cff !important;
   }
 
   path {
@@ -152,6 +153,7 @@
 .suspendedIconSelected {
   g {
     fill: #fff !important;
+    stroke: #319cff;
   }
 
   path {
@@ -162,13 +164,10 @@
 .pendingIconSelected {
   g {
     fill: #319cff !important;
+    stroke-width: 0;
   }
 
   path {
-    fill: #fff !important;
-  }
-
-  g#Ellipse_30 {
     fill: #fff !important;
   }
 }

@@ -1,14 +1,14 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-const ApprovedIcon = ({ fill = '#57d05a' }) => (
-  <SvgIcon viewBox='0 0 16 16'>
+const ApprovedIcon = ({ className }) => (
+  <SvgIcon viewBox='0 0 16 16' className={className}>
     <g id='Group_2217' data-name='Group 2217' transform='translate(-47 -243)'>
       <g
         id='Ellipse_28'
         data-name='Ellipse 28'
         transform='translate(47 243)'
-        fill={fill}
+        fill='#57d05a'
         stroke='#fff'
         strokeWidth='1'
       >

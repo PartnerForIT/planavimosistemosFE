@@ -13,6 +13,7 @@ export default function DataTable({
 }) {
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
+  const [selectedItemId, setSelectedItemId] = useState(null);
 
   useEffect(() => {
     const initSortOptions = (options) => {
@@ -127,6 +128,8 @@ export default function DataTable({
               groupChecked={checkedNumber === group.items.length}
               selectable={selectable}
               onSelect={onSelect}
+              selectedItemId={selectedItemId}
+              setSelectedItemId={setSelectedItemId}
               titleColor={group.titleColor || null}
               titleBackground={group.backgroundColor || null}
               fieldIcons={fieldIcons}

@@ -7,11 +7,10 @@ import Row from './Row';
 import TriangleIcon from '../../Icons/TriangleIcon';
 
 const Group = ({
-  label, rows, columns, ids, titleColor = '#4d7499', fieldIcons,
+  label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItemId, setSelectedItemId,
   titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState(null);
 
   const useStyles = makeStyles({
     flexRow: {

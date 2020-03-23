@@ -21,6 +21,16 @@ const Row = ({
       padding: '0.5em 0.5em',
       color: '#333945',
     },
+
+    approvedIconSelected: {
+      g: {
+        fill: '#fff !important',
+      },
+
+      path: {
+        stroke: '#319cff !important',
+      },
+    },
   });
   const classes = useStyles();
 

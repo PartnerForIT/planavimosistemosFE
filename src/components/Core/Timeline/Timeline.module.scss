@@ -1,0 +1,40 @@
+.timeline {
+  display: flex;
+  height: 5px;
+  width: 100%;
+}
+
+.timeStart {
+  left: -17px;
+}
+
+.timeEnd {
+  right: 0;
+  display: none;
+}
+
+.timespan {
+  position: relative;
+  display: inline-flex;
+  height: 5px;
+
+  &:first-child {
+    .timeStart {
+      left: 0;
+    }
+  }
+
+  &:last-child {
+    .timeEnd {
+      display: block;
+    }
+  }
+}
+
+.time {
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: rgba(93, 94, 98, 0.51);
+  position: absolute;
+  top: 10px;
+}
