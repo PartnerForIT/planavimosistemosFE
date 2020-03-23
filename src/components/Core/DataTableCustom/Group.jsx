@@ -11,6 +11,7 @@ const Group = ({
   titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
 
   const useStyles = makeStyles({
     flexRow: {
@@ -73,6 +74,8 @@ const Group = ({
             <Row
               key={idx.toString()}
               row={row}
+              selectedItemId={selectedItemId}
+              setSelectedItemId={setSelectedItemId}
               columns={columns}
               selectable={selectable}
               onSelect={onSelect}

@@ -90,6 +90,38 @@ const data = [
         group: 'Group B',
         subgroup: 'Sub Group B',
         skill: 'Barmen',
+        data: {
+          columns: [
+            { title: 'Work Date', field: 'work_date' },
+            { title: 'Start', field: 'start' },
+            { title: 'End', field: 'end' },
+            { title: 'Comment', field: 'comment' },
+            { title: 'Duration', field: 'duration' },
+          ],
+          items: [
+            {
+              work_date: '2019-09-19',
+              start: '07:00',
+              end: '14:00',
+              comment: 'A lot of customers, good day',
+              duration: '07:00',
+            },
+            {
+              work_date: '2019-09-20',
+              start: '10:00',
+              end: '18:00',
+              comment: 'A lot of drunk people',
+              duration: '08:00',
+            },
+            {
+              work_date: '2019-09-21',
+              start: '09:30',
+              end: '15:00',
+              comment: 'No customers for today',
+              duration: '06:30',
+            },
+          ],
+        },
         finishedAt: '2020-03-17 16:13:32',
         finishedAtFormatted: '2020-03-17',
       },

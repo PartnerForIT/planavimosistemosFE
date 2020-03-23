@@ -16,6 +16,7 @@ const useStyles = makeStyles({
     border: '1px solid #A2C2E3',
     width: 16,
     height: 16,
+    backgroundColor: '#fff',
     // boxShadow: 'inset 0 0 0 1px rgba(16, 22, 26, 0.2), inset 0 -1px 0 rgba(16, 22, 26, 0.1)',
 
     '$root.Mui-focusVisible &': {

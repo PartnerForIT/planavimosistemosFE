@@ -106,6 +106,16 @@
   height: 10px !important;
   margin-right: 5px;
   padding-right: 0 !important;
+
+  path {
+    fill: #0087ff;
+  }
+}
+
+.collapsIconSelected {
+  path {
+    fill: #fff;
+  }
 }
 
 .collapsIconRotated {
@@ -117,6 +127,50 @@
   display: flex;
   align-items: center;
   user-select: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rowSelected {
+  background-color: #319cff;
+}
+
+.flexRowSelected {
+  color: #fff !important;
+}
+
+.approvedIconSelected {
+  g {
+    fill: #fff !important;
+  }
+
+  path {
+    stroke: #319cff !important;
+  }
+}
+
+.suspendedIconSelected {
+  g {
+    fill: #fff !important;
+  }
+
+  path {
+    stroke: #319cff !important;
+  }
+}
+
+.pendingIconSelected {
+  g {
+    fill: #319cff !important;
+  }
+
+  path {
+    fill: #fff !important;
+  }
+
+  g#Ellipse_30 {
+    fill: #fff !important;
+  }
 }
 
 .tableFooter {
