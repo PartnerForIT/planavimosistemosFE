@@ -13,21 +13,21 @@ const data = {
   status: 'Pending',
 };
 
-const Container = () => {
+const Container = ({ ...props }) => {
   const [time, setTime] = useState(data);
 
   return (
     <div style={{ width: '300px' }}>
       <InfoCard
-        type='total'
-        label='Total hours'
-        text='$2000'
         time={time}
-        editable
         onChange={setTime}
+        {...props}
       />
     </div>
   );
 };
 
-stories.add('normal', () => <Container style={{ width: '300px' }} />);
+stories.add('work time', () => (<Container type='total' text='$2000' editable />));
+stories.add('break time', () => (<Container type='break' text='$2000' editable />));
+stories.add('break time without editing', () => (<Container type='break' text='$2000' />));
+stories.add('with custom text', () => (<Container type='other' label='Custom text' text='$2000' time={null} />));
