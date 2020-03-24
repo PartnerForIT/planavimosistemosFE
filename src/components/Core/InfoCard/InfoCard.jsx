@@ -110,11 +110,16 @@ const InfoCard = ({
 
   const approveChanges = () => {
     const duration = minutesToString(timeToMinutes(end) - timeToMinutes(start));
-    console.log('duration', duration);
     onChange({
       ...time, start, end, duration,
     });
     setEditing(false);
+  };
+
+  const declineChanges = () => {
+    setEditing(false);
+    setStart(time.start);
+    setEnd(time.end);
   };
 
   return (
@@ -153,7 +158,7 @@ const InfoCard = ({
                     <ApprovedIcon className={classes.approvedIcon} />
                   </div>
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                  <div onClick={() => setEditing(false)} className={styles.actionsIcon}>
+                  <div onClick={declineChanges} className={styles.actionsIcon}>
                     <SuspendedIcon className={classes.approvedIcon} />
                   </div>
                 </>
