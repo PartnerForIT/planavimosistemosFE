@@ -1,0 +1,83 @@
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 255px;
+  height: 86px;
+  border-radius: 13px;
+  padding: 10px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  width: 100%;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: #5d5e62;
+}
+
+.timeBlock {
+  font-family: Helvetica Neue, sans-serif;
+  font-weight: 500;
+  margin-top: auto;
+
+  .time {
+    font-size: 23px;
+    color: #333945;
+  }
+
+  .text {
+    font-size: 16px;
+    color: #5d5e62;
+  }
+}
+
+.editableBlock {
+  border: 1px solid #339dff;
+  border-radius: 4px;
+  display: flex;
+  padding: 3px;
+  margin-right: 5px;
+}
+
+.editableInput {
+  background-color: transparent;
+  border: none;
+  caret-color: #0087ff;
+  color: #5d5e62;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 13px;
+  outline: none;
+  width: 35px;
+
+  &::-moz-selection {
+    color: #fff;
+    background-color: rgba(71, 151, 222, 0.62);
+  }
+
+  &::selection {
+    color: #fff;
+    background-color: rgba(71, 151, 222, 0.62);
+  }
+}
+
+.actionsIcon {
+  cursor: pointer;
+  margin-left: 3px;
+}

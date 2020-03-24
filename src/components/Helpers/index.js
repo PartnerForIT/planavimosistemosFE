@@ -1,6 +1,14 @@
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');
-  return timeArr[0] * 60 + timeArr[1];
+  return parseInt(timeArr[0], 10) * 60 + parseInt(timeArr[1], 10);
+};
+
+export const minutesToString = (totalMinutes) => {
+  let hours = Math.floor(totalMinutes / 60) || 0;
+  hours = hours > 10 ? hours : `0${hours}`;
+  let minutes = totalMinutes % 60 || 0;
+  minutes = minutes > 10 ? minutes : `0${minutes}`;
+  return `${hours}:${minutes}`;
 };
 
 export const getColorByStatus = (status) => {
@@ -20,4 +28,29 @@ export const getColorByStatus = (status) => {
   }
 
   return color;
+};
+
+export const getInfoCardColors = (type) => {
+  let theme = {};
+  switch (type) {
+    case 'total':
+      theme = {
+        text: '#0085ff',
+        background: '#ecf3f9',
+      };
+      break;
+    case 'break':
+      theme = {
+        text: '#ff9d00',
+        background: 'rgba(253, 176, 51, 0.21)',
+      };
+      break;
+    default:
+      theme = {
+        text: '#0085ff',
+        background: '#ecf3f9',
+      };
+  }
+
+  return theme;
 };
