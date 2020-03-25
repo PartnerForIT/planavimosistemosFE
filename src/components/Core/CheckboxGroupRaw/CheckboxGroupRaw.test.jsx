@@ -15,7 +15,7 @@ const items = [
   },
 ];
 
-describe('Checkbox', () => {
+describe('CheckboxGroup', () => {
   afterEach(cleanup);
 
   it('displays label', () => {

@@ -32,7 +32,7 @@ const data = {
   ],
 };
 
-describe('Input', () => {
+describe('Timeline', () => {
   afterEach(cleanup);
 
   it('displays timeline', () => {

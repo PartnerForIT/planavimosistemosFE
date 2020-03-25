@@ -1,0 +1,94 @@
+.card {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 16px #d9dcde;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  margin: 15px 10px;
+  padding: 6px 13px;
+  width: 246px;
+}
+
+.cardSelected {
+  background-color: #097aff;
+  box-shadow: 0 3px 16px rgba(0, 135, 255, 0.33);
+}
+
+.leftSide {
+  width: 210px;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+}
+
+.headerRow {
+  font-family: Helvetica Neue, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333945;
+  display: flex;
+  align-items: center;
+  height: 20px;
+  width: 100%;
+}
+
+.headerRowSelected {
+  color: #fff;
+}
+
+.timeBlock {
+  font-family: Helvetica Neue, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(51, 57, 69, 0.62);
+  margin-top: auto;
+  padding: 3px 0;
+
+  .time {
+    font-size: 23px;
+    color: #333945;
+  }
+
+  .text {
+    font-size: 16px;
+    color: #5d5e62;
+  }
+}
+
+.timeBlockSelected {
+  color: rgba(254, 255, 255, 0.62);
+}
+
+.closeButtonWrapper {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.closeButton {
+  width: 16px !important;
+  height: 16px !important;
+
+  g {
+    fill: #adadad;
+  }
+
+  path,
+  circle {
+    stroke: #fff;
+  }
+}
+
+.closeButtonSelected {
+  g {
+    fill: #fff;
+  }
+
+  path,
+  circle {
+    stroke: #097aff;
+  }
+}

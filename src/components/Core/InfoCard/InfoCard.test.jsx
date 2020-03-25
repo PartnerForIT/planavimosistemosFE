@@ -14,7 +14,7 @@ const data = {
 const label = 'Total hours';
 const text = '$2000';
 
-describe('Input', () => {
+describe('InfoCard', () => {
   afterEach(cleanup);
 
   it('displays InfoCard time range', () => {
