@@ -45,7 +45,7 @@ const ClosableCard = ({
       </div>
       <div className={styles.rightSide}>
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div className={styles.closeButtonWrapper} onClick={() => onClose(dateRange.id)}>
+        <div className={styles.closeButtonWrapper} onClick={(e) => onClose(e, dateRange.id)}>
           <SuspendedIcon className={closeButtonClasses} />
         </div>
       </div>

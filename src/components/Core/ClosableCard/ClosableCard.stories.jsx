@@ -36,9 +36,11 @@ const Container = ({ ...props }) => {
   const [reports, setReports] = useState(data);
   const [activeReport, setActiveReport] = useState();
 
-  const closeHandler = (reportId) => {
+  const closeHandler = (e, reportId) => {
+    e.stopPropagation();
     const removeReport = (reps) => reps.filter((rep) => rep.id !== reportId);
     setReports(removeReport);
+    if (reportId === activeReport) setActiveReport(null);
   };
 
   return (
