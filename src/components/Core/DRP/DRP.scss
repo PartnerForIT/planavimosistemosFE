@@ -1,3 +1,5 @@
+@import "../variables";
+
 .pickerWrapper {
   position: relative;
   display: flex;
@@ -7,15 +9,15 @@
 .dateInput {
   padding: 8px 12px;
   border: 1px solid #d0dfef;
-  border-radius: 3px;
+  border-radius: 4px;
   color: #333945;
   font-family: Helvetica Neue, sans-serif;
   font-size: 16px;
   width: 128px;
 
   &:focus {
-    color: #0085ff;
-    border: 1px solid #0085ff;
+    color: $blue-grownu;
+    border: 1px solid $blue-grownu;
     outline: none;
   }
 }
@@ -40,31 +42,34 @@
   align-items: center;
   margin-right: 5px;
   cursor: pointer;
+  outline: none;
 
   &:hover {
-    border-color: #0085ff;
+    border-color: $blue-grownu;
 
     .calendarIcon {
-      color: #0085ff;
+      color: $blue-grownu;
     }
   }
 
   &.active {
-    border-color: #0085ff;
+    border-color: $blue-grownu;
 
     .calendarIcon {
-      color: #0085ff;
+      color: $blue-grownu;
     }
   }
 }
 
 .definedRanges {
-  position: absolute;
-  top: 50px;
-  width: 275px;
-  border: 1px solid #0085ff;
+  background-color: #fff;
+  border: 1px solid $blue-grownu;
   border-radius: 6px;
+  position: absolute;
+  top: 65px;
+  width: 275px;
   padding: 5px 10px;
+  z-index: 1;
 
   button {
     margin: 5px 0;

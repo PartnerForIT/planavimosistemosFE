@@ -1,3 +1,20 @@
 {
-  "Learn React": "Learn React i18n"
+  "Learn React": "Learn React i18n",
+  "All groups": "All groups",
+  "All employees": "All employees",
+  "Select All": "Select All",
+  "Select None": "Select None",
+  "Apply": "Apply",
+  "Filter": "Filter",
+  "Search": "Search",
+  "Start Date": "Start Date",
+  "End Date": "End Date",
+  "To": "To",
+  "Today": "Today",
+  "Yesterday": "Yesterday",
+  "This Week": "This Week",
+  "Last Week": "Last Week",
+  "Last 7 Days": "Last 7 Days",
+  "This Month": "This Month",
+  "Last Month": "Last Month"
 }

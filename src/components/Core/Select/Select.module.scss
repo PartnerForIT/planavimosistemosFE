@@ -1,18 +1,21 @@
 @import "../variables";
 
 .contentBox {
-  width: 310px;
+  width: 280px;
+  background-color: #fff;
   border: 1px solid $blue-grownu;
   border-radius: 4px;
   padding: 10px;
+  position: absolute;
   margin-top: 10px;
 }
 
 .select {
-  width: 330px;
+  width: 176px;
 }
 
 .inputWrapper {
+  cursor: pointer;
   position: relative;
   width: fit-content;
 
@@ -33,9 +36,9 @@
 }
 
 .customSelect {
-  width: 330px;
+  width: 176px;
   height: 36px;
-  border: 1px solid $blue-grownu;
+  border: 1px solid #d0dfef;
   border-radius: 4px;
   outline: none;
   padding: 5px 20px 5px 10px;
@@ -47,4 +50,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.customSelectOpened {
+  border: 1px solid $blue-grownu;
 }

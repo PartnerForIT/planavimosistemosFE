@@ -114,4 +114,4 @@ export default {
   title: 'Select',
 };
 
-export const normal = () => (<CustomSelect items={items} />);
+export const normal = () => (<CustomSelect placeholder='All employees' buttonLabel='Filter' items={items} />);

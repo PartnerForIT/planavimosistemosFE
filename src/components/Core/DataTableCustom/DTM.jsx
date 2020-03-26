@@ -112,31 +112,33 @@ export default function DataTable({
           ))
         }
       </div>
-      {
-        data.map((group, idx) => {
-          let checkedNumber = 0;
-          for (let i = 0; i < group.items.length; i += 1) {
-            if (group.items[i].checked) checkedNumber += 1;
-          }
-          return (
-            <Group
-              key={idx.toString()}
-              label={group.label}
-              rows={group.items}
-              ids={group.items.map((item) => item.id)}
-              columns={columns}
-              groupChecked={checkedNumber === group.items.length}
-              selectable={selectable}
-              onSelect={onSelect}
-              selectedItemId={selectedItemId}
-              setSelectedItemId={setSelectedItemId}
-              titleColor={group.titleColor || null}
-              titleBackground={group.backgroundColor || null}
-              fieldIcons={fieldIcons}
-            />
-          );
-        })
-      }
+      <div className={styles.tableContent}>
+        {
+          data.map((group, idx) => {
+            let checkedNumber = 0;
+            for (let i = 0; i < group.items.length; i += 1) {
+              if (group.items[i].checked) checkedNumber += 1;
+            }
+            return (
+              <Group
+                key={idx.toString()}
+                label={group.label}
+                rows={group.items}
+                ids={group.items.map((item) => item.id)}
+                columns={columns}
+                groupChecked={checkedNumber === group.items.length}
+                selectable={selectable}
+                onSelect={onSelect}
+                selectedItemId={selectedItemId}
+                setSelectedItemId={setSelectedItemId}
+                titleColor={group.titleColor || null}
+                titleBackground={group.backgroundColor || null}
+                fieldIcons={fieldIcons}
+              />
+            );
+          })
+        }
+      </div>
       <div className={classNames(styles.tableFooter)}>
         <ExcelIcon />
         <PdfIcon />

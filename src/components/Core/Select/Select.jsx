@@ -2,14 +2,14 @@ import React, {
   useCallback, useEffect, useState,
 } from 'react';
 import classNames from 'classnames';
-// import Select from 'react-select';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
-export default function CustomSelect({ items }) {
+export default function CustomSelect({ items, placeholder, buttonLabel }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
@@ -104,51 +104,58 @@ export default function CustomSelect({ items }) {
     { [styles.inputWrapperOpened]: open },
   );
 
-  return (
-    <div>
-      {/* eslint-disable-next-line jsx-a11y/aria-role */}
-      <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
-        <input
-          type='text'
-          value={checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
-          disabled
-          placeholder='All employees'
-          className={classNames(styles.customSelect)}
-        />
-      </div>
+  const customSelectClasses = classNames(
+    styles.customSelect,
+    { [styles.customSelectOpened]: open },
+  );
 
-      {open ? (
-        <div className={classNames(styles.contentBox)}>
-          <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
-            {
-              itemsArray.map((data) => (
-                data.type && data.type === 'group'
-                  ? (
-                    <Dropdown
-                      key={data.id.toString()}
-                      label={data.label}
-                      id={data.id}
-                      checked={data.checked}
-                      items={data.items}
-                      onChange={handleCheckboxChange}
-                    />
-                  )
-                  : (
-                    <StyledCheckbox
-                      key={data.id.toString()}
-                      label={data.label}
-                      id={data.id}
-                      checked={data.checked}
-                      disabled={data.disabled}
-                      onChange={handleCheckboxChange}
-                    />
-                  )
-              ))
-            }
-          </CheckboxGroup>
-          <Button fillWidth>Filter</Button>
+  return (
+    <ClickAwayListener onClickAway={() => setOpen(false)}>
+      <div>
+        {/* eslint-disable-next-line jsx-a11y/aria-role */}
+        <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
+          <input
+            type='text'
+            value={checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
+            disabled
+            placeholder={placeholder}
+            className={customSelectClasses}
+          />
         </div>
-      ) : null}
-    </div>
+
+        {open ? (
+          <div className={classNames(styles.contentBox)}>
+            <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
+              {
+                itemsArray.map((data) => (
+                  data.type && data.type === 'group'
+                    ? (
+                      <Dropdown
+                        key={data.id.toString()}
+                        label={data.label}
+                        id={data.id}
+                        checked={data.checked}
+                        items={data.items}
+                        onChange={handleCheckboxChange}
+                      />
+                    )
+                    : (
+                      <StyledCheckbox
+                        key={data.id.toString()}
+                        label={data.label}
+                        id={data.id}
+                        checked={data.checked}
+                        disabled={data.disabled}
+                        onChange={handleCheckboxChange}
+                      />
+                    )
+                ))
+              }
+            </CheckboxGroup>
+            <Button fillWidth>{buttonLabel}</Button>
+          </div>
+        ) : null}
+      </div>
+    </ClickAwayListener>
   );
 }

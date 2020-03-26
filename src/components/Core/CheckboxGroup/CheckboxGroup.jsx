@@ -1,11 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroup.module.scss';
 
 export default function CheckboxGroup({
   items, children, selectAll, itemsStat,
 }) {
+  const { t } = useTranslation();
+
   // const [itemsArray, setItemsArray] = useState([]);
   // const [itemsStat, setItemsStat] = useState(itemsStatObj || { checked: 0, unchecked: 0, total: 0 });
 
@@ -68,14 +71,14 @@ export default function CheckboxGroup({
           onClick={() => selectAll(true)}
           disabled={itemsStat.checked === itemsStat.total}
         >
-          Select All
+          {t('Select All')}
         </button>
         <button
           className={classNames(styles.button)}
           onClick={() => selectAll(false)}
           disabled={itemsStat.unchecked === itemsStat.total}
         >
-          Select None
+          {t('Select None')}
         </button>
       </div>
       <div className={classNames(styles.contentBox)}>

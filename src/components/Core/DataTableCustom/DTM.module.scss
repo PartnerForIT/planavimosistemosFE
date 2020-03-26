@@ -198,10 +198,17 @@ div {
   box-sizing: border-box;
 }
 
+.tableContent {
+  min-height: 250px;
+  height: calc(100vh - 235px);
+  overflow: scroll;
+}
+
 .tableContainer {
+  background-color: #fff;
   display: block;
-  margin: 2em auto;
-  width: 90%;
+  //margin: 2em auto;
+  width: 100%;
   border: 1px solid rgba(226, 235, 244, 0.85);
   border-radius: 10px;
   padding-top: 10px;
@@ -283,6 +290,10 @@ div {
   //border-left: solid 1px $table-border;
   transition: 0.5s;
   padding: 0 10px;
+
+  &.header {
+    padding-bottom: 5px;
+  }
 
   &:first-of-type {
     //border-top: solid 1px $table-header-border;
