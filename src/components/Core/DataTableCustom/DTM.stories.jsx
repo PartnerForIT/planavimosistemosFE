@@ -185,11 +185,11 @@ const data = [
 ];
 
 const columns = [
-  { title: 'Status', field: 'status' },
-  { title: 'Employee', field: 'employee' },
-  { title: 'Group', field: 'group' },
-  { title: 'Sub-Group', field: 'subgroup' },
-  { title: 'Skill', field: 'skill' },
+  { label: 'Status', field: 'status', checked: true },
+  { label: 'Employee', field: 'employee', checked: true },
+  { label: 'Group', field: 'group', checked: true },
+  { label: 'Sub-Group', field: 'subgroup', checked: true },
+  { label: 'Skill', field: 'skill', checked: true },
 ];
 
 const icons = {
@@ -211,6 +211,7 @@ const icons = {
 
 const DataTableContainer = () => {
   const [itemsArray, setItemsArray] = useState(data);
+  const [columnsArray, setColumnsArray] = useState(columns);
 
   const selectionHandler = useCallback((itemId, value) => {
     const setCheckedToAll = (array) => {
@@ -252,7 +253,8 @@ const DataTableContainer = () => {
   return (
     <DataTable
       data={itemsArray}
-      columns={columns}
+      columns={columnsArray}
+      onColumnsChange={setColumnsArray}
       selectable
       sortable
       onSelect={selectionHandler}

@@ -59,7 +59,7 @@ const Drp = () => {
             <Dropdown
               key={idx.toString()}
               label={item.label}
-              id={item.id}
+              currentItem={item}
               checked={item.checked}
               items={item.items}
               onChange={handleCheckboxChange}

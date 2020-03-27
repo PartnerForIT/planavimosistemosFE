@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 });
 
 export default function Dropdown({
-  label, id, items, checked, onChange,
+  currentItem, label, items, checked, onChange,
 }) {
   const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
@@ -151,7 +151,7 @@ export default function Dropdown({
           onFocus={(event) => event.stopPropagation()}
           control={(
             <StyledCheckbox
-              onChange={() => onChange(id)}
+              onChange={() => onChange(currentItem)}
               checked={checked}
             />
           )}
@@ -165,7 +165,7 @@ export default function Dropdown({
               <Dropdown
                 key={idx.toString()}
                 label={item.label}
-                id={item.id}
+                currentItem={item}
                 checked={item.checked}
                 items={item.items}
                 onChange={onChange}

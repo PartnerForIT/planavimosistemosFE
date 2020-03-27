@@ -42,6 +42,33 @@
   padding: 0 !important;
 }
 
+.settingsCell {
+  position: relative;
+  width: 20px !important;
+  display: inline-flex;
+  padding: 0 !important;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  svg {
+    width: 16.63px !important;
+    height: 15.54px !important;
+  }
+}
+
+.settingsPopup {
+  background-color: #fff;
+  border: 1px solid #0085ff;
+  border-radius: 6px;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 275px;
+  padding: 5px 10px;
+  z-index: 1;
+}
+
 .groupContainer {
   padding: 0 10px;
 }
@@ -212,6 +239,12 @@ div {
   border: 1px solid rgba(226, 235, 244, 0.85);
   border-radius: 10px;
   padding-top: 10px;
+}
+
+.leftPannel {
+  border: 1px solid rgba(226, 235, 244, 0.85);
+  width: 32px;
+  height: 100%;
 }
 
 .simpleTableContainer {

@@ -195,11 +195,11 @@ const data = [
 ];
 
 const columns = [
-  { title: 'Status', field: 'status' },
-  { title: 'Employee', field: 'employee' },
-  { title: 'Group', field: 'group' },
-  { title: 'Sub-Group', field: 'subgroup' },
-  { title: 'Skill', field: 'skill' },
+  { label: 'Status', field: 'status', checked: true },
+  { label: 'Employee', field: 'employee', checked: true },
+  { label: 'Group', field: 'group', checked: true },
+  { label: 'Sub-Group', field: 'subgroup', checked: false },
+  { label: 'Skill', field: 'skill', checked: true },
 ];
 
 const icons = {
@@ -221,6 +221,7 @@ const icons = {
 
 const Logbook = () => {
   const [itemsArray, setItemsArray] = useState(data);
+  const [columnsArray, setColumnsArray] = useState(columns);
 
   const { t } = useTranslation();
   // const dispatch = useDispatch();
@@ -397,7 +398,8 @@ const Logbook = () => {
         <Delimiter />
         <DataTable
           data={itemsArray}
-          columns={columns}
+          columns={columnsArray}
+          onColumnsChange={setColumnsArray}
           selectable
           sortable
           onSelect={selectionHandler}

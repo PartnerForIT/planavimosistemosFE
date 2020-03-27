@@ -42,7 +42,7 @@ export default function SimpleTable({
               className={classNames(classes.flexRow, styles.columnName)}
               role='columnheader'
             >
-              {column.title}
+              {column.label}
             </div>
           ))
         }

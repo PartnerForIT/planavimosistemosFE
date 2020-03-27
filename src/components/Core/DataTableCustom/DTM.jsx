@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
 import SortIcon from '../../Icons/SortIcon';
+import CogwheelIcon from '../../Icons/CogwheelIcon';
+import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 export default function DataTable({
-  data, columns, selectable, sortable, onSelect, onSort, fieldIcons,
+  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange,
 }) {
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [showSettingsPopup, setShowSettingsPopup] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   useEffect(() => {
     const initSortOptions = (options) => {
@@ -26,6 +31,7 @@ export default function DataTable({
       return arrayCopy;
     };
     setSortOptionsAsc(initSortOptions);
+    setVisibleColumns(columns.filter((column) => column.checked));
   }, [columns]);
 
   useEffect(() => {
@@ -52,7 +58,9 @@ export default function DataTable({
   const useStyles = makeStyles({
     flexRow: {
       display: 'flex',
-      width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+      width: selectable
+        ? `calc((100% - 70px) / ${visibleColumns.length})`
+        : `calc((100% - 20px) / ${visibleColumns.length})`,
       textAlign: 'left',
       padding: '0 0.5em',
     },
@@ -66,6 +74,16 @@ export default function DataTable({
   const sort = (field, asc) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
     onSort(field, !asc);
+  };
+
+  const columnsChangeHandler = (item) => {
+    const arrayCopy = [...columns];
+    for (let i = 0; i < arrayCopy.length; i += 1) {
+      if (arrayCopy[i].field === item.field) {
+        arrayCopy[i].checked = !arrayCopy[i].checked;
+      }
+    }
+    onColumnsChange(arrayCopy);
   };
 
   return (
@@ -87,7 +105,7 @@ export default function DataTable({
           )
         }
         {
-          columns.map((column, idx) => (
+          visibleColumns.map((column, idx) => (
             <div
               key={idx.toString()}
               className={classNames(classes.flexRow, styles.columnName)}
@@ -97,7 +115,7 @@ export default function DataTable({
                 className={classNames(styles.sortBlock)}
                 onClick={() => sort(column.field, sortOptionsAsc[column.field])}
               >
-                <div className={classNames(styles.flexCenter)}>{column.title}</div>
+                <div className={classNames(styles.flexCenter)}>{column.label}</div>
                 {
                   (fieldIcons[column.field] && fieldIcons[column.field].length)
                   && fieldIcons[column.field].map((icon) => icon.icon)
@@ -111,6 +129,24 @@ export default function DataTable({
             </div>
           ))
         }
+        <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
+          <div
+            className={classNames(classes.flexRow, styles.columnName, styles.settingsCell)}
+            role='columnheader'
+          >
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
+              <CogwheelIcon />
+            </div>
+            {
+              showSettingsPopup && (
+              <div className={styles.settingsPopup}>
+                <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+              </div>
+              )
+            }
+          </div>
+        </ClickAwayListener>
       </div>
       <div className={styles.tableContent}>
         {
@@ -125,7 +161,7 @@ export default function DataTable({
                 label={group.label}
                 rows={group.items}
                 ids={group.items.map((item) => item.id)}
-                columns={columns}
+                columns={visibleColumns}
                 groupChecked={checkedNumber === group.items.length}
                 selectable={selectable}
                 onSelect={onSelect}

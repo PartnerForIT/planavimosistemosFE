@@ -42,13 +42,13 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
     setItemsStat({ ...itemsStat });
   }, [items, setCheckedItems]);
 
-  const handleCheckboxChange = useCallback((itemId) => {
+  const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
       return arrayCopy.map((o) => {
         const newObj = { ...o };
-        if (o.id === itemId) {
+        if (o.id === item.id) {
           if (!newObj.disabled) newObj.checked = value || !o.checked;
           if (newObj.items) {
             newObj.items = setCheckedToAll(o.items, !o.checked);
@@ -133,7 +133,7 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
                       <Dropdown
                         key={data.id.toString()}
                         label={data.label}
-                        id={data.id}
+                        currentItem={data}
                         checked={data.checked}
                         items={data.items}
                         onChange={handleCheckboxChange}
