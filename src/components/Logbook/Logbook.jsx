@@ -50,11 +50,11 @@ const data = [
         skill: 'Barmen',
         data: {
           columns: [
-            { title: 'Work Date', field: 'work_date' },
-            { title: 'Start', field: 'start' },
-            { title: 'End', field: 'end' },
-            { title: 'Comment', field: 'comment' },
-            { title: 'Duration', field: 'duration' },
+            { label: 'Work Date', field: 'work_date' },
+            { label: 'Start', field: 'start' },
+            { label: 'End', field: 'end' },
+            { label: 'Comment', field: 'comment' },
+            { label: 'Duration', field: 'duration' },
           ],
           items: [
             {
@@ -102,11 +102,11 @@ const data = [
         skill: 'Barmen',
         data: {
           columns: [
-            { title: 'Work Date', field: 'work_date' },
-            { title: 'Start', field: 'start' },
-            { title: 'End', field: 'end' },
-            { title: 'Comment', field: 'comment' },
-            { title: 'Duration', field: 'duration' },
+            { label: 'Work Date', field: 'work_date' },
+            { label: 'Start', field: 'start' },
+            { label: 'End', field: 'end' },
+            { label: 'Comment', field: 'comment' },
+            { label: 'Duration', field: 'duration' },
           ],
           items: [
             {
