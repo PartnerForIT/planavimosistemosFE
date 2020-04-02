@@ -271,7 +271,7 @@ const Logbook = () => {
                   </div>
                   <Delimiter />
                   {
-                    selectedItem && selectedItem.employee_id === employee.id && !employeeLoading && (
+                    selectedItem && parseInt(selectedItem.employee_id, 10) === employee.id && !employeeLoading && (
                       <>
                         <Timeline
                           data={employee.works}

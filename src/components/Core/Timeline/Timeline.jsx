@@ -31,7 +31,7 @@ const Timeline = ({
       }}
     >
       {
-        withTimeBreaks ? (
+        withTimeBreaks && total > 0 ? (
           <>
             <div className={classNames(styles.time, styles.timeStart)}>
               {format(new Date(timespan.started_at), 'HH:mm')}
@@ -47,7 +47,7 @@ const Timeline = ({
   );
 
   return (
-    <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total })}>
+    <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
       {
         timespans.map((timespan, idx) => (
           <Timespan key={idx.toString()} timespan={timespan} />
