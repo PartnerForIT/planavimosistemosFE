@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import { format } from 'date-fns';
 import styles from './Timeline.module.scss';
-import { getColorByStatus, timeToMinutes } from '../../Helpers';
+import { datetimeToMinutes, getColorByStatus } from '../../Helpers';
 
-const Timeline = ({ data, total, withTimeBreaks = true }) => {
+const Timeline = ({
+  data, total, startMinute, withTimeBreaks = true,
+}) => {
   const [timespans, setTimespans] = useState([]);
 
   useEffect(() => {
     const calculateTimespans = () => {
       const arrayCopy = [...data];
-      return arrayCopy.map((span) => {
-        const totalMinutes = timeToMinutes(total);
-        return { ...span, width: `${(timeToMinutes(span.duration) * 100) / totalMinutes}%` };
-      });
+      return arrayCopy.map((span) => ({
+        ...span,
+        width: `${Math.round(((((span.duration * 100) / total) + Number.EPSILON) * 100) / 100)}%`,
+        left: `${((datetimeToMinutes(span.started_at) - startMinute) * 100) / total}%`,
+      }));
     };
     setTimespans(calculateTimespans);
-  }, [data, total]);
+  }, [data, startMinute, total]);
 
   const Timespan = ({ timespan }) => (
     <div
       className={classNames(styles.timespan)}
-      style={{ width: timespan.width, backgroundColor: getColorByStatus(timespan.status) }}
+      style={{
+        width: timespan.width,
+        left: timespan.left,
+        backgroundColor: getColorByStatus(timespan.status || 'Approved'),
+      }}
     >
       {
         withTimeBreaks ? (
           <>
-            <div className={classNames(styles.time, styles.timeStart)}>{timespan.start}</div>
-            <div className={classNames(styles.time, styles.timeEnd)}>{timespan.end}</div>
+            <div className={classNames(styles.time, styles.timeStart)}>
+              {format(new Date(timespan.started_at), 'HH:mm')}
+            </div>
+            <div className={classNames(styles.time, styles.timeEnd)}>
+              {format(new Date(timespan.finished_at), 'HH:mm')}
+            </div>
           </>
         )
           : null
@@ -35,7 +47,7 @@ const Timeline = ({ data, total, withTimeBreaks = true }) => {
   );
 
   return (
-    <div className={styles.timeline}>
+    <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total })}>
       {
         timespans.map((timespan, idx) => (
           <Timespan key={idx.toString()} timespan={timespan} />

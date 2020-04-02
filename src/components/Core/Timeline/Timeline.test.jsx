@@ -1,33 +1,34 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import Timeline from './Timeline';
+import { datetimeToMinutes } from '../../Helpers';
 
 const data = {
-  total: '08:00',
+  total: 960,
   spans: [
     {
-      work_date: '2019-09-19',
-      start: '07:00',
-      end: '12:00',
-      comment: 'A lot of customers, good day',
-      duration: '05:00',
-      status: 'Approved',
+      id: 340,
+      employee_id: 34,
+      project_id: 18,
+      speciality_id: 46,
+      started_at: '2019-01-24 07:21:04',
+      finished_at: '2019-01-24 17:48:50',
+      created_at: '2019-01-24 15:48:50',
+      updated_at: '2019-01-24 15:48:50',
+      deleted_at: null,
+      duration: 627,
     },
     {
-      work_date: '2019-09-29',
-      start: '12:00',
-      end: '14:00',
-      comment: 'A lot of drunk people',
-      duration: '02:00',
-      status: 'Pending',
-    },
-    {
-      work_date: '2019-09-19',
-      start: '14:00',
-      end: '17:00',
-      comment: 'No customers for today',
-      duration: '02:00',
-      status: 'Approved',
+      id: 341,
+      employee_id: 34,
+      project_id: 18,
+      speciality_id: 46,
+      started_at: '2019-01-24 20:48:50',
+      finished_at: '2019-01-24 23:22:02',
+      created_at: '2019-01-24 21:22:02',
+      updated_at: '2019-01-24 21:22:02',
+      deleted_at: null,
+      duration: 153,
     },
   ],
 };
@@ -37,25 +38,25 @@ describe('Timeline', () => {
 
   it('displays timeline', () => {
     const { getAllByText } = render(
-      <Timeline data={data.spans} total={data.total} />,
+      <Timeline data={data.spans} total={data.total} startMinute={datetimeToMinutes('2019-01-24 07:21:04')} />,
     );
 
-    const arr7 = getAllByText('07:00');
+    const arr7 = getAllByText('07:21');
     for (let i = 0; i < arr7.length; i += 1) {
       expect(arr7[i]).toBeInTheDocument();
     }
 
-    const arr12 = getAllByText('12:00');
+    const arr12 = getAllByText('17:48');
     for (let i = 0; i < arr12.length; i += 1) {
       expect(arr12[i]).toBeInTheDocument();
     }
 
-    const arr14 = getAllByText('14:00');
+    const arr14 = getAllByText('20:48');
     for (let i = 0; i < arr14.length; i += 1) {
       expect(arr14[i]).toBeInTheDocument();
     }
 
-    const arr17 = getAllByText('17:00');
+    const arr17 = getAllByText('23:22');
     for (let i = 0; i < arr17.length; i += 1) {
       expect(arr17[i]).toBeInTheDocument();
     }

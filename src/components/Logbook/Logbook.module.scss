@@ -7,6 +7,7 @@
   min-height: 485px;
   padding: 15px 25px;
   width: 100vw;
+  min-width: fit-content;
 }
 
 .appHeader {
@@ -29,20 +30,46 @@
 }
 
 .rightSidebar {
-  align-items: center;
+  //align-items: center;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   justify-content: center;
+  padding: 20px 10px;
   text-align: center;
   margin-left: 15px;
-  width: 287px;
+  min-width: 287px;
+  max-width: 287px;
   min-height: 455px;
   height: calc(100vh - 30px);
+
+  .hero {
+    //display: flex;
+    //justify-content: center;
+  }
+
+  .employeeInfo {
+    width: 100%;
+  }
+
+  .employeeName {
+    color: #333945;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+  }
+
+  .date {
+    color: rgba(0, 0, 0, 0.34);
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 
 .emptyWrapper {
+  align-self: center;
   font-family: Helvetica Neue, sans-serif;
   font-size: 18px;
   color: #5f6265;

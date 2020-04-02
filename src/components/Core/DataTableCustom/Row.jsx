@@ -10,13 +10,14 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItemId, setSelectedItemId,
+  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem,
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
   const useStyles = makeStyles({
     flexRow: {
       width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+      minWidth: '140px',
       textAlign: 'left',
       padding: '0.5em 0.5em',
       color: '#333945',
@@ -36,7 +37,10 @@ const Row = ({
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
-    { [styles.collapsIconRotated]: subTableExpanded, [styles.collapsIconSelected]: selectedItemId === row.id },
+    {
+      [styles.collapsIconRotated]: subTableExpanded,
+      [styles.collapsIconSelected]: selectedItem && selectedItem.id === row.id,
+    },
   );
 
   const rowClasses = classNames(
@@ -44,23 +48,32 @@ const Row = ({
     styles.cell,
     {
       [styles.pointer]: row.data && row.data.columns && row.data.items,
-      [styles.flexRowSelected]: selectedItemId === row.id,
+      [styles.flexRowSelected]: selectedItem && selectedItem.id === row.id,
     },
   );
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: selectedItemId === row.id },
+    { [styles.rowSelected]: selectedItem && selectedItem.id === row.id },
   );
 
   const Components = {
-    Approved: <ApprovedIcon className={classNames({ [styles.approvedIconSelected]: selectedItemId === row.id })} />,
-    Suspended: <SuspendedIcon className={classNames({ [styles.suspendedIconSelected]: selectedItemId === row.id })} />,
-    Pending: <PendingIcon className={classNames({ [styles.pendingIconSelected]: selectedItemId === row.id })} />,
+    Approved: <ApprovedIcon className={classNames(
+      { [styles.approvedIconSelected]: selectedItem && selectedItem.id === row.id },
+    )}
+    />,
+    Suspended: <SuspendedIcon className={classNames(
+      { [styles.suspendedIconSelected]: selectedItem && selectedItem.id === row.id },
+    )}
+    />,
+    Pending: <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selectedItem && selectedItem.id === row.id },
+    )}
+    />,
   };
 
-  const selectRow = (id) => {
-    setSelectedItemId(id);
+  const selectRow = (selectedRow) => {
+    setSelectedItem(selectedRow);
     setSubTableExpanded(!subTableExpanded);
   };
 
@@ -85,13 +98,13 @@ const Row = ({
         {
           columns.map((column, idx) => {
             let IconComponent = null;
-            if (fieldIcons[column.field] && fieldIcons[column.field].length) {
+            if (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length) {
               const fieldIcon = fieldIcons[column.field].filter((icon) => icon.value === row[column.field])[0].value;
               IconComponent = Components[fieldIcon];
             }
             return (
               <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-                onClick={() => selectRow(row.id)}
+                onClick={() => selectRow(row)}
                 key={idx.toString()}
                 className={rowClasses}
                 role='cell'

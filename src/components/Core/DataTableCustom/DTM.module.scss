@@ -38,17 +38,18 @@
 
 .checkboxCell {
   width: 50px !important;
+  min-width: 50px !important;
   display: inline-flex;
   padding: 0 !important;
 }
 
 .settingsCell {
-  position: relative;
+  position: absolute;
+  top: 15px;
+  right: 10px;
   width: 20px !important;
-  display: inline-flex;
+  min-width: 20px !important;
   padding: 0 !important;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
 
   svg {
@@ -71,6 +72,8 @@
 
 .groupContainer {
   padding: 0 10px;
+  width: fit-content;
+  min-width: 100%;
 }
 
 .groupLabel {
@@ -228,7 +231,7 @@ div {
 .tableContent {
   min-height: 250px;
   height: calc(100vh - 235px);
-  overflow: scroll;
+  //overflow: scroll;
 }
 
 .tableContainer {
@@ -239,6 +242,12 @@ div {
   border: 1px solid rgba(226, 235, 244, 0.85);
   border-radius: 10px;
   padding-top: 10px;
+  position: relative;
+}
+
+.scrollableContent {
+  overflow: scroll;
+  width: calc(100% - 40px);
 }
 
 .leftPannel {
@@ -269,15 +278,17 @@ div {
 }
 
 .flexTable {
-  width: 100%;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
   //border-left: solid 1px $table-border;
   transition: 0.5s;
   padding: 0 10px;
+  width: fit-content;
+  min-width: 100%;
 
   &.header {
     padding-bottom: 5px;
+    //position: relative;
   }
 
   &:first-of-type {
@@ -366,57 +377,22 @@ div {
     // border-right: 0;
   }
 }
-//
-//@media all and (max-width: 767px) {
-//  .flexRow {
-//    width: calc(100% / 3); //1px = border right
-//
-//    &.first {
-//      width: 100%;
-//    }
-//  }
-//
-//  .column {
-//    width: 100%;
-//  }
-//}
-//
-//@media all and (max-width: 430px) {
-//
-//  .header {
-//    .flexRow {
-//      //border-bottom: solid 1px;
-//    }
-//  }
-//
-//  .flexRow {
-//    width: 100%; //1px = border right
-//
-//    &.first {
-//      width: 100%;
-//      //border-bottom: solid 1px $table-border;
-//    }
-//  }
-//
-//  .column {
-//    width: 100%;
-//
-//    .flexRow {
-//      //border-bottom: solid 1px $table-border;
-//    }
-//  }
-//
-//  .flexCell {
-//    width: 100%; //1px = border right
-//  }
-//
-//  .flexTable {
-//    .flexTow {
-//      border-bottom: 0;
-//    }
-//
-//    .flexRow:last-of-type {
-//      //border-bottom: solid 1px $table-border;
-//    }
-//  }
-//}
+
+.pagination {
+  margin-left: auto;
+}
+
+.paginationLink {
+  color: #808f94;
+  font-family: Helvetica Neue, sans-serif;
+  text-decoration: none;
+}
+
+.paginationLinkActive {
+  color: #3e4552;
+}
+
+.paginationItem {
+  display: inline-flex;
+  padding: 0 3px;
+}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
 import PendingIcon from '../../Icons/PendingIcon';
 import EditIcon from '../../Icons/EditIcon';
@@ -11,8 +12,8 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 const InfoCard = ({
   type, label, text, icon, time, editable, onChange,
 }) => {
-  const [start, setStart] = useState(time && time.start ? time.start : '00:00');
-  const [end, setEnd] = useState(time && time.end ? time.end : '00:00');
+  const [start, setStart] = useState(time && time.started_at ? format(new Date(time.started_at), 'HH:mm') : '00:00');
+  const [end, setEnd] = useState(time && time.finished_at ? format(new Date(time.finished_at), 'HH:mm') : '00:00');
   const [editing, setEditing] = useState(false);
 
   const colors = getInfoCardColors(type);
@@ -118,8 +119,8 @@ const InfoCard = ({
 
   const declineChanges = () => {
     setEditing(false);
-    setStart(time.start);
-    setEnd(time.end);
+    setStart(format(new Date(time.started_at), 'HH:mm'));
+    setEnd(format(new Date(time.finished_at), 'HH:mm'));
   };
 
   return (
@@ -165,7 +166,7 @@ const InfoCard = ({
               )
               : (
                 <>
-                  {`${time.start} - ${time.end}`}
+                  {`${start} - ${end}`}
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                   { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIcon /></div> }
                 </>

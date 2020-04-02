@@ -1,3 +1,5 @@
+import { getMinutes, getHours } from 'date-fns';
+
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');
   return parseInt(timeArr[0], 10) * 60 + parseInt(timeArr[1], 10);
@@ -10,6 +12,8 @@ export const minutesToString = (totalMinutes) => {
   minutes = minutes > 10 ? minutes : `0${minutes}`;
   return `${hours}:${minutes}`;
 };
+
+export const datetimeToMinutes = (datetime) => getHours(new Date(datetime)) * 60 + getMinutes(new Date(datetime));
 
 export const getColorByStatus = (status) => {
   let color = '';
@@ -54,3 +58,7 @@ export const getInfoCardColors = (type) => {
 
   return theme;
 };
+
+export const makeQueryString = (queryObj) => Object.keys(queryObj)
+  .filter((item) => typeof queryObj[item] !== 'undefined' && queryObj[item].toString().length)
+  .map((key) => `${key}=${queryObj[key]}`).join('&');

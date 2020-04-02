@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DateRangePicker } from 'custom-react-daterange-picker';
 import { format } from 'date-fns';
@@ -13,10 +13,10 @@ import defaultRanges from './defaultRanges';
 /**
  * Simple Button encapsulating all design variations
  */
-const DRP = () => {
+const DRP = ({ initRange, onChange }) => {
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
-  const [dateRange, setDateRange] = useState({});
+  const [dateRange, setDateRange] = useState(initRange || {});
   const [predefinedDateRange, setPredefinedDateRange] = useState({});
   const { t } = useTranslation();
   const { startDate, endDate } = dateRange;
@@ -35,6 +35,10 @@ const DRP = () => {
     setDefinedRangesOpen(false);
     setOpen(false);
   };
+
+  useEffect(() => {
+    setDateRange(initRange);
+  }, [initRange]);
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -80,7 +84,7 @@ const DRP = () => {
         <DateRangePicker
           initialDateRange={predefinedDateRange}
           open={open}
-          onChange={(range) => setDateRange(range)}
+          onChange={(range) => onChange(range)}
         />
       </div>
     </ClickAwayListener>

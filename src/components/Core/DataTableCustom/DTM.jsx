@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Pagination from 'react-js-pagination';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -13,10 +14,11 @@ import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange,
+  lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem,
 }) {
+  const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
-  const [selectedItemId, setSelectedItemId] = useState(null);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
 
@@ -52,7 +54,8 @@ export default function DataTable({
       });
       return initData;
     };
-    setAllSelected(checkAllSelected);
+    if (data.length) setAllSelected(checkAllSelected);
+    setTableData(data);
   }, [data]);
 
   const useStyles = makeStyles({
@@ -61,6 +64,7 @@ export default function DataTable({
       width: selectable
         ? `calc((100% - 70px) / ${visibleColumns.length})`
         : `calc((100% - 20px) / ${visibleColumns.length})`,
+      minWidth: '140px',
       textAlign: 'left',
       padding: '0 0.5em',
     },
@@ -88,96 +92,120 @@ export default function DataTable({
 
   return (
     <div className={classNames(styles.tableContainer)} role='table' aria-label='Destinations'>
-      <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
-        {
-          selectable && (
-            <div
-              className={classNames(classes.flexRow, styles.columnName, styles.checkboxCell)}
-              role='columnheader'
-            >
-              <StyledCheckbox
-                id='all'
-                className={classNames(styles.checkbox)}
-                checked={allSelected.checked === allSelected.total}
-                onChange={onSelect}
-              />
-            </div>
-          )
-        }
-        {
-          visibleColumns.map((column, idx) => (
-            <div
-              key={idx.toString()}
-              className={classNames(classes.flexRow, styles.columnName)}
-              role='columnheader'
-            >
-              <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-                className={classNames(styles.sortBlock)}
-                onClick={() => sort(column.field, sortOptionsAsc[column.field])}
+      <div className={classNames(styles.scrollableContent)}>
+        <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
+          {
+            selectable && tableData.length > 0 && (
+              <div
+                className={classNames(classes.flexRow, styles.columnName, styles.checkboxCell)}
+                role='columnheader'
               >
-                <div className={classNames(styles.flexCenter)}>{column.label}</div>
-                {
-                  (fieldIcons[column.field] && fieldIcons[column.field].length)
-                  && fieldIcons[column.field].map((icon) => icon.icon)
-                }
-                { sortable && (
-                <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                  <SortIcon />
-                </div>
-                ) }
+                <StyledCheckbox
+                  id='all'
+                  className={classNames(styles.checkbox)}
+                  checked={allSelected.checked === allSelected.total}
+                  onChange={onSelect}
+                />
               </div>
-            </div>
-          ))
-        }
-        <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
-          <div
-            className={classNames(classes.flexRow, styles.columnName, styles.settingsCell)}
-            role='columnheader'
-          >
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
-              <CogwheelIcon />
-            </div>
-            {
-              showSettingsPopup && (
-              <div className={styles.settingsPopup}>
-                <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
-              </div>
-              )
-            }
-          </div>
-        </ClickAwayListener>
-      </div>
-      <div className={styles.tableContent}>
-        {
-          data.map((group, idx) => {
-            let checkedNumber = 0;
-            for (let i = 0; i < group.items.length; i += 1) {
-              if (group.items[i].checked) checkedNumber += 1;
-            }
-            return (
-              <Group
+            )
+          }
+          {
+            visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
+              <div
                 key={idx.toString()}
-                label={group.label}
-                rows={group.items}
-                ids={group.items.map((item) => item.id)}
-                columns={visibleColumns}
-                groupChecked={checkedNumber === group.items.length}
-                selectable={selectable}
-                onSelect={onSelect}
-                selectedItemId={selectedItemId}
-                setSelectedItemId={setSelectedItemId}
-                titleColor={group.titleColor || null}
-                titleBackground={group.backgroundColor || null}
-                fieldIcons={fieldIcons}
-              />
-            );
-          })
-        }
+                className={classNames(classes.flexRow, styles.columnName)}
+                role='columnheader'
+              >
+                <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+                  className={classNames(styles.sortBlock)}
+                  onClick={() => sort(column.field, sortOptionsAsc[column.field])}
+                >
+                  <div className={classNames(styles.flexCenter)}>{column.label}</div>
+                  {
+                    (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
+                    && fieldIcons[column.field].map((icon) => icon.icon)
+                  }
+                  { sortable && (
+                  <div className={classNames(styles.flexCenter, styles.sortIcon)}>
+                    <SortIcon />
+                  </div>
+                  ) }
+                </div>
+              </div>
+            ))
+          }
+          {
+            tableData.length > 0 && (
+              <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
+                <div
+                  className={classNames(classes.flexRow, styles.columnName, styles.settingsCell)}
+                  role='columnheader'
+                >
+                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                  <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
+                    <CogwheelIcon />
+                  </div>
+                  {
+                    showSettingsPopup && (
+                      <div className={styles.settingsPopup}>
+                        <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+                      </div>
+                    )
+                  }
+                </div>
+              </ClickAwayListener>
+            )
+          }
+        </div>
+        <div className={styles.tableContent}>
+          {
+            tableData.length ? tableData.map((group, idx) => {
+              let checkedNumber = 0;
+              for (let i = 0; i < group.items.length; i += 1) {
+                if (group.items[i].checked) checkedNumber += 1;
+              }
+              return (
+                <Group
+                  key={idx.toString()}
+                  label={group.label}
+                  rows={group.items}
+                  ids={group.items.map((item) => item.id)}
+                  columns={visibleColumns}
+                  groupChecked={checkedNumber === group.items.length}
+                  selectable={selectable}
+                  onSelect={onSelect}
+                  selectedItem={selectedItem}
+                  setSelectedItem={setSelectedItem}
+                  titleColor={group.titleColor || null}
+                  titleBackground={group.backgroundColor || null}
+                  fieldIcons={fieldIcons}
+                />
+              );
+            }) : null
+          }
+        </div>
       </div>
       <div className={classNames(styles.tableFooter)}>
         <ExcelIcon />
         <PdfIcon />
+        {
+          lastPage && lastPage > 1
+            ? (
+              <div className={classNames(styles.pagination)}>
+                <Pagination
+                  activePage={activePage}
+                  itemsCountPerPage={itemsCountPerPage}
+                  totalItemsCount={totalItemsCount}
+                  pageRangeDisplayed={3}
+                  onChange={handlePagination}
+                  itemClass={classNames(styles.paginationItem)}
+                  linkClass={classNames(styles.paginationLink)}
+                  activeLinkClass={classNames(styles.paginationLinkActive)}
+                />
+              </div>
+            )
+            : null
+        }
       </div>
     </div>
   );

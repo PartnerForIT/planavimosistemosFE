@@ -7,12 +7,16 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import saga from './saga';
 import auth from './auth/reducer';
+import worktime from './worktime/reducer';
+import employees from './employees/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
   auth,
+  worktime,
+  employees,
 });
 
 const middlewares = [

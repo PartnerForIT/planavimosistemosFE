@@ -3,12 +3,20 @@ import { render, cleanup } from '@testing-library/react';
 import InfoCard from './InfoCard';
 
 const data = {
-  work_date: '2019-09-29',
-  start: '14:56',
-  end: '18:00',
-  comment: 'A lot of drunk people',
-  duration: '03:04',
-  status: 'Pending',
+  id: 358,
+  started_at: '2019-04-29 08:45:39',
+  finished_at: '2019-04-30 01:12:01',
+  employee_id: 31,
+  speciality_id: 34,
+  project_id: 11,
+  employee: 'TestUser User',
+  speciality: 'Dazymo darbai',
+  project: '2080 Norköping hus',
+  start: '08:45:39',
+  end: '01:12:01',
+  _duration: 965,
+  duration: '16:05',
+  total_duration: 986,
 };
 
 const label = 'Total hours';
@@ -22,7 +30,7 @@ describe('InfoCard', () => {
       <InfoCard type='total' label={label} text={text} time={data} />,
     );
 
-    const timeRange = getByText('14:56 - 18:00');
+    const timeRange = getByText('08:45 - 01:12');
     expect(timeRange).toBeInTheDocument();
   });
 

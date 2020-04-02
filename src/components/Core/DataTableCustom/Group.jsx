@@ -7,7 +7,7 @@ import Row from './Row';
 import TriangleIcon from '../../Icons/TriangleIcon';
 
 const Group = ({
-  label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItemId, setSelectedItemId,
+  label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
   titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -15,6 +15,7 @@ const Group = ({
   const useStyles = makeStyles({
     flexRow: {
       width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+      minWidth: '140px',
       textAlign: 'left',
       padding: '0.5em 0.5em',
       color: '#333945',
@@ -73,8 +74,8 @@ const Group = ({
             <Row
               key={idx.toString()}
               row={row}
-              selectedItemId={selectedItemId}
-              setSelectedItemId={setSelectedItemId}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
               columns={columns}
               selectable={selectable}
               onSelect={onSelect}
