@@ -6,14 +6,12 @@ import Pagination from 'react-js-pagination';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
-import ExcelIcon from '../../Icons/ExcelIcon';
-import PdfIcon from '../../Icons/PdfIcon';
 import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 export default function DataTable({
-  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange,
+  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem,
 }) {
   const [tableData, setTableData] = useState(data);
@@ -167,6 +165,7 @@ export default function DataTable({
               return (
                 <Group
                   key={idx.toString()}
+                  group={group}
                   label={group.label}
                   rows={group.items}
                   ids={group.items.map((item) => item.id)}
@@ -186,8 +185,17 @@ export default function DataTable({
         </div>
       </div>
       <div className={classNames(styles.tableFooter)}>
-        <ExcelIcon />
-        <PdfIcon />
+        {/* <ExcelIcon /> */}
+        {/* <PdfIcon /> */}
+        {
+          totalDuration && (
+            <p className={styles.footerTitle}>
+              Overall:
+              {' '}
+              <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
+            </p>
+          )
+        }
         {
           lastPage && lastPage > 1
             ? (

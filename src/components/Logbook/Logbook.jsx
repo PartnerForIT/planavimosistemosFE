@@ -10,7 +10,7 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
-import { workTimeSelector, columnsSelector } from '../../store/worktime/selectors';
+import { workTimeSelector, columnsSelector, totalDurationSelector } from '../../store/worktime/selectors';
 import { employeeSelector, employeeLoadingSelector } from '../../store/employees/selectors';
 import { getWorkTime } from '../../store/worktime/actions';
 import { getEmployee } from '../../store/employees/actions';
@@ -128,35 +128,37 @@ const selectItems = [
 const Logbook = () => {
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
+  const [totalDuration, setTotalDuration] = useState(null);
   const [employee, setEmployee] = useState(null);
   const [employeeLoading, setEmployeeLoading] = useState(null);
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const [dateRange, setDateRange] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
+  const [search, setSearch] = useState('');
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const workTime = useSelector(workTimeSelector);
   const columns = useSelector(columnsSelector);
   const selectedEmployee = useSelector(employeeSelector);
   const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
+  const getTotalDuration = useSelector(totalDurationSelector);
+
+  // useEffect(() => {
+  //   const { startDate, endDate } = dateRange;
+  //   dispatch(getWorkTime({
+  //     page,
+  //     startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
+  //     endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
+  //   })).then().catch();
+  // }, [page]);
 
   useEffect(() => {
     const { startDate, endDate } = dateRange;
     dispatch(getWorkTime({
-      page,
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
     })).then().catch();
-  }, [page]);
-
-  useEffect(() => {
-    const { startDate, endDate } = dateRange;
-    dispatch(getWorkTime({
-      page: 1,
-      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
-      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
-    })).then().catch();
-  }, [dateRange]);
+  }, [dateRange, dispatch]);
 
   useEffect(() => {
     setEmployee(selectedEmployee);
@@ -164,9 +166,10 @@ const Logbook = () => {
   }, [selectedEmployee, selectedEmployeeLoading]);
 
   useEffect(() => {
-    setItemsArray(workTime.data);
+    setItemsArray(workTime);
     setColumnsArray(columns);
-  }, [workTime.data, columns]);
+    setTotalDuration(getTotalDuration);
+  }, [workTime, columns, getTotalDuration]);
 
   const selectionHandler = useCallback((itemId, value) => {
     const setCheckedToAll = (state) => {
@@ -213,23 +216,35 @@ const Logbook = () => {
 
   const Delimiter = () => (<div className={styles.delimiter} />);
 
-  const applyHandler = (e) => {
-    console.log('applyHandler', e);
+  const applyHandler = () => {
+    const { startDate, endDate } = dateRange;
+    dispatch(getWorkTime({
+      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
+      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
+      search,
+    })).then().catch();
   };
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
     dispatch(getEmployee(selectedRow.id)).then().catch();
   };
-  console.log('employee', employee);
-  console.log('selectedItem', selectedItem);
+
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
         <header className={styles.appHeader}>
           <DRP initRange={dateRange} onChange={setDateRange} />
           <Delimiter />
-          <Input icon={<SearchIcon />} placeholder={`${t('Search')}...`} width='186px' height='36px' />
+          <Input
+            icon={<SearchIcon />}
+            placeholder={`${t('Search')}...`}
+            width='186px'
+            height='36px'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
+          />
           <Delimiter />
           <CustomSelect placeholder={t('All groups')} buttonLabel={t('Filter')} items={selectItems} />
           <Delimiter />
@@ -250,8 +265,9 @@ const Logbook = () => {
           activePage={workTime.current_page}
           itemsCountPerPage={workTime.per_page}
           totalItemsCount={workTime.total}
-          handlePagination={setPage}
+          handlePagination={console.log}
           selectedItem={selectedItem}
+          totalDuration={totalDuration}
           setSelectedItem={rowSelectionHandler}
         />
       </div>
@@ -266,7 +282,12 @@ const Logbook = () => {
                   <div className={styles.employeeName}>{`${employee.name} ${employee.surname}`}</div>
                   <div className={styles.date}>
                     {
-                      format(new Date(employee.works[0].started_at), 'iii, dd, MMMM, yyyy')
+                      format(
+                        new Date(
+                          new Date(employee.works[0].started_at).getTime() + new Date(employee.works[0].started_at)
+                            .getTimezoneOffset() * 60 * 1000,
+                        ), 'iii, dd, MMMM, yyyy',
+                      )
                     }
                   </div>
                   <Delimiter />

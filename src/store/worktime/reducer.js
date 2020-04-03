@@ -6,6 +6,7 @@ import {
 const initialState = {
   workTime: [],
   columns: [],
+  totalDuration: null,
   loading: false,
   error: null,
 };
@@ -17,7 +18,11 @@ export const reducer = (state = initialState, action) => {
 
     case success(GET_WORK_TIME):
       return {
-        ...state, workTime: action.data.work_time, columns: action.data.columns, loading: false,
+        ...state,
+        workTime: action.data.work_time,
+        totalDuration: action.data.total_duration,
+        columns: action.data.columns,
+        loading: false,
       };
 
     case error(GET_WORK_TIME):

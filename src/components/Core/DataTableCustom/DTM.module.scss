@@ -14,6 +14,7 @@
 .columnName {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
+  font-weight: 500;
   color: #808f94;
 }
 
@@ -96,6 +97,22 @@
   }
 }
 
+.groupClickableContainer {
+  display: flex;
+  width: fit-content;
+  min-width: calc(100% - 40px);
+  cursor: pointer;
+
+  > span {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+.groupCell {
+  padding: 0;
+}
+
 .sortBlock {
   cursor: pointer;
   display: flex;
@@ -127,6 +144,10 @@
 
 .pointer {
   cursor: pointer;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .collapsIcon {
@@ -211,12 +232,33 @@
   background-color: #fff;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  margin-top: 40px;
+  //margin-top: 40px;
   box-shadow: 0 -4px 20px rgba(62, 69, 82, 0.06);
 
   > * {
     padding: 0 5px;
   }
+}
+
+.footerTitle {
+  color: #3e4552;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.blueTotals {
+  color: #0085ff;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.medium {
+  font-weight: 500;
 }
 
 $table-header: #1976d2;
@@ -230,7 +272,7 @@ div {
 
 .tableContent {
   min-height: 250px;
-  height: calc(100vh - 235px);
+  height: calc(100vh - 200px);
   //overflow: scroll;
 }
 

@@ -7,7 +7,7 @@ import Row from './Row';
 import TriangleIcon from '../../Icons/TriangleIcon';
 
 const Group = ({
-  label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
+  group, label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
   titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -60,13 +60,35 @@ const Group = ({
             </div>
           )
         }
-        <span // eslint-disable-line jsx-a11y/no-static-element-interactions
+        <div // eslint-disable-line jsx-a11y/no-static-element-interactions
           onClick={() => setExpanded(!expanded)}
-          className={classNames(styles.pointer)}
+          className={styles.groupClickableContainer}
         >
-          <TriangleIcon className={iconClasses} fill={titleColor} />
-          <span className={classNames(styles.groupLabelText)}>{label}</span>
-        </span>
+          {
+            columns.map((column, idx) => {
+              if (idx === 0) {
+                return (
+                  <span
+                    key={idx.toString()}
+                    className={classNames(styles.pointer, styles.nowrap, classes.flexRow)}
+                  >
+                    <TriangleIcon className={iconClasses} fill={titleColor} />
+                    <span className={classNames(styles.groupLabelText)}>{label}</span>
+                  </span>
+                );
+              }
+              return (
+                <span
+                  key={idx.toString()}
+                  className={classNames(classes.flexRow, styles.groupCell)}
+                  role='cell'
+                >
+                  <span className={classNames(styles.blueTotals, styles.medium)}>{group[column.field]}</span>
+                </span>
+              );
+            })
+          }
+        </div>
       </div>
       <div className={detailsClasses}>
         {
