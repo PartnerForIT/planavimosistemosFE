@@ -438,3 +438,22 @@ div {
   display: inline-flex;
   padding: 0 3px;
 }
+
+.overlay {
+  background: #fff;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  position: absolute;
+  padding: 0;
+  transition: opacity 0.2s;
+  display: none;
+}
+
+.overlayActive {
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  display: block;
+}

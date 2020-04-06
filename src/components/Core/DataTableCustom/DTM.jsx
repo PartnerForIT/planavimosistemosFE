@@ -11,7 +11,7 @@ import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 export default function DataTable({
-  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration,
+  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem,
 }) {
   const [tableData, setTableData] = useState(data);
@@ -215,6 +215,7 @@ export default function DataTable({
             : null
         }
       </div>
+      <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ export const getEmployees = () => ({
   type: GET_EMPLOYEES,
   request: {
     method: 'GET',
-    url: '/employee/',
+    url: '/employees',
   },
   meta: {
     thunk: true,

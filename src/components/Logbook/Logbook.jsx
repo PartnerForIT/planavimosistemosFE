@@ -10,155 +10,74 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
-import { workTimeSelector, columnsSelector, totalDurationSelector } from '../../store/worktime/selectors';
-import { employeeSelector, employeeLoadingSelector } from '../../store/employees/selectors';
+import {
+  workTimeSelector,
+  columnsSelector,
+  totalDurationSelector,
+  workTimeLoadingSelector,
+} from '../../store/worktime/selectors';
+import { employeeSelector, employeesSelector, employeeLoadingSelector } from '../../store/employees/selectors';
+import { specializationsSelector } from '../../store/specializations/selectors';
 import { getWorkTime } from '../../store/worktime/actions';
-import { getEmployee } from '../../store/employees/actions';
+import { getEmployee, getEmployees } from '../../store/employees/actions';
+import { getSpecializations } from '../../store/specializations/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { datetimeToMinutes } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
 
-const selectItems = [
-  {
-    id: 0,
-    type: 'group',
-    label: 'Group A',
-    items: [
-      {
-        id: 1,
-        label: 'Employee Name',
-        checked: false,
-      },
-      {
-        id: 2,
-        label: 'Employee Name 2',
-        checked: true,
-      },
-    ],
-  },
-  {
-    id: 3,
-    type: 'group',
-    label: 'Group B',
-    checked: true,
-    items: [
-      {
-        id: 4,
-        label: 'Employee Name 3',
-        checked: false,
-      },
-      {
-        id: 5,
-        label: 'Employee Name 4',
-        checked: true,
-      },
-      {
-        id: 6,
-        label: 'Employee Name 5',
-        checked: true,
-        disabled: true,
-      },
-    ],
-  },
-  {
-    id: 7,
-    type: 'group',
-    label: 'Group C',
-    checked: false,
-    items: [
-      {
-        id: 8,
-        type: 'group',
-        label: 'Group C.1',
-        checked: false,
-        items: [
-          {
-            id: 9,
-            label: 'Employee Name',
-            checked: false,
-          },
-          {
-            id: 10,
-            label: 'Employee Name 2',
-            checked: true,
-          },
-          {
-            id: 11,
-            label: 'Employee Name 3',
-            checked: false,
-            disabled: true,
-          },
-        ],
-      },
-      {
-        id: 12,
-        type: 'group',
-        label: 'Group C.2',
-        checked: false,
-        items: [
-          {
-            id: 13,
-            label: 'Employee Name C.2',
-            checked: false,
-          },
-          {
-            id: 14,
-            label: 'Employee Name 2  C.2',
-            checked: true,
-          },
-          {
-            id: 15,
-            label: 'Employee Name 3  C.2',
-            checked: true,
-            disabled: true,
-          },
-          {
-            id: 16,
-            label: 'Employee Name 4  C.2',
-            checked: false,
-            disabled: true,
-          },
-        ],
-      },
-    ],
-  },
-];
-
 const Logbook = () => {
+  /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
   const [totalDuration, setTotalDuration] = useState(null);
   const [employee, setEmployee] = useState(null);
   const [employeeLoading, setEmployeeLoading] = useState(null);
-  // const [page, setPage] = useState(1);
-  const [dateRange, setDateRange] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
+  const [loading, setLoading] = useState(null);
+  // const [page, setPage] = useState(1);
+
+  const [dateRange, setDateRange] = useState({});
+
   const [search, setSearch] = useState('');
+
+  const [specializations, setSpecializations] = useState([]);
+  const [checkedSpecializations, setCheckedSpecializations] = useState([]);
+
+  const [employees, setEmployees] = useState([]);
+  const [checkedEmployees, setCheckedEmployees] = useState([]);
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const workTime = useSelector(workTimeSelector);
+  const workTimeLoading = useSelector(workTimeLoadingSelector);
   const columns = useSelector(columnsSelector);
   const selectedEmployee = useSelector(employeeSelector);
+  const getAllEmployees = useSelector(employeesSelector);
   const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
-
-  // useEffect(() => {
-  //   const { startDate, endDate } = dateRange;
-  //   dispatch(getWorkTime({
-  //     page,
-  //     startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
-  //     endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
-  //   })).then().catch();
-  // }, [page]);
+  const selectSpecializations = useSelector(specializationsSelector);
 
   useEffect(() => {
+    dispatch(getSpecializations()).then().catch();
+    dispatch(getEmployees()).then().catch();
+  }, [dispatch]);
+
+  const sendRequest = (props) => {
     const { startDate, endDate } = dateRange;
     dispatch(getWorkTime({
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
+      search,
+      specs: checkedSpecializations.map((item) => item.id),
+      employees: checkedEmployees.map((item) => item.id),
+      ...props,
     })).then().catch();
-  }, [dateRange, dispatch]);
+  };
+
+  useEffect(() => {
+    sendRequest();
+  }, [dateRange]);
 
   useEffect(() => {
     setEmployee(selectedEmployee);
@@ -170,6 +89,19 @@ const Logbook = () => {
     setColumnsArray(columns);
     setTotalDuration(getTotalDuration);
   }, [workTime, columns, getTotalDuration]);
+
+  useEffect(() => {
+    setLoading(workTimeLoading);
+  }, [workTimeLoading]);
+
+  useEffect(() => {
+    setSpecializations(selectSpecializations);
+    console.log('selectSpecializations', selectSpecializations);
+  }, [selectSpecializations]);
+
+  useEffect(() => {
+    setEmployees(getAllEmployees);
+  }, [getAllEmployees]);
 
   const selectionHandler = useCallback((itemId, value) => {
     const setCheckedToAll = (state) => {
@@ -217,17 +149,27 @@ const Logbook = () => {
   const Delimiter = () => (<div className={styles.delimiter} />);
 
   const applyHandler = () => {
-    const { startDate, endDate } = dateRange;
-    dispatch(getWorkTime({
-      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
-      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
-      search,
-    })).then().catch();
+    sendRequest();
   };
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
     dispatch(getEmployee(selectedRow.id)).then().catch();
+  };
+
+  const onSpecSelectChange = (specs, checkedSpecs) => {
+    setCheckedSpecializations(checkedSpecs);
+    sendRequest({ specs: checkedSpecs.map((item) => item.id) });
+  };
+
+  const onEmployeesSelectChange = (employeesArr, selectedEmployees) => {
+    setCheckedEmployees(selectedEmployees);
+    sendRequest({ employees: selectedEmployees.map((item) => item.id) });
+  };
+
+  const searchHandler = (term) => {
+    setSearch(term);
+    sendRequest({ search: term });
   };
 
   return (
@@ -242,13 +184,23 @@ const Logbook = () => {
             width='186px'
             height='36px'
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => searchHandler(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
           />
           <Delimiter />
-          <CustomSelect placeholder={t('All groups')} buttonLabel={t('Filter')} items={selectItems} />
+          <CustomSelect
+            placeholder={t('All Specializations')}
+            buttonLabel={t('Filter')}
+            items={specializations}
+            onChange={onSpecSelectChange}
+          />
           <Delimiter />
-          <CustomSelect placeholder={t('All employees')} buttonLabel={t('Filter')} items={selectItems} />
+          <CustomSelect
+            placeholder={t('All employees')}
+            buttonLabel={t('Filter')}
+            items={employees}
+            onChange={onEmployeesSelectChange}
+          />
           <Delimiter />
           <Button onClick={applyHandler}>{t('Apply')}</Button>
         </header>
@@ -259,6 +211,7 @@ const Logbook = () => {
           onColumnsChange={setColumnsArray}
           selectable
           sortable
+          loading={loading}
           onSelect={selectionHandler}
           onSort={sortHandler}
           lastPage={workTime.last_page}

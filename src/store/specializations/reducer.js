@@ -1,34 +1,27 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_EMPLOYEE,
-  GET_EMPLOYEES,
+  GET_SPECIALIZATIONS,
 } from './types';
 
 const initialState = {
-  employees: [],
-  employee: null,
+  specializations: [],
   loading: false,
   error: null,
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_EMPLOYEE:
-    case GET_EMPLOYEES:
+    case GET_SPECIALIZATIONS:
       return { ...state, error: null, loading: true };
 
-    case success(GET_EMPLOYEE):
+    case success(GET_SPECIALIZATIONS):
       return {
-        ...state, employee: action.data, loading: false,
+        ...state,
+        specializations: action.data,
+        loading: false,
       };
 
-    case success(GET_EMPLOYEES):
-      return {
-        ...state, employees: action.data, loading: false,
-      };
-
-    case error(GET_EMPLOYEE):
-    case error(GET_EMPLOYEES):
+    case error(GET_SPECIALIZATIONS):
       return {
         ...state, loading: false, error: action.error,
       };

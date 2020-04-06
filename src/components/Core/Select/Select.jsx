@@ -9,7 +9,9 @@ import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
-export default function CustomSelect({ items, placeholder, buttonLabel }) {
+export default function CustomSelect({
+  items, placeholder, buttonLabel, onChange,
+}) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
@@ -42,6 +44,14 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
     setItemsStat({ ...itemsStat });
   }, [items, setCheckedItems]);
 
+  useEffect(() => {
+    setItemsStat({
+      ...itemsStat,
+      checked: checkedItems.length,
+      unchecked: itemsStat.total - checkedItems.length,
+    });
+  }, [checkedItems]);
+
   const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
@@ -65,11 +75,6 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
     };
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-    setItemsStat({
-      ...itemsStat,
-      checked: checkedItemsArray.length,
-      unchecked: itemsStat.total - checkedItemsArray.length,
-    });
   }, [setItemsArray]);
 
   const selectAll = useCallback((check) => {
@@ -116,7 +121,7 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
         <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
           <input
             type='text'
-            value={checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
+            value={checkedItems && checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
             disabled
             placeholder={placeholder}
             className={customSelectClasses}
@@ -143,6 +148,7 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
                       <StyledCheckbox
                         key={data.id.toString()}
                         label={data.label}
+                        item={data}
                         id={data.id}
                         checked={data.checked}
                         disabled={data.disabled}
@@ -152,7 +158,7 @@ export default function CustomSelect({ items, placeholder, buttonLabel }) {
                 ))
               }
             </CheckboxGroup>
-            <Button fillWidth>{buttonLabel}</Button>
+            <Button fillWidth onClick={() => onChange(itemsArray, checkedItems)}>{buttonLabel}</Button>
           </div>
         ) : null}
       </div>
