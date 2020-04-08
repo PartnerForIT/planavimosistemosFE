@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -56,22 +56,22 @@ export default function DataTable({
     setTableData(data);
   }, [data]);
 
-  const useStyles = makeStyles({
-    flexRow: {
-      display: 'flex',
-      width: selectable
-        ? `calc((100% - 70px) / ${visibleColumns.length})`
-        : `calc((100% - 20px) / ${visibleColumns.length})`,
-      minWidth: '140px',
-      textAlign: 'left',
-      padding: '0 0.5em',
-    },
-
-    detailsRoot: {
-      display: 'block',
-    },
-  });
-  const classes = useStyles();
+  // const useStyles = makeStyles({
+  //   flexRow: {
+  //     display: 'flex',
+  //     width: selectable
+  //       ? `calc((100% - 70px) / ${visibleColumns.length})`
+  //       : `calc((100% - 20px) / ${visibleColumns.length})`,
+  //     minWidth: '140px',
+  //     textAlign: 'left',
+  //     padding: '0 0.5em',
+  //   },
+  //
+  //   detailsRoot: {
+  //     display: 'block',
+  //   },
+  // });
+  // const classes = useStyles();
 
   const sort = (field, asc) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
@@ -95,7 +95,7 @@ export default function DataTable({
           {
             selectable && tableData.length > 0 && (
               <div
-                className={classNames(classes.flexRow, styles.columnName, styles.checkboxCell)}
+                className={classNames(styles.columnName, styles.checkboxCell)}
                 role='columnheader'
               >
                 <StyledCheckbox
@@ -111,7 +111,7 @@ export default function DataTable({
             visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
               <div
                 key={idx.toString()}
-                className={classNames(classes.flexRow, styles.columnName)}
+                className={classNames(styles.columnName)}
                 role='columnheader'
               >
                 <div // eslint-disable-line jsx-a11y/no-static-element-interactions
@@ -136,7 +136,7 @@ export default function DataTable({
             tableData.length > 0 && (
               <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
                 <div
-                  className={classNames(classes.flexRow, styles.columnName, styles.settingsCell)}
+                  className={classNames(styles.columnName, styles.settingsCell)}
                   role='columnheader'
                 >
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}

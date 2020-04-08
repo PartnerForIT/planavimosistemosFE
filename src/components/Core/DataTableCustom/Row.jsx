@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import SimpleTable from './SimpleTable';
@@ -14,26 +14,26 @@ const Row = ({
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
-  const useStyles = makeStyles({
-    flexRow: {
-      width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-      minWidth: '140px',
-      textAlign: 'left',
-      padding: '0.5em 0.5em',
-      color: '#333945',
-    },
-
-    approvedIconSelected: {
-      g: {
-        fill: '#fff !important',
-      },
-
-      path: {
-        stroke: '#319cff !important',
-      },
-    },
-  });
-  const classes = useStyles();
+  // const useStyles = makeStyles({
+  //   flexRow: {
+  //     width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+  //     minWidth: '140px',
+  //     textAlign: 'left',
+  //     padding: '0.5em 0.5em',
+  //     color: '#333945',
+  //   },
+  //
+  //   approvedIconSelected: {
+  //     g: {
+  //       fill: '#fff !important',
+  //     },
+  //
+  //     path: {
+  //       stroke: '#319cff !important',
+  //     },
+  //   },
+  // });
+  // const classes = useStyles();
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
@@ -44,7 +44,6 @@ const Row = ({
   );
 
   const rowClasses = classNames(
-    classes.flexRow,
     styles.cell,
     {
       [styles.pointer]: row.data && row.data.columns && row.data.items,
@@ -85,7 +84,7 @@ const Row = ({
       <div className={rowWrapperClasses}>
         {
           selectable && (
-            <div className={classNames(classes.flexRow, styles.cell, styles.checkboxCell)} role='cell'>
+            <div className={classNames(styles.cell, styles.checkboxCell)} role='cell'>
               <StyledCheckbox
                 id={row.id}
                 className={classNames(styles.checkbox)}
