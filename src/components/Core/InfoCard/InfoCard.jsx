@@ -10,10 +10,12 @@ import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 
 const InfoCard = ({
-  type, label, text, icon, time, editable, onChange,
+  type, label, text, icon, time, editable, onChange, durationSec,
 }) => {
-  const [start, setStart] = useState(time && time.started_at ? format(new Date(time.started_at), 'HH:mm') : '00:00');
-  const [end, setEnd] = useState(time && time.finished_at ? format(new Date(time.finished_at), 'HH:mm') : '00:00');
+  const [start, setStart] = useState(time && time.started_at
+    ? format(new Date(time.started_at.replace(' ', 'T')), 'HH:mm') : '00:00');
+  const [end, setEnd] = useState(time && time.finished_at
+    ? format(new Date(time.finished_at.replace(' ', 'T')), 'HH:mm') : '00:00');
   const [editing, setEditing] = useState(false);
 
   const colors = getInfoCardColors(type);
@@ -89,7 +91,11 @@ const InfoCard = ({
 
   const CardText = () => {
     if (!time || !time.duration) return <span className={styles.time}>{text}</span>;
-    const durationArray = time.duration.split(':');
+
+    const durationArray = typeof durationSec !== 'undefined'
+      ? minutesToString(Math.floor(durationSec / 60)).split(':')
+      : time.duration.split(':');
+
     switch (type) {
       case 'total':
       case 'break':
@@ -119,8 +125,8 @@ const InfoCard = ({
 
   const declineChanges = () => {
     setEditing(false);
-    setStart(format(new Date(time.started_at), 'HH:mm'));
-    setEnd(format(new Date(time.finished_at), 'HH:mm'));
+    setStart(format(new Date(time.started_at.replace(' ', 'T')), 'HH:mm'));
+    setEnd(format(new Date(time.finished_at.replace(' ', 'T')), 'HH:mm'));
   };
 
   return (

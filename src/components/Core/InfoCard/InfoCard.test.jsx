@@ -14,7 +14,7 @@ const data = {
   project: '2080 Norköping hus',
   start: '08:45:39',
   end: '01:12:01',
-  _duration: 965,
+  net_duration: 965,
   duration: '16:05',
   total_duration: 986,
 };

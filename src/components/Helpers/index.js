@@ -1,4 +1,4 @@
-import { getMinutes, getHours } from 'date-fns';
+import { getMinutes, getHours, getSeconds } from 'date-fns';
 
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');
@@ -13,15 +13,21 @@ export const minutesToString = (totalMinutes) => {
   return `${hours}:${minutes}`;
 };
 
-export const datetimeToMinutes = (datetime) => getHours(new Date(datetime)) * 60 + getMinutes(new Date(datetime));
+export const datetimeToMinutes = (datetime) => getHours(new Date(datetime.replace(' ', 'T'))) * 60
+  + getMinutes(new Date(datetime));
+
+export const datetimeToSeconds = (datetime) => getHours(new Date(datetime.replace(' ', 'T'))) * 60 * 60
+  + getMinutes(new Date(datetime)) * 60 + getSeconds(new Date(datetime));
 
 export const getColorByStatus = (status) => {
   let color = '';
   switch (status) {
     case 'Approved':
+    case 'work':
       color = '#009FFF';
       break;
     case 'Pending':
+    case 'break':
       color = '#FF9D00';
       break;
     case 'Suspended':

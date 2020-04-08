@@ -80,3 +80,75 @@
     height: 168px !important;
   }
 }
+
+.multipleEntries {
+  width: 100%;
+  padding: 0 10px;
+
+  .header {
+    align-items: center;
+    display: flex;
+    color: #333945;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100% - 60px);
+
+    > div {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      height: 50%;
+    }
+
+    .topBlock {
+      justify-content: flex-end;
+      padding-bottom: 20px;
+    }
+
+    .bottomBlock {
+      justify-content: flex-start;
+      padding-top: 20px;
+    }
+  }
+
+  .entryTitle {
+    color: #333945;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 38px;
+    font-weight: 600;
+    padding: 10px 0;
+  }
+
+  .entryDescription {
+    color: #818f94;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .checkboxIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .clockIcon {
+    width: 33.87px;
+    height: 33.87px;
+
+    g {
+      fill: #0085ff !important;
+      stroke-width: 0;
+    }
+
+    path {
+      fill: #fff !important;
+    }
+  }
+}

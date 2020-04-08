@@ -23,8 +23,11 @@ import { getEmployee, getEmployees } from '../../store/employees/actions';
 import { getSpecializations } from '../../store/specializations/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
-import { datetimeToMinutes } from '../Helpers';
+import { minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
+import InfoIcon from '../Icons/InfoIcon';
+import CheckboxIcon from '../Icons/CheckboxIcon';
+import PendingIcon from '../Icons/PendingIcon';
 
 const Logbook = () => {
   /* Data table */
@@ -34,6 +37,7 @@ const Logbook = () => {
   const [employee, setEmployee] = useState(null);
   const [employeeLoading, setEmployeeLoading] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [checkedItems, setCheckedItems] = useState([]);
   const [loading, setLoading] = useState(null);
   // const [page, setPage] = useState(1);
 
@@ -96,7 +100,6 @@ const Logbook = () => {
 
   useEffect(() => {
     setSpecializations(selectSpecializations);
-    console.log('selectSpecializations', selectSpecializations);
   }, [selectSpecializations]);
 
   useEffect(() => {
@@ -104,6 +107,7 @@ const Logbook = () => {
   }, [getAllEmployees]);
 
   const selectionHandler = useCallback((itemId, value) => {
+    const checkedItms = [];
     const setCheckedToAll = (state) => {
       const arrayCopy = [...state];
       return arrayCopy.map((group) => {
@@ -116,12 +120,14 @@ const Logbook = () => {
           } else if (newRowObj.id === itemId) {
             newRowObj.checked = value;
           }
+          if (newRowObj.checked) checkedItms.push(newRowObj);
           return newRowObj;
         });
         return { ...group, items };
       });
     };
     setItemsArray(setCheckedToAll);
+    setCheckedItems(checkedItms);
   }, []);
 
   const sortHandler = useCallback((field, asc) => {
@@ -171,6 +177,84 @@ const Logbook = () => {
     setSearch(term);
     sendRequest({ search: term });
   };
+
+  const EmployeeInfo = () => (
+    <div className={styles.employeeInfo}>
+      <div className={styles.hero}>
+        <img src={avatar} alt={`${employee.name} ${employee.surname}`} width='71' height='72' />
+        <div className={styles.employeeName}>{`${employee.name} ${employee.surname}`}</div>
+        <div className={styles.date}>
+          {
+            format(
+              new Date(
+                new Date(employee.works[0].started_at.replace(' ', 'T')).getTime()
+                + new Date(employee.works[0].started_at.replace(' ', 'T'))
+                  .getTimezoneOffset() * 60 * 1000,
+              ), 'iii, dd, MMMM, yyyy',
+            )
+          }
+        </div>
+        <Delimiter />
+        {
+          selectedItem && parseInt(selectedItem.employee_id, 10) === employee.id && !employeeLoading && (
+            <>
+              <Timeline
+                works={employee.works}
+                breaks={employee.breaks}
+                total={employee.total_work_sec + employee.total_break_sec}
+                startMinute={selectedItem.started_at}
+                withTimeBreaks
+              />
+              <Delimiter />
+              <InfoCard
+                type='total'
+                time={selectedItem}
+              />
+              <Delimiter />
+              <InfoCard
+                type='break'
+                time={selectedItem}
+                durationSec={employee.total_break_sec}
+              />
+            </>
+          )
+        }
+      </div>
+    </div>
+  );
+
+  const MultipleEntries = () => (
+    <div className={styles.multipleEntries}>
+      <div className={styles.header}>
+        <InfoIcon />
+        <Delimiter />
+        Multiple entries selection
+      </div>
+      <div className={styles.content}>
+        <div className={styles.topBlock}>
+          <CheckboxIcon className={styles.checkboxIcon} />
+          <div className={styles.entryTitle}>
+            {`${checkedItems.length} entries`}
+          </div>
+          <div className={styles.entryDescription}>
+            selected
+          </div>
+        </div>
+        <div className={styles.bottomBlock}>
+          <PendingIcon className={styles.clockIcon} />
+          <div className={styles.entryTitle}>
+            {minutesToString(checkedItems.map((item) => item.net_duration).reduce((a, b) => a + b))}
+          </div>
+          <div className={styles.entryDescription}>
+            Total Hours
+          </div>
+        </div>
+      </div>
+      <div className={styles.actions}>
+        <Button onClick={console.log} danger fillWidth>{t('Delete All')}</Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
@@ -227,51 +311,21 @@ const Logbook = () => {
 
       <div className={styles.rightSidebar}>
         {
-          employee
+          // eslint-disable-next-line no-nested-ternary
+          checkedItems.length > 1
             ? (
-              <div className={styles.employeeInfo}>
-                <div className={styles.hero}>
-                  <img src={avatar} alt={`${employee.name} ${employee.surname}`} width='71' height='72' />
-                  <div className={styles.employeeName}>{`${employee.name} ${employee.surname}`}</div>
-                  <div className={styles.date}>
-                    {
-                      format(
-                        new Date(
-                          new Date(employee.works[0].started_at).getTime() + new Date(employee.works[0].started_at)
-                            .getTimezoneOffset() * 60 * 1000,
-                        ), 'iii, dd, MMMM, yyyy',
-                      )
-                    }
-                  </div>
-                  <Delimiter />
-                  {
-                    selectedItem && parseInt(selectedItem.employee_id, 10) === employee.id && !employeeLoading && (
-                      <>
-                        <Timeline
-                          data={employee.works}
-                          total={selectedItem.total_duration}
-                          startMinute={datetimeToMinutes(selectedItem.started_at)}
-                          withTimeBreaks
-                        />
-                        <Delimiter />
-                        <InfoCard
-                          type='total'
-                          time={selectedItem}
-                          onChange={console.log}
-                          editable
-                        />
-                      </>
-                    )
-                  }
+              <MultipleEntries />
+            )
+            : employee
+              ? (
+                <EmployeeInfo />
+              )
+              : (
+                <div className={styles.emptyWrapper}>
+                  <TableIcon />
+                  <p>Select any entry to get a detailed editable info</p>
                 </div>
-              </div>
-            )
-            : (
-              <div className={styles.emptyWrapper}>
-                <TableIcon />
-                <p>Select any entry to get a detailed editable info</p>
-              </div>
-            )
+              )
         }
       </div>
     </div>

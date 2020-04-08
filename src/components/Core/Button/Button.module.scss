@@ -6,6 +6,7 @@
   border-radius: 4px;
   letter-spacing: -0.17px;
   color: $white;
+  font-family: Helvetica Neue, sans-serif;
   font-size: $small-font-size;
   background: $blue-grownu;
   border: 1px solid transparent;
@@ -17,6 +18,14 @@
   color: #0087ff;
   background: #fff;
   border: 1px solid $border;
+}
+
+.danger {
+  color: #fff;
+  background: #ed3838;
+  border: 1px solid #ed3838;
+  font-size: 15px !important;
+  font-weight: 500;
 }
 
 .disabled {

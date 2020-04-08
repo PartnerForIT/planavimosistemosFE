@@ -23,7 +23,9 @@
   position: absolute;
   display: inline-flex;
   height: 5px;
+}
 
+.workTime {
   &:first-child {
     .timeStart {
       left: 0;
@@ -31,9 +33,7 @@
   }
 
   &:last-child {
-    .timeEnd {
-      display: block;
-    }
+    cursor: auto;
   }
 }
 
