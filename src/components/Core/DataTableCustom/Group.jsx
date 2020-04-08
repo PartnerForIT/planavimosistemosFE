@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-// import { makeStyles } from '@material-ui/core/styles';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import Row from './Row';
@@ -11,26 +10,6 @@ const Group = ({
   titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
 }) => {
   const [expanded, setExpanded] = useState(false);
-
-  // const useStyles = makeStyles({
-  //   flexRow: {
-  //     width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-  //     minWidth: '140px',
-  //     textAlign: 'left',
-  //     padding: '0.5em 0.5em',
-  //     color: '#333945',
-  //   },
-  //
-  //   details: {
-  //     display: 'block',
-  //   },
-  //
-  //   labelColor: {
-  //     color: titleColor,
-  //     backgroundColor: titleBackground,
-  //   },
-  // });
-  // const classes = useStyles();
 
   const detailsClasses = classNames(
     styles.details,
@@ -44,11 +23,14 @@ const Group = ({
 
   return (
     <div className={classNames(styles.groupContainer)}>
-      <div className={classNames(styles.groupLabel)}>
+      <div className={classNames(styles.groupLabel)} style={{ color: titleColor, backgroundColor: titleBackground }}>
         {
           selectable && (
             <div
-              className={classNames(styles.columnName, styles.checkboxCell)}
+              className={classNames(styles.flexRowGroup, styles.columnName, styles.checkboxCell)}
+              style={{
+                width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+              }}
               role='columnheader'
             >
               <StyledCheckbox
@@ -70,7 +52,10 @@ const Group = ({
                 return (
                   <span
                     key={idx.toString()}
-                    className={classNames(styles.pointer, styles.nowrap)}
+                    className={classNames(styles.pointer, styles.nowrap, styles.flexRowGroup)}
+                    style={{
+                      width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                    }}
                   >
                     <TriangleIcon className={iconClasses} fill={titleColor} />
                     <span className={classNames(styles.groupLabelText)}>{label}</span>
@@ -80,7 +65,10 @@ const Group = ({
               return (
                 <span
                   key={idx.toString()}
-                  className={classNames(styles.groupCell)}
+                  className={classNames(styles.flexRowGroup, styles.groupCell)}
+                  style={{
+                    width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                  }}
                   role='cell'
                 >
                   <span className={classNames(styles.blueTotals, styles.medium)}>{group[column.field]}</span>

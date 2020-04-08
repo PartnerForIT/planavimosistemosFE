@@ -186,6 +186,26 @@
   background-color: #319cff;
 }
 
+.flexRowGlobal {
+  display: flex;
+  min-width: 140px;
+  text-align: left;
+  padding: 0 0.5em;
+}
+
+.flexRowGroup {
+  color: #333945;
+  min-width: 140px;
+  text-align: left;
+  padding: 0.5em 0.5em;
+}
+
+.flexRowSimpleTable {
+  display: flex;
+  text-align: left;
+  padding: 0.5em 0;
+}
+
 .flexRowSelected {
   color: #fff !important;
 }

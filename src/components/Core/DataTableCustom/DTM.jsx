@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -56,23 +55,6 @@ export default function DataTable({
     setTableData(data);
   }, [data]);
 
-  // const useStyles = makeStyles({
-  //   flexRow: {
-  //     display: 'flex',
-  //     width: selectable
-  //       ? `calc((100% - 70px) / ${visibleColumns.length})`
-  //       : `calc((100% - 20px) / ${visibleColumns.length})`,
-  //     minWidth: '140px',
-  //     textAlign: 'left',
-  //     padding: '0 0.5em',
-  //   },
-  //
-  //   detailsRoot: {
-  //     display: 'block',
-  //   },
-  // });
-  // const classes = useStyles();
-
   const sort = (field, asc) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
     onSort(field, !asc);
@@ -95,7 +77,12 @@ export default function DataTable({
           {
             selectable && tableData.length > 0 && (
               <div
-                className={classNames(styles.columnName, styles.checkboxCell)}
+                className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
+                style={{
+                  width: selectable
+                    ? `calc((100% - 70px) / ${visibleColumns.length})`
+                    : `calc((100% - 20px) / ${visibleColumns.length})`,
+                }}
                 role='columnheader'
               >
                 <StyledCheckbox
@@ -111,7 +98,12 @@ export default function DataTable({
             visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
               <div
                 key={idx.toString()}
-                className={classNames(styles.columnName)}
+                className={classNames(styles.flexRowGlobal, styles.columnName)}
+                style={{
+                  width: selectable
+                    ? `calc((100% - 70px) / ${visibleColumns.length})`
+                    : `calc((100% - 20px) / ${visibleColumns.length})`,
+                }}
                 role='columnheader'
               >
                 <div // eslint-disable-line jsx-a11y/no-static-element-interactions
