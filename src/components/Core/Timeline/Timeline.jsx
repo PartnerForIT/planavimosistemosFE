@@ -51,17 +51,19 @@ const Timeline = ({
   );
 
   return (
-    <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
-      {
-        workTimespans.map((timespan, idx) => (
-          <Timespan key={idx.toString()} timespan={timespan} type='work' />
-        ))
-      }
-      {
-        breakTimespans.map((timespan, idx) => (
-          <Timespan key={idx.toString()} timespan={timespan} type='break' />
-        ))
-      }
+    <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
+      <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
+        {
+          workTimespans.map((timespan, idx) => (
+            <Timespan key={idx.toString()} timespan={timespan} type='work' />
+          ))
+        }
+        {
+          breakTimespans.map((timespan, idx) => (
+            <Timespan key={idx.toString()} timespan={timespan} type='break' />
+          ))
+        }
+      </div>
     </div>
   );
 };
