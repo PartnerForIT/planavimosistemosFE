@@ -17,6 +17,7 @@ const useStyles = makeStyles({
     width: 16,
     height: 16,
     backgroundColor: '#fff',
+    boxShadow: 'none !important',
     // boxShadow: 'inset 0 0 0 1px rgba(16, 22, 26, 0.2), inset 0 -1px 0 rgba(16, 22, 26, 0.1)',
 
     '$root.Mui-focusVisible &': {
@@ -69,6 +70,7 @@ const useStyles = makeStyles({
   },
 
   labelRoot: {
+    boxShadow: 'none !important',
     marginLeft: '0px',
     marginRight: '0px',
     display: 'flex',
@@ -79,6 +81,7 @@ const useStyles = makeStyles({
     fontFamily: 'Helvetica Neue, sans-serif',
     fontSize: '16px',
     marginLeft: 0,
+    textAlign: 'left',
     wordWrap: 'break-word',
     width: 'calc(100% - 18px)',
   },
