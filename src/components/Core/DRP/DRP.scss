@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.pickerWrapperRight {
+  position: static;
+}
+
 .dateInput {
   padding: 8px 12px;
   border: 1px solid #d0dfef;
@@ -22,6 +26,11 @@
   }
 }
 
+.dateInputSmall {
+  width: 83px;
+  padding: 6px;
+}
+
 .to {
   color: #cbd1d8;
   font-family: Helvetica Neue, sans-serif;
@@ -32,6 +41,17 @@
 .calendarIcon {
   color: #808f94;
   padding: 5px;
+}
+
+.calendarIconSmall {
+  padding: 3px;
+}
+
+.pickerRightWrapper {
+  top: 40px;
+  right: 0;
+  position: absolute;
+  width: 583px;
 }
 
 .calendarIconWrapper {
@@ -74,4 +94,9 @@
   button {
     margin: 5px 0;
   }
+}
+
+.definedRangesRight {
+  top: 105px;
+  right: 0;
 }

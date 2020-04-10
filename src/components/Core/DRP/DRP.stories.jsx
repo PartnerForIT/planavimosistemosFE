@@ -10,6 +10,6 @@ export default {
 
 export const normal = () => (
   <div>
-    <DRP open />
+    <DRP initRange={{}} open />
   </div>
 );

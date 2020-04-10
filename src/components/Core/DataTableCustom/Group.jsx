@@ -7,7 +7,7 @@ import TriangleIcon from '../../Icons/TriangleIcon';
 
 const Group = ({
   group, label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
-  titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked,
+  titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked, reports,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -90,6 +90,7 @@ const Group = ({
               selectable={selectable}
               onSelect={onSelect}
               fieldIcons={fieldIcons}
+              reports={reports}
             />
           ))
         }

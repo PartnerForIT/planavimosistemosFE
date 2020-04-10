@@ -10,10 +10,9 @@ import Button from '../Button/Button';
 import defaultRanges from './defaultRanges';
 
 
-/**
- * Simple Button encapsulating all design variations
- */
-const DRP = ({ initRange, onChange }) => {
+const DRP = ({
+  initRange, onChange, small, right,
+}) => {
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
@@ -24,6 +23,26 @@ const DRP = ({ initRange, onChange }) => {
   const classes = classNames({
     calendarIconWrapper: true,
     active: definedRangesOpen,
+  });
+
+  const calendarIconClasses = classNames({
+    calendarIcon: true,
+    calendarIconSmall: small,
+  });
+
+  const inputClasses = classNames({
+    dateInput: true,
+    dateInputSmall: small,
+  });
+
+  const definedRangesClasses = classNames({
+    definedRanges: true,
+    definedRangesRight: right,
+  });
+
+  const pickerWrapperClasses = classNames({
+    pickerWrapper: true,
+    pickerWrapperRight: right,
   });
 
   const inputClickHandler = () => {
@@ -42,18 +61,18 @@ const DRP = ({ initRange, onChange }) => {
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      <div className='pickerWrapper'>
+      <div className={pickerWrapperClasses}>
         <div
           role='button'
           tabIndex={0}
           className={classes}
           onClick={() => { setDefinedRangesOpen(!definedRangesOpen); setOpen(false); }}
         >
-          <CalendarTodayIcon className='calendarIcon' />
+          <CalendarTodayIcon className={calendarIconClasses} />
         </div>
         {definedRangesOpen
           ? (
-            <div className='definedRanges'>
+            <div className={definedRangesClasses}>
               {defaultRanges.map((range, idx) => (
                 <Button
                   key={idx.toString()}
@@ -68,7 +87,7 @@ const DRP = ({ initRange, onChange }) => {
           : null}
         <input
           type='text'
-          className='dateInput'
+          className={inputClasses}
           readOnly
           onClick={() => inputClickHandler()}
           value={startDate ? format(startDate, 'MMM, dd, yyyy') : t('Start Date')}
@@ -76,16 +95,29 @@ const DRP = ({ initRange, onChange }) => {
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
           type='text'
-          className='dateInput'
+          className={inputClasses}
           readOnly
           onClick={() => inputClickHandler()}
           value={endDate ? format(endDate, 'MMM, dd, yyyy') : t('End Date')}
         />
-        <DateRangePicker
-          initialDateRange={predefinedDateRange}
-          open={open}
-          onChange={(range) => onChange(range)}
-        />
+        {
+          right ? (
+            <div className='pickerRightWrapper'>
+              <DateRangePicker
+                initialDateRange={predefinedDateRange}
+                open={open}
+                onChange={(range) => onChange(range)}
+              />
+            </div>
+          )
+            : (
+              <DateRangePicker
+                initialDateRange={predefinedDateRange}
+                open={open}
+                onChange={(range) => onChange(range)}
+              />
+            )
+        }
       </div>
     </ClickAwayListener>
   );

@@ -73,7 +73,6 @@
 
 .groupContainer {
   padding: 0 10px;
-  width: fit-content;
   min-width: 100%;
 }
 
@@ -175,7 +174,7 @@
 }
 
 .rowWrapper {
-  width: 100%;
+  min-width: 100%;
   display: flex;
   align-items: center;
   user-select: none;
@@ -185,6 +184,10 @@
 
 .rowSelected {
   background-color: #319cff;
+}
+
+.reportsRowSelected {
+  background-color: #fff;
 }
 
 .flexRowGlobal {
@@ -209,6 +212,13 @@
 
 .flexRowSelected {
   color: #fff !important;
+}
+
+.reportsFlexRowSelected {
+  color: #0085ff;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .approvedIconSelected {
@@ -294,6 +304,8 @@ div {
 .tableContent {
   min-height: 250px;
   height: calc(100vh - 200px);
+  min-width: 100%;
+  width: fit-content;
   //overflow: scroll;
 }
 
@@ -342,7 +354,7 @@ div {
 
 .flexTable {
   display: flex;
-  flex-flow: row;
+  flex-flow: wrap;
   //border-left: solid 1px $table-border;
   transition: 0.5s;
   padding: 0 10px;

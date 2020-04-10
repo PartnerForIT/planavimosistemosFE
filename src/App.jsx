@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Test from './components/Test/Test';
 import Logbook from './components/Logbook/Logbook';
+import Reports from './components/Reports/Reports';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -13,6 +14,7 @@ const App = () => (
       <Switch>
         <Route exact path='/' component={Test} />
         <Route exact path='/logbook' component={Logbook} />
+        <Route exact path='/reports' component={Reports} />
       </Switch>
     </Router>
   </Suspense>

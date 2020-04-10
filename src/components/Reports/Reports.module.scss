@@ -1,0 +1,153 @@
+.container {
+  background-color: #edf4fa;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  min-height: 485px;
+  padding: 15px 25px;
+  width: 100vw;
+  min-width: fit-content;
+}
+
+.mainContainer {
+  height: 100%;
+}
+
+.mainContainerWithReports {
+  height: calc(100% - 83px);
+}
+
+.emptyContainer {
+  background-color: #fff;
+  display: flex;
+  //margin: 2em auto;
+  width: 100%;
+  border: 1px solid rgba(226, 235, 244, 0.85);
+  border-radius: 10px;
+  padding-top: 10px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .emptyContent {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 255px;
+
+    .arrowIcon {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding-left: 80px;
+      
+      svg {
+        width: 160px;
+        height: 30px;
+      }
+    }
+    
+    .reportsIcon {
+      width: 74px;
+      height: 90px;
+      margin-bottom: 15px;
+    }
+    
+    .title {
+      color: #0789ff;
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      width: 255px;
+    }
+    
+    .description {
+      color: rgba(7, 137, 255, 0.45);
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      width: 255px;
+    }
+    
+    p {
+      margin: 0;
+      padding: 6px;
+    }
+  }
+}
+
+.appHeader {
+  background-color: #fff;
+  border: 1px solid rgba(226, 235, 244, 0.85);
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
+  display: flex;
+  padding: 13px 20px;
+  width: fit-content;
+}
+
+.delimiter {
+  width: 15px;
+  margin-top: 15px;
+}
+
+.leftContent {
+  width: 1110px;
+}
+
+.rightSidebar {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
+  display: flex;
+  justify-content: center;
+  padding: 20px 15px;
+  text-align: center;
+  margin-left: 15px;
+  min-width: 287px;
+  max-width: 287px;
+  min-height: 455px;
+  height: calc(100vh - 30px);
+
+  .sidebarTitle {
+    color: #808f94;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    
+    &:first-child {
+      padding-top: 0px;
+    }
+  }
+
+  .checkboxGroupWrapper {
+    height: 270px;
+  }
+
+  .multipleEntries {
+    width: 100%;
+
+    .header {
+      align-items: center;
+      display: flex;
+      color: #333945;
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .sidebarContent {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: calc(100% - 90px);
+      margin: 15px 0;
+      overflow-y: scroll;
+    }
+  }
+}

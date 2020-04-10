@@ -11,7 +11,7 @@ import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
-  lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem,
+  lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -170,6 +170,7 @@ export default function DataTable({
                   titleColor={group.titleColor || null}
                   titleBackground={group.backgroundColor || null}
                   fieldIcons={fieldIcons}
+                  reports={reports}
                 />
               );
             }) : null

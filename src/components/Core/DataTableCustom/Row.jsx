@@ -9,7 +9,7 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem,
+  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports,
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
@@ -17,7 +17,7 @@ const Row = ({
     styles.collapsIcon,
     {
       [styles.collapsIconRotated]: subTableExpanded,
-      [styles.collapsIconSelected]: selectedItem && selectedItem.id === row.id,
+      [styles.collapsIconSelected]: selectedItem && selectedItem.id === row.id && !reports,
     },
   );
 
@@ -26,13 +26,15 @@ const Row = ({
     styles.cell,
     {
       [styles.pointer]: row.data && row.data.columns && row.data.items,
-      [styles.flexRowSelected]: selectedItem && selectedItem.id === row.id,
+      [styles.flexRowSelected]: selectedItem && selectedItem.id === row.id && !reports,
+      [styles.reportsFlexRowSelected]: subTableExpanded && reports,
     },
   );
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: selectedItem && selectedItem.id === row.id },
+    { [styles.rowSelected]: selectedItem && selectedItem.id === row.id && !reports },
+    { [styles.reportsRowSelected]: subTableExpanded && reports },
   );
 
   const Components = {
@@ -51,7 +53,7 @@ const Row = ({
   };
 
   const selectRow = (selectedRow) => {
-    setSelectedItem(selectedRow);
+    if (typeof setSelectedItem === 'function') setSelectedItem(selectedRow);
     setSubTableExpanded(!subTableExpanded);
   };
 

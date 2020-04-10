@@ -10,6 +10,8 @@ import auth from './auth/reducer';
 import worktime from './worktime/reducer';
 import employees from './employees/reducer';
 import specializations from './specializations/reducer';
+import places from './places/reducer';
+import reports from './reports/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   worktime,
   employees,
   specializations,
+  places,
+  reports,
 });
 
 const middlewares = [
