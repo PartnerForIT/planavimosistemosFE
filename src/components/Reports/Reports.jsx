@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -10,22 +12,19 @@ import {
   columnsSelector,
   reportLoadingSelector,
   totalDurationSelector,
-  reportsSelector,
 } from '../../store/reports/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
 import { specializationsSelector } from '../../store/specializations/selectors';
-import { getEmployee, getEmployees } from '../../store/employees/actions';
+import { getEmployees } from '../../store/employees/actions';
 import { getSpecializations } from '../../store/specializations/actions';
 import { getPlaces } from '../../store/places/actions';
 import InfoIcon from '../Icons/InfoIcon';
 import ClosableCard from '../Core/ClosableCard/ClosableCard';
 import ReportsIcon from '../Icons/ReportsIcon';
-import CheckboxGroupWrapper from "../Core/CheckboxGroup/CheckboxGroupWrapper";
-import ArrowRightIcon from "../Icons/ArrowRightIcon";
-import classNames from "classnames";
-import { placesSelector } from "../../store/places/selectors";
-import { getReport, downloadExcel, downloadPdf } from "../../store/reports/actions";
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import CheckboxGroupWrapper from '../Core/CheckboxGroup/CheckboxGroupWrapper';
+import ArrowRightIcon from '../Icons/ArrowRightIcon';
+import { placesSelector } from '../../store/places/selectors';
+import { getReport, downloadExcel, downloadPdf } from '../../store/reports/actions';
 
 const Reports = () => {
   /* Reports data */
@@ -148,7 +147,6 @@ const Reports = () => {
     const sortItems = (array) => {
       const arrayCopy = [...array];
       return arrayCopy.map((report) => {
-
         if (report.id === activeReport) {
           const newReport = { ...report };
           const tableData = newReport.report.map((group) => {
@@ -178,7 +176,7 @@ const Reports = () => {
     setItemsArray(removeReport);
     if (reportId === activeReport) setActiveReport(null);
   };
-  
+
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
     if (selectedReport) {
