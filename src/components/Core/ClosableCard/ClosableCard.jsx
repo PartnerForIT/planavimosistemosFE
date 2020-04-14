@@ -4,7 +4,7 @@ import styles from './ClosableCard.module.scss';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 
 const ClosableCard = ({
-  title, dateRange, selected, onClick, onClose,
+  title, description, reportId, selected, onClick, onClose,
 }) => {
   const cardClasses = classNames(
     styles.card,
@@ -29,23 +29,19 @@ const ClosableCard = ({
   return (
     <div // eslint-disable-line jsx-a11y/no-static-element-interactions
       className={cardClasses}
-      onClick={() => onClick(dateRange.id)}
+      onClick={() => onClick(reportId)}
     >
       <div className={styles.leftSide}>
         <div className={headerRowClasses}>
           {title}
         </div>
         <div className={timeBlockClasses}>
-          {
-            dateRange && dateRange.start_date && dateRange.end_date
-              ? `${dateRange.start_date} - ${dateRange.end_date}`
-              : null
-          }
+          {description}
         </div>
       </div>
       <div className={styles.rightSide}>
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div className={styles.closeButtonWrapper} onClick={(e) => onClose(e, dateRange.id)}>
+        <div className={styles.closeButtonWrapper} onClick={(e) => onClose(e, reportId)}>
           <SuspendedIcon className={closeButtonClasses} />
         </div>
       </div>

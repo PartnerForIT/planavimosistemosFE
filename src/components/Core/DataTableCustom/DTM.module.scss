@@ -99,7 +99,6 @@
 .groupClickableContainer {
   display: flex;
   width: fit-content;
-  min-width: calc(100% - 40px);
   cursor: pointer;
 
   > span {
@@ -197,11 +196,31 @@
   padding: 0 0.5em;
 }
 
+.flexRowGlobalReports:last-of-type {
+  justify-content: flex-end;
+}
+
 .flexRowGroup {
   color: #333945;
   min-width: 140px;
   text-align: left;
   padding: 0.5em 0.5em;
+}
+
+.flexRowGroupReports {
+  font-weight: 500;
+
+  &:last-of-type {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.groupLabelReports {
+  color: #4d7499;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .flexRowSimpleTable {
@@ -276,6 +295,11 @@
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
   font-weight: 600;
+}
+
+.footerTitleReports {
+  margin-left: auto;
+  padding-right: 40px;
 }
 
 .blueTotals {

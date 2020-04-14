@@ -21,13 +21,32 @@ const Group = ({
     { [styles.collapsIconRotated]: expanded },
   );
 
+  const rowClasses = classNames(
+    styles.flexRowGroup,
+    styles.columnName,
+    { [styles.checkboxCell]: selectable, [styles.flexRowGlobalReports]: reports },
+  );
+
+  const rowGroupClasses = classNames(
+    styles.flexRowGroup,
+    styles.groupCell,
+    { [styles.flexRowGroupReports]: reports },
+  );
+
+  const groupLabelClasses = classNames(
+    styles.pointer,
+    styles.nowrap,
+    styles.flexRowGroup,
+    { [styles.groupLabelReports]: reports },
+  );
+
   return (
     <div className={classNames(styles.groupContainer)}>
       <div className={classNames(styles.groupLabel)} style={{ color: titleColor, backgroundColor: titleBackground }}>
         {
           selectable && (
             <div
-              className={classNames(styles.flexRowGroup, styles.columnName, styles.checkboxCell)}
+              className={rowClasses}
               style={{
                 width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
               }}
@@ -45,6 +64,7 @@ const Group = ({
         <div // eslint-disable-line jsx-a11y/no-static-element-interactions
           onClick={() => setExpanded(!expanded)}
           className={styles.groupClickableContainer}
+          style={{ minWidth: selectable ? 'calc(100% - 40px)' : '100%' }}
         >
           {
             columns.map((column, idx) => {
@@ -52,7 +72,7 @@ const Group = ({
                 return (
                   <span
                     key={idx.toString()}
-                    className={classNames(styles.pointer, styles.nowrap, styles.flexRowGroup)}
+                    className={groupLabelClasses}
                     style={{
                       width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
                     }}
@@ -65,7 +85,7 @@ const Group = ({
               return (
                 <span
                   key={idx.toString()}
-                  className={classNames(styles.flexRowGroup, styles.groupCell)}
+                  className={rowGroupClasses}
                   style={{
                     width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
                   }}

@@ -8,10 +8,13 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
+import ExcelIcon from '../../Icons/ExcelIcon';
+import PdfIcon from '../../Icons/PdfIcon';
 
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
+  downloadExcel, downloadPdf,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -70,6 +73,17 @@ export default function DataTable({
     onColumnsChange(arrayCopy);
   };
 
+  const footerTitleClasses = classNames(
+    styles.footerTitle,
+    { [styles.footerTitleReports]: reports },
+  );
+
+  const tableHeaderCell = classNames(
+    styles.flexRowGlobal,
+    styles.columnName,
+    { [styles.checkboxCell]: selectable, [styles.flexRowGlobalReports]: reports },
+  );
+
   return (
     <div className={classNames(styles.tableContainer)} role='table' aria-label='Destinations'>
       <div className={classNames(styles.scrollableContent)}>
@@ -77,11 +91,9 @@ export default function DataTable({
           {
             selectable && tableData.length > 0 && (
               <div
-                className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
+                className={tableHeaderCell}
                 style={{
-                  width: selectable
-                    ? `calc((100% - 70px) / ${visibleColumns.length})`
-                    : `calc((100% - 20px) / ${visibleColumns.length})`,
+                  width: `calc((100% - 70px) / ${visibleColumns.length})`,
                 }}
                 role='columnheader'
               >
@@ -98,11 +110,11 @@ export default function DataTable({
             visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
               <div
                 key={idx.toString()}
-                className={classNames(styles.flexRowGlobal, styles.columnName)}
+                className={tableHeaderCell}
                 style={{
                   width: selectable
                     ? `calc((100% - 70px) / ${visibleColumns.length})`
-                    : `calc((100% - 20px) / ${visibleColumns.length})`,
+                    : `calc((100%) / ${visibleColumns.length})`,
                 }}
                 role='columnheader'
               >
@@ -127,7 +139,7 @@ export default function DataTable({
           {
             tableData.length > 0 && (
               <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
-                <div
+                <aside
                   className={classNames(styles.columnName, styles.settingsCell)}
                   role='columnheader'
                 >
@@ -142,7 +154,7 @@ export default function DataTable({
                       </div>
                     )
                   }
-                </div>
+                </aside>
               </ClickAwayListener>
             )
           }
@@ -178,13 +190,30 @@ export default function DataTable({
         </div>
       </div>
       <div className={classNames(styles.tableFooter)}>
-        {/* <ExcelIcon /> */}
-        {/* <PdfIcon /> */}
+        { typeof downloadExcel === 'function'
+        && (
+          <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+            className={styles.pointer}
+            onClick={downloadExcel}
+          >
+            <ExcelIcon />
+          </div>
+        ) }
+        { typeof downloadPdf === 'function'
+        && (
+          <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+            className={styles.pointer}
+            onClick={downloadPdf}
+          >
+            <PdfIcon />
+          </div>
+        ) }
         {
           totalDuration && (
-            <p className={styles.footerTitle}>
-              Overall:
-              {' '}
+            <p className={footerTitleClasses}>
+              {
+                reports ? 'Overall worktime: ' : 'Overall: '
+              }
               <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
             </p>
           )

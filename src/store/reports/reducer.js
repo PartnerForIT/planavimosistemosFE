@@ -19,8 +19,8 @@ export const reducer = (state = initialState, action) => {
     case success(GET_REPORT):
       return {
         ...state,
-        report: action.data.report,
-        totalDuration: action.data.total_duration,
+        report: action.data,
+        totalDuration: action.data.totalDuration,
         columns: action.data.columns,
         loading: false,
       };

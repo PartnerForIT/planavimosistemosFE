@@ -10,6 +10,7 @@ import {
   columnsSelector,
   reportLoadingSelector,
   totalDurationSelector,
+  reportsSelector,
 } from '../../store/reports/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
 import { specializationsSelector } from '../../store/specializations/selectors';
@@ -23,39 +24,11 @@ import CheckboxGroupWrapper from "../Core/CheckboxGroup/CheckboxGroupWrapper";
 import ArrowRightIcon from "../Icons/ArrowRightIcon";
 import classNames from "classnames";
 import { placesSelector } from "../../store/places/selectors";
-import { getReport } from "../../store/reports/actions";
-
-const data = [
-  {
-    id: 0,
-    start_date: '2019-09-29',
-    end_date: '2019-09-30',
-  },
-  {
-    id: 1,
-    start_date: '2019-10-29',
-    end_date: '2019-11-29',
-  },
-  {
-    id: 2,
-    start_date: '2020-03-15',
-    end_date: '2020-03-22',
-  },
-  {
-    id: 3,
-    start_date: '2020-03-22',
-    end_date: '2020-03-22',
-  },
-  {
-    id: 4,
-    start_date: '2019-03-15',
-    end_date: '2020-03-15',
-  },
-];
+import { getReport, downloadExcel, downloadPdf } from "../../store/reports/actions";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 
 const Reports = () => {
   /* Reports data */
-  const [reports, setReports] = useState(data);
   const [activeReport, setActiveReport] = useState();
 
 
@@ -70,7 +43,7 @@ const Reports = () => {
   const [loading, setLoading] = useState(null);
   // const [page, setPage] = useState(1);
 
-  const [dateRange, setDateRange] = useState({});
+  const [dateRange, setDateRange] = useState({ startDate: startOfMonth(new Date()), endDate: endOfMonth(new Date()) });
 
   const [specializations, setSpecializations] = useState([]);
   const [checkedSpecializations, setCheckedSpecializations] = useState([]);
@@ -84,7 +57,7 @@ const Reports = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const generatedReport = useSelector(reportSelector);
-  // const reportLoading = useSelector(reportLoadingSelector());
+  const reportLoading = useSelector(reportLoadingSelector);
   const columns = useSelector(columnsSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
 
@@ -93,7 +66,7 @@ const Reports = () => {
   const getAllPlaces = useSelector(placesSelector);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
-    [styles.mainContainerWithReports]: reports.length,
+    [styles.mainContainerWithReports]: itemsArray.length,
   });
 
   useEffect(() => {
@@ -104,7 +77,10 @@ const Reports = () => {
 
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
-    dispatch(getReport(startDate, endDate)).then().catch();
+    const placesArr = checkedPlaces.map((place) => place.id);
+    const specsArr = checkedSpecializations.map((spec) => spec.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    dispatch(getReport(startDate, endDate, specsArr, employeesArr, placesArr)).then().catch();
   };
 
   useEffect(() => {
@@ -120,14 +96,19 @@ const Reports = () => {
   }, [getAllSpecializations]);
 
   useEffect(() => {
-    setItemsArray(generatedReport);
+    if (generatedReport.report) {
+      setItemsArray((state) => (
+        [...state, generatedReport]
+      ));
+      setActiveReport(generatedReport.id);
+    }
     setColumnsArray(columns);
     setTotalDuration(getTotalDuration);
   }, [generatedReport, columns, getTotalDuration]);
 
-  // useEffect(() => {
-  //   setLoading(reportLoading);
-  // }, [reportLoading]);
+  useEffect(() => {
+    setLoading(reportLoading);
+  }, [reportLoading]);
 
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
@@ -166,14 +147,24 @@ const Reports = () => {
     };
     const sortItems = (array) => {
       const arrayCopy = [...array];
-      return arrayCopy.map((group) => {
-        const items = [...group.items];
-        items.sort(sortFunction);
-        return { ...group, items };
+      return arrayCopy.map((report) => {
+
+        if (report.id === activeReport) {
+          const newReport = { ...report };
+          const tableData = newReport.report.map((group) => {
+            const items = [...group.items];
+            items.sort(sortFunction);
+            return { ...group, items };
+          });
+          return { ...newReport, data: tableData };
+        }
+        return report;
       });
     };
+
     setItemsArray(sortItems);
-  }, []);
+  }, [activeReport]);
+
 
   const Delimiter = () => (<div className={styles.delimiter} />);
 
@@ -184,8 +175,31 @@ const Reports = () => {
   const closeReportTabHandler = (e, reportId) => {
     e.stopPropagation();
     const removeReport = (reps) => reps.filter((rep) => rep.id !== reportId);
-    setReports(removeReport);
+    setItemsArray(removeReport);
     if (reportId === activeReport) setActiveReport(null);
+  };
+  
+  const downloadReport = (action, ext) => {
+    const selectedReport = itemsArray.find((report) => report.id === activeReport);
+    if (selectedReport) {
+      const requestObj = {
+        'date-start': selectedReport.startDate,
+        'date-end': selectedReport.endDate,
+        objects: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
+        specialities: selectedReport.specializations.length > 0 ? `[${selectedReport.specializations.join(',')}]` : '',
+        employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
+      };
+
+      dispatch(action(requestObj)).then((data) => {
+        const downloadUrl = window.URL.createObjectURL(new Blob([data.data]));
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', `Report_${format(new Date(selectedReport.startDate), 'yyyy-MM-dd')}_${format(new Date(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }).catch();
+    }
   };
 
   return (
@@ -193,10 +207,12 @@ const Reports = () => {
       <div className={styles.leftContent}>
         <div style={{ display: 'flex', width: '100%', overflowY: 'scroll' }}>
           {
-            reports.map((report) => (
+            itemsArray.length > 0 && itemsArray.map((report) => (
               <ClosableCard
-                title='Object and employee report'
-                dateRange={report}
+                key={report.id.toString()}
+                title={report.title}
+                description={report.description}
+                reportId={report.id}
                 selected={report.id === activeReport}
                 onClick={setActiveReport}
                 onClose={closeReportTabHandler}
@@ -206,21 +222,24 @@ const Reports = () => {
         </div>
         <div className={mainContainerClasses}>
           {
-            itemsArray.length > 0
-              ? (
+            itemsArray.length > 0 && activeReport
+              ? itemsArray.map((report) => report.id === activeReport && (
                 <DataTable
-                  data={itemsArray || []}
+                  key={report.id.toString()}
+                  data={report.report || []}
                   columns={columnsArray || []}
                   onColumnsChange={setColumnsArray}
                   sortable
                   loading={loading}
                   onSort={sortHandler}
                   selectedItem={selectedItem}
-                  totalDuration={totalDuration}
+                  totalDuration={report.totalDuration}
                   setSelectedItem={rowSelectionHandler}
                   reports
+                  downloadExcel={() => downloadReport(downloadExcel, 'xls')}
+                  downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                 />
-              )
+              ))
               : (
                 <div className={styles.emptyContainer}>
                   <div className={styles.emptyContent}>

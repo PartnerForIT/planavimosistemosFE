@@ -3,11 +3,23 @@ import classNames from 'classnames';
 import styles from './DTM.module.scss';
 
 export default function SimpleTable({
-  rows, columns, expanded, selectable,
+  rows, columns, expanded, selectable, reports,
 }) {
   const simpleTableContainer = classNames(
     styles.simpleTableContainer,
     { [styles.simpleTableContainerHidden]: !expanded, [styles.simpleTableContainerShown]: expanded },
+  );
+
+  const simpleTableHeaderClasses = classNames(
+    styles.flexRowSimpleTable,
+    styles.columnName,
+    { [styles.flexRowGlobalReports]: reports },
+  );
+
+  const simpleTableCellClasses = classNames(
+    styles.flexRowSimpleTable,
+    styles.cell,
+    { [styles.flexRowGlobalReports]: reports },
   );
 
   return (
@@ -25,7 +37,7 @@ export default function SimpleTable({
           columns.map((column, idx) => (
             <div
               key={idx.toString()}
-              className={classNames(styles.flexRowSimpleTable, styles.columnName)}
+              className={simpleTableHeaderClasses}
               style={{ width: `calc(100% / ${columns.length})` }}
               role='columnheader'
             >
@@ -42,7 +54,7 @@ export default function SimpleTable({
                 columns.map((column, idz) => (
                   <div
                     key={idz.toString()}
-                    className={classNames(styles.flexRowSimpleTable, styles.cell)}
+                    className={simpleTableCellClasses}
                     style={{ width: `calc(100% / ${columns.length})` }}
                     role='cell'
                   >

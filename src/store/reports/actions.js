@@ -1,28 +1,42 @@
 import { makeQueryString } from '../../components/Helpers';
 import {
   GET_REPORT,
-  GET_BREAK_TIME,
+  EXCEL,
+  PDF,
 } from './types';
 
-export const getReport = (startDate, endDate) => ({
+export const getReport = (startDate, endDate, specializations, employees, places) => ({
   type: GET_REPORT,
   request: {
     method: 'POST',
     url: '/reports/generate',
-  },
-  data: {
-    startDate, endDate,
+    data: {
+      startDate, endDate, specializations, employees, places,
+    },
   },
   meta: {
     thunk: true,
   },
 });
 
-export const getBreakTime = (queryObj) => ({
-  type: GET_BREAK_TIME,
+export const downloadExcel = (queryObj) => ({
+  type: EXCEL,
   request: {
     method: 'GET',
-    url: `/logbook?${makeQueryString(queryObj)}`,
+    url: `/reports/export/excel?${makeQueryString(queryObj, false)}`,
+    responseType: 'blob',
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
+export const downloadPdf = (queryObj) => ({
+  type: PDF,
+  request: {
+    method: 'GET',
+    url: `/reports/export/pdf?${makeQueryString(queryObj, false)}`,
+    responseType: 'blob',
   },
   meta: {
     thunk: true,

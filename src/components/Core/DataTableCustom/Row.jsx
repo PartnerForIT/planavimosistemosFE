@@ -28,6 +28,7 @@ const Row = ({
       [styles.pointer]: row.data && row.data.columns && row.data.items,
       [styles.flexRowSelected]: selectedItem && selectedItem.id === row.id && !reports,
       [styles.reportsFlexRowSelected]: subTableExpanded && reports,
+      [styles.flexRowGroupReports]: reports,
     },
   );
 
@@ -116,6 +117,7 @@ const Row = ({
               rows={row.data.items}
               expanded={subTableExpanded}
               selectable={selectable}
+              reports={reports}
             />
           )
           : null
