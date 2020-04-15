@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
@@ -10,19 +10,21 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
 
   useEffect(() => {
     const checkedItemsArray = [];
+    const stat = { checked: 0, unchecked: 0, total: 0 };
 
-    const setCheckedToAll = (array) => {
-      const arrayCopy = array.length ? [...array] : items;
+    const setCheckedToAll = () => {
+      const arrayCopy = [...items];
+      if (!arrayCopy.length) return arrayCopy;
 
       return arrayCopy.map((item) => {
         if (!item.disabled) {
           if (item.checked) {
             checkedItemsArray.push(item);
-            itemsStat.checked += 1;
+            stat.checked += 1;
           } else {
-            itemsStat.unchecked += 1;
+            stat.unchecked += 1;
           }
-          itemsStat.total += 1;
+          stat.total += 1;
         }
         if (item.items) {
           setCheckedToAll(item.items);
@@ -32,8 +34,8 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
     };
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-    setItemsStat({ ...itemsStat });
-  }, [items, setCheckedItems]);
+    setItemsStat(stat);
+  }, [items]);
 
   useEffect(() => {
     setItemsStat({
@@ -44,7 +46,7 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
     onChange(checkedItems);
   }, [checkedItems]);
 
-  const selectAll = useCallback((check) => {
+  const selectAll = (check) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array) => {
       const arrayCopy = [...array];
@@ -69,9 +71,9 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
 
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-  }, [itemsStat]);
+  };
 
-  const handleCheckboxChange = useCallback((item) => {
+  const handleCheckboxChange = (item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -94,35 +96,37 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
     };
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-  }, [setItemsArray]);
+  };
 
   return (
     <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
       {
-        itemsArray.map((data) => (
-          data.type && data.type === 'group'
-            ? (
-              <Dropdown
-                key={data.id.toString()}
-                label={data.label}
-                currentItem={data}
-                checked={data.checked}
-                items={data.items}
-                onChange={handleCheckboxChange}
-              />
-            )
-            : (
-              <StyledCheckbox
-                key={data.id.toString()}
-                label={data.label}
-                item={data}
-                id={data.id}
-                checked={data.checked}
-                disabled={data.disabled}
-                onChange={handleCheckboxChange}
-              />
-            )
-        ))
+        itemsArray.length
+          ? itemsArray.map((data) => (
+            data.type && data.type === 'group'
+              ? (
+                <Dropdown
+                  key={data.id.toString()}
+                  label={data.label}
+                  currentItem={data}
+                  checked={data.checked}
+                  items={data.items}
+                  onChange={handleCheckboxChange}
+                />
+              )
+              : (
+                <StyledCheckbox
+                  key={data.id.toString()}
+                  label={data.label}
+                  item={data}
+                  id={data.id}
+                  checked={data.checked}
+                  disabled={data.disabled}
+                  onChange={handleCheckboxChange}
+                />
+              )
+          ))
+          : <p>There is no data to display</p>
       }
     </CheckboxGroup>
   );

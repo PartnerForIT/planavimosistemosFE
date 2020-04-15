@@ -38,8 +38,8 @@
 }
 
 .checkboxCell {
-  width: 50px !important;
-  min-width: 50px !important;
+  width: 35px !important;
+  min-width: 35px !important;
   display: inline-flex;
   padding: 0 !important;
 }
@@ -72,11 +72,13 @@
 }
 
 .groupContainer {
-  padding: 0 10px;
+  padding: 0 15px;
   min-width: 100%;
 }
 
 .groupLabel {
+  align-items: center;
+  height: 34px;
   color: #4d7499;
   display: flex;
   font-family: Helvetica Neue, sans-serif;
@@ -93,6 +95,9 @@
 
   .groupLabelText {
     user-select: none;
+    color: #4d7499;
+    text-transform: uppercase;
+    font-weight: 500;
   }
 }
 
@@ -112,7 +117,7 @@
 }
 
 .sortBlock {
-  cursor: pointer;
+  //cursor: pointer;
   display: flex;
   user-select: none;
 
@@ -204,7 +209,7 @@
   color: #333945;
   min-width: 140px;
   text-align: left;
-  padding: 0.5em 0.5em;
+  padding: 8px;
 }
 
 .flexRowGroupReports {
@@ -221,6 +226,7 @@
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
   font-weight: 500;
+  text-transform: uppercase;
 }
 
 .flexRowSimpleTable {
@@ -278,12 +284,12 @@
   align-items: center;
   width: 100%;
   height: 46px;
-  padding: 0 10px;
+  padding: 0 17px;
   background-color: #fff;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   //margin-top: 40px;
-  box-shadow: 0 -4px 20px rgba(62, 69, 82, 0.06);
+  box-shadow: 0 -4px 20px rgba(2, 16, 29, 0.11);
 
   > * {
     padding: 0 5px;
@@ -299,7 +305,7 @@
 
 .footerTitleReports {
   margin-left: auto;
-  padding-right: 40px;
+  padding-right: 23px;
 }
 
 .blueTotals {
@@ -347,6 +353,11 @@ div {
 .scrollableContent {
   overflow: scroll;
   width: calc(100% - 40px);
+}
+
+.scrollableContentReports {
+  padding: 0 3px;
+  width: 100%;
 }
 
 .leftPannel {

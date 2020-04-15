@@ -81,19 +81,29 @@ export default function DataTable({
   const tableHeaderCell = classNames(
     styles.flexRowGlobal,
     styles.columnName,
-    { [styles.checkboxCell]: selectable, [styles.flexRowGlobalReports]: reports },
+    { [styles.flexRowGlobalReports]: reports },
+  );
+
+  const sortBlockClasses = classNames(
+    styles.sortBlock,
+    { [styles.pointer]: sortable },
+  );
+
+  const scrollableContentClasses = classNames(
+    styles.scrollableContent,
+    { [styles.scrollableContentReports]: reports },
   );
 
   return (
     <div className={classNames(styles.tableContainer)} role='table' aria-label='Destinations'>
-      <div className={classNames(styles.scrollableContent)}>
+      <div className={scrollableContentClasses}>
         <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
           {
             selectable && tableData.length > 0 && (
               <div
-                className={tableHeaderCell}
+                className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
                 style={{
-                  width: `calc((100% - 70px) / ${visibleColumns.length})`,
+                  width: `calc((100% - 35px) / ${visibleColumns.length})`,
                 }}
                 role='columnheader'
               >
@@ -113,14 +123,14 @@ export default function DataTable({
                 className={tableHeaderCell}
                 style={{
                   width: selectable
-                    ? `calc((100% - 70px) / ${visibleColumns.length})`
+                    ? `calc((100% - 35px) / ${visibleColumns.length})`
                     : `calc((100%) / ${visibleColumns.length})`,
                 }}
                 role='columnheader'
               >
                 <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-                  className={classNames(styles.sortBlock)}
-                  onClick={() => sort(column.field, sortOptionsAsc[column.field])}
+                  className={sortBlockClasses}
+                  onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
                 >
                   <div className={classNames(styles.flexCenter)}>{column.label}</div>
                   {
@@ -137,7 +147,7 @@ export default function DataTable({
             ))
           }
           {
-            tableData.length > 0 && (
+            !reports && tableData.length > 0 && (
               <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
                 <aside
                   className={classNames(styles.columnName, styles.settingsCell)}

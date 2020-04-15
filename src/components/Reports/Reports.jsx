@@ -11,20 +11,20 @@ import {
   reportSelector,
   columnsSelector,
   reportLoadingSelector,
-  totalDurationSelector,
+  placesSelector,
+  employeesSelector,
+  specializationsSelector,
 } from '../../store/reports/selectors';
-import { employeesSelector } from '../../store/employees/selectors';
-import { specializationsSelector } from '../../store/specializations/selectors';
-import { getEmployees } from '../../store/employees/actions';
-import { getSpecializations } from '../../store/specializations/actions';
-import { getPlaces } from '../../store/places/actions';
 import InfoIcon from '../Icons/InfoIcon';
 import ClosableCard from '../Core/ClosableCard/ClosableCard';
 import ReportsIcon from '../Icons/ReportsIcon';
 import CheckboxGroupWrapper from '../Core/CheckboxGroup/CheckboxGroupWrapper';
 import ArrowRightIcon from '../Icons/ArrowRightIcon';
-import { placesSelector } from '../../store/places/selectors';
-import { getReport, downloadExcel, downloadPdf } from '../../store/reports/actions';
+import {
+  getReport, downloadExcel, downloadPdf, getFilters,
+} from '../../store/reports/actions';
+import SearchIcon from '../Icons/SearchIcon';
+import Input from '../Core/Input/Input';
 
 const Reports = () => {
   /* Reports data */
@@ -34,23 +34,26 @@ const Reports = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
-  const [totalDuration, setTotalDuration] = useState(null);
+  // const [totalDuration, setTotalDuration] = useState(null);
   // const [employee, setEmployee] = useState(null);
   // const [employeeLoading, setEmployeeLoading] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [checkedItems, setCheckedItems] = useState([]);
+  // const [checkedItems, setCheckedItems] = useState([]);
   const [loading, setLoading] = useState(null);
   // const [page, setPage] = useState(1);
 
   const [dateRange, setDateRange] = useState({ startDate: startOfMonth(new Date()), endDate: endOfMonth(new Date()) });
 
   const [specializations, setSpecializations] = useState([]);
+  const [filteredSpecializations, setFilteredSpecializations] = useState([]);
   const [checkedSpecializations, setCheckedSpecializations] = useState([]);
 
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
   const [places, setPlaces] = useState([]);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [checkedPlaces, setCheckedPlaces] = useState([]);
 
   const { t } = useTranslation();
@@ -58,7 +61,7 @@ const Reports = () => {
   const generatedReport = useSelector(reportSelector);
   const reportLoading = useSelector(reportLoadingSelector);
   const columns = useSelector(columnsSelector);
-  const getTotalDuration = useSelector(totalDurationSelector);
+  // const getTotalDuration = useSelector(totalDurationSelector);
 
   const getAllEmployees = useSelector(employeesSelector);
   const getAllSpecializations = useSelector(specializationsSelector);
@@ -69,10 +72,8 @@ const Reports = () => {
   });
 
   useEffect(() => {
-    dispatch(getSpecializations()).then().catch();
-    dispatch(getEmployees()).then().catch();
-    dispatch(getPlaces()).then().catch();
-  }, []);
+    dispatch(getFilters({})).then().catch();
+  }, [dispatch]);
 
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
@@ -84,14 +85,17 @@ const Reports = () => {
 
   useEffect(() => {
     setPlaces(getAllPlaces);
+    setFilteredPlaces(getAllPlaces);
   }, [getAllPlaces]);
 
   useEffect(() => {
     setEmployees(getAllEmployees);
+    setFilteredEmployees(getAllEmployees);
   }, [getAllEmployees]);
 
   useEffect(() => {
     setSpecializations(getAllSpecializations);
+    setFilteredSpecializations(getAllSpecializations);
   }, [getAllSpecializations]);
 
   useEffect(() => {
@@ -102,36 +106,12 @@ const Reports = () => {
       setActiveReport(generatedReport.id);
     }
     setColumnsArray(columns);
-    setTotalDuration(getTotalDuration);
-  }, [generatedReport, columns, getTotalDuration]);
+    // setTotalDuration(getTotalDuration);
+  }, [generatedReport, columns]);
 
   useEffect(() => {
     setLoading(reportLoading);
   }, [reportLoading]);
-
-  const selectionHandler = useCallback((itemId, value) => {
-    const checkedItms = [];
-    const setCheckedToAll = (state) => {
-      const arrayCopy = [...state];
-      return arrayCopy.map((group) => {
-        const items = group.items.map((row) => {
-          const newRowObj = { ...row };
-          if (typeof itemId === 'string' && itemId === 'all') {
-            newRowObj.checked = value;
-          } else if (Array.isArray(itemId) && itemId.includes(newRowObj.id)) {
-            newRowObj.checked = value;
-          } else if (newRowObj.id === itemId) {
-            newRowObj.checked = value;
-          }
-          if (newRowObj.checked) checkedItms.push(newRowObj);
-          return newRowObj;
-        });
-        return { ...group, items };
-      });
-    };
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItms);
-  }, []);
 
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
@@ -192,13 +172,54 @@ const Reports = () => {
         const downloadUrl = window.URL.createObjectURL(new Blob([data.data]));
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.setAttribute('download', `Report_${format(new Date(selectedReport.startDate), 'yyyy-MM-dd')}_${format(new Date(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
+        link.setAttribute('download',
+          `Report_${format(new Date(selectedReport.startDate), 'yyyy-MM-dd')}_${format(new Date(selectedReport.endDate),
+            'yyyy-MM-dd')}.${ext}`);
         document.body.appendChild(link);
         link.click();
         link.remove();
       }).catch();
     }
   };
+
+  const handleInputChange = (term, items, setter) => {
+    const filterData = () => {
+      const arrayCopy = [...items];
+      return arrayCopy.filter((item) => item.label.toLowerCase().includes(term.toLowerCase()));
+    };
+    setter(filterData);
+  };
+
+  // const handleCheckedFilter = (checked, checkedSetter, filteredItems, filteredItemsSetter) => {
+  //   checkedSetter(checked);
+  //   const checkedIds = checked.map((item) => item.id);
+  //   console.log('checkedIds', checkedIds);
+  //   const checkItems = (state) => {
+  //     const newArray = [...state];
+  //     return newArray.map((item) => checkedIds.includes(item.id) ? { ...item, checked: true } : { ...item });
+  //   };
+  //   filteredItemsSetter(checkItems);
+  // };
+
+  // const filterChecked = (checkedArray, type) => {
+  //   const requestObj = {
+  //     objects: checkedPlaces.map((place) => place.id),
+  //     employees: checkedEmployees.map((emp) => emp.id),
+  //     specializations: checkedSpecializations.map((spec) => spec.id),
+  //   };
+  //
+  //   switch (type) {
+  //     case 'places':
+  //       break;
+  //     case 'spec':
+  //       setCheckedSpecializations(checkedArray);
+  //       requestObj.specializations = checkedArray.map((spec) => spec.id);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   dispatch(getFilters(requestObj)).then().catch();
+  // };
 
   return (
     <div className={styles.container}>
@@ -227,7 +248,6 @@ const Reports = () => {
                   data={report.report || []}
                   columns={columnsArray || []}
                   onColumnsChange={setColumnsArray}
-                  sortable
                   loading={loading}
                   onSort={sortHandler}
                   selectedItem={selectedItem}
@@ -270,8 +290,14 @@ const Reports = () => {
               places.length > 0 ? (
                 <>
                   <div className={styles.sidebarTitle}>Objects</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by objects'
+                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                    fullWidth
+                  />
                   <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={places} onChange={setCheckedPlaces} />
+                    <CheckboxGroupWrapper items={filteredPlaces} onChange={setCheckedPlaces} />
                   </div>
                 </>
               ) : null
@@ -280,8 +306,14 @@ const Reports = () => {
               employees.length > 0 ? (
                 <>
                   <div className={styles.sidebarTitle}>Employees</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by employees'
+                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                    fullWidth
+                  />
                   <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={employees} onChange={setCheckedEmployees} />
+                    <CheckboxGroupWrapper items={filteredEmployees} onChange={setCheckedEmployees} />
                   </div>
                 </>
               ) : null
@@ -289,9 +321,15 @@ const Reports = () => {
             {
               specializations.length > 0 ? (
                 <>
-                  <div className={styles.sidebarTitle}>Specializations</div>
+                  <div className={styles.sidebarTitle}>Specialization</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by specialization'
+                    onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
+                    fullWidth
+                  />
                   <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={specializations} onChange={setCheckedSpecializations} />
+                    <CheckboxGroupWrapper items={filteredSpecializations} onChange={setCheckedSpecializations} />
                   </div>
                 </>
               ) : null

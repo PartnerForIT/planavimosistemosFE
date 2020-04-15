@@ -48,7 +48,7 @@ const Group = ({
             <div
               className={rowClasses}
               style={{
-                width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
               }}
               role='columnheader'
             >
@@ -74,7 +74,7 @@ const Group = ({
                     key={idx.toString()}
                     className={groupLabelClasses}
                     style={{
-                      width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                      width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
                     }}
                   >
                     <TriangleIcon className={iconClasses} fill={titleColor} />
@@ -87,10 +87,11 @@ const Group = ({
                   key={idx.toString()}
                   className={rowGroupClasses}
                   style={{
-                    width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                    width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
                   }}
                   role='cell'
                 >
+                  { reports && column.field === 'duration' && <span>Total:&nbsp;</span> }
                   <span className={classNames(styles.blueTotals, styles.medium)}>{group[column.field]}</span>
                 </span>
               );

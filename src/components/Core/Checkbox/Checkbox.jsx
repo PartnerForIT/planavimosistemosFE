@@ -6,6 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles({
   root: {
+    boxShadow: 'none !important',
+
     '&:hover': {
       backgroundColor: 'transparent !important',
     },
@@ -40,6 +42,7 @@ const useStyles = makeStyles({
   },
 
   checkedIcon: {
+    boxShadow: 'none !important',
     backgroundColor: '#0085FF',
     backgroundImage: 'linear-gradient(180deg, hsla(0, 0%, 100%, 0.1), hsla(0, 0%, 100%, 0))',
 
@@ -74,9 +77,11 @@ const useStyles = makeStyles({
     marginLeft: '0px',
     marginRight: '0px',
     display: 'flex',
+    flexShrink: 0,
   },
 
   label: {
+    boxShadow: 'none !important',
     color: '#333945',
     fontFamily: 'Helvetica Neue, sans-serif',
     fontSize: '16px',

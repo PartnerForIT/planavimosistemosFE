@@ -69,7 +69,7 @@ const Row = ({
             <div
               className={classNames(styles.flexRowGroup, styles.cell, styles.checkboxCell)}
               style={{
-                width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
               }}
               role='cell'
             >
@@ -95,7 +95,7 @@ const Row = ({
                 key={idx.toString()}
                 className={rowClasses}
                 style={{
-                  width: selectable ? `calc((100% - 50px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                  width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
                 }}
                 role='cell'
               >

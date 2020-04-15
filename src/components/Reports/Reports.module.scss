@@ -42,19 +42,19 @@
       display: flex;
       justify-content: center;
       padding-left: 80px;
-      
+
       svg {
         width: 160px;
         height: 30px;
       }
     }
-    
+
     .reportsIcon {
       width: 74px;
       height: 90px;
       margin-bottom: 15px;
     }
-    
+
     .title {
       color: #0789ff;
       font-family: Helvetica Neue, sans-serif;
@@ -62,7 +62,7 @@
       font-weight: 600;
       width: 255px;
     }
-    
+
     .description {
       color: rgba(7, 137, 255, 0.45);
       font-family: Helvetica Neue, sans-serif;
@@ -70,7 +70,7 @@
       font-weight: 500;
       width: 255px;
     }
-    
+
     p {
       margin: 0;
       padding: 6px;
@@ -120,14 +120,15 @@
     text-align: left;
     padding-top: 10px;
     padding-bottom: 5px;
-    
+
     &:first-child {
-      padding-top: 0px;
+      padding-top: 0;
     }
   }
 
   .checkboxGroupWrapper {
     height: 270px;
+    margin-top: 10px;
   }
 
   .multipleEntries {
