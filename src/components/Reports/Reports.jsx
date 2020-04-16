@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -11,25 +13,30 @@ import {
   reportSelector,
   columnsSelector,
   reportLoadingSelector,
-  placesSelector,
-  employeesSelector,
-  specializationsSelector,
 } from '../../store/reports/selectors';
+
+import { employeesSelector } from '../../store/employees/selectors';
+import { specializationsSelector } from '../../store/specializations/selectors';
+import { getReportsEmployees } from '../../store/employees/actions';
+import { getReportsSpecializations } from '../../store/specializations/actions';
+import { getReportsPlaces } from '../../store/places/actions';
+import { placesSelector } from '../../store/places/selectors';
+
 import InfoIcon from '../Icons/InfoIcon';
 import ClosableCard from '../Core/ClosableCard/ClosableCard';
 import ReportsIcon from '../Icons/ReportsIcon';
 import CheckboxGroupWrapper from '../Core/CheckboxGroup/CheckboxGroupWrapper';
 import ArrowRightIcon from '../Icons/ArrowRightIcon';
 import {
-  getReport, downloadExcel, downloadPdf, getFilters,
+  getReport, downloadExcel, downloadPdf,
 } from '../../store/reports/actions';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
 
 const Reports = () => {
   /* Reports data */
+  const reportTabs = useRef(null);
   const [activeReport, setActiveReport] = useState();
-
 
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -72,8 +79,14 @@ const Reports = () => {
   });
 
   useEffect(() => {
-    dispatch(getFilters({})).then().catch();
-  }, [dispatch]);
+    dispatch(getReportsPlaces({})).then().catch();
+    dispatch(getReportsEmployees({})).then().catch();
+    dispatch(getReportsSpecializations({})).then().catch();
+  }, []);
+
+  useEffect(() => {
+    reportTabs.current.scrollLeft = itemsArray.length * 246;
+  }, [itemsArray]);
 
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
@@ -160,12 +173,24 @@ const Reports = () => {
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
     if (selectedReport) {
+      let filter = '';
+      if (selectedReport.places.length && !selectedReport.specializations.length && !selectedReport.employees.length) {
+        filter = 0;
+      } else if (!selectedReport.specializations.length && selectedReport.employees.length) {
+        filter = 1;
+      } else if (selectedReport.specializations.length && !selectedReport.employees.length) {
+        filter = 2;
+      } else if (selectedReport.specializations.length && selectedReport.employees.length) {
+        filter = 3;
+      }
+
       const requestObj = {
         'date-start': selectedReport.startDate,
         'date-end': selectedReport.endDate,
         objects: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
         specialities: selectedReport.specializations.length > 0 ? `[${selectedReport.specializations.join(',')}]` : '',
         employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
+        filter,
       };
 
       dispatch(action(requestObj)).then((data) => {
@@ -190,41 +215,89 @@ const Reports = () => {
     setter(filterData);
   };
 
-  // const handleCheckedFilter = (checked, checkedSetter, filteredItems, filteredItemsSetter) => {
-  //   checkedSetter(checked);
-  //   const checkedIds = checked.map((item) => item.id);
-  //   console.log('checkedIds', checkedIds);
-  //   const checkItems = (state) => {
-  //     const newArray = [...state];
-  //     return newArray.map((item) => checkedIds.includes(item.id) ? { ...item, checked: true } : { ...item });
-  //   };
-  //   filteredItemsSetter(checkItems);
-  // };
+  const filterChecked = (checkedArray, type) => {
+    switch (type) {
+      case 'places':
+        setCheckedPlaces(checkedArray);
 
-  // const filterChecked = (checkedArray, type) => {
-  //   const requestObj = {
-  //     objects: checkedPlaces.map((place) => place.id),
-  //     employees: checkedEmployees.map((emp) => emp.id),
-  //     specializations: checkedSpecializations.map((spec) => spec.id),
-  //   };
-  //
-  //   switch (type) {
-  //     case 'places':
-  //       break;
-  //     case 'spec':
-  //       setCheckedSpecializations(checkedArray);
-  //       requestObj.specializations = checkedArray.map((spec) => spec.id);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   dispatch(getFilters(requestObj)).then().catch();
-  // };
+        if (checkedEmployees.length && !checkedSpecializations.length) {
+          dispatch(getReportsSpecializations({
+            objects: checkedArray.map((place) => place.id),
+            employees: checkedEmployees.map((emp) => emp.id),
+          })).then().catch();
+        } else if (checkedSpecializations.length && !checkedEmployees.length) {
+          dispatch(getReportsEmployees({
+            objects: checkedArray.map((place) => place.id),
+            specializations: checkedSpecializations.map((spec) => spec.id),
+          })).then().catch();
+        } else if (!checkedSpecializations.length && !checkedEmployees.length) {
+          dispatch(getReportsEmployees({
+            objects: checkedArray.map((place) => place.id),
+            specializations: checkedSpecializations.map((spec) => spec.id),
+          })).then().catch();
+          dispatch(getReportsSpecializations({
+            objects: checkedArray.map((place) => place.id),
+            employees: checkedEmployees.map((emp) => emp.id),
+          })).then().catch();
+        }
+        break;
+      case 'employees':
+        setCheckedEmployees(checkedArray);
+
+        if (checkedSpecializations.length && !checkedPlaces.length) {
+          dispatch(getReportsPlaces({
+            employees: checkedArray.map((emp) => emp.id),
+            specializations: checkedSpecializations.map((place) => place.id),
+          })).then().catch();
+        } else if (checkedPlaces.length && !checkedSpecializations.length) {
+          dispatch(getReportsSpecializations({
+            objects: checkedPlaces.map((place) => place.id),
+            employees: checkedArray.map((emp) => emp.id),
+          })).then().catch();
+        } else if (!checkedPlaces.length && !checkedSpecializations.length) {
+          dispatch(getReportsPlaces({
+            employees: checkedArray.map((emp) => emp.id),
+            specializations: checkedSpecializations.map((place) => place.id),
+          })).then().catch();
+          dispatch(getReportsSpecializations({
+            objects: checkedPlaces.map((place) => place.id),
+            employees: checkedArray.map((emp) => emp.id),
+          })).then().catch();
+        }
+        break;
+      case 'spec':
+        setCheckedSpecializations(checkedArray);
+
+        if (checkedEmployees.length && !checkedPlaces.length) {
+          dispatch(getReportsPlaces({
+            employees: checkedEmployees.map((emp) => emp.id),
+            specializations: checkedArray.map((place) => place.id),
+          })).then().catch();
+        } else if (checkedPlaces.length && !checkedEmployees.length) {
+          dispatch(getReportsEmployees({
+            objects: checkedPlaces.map((place) => place.id),
+            specializations: checkedArray.map((spec) => spec.id),
+          })).then().catch();
+        } else if (!checkedPlaces.length && !checkedEmployees.length) {
+          dispatch(getReportsEmployees({
+            objects: checkedPlaces.map((place) => place.id),
+            specializations: checkedArray.map((spec) => spec.id),
+          })).then().catch();
+          dispatch(getReportsPlaces({
+            employees: checkedEmployees.map((emp) => emp.id),
+            specializations: checkedArray.map((place) => place.id),
+          })).then().catch();
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <div style={{ display: 'flex', width: '100%', overflowY: 'scroll' }}>
+        <div ref={reportTabs} style={{ display: 'flex', width: '100%', overflowY: 'scroll' }}>
           {
             itemsArray.length > 0 && itemsArray.map((report) => (
               <ClosableCard
@@ -287,52 +360,46 @@ const Reports = () => {
             <div className={styles.sidebarTitle}>Report period</div>
             <DRP initRange={dateRange} onChange={setDateRange} small right />
             {
-              places.length > 0 ? (
-                <>
-                  <div className={styles.sidebarTitle}>Objects</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by objects'
-                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredPlaces} onChange={setCheckedPlaces} />
-                  </div>
-                </>
-              ) : null
+              <>
+                <div className={styles.sidebarTitle}>Objects</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by objects'
+                  onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
+                </div>
+              </>
             }
             {
-              employees.length > 0 ? (
-                <>
-                  <div className={styles.sidebarTitle}>Employees</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by employees'
-                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredEmployees} onChange={setCheckedEmployees} />
-                  </div>
-                </>
-              ) : null
+              <>
+                <div className={styles.sidebarTitle}>Employees</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by employees'
+                  onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
+                </div>
+              </>
             }
             {
-              specializations.length > 0 ? (
-                <>
-                  <div className={styles.sidebarTitle}>Specialization</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by specialization'
-                    onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredSpecializations} onChange={setCheckedSpecializations} />
-                  </div>
-                </>
-              ) : null
+              <>
+                <div className={styles.sidebarTitle}>Specialization</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by specialization'
+                  onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
+                </div>
+              </>
             }
           </div>
           <div className={styles.actions}>

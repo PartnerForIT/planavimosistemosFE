@@ -32,9 +32,11 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
         return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
       });
     };
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
-    setItemsStat(stat);
+    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+      setItemsArray(resultedItems);
+      setItemsStat(stat);
+      setCheckedItems(checkedItemsArray);
+    });
   }, [items]);
 
   useEffect(() => {
@@ -43,7 +45,6 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       checked: checkedItems.length,
       unchecked: itemsStat.total - checkedItems.length,
     });
-    onChange(checkedItems);
   }, [checkedItems]);
 
   const selectAll = (check) => {
@@ -69,8 +70,11 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       });
     };
 
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
+    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+      setItemsArray(resultedItems);
+      setCheckedItems(checkedItemsArray);
+      onChange(checkedItemsArray);
+    });
   };
 
   const handleCheckboxChange = (item) => {
@@ -94,8 +98,11 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
         return newObj;
       });
     };
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
+    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+      setItemsArray(resultedItems);
+      setCheckedItems(checkedItemsArray);
+      onChange(checkedItemsArray);
+    });
   };
 
   return (
