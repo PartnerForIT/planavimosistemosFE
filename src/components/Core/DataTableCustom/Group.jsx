@@ -13,7 +13,7 @@ const Group = ({
 
   const detailsClasses = classNames(
     styles.details,
-    { [styles.datailsHidden]: !expanded, [styles.detailsShown]: expanded },
+    { [styles.datailsHidden]: !expanded, [styles.detailsShown]: expanded , [styles.detailsReports]: reports },
   );
 
   const iconClasses = classNames(
@@ -64,7 +64,7 @@ const Group = ({
         <div // eslint-disable-line jsx-a11y/no-static-element-interactions
           onClick={() => setExpanded(!expanded)}
           className={styles.groupClickableContainer}
-          style={{ minWidth: selectable ? 'calc(100% - 40px)' : '100%' }}
+          style={{ minWidth: selectable ? 'calc(100% - 15px)' : '100%' }}
         >
           {
             columns.map((column, idx) => {
@@ -88,6 +88,7 @@ const Group = ({
                   className={rowGroupClasses}
                   style={{
                     width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
+                    padding: '0 1px!important',
                   }}
                   role='cell'
                 >

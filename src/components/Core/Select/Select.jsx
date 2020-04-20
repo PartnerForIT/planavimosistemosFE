@@ -8,6 +8,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
+import Scrollbar from "react-scrollbars-custom";
 
 export default function CustomSelect({
   items, placeholder, buttonLabel, onChange,
@@ -114,6 +115,10 @@ export default function CustomSelect({
     { [styles.customSelectOpened]: open },
   );
 
+  const scrollableContentClasses = classNames(
+    styles.scrollableContent
+  );
+
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div>
@@ -122,7 +127,6 @@ export default function CustomSelect({
           <input
             type='text'
             value={checkedItems && checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
-            disabled
             placeholder={placeholder}
             className={customSelectClasses}
           />
@@ -131,32 +135,61 @@ export default function CustomSelect({
         {open ? (
           <div className={classNames(styles.contentBox)}>
             <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
-              {
-                itemsArray.map((data) => (
-                  data.type && data.type === 'group'
-                    ? (
-                      <Dropdown
-                        key={data.id.toString()}
-                        label={data.label}
-                        currentItem={data}
-                        checked={data.checked}
-                        items={data.items}
-                        onChange={handleCheckboxChange}
+              <Scrollbar
+                className={scrollableContentClasses}
+                removeTracksWhenNotUsed
+                trackXProps={{
+                  renderer: (props) => {
+                    const { elementRef, ...restProps } = props;
+                    return (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
                       />
-                    )
-                    : (
-                      <StyledCheckbox
-                        key={data.id.toString()}
-                        label={data.label}
-                        item={data}
-                        id={data.id}
-                        checked={data.checked}
-                        disabled={data.disabled}
-                        onChange={handleCheckboxChange}
+                    );
+                  },
+                }}
+                trackYProps={{
+                  renderer: (props) => {
+                    const { elementRef, ...restProps } = props;
+                    return (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
                       />
-                    )
-                ))
-              }
+                    );
+                  },
+                }}
+              >
+                {
+                  itemsArray.map((data) => (
+                    data.type && data.type === 'group'
+                      ? (
+                        <Dropdown
+                          key={data.id.toString()}
+                          label={data.label}
+                          currentItem={data}
+                          checked={data.checked}
+                          items={data.items}
+                          onChange={handleCheckboxChange}
+                        />
+                      )
+                      : (
+                        <StyledCheckbox
+                          key={data.id.toString()}
+                          label={data.label}
+                          item={data}
+                          id={data.id}
+                          checked={data.checked}
+                          disabled={data.disabled}
+                          onChange={handleCheckboxChange}
+                        />
+                      )
+                  ))
+                }
+              </Scrollbar>
             </CheckboxGroup>
             <Button fillWidth onClick={() => onChange(itemsArray, checkedItems)}>{buttonLabel}</Button>
           </div>

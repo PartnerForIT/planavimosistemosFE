@@ -111,11 +111,13 @@ const DRP = ({
             </div>
           )
             : (
-              <DateRangePicker
-                initialDateRange={predefinedDateRange}
-                open={open}
-                onChange={(range) => onChange(range)}
-              />
+              <div className='pickerDefaultWrapper'>
+                <DateRangePicker
+                  initialDateRange={predefinedDateRange}
+                  open={open}
+                  onChange={(range) => onChange(range)}
+                />
+              </div>
             )
         }
       </div>

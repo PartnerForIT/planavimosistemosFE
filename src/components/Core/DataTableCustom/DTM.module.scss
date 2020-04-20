@@ -1,3 +1,8 @@
+$table-header: #1976d2;
+$table-header-border: #1565c0;
+$table-border: #d9d9d9;
+$row-bg: #f4f2f1;
+
 .cell {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
@@ -12,18 +17,62 @@
 }
 
 .columnName {
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Helvetica Neue Medium, sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: #808f94;
+}
+
+.flexTable {
+  display: flex;
+  flex-flow: wrap;
+  //border-left: solid 1px $table-border;
+  transition: 0.5s;
+  padding: 0 10px;
+  width: fit-content;
+  min-width: 100%;
+
+  &.header {
+    padding-bottom: 5px;
+    padding-left: 15px;
+    //position: relative;
+  }
+
+  &:first-of-type {
+    //border-top: solid 1px $table-header-border;
+    //border-left: solid 1px $table-header-border;
+  }
+
+  &:first-of-type .flexRow {
+    background: $table-header;
+    color: white;
+    //border-color: $table-header-border;
+  }
+
+  &.row:nth-child(odd) .flexRow {
+    background: $row-bg;
+  }
+
+  //&:hover {
+  //  background: #f5f5f5;
+  //  transition: 500ms;
+  //}
 }
 
 .details {
   min-height: 0;
   overflow: hidden;
   padding-top: 5px;
-  //transform-origin: top;
-  //transition: transform 0.26s ease;
+
+  .flexTable {
+    padding: 0;
+  }
+}
+
+.detailsReports {
+  .flexTable {
+    padding: 0 10px;
+  }
 }
 
 .datailsHidden {
@@ -47,7 +96,7 @@
 .settingsCell {
   position: absolute;
   top: 15px;
-  right: 10px;
+  right: 5px;
   width: 20px !important;
   min-width: 20px !important;
   padding: 0 !important;
@@ -97,6 +146,7 @@
     user-select: none;
     color: #4d7499;
     text-transform: uppercase;
+    font-family: Helvetica Neue Medium, sans-serif;
     font-weight: 500;
   }
 }
@@ -133,7 +183,7 @@
 .flexCenter {
   display: flex;
   align-items: center;
-  padding: 0 5px;
+  padding: 0 5px 0 2px;
 }
 
 .checkbox {
@@ -198,7 +248,7 @@
   display: flex;
   min-width: 140px;
   text-align: left;
-  padding: 0 0.5em;
+  padding: 0 1px;
 }
 
 .flexRowGlobalReports:last-of-type {
@@ -213,6 +263,7 @@
 }
 
 .flexRowGroupReports {
+  font-family: Helvetica Neue Medium, sans-serif;
   font-weight: 500;
 
   &:last-of-type {
@@ -223,7 +274,7 @@
 
 .groupLabelReports {
   color: #4d7499;
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Helvetica Neue Medium, sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
@@ -241,7 +292,7 @@
 
 .reportsFlexRowSelected {
   color: #0085ff;
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Helvetica Neue Medium, sans-serif;
   font-size: 14px;
   font-weight: 500;
 }
@@ -298,9 +349,9 @@
 
 .footerTitle {
   color: #3e4552;
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Helvetica Neue Bold, sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  //font-weight: 600;
 }
 
 .footerTitleReports {
@@ -315,17 +366,14 @@
 }
 
 .bold {
-  font-weight: 600;
+  font-family: Helvetica Neue Bold, sans-serif;
+  //font-weight: 600;
 }
 
 .medium {
+  font-family: Helvetica Neue Medium, sans-serif;
   font-weight: 500;
 }
-
-$table-header: #1976d2;
-$table-header-border: #1565c0;
-$table-border: #d9d9d9;
-$row-bg: #f4f2f1;
 
 div {
   box-sizing: border-box;
@@ -335,6 +383,7 @@ div {
   min-height: 250px;
   height: calc(100vh - 200px);
   min-width: 100%;
+  padding-right: 15px;
   width: fit-content;
   //overflow: scroll;
 }
@@ -351,8 +400,39 @@ div {
 }
 
 .scrollableContent {
-  overflow: scroll;
-  width: calc(100% - 40px);
+  //overflow: scroll;
+  height: calc(100vh - 165px) !important;
+  width: calc(100% - 22px) !important;
+}
+
+.scrollbarTrackX {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  height: 7px !important;
+  bottom: 7px !important;
+  left: 15px !important;
+  width: calc(100% - 35px) !important;
+  z-index: 1 !important;
+
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
+  }
+}
+
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 35px) !important;
+  top: 35px !important;
+  right: -9px !important;
+  z-index: 1;
+
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
+  }
 }
 
 .scrollableContentReports {
@@ -387,41 +467,6 @@ div {
   }
 }
 
-.flexTable {
-  display: flex;
-  flex-flow: wrap;
-  //border-left: solid 1px $table-border;
-  transition: 0.5s;
-  padding: 0 10px;
-  width: fit-content;
-  min-width: 100%;
-
-  &.header {
-    padding-bottom: 5px;
-    //position: relative;
-  }
-
-  &:first-of-type {
-    //border-top: solid 1px $table-header-border;
-    //border-left: solid 1px $table-header-border;
-  }
-
-  &:first-of-type .flexRow {
-    background: $table-header;
-    color: white;
-    //border-color: $table-header-border;
-  }
-
-  &.row:nth-child(odd) .flexRow {
-    background: $row-bg;
-  }
-
-  //&:hover {
-  //  background: #f5f5f5;
-  //  transition: 500ms;
-  //}
-}
-
 .simpleTableContainer {
   display: block;
   margin: 0;
@@ -440,6 +485,7 @@ div {
 
   .columnName {
     color: #4d7499;
+    font-family: Helvetica Neue Medium, sans-serif;
     font-weight: 500;
   }
 
@@ -524,4 +570,16 @@ div {
   opacity: 0.9;
   transition: opacity 0.2s;
   display: block;
+}
+
+.scrollingPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 100%;
+  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
+  background-color: #fff;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }

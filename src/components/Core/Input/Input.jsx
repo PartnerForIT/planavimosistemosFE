@@ -16,14 +16,14 @@ const Input = ({
   );
 
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} style={{ width }}>
       {icon ? (
         <div className={classNames(styles.iconWrapper)}>
           {icon}
         </div>
       ) : null}
       <input
-        style={{ width, height }}
+        style={{ width: '100%', height }}
         className={classes}
         type='text'
         placeholder={placeholder || 'Search...'}

@@ -4,18 +4,18 @@ import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
 import PendingIcon from '../../Icons/PendingIcon';
 import EditIcon from '../../Icons/EditIcon';
-import { getInfoCardColors, timeToMinutes, minutesToString } from '../../Helpers';
+import { getInfoCardColors, timeToMinutes, minutesToString, dateToUCT } from '../../Helpers';
 import PauseIcon from '../../Icons/PauseIcon';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 
 const InfoCard = ({
-  type, label, text, icon, time, editable, onChange, durationSec,
+  type, label, text, icon, time, editable, onChange, durationSec, showRange,
 }) => {
   const [start, setStart] = useState(time && time.started_at
-    ? format(new Date(time.started_at.replace(' ', 'T')), 'HH:mm') : '00:00');
+    ? format(dateToUCT(time.started_at), 'HH:mm') : '00:00');
   const [end, setEnd] = useState(time && time.finished_at
-    ? format(new Date(time.finished_at.replace(' ', 'T')), 'HH:mm') : '00:00');
+    ? format(dateToUCT(time.finished_at), 'HH:mm') : '00:00');
   const [editing, setEditing] = useState(false);
 
   const colors = getInfoCardColors(type);
@@ -125,8 +125,8 @@ const InfoCard = ({
 
   const declineChanges = () => {
     setEditing(false);
-    setStart(format(new Date(time.started_at.replace(' ', 'T')), 'HH:mm'));
-    setEnd(format(new Date(time.finished_at.replace(' ', 'T')), 'HH:mm'));
+    setStart(format(dateToUCT(time.started_at), 'HH:mm'));
+    setEnd(format(dateToUCT(time.finished_at), 'HH:mm'));
   };
 
   return (
@@ -170,13 +170,14 @@ const InfoCard = ({
                   </div>
                 </>
               )
-              : (
+              : showRange ? (
                 <>
                   {`${start} - ${end}`}
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                   { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIcon /></div> }
                 </>
               )
+                : null
           }
 
         </div>

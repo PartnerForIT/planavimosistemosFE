@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import Scrollbar from 'react-scrollbars-custom';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
+import styles from '../Select/Select.module.scss';
 
 const CheckboxGroupWrapper = ({ items, onChange }) => {
   const [itemsArray, setItemsArray] = useState([]);
@@ -107,34 +110,63 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
 
   return (
     <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
-      {
-        itemsArray.length
-          ? itemsArray.map((data) => (
-            data.type && data.type === 'group'
-              ? (
-                <Dropdown
-                  key={data.id.toString()}
-                  label={data.label}
-                  currentItem={data}
-                  checked={data.checked}
-                  items={data.items}
-                  onChange={handleCheckboxChange}
-                />
-              )
-              : (
-                <StyledCheckbox
-                  key={data.id.toString()}
-                  label={data.label}
-                  item={data}
-                  id={data.id}
-                  checked={data.checked}
-                  disabled={data.disabled}
-                  onChange={handleCheckboxChange}
-                />
-              )
-          ))
-          : <p>There is no data to display</p>
-      }
+      <Scrollbar
+        className={styles.scrollableContent}
+        removeTracksWhenNotUsed
+        trackXProps={{
+          renderer: (props) => {
+            const { elementRef, ...restProps } = props;
+            return (
+              <span
+                {...restProps}
+                ref={elementRef}
+                className={classNames(styles.scrollbarTrackX, { trackX: true })}
+              />
+            );
+          },
+        }}
+        trackYProps={{
+          renderer: (props) => {
+            const { elementRef, ...restProps } = props;
+            return (
+              <span
+                {...restProps}
+                ref={elementRef}
+                className={classNames(styles.scrollbarTrackY, { trackY: true })}
+              />
+            );
+          },
+        }}
+      >
+        {
+          itemsArray.length
+            ? itemsArray.map((data) => (
+              data.type && data.type === 'group'
+                ? (
+                  <Dropdown
+                    key={data.id.toString()}
+                    label={data.label}
+                    currentItem={data}
+                    checked={data.checked}
+                    items={data.items}
+                    onChange={handleCheckboxChange}
+                  />
+                )
+                : (
+                  <StyledCheckbox
+                    key={data.id.toString()}
+                    label={data.label}
+                    item={data}
+                    id={data.id}
+                    checked={data.checked}
+                    disabled={data.disabled}
+                    onChange={handleCheckboxChange}
+                  />
+                )
+            ))
+            : <p>There is no data to display</p>
+        }
+      </Scrollbar>
     </CheckboxGroup>
   );
 };

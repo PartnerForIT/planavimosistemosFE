@@ -57,15 +57,15 @@
 
     .title {
       color: #0789ff;
-      font-family: Helvetica Neue, sans-serif;
+      font-family: Helvetica Neue Bold, sans-serif;
       font-size: 15px;
-      font-weight: 600;
+      //font-weight: 600;
       width: 255px;
     }
 
     .description {
       color: rgba(7, 137, 255, 0.45);
-      font-family: Helvetica Neue, sans-serif;
+      font-family: Helvetica Neue Medium, sans-serif;
       font-size: 15px;
       font-weight: 500;
       width: 255px;
@@ -94,7 +94,8 @@
 }
 
 .leftContent {
-  width: 1110px;
+  width: calc(100% - 300px);
+  overflow: hidden;
 }
 
 .rightSidebar {
@@ -114,7 +115,7 @@
 
   .sidebarTitle {
     color: #808f94;
-    font-family: Helvetica Neue, sans-serif;
+    font-family: Helvetica Neue Medium, sans-serif;
     font-size: 14px;
     font-weight: 500;
     text-align: left;
@@ -138,9 +139,10 @@
       align-items: center;
       display: flex;
       color: #333945;
-      font-family: Helvetica Neue, sans-serif;
+      font-family: Helvetica Neue Medium, sans-serif;
       font-size: 16px;
       font-weight: 500;
+      margin-bottom: 10px;
     }
 
     .sidebarContent {
@@ -148,8 +150,46 @@
       flex-direction: column;
       width: 100%;
       height: calc(100% - 90px);
-      margin: 15px 0;
-      overflow-y: scroll;
+      margin: 0;
+      //overflow-y: scroll;
+      padding-right: 5px;
+    }
+  }
+
+  .scrollableContent {
+    //overflow: scroll;
+    height: calc(100% - 70px) !important;
+    width: 100% !important;
+    margin-bottom: 5px;
+  }
+
+  .scrollbarTrackX {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    height: 7px !important;
+    bottom: 7px !important;
+    left: 15px !important;
+    width: calc(100% - 35px) !important;
+    z-index: 1 !important;
+
+    div {
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
+    }
+  }
+
+  .scrollbarTrackY {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    width: 7px !important;
+    height: calc(100% - 15px) !important;
+    top: 5px !important;
+    right: 0 !important;
+    z-index: 1;
+
+    div {
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
     }
   }
 }

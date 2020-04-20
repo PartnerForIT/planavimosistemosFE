@@ -1,6 +1,7 @@
 .inputWrapper {
   position: relative;
   width: fit-content;
+  min-width: 100px;
 }
 
 .input {
@@ -37,14 +38,15 @@
 .iconWrapper {
   display: flex;
   position: absolute;
-  width: 20px;
+  justify-content: center;
+  width: 33px;
   height: 100%;
   top: 0;
-  left: 5px;
+  left: 0;
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 13.89px;
+    height: 13.89px;
     display: flex;
     align-self: center;
   }

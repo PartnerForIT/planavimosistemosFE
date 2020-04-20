@@ -1,5 +1,8 @@
 import { getMinutes, getHours, getSeconds } from 'date-fns';
 
+// export const dateToUCT = (date) => (new Date(`${date}Z`.replace(' ', 'T')));
+export const dateToUCT = (date) => (new Date(date.replace(/-/g,'/').replace('T',' ').replace(/\..*|\+.*/,"")));
+
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');
   return parseInt(timeArr[0], 10) * 60 + parseInt(timeArr[1], 10);
@@ -13,11 +16,12 @@ export const minutesToString = (totalMinutes) => {
   return `${hours}:${minutes}`;
 };
 
-export const datetimeToMinutes = (datetime) => getHours(new Date(datetime.replace(' ', 'T'))) * 60
-  + getMinutes(new Date(datetime));
+export const datetimeToMinutes = (datetime) => getHours(dateToUCT(datetime)) * 60
+  + getMinutes(dateToUCT(datetime));
 
-export const datetimeToSeconds = (datetime) => getHours(new Date(datetime.replace(' ', 'T'))) * 60 * 60
-  + getMinutes(new Date(datetime)) * 60 + getSeconds(new Date(datetime));
+export const datetimeToSeconds = (datetime) => getHours(dateToUCT(datetime)) * 60 * 60
+  + getMinutes(dateToUCT(datetime)) * 60
+  + getSeconds(dateToUCT(datetime));
 
 export const getColorByStatus = (status) => {
   let color = '';

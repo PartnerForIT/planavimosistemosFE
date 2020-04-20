@@ -84,7 +84,7 @@ const useStyles = makeStyles({
     boxShadow: 'none !important',
     color: '#333945',
     fontFamily: 'Helvetica Neue, sans-serif',
-    fontSize: '16px',
+    fontSize: '15px',
     marginLeft: 0,
     textAlign: 'left',
     wordWrap: 'break-word',

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
+import Scrollbar from 'react-scrollbars-custom';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -96,80 +97,85 @@ export default function DataTable({
 
   return (
     <div className={classNames(styles.tableContainer)} role='table' aria-label='Destinations'>
-      <div className={scrollableContentClasses}>
-        <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
-          {
-            selectable && tableData.length > 0 && (
-              <div
-                className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
-                style={{
-                  width: `calc((100% - 35px) / ${visibleColumns.length})`,
-                }}
-                role='columnheader'
-              >
-                <StyledCheckbox
-                  id='all'
-                  className={classNames(styles.checkbox)}
-                  checked={allSelected.checked === allSelected.total}
-                  onChange={onSelect}
-                />
-              </div>
-            )
-          }
-          {
-            visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
-              <div
-                key={idx.toString()}
-                className={tableHeaderCell}
-                style={{
-                  width: selectable
-                    ? `calc((100% - 35px) / ${visibleColumns.length})`
-                    : `calc((100%) / ${visibleColumns.length})`,
-                }}
-                role='columnheader'
-              >
-                <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-                  className={sortBlockClasses}
-                  onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
-                >
-                  <div className={classNames(styles.flexCenter)}>{column.label}</div>
-                  {
-                    (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
-                    && fieldIcons[column.field].map((icon) => icon.icon)
-                  }
-                  { sortable && (
-                  <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                    <SortIcon />
-                  </div>
-                  ) }
-                </div>
-              </div>
-            ))
-          }
-          {
-            !reports && tableData.length > 0 && (
-              <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
-                <aside
-                  className={classNames(styles.columnName, styles.settingsCell)}
+      <Scrollbar
+        className={scrollableContentClasses}
+        removeTracksWhenNotUsed
+        trackXProps={{
+          renderer: (props) => {
+            const { elementRef, ...restProps } = props;
+            return (
+              <span
+                {...restProps}
+                ref={elementRef}
+                className={classNames(styles.scrollbarTrackX, { trackX: true })}
+              />
+            );
+          },
+        }}
+        trackYProps={{
+          renderer: (props) => {
+            const { elementRef, ...restProps } = props;
+            return (
+              <span
+                {...restProps}
+                ref={elementRef}
+                className={classNames(styles.scrollbarTrackY, { trackY: true })}
+              />
+            );
+          },
+        }}
+      >
+        <div className={styles.tableContent}>
+          <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
+            {
+              selectable && tableData.length > 0 && (
+                <div
+                  className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
+                  style={{
+                    width: `calc((100% - 35px) / ${visibleColumns.length})`,
+                  }}
                   role='columnheader'
                 >
-                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                  <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
-                    <CogwheelIcon />
+                  <StyledCheckbox
+                    id='all'
+                    className={classNames(styles.checkbox)}
+                    checked={allSelected.checked === allSelected.total}
+                    onChange={onSelect}
+                  />
+                </div>
+              )
+            }
+            {
+              visibleColumns.length > 0 && visibleColumns.map((column, idx) => (
+                <div
+                  key={idx.toString()}
+                  className={tableHeaderCell}
+                  style={{
+                    width: selectable
+                      ? `calc((100% - 35px) / ${visibleColumns.length})`
+                      : `calc((100%) / ${visibleColumns.length})`,
+                  }}
+                  role='columnheader'
+                >
+                  <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+                    className={sortBlockClasses}
+                    onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
+                  >
+                    <div className={classNames(styles.flexCenter)}>{column.label}</div>
+                    {
+                      (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
+                      && fieldIcons[column.field].map((icon) => icon.icon)
+                    }
+                    { sortable && (
+                    <div className={classNames(styles.flexCenter, styles.sortIcon)}>
+                      <SortIcon />
+                    </div>
+                    ) }
                   </div>
-                  {
-                    showSettingsPopup && (
-                      <div className={styles.settingsPopup}>
-                        <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
-                      </div>
-                    )
-                  }
-                </aside>
-              </ClickAwayListener>
-            )
-          }
-        </div>
-        <div className={styles.tableContent}>
+                </div>
+              ))
+            }
+          </div>
           {
             tableData.length ? tableData.map((group, idx) => {
               let checkedNumber = 0;
@@ -198,7 +204,7 @@ export default function DataTable({
             }) : null
           }
         </div>
-      </div>
+      </Scrollbar>
       <div className={classNames(styles.tableFooter)}>
         { typeof downloadExcel === 'function'
         && (
@@ -245,6 +251,30 @@ export default function DataTable({
               </div>
             )
             : null
+        }
+      </div>
+      <div className={classNames(styles.scrollingPanel)}>
+        {
+          !reports && tableData.length > 0 && (
+            <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
+              <aside
+                className={classNames(styles.columnName, styles.settingsCell)}
+                role='columnheader'
+              >
+                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
+                  <CogwheelIcon />
+                </div>
+                {
+                  showSettingsPopup && (
+                    <div className={styles.settingsPopup}>
+                      <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+                    </div>
+                  )
+                }
+              </aside>
+            </ClickAwayListener>
+          )
         }
       </div>
       <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })} />

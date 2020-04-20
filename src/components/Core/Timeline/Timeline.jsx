@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import styles from './Timeline.module.scss';
-import { datetimeToSeconds, getColorByStatus } from '../../Helpers';
+import { datetimeToSeconds, dateToUCT, getColorByStatus } from '../../Helpers';
 
 const Timeline = ({
   works, breaks, total, startMinute, withTimeBreaks = true,
@@ -31,17 +31,17 @@ const Timeline = ({
       style={{
         width: timespan.width,
         left: timespan.left,
-        backgroundColor: getColorByStatus(type || ''),
+        backgroundColor: getColorByStatus(type || 'break'),
       }}
     >
       {
         withTimeBreaks && total > 0 ? (
           <>
             <div className={classNames(styles.time, styles.timeStart)}>
-              {format(new Date(timespan.started_at.replace(' ', 'T')), 'HH:mm')}
+              {format(dateToUCT(timespan.started_at), 'HH:mm')}
             </div>
             <div className={classNames(styles.time, styles.timeEnd)}>
-              {format(new Date(timespan.finished_at.replace(' ', 'T')), 'HH:mm')}
+              {format(dateToUCT(timespan.finished_at), 'HH:mm')}
             </div>
           </>
         )
@@ -53,11 +53,13 @@ const Timeline = ({
   return (
     <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
       <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
-        {
-          workTimespans.map((timespan, idx) => (
-            <Timespan key={idx.toString()} timespan={timespan} type='work' />
-          ))
-        }
+        <div className={styles.worktimes}>
+          {
+            workTimespans.map((timespan, idx) => (
+              <Timespan key={idx.toString()} timespan={timespan} type='work' />
+            ))
+          }
+        </div>
         {
           breakTimespans.map((timespan, idx) => (
             <Timespan key={idx.toString()} timespan={timespan} type='break' />

@@ -23,7 +23,7 @@ import { getEmployee, getEmployees } from '../../store/employees/actions';
 import { getSpecializations } from '../../store/specializations/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
-import { minutesToString } from '../Helpers';
+import { dateToUCT, minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
@@ -187,8 +187,8 @@ const Logbook = () => {
           {
             format(
               new Date(
-                new Date(employee.works[0].started_at.replace(' ', 'T')).getTime()
-                + new Date(employee.works[0].started_at.replace(' ', 'T'))
+                dateToUCT(employee.works[0].started_at).getTime()
+                + dateToUCT(employee.works[0].started_at)
                   .getTimezoneOffset() * 60 * 1000,
               ), 'iii, dd, MMMM, yyyy',
             )
@@ -209,6 +209,7 @@ const Logbook = () => {
               <InfoCard
                 type='total'
                 time={selectedItem}
+                showRange
               />
               <Delimiter />
               <InfoCard
@@ -265,7 +266,7 @@ const Logbook = () => {
           <Input
             icon={<SearchIcon />}
             placeholder={`${t('Search')}...`}
-            width='186px'
+            width='18%'
             height='36px'
             value={search}
             onChange={(e) => searchHandler(e.target.value)}
@@ -277,6 +278,7 @@ const Logbook = () => {
             buttonLabel={t('Filter')}
             items={specializations}
             onChange={onSpecSelectChange}
+            width='18%'
           />
           <Delimiter />
           <CustomSelect
@@ -284,9 +286,11 @@ const Logbook = () => {
             buttonLabel={t('Filter')}
             items={employees}
             onChange={onEmployeesSelectChange}
+            width='18%'
           />
           <Delimiter />
           <Button onClick={applyHandler}>{t('Apply')}</Button>
+          <Delimiter />
         </header>
         <Delimiter />
         <DataTable

@@ -32,6 +32,8 @@ import {
 } from '../../store/reports/actions';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
+import { dateToUCT } from "../Helpers";
+import Scrollbar from "react-scrollbars-custom";
 
 const Reports = () => {
   /* Reports data */
@@ -198,8 +200,8 @@ const Reports = () => {
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.setAttribute('download',
-          `Report_${format(new Date(selectedReport.startDate), 'yyyy-MM-dd')}_${format(new Date(selectedReport.endDate),
-            'yyyy-MM-dd')}.${ext}`);
+          `Report_${format(dateToUCT(selectedReport.startDate),
+            'yyyy-MM-dd')}_${format(dateToUCT(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -356,52 +358,81 @@ const Reports = () => {
             <Delimiter />
             Generate Report
           </div>
-          <div className={styles.sidebarContent}>
-            <div className={styles.sidebarTitle}>Report period</div>
-            <DRP initRange={dateRange} onChange={setDateRange} small right />
-            {
-              <>
-                <div className={styles.sidebarTitle}>Objects</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by objects'
-                  onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
-                </div>
-              </>
-            }
-            {
-              <>
-                <div className={styles.sidebarTitle}>Employees</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by employees'
-                  onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
-                </div>
-              </>
-            }
-            {
-              <>
-                <div className={styles.sidebarTitle}>Specialization</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by specialization'
-                  onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
-                </div>
-              </>
-            }
-          </div>
+          <Scrollbar
+            className={styles.scrollableContent}
+            removeTracksWhenNotUsed
+            trackXProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                  />
+                );
+              },
+            }}
+            trackYProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                  />
+                );
+              },
+            }}
+          >
+            <div className={styles.sidebarContent}>
+              <div className={styles.sidebarTitle}>Report period</div>
+              <DRP initRange={dateRange} onChange={setDateRange} small right />
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Objects</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by objects'
+                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
+                  </div>
+                </>
+              }
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Employees</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by employees'
+                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
+                  </div>
+                </>
+              }
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Specialization</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by specialization'
+                    onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
+                  </div>
+                </>
+              }
+            </div>
+          </Scrollbar>
           <div className={styles.actions}>
             <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
           </div>
