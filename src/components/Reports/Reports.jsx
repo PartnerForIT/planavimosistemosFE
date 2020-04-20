@@ -358,81 +358,52 @@ const Reports = () => {
             <Delimiter />
             Generate Report
           </div>
-          <Scrollbar
-            className={styles.scrollableContent}
-            removeTracksWhenNotUsed
-            trackXProps={{
-              renderer: (props) => {
-                const { elementRef, ...restProps } = props;
-                return (
-                  <span
-                    {...restProps}
-                    ref={elementRef}
-                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                  />
-                );
-              },
-            }}
-            trackYProps={{
-              renderer: (props) => {
-                const { elementRef, ...restProps } = props;
-                return (
-                  <span
-                    {...restProps}
-                    ref={elementRef}
-                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                  />
-                );
-              },
-            }}
-          >
-            <div className={styles.sidebarContent}>
-              <div className={styles.sidebarTitle}>Report period</div>
-              <DRP initRange={dateRange} onChange={setDateRange} small right />
-              {
-                <>
-                  <div className={styles.sidebarTitle}>Objects</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by objects'
-                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
-                  </div>
-                </>
-              }
-              {
-                <>
-                  <div className={styles.sidebarTitle}>Employees</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by employees'
-                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
-                  </div>
-                </>
-              }
-              {
-                <>
-                  <div className={styles.sidebarTitle}>Specialization</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by specialization'
-                    onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
-                  </div>
-                </>
-              }
-            </div>
-          </Scrollbar>
+          <div className={styles.sidebarContent}>
+            <div className={styles.sidebarTitle}>Report period</div>
+            <DRP initRange={dateRange} onChange={setDateRange} small right />
+            {
+              <>
+                <div className={styles.sidebarTitle}>Objects</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by objects'
+                  onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
+                </div>
+              </>
+            }
+            {
+              <>
+                <div className={styles.sidebarTitle}>Employees</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by employees'
+                  onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
+                </div>
+              </>
+            }
+            {
+              <>
+                <div className={styles.sidebarTitle}>Specialization</div>
+                <Input
+                  icon={<SearchIcon />}
+                  placeholder='Search by specialization'
+                  onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
+                  fullWidth
+                />
+                <div className={styles.checkboxGroupWrapper}>
+                  <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
+                </div>
+              </>
+            }
+          </div>
           <div className={styles.actions}>
             <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
           </div>
