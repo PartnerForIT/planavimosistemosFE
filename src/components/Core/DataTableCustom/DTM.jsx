@@ -75,8 +75,7 @@ export default function DataTable({
   };
 
   const footerTitleClasses = classNames(
-    styles.footerTitle,
-    { [styles.footerTitleReports]: reports },
+    styles.footerTitle, styles.footerTitleReports,
   );
 
   const tableHeaderCell = classNames(
@@ -93,6 +92,12 @@ export default function DataTable({
   const scrollableContentClasses = classNames(
     styles.scrollableContent,
     { [styles.scrollableContentReports]: reports },
+  );
+
+  const flexTableClasses = classNames(
+    styles.flexTable,
+    styles.header,
+    { [styles.flexTableHeaderReports]: reports },
   );
 
   return (
@@ -126,7 +131,7 @@ export default function DataTable({
         }}
       >
         <div className={styles.tableContent}>
-          <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
+          <div className={flexTableClasses} role='rowgroup'>
             {
               selectable && tableData.length > 0 && (
                 <div
@@ -228,7 +233,7 @@ export default function DataTable({
           totalDuration && (
             <p className={footerTitleClasses}>
               {
-                reports ? 'Overall worktime: ' : 'Overall: '
+                'Overall worktime: '
               }
               <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
             </p>

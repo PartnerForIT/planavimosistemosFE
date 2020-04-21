@@ -38,6 +38,10 @@ $row-bg: #f4f2f1;
     //position: relative;
   }
 
+  &.flexTableHeaderReports {
+    padding: 0 27px 5px 43px;
+  }
+
   &:first-of-type {
     //border-top: solid 1px $table-header-border;
     //border-left: solid 1px $table-header-border;
@@ -337,8 +341,8 @@ $row-bg: #f4f2f1;
   height: 46px;
   padding: 0 17px;
   background-color: #fff;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
   //margin-top: 40px;
   box-shadow: 0 -4px 20px rgba(2, 16, 29, 0.11);
 
@@ -375,14 +379,21 @@ $row-bg: #f4f2f1;
   font-weight: 500;
 }
 
+.total {
+  color: #3e4552;
+  font-family: Helvetica Neue Medium, sans-serif;
+  font-weight: 500;
+}
+
 div {
   box-sizing: border-box;
 }
 
 .tableContent {
   min-height: 250px;
-  height: calc(100vh - 200px);
+  //height: calc(100vh - 200px);
   min-width: 100%;
+  padding-bottom: 10px;
   padding-right: 15px;
   width: fit-content;
   //overflow: scroll;
@@ -394,14 +405,14 @@ div {
   //margin: 2em auto;
   width: 100%;
   border: 1px solid rgba(226, 235, 244, 0.85);
-  border-radius: 10px;
+  border-radius: 12px;
   padding-top: 10px;
   position: relative;
 }
 
 .scrollableContent {
   //overflow: scroll;
-  height: calc(100vh - 165px) !important;
+  height: calc(100vh - 175px) !important;
   width: calc(100% - 22px) !important;
 }
 
@@ -471,16 +482,17 @@ div {
   display: block;
   margin: 0;
   width: 100%;
-  border: 1px solid #f5f9fb;
-  border-radius: 8px;
-  padding: 0;
+  padding: 0 8px;
   overflow: hidden;
 
   .flexTable.header {
     background-color: #edf5fc;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    padding: 0 10px;
+    border-top: 1px solid #f5f9fb;
+    border-left: 1px solid #f5f9fb;
+    border-right: 1px solid #f5f9fb;
+    padding: 0 13px;
   }
 
   .columnName {
@@ -490,7 +502,12 @@ div {
   }
 
   .simpleTableContent {
-    padding: 5px 10px;
+    padding: 5px 13px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid #f5f9fb;
+    border-right: 1px solid #f5f9fb;
+    border-bottom: 1px solid #f5f9fb;
   }
 
   .row {
@@ -580,6 +597,6 @@ div {
   height: 100%;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   background-color: #fff;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }

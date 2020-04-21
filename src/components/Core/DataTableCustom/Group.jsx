@@ -92,7 +92,7 @@ const Group = ({
                   }}
                   role='cell'
                 >
-                  { reports && column.field === 'duration' && <span>Total:&nbsp;</span> }
+                  { column.field === 'duration' && <span className={styles.total}>Total:&nbsp;</span> }
                   <span className={classNames(styles.blueTotals, styles.medium)}>{group[column.field]}</span>
                 </span>
               );

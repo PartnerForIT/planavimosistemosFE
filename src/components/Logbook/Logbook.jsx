@@ -262,35 +262,42 @@ const Logbook = () => {
       <div className={styles.leftContent}>
         <header className={styles.appHeader}>
           <DRP initRange={dateRange} onChange={setDateRange} />
-          <Delimiter />
-          <Input
-            icon={<SearchIcon />}
-            placeholder={`${t('Search')}...`}
-            width='18%'
-            height='36px'
-            value={search}
-            onChange={(e) => searchHandler(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
-          />
-          <Delimiter />
-          <CustomSelect
-            placeholder={t('All Specializations')}
-            buttonLabel={t('Filter')}
-            items={specializations}
-            onChange={onSpecSelectChange}
-            width='18%'
-          />
-          <Delimiter />
-          <CustomSelect
-            placeholder={t('All employees')}
-            buttonLabel={t('Filter')}
-            items={employees}
-            onChange={onEmployeesSelectChange}
-            width='18%'
-          />
-          <Delimiter />
-          <Button onClick={applyHandler}>{t('Apply')}</Button>
-          <Delimiter />
+          <div className={styles.hideOn660}>
+            <Delimiter />
+            <Input
+              icon={<SearchIcon />}
+              placeholder={`${t('Search')}...`}
+              width='auto'
+              height='36px'
+              value={search}
+              onChange={(e) => searchHandler(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
+            />
+          </div>
+          <div className={styles.hideOn750}>
+            <Delimiter />
+            <CustomSelect
+              placeholder={t('All Specializations')}
+              buttonLabel={t('Filter')}
+              items={specializations}
+              onChange={onSpecSelectChange}
+              width='auto'
+            />
+          </div>
+          <div className={styles.hideOn815}>
+            <Delimiter />
+            <CustomSelect
+              placeholder={t('All employees')}
+              buttonLabel={t('Filter')}
+              items={employees}
+              onChange={onEmployeesSelectChange}
+              width='auto'
+            />
+          </div>
+          <div className={styles.hideOn936}>
+            <Delimiter />
+            <Button onClick={applyHandler}>{t('Apply')}</Button>
+          </div>
         </header>
         <Delimiter />
         <DataTable

@@ -3,15 +3,15 @@ import React, {
 } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Scrollbar from 'react-scrollbars-custom';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
-import Scrollbar from "react-scrollbars-custom";
 
 export default function CustomSelect({
-  items, placeholder, buttonLabel, onChange,
+  items, placeholder, buttonLabel, onChange, width = '100%',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -116,12 +116,12 @@ export default function CustomSelect({
   );
 
   const scrollableContentClasses = classNames(
-    styles.scrollableContent
+    styles.scrollableContent,
   );
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div>
+      <div style={{ width }}>
         {/* eslint-disable-next-line jsx-a11y/aria-role */}
         <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
           <input

@@ -32,8 +32,7 @@ import {
 } from '../../store/reports/actions';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
-import { dateToUCT } from "../Helpers";
-import Scrollbar from "react-scrollbars-custom";
+import { dateToUCT } from '../Helpers';
 
 const Reports = () => {
   /* Reports data */
@@ -95,7 +94,13 @@ const Reports = () => {
     const placesArr = checkedPlaces.map((place) => place.id);
     const specsArr = checkedSpecializations.map((spec) => spec.id);
     const employeesArr = checkedEmployees.map((emp) => emp.id);
-    dispatch(getReport(startDate, endDate, specsArr, employeesArr, placesArr)).then().catch();
+    dispatch(getReport(
+      format(startDate, 'yyyy-MM-dd HH:mm:ss'),
+      format(endDate, 'yyyy-MM-dd HH:mm:ss'),
+      specsArr,
+      employeesArr,
+      placesArr,
+    )).then().catch();
   };
 
   useEffect(() => {
@@ -299,20 +304,39 @@ const Reports = () => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <div ref={reportTabs} style={{ display: 'flex', width: '100%', overflowY: 'scroll' }}>
-          {
-            itemsArray.length > 0 && itemsArray.map((report) => (
-              <ClosableCard
-                key={report.id.toString()}
-                title={report.title}
-                description={report.description}
-                reportId={report.id}
-                selected={report.id === activeReport}
-                onClick={setActiveReport}
-                onClose={closeReportTabHandler}
-              />
-            ))
-          }
+        <div
+          ref={reportTabs}
+          style={{
+            display: 'flex',
+            width: 'calc(100vw - 353px)',
+            overflow: 'hidden',
+            height: itemsArray.length > 0 ? '85px' : 0,
+          }}
+        >
+          <div
+            ref={reportTabs}
+            style={{
+              display: 'flex',
+              width: 'calc(100vw - 353px)',
+              overflowX: 'auto',
+              maxHeight: '100px',
+              height: 'fit-content',
+            }}
+          >
+            {
+              itemsArray.length > 0 && itemsArray.map((report) => (
+                <ClosableCard
+                  key={report.id.toString()}
+                  title={report.title}
+                  description={report.description}
+                  reportId={report.id}
+                  selected={report.id === activeReport}
+                  onClick={setActiveReport}
+                  onClose={closeReportTabHandler}
+                />
+              ))
+            }
+          </div>
         </div>
         <div className={mainContainerClasses}>
           {

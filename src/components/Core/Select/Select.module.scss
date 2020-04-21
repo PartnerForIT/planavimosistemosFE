@@ -18,7 +18,8 @@
 .inputWrapper {
   cursor: pointer;
   position: relative;
-  width: fit-content;
+  width: 100%;
+  min-width: 60px;
 
   &::before {
     content: "";
@@ -38,7 +39,7 @@
 }
 
 .customSelect {
-  width: 176px;
+  width: 100%;
   height: 36px;
   background-color: #fff;
   border: 1px solid #d0dfef;
