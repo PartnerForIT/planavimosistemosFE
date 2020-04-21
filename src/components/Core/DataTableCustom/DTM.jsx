@@ -81,7 +81,7 @@ export default function DataTable({
   const tableHeaderCell = classNames(
     styles.flexRowGlobal,
     styles.columnName,
-    { [styles.flexRowGlobalReports]: reports },
+    styles.flexRowGlobalReports,
   );
 
   const sortBlockClasses = classNames(

@@ -264,6 +264,11 @@ $row-bg: #f4f2f1;
   min-width: 140px;
   text-align: left;
   padding: 8px;
+
+  &:last-of-type {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .flexRowGroupReports {
@@ -360,7 +365,7 @@ $row-bg: #f4f2f1;
 
 .footerTitleReports {
   margin-left: auto;
-  padding-right: 23px;
+  padding-right: 50px;
 }
 
 .blueTotals {
