@@ -167,38 +167,38 @@
 
   .scrollableContent {
     //overflow: scroll;
-    height: calc(100% - 70px) !important;
-    width: 100% !important;
-    margin-bottom: 5px;
+    height: fit-content !important;
+    width: calc(100vw - 353px) !important;
+    //margin-bottom: 5px;
   }
+}
 
-  .scrollbarTrackX {
-    background-color: transparent !important;
+.scrollbarTrackX {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  height: 7px !important;
+  bottom: 4px !important;
+  left: 10px !important;
+  width: calc(100% - 10px) !important;
+  z-index: 1 !important;
+
+  div {
+    background-color: #d5dde1 !important;
     border-radius: 10px !important;
-    height: 7px !important;
-    bottom: 7px !important;
-    left: 15px !important;
-    width: calc(100% - 35px) !important;
-    z-index: 1 !important;
-
-    div {
-      background-color: #d5dde1 !important;
-      border-radius: 10px !important;
-    }
   }
+}
 
-  .scrollbarTrackY {
-    background-color: transparent !important;
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 15px) !important;
+  top: 5px !important;
+  right: 0 !important;
+  z-index: 1;
+
+  div {
+    background-color: #d5dde1 !important;
     border-radius: 10px !important;
-    width: 7px !important;
-    height: calc(100% - 15px) !important;
-    top: 5px !important;
-    right: 0 !important;
-    z-index: 1;
-
-    div {
-      background-color: #d5dde1 !important;
-      border-radius: 10px !important;
-    }
   }
 }

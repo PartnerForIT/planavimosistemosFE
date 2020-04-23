@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
+import Scrollbar from 'react-scrollbars-custom';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -85,9 +86,9 @@ const Reports = () => {
     dispatch(getReportsSpecializations({})).then().catch();
   }, []);
 
-  useEffect(() => {
-    reportTabs.current.scrollLeft = itemsArray.length * 246;
-  }, [itemsArray]);
+  // useEffect(() => {
+  //   reportTabs.current.scrollLeft = itemsArray.length * 246;
+  // }, [itemsArray]);
 
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
@@ -304,41 +305,65 @@ const Reports = () => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <div
-          style={{
-            display: 'flex',
-            width: 'calc(100vw - 353px)',
-            overflow: 'hidden',
-            height: itemsArray.length > 0 ? '85px' : 0,
-          }}
-        >
-          <div
-            ref={reportTabs}
-            style={{
-              display: 'flex',
-              width: 'calc(100vw - 353px)',
-              overflowX: 'auto',
-              maxHeight: '100px',
-              height: 'fit-content',
+        {itemsArray.length > 0 && (
+          <Scrollbar
+            className={styles.scrollableContent}
+            style={{ height: `85px` }}
+            removeTracksWhenNotUsed
+            disableTrackYMousewheelScrolling
+            noScrollY
+            trackXProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                  />
+                );
+              },
+            }}
+            trackYProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                  />
+                );
+              },
             }}
           >
-            {
-              itemsArray.length > 0 && itemsArray.map((report) => (
-                <ClosableCard
-                  key={report.id.toString()}
-                  title={report.title}
-                  description={report.description}
-                  reportId={report.id}
-                  selected={report.id === activeReport}
-                  onClick={setActiveReport}
-                  onClose={closeReportTabHandler}
-                />
-              ))
-            }
-          </div>
-        </div>
-        <div className={mainContainerClasses} 
-             style={{ height: itemsArray.length > 0 ? `calc(100vh - 125px)` : 'calc(100vh - 40px)' }}>
+            <div
+              ref={reportTabs}
+              style={{
+                display: 'flex',
+                maxHeight: '85px',
+              }}
+            >
+              {
+                itemsArray.length > 0 && itemsArray.map((report) => (
+                  <ClosableCard
+                    key={report.id.toString()}
+                    title={report.title}
+                    description={report.description}
+                    reportId={report.id}
+                    selected={report.id === activeReport}
+                    onClick={setActiveReport}
+                    onClose={closeReportTabHandler}
+                  />
+                ))
+              }
+            </div>
+          </Scrollbar>
+        )}
+        <div
+          className={mainContainerClasses}
+          style={{ height: itemsArray.length > 0 ? 'calc(100vh - 125px)' : 'calc(100vh - 40px)' }}
+        >
           {
             itemsArray.length > 0 && activeReport
               ? itemsArray.map((report) => report.id === activeReport && (
