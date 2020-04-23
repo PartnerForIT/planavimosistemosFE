@@ -342,6 +342,9 @@ const Reports = () => {
               style={{
                 display: 'flex',
                 maxHeight: '85px',
+                paddingRight: '5px',
+                width: 'fit-content',
+                paddingLeft: '10px',
               }}
             >
               {

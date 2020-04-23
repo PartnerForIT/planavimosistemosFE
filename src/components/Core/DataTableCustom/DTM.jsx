@@ -120,8 +120,12 @@ export default function DataTable({
   );
 
   return (
-    <div className={classNames(styles.tableContainer)} style={{ height: `calc(100vh - ${verticalOffset})` }}
-         role='table' aria-label='Destinations'>
+    <div
+      className={classNames(styles.tableContainer)}
+      style={{ height: `calc(100vh - ${verticalOffset})` }}
+      role='table'
+      aria-label='Destinations'
+    >
       <Scrollbar
         className={scrollableContentClasses}
         style={{ height: `calc(100vh - ${verticalOffset} - 47px)` }}
@@ -159,7 +163,7 @@ export default function DataTable({
                   <div
                     className={classNames(styles.flexRowGlobal, styles.columnName, styles.checkboxCell)}
                     style={{
-                      marginRight: '5px'
+                      marginRight: '5px',
                     }}
                     role='columnheader'
                   >
@@ -188,7 +192,7 @@ export default function DataTable({
                   } else {
                     width = selectable
                       ? `calc((100% - 40px) / ${visibleColumns.length})`
-                      : `calc((100%) / ${visibleColumns.length})`
+                      : `calc((100%) / ${visibleColumns.length})`;
                   }
                   return (
                     <div
