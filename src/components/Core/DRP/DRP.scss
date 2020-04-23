@@ -29,6 +29,10 @@
   width: calc((100% - 36px - 26px) / 2);
 
   &:focus {
+    outline: none;
+  }
+
+  &.active {
     color: $blue-grownu;
     border: 1px solid $blue-grownu;
     outline: none;

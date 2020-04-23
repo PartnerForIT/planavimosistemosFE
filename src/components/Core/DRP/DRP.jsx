@@ -30,9 +30,16 @@ const DRP = ({
     calendarIconSmall: small,
   });
 
-  const inputClasses = classNames({
+  const startInputClasses = classNames({
     dateInput: true,
     dateInputSmall: small,
+    active: open && ((!startDate && !endDate) || (startDate && endDate)),
+  });
+
+  const endInputClasses = classNames({
+    dateInput: true,
+    dateInputSmall: small,
+    active: open && (startDate && typeof endDate === 'undefined'),
   });
 
   const definedRangesClasses = classNames({
@@ -59,6 +66,10 @@ const DRP = ({
     setDateRange(initRange);
   }, [initRange]);
 
+  useEffect(() => {
+    if (dateRange.startDate && dateRange.endDate) setOpen(false);
+  }, [dateRange]);
+
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className={pickerWrapperClasses}>
@@ -76,7 +87,10 @@ const DRP = ({
               {defaultRanges.map((range, idx) => (
                 <Button
                   key={idx.toString()}
-                  onClick={() => { setPredefinedDateRange({ startDate: range.startDate, endDate: range.endDate }); }}
+                  onClick={() => {
+                    setPredefinedDateRange({ startDate: range.startDate, endDate: range.endDate });
+                    setDefinedRangesOpen(false);
+                  }}
                   fillWidth
                 >
                   {t(range.label)}
@@ -87,7 +101,7 @@ const DRP = ({
           : null}
         <input
           type='text'
-          className={inputClasses}
+          className={startInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
           value={startDate ? format(startDate, 'MMM, dd, yyyy') : t('Start Date')}
@@ -95,7 +109,7 @@ const DRP = ({
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
           type='text'
-          className={inputClasses}
+          className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
           value={endDate ? format(endDate, 'MMM, dd, yyyy') : t('End Date')}
@@ -115,7 +129,7 @@ const DRP = ({
                 <DateRangePicker
                   initialDateRange={predefinedDateRange}
                   open={open}
-                  onChange={(range) => onChange(range)}
+                  onChange={(range) => { setDateRange(range); onChange(range); }}
                 />
               </div>
             )

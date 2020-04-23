@@ -95,8 +95,8 @@ const Reports = () => {
     const specsArr = checkedSpecializations.map((spec) => spec.id);
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     dispatch(getReport(
-      format(startDate, 'yyyy-MM-dd HH:mm:ss'),
-      format(endDate, 'yyyy-MM-dd HH:mm:ss'),
+      startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
       specsArr,
       employeesArr,
       placesArr,

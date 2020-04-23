@@ -72,6 +72,7 @@ const Logbook = () => {
 
   const sendRequest = (props) => {
     const { startDate, endDate } = dateRange;
+    if (startDate && !endDate) return;
     dispatch(getWorkTime({
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
