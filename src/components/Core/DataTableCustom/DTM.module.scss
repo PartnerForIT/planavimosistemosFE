@@ -52,6 +52,7 @@ header {
   &.header {
     padding-left: 15px;
     padding-right: 25px;
+    flex-flow: nowrap;
   }
 
   &.flexTableHeaderReports {
