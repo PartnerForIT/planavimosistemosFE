@@ -2,29 +2,31 @@
   background-color: #edf4fa;
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  //justify-content: center;
   height: 100vh;
-  min-height: 485px;
-  padding: 15px 25px;
+  min-height: 435px;
+  padding: 0 25px 0 0;
   width: 100vw;
-  min-width: fit-content;
+  //min-width: fit-content;
 }
 
 .mainContainer {
-  height: 100%;
+  height: calc(100vh - 40px);
+  min-height: 400px;
 }
 
 .mainContainerWithReports {
-  height: calc(100% - 83px);
+  min-height: calc(100% - 85px);
 }
 
 .emptyContainer {
   background-color: #fff;
+  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   //margin: 2em auto;
   width: 100%;
   border: 1px solid rgba(226, 235, 244, 0.85);
-  border-radius: 10px;
+  border-radius: 12px;
   padding-top: 10px;
   position: relative;
   justify-content: center;
@@ -85,7 +87,7 @@
 .appHeader {
   background-color: #fff;
   border: 1px solid rgba(226, 235, 244, 0.85);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   padding: 13px 20px;
@@ -98,24 +100,27 @@
 }
 
 .leftContent {
-  width: calc(100% - 300px);
+  padding: 15px 15px 25px 25px;
+  width: calc(100% - 287px);
   overflow: hidden;
 }
 
 .rightSidebar {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   justify-content: center;
   padding: 20px 15px;
   position: relative;
   text-align: center;
-  margin-left: 15px;
   min-width: 287px;
   max-width: 287px;
-  min-height: 455px;
-  height: calc(100vh - 30px);
+  //min-height: 455px;
+  //height: calc(100vh - 30px);
+  margin-top: 15px;
+  min-height: 400px;
+  height: calc(100vh - 41px);
 
   .sidebarTitle {
     color: #808f94;

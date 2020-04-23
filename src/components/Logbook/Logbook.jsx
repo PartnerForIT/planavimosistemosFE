@@ -13,12 +13,13 @@ import TableIcon from '../Icons/TableIcon';
 import {
   workTimeSelector,
   columnsSelector,
+  columnsWidthSelector,
   totalDurationSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import { employeeSelector, employeesSelector, employeeLoadingSelector } from '../../store/employees/selectors';
 import { specializationsSelector } from '../../store/specializations/selectors';
-import { getWorkTime } from '../../store/worktime/actions';
+import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployee, getEmployees } from '../../store/employees/actions';
 import { getSpecializations } from '../../store/specializations/actions';
 import avatar from '../Icons/avatar.png';
@@ -33,6 +34,7 @@ const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
+  const [columnsWidthArray, setColumnsWidthArray] = useState({});
   const [totalDuration, setTotalDuration] = useState(null);
   const [employee, setEmployee] = useState(null);
   const [employeeLoading, setEmployeeLoading] = useState(null);
@@ -56,6 +58,7 @@ const Logbook = () => {
   const workTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const columns = useSelector(columnsSelector);
+  const columnsWidth = useSelector(columnsWidthSelector);
   const selectedEmployee = useSelector(employeeSelector);
   const getAllEmployees = useSelector(employeesSelector);
   const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
@@ -76,7 +79,11 @@ const Logbook = () => {
       specs: checkedSpecializations.map((item) => item.id),
       employees: checkedEmployees.map((item) => item.id),
       ...props,
-    })).then().catch();
+    })).then(() => {
+      setCheckedItems([]);
+      setEmployee(null);
+      setSelectedItem(null);
+    }).catch();
   };
 
   useEffect(() => {
@@ -91,8 +98,9 @@ const Logbook = () => {
   useEffect(() => {
     setItemsArray(workTime);
     setColumnsArray(columns);
+    setColumnsWidthArray(columnsWidth);
     setTotalDuration(getTotalDuration);
-  }, [workTime, columns, getTotalDuration]);
+  }, [workTime, columns, columnsWidth, getTotalDuration]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -178,6 +186,12 @@ const Logbook = () => {
     sendRequest({ search: term });
   };
 
+  const deleteItems = () => {
+    dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
+      sendRequest();
+    }).catch();
+  };
+
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
       <div className={styles.hero}>
@@ -235,7 +249,8 @@ const Logbook = () => {
         <div className={styles.topBlock}>
           <CheckboxIcon className={styles.checkboxIcon} />
           <div className={styles.entryTitle}>
-            {`${checkedItems.length} entries`}
+            {`${checkedItems.length} `}
+            { checkedItems.length === 1 ? 'entry' : 'entries' }
           </div>
           <div className={styles.entryDescription}>
             selected
@@ -252,7 +267,9 @@ const Logbook = () => {
         </div>
       </div>
       <div className={styles.actions}>
-        <Button onClick={console.log} danger fillWidth>{t('Delete All')}</Button>
+        <Button onClick={() => deleteItems()} danger fillWidth>
+          { checkedItems.length === 1 ? t('Delete') : t('Delete All') }
+        </Button>
       </div>
     </div>
   );
@@ -303,6 +320,7 @@ const Logbook = () => {
         <DataTable
           data={itemsArray || []}
           columns={columnsArray || []}
+          columnsWidth={columnsWidthArray || {}}
           onColumnsChange={setColumnsArray}
           selectable
           sortable
@@ -317,13 +335,14 @@ const Logbook = () => {
           selectedItem={selectedItem}
           totalDuration={totalDuration}
           setSelectedItem={rowSelectionHandler}
+          verticalOffset='123px'
         />
       </div>
 
       <div className={styles.rightSidebar}>
         {
           // eslint-disable-next-line no-nested-ternary
-          checkedItems.length > 1
+          checkedItems.length > 0
             ? (
               <MultipleEntries />
             )

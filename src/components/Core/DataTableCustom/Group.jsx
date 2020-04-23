@@ -7,13 +7,15 @@ import TriangleIcon from '../../Icons/TriangleIcon';
 
 const Group = ({
   group, label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
-  titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked, reports,
+  titleBackground = 'rgba(0, 133, 255, 0.09)', selectable, onSelect, groupChecked, reports, columnsWidth,
+  totalCustomColumns, totalCustomWidthColumns,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   const detailsClasses = classNames(
     styles.details,
-    { [styles.datailsHidden]: !expanded, [styles.detailsShown]: expanded , [styles.detailsReports]: reports },
+    { [styles.datailsHidden]: !expanded, [styles.detailsShown]: expanded,
+      [styles.detailsReports]: reports, [styles.detailsNotSelectable]: !reports && !selectable },
   );
 
   const iconClasses = classNames(
@@ -40,16 +42,19 @@ const Group = ({
     { [styles.groupLabelReports]: reports },
   );
 
+  const groupContainerClasses = classNames(
+    styles.groupContainer,
+    { [styles.groupContainerReports]: reports },
+  );
+
   return (
-    <div className={classNames(styles.groupContainer)}>
-      <div className={classNames(styles.groupLabel)} style={{ color: titleColor, backgroundColor: titleBackground }}>
+    <div className={groupContainerClasses}>
+      <div className={classNames(styles.groupLabel)} style={{ color: titleColor, backgroundColor: titleBackground, 
+        paddingRight: !selectable && '0' }}>
         {
           selectable && (
             <div
               className={rowClasses}
-              style={{
-                width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-              }}
               role='columnheader'
             >
               <StyledCheckbox
@@ -68,14 +73,29 @@ const Group = ({
         >
           {
             columns.map((column, idx) => {
+              let width = '';
+              let minWidth = null;
+              if (totalCustomWidthColumns > 0) {
+                if (columnsWidth[column.field]) {
+                  width = columnsWidth[column.field];
+                  minWidth = columnsWidth[column.field];
+                } else {
+                  width = selectable
+                    ? `calc((100% - ${totalCustomWidthColumns + 35}px) / ${columns.length - totalCustomColumns})`
+                    : `calc((100% - ${totalCustomWidthColumns}px) / ${columns.length - totalCustomColumns})`;
+                }
+              } else {
+                width = selectable
+                  ? `calc((100% - 35px) / ${columns.length})`
+                  : `calc((100%) / ${columns.length})`
+              }
+              
               if (idx === 0) {
                 return (
                   <span
                     key={idx.toString()}
                     className={groupLabelClasses}
-                    style={{
-                      width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-                    }}
+                    style={{ width, minWidth }}
                   >
                     <TriangleIcon className={iconClasses} fill={titleColor} />
                     <span className={classNames(styles.groupLabelText)}>{label}</span>
@@ -86,10 +106,7 @@ const Group = ({
                 <span
                   key={idx.toString()}
                   className={rowGroupClasses}
-                  style={{
-                    width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-                    padding: '0 1px!important',
-                  }}
+                  style={{ width, minWidth, padding: '0 1px!important', }}
                   role='cell'
                 >
                   { column.field === 'duration' && <span className={styles.total}>Total:&nbsp;</span> }
@@ -113,6 +130,9 @@ const Group = ({
               onSelect={onSelect}
               fieldIcons={fieldIcons}
               reports={reports}
+              columnsWidth={columnsWidth}
+              totalCustomWidthColumns={totalCustomWidthColumns}
+              totalCustomColumns={totalCustomColumns}
             />
           ))
         }

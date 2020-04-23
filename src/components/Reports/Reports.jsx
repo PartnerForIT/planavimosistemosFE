@@ -305,7 +305,6 @@ const Reports = () => {
     <div className={styles.container}>
       <div className={styles.leftContent}>
         <div
-          ref={reportTabs}
           style={{
             display: 'flex',
             width: 'calc(100vw - 353px)',
@@ -338,7 +337,8 @@ const Reports = () => {
             }
           </div>
         </div>
-        <div className={mainContainerClasses}>
+        <div className={mainContainerClasses} 
+             style={{ height: itemsArray.length > 0 ? `calc(100vh - 125px)` : 'calc(100vh - 40px)' }}>
           {
             itemsArray.length > 0 && activeReport
               ? itemsArray.map((report) => report.id === activeReport && (
@@ -355,6 +355,7 @@ const Reports = () => {
                   reports
                   downloadExcel={() => downloadReport(downloadExcel, 'xls')}
                   downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
+                  verticalOffset='127px'
                 />
               ))
               : (

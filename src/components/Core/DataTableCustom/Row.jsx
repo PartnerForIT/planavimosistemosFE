@@ -9,7 +9,8 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports,
+  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
+  totalCustomColumns, totalCustomWidthColumns,
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
@@ -68,9 +69,6 @@ const Row = ({
           selectable && (
             <div
               className={classNames(styles.flexRowGroup, styles.cell, styles.checkboxCell)}
-              style={{
-                width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-              }}
               role='cell'
             >
               <StyledCheckbox
@@ -89,14 +87,29 @@ const Row = ({
               const fieldIcon = fieldIcons[column.field].filter((icon) => icon.value === row[column.field])[0].value;
               IconComponent = Components[fieldIcon];
             }
+            let width = '';
+            let minWidth = null;
+            if (totalCustomWidthColumns > 0) {
+              if (columnsWidth[column.field]) {
+                width = columnsWidth[column.field];
+                minWidth = columnsWidth[column.field];
+              } else {
+                width = selectable
+                  ? `calc((100% - ${totalCustomWidthColumns + 35}px) / ${columns.length - totalCustomColumns})`
+                  : `calc((100% - ${totalCustomWidthColumns}px) / ${columns.length - totalCustomColumns})`;
+              }
+            } else {
+              width = selectable
+                ? `calc((100% - 35px) / ${columns.length})`
+                : `calc((100%) / ${columns.length})`
+            }
+
             return (
               <div // eslint-disable-line jsx-a11y/no-static-element-interactions
                 onClick={() => selectRow(row)}
                 key={idx.toString()}
                 className={rowClasses}
-                style={{
-                  width: selectable ? `calc((100% - 35px) / ${columns.length})` : `calc(100% / ${columns.length})`,
-                }}
+                style={{ width, minWidth }}
                 role='cell'
               >
                 {row.data && row.data.columns && row.data.items && idx === 0
