@@ -14,8 +14,12 @@ const Group = ({
 
   const detailsClasses = classNames(
     styles.details,
-    { [styles.datailsHidden]: !expanded, [styles.detailsShown]: expanded,
-      [styles.detailsReports]: reports, [styles.detailsNotSelectable]: !reports && !selectable },
+    {
+      [styles.datailsHidden]: !expanded,
+      [styles.detailsShown]: expanded,
+      [styles.detailsReports]: reports,
+      [styles.detailsNotSelectable]: !reports && !selectable,
+    },
   );
 
   const iconClasses = classNames(
@@ -49,8 +53,14 @@ const Group = ({
 
   return (
     <div className={groupContainerClasses}>
-      <div className={classNames(styles.groupLabel)} style={{ color: titleColor, backgroundColor: titleBackground, 
-        paddingRight: !selectable && '0' }}>
+      <div
+        className={classNames(styles.groupLabel)}
+        style={{
+          color: titleColor,
+          backgroundColor: titleBackground,
+          paddingRight: !selectable && '0',
+        }}
+      >
         {
           selectable && (
             <div
@@ -87,9 +97,9 @@ const Group = ({
               } else {
                 width = selectable
                   ? `calc((100% - 35px) / ${columns.length})`
-                  : `calc((100%) / ${columns.length})`
+                  : `calc((100%) / ${columns.length})`;
               }
-              
+
               if (idx === 0) {
                 return (
                   <span
@@ -106,7 +116,7 @@ const Group = ({
                 <span
                   key={idx.toString()}
                   className={rowGroupClasses}
-                  style={{ width, minWidth, padding: '0 1px!important', }}
+                  style={{ width, minWidth, padding: '0 1px!important' }}
                   role='cell'
                 >
                   { column.field === 'duration' && <span className={styles.total}>Total:&nbsp;</span> }

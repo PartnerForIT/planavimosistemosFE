@@ -23,14 +23,29 @@ describe('ClosableCard', () => {
 
   it('displays ClosableCard date range', () => {
     const { getByText } = render(
-      <ClosableCard title={title} dateRange={data} />,
+      <ClosableCard
+        title={title}
+        description={`${data.start_date} - ${data.end_date}`}
+        reportId='1'
+        onClick={console.log}
+        onClose={console.log}
+      />,
     );
     const dateRange = getByText(`${data.start_date} - ${data.end_date}`);
     expect(dateRange).toBeInTheDocument();
   });
 
   // it('displays ClosableCard selected', () => {
-  //   const { getByTestId } = render(<ClosableCard title={title} dateRange={data} />);
+  //   const { getByTestId } = render(
+  //     <ClosableCard
+  //       title={title}
+  //       description={`${data.start_date} - ${data.end_date}`}
+  //       reportId='1'
+  //       selected
+  //       onClick={console.log}
+  //       onClose={console.log}
+  //     />,
+  //   );
   //   const element = getByTestId('closablecard');
   //   userEvent.click(element);
   //   expect(element).toHaveClass('cardSelected');

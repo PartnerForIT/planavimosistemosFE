@@ -27,7 +27,7 @@ describe('InfoCard', () => {
 
   it('displays InfoCard time range', () => {
     const { getByText } = render(
-      <InfoCard type='total' label={label} text={text} time={data} />,
+      <InfoCard type='total' label={label} text={text} time={data} showRange />,
     );
 
     const timeRange = getByText('08:45 - 01:12');

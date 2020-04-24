@@ -34,10 +34,31 @@ header {
 }
 
 .columnName {
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: #808f94;
+}
+
+.column {
+  display: flex;
+  flex-flow: column wrap;
+  width: 75%;
+  padding: 0;
+
+  .flexRow {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    //border-bottom: solid 1px $table-border;
+
+    //&:hover {
+    //  background: #f5f5f5;
+    //  transition: 500ms;
+    //}
+  }
 }
 
 .flexTable {
@@ -59,7 +80,7 @@ header {
     padding: 3px 18px 3px 0;
     margin-left: 15px;
   }
-  
+
   &.flexTableHeaderNotSelectable {
     padding-left: 45px;
   }
@@ -150,22 +171,6 @@ header {
   z-index: 3;
 }
 
-.groupContainer {
-  padding: 0 15px;
-  padding-right: 30px;
-  min-width: 100%;
-
-  &:first-of-type {
-    .groupLabel {
-      margin-top: 0;
-    }
-  }
-  
-  &.groupContainerReports {
-    padding-right: 15px;
-  }
-}
-
 .groupLabel {
   align-items: center;
   height: 34px;
@@ -187,8 +192,24 @@ header {
     user-select: none;
     color: #4d7499;
     text-transform: uppercase;
-    font-family: Helvetica Neue Medium, sans-serif;
+    font-family: 'Helvetica Neue Medium', sans-serif;
     font-weight: 500;
+  }
+}
+
+.groupContainer {
+  padding: 0 15px;
+  padding-right: 30px;
+  min-width: 100%;
+
+  &:first-of-type {
+    .groupLabel {
+      margin-top: 0;
+    }
+  }
+
+  &.groupContainerReports {
+    padding-right: 15px;
   }
 }
 
@@ -323,7 +344,7 @@ header {
 }
 
 .flexRowGroupReports {
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-weight: 500;
 
   &:last-of-type {
@@ -334,7 +355,7 @@ header {
 
 .groupLabelReports {
   color: #4d7499;
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
@@ -352,7 +373,7 @@ header {
 
 .reportsFlexRowSelected {
   color: #0085ff;
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-size: 14px;
   font-weight: 500;
 }
@@ -409,7 +430,7 @@ header {
 
 .footerTitle {
   color: #3e4552;
-  font-family: Helvetica Neue Bold, sans-serif;
+  font-family: 'Helvetica Neue Bold', sans-serif;
   font-size: 14px;
   //font-weight: 600;
 }
@@ -426,18 +447,18 @@ header {
 }
 
 .bold {
-  font-family: Helvetica Neue Bold, sans-serif;
+  font-family: 'Helvetica Neue Bold', sans-serif;
   //font-weight: 600;
 }
 
 .medium {
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-weight: 500;
 }
 
 .total {
   color: #3e4552;
-  font-family: Helvetica Neue Medium, sans-serif;
+  font-family: 'Helvetica Neue Medium', sans-serif;
   font-weight: 500;
 }
 
@@ -452,7 +473,7 @@ div {
   padding-bottom: 10px;
   //padding-right: 15px;
   width: fit-content;
-  
+
   &.tableContentNotSortable {
     //padding-right: 15px;
   }
@@ -523,27 +544,6 @@ div {
   height: 100%;
 }
 
-.column {
-  display: flex;
-  flex-flow: column wrap;
-  width: 75%;
-  padding: 0;
-
-  .flexRow {
-    display: flex;
-    flex-flow: row wrap;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    //border-bottom: solid 1px $table-border;
-
-    //&:hover {
-    //  background: #f5f5f5;
-    //  transition: 500ms;
-    //}
-  }
-}
-
 .simpleTableContainer {
   display: block;
   margin: 0;
@@ -563,7 +563,7 @@ div {
 
   .columnName {
     color: #4d7499;
-    font-family: Helvetica Neue Medium, sans-serif;
+    font-family: 'Helvetica Neue Medium', sans-serif;
     font-weight: 500;
   }
 

@@ -308,7 +308,7 @@ const Reports = () => {
         {itemsArray.length > 0 && (
           <Scrollbar
             className={styles.scrollableContent}
-            style={{ height: `85px` }}
+            style={{ height: '85px' }}
             removeTracksWhenNotUsed
             disableTrackYMousewheelScrolling
             noScrollY

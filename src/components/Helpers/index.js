@@ -1,7 +1,7 @@
 import { getMinutes, getHours, getSeconds } from 'date-fns';
 
 // export const dateToUCT = (date) => (new Date(`${date}Z`.replace(' ', 'T')));
-export const dateToUCT = (date) => (new Date(date.replace(/-/g,'/').replace('T',' ').replace(/\..*|\+.*/,"")));
+export const dateToUCT = (date) => (new Date(date.replace(/-/g, '/').replace('T', ' ').replace(/\..*|\+.*/, '')));
 
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');

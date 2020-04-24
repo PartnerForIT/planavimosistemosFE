@@ -4,7 +4,9 @@ import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
 import PendingIcon from '../../Icons/PendingIcon';
 import EditIcon from '../../Icons/EditIcon';
-import { getInfoCardColors, timeToMinutes, minutesToString, dateToUCT } from '../../Helpers';
+import {
+  getInfoCardColors, timeToMinutes, minutesToString, dateToUCT,
+} from '../../Helpers';
 import PauseIcon from '../../Icons/PauseIcon';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
@@ -170,14 +172,13 @@ const InfoCard = ({
                   </div>
                 </>
               )
-              : showRange ? (
+              : showRange && (
                 <>
                   {`${start} - ${end}`}
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                   { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIcon /></div> }
                 </>
               )
-                : null
           }
 
         </div>

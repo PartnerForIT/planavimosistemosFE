@@ -186,7 +186,8 @@ export default function DataTable({
                       minWidth = columnsWidth[column.field];
                     } else {
                       width = selectable
-                        ? `calc((100% - ${totalCustomWidthColumns + 40}px) / ${visibleColumns.length - totalCustomColumns})`
+                        ? `calc((100% - ${totalCustomWidthColumns + 40}px) / ${visibleColumns.length
+                        - totalCustomColumns})`
                         : `calc((100% - ${totalCustomWidthColumns}px) / ${visibleColumns.length - totalCustomColumns})`;
                     }
                   } else {

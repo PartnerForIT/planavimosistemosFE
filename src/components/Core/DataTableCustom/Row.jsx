@@ -101,7 +101,7 @@ const Row = ({
             } else {
               width = selectable
                 ? `calc((100% - 35px) / ${columns.length})`
-                : `calc((100%) / ${columns.length})`
+                : `calc((100%) / ${columns.length})`;
             }
 
             return (
