@@ -285,7 +285,7 @@ const Logbook = () => {
             <Input
               icon={<SearchIcon />}
               placeholder={`${t('Search')}...`}
-              width='auto'
+              width='100%'
               height='36px'
               value={search}
               onChange={(e) => searchHandler(e.target.value)}

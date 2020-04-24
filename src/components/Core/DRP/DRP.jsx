@@ -121,6 +121,7 @@ const DRP = ({
                 initialDateRange={predefinedDateRange}
                 open={open}
                 onChange={(range) => onChange(range)}
+                startYear='2018'
               />
             </div>
           )
@@ -130,6 +131,7 @@ const DRP = ({
                   initialDateRange={predefinedDateRange}
                   open={open}
                   onChange={(range) => { setDateRange(range); onChange(range); }}
+                  startYear='2018'
                 />
               </div>
             )
