@@ -188,9 +188,12 @@ const Logbook = () => {
   };
 
   const deleteItems = () => {
-    dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
-      sendRequest();
-    }).catch();
+    const confirm = window.confirm('Are you sure you want to delete this entry/entries?');
+    if (confirm) {
+      dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
+        sendRequest();
+      }).catch();
+    }
   };
 
   const EmployeeInfo = () => (
@@ -300,6 +303,7 @@ const Logbook = () => {
               items={specializations}
               onChange={onSpecSelectChange}
               width='auto'
+              type='skills'
             />
           </div>
           <div className={styles.hideOn815}>
@@ -310,6 +314,7 @@ const Logbook = () => {
               items={employees}
               onChange={onEmployeesSelectChange}
               width='auto'
+              type='employees'
             />
           </div>
           <div className={styles.hideOn936}>

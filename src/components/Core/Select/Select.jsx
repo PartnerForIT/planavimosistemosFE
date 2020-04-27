@@ -11,7 +11,7 @@ import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
 export default function CustomSelect({
-  items, placeholder, buttonLabel, onChange, width = '100%',
+  items, placeholder, buttonLabel, onChange, width = '100%', type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -119,6 +119,9 @@ export default function CustomSelect({
     styles.scrollableContent,
   );
 
+  const generateLabel = () => (checkedItems.length === 1 ? checkedItems[0].label
+    : `${checkedItems.filter((e) => e.type !== 'group').length} ${type} selected`);
+
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div style={{ width }}>
@@ -126,7 +129,7 @@ export default function CustomSelect({
         <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
           <input
             type='text'
-            value={checkedItems && checkedItems.filter((e) => e.type !== 'group').map((e) => e.label).join(', ')}
+            value={checkedItems.length > 0 ? generateLabel() : ''}
             placeholder={placeholder}
             className={customSelectClasses}
           />

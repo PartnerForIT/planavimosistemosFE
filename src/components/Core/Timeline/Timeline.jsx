@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { format } from 'date-fns';
 import styles from './Timeline.module.scss';
-import { datetimeToSeconds, dateToUCT, getColorByStatus } from '../../Helpers';
+import { datetimeToSeconds } from '../../Helpers';
+import Timespan from './Timespan';
 
 const Timeline = ({
   works, breaks, total, startMinute, withTimeBreaks = true,
@@ -24,47 +24,35 @@ const Timeline = ({
     setBreakTimespans(calculateTimespans(breaks));
   }, [works, breaks, startMinute, total]);
 
-  const Timespan = ({ timespan, type }) => (
-    <div
-      className={classNames(styles.timespan,
-        { [styles.workTime]: type === 'work', [styles.breakTime]: type === 'break' })}
-      style={{
-        width: timespan.width,
-        left: timespan.left,
-        backgroundColor: getColorByStatus(type || 'break'),
-      }}
-    >
-      {
-        withTimeBreaks && total > 0 ? (
-          <>
-            <div className={classNames(styles.time, styles.timeStart)}>
-              {format(dateToUCT(timespan.started_at), 'HH:mm')}
-            </div>
-            <div className={classNames(styles.time, styles.timeEnd)}>
-              {format(dateToUCT(timespan.finished_at), 'HH:mm')}
-            </div>
-          </>
-        )
-          : null
-      }
-    </div>
-  );
-
   return (
     <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
       <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
         <div className={styles.worktimes}>
           {
             workTimespans.map((timespan, idx) => (
-              <Timespan key={idx.toString()} timespan={timespan} type='work' />
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type='work'
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
             ))
           }
         </div>
-        {
-          breakTimespans.map((timespan, idx) => (
-            <Timespan key={idx.toString()} timespan={timespan} type='break' />
-          ))
-        }
+        <div className={styles.breaktimes}>
+          {
+            breakTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type='break'
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))
+          }
+        </div>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const DRP = ({
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
+  const [lastDateRange, setLastDateRange] = useState(initRange || {});
   const [predefinedDateRange, setPredefinedDateRange] = useState({});
   const { t } = useTranslation();
   const { startDate, endDate } = dateRange;
@@ -53,11 +54,20 @@ const DRP = ({
   });
 
   const inputClickHandler = () => {
+    if (Object.keys(dateRange).length !== 0 && dateRange.constructor === Object) {
+      setLastDateRange(dateRange);
+      setDateRange({});
+    }
     setOpen(true);
     setDefinedRangesOpen(false);
   };
 
   const handleClickAway = () => {
+    if (Object.keys(dateRange).length === 0 && dateRange.constructor === Object
+    && Object.keys(lastDateRange).length !== 0 && lastDateRange.constructor === Object) {
+      setDateRange(lastDateRange);
+      setLastDateRange({});
+    }
     setDefinedRangesOpen(false);
     setOpen(false);
   };
