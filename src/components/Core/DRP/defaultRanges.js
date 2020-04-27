@@ -21,13 +21,13 @@ const getDefaultRanges = (date) => [
   },
   {
     label: 'This Week',
-    startDate: startOfWeek(date),
-    endDate: endOfWeek(date),
+    startDate: startOfWeek(date, { weekStartsOn: 1 }),
+    endDate: endOfWeek(date, { weekStartsOn: 1 }),
   },
   {
     label: 'Last Week',
-    startDate: startOfWeek(addWeeks(date, -1)),
-    endDate: endOfWeek(addWeeks(date, -1)),
+    startDate: startOfWeek(addWeeks(date, -1), { weekStartsOn: 1 }),
+    endDate: endOfWeek(addWeeks(date, -1), { weekStartsOn: 1 }),
   },
   {
     label: 'Last 7 Days',
