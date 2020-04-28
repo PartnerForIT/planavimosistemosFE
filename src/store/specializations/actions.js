@@ -7,7 +7,7 @@ export const getSpecializations = () => ({
   type: GET_SPECIALIZATIONS,
   request: {
     method: 'GET',
-    url: '/specializations',
+    url: '/jobtypes',
   },
   meta: {
     thunk: true,
@@ -18,7 +18,7 @@ export const getReportsSpecializations = (queryObj) => ({
   type: GET_SPECIALIZATIONS,
   request: {
     method: 'GET',
-    url: `/reports/specializations?${makeQueryString(queryObj)}`,
+    url: `/reports/jobtypes?${makeQueryString(queryObj)}`,
   },
   meta: {
     thunk: true,
@@ -29,7 +29,7 @@ export const getSpecialization = () => ({
   type: GET_SPECIALIZATIONS,
   request: {
     method: 'GET',
-    url: '/specialization',
+    url: '/jobtype',
   },
   meta: {
     thunk: true,

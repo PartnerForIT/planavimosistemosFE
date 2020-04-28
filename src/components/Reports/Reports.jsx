@@ -416,10 +416,10 @@ const Reports = () => {
             <DRP initRange={dateRange} onChange={setDateRange} small right />
             {
               <>
-                <div className={styles.sidebarTitle}>Objects</div>
+                <div className={styles.sidebarTitle}>Places</div>
                 <Input
                   icon={<SearchIcon />}
-                  placeholder='Search by objects'
+                  placeholder='Search by places'
                   onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
                   fullWidth
                 />
