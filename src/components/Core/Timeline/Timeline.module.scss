@@ -46,6 +46,10 @@
         background-color: #fff;
         z-index: 1;
       }
+
+      .tooltip {
+        display: block;
+      }
     }
 
     &:first-child {
@@ -89,6 +93,10 @@
         right: -35px;
         z-index: 1;
       }
+      
+      .tooltip {
+        display: block;
+      }
     }
   }
 }
@@ -98,5 +106,36 @@
   font-size: 14px;
   color: rgba(93, 94, 98, 0.51);
   position: absolute;
+  top: 10px;
+}
+
+.tooltip {
+  background-color: gray;
+  border-radius: 4px;
+  color: #fff;
+  display: none;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 12px;
+  position: absolute;
+  top: 20px;
+  width: 100px;
+  z-index: 1;
+}
+
+.startTime {
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: rgba(93, 94, 98, 0.51);
+  position: absolute;
+  left: 0;
+  top: 10px;
+}
+
+.endTime {
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: rgba(93, 94, 98, 0.51);
+  position: absolute;
+  right: 0;
   top: 10px;
 }

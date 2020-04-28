@@ -221,6 +221,8 @@ const Logbook = () => {
                 breaks={employee.breaks}
                 total={employee.total_work_sec + employee.total_break_sec}
                 startMinute={selectedItem.started_at}
+                startTime={selectedItem.start}
+                endTime={selectedItem.end}
                 withTimeBreaks
               />
               <Delimiter />

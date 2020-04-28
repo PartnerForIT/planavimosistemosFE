@@ -5,7 +5,7 @@ import { datetimeToSeconds } from '../../Helpers';
 import Timespan from './Timespan';
 
 const Timeline = ({
-  works, breaks, total, startMinute, withTimeBreaks = true,
+  works, breaks, total, startMinute, withTimeBreaks = true, startTime, endTime,
 }) => {
   const [workTimespans, setWorkTimespans] = useState([]);
   const [breakTimespans, setBreakTimespans] = useState([]);
@@ -27,6 +27,8 @@ const Timeline = ({
   return (
     <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
       <div className={classNames(styles.timeline, { [styles.timelineWithTimeBreaks]: withTimeBreaks && total > 0 })}>
+        <div className={styles.startTime}>{startTime}</div>
+        <div className={styles.endTime}>{endTime}</div>
         <div className={styles.worktimes}>
           {
             workTimespans.map((timespan, idx) => (
