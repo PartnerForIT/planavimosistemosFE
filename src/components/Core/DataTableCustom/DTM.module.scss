@@ -167,6 +167,8 @@ header {
   top: 30px;
   right: 20px;
   width: 200px;
+  max-height: 250px;
+  overflow: auto;
   padding: 5px 10px;
   z-index: 3;
 }

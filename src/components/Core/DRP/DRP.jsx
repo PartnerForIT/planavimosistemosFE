@@ -114,7 +114,7 @@ const DRP = ({
           className={startInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={startDate ? format(startDate, 'MMM, dd, yyyy') : t('Start Date')}
+          value={startDate ? format(startDate, 'MM.dd.yyyy') : t('Start Date')}
         />
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
@@ -122,7 +122,7 @@ const DRP = ({
           className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={endDate ? format(endDate, 'MMM, dd, yyyy') : t('End Date')}
+          value={endDate ? format(endDate, 'MM.dd.yyyy') : t('End Date')}
         />
         {
           right ? (
