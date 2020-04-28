@@ -444,10 +444,10 @@ const Reports = () => {
             }
             {
               <>
-                <div className={styles.sidebarTitle}>Specialization</div>
+                <div className={styles.sidebarTitle}>Job type</div>
                 <Input
                   icon={<SearchIcon />}
-                  placeholder='Search by specialization'
+                  placeholder='Search by job type'
                   onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
                   fullWidth
                 />

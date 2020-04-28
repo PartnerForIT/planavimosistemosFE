@@ -300,7 +300,7 @@ const Logbook = () => {
           <div className={styles.hideOn750}>
             <Delimiter />
             <CustomSelect
-              placeholder={t('All Specializations')}
+              placeholder={t('All skills')}
               buttonLabel={t('Filter')}
               items={specializations}
               onChange={onSpecSelectChange}
