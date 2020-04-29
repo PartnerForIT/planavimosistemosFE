@@ -29,6 +29,8 @@ import InfoCard from '../Core/InfoCard/InfoCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
+import { skillsSelector } from '../../store/skills/selectors';
+import { getSkills } from '../../store/skills/actions';
 
 const Logbook = () => {
   /* Data table */
@@ -50,6 +52,9 @@ const Logbook = () => {
   const [specializations, setSpecializations] = useState([]);
   const [checkedSpecializations, setCheckedSpecializations] = useState([]);
 
+  const [skills, setSkills] = useState([]);
+  const [checkedSkills, setCheckedSkills] = useState([]);
+
   const [employees, setEmployees] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
@@ -64,10 +69,12 @@ const Logbook = () => {
   const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSpecializations = useSelector(jobTypesSelector);
+  const selectSkills = useSelector(skillsSelector);
 
   useEffect(() => {
     dispatch(getJobTypes()).then().catch();
     dispatch(getEmployees()).then().catch();
+    dispatch(getSkills()).then().catch();
   }, [dispatch]);
 
   const sendRequest = (props) => {
@@ -110,6 +117,10 @@ const Logbook = () => {
   useEffect(() => {
     setSpecializations(selectSpecializations);
   }, [selectSpecializations]);
+
+  useEffect(() => {
+    setSkills(selectSkills);
+  }, [selectSkills]);
 
   useEffect(() => {
     setEmployees(getAllEmployees);
@@ -175,6 +186,11 @@ const Logbook = () => {
   const onSpecSelectChange = (specs, checkedSpecs) => {
     setCheckedSpecializations(checkedSpecs);
     sendRequest({ specs: checkedSpecs.map((item) => item.id) });
+  };
+
+  const onSkillsSelectChange = (skillsArr, selectedSkills) => {
+    setCheckedSkills(checkedSkills);
+    sendRequest({ skills: selectedSkills.map((item) => item.id) });
   };
 
   const onEmployeesSelectChange = (employeesArr, selectedEmployees) => {
@@ -302,8 +318,8 @@ const Logbook = () => {
             <CustomSelect
               placeholder={t('All skills')}
               buttonLabel={t('Filter')}
-              items={specializations}
-              onChange={onSpecSelectChange}
+              items={skills}
+              onChange={onSkillsSelectChange}
               width='auto'
               type='skills'
             />
