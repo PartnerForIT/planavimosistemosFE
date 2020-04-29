@@ -17,9 +17,9 @@ import {
 } from '../../store/reports/selectors';
 
 import { employeesSelector } from '../../store/employees/selectors';
-import { specializationsSelector } from '../../store/specializations/selectors';
+import { jobTypesSelector } from '../../store/jobTypes/selectors';
 import { getReportsEmployees } from '../../store/employees/actions';
-import { getReportsSpecializations } from '../../store/specializations/actions';
+import { getReportsJobTypes } from '../../store/jobTypes/actions';
 import { getReportsPlaces } from '../../store/places/actions';
 import { placesSelector } from '../../store/places/selectors';
 
@@ -53,9 +53,9 @@ const Reports = () => {
 
   const [dateRange, setDateRange] = useState({ startDate: startOfMonth(new Date()), endDate: endOfMonth(new Date()) });
 
-  const [specializations, setSpecializations] = useState([]);
-  const [filteredSpecializations, setFilteredSpecializations] = useState([]);
-  const [checkedSpecializations, setCheckedSpecializations] = useState([]);
+  const [jobTypes, setJobTypes] = useState([]);
+  const [filteredJobTypes, setFilteredJobTypes] = useState([]);
+  const [checkedJobTypes, setCheckedJobTypes] = useState([]);
 
   const [employees, setEmployees] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
@@ -73,7 +73,7 @@ const Reports = () => {
   // const getTotalDuration = useSelector(totalDurationSelector);
 
   const getAllEmployees = useSelector(employeesSelector);
-  const getAllSpecializations = useSelector(specializationsSelector);
+  const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
@@ -83,7 +83,7 @@ const Reports = () => {
   useEffect(() => {
     dispatch(getReportsPlaces({})).then().catch();
     dispatch(getReportsEmployees({})).then().catch();
-    dispatch(getReportsSpecializations({})).then().catch();
+    dispatch(getReportsJobTypes({})).then().catch();
   }, []);
 
   // useEffect(() => {
@@ -93,12 +93,12 @@ const Reports = () => {
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
     const placesArr = checkedPlaces.map((place) => place.id);
-    const specsArr = checkedSpecializations.map((spec) => spec.id);
+    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     dispatch(getReport(
       startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
       endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
-      specsArr,
+      jobTypesArr,
       employeesArr,
       placesArr,
     )).then().catch();
@@ -115,9 +115,9 @@ const Reports = () => {
   }, [getAllEmployees]);
 
   useEffect(() => {
-    setSpecializations(getAllSpecializations);
-    setFilteredSpecializations(getAllSpecializations);
-  }, [getAllSpecializations]);
+    setJobTypes(getAllJobTypes);
+    setFilteredJobTypes(getAllJobTypes);
+  }, [getAllJobTypes]);
 
   useEffect(() => {
     if (generatedReport.report) {
@@ -182,21 +182,21 @@ const Reports = () => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
     if (selectedReport) {
       let filter = '';
-      if (selectedReport.places.length && !selectedReport.specializations.length && !selectedReport.employees.length) {
+      if (selectedReport.places.length && !selectedReport.jobTypes.length && !selectedReport.employees.length) {
         filter = 0;
-      } else if (!selectedReport.specializations.length && selectedReport.employees.length) {
+      } else if (!selectedReport.jobTypes.length && selectedReport.employees.length) {
         filter = 1;
-      } else if (selectedReport.specializations.length && !selectedReport.employees.length) {
+      } else if (selectedReport.jobTypes.length && !selectedReport.employees.length) {
         filter = 2;
-      } else if (selectedReport.specializations.length && selectedReport.employees.length) {
+      } else if (selectedReport.jobTypes.length && selectedReport.employees.length) {
         filter = 3;
       }
 
       const requestObj = {
         'date-start': selectedReport.startDate,
         'date-end': selectedReport.endDate,
-        objects: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-        specialities: selectedReport.specializations.length > 0 ? `[${selectedReport.specializations.join(',')}]` : '',
+        places: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
+        jobTypes: selectedReport.jobTypes.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : '',
         employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
         filter,
       };
@@ -228,23 +228,23 @@ const Reports = () => {
       case 'places':
         setCheckedPlaces(checkedArray);
 
-        if (checkedEmployees.length && !checkedSpecializations.length) {
-          dispatch(getReportsSpecializations({
-            objects: checkedArray.map((place) => place.id),
+        if (checkedEmployees.length && !checkedJobTypes.length) {
+          dispatch(getReportsJobTypes({
+            places: checkedArray.map((place) => place.id),
             employees: checkedEmployees.map((emp) => emp.id),
           })).then().catch();
-        } else if (checkedSpecializations.length && !checkedEmployees.length) {
+        } else if (checkedJobTypes.length && !checkedEmployees.length) {
           dispatch(getReportsEmployees({
-            objects: checkedArray.map((place) => place.id),
-            specializations: checkedSpecializations.map((spec) => spec.id),
+            places: checkedArray.map((place) => place.id),
+            jobTypes: checkedJobTypes.map((spec) => spec.id),
           })).then().catch();
-        } else if (!checkedSpecializations.length && !checkedEmployees.length) {
+        } else if (!checkedJobTypes.length && !checkedEmployees.length) {
           dispatch(getReportsEmployees({
-            objects: checkedArray.map((place) => place.id),
-            specializations: checkedSpecializations.map((spec) => spec.id),
+            places: checkedArray.map((place) => place.id),
+            jobTypes: checkedJobTypes.map((spec) => spec.id),
           })).then().catch();
-          dispatch(getReportsSpecializations({
-            objects: checkedArray.map((place) => place.id),
+          dispatch(getReportsJobTypes({
+            places: checkedArray.map((place) => place.id),
             employees: checkedEmployees.map((emp) => emp.id),
           })).then().catch();
         }
@@ -252,48 +252,48 @@ const Reports = () => {
       case 'employees':
         setCheckedEmployees(checkedArray);
 
-        if (checkedSpecializations.length && !checkedPlaces.length) {
+        if (checkedJobTypes.length && !checkedPlaces.length) {
           dispatch(getReportsPlaces({
             employees: checkedArray.map((emp) => emp.id),
-            specializations: checkedSpecializations.map((place) => place.id),
+            jobTypes: checkedJobTypes.map((place) => place.id),
           })).then().catch();
-        } else if (checkedPlaces.length && !checkedSpecializations.length) {
-          dispatch(getReportsSpecializations({
-            objects: checkedPlaces.map((place) => place.id),
+        } else if (checkedPlaces.length && !checkedJobTypes.length) {
+          dispatch(getReportsJobTypes({
+            places: checkedPlaces.map((place) => place.id),
             employees: checkedArray.map((emp) => emp.id),
           })).then().catch();
-        } else if (!checkedPlaces.length && !checkedSpecializations.length) {
+        } else if (!checkedPlaces.length && !checkedJobTypes.length) {
           dispatch(getReportsPlaces({
             employees: checkedArray.map((emp) => emp.id),
-            specializations: checkedSpecializations.map((place) => place.id),
+            jobTypes: checkedJobTypes.map((place) => place.id),
           })).then().catch();
-          dispatch(getReportsSpecializations({
-            objects: checkedPlaces.map((place) => place.id),
+          dispatch(getReportsJobTypes({
+            places: checkedPlaces.map((place) => place.id),
             employees: checkedArray.map((emp) => emp.id),
           })).then().catch();
         }
         break;
       case 'spec':
-        setCheckedSpecializations(checkedArray);
+        setCheckedJobTypes(checkedArray);
 
         if (checkedEmployees.length && !checkedPlaces.length) {
           dispatch(getReportsPlaces({
             employees: checkedEmployees.map((emp) => emp.id),
-            specializations: checkedArray.map((place) => place.id),
+            jobTypes: checkedArray.map((place) => place.id),
           })).then().catch();
         } else if (checkedPlaces.length && !checkedEmployees.length) {
           dispatch(getReportsEmployees({
-            objects: checkedPlaces.map((place) => place.id),
-            specializations: checkedArray.map((spec) => spec.id),
+            places: checkedPlaces.map((place) => place.id),
+            jobTypes: checkedArray.map((spec) => spec.id),
           })).then().catch();
         } else if (!checkedPlaces.length && !checkedEmployees.length) {
           dispatch(getReportsEmployees({
-            objects: checkedPlaces.map((place) => place.id),
-            specializations: checkedArray.map((spec) => spec.id),
+            places: checkedPlaces.map((place) => place.id),
+            jobTypes: checkedArray.map((spec) => spec.id),
           })).then().catch();
           dispatch(getReportsPlaces({
             employees: checkedEmployees.map((emp) => emp.id),
-            specializations: checkedArray.map((place) => place.id),
+            jobTypes: checkedArray.map((place) => place.id),
           })).then().catch();
         }
         break;
@@ -444,15 +444,15 @@ const Reports = () => {
             }
             {
               <>
-                <div className={styles.sidebarTitle}>Job type</div>
+                <div className={styles.sidebarTitle}>Job types</div>
                 <Input
                   icon={<SearchIcon />}
-                  placeholder='Search by job type'
-                  onChange={(e) => handleInputChange(e.target.value, specializations, setFilteredSpecializations)}
+                  placeholder='Search by job types'
+                  onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
                   fullWidth
                 />
                 <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredSpecializations} onChange={(c) => filterChecked(c, 'spec')} />
+                  <CheckboxGroupWrapper items={filteredJobTypes} onChange={(c) => filterChecked(c, 'spec')} />
                 </div>
               </>
             }

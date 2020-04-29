@@ -10,7 +10,7 @@ const initialState = {
   totalDuration: null,
   places: [],
   employees: [],
-  specializations: [],
+  jobTypes: [],
   loading: false,
   error: null,
 };
@@ -34,7 +34,7 @@ export const reducer = (state = initialState, action) => {
         ...state,
         places: action.data.objects,
         employees: action.data.employees,
-        specializations: action.data.specializations,
+        jobTypes: action.data.specializations,
         loading: false,
       };
 

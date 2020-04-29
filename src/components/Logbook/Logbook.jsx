@@ -18,10 +18,10 @@ import {
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import { employeeSelector, employeesSelector, employeeLoadingSelector } from '../../store/employees/selectors';
-import { specializationsSelector } from '../../store/specializations/selectors';
+import { jobTypesSelector } from '../../store/jobTypes/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployee, getEmployees } from '../../store/employees/actions';
-import { getSpecializations } from '../../store/specializations/actions';
+import { getJobTypes } from '../../store/jobTypes/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -63,10 +63,10 @@ const Logbook = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
-  const selectSpecializations = useSelector(specializationsSelector);
+  const selectSpecializations = useSelector(jobTypesSelector);
 
   useEffect(() => {
-    dispatch(getSpecializations()).then().catch();
+    dispatch(getJobTypes()).then().catch();
     dispatch(getEmployees()).then().catch();
   }, [dispatch]);
 

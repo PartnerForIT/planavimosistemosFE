@@ -9,7 +9,7 @@ import saga from './saga';
 import auth from './auth/reducer';
 import worktime from './worktime/reducer';
 import employees from './employees/reducer';
-import specializations from './specializations/reducer';
+import jobTypes from './jobTypes/reducer';
 import places from './places/reducer';
 import reports from './reports/reducer';
 
@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   auth,
   worktime,
   employees,
-  specializations,
+  jobTypes,
   places,
   reports,
 });
