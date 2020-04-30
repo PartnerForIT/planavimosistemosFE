@@ -11,7 +11,7 @@ import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
 export default function CustomSelect({
-  items, placeholder, buttonLabel, onChange, width = '100%', type = 'items',
+  items, placeholder, buttonLabel, onChange, onFilter, width = '100%', type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -53,7 +53,7 @@ export default function CustomSelect({
     });
   }, [checkedItems]);
 
-  const handleCheckboxChange = useCallback((item) => {
+  const handleCheckboxChange = (item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -74,9 +74,12 @@ export default function CustomSelect({
         return newObj;
       });
     };
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
-  }, [setItemsArray]);
+    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+      setItemsArray(resultedItems);
+      setCheckedItems(checkedItemsArray);
+      onChange(checkedItemsArray);
+    });
+  };
 
   const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
@@ -194,7 +197,7 @@ export default function CustomSelect({
                 }
               </Scrollbar>
             </CheckboxGroup>
-            <Button fillWidth onClick={() => onChange(itemsArray, checkedItems)}>{buttonLabel}</Button>
+            <Button fillWidth onClick={() => onFilter()}>{buttonLabel}</Button>
           </div>
         ) : null}
       </div>

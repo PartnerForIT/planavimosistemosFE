@@ -86,6 +86,7 @@ const Logbook = () => {
       search,
       specs: checkedSpecializations.map((item) => item.id),
       employees: checkedEmployees.map((item) => item.id),
+      skills: checkedSkills.map((item) => item.id),
       ...props,
     })).then(() => {
       setCheckedItems([]);
@@ -188,14 +189,18 @@ const Logbook = () => {
   //   sendRequest({ specs: checkedSpecs.map((item) => item.id) });
   // };
 
-  const onSkillsSelectChange = (skillsArr, selectedSkills) => {
-    setCheckedSkills(checkedSkills);
-    sendRequest({ skills: selectedSkills.map((item) => item.id) });
+  const onSkillsSelectChange = (selectedSkills) => {
+    setCheckedSkills(selectedSkills);
+  };
+  const onSkillsSelectFilter = () => {
+    sendRequest({ skills: checkedSkills.map((item) => item.id) });
   };
 
-  const onEmployeesSelectChange = (employeesArr, selectedEmployees) => {
+  const onEmployeesSelectChange = (selectedEmployees) => {
     setCheckedEmployees(selectedEmployees);
-    sendRequest({ employees: selectedEmployees.map((item) => item.id) });
+  };
+  const onEmployeesSelectFilter = () => {
+    sendRequest({ employees: checkedEmployees.map((item) => item.id) });
   };
 
   const searchHandler = (term) => {
@@ -319,6 +324,7 @@ const Logbook = () => {
               placeholder={t('All skills')}
               buttonLabel={t('Filter')}
               items={skills}
+              onFilter={onSkillsSelectFilter}
               onChange={onSkillsSelectChange}
               width='auto'
               type='skills'
@@ -330,6 +336,7 @@ const Logbook = () => {
               placeholder={t('All employees')}
               buttonLabel={t('Filter')}
               items={employees}
+              onFilter={onEmployeesSelectFilter}
               onChange={onEmployeesSelectChange}
               width='auto'
               type='employees'
