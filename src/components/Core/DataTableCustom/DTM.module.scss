@@ -653,12 +653,14 @@ div {
   padding: 0;
   transition: opacity 0.2s;
   display: none;
+  justify-content: center;
+  align-items: center;
 }
 
 .overlayActive {
   opacity: 0.9;
   transition: opacity 0.2s;
-  display: block;
+  display: flex;
 }
 
 .scrollingPanel {

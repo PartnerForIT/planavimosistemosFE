@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
 import Scrollbar from 'react-scrollbars-custom';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -11,6 +13,12 @@ import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
+
+const useStyles = makeStyles({
+  colorPrimary: {
+    color: '#0087ff',
+  },
+});
 
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
@@ -24,6 +32,8 @@ export default function DataTable({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
+
+  const classes = useStyles();
 
   useEffect(() => {
     const initSortOptions = (options) => {
@@ -327,7 +337,9 @@ export default function DataTable({
           )
         }
       </div>
-      <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })} />
+      <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })}>
+        <CircularProgress classes={{ colorPrimary: classes.colorPrimary }} />
+      </div>
     </div>
   );
 }
