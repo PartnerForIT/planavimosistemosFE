@@ -104,8 +104,11 @@ export default function CustomSelect({
       });
     };
 
-    setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
+    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+      setItemsArray(resultedItems);
+      setCheckedItems(checkedItemsArray);
+      onChange(checkedItemsArray);
+    });
   }, [itemsStat]);
 
   const wrapperClasses = classNames(
