@@ -38,8 +38,8 @@ const Logbook = () => {
   const [columnsArray, setColumnsArray] = useState([]);
   const [columnsWidthArray, setColumnsWidthArray] = useState({});
   const [totalDuration, setTotalDuration] = useState(null);
-  const [employee, setEmployee] = useState(null);
-  const [employeeLoading, setEmployeeLoading] = useState(null);
+  // const [employee, setEmployee] = useState(null);
+  // const [employeeLoading, setEmployeeLoading] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [loading, setLoading] = useState(null);
@@ -49,7 +49,7 @@ const Logbook = () => {
 
   const [search, setSearch] = useState('');
 
-  const [specializations, setSpecializations] = useState([]);
+  // const [specializations, setSpecializations] = useState([]);
   const [checkedSpecializations, setCheckedSpecializations] = useState([]);
 
   const [skills, setSkills] = useState([]);
@@ -64,11 +64,11 @@ const Logbook = () => {
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const columns = useSelector(columnsSelector);
   const columnsWidth = useSelector(columnsWidthSelector);
-  const selectedEmployee = useSelector(employeeSelector);
+  // const selectedEmployee = useSelector(employeeSelector);
   const getAllEmployees = useSelector(employeesSelector);
-  const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
+  // const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
-  const selectSpecializations = useSelector(jobTypesSelector);
+  // const selectSpecializations = useSelector(jobTypesSelector);
   const selectSkills = useSelector(skillsSelector);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const Logbook = () => {
       ...props,
     })).then(() => {
       setCheckedItems([]);
-      setEmployee(null);
+      // setEmployee(null);
       setSelectedItem(null);
     }).catch();
   };
@@ -98,10 +98,10 @@ const Logbook = () => {
     sendRequest();
   }, [dateRange]);
 
-  useEffect(() => {
-    setEmployee(selectedEmployee);
-    setEmployeeLoading(selectedEmployeeLoading);
-  }, [selectedEmployee, selectedEmployeeLoading]);
+  // useEffect(() => {
+  //   setEmployee(selectedEmployee);
+  //   setEmployeeLoading(selectedEmployeeLoading);
+  // }, [selectedEmployee, selectedEmployeeLoading]);
 
   useEffect(() => {
     setItemsArray(workTime);
@@ -114,9 +114,9 @@ const Logbook = () => {
     setLoading(workTimeLoading);
   }, [workTimeLoading]);
 
-  useEffect(() => {
-    setSpecializations(selectSpecializations);
-  }, [selectSpecializations]);
+  // useEffect(() => {
+  //   setSpecializations(selectSpecializations);
+  // }, [selectSpecializations]);
 
   useEffect(() => {
     setSkills(selectSkills);
@@ -180,13 +180,13 @@ const Logbook = () => {
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
-    dispatch(getEmployee(selectedRow.id)).then().catch();
+    // dispatch(getEmployee(selectedRow.id)).then().catch();
   };
 
-  const onSpecSelectChange = (specs, checkedSpecs) => {
-    setCheckedSpecializations(checkedSpecs);
-    sendRequest({ specs: checkedSpecs.map((item) => item.id) });
-  };
+  // const onSpecSelectChange = (specs, checkedSpecs) => {
+  //   setCheckedSpecializations(checkedSpecs);
+  //   sendRequest({ specs: checkedSpecs.map((item) => item.id) });
+  // };
 
   const onSkillsSelectChange = (skillsArr, selectedSkills) => {
     setCheckedSkills(checkedSkills);
@@ -215,14 +215,14 @@ const Logbook = () => {
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
       <div className={styles.hero}>
-        <img src={avatar} alt={`${employee.name} ${employee.surname}`} width='71' height='72' />
-        <div className={styles.employeeName}>{`${employee.name} ${employee.surname}`}</div>
+        <img src={avatar} alt={selectedItem.employee} width='71' height='72' />
+        <div className={styles.employeeName}>{selectedItem.employee}</div>
         <div className={styles.date}>
           {
             format(
               new Date(
-                dateToUCT(employee.works[0].started_at).getTime()
-                + dateToUCT(employee.works[0].started_at)
+                dateToUCT(selectedItem.works[0].started_at).getTime()
+                + dateToUCT(selectedItem.works[0].started_at)
                   .getTimezoneOffset() * 60 * 1000,
               ), 'iii, dd, MMMM, yyyy',
             )
@@ -230,12 +230,12 @@ const Logbook = () => {
         </div>
         <Delimiter />
         {
-          selectedItem && parseInt(selectedItem.employee_id, 10) === employee.id && !employeeLoading && (
+          selectedItem && (
             <>
               <Timeline
-                works={employee.works}
-                breaks={employee.breaks}
-                total={employee.total_work_sec + employee.total_break_sec}
+                works={selectedItem.works}
+                breaks={selectedItem.breaks}
+                total={selectedItem.total_work_sec + selectedItem.total_break_sec}
                 startMinute={selectedItem.started_at}
                 startTime={selectedItem.start}
                 endTime={selectedItem.end}
@@ -251,7 +251,7 @@ const Logbook = () => {
               <InfoCard
                 type='break'
                 time={selectedItem}
-                durationSec={employee.total_break_sec}
+                durationSec={selectedItem.total_break_sec}
               />
             </>
           )
@@ -370,7 +370,7 @@ const Logbook = () => {
             ? (
               <MultipleEntries />
             )
-            : employee
+            : selectedItem
               ? (
                 <EmployeeInfo />
               )
