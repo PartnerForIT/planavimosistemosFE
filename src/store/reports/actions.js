@@ -5,13 +5,13 @@ import {
   PDF,
 } from './types';
 
-export const getReport = (startDate, endDate, jobTypes, employees, places) => ({
+export const getReport = (startDate, endDate, jobTypes, employees, places, skills) => ({
   type: GET_REPORT,
   request: {
     method: 'POST',
     url: '/reports/generate',
     data: {
-      startDate, endDate, jobTypes, employees, places,
+      startDate, endDate, jobTypes, employees, places, skills,
     },
   },
   meta: {
