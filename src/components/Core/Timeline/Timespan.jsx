@@ -7,7 +7,7 @@ import styles from './Timeline.module.scss';
 import { dateToUCT, getColorByStatus } from '../../Helpers';
 
 const Timespan = ({
-  timespan, type, withTimeBreaks, total,
+  timespan, type,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -35,7 +35,8 @@ const Timespan = ({
           {/* { */}
           {/*  withTimeBreaks && total > 0 ? ( */}
           {/*    <div className={styles.tooltip}> */}
-          {/*      {`${format(dateToUCT(timespan.started_at), 'HH:mm')} - ${format(dateToUCT(timespan.finished_at), 'HH:mm')}`} */}
+          {/*      {`${format(dateToUCT(timespan.started_at), 'HH:mm')} - */}
+          {/*      ${format(dateToUCT(timespan.finished_at), 'HH:mm')}`} */}
           {/*    </div> */}
           {/*  ) */}
           {/*    : null */}

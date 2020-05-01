@@ -26,9 +26,6 @@ jobs:
     - name: Lint
       run: |
         yarn lint
-    - name: Production Build
-      run: |
-        yarn build
     - name: Deploy to Digital Ocean
       uses: appleboy/jenkins-action@master
       with:

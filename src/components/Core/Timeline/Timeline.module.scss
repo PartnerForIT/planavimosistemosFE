@@ -36,6 +36,19 @@
   position: absolute;
 }
 
+.tooltip {
+  background-color: gray;
+  border-radius: 4px;
+  color: #fff;
+  display: none;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 12px;
+  position: absolute;
+  top: 20px;
+  width: 100px;
+  z-index: 1;
+}
+
 .worktimes {
   .workTime {
     &:hover,
@@ -93,7 +106,7 @@
         right: -35px;
         z-index: 1;
       }
-      
+
       .tooltip {
         display: block;
       }
@@ -107,19 +120,6 @@
   color: rgba(93, 94, 98, 0.51);
   position: absolute;
   top: 10px;
-}
-
-.tooltip {
-  background-color: gray;
-  border-radius: 4px;
-  color: #fff;
-  display: none;
-  font-family: Helvetica Neue, sans-serif;
-  font-size: 12px;
-  position: absolute;
-  top: 20px;
-  width: 100px;
-  z-index: 1;
 }
 
 .startTime {

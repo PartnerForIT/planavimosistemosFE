@@ -94,6 +94,8 @@ describe('Timeline', () => {
         breaks={employee.breaks}
         total={employee.total_work_sec + employee.total_break_sec}
         startMinute={selectedItem.started_at}
+        startTime={selectedItem.start}
+        endTime={selectedItem.end}
         withTimeBreaks
       />,
     );
@@ -103,12 +105,7 @@ describe('Timeline', () => {
       expect(arr7[i]).toBeInTheDocument();
     }
 
-    const arr12 = getAllByText('09:58');
-    for (let i = 0; i < arr12.length; i += 1) {
-      expect(arr12[i]).toBeInTheDocument();
-    }
-
-    const arr14 = getAllByText('10:00');
+    const arr14 = getAllByText('10:02');
     for (let i = 0; i < arr14.length; i += 1) {
       expect(arr14[i]).toBeInTheDocument();
     }

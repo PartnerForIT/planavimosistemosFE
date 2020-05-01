@@ -17,10 +17,9 @@ import {
   totalDurationSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
-import { employeeSelector, employeesSelector, employeeLoadingSelector } from '../../store/employees/selectors';
-import { jobTypesSelector } from '../../store/jobTypes/selectors';
+import { employeesSelector } from '../../store/employees/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
-import { getEmployee, getEmployees } from '../../store/employees/actions';
+import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
@@ -38,8 +37,7 @@ const Logbook = () => {
   const [columnsArray, setColumnsArray] = useState([]);
   const [columnsWidthArray, setColumnsWidthArray] = useState({});
   const [totalDuration, setTotalDuration] = useState(null);
-  // const [employee, setEmployee] = useState(null);
-  // const [employeeLoading, setEmployeeLoading] = useState(null);
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [loading, setLoading] = useState(null);
@@ -48,9 +46,6 @@ const Logbook = () => {
   const [dateRange, setDateRange] = useState({});
 
   const [search, setSearch] = useState('');
-
-  // const [specializations, setSpecializations] = useState([]);
-  const [checkedSpecializations, setCheckedSpecializations] = useState([]);
 
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
@@ -64,11 +59,8 @@ const Logbook = () => {
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const columns = useSelector(columnsSelector);
   const columnsWidth = useSelector(columnsWidthSelector);
-  // const selectedEmployee = useSelector(employeeSelector);
   const getAllEmployees = useSelector(employeesSelector);
-  // const selectedEmployeeLoading = useSelector(employeeLoadingSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
-  // const selectSpecializations = useSelector(jobTypesSelector);
   const selectSkills = useSelector(skillsSelector);
 
   useEffect(() => {
@@ -84,13 +76,11 @@ const Logbook = () => {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
       search,
-      specs: checkedSpecializations.map((item) => item.id),
       employees: checkedEmployees.map((item) => item.id),
       skills: checkedSkills.map((item) => item.id),
       ...props,
     })).then(() => {
       setCheckedItems([]);
-      // setEmployee(null);
       setSelectedItem(null);
     }).catch();
   };
@@ -98,11 +88,6 @@ const Logbook = () => {
   useEffect(() => {
     sendRequest();
   }, [dateRange]);
-
-  // useEffect(() => {
-  //   setEmployee(selectedEmployee);
-  //   setEmployeeLoading(selectedEmployeeLoading);
-  // }, [selectedEmployee, selectedEmployeeLoading]);
 
   useEffect(() => {
     setItemsArray(workTime);
@@ -114,10 +99,6 @@ const Logbook = () => {
   useEffect(() => {
     setLoading(workTimeLoading);
   }, [workTimeLoading]);
-
-  // useEffect(() => {
-  //   setSpecializations(selectSpecializations);
-  // }, [selectSpecializations]);
 
   useEffect(() => {
     setSkills(selectSkills);
@@ -181,13 +162,7 @@ const Logbook = () => {
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
-    // dispatch(getEmployee(selectedRow.id)).then().catch();
   };
-
-  // const onSpecSelectChange = (specs, checkedSpecs) => {
-  //   setCheckedSpecializations(checkedSpecs);
-  //   sendRequest({ specs: checkedSpecs.map((item) => item.id) });
-  // };
 
   const onSkillsSelectChange = (selectedSkills) => {
     setCheckedSkills(selectedSkills);
