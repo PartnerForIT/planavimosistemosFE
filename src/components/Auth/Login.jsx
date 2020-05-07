@@ -20,7 +20,7 @@ const LoginContainer = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const isAuthorized = await localStorage.getItem('user');
-      if (isAuthorized.length) history.goBack();
+      if (isAuthorized && isAuthorized.length) history.goBack();
     };
 
     checkAuth();
