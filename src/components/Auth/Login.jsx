@@ -40,7 +40,7 @@ const LoginContainer = () => {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.content}>
-          <h3>Sign In</h3>
+          <p className={styles.title}>Sign In</p>
           <Input
             placeholder='Email'
             value={email}
@@ -56,7 +56,6 @@ const LoginContainer = () => {
           <Delimiter />
           <Button onClick={handleLogin}>{t('Sign in')}</Button>
         </div>
-        <Delimiter />
         <div className={styles.errorBlock}>
           {
             authError && authError.response && authError.response.data && authError.response.data.error && (
