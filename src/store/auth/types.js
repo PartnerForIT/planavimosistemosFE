@@ -1,3 +1,4 @@
 export const LOGIN = 'LOGIN';
-export const SOCIAL_LOGIN = 'SOCIAL_LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const REFRESH_TOKEN = 'REFRESH_TOKEN';
 export const LOGIN_CHECK = 'LOGIN_CHECK';

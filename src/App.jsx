@@ -4,17 +4,20 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import Test from './components/Test/Test';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
+import Login from './components/Auth/Login';
+import Logout from './components/Auth/Logout';
+import AuthRoute from './components/Auth/AuthRoute';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
     <Router>
       <Switch>
-        <Route exact path='/' component={Test} />
-        <Route exact path='/logbook' component={Logbook} />
-        <Route exact path='/reports' component={Reports} />
+        <Route exact path='/' component={Login} />
+        <Route exact path='/logout' component={Logout} />
+        <AuthRoute exact path='/logbook' component={Logbook} />
+        <AuthRoute exact path='/reports' component={Reports} />
       </Switch>
     </Router>
   </Suspense>

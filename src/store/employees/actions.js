@@ -4,11 +4,11 @@ import {
 } from './types';
 import { makeQueryString } from '../../components/Helpers';
 
-export const getEmployee = (worktimeId) => ({
+export const getEmployee = (id) => ({
   type: GET_EMPLOYEE,
   request: {
     method: 'GET',
-    url: `/employee/${worktimeId}`,
+    url: `/employee/${id}`,
   },
   meta: {
     thunk: true,

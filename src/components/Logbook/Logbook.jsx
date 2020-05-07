@@ -67,7 +67,7 @@ const Logbook = () => {
     dispatch(getJobTypes()).then().catch();
     dispatch(getEmployees()).then().catch();
     dispatch(getSkills()).then().catch();
-  }, [dispatch]);
+  }, []);
 
   const sendRequest = (props) => {
     const { startDate, endDate } = dateRange;

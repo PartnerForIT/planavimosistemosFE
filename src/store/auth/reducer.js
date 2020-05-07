@@ -16,6 +16,8 @@ export const reducer = (state = initialState, action) => {
       return { ...state, error: null, loading: true };
 
     case success(LOGIN):
+      localStorage.setItem('token', action.data.access_token);
+      localStorage.setItem('user', JSON.stringify(action.data.user));
       return {
         ...state, user: action.data.user, loading: false, isAuthorized: true,
       };

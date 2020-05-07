@@ -1,0 +1,41 @@
+.container {
+  background-color: #edf4fa;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  width: 100vw;
+}
+
+.wrapper {
+  background-color: #fff;
+  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
+  display: flex;
+  flex-direction: column;
+  //margin: 2em auto;
+  width: 600px;
+  border: 1px solid rgba(226, 235, 244, 0.85);
+  border-radius: 12px;
+  padding-top: 10px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.delimiter {
+  margin-left: 15px;
+  height: 15px;
+}
+
+.errorBlock {
+  height: 20px;
+}

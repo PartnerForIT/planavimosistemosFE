@@ -1,5 +1,5 @@
 import {
-  LOGIN, SOCIAL_LOGIN, LOGIN_CHECK,
+  LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN,
 } from './types';
 
 export const login = (email, password) => ({
@@ -16,14 +16,22 @@ export const login = (email, password) => ({
   },
 });
 
-export const socialLogin = (profile, provider) => ({
-  type: SOCIAL_LOGIN,
+export const logout = () => ({
+  type: LOGOUT,
   request: {
     method: 'POST',
-    url: '/auth/social',
-    data: {
-      profile, provider,
-    },
+    url: '/auth/logout',
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
+export const refreshToken = () => ({
+  type: REFRESH_TOKEN,
+  request: {
+    method: 'POST',
+    url: '/auth/refresh',
   },
   meta: {
     thunk: true,
@@ -33,8 +41,8 @@ export const socialLogin = (profile, provider) => ({
 export const authCheck = () => ({
   type: LOGIN_CHECK,
   request: {
-    method: 'GET',
-    url: '/auth/login',
+    method: 'POST',
+    url: '/auth/me',
   },
   meta: {
     thunk: true,
