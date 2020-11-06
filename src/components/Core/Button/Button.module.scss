@@ -17,7 +17,7 @@
 .inverse {
   color: #0087ff;
   background: #fff;
-  border: 1px solid $border;
+  border: 1px solid $light-blue;
 }
 
 .danger {
@@ -25,7 +25,7 @@
   background: #ed3838;
   border: 1px solid #ed3838;
   font-size: 15px !important;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 }
 
@@ -37,7 +37,7 @@
 .big {
   height: 48px;
   line-height: 18px;
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   //font-weight: 600;
   font-size: 14px;
   letter-spacing: -0.02em;
@@ -46,7 +46,7 @@
 
 .normal {
   line-height: 10px;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 13px;
   font-weight: 500;
   padding: 12px 30px;

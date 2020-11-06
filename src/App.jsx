@@ -7,6 +7,7 @@ import {
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import Company from './components/Company';
+import OrganizationList from './components/OrganizationList';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
 import AuthRoute from './components/Auth/AuthRoute';
@@ -20,6 +21,7 @@ const App = () => (
         <AuthRoute exact path='/logbook' component={Logbook} />
         <AuthRoute exact path='/reports' component={Reports} />
         <AuthRoute exact path='/company' component={Company} />
+        <AuthRoute exact path='/organization-list' component={OrganizationList} />
       </Switch>
     </Router>
   </Suspense>
