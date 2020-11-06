@@ -1,0 +1,11 @@
+@import "../variables";
+
+.mainLayout {
+  width: 100%;
+  min-height: 100vh;
+}
+.mainBody {
+  padding: 90px 20px 20px 20px;
+  background: $main-bg;
+  min-height: 100vh;
+}
