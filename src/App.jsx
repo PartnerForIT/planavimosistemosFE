@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
+import Company from './components/Company';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
 import AuthRoute from './components/Auth/AuthRoute';
@@ -18,6 +19,7 @@ const App = () => (
         <Route exact path='/logout' component={Logout} />
         <AuthRoute exact path='/logbook' component={Logbook} />
         <AuthRoute exact path='/reports' component={Reports} />
+        <AuthRoute exact path='/company' component={Company} />
       </Switch>
     </Router>
   </Suspense>
