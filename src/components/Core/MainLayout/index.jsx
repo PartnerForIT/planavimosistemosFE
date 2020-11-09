@@ -6,7 +6,11 @@ export default function MainLayout({children}) {
   return (
     <div className={styles.mainLayout}>
       <Header />
-      <main className={styles.mainBody}>{children}</main>
+      <main className={styles.mainBody}>
+        <div className={styles.mainBlock}>
+          {children}
+        </div>
+        </main>
     </div>
   )
 }
