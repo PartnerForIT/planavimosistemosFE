@@ -3,8 +3,15 @@
 .titleBlock {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
   padding: 20px 30px;
+
+  .leftBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &__title {
     font-size: 24px;

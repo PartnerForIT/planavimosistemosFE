@@ -7,7 +7,7 @@
 .mainBody {
   padding: 90px 20px 20px 20px;
   background: $main-bg;
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
 }
 .mainBlock {
   background: #fff;
