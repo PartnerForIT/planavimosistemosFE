@@ -4,7 +4,6 @@ import Avatar from '@material-ui/core/Avatar';
 import styles from './header.module.scss';
 export default function AvatarComponent() {
   const user = JSON.parse(localStorage.getItem('user'))
-  console.log('name', user)
   return(
     <div className={styles.userBlock}>
        <Avatar>{user&&user.name[0]}</Avatar>
