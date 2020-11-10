@@ -15,11 +15,11 @@ export const getEmployee = (id) => ({
   },
 });
 
-export const getEmployees = () => ({
+export const getEmployees = (companyId) => ({
   type: GET_EMPLOYEES,
   request: {
     method: 'GET',
-    url: '/employees',
+    url: `/company/${companyId}/employees`,
   },
   meta: {
     thunk: true,

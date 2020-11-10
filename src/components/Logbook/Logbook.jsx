@@ -21,6 +21,7 @@ import { employeesSelector } from '../../store/employees/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
+import {companyIdSelector} from '../../store/auth/selectors'
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -62,11 +63,12 @@ const Logbook = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
-
+  const companyId = useSelector(companyIdSelector);
+  
   useEffect(() => {
-    dispatch(getJobTypes()).then().catch();
-    dispatch(getEmployees()).then().catch();
-    dispatch(getSkills()).then().catch();
+    dispatch(getJobTypes(companyId)).then().catch();
+    dispatch(getEmployees(companyId)).then().catch();
+    dispatch(getSkills(companyId)).then().catch();
   }, []);
 
   const sendRequest = (props) => {
@@ -79,7 +81,7 @@ const Logbook = () => {
       employees: checkedEmployees.map((item) => item.id),
       skills: checkedSkills.map((item) => item.id),
       ...props,
-    })).then(() => {
+    }, companyId)).then(() => {
       setCheckedItems([]);
       setSelectedItem(null);
     }).catch();

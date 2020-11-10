@@ -3,11 +3,11 @@ import {
 } from './types';
 import { makeQueryString } from '../../components/Helpers';
 
-export const getSkills = () => ({
+export const getSkills = (companyId) => ({
   type: GET_SKILLS,
   request: {
     method: 'GET',
-    url: '/skills',
+    url: `/company/${companyId}/skills`,
   },
   meta: {
     thunk: true,
