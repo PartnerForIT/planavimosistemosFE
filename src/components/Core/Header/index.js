@@ -31,7 +31,7 @@ export default function ButtonAppBar() {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <div className={styles.linkBlock}>
-            <Link to='/' className={styles.link}>
+            <Link to='/overview' className={pathname=="/overview" ? styles.activelink : styles.link}>
               <OverviewIcon className={styles.icon} />
               <span className={styles.link__text}>Overview</span>
             </Link>

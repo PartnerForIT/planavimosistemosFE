@@ -30,9 +30,13 @@ export default function OrganizationList() {
         TitleButtonNew={"New Organisation"} 
         handleButtonNew={handleClickOpen}
       >
-          <PeopleIcon />
+        <PeopleIcon />
       </TitleBlock>
-      <AddNewOrganization open={open} handleClose={handleClose} title={"Add new organization"}  />
+      <AddNewOrganization
+       open={open} 
+       handleClose={handleClose} 
+       title={"Add new organization"}  
+       />
     </MaynLayout>  
   )
 }

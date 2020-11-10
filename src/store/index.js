@@ -13,6 +13,7 @@ import jobTypes from './jobTypes/reducer';
 import places from './places/reducer';
 import skills from './skills/reducer';
 import reports from './reports/reducer';
+import overview from './overview/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   places,
   skills,
   reports,
+  overview,
 });
 
 const middlewares = [
