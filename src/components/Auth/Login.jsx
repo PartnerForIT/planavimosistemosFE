@@ -27,8 +27,9 @@ const LoginContainer = () => {
   }, []);
 
   const handleLogin = () => {
-    dispatch(login(email, password)).then(() => {
-      history.push(routes.LOGBOOK);
+    dispatch(login(email, password)).then((data) => {
+      const roleId = data.data.user.role_id
+      roleId == 1 ? history.push(routes.ORG_LIST) : history.push(routes.LOGBOOK);
     }).catch((error) => {
       console.log('Login error', error);
     });

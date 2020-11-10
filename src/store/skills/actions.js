@@ -18,9 +18,10 @@ export const getReportsSkills = (queryObj) => ({
   type: GET_SKILLS,
   request: {
     method: 'GET',
-    url: `/reports/skills?${makeQueryString(queryObj)}`,
+    url: `/company/${queryObj.company_id}/reports/skills?${makeQueryString(queryObj)}`,
   },
   meta: {
     thunk: true,
   },
 });
+

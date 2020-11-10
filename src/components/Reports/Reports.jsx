@@ -15,7 +15,7 @@ import {
   columnsSelector,
   reportLoadingSelector,
 } from '../../store/reports/selectors';
-
+import {companyIdSelector} from '../../store/auth/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 import { getReportsEmployees } from '../../store/employees/actions';
@@ -82,16 +82,17 @@ const Reports = () => {
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
+  const companyId = useSelector(companyIdSelector);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
 
   useEffect(() => {
-    dispatch(getReportsPlaces({})).then().catch();
-    dispatch(getReportsEmployees({})).then().catch();
-    dispatch(getReportsJobTypes({})).then().catch();
-    dispatch(getReportsSkills({})).then().catch();
+    dispatch(getReportsPlaces({company_id: companyId},)).then().catch();
+    dispatch(getReportsEmployees({company_id: companyId})).then().catch();
+    dispatch(getReportsJobTypes({company_id: companyId})).then().catch();
+    dispatch(getReportsSkills({company_id: companyId})).then().catch();
   }, []);
 
   // useEffect(() => {
@@ -111,6 +112,7 @@ const Reports = () => {
       employeesArr,
       placesArr,
       skillsArr,
+      companyId,
     )).then().catch();
   };
 

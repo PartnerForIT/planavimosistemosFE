@@ -4,16 +4,18 @@ import MaynLayout from '../Core/MainLayout';
 import TitleBlock from '../Core/TitleBlock';
 import AddNewOrganization from '../Core/Dialog/AddNewOrganization'
 import PeopleIcon from '../Icons/2Peple';
-
 import {getCountries} from '../../store/organizationList/actions';
+import {countriesSelector} from '../../store/organizationList/selectors';
 
 export default function OrganizationList() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(getCountries());
   },[])
+
+  const countries = useSelector(countriesSelector);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,6 +46,7 @@ export default function OrganizationList() {
        open={open} 
        handleClose={handleClose} 
        title={"Add new organization"}  
+       countries={countries}
        />
     </MaynLayout>  
   )

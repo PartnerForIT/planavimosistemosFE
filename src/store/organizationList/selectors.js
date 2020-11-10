@@ -1,2 +1,2 @@
-export const overviewSelector = (state) => state.overview.users;
-export const isLoadingSelector = (state) => state.overview.loading;
+export const countriesSelector = (state) => state.organizationList.countries;
+export const isLoadingSelector = (state) => state.organizationList.loading;

@@ -18,3 +18,34 @@
   text-align: center;
   margin-top: 0;
 }
+
+.addOrg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  &__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 20px 30px;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 1px;
+      height: auto;
+      top: 0px;
+      bottom: 0px;
+      left: -15px;
+      background: $light-blue;
+    }
+    &:first-child {
+      &:after {
+        display: none;
+      }
+    }
+  }
+}

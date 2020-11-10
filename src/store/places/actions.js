@@ -18,7 +18,7 @@ export const getReportsPlaces = (queryObj) => ({
   type: GET_PLACES,
   request: {
     method: 'GET',
-    url: `/reports/places?${makeQueryString(queryObj)}`,
+    url: `/company/${queryObj.company_id}/reports/places?${makeQueryString(queryObj)}`,
   },
   meta: {
     thunk: true,

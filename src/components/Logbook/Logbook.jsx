@@ -21,7 +21,7 @@ import { employeesSelector } from '../../store/employees/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
-import {companyIdSelector} from '../../store/auth/selectors'
+import {companyIdSelector} from '../../store/auth/selectors';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
