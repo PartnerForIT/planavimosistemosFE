@@ -1,14 +1,8 @@
-import React, {useEffect} from 'react';
-import {authCheck} from '../../../store/auth/actions';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import Header from '../Header'
 import styles from './Layout.module.scss';
 
 export default function MainLayout({children}) {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(authCheck());
-  // },[])
 
   return (
     <div className={styles.mainLayout}>
