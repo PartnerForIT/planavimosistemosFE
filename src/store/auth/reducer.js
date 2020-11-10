@@ -1,6 +1,7 @@
 import { success, error } from 'redux-saga-requests';
 import {
   LOGIN,
+  LOGIN_CHECK,
 } from './types';
 
 const initialState = {
@@ -23,6 +24,22 @@ export const reducer = (state = initialState, action) => {
       };
 
     case error(LOGIN):
+      return {
+        ...state, loading: false, error: action.error, isAuthorized: false,
+      };
+
+    case LOGIN_CHECK:
+      return { ...state, error: null, loading: true };
+
+    case success(LOGIN_CHECK): {
+      return {
+        ...state, user: action.data, loading: false, isAuthorized: true,
+      };
+    }
+
+    case error(LOGIN_CHECK):
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       return {
         ...state, loading: false, error: action.error, isAuthorized: false,
       };

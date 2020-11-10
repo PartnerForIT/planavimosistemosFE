@@ -22,7 +22,7 @@ export default function Overview() {
       <TitleBlock  
         title={"Overview"}
       >
-      <PeopleIcon />
+      <PeopleIcon />  
       </TitleBlock>
       
       <div className={styles.overview}>
@@ -34,7 +34,7 @@ export default function Overview() {
           <OverviewInfoBlock text={"Users clocked in"} number={users.clocked_in_users} />
         </div>
       }
-      {isLoading&& <Progress />}
+      {isLoading && <Progress />}
       </div>
  
 

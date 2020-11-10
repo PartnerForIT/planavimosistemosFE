@@ -1,28 +1,28 @@
 
 import {
-  GET_OVERVIEW,
-  GET_OVERVIEW_SUCCESS,
-  GET_OVERVIEW_ERROR,
+  GET_COUNTRIES,
+  GET_COUNTRIES_SUCCESS,
+  GET_COUNTRIES_ERROR,
 } from './types';
 
 const initialState = {
-  users: null,
+  countries: null,
   loading: false,
   error: null
 };
 
-export const reducerOverview = (state = initialState, action) => {
+export const reducerOrganizationList = (state = initialState, action) => {
   switch (action.type) {
-    case GET_OVERVIEW:
+    case GET_COUNTRIES:
       return { ...state, error: null, loading: true };
 
-    case GET_OVERVIEW_SUCCESS:
+    case GET_COUNTRIES_SUCCESS:
       return {
         ...state,
-        users: action.data,
+        countries: action.data,
         loading: false,
       };
-      case GET_OVERVIEW_ERROR:
+      case GET_COUNTRIES_ERROR:
         return {
           ...state,
           loading: false,
@@ -34,4 +34,4 @@ export const reducerOverview = (state = initialState, action) => {
   }
 };
 
-export default reducerOverview;
+export default reducerOrganizationList;

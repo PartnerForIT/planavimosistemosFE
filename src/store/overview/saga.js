@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import config from 'config';
 import axios from "axios";
 import {
