@@ -58,7 +58,7 @@ const BootstrapInput = withStyles((theme) => ({
 }))(InputBase); 
 
 export default function AddNewOrganization({
-  open, handleClose, title, countries, country, language, setCountry, setLanguage, setCompanyName, setId, setName, setEmail,
+  open, handleClose, countries,  title ,inputValues, handleInputChange, saveOrg
 }) {
   const classes = useStyles();
 
@@ -70,13 +70,23 @@ export default function AddNewOrganization({
               <InputLabel shrink htmlFor="name" className={classes.label}>
                 Company Name
               </InputLabel>
-              <BootstrapInput placeholder="Enter yuor company name" id="name" />
+              <BootstrapInput 
+                name="name" 
+                onChange={handleInputChange} 
+                value={inputValues.name}
+                placeholder="Enter yuor company name" 
+                id="name" />
             </FormControl>
             <FormControl className={classes.margin}>
               <InputLabel shrink htmlFor="external-id" className={classes.label}>
                 External ID
               </InputLabel>
-              <BootstrapInput placeholder="Company external id" id="external-id" />
+              <BootstrapInput
+                name="admin_id"
+                onChange={handleInputChange} 
+                value={inputValues.admin_id}
+                placeholder="Company external id"
+                id="external-id" />
             </FormControl>
             <FormControl className={classes.margin}>
               <InputLabel shrink htmlFor="country-select" className={classes.label}>
@@ -84,13 +94,15 @@ export default function AddNewOrganization({
               </InputLabel>
               <NativeSelect
                 id="country-select"
-                value={country}
-                defaultValue={country}
-                onChange={setCountry}
-                input={<BootstrapInput />}
+                value={inputValues.country}
+                onChange={handleInputChange}
+                inputProps={{
+                  name: 'country',
+                }}
+                input={<BootstrapInput name="country" />}
               >
-                {_.map(countries, (country) => (
-                  <option key={country.code} value={country.code}>{country.name}</option>
+                {_.map(countries, (item) => (
+                  <option key={item.code} value={item.code}>{item.name}</option>
                 ))}
               </NativeSelect>
             </FormControl>
@@ -100,14 +112,16 @@ export default function AddNewOrganization({
               </InputLabel>
               <NativeSelect
                 id="country-select"
-                value={language}
-                defaultValue={language}
+                value={inputValues.lang}
                 placeholder="Select your Language"
-                onChange={setLanguage}
+                onChange={handleInputChange}
+                inputProps={{
+                  name: 'lang',
+                }}
                 input={<BootstrapInput />}
               >
-                <option value={'En'}>English</option>
-                <option value={'Ru'}>Russian</option>
+                <option value={'EN'}>English</option>
+                <option value={'RU'}>Russian</option>
               </NativeSelect>
             </FormControl>
           </div>
@@ -117,19 +131,37 @@ export default function AddNewOrganization({
                 <InputLabel shrink htmlFor="person" className={classes.label}>
                   Contact persons
                 </InputLabel>
-                <BootstrapInput placeholder="Contact persons name" id="person" />
+                <BootstrapInput 
+                  placeholder="Contact persons name" 
+                  id="person"
+                  name="contact_person_name"
+                  value={inputValues.contact_person_name}
+                  onChange={handleInputChange}
+                />
               </FormControl>
 
               <FormControl className={classes.margin}>
                 <InputLabel shrink htmlFor="email" className={classes.label}>
                   Contact persons email
                 </InputLabel>
-                <BootstrapInput placeholder="Contact persons email" id="email" />
+                <BootstrapInput 
+                  placeholder="Contact persons email" 
+                  id="email"
+                  name="contact_person_email"
+                  value={inputValues.contact_person_email}
+                  onChange={handleInputChange}
+                />
               </FormControl>
             </div>
             <div className={style.buttonBlock}>
-              <Button cancel size="big" onClick={()=> {}}>Cancel</Button>
-              <Button size="big" onClick={()=> {}}>Save and Invite</Button>
+              <Button cancel size="big" onClick={handleClose}>Cancel</Button>
+              <Button 
+                size="big" 
+                onClick={()=> saveOrg()}
+                disabled={!inputValues.admin_id || !inputValues.name}
+              >
+                Save and Invite
+              </Button>
             </div>
           </div>
       </div>
