@@ -9,6 +9,8 @@ import {countriesSelector} from '../../store/organizationList/selectors';
 
 export default function OrganizationList() {
   const [open, setOpen] = useState(false);
+  const [country, setCountry] = useState('PL');
+  const [language, setLanguage] = useState('EN');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,6 +24,13 @@ export default function OrganizationList() {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+ // Add new org
+  const handleChangeCountry = (event) => {
+    setCountry(event.target.value);
+  };
+  const handleChangeLanguage = (event) => {
+    setLanguage(event.target.value);
   };
 
   //mock---------
@@ -47,6 +56,10 @@ export default function OrganizationList() {
        handleClose={handleClose} 
        title={"Add new organization"}  
        countries={countries}
+       country={country}
+       language={language}
+       setCountry={handleChangeCountry}
+       setLanguage={handleChangeLanguage}
        />
     </MaynLayout>  
   )
