@@ -41,7 +41,6 @@ function* addNewOrganization (actions) {
 
 function* loadCompanies ({params}) {
   try {
-    console.log('--action--', params)
     const {data} = yield call(axios.get, `${config.api.url}/companies`, 
     { 
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }, 
