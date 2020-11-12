@@ -44,7 +44,7 @@ const BootstrapInput = withStyles((theme) => ({
     width: '100%',
     position: 'relative',
     backgroundColor: theme.palette.common.white,
-    border: '1px solid #ced4da',
+    border: '1px solid #e8eff6',
     fontSize: 14,
     lineHeight: '16px',
     padding: '11px',
@@ -52,7 +52,8 @@ const BootstrapInput = withStyles((theme) => ({
     '&:focus': {
       boxShadow: 'none',
       borderRadius: 4,
-      borderColor: '#4d7499',
+      backgroundColor: theme.palette.common.white,
+      borderColor: '#0087ff',
     },
   },
 }))(InputBase); 

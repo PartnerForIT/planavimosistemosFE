@@ -39,10 +39,14 @@ function* addNewOrganization (actions) {
   }
 }
 
-function* loadCompanies (action) {
+function* loadCompanies ({params}) {
   try {
-    const {data} = yield call(axios.get, `${config.api.url}/companies`,token(), {params: action.data});
-    console.log(data);
+    console.log('--action--', params)
+    const {data} = yield call(axios.get, `${config.api.url}/companies`, 
+    { 
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }, 
+      params: params.status !== 3 ? params : null 
+    });
     yield put(getCompaniesSuccess(data))
   } catch(error) {
     console.log('error', error)
