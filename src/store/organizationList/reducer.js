@@ -5,10 +5,14 @@ import {
   GET_COUNTRIES_ERROR,
   ADD_SNACKBAR,
   DISMISS_SNACKBAR,
+  GET_COMPANIES,
+  GET_COMPANIES_SUCCESS,
 } from './types';
 
 const initialState = {
-  countries: null,
+  countries: [],
+  companies: [],
+  stats: {},
   loading: false,
   error: null,
   snackbarText: '',
@@ -20,11 +24,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
   switch (action.type) {
     case GET_COUNTRIES:
       return { ...state, error: null, loading: true };
-    case ADD_SNACKBAR:
-        return { ...state, snackbarText: action.data, snackbarType: action.snackbarType, snackbarShow: true };
-    case DISMISS_SNACKBAR:
-        return { ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '' };
-
     case GET_COUNTRIES_SUCCESS:
       return {
         ...state,
@@ -37,7 +36,27 @@ export const reducerOrganizationList = (state = initialState, action) => {
           loading: false,
           error: true,
         };
+
+      case GET_COMPANIES:
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        }
+
+      case GET_COMPANIES_SUCCESS:
+        return {
+          ...state,
+          companies: action.data.companies,
+          stats: action.data.stats,
+          loading: true,
+          error: null,
+        }  
     
+      case ADD_SNACKBAR:
+          return { ...state, snackbarText: action.data, snackbarType: action.snackbarType, snackbarShow: true };
+      case DISMISS_SNACKBAR:
+          return { ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '' };
 
     default: return state;
   }

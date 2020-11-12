@@ -5,8 +5,9 @@ import MaynLayout from '../Core/MainLayout';
 import TitleBlock from '../Core/TitleBlock';
 import AddNewOrganization from '../Core/Dialog/AddNewOrganization'
 import PeopleIcon from '../Icons/2Peple';
-import {getCountries, addOrganization} from '../../store/organizationList/actions';
-import {countriesSelector, isShowSnackbar, snackbarType, snackbarText} from '../../store/organizationList/selectors';
+import {getCountries, addOrganization, getCompanies} from '../../store/organizationList/actions';
+import {countriesSelector, isShowSnackbar, snackbarType, snackbarText,
+  companiesSelector, statsSelector} from '../../store/organizationList/selectors';
 import Snackbar from '@material-ui/core/Snackbar';
 
 const useStyles = makeStyles(() => ({
@@ -37,19 +38,22 @@ export default function OrganizationList() {
  
   useEffect(() => {
     dispatch(getCountries());
-  },[])
+    dispatch(getCompanies());
+  },[]);
 
   const countries = useSelector(countriesSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const companies = useSelector(companiesSelector);
+  const stats = useSelector(statsSelector)
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-    
+
     setInputValues({
       country: 'PL', 
       lang: 'EN', 
@@ -79,20 +83,11 @@ export default function OrganizationList() {
     setOpen(false);
   }
 
- 
-  //mock---------
-  const orgObj = {
-    organization: 100,
-    active: 60,
-    suspended: 40,
-    terminated: 0,
-  }
-   //mock---------
   return (
     <MaynLayout>
       <TitleBlock  
         title={"Organization list"} 
-        info={orgObj} 
+        info={stats} 
         TitleButtonNew={"New Organisation"} 
         handleButtonNew={handleClickOpen}
       >
