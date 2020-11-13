@@ -75,11 +75,11 @@ export default function OrganizationList() {
   },[organizations])
 
   useEffect(() => {
-    companies.map(item => {item.checked = false})
+    companies.map(item => {
+      item.checked = false
+    })
     setItemsArray(companies);
   }, [companies]);
-
-
 
   //table 
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -88,7 +88,6 @@ export default function OrganizationList() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [totalDuration, setTotalDuration] = useState(null);
-
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
@@ -109,33 +108,31 @@ export default function OrganizationList() {
       setCheckedItems([...checkedItems]);
     }
   };
-        
+    
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
+      if (typeof a[field] === 'object' || typeof b[field] === 'object') {
+        return sortNumFunction(a, b);
+      }
       if (asc) {
+        console.log(a[field].toString().localeCompare(b[field]));
         return a[field].toString().localeCompare(b[field]);
       }
       return b[field].toString().localeCompare(a[field]);
     };
     const sortItems = (array) => {
       const arrayCopy = [...array];
-      return arrayCopy.map((group) => {
-        const items = [...group.items];
-        items.sort(sortFunction);
-        return { ...group, items };
-      });
+      arrayCopy.sort(sortFunction);
+      return arrayCopy 
     };
     setItemsArray(sortItems);
   }, []);
-
-
 //--table--
      
-
   const handleChangeOrganizations = e => {
     const { value } = e.target;
     SetOrganizations(parseInt(value));
