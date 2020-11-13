@@ -35,11 +35,11 @@ const columns =[
   
  const columnsWidthArray = {
   status: 80,
-  name: 150,
-  contact_person_email: 150,
-  contact_person_name: 150,
-  deleted_at: 150,
-  country: 150,
+  name: 200,
+  contact_person_email: 200,
+  contact_person_name: 200,
+  deleted_at: 200,
+  country: 200,
  };
 
  const page={};
@@ -108,6 +108,10 @@ export default function OrganizationList() {
       setCheckedItems([...checkedItems]);
     }
   };
+
+  const searchHandler = useCallback(() => {
+    //search
+  }, [])
     
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
@@ -119,7 +123,6 @@ export default function OrganizationList() {
         return sortNumFunction(a, b);
       }
       if (asc) {
-        console.log(a[field].toString().localeCompare(b[field]));
         return a[field].toString().localeCompare(b[field]);
       }
       return b[field].toString().localeCompare(a[field]);
@@ -207,6 +210,7 @@ export default function OrganizationList() {
           loading={loading}
           onSelect={selectionHandler}
           onSort={sortHandler}
+          onSerach={searchHandler}
           lastPage={page.last_page}
           activePage={page.current_page}
           itemsCountPerPage={page.per_page}

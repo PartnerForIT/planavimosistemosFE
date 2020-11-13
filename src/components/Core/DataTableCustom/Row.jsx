@@ -7,10 +7,11 @@ import TriangleIcon from '../../Icons/TriangleIcon';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
+import CheckStatus from '../../Icons/CheckStatus';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
@@ -116,7 +117,9 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                {row[column.field]}
+                <span className={(statysIcon && width===80 ) ? styles.opacityText : ""}>{row[column.field]}</span>
+                {/* icon statys */}
+                {(statysIcon && width===80 ) && <span className={styles.IconStatus}><CheckStatus /></span>}
               </div>
             );
           })

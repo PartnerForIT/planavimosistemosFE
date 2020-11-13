@@ -7,12 +7,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
 import styles from './DTM.module.scss';
-import StyledCheckbox from '../Checkbox/Checkbox';
+//import StyledCheckbox from '../Checkbox/Checkbox';
 import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
+import RowSearch from './Search'
 
 const useStyles = makeStyles({
   colorPrimary: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth,
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -166,7 +167,7 @@ export default function DataTable({
         }}
       >
         <div className={tableContentClasses}>
-          <div className={styles.headerWrapper}>
+          <div className={onSerach ? styles.headerWrapperSearch : styles.headerWrapper}>
             <header className={flexTableClasses} role='rowgroup'>
               {
                 visibleColumns.length > 0 && visibleColumns.map((column, idx) => {
@@ -209,6 +210,11 @@ export default function DataTable({
                           </div>
                         ) }
                       </div>
+                      { (onSerach && columnsWidth[column.field]!== 80) &&
+                          <div className={styles.headerSearch}>
+                            <RowSearch />
+                          </div>
+                      }
                     </div>
                   );
                 })
@@ -224,6 +230,7 @@ export default function DataTable({
               setSelectedItem={setSelectedItem}
               columns={visibleColumns}
               selectable={selectable}
+              statysIcon={true}
               onSelect={onSelect}
               fieldIcons={fieldIcons}
               reports={reports}
