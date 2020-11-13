@@ -7,7 +7,7 @@ import {
   GET_COMPANIES,
 } from "./types";
 import { getCountriesSuccess,getCountriesError, 
-          addSnackbar,dismissSnackbar, getCompaniesSuccess} from "./actions"
+          addSnackbar,dismissSnackbar, getCompaniesSuccess, addOrganizationSuccess} from "./actions"
 
 function token() {
   const token = {
@@ -28,12 +28,13 @@ function* loadCountries( ) {
 function* addNewOrganization (actions) {
   try {
     const { data } = yield call(axios.post, `${config.api.url}/company/store`, actions.data, token() );
+   yield put(addOrganizationSuccess(data))
     yield put(addSnackbar('New organization added successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
 
-  } catch(error) {
-    yield put(addSnackbar('Add organizations Error', 'error'));
+  } catch(e) {
+    yield put(addSnackbar(e, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }

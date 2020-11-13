@@ -3,6 +3,7 @@ import {
   GET_COUNTRIES_SUCCESS,
   GET_COUNTRIES_ERROR,
   POST_ORGANIZATION,
+  POST_ORGANIZATION_SUCCESS,
   ADD_SNACKBAR,
   DISMISS_SNACKBAR,
   GET_COMPANIES,
@@ -26,6 +27,10 @@ export const addOrganization = (data) => ({
     type: POST_ORGANIZATION,
     data,
 });
+export const addOrganizationSuccess = (data) => ({
+  type: POST_ORGANIZATION_SUCCESS,
+  data,
+})
 
 export const addSnackbar = (data, snackbarType) => ({
   type: ADD_SNACKBAR,

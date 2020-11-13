@@ -109,10 +109,7 @@ export default function OrganizationList() {
       setCheckedItems([...checkedItems]);
     }
   };
-
-  console.log('checkedItems', checkedItems)
-  console.log('companies', companies)
-
+        
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
@@ -137,10 +134,7 @@ export default function OrganizationList() {
 
 
 //--table--
-
-
-
-
+     
 
   const handleChangeOrganizations = e => {
     const { value } = e.target;
@@ -161,8 +155,7 @@ export default function OrganizationList() {
       contact_person_name: '', 
       contact_person_email: ''
     });
-  };
-  
+  };    
  // Add new org
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -181,7 +174,7 @@ export default function OrganizationList() {
     });
     setOpen(false);
   }
-
+        
   return (
     <MaynLayout>
       <TitleBlock  
