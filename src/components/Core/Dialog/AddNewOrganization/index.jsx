@@ -79,17 +79,6 @@ export default function AddNewOrganization({
                 id="name" />
             </FormControl>
             <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="external-id" className={classes.label}>
-                External ID
-              </InputLabel>
-              <BootstrapInput
-                name="admin_id"
-                onChange={handleInputChange} 
-                value={inputValues.admin_id}
-                placeholder="Company external id"
-                id="external-id" />
-            </FormControl>
-            <FormControl className={classes.margin}>
               <InputLabel shrink htmlFor="country-select" className={classes.label}>
                 Country
               </InputLabel>
@@ -125,6 +114,17 @@ export default function AddNewOrganization({
                 <option value={'RU'}>Russian</option>
               </NativeSelect>
             </FormControl>
+            <FormControl className={classes.margin}>
+              <InputLabel shrink htmlFor="external-id" className={classes.label}>
+                External ID
+              </InputLabel>
+              <BootstrapInput
+                name="external_id"
+                onChange={handleInputChange} 
+                value={inputValues.admin_id}
+                placeholder="Company external id"
+                id="external-id" />
+            </FormControl>
           </div>
           <div className={style.addOrg__inner}>
             <div>
@@ -159,7 +159,7 @@ export default function AddNewOrganization({
               <Button 
                 size="big" 
                 onClick={()=> saveOrg()}
-                disabled={!inputValues.admin_id || !inputValues.name}
+                disabled={!inputValues.contact_person_email || !inputValues.name}
               >
                 Save and Invite
               </Button>

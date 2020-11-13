@@ -51,12 +51,12 @@ export default function OrganizationList() {
     country: 'PL', 
     lang: 'EN', 
     name: '', 
-    admin_id: '', 
+    external_id: '', 
     contact_person_name: '', 
     contact_person_email: ''
   });
   const [organizations, SetOrganizations] = useState(3);
-
+  
   const dispatch = useDispatch();
   const countries = useSelector(countriesSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -151,7 +151,7 @@ export default function OrganizationList() {
       country: 'PL', 
       lang: 'EN', 
       name: '', 
-      admin_id: '', 
+      external_id: '', 
       contact_person_name: '', 
       contact_person_email: ''
     });
@@ -168,7 +168,7 @@ export default function OrganizationList() {
       country: 'PL', 
       lang: 'EN', 
       name: '', 
-      admin_id: '', 
+      external_id: '', 
       contact_person_name: '', 
       contact_person_email: ''
     });
