@@ -32,14 +32,40 @@
     background: $light-blue2;
   }
 }
+.yellow {
+  color: #fff;
+  background: $yellow;
+  border: 1px solid $yellow;
+  font-size: 14px;
+  font-family: "Helvetica Neue Medium", sans-serif;
+  font-weight: 500;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.green {
+  color: #fff;
+  background: $green;
+  border: 1px solid $green;
+  font-size: 14px;
+  font-family: "Helvetica Neue Medium", sans-serif;
+  font-weight: 500;
+  &:hover {
+    opacity: 0.8;
+  }
+}
 
 .danger {
   color: #fff;
-  background: #ed3838;
-  border: 1px solid #ed3838;
-  font-size: 15px !important;
+  background: $red;
+  border: 1px solid $red;
+  font-size: 14px;
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .disabled {

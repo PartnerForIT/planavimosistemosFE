@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   margin: {
-    margin: '5px 10px 10px 0',
+    margin: '0 5px 0 0',
   },
   label: {
     color: '#808F94',
@@ -74,6 +74,20 @@ export default function Filter({organizations, handleChangeOrganizations}) {
           <option value={2}>Terminated</option>
         </NativeSelect>
       </FormControl>
+      <div className={styles.filterBlock__inner}>
+        <Button onClick={()=> {}} disabled={false}>
+          Enter Organization
+        </Button>
+        <Button green onClick={()=> {}} disabled={false}>
+          Active
+        </Button>
+        <Button yellow onClick={()=> {}} disabled={false}>
+          Suspend
+        </Button>
+        <Button danger onClick={()=> {}} disabled={false}>
+          Delete
+        </Button>
+      </div>
     </div>
   )
 }

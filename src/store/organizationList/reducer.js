@@ -65,7 +65,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
           companies: [...state.companies, action.data],
           stats: {
             total: state.stats.total + 1, 
-            active: state.stats.active + 1,
+            active: state.stats.suspended + 1,
             suspended: state.stats.suspended,
             terminated: state.stats.terminated,
           } 
