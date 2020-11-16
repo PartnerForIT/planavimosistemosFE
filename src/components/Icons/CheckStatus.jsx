@@ -11,12 +11,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckStatus () {
+export default function CheckStatus ({fill}) {
   const classes = useStyles();
   return (
     <SvgIcon viewBox='0 0 16 16' className={classes.root}>
       <g id="2383" data-name="2383" transform="translate(-47 -243)">
-        <g id="135" data-name="135" transform="translate(47 243)" fill="#57d05a" stroke="#fff" strokeWidth="1">
+        <g id="135" data-name="135" transform="translate(47 243)" fill={fill ? fill : '#57d05a'} stroke="#fff" strokeWidth="1">
           <circle cx="8" cy="8" r="8" stroke="none"/>
           <circle cx="8" cy="8" r="7.5" fill="none"/>
         </g>

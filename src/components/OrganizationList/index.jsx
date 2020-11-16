@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import MaynLayout from '../Core/MainLayout';
 import PageLayout from '../Core/PageLayout';
@@ -7,11 +8,12 @@ import TitleBlock from '../Core/TitleBlock';
 import Filter from "./Filter";
 import AddNewOrganization from '../Core/Dialog/AddNewOrganization'
 import PeopleIcon from '../Icons/2Peple';
-import {getCountries, addOrganization, getCompanies} from '../../store/organizationList/actions';
+import {getCountries, addOrganization, getCompanies, postChangeOfStatus} from '../../store/organizationList/actions';
 import {countriesSelector, isShowSnackbar, snackbarType, snackbarText,
-  companiesSelector, statsSelector} from '../../store/organizationList/selectors';
+  companiesSelector, statsSelector, isLoadingSelector} from '../../store/organizationList/selectors';
 import Snackbar from '@material-ui/core/Snackbar';
 import DataTable from '../Core/DataTableCustom/OLT';
+import routes from '../../config/routes';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -46,6 +48,9 @@ const columns =[
 
 export default function OrganizationList() {
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
   const [inputValues, setInputValues] = useState({
     country: 'PL', 
@@ -56,22 +61,33 @@ export default function OrganizationList() {
     contact_person_email: ''
   });
   const [organizations, SetOrganizations] = useState(3);
+  //table 
+  const [columnsArray, setColumnsArray] = useState(columns);
+  const [loading, setLoading] = useState(null);
+  const [itemsArray, setItemsArray] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [totalDuration, setTotalDuration] = useState(null);
   
-  const dispatch = useDispatch();
   const countries = useSelector(countriesSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const companies = useSelector(companiesSelector);
-  const stats = useSelector(statsSelector)
+  const stats = useSelector(statsSelector);
+  const isLoading = useSelector(isLoadingSelector);
  
   useEffect(() => {
     dispatch(getCountries());
-    dispatch(getCompanies({status: organizations}));
+    dispatch(getCompanies());
   },[]);
 
   useEffect(()=> {
-    dispatch(getCompanies({status: organizations}));
+    if(organizations === 3) {
+      dispatch(getCompanies());
+    } else {
+      dispatch(getCompanies({status: organizations}));
+    }
   },[organizations])
 
   useEffect(() => {
@@ -81,13 +97,9 @@ export default function OrganizationList() {
     setItemsArray(companies);
   }, [companies]);
 
-  //table 
-  const [columnsArray, setColumnsArray] = useState(columns);
-  const [loading, setLoading] = useState(null);
-  const [itemsArray, setItemsArray] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [totalDuration, setTotalDuration] = useState(null);
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
@@ -108,10 +120,6 @@ export default function OrganizationList() {
       setCheckedItems([...checkedItems]);
     }
   };
-
-  const searchHandler = useCallback(() => {
-    //search
-  }, [])
     
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
@@ -140,13 +148,11 @@ export default function OrganizationList() {
     const { value } = e.target;
     SetOrganizations(parseInt(value));
   }
-
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-
     setInputValues({
       country: 'PL', 
       lang: 'EN', 
@@ -156,7 +162,8 @@ export default function OrganizationList() {
       contact_person_email: ''
     });
   };    
- // Add new org
+
+ // Add new organization
   const handleInputChange = event => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
@@ -174,6 +181,29 @@ export default function OrganizationList() {
     });
     setOpen(false);
   }
+  // Change Status Organizations
+  const changeStatusCompany = (status) => {
+    const data = {
+      action: status,
+      company: (checkedItems.join()),
+    }
+    dispatch(postChangeOfStatus(data))
+    companies.map(item => {
+      item.checked = false;
+    }
+  );
+    setCheckedItems([])
+  }
+
+  // Push to Company
+  const enterOrganization = () => {
+    companies.map(item => {
+      item.checked = false;
+      }
+    );
+    setCheckedItems([])
+    history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
+  }
         
   return (
     <MaynLayout>
@@ -189,6 +219,9 @@ export default function OrganizationList() {
         <Filter 
           handleChangeOrganizations={handleChangeOrganizations} 
           organizations={organizations} 
+          changeStatusCompany={changeStatusCompany}
+          checkedItems={checkedItems}
+          enterOrganization={enterOrganization}
         />
         <AddNewOrganization
         open={open} 
@@ -210,7 +243,7 @@ export default function OrganizationList() {
           loading={loading}
           onSelect={selectionHandler}
           onSort={sortHandler}
-          onSerach={searchHandler}
+          // onSerach={searchHandler}
           lastPage={page.last_page}
           activePage={page.current_page}
           itemsCountPerPage={page.per_page}

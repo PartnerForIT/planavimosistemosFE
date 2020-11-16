@@ -9,6 +9,7 @@ import {
   GET_COMPANIES,
   GET_COMPANIES_SUCCESS,
   GET_COMPANIES_ERROR,
+  POST_CHANGE_OF_STATUS,
 } from './types';
 
 export const getCountries = () => ({
@@ -45,5 +46,10 @@ export const getCompanies = (params) => ({
 })
 export const getCompaniesSuccess = (data) => ({
   type: GET_COMPANIES_SUCCESS,
+  data
+})
+
+export const postChangeOfStatus = (data) => ({
+  type: POST_CHANGE_OF_STATUS,
   data
 })

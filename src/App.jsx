@@ -12,6 +12,7 @@ import Overview from './components/Overview';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
 import AuthRoute from './components/Auth/AuthRoute';
+import SettingCompany from './components/Settings/General/Company'
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -24,6 +25,7 @@ const App = () => (
         <AuthRoute exact path='/company' component={Company} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/overview' component={Overview} />
+        <AuthRoute exact path='/settings/general/company' component={SettingCompany} />
       </Switch>
     </Router>
   </Suspense>

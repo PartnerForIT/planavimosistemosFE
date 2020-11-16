@@ -55,7 +55,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
           ...state,
           companies: action.data.companies,
           stats: action.data.stats,
-          loading: true,
+          loading: false,
           error: null,
         }
         

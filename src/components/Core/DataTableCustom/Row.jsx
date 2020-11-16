@@ -119,7 +119,12 @@ const Row = ({
                 {IconComponent}
                 <span className={(statysIcon && width===80 ) ? styles.opacityText : ""}>{row[column.field]}</span>
                 {/* icon statys */}
-                {(statysIcon && width===80 ) && <span className={styles.IconStatus}><CheckStatus /></span>}
+                {(statysIcon && width===80 ) && 
+                  <span className={styles.IconStatus}>
+                    {row[column.field] === 1 &&  <CheckStatus />}
+                    {row[column.field] === 0 &&  <CheckStatus fill="#FD9D27" />}
+                    </span>
+                }
               </div>
             );
           })
