@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -26,20 +27,27 @@ const useStyles = makeStyles(() => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
   const {pathname} = useLocation();
+  const params = useParams();
+  const user = JSON.parse(localStorage.getItem('user'))
+  
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          <div className={styles.linkBlock}>
-            <Link to='/overview' className={pathname=="/overview" ? styles.activelink : styles.link}>
-              <OverviewIcon className={styles.icon} />
-              <span className={styles.link__text}>Overview</span>
-            </Link>
-            <Link to='/organization-list' className={pathname=="/organization-list" ? styles.activelink : styles.link}>
-              <PalceIcon className={styles.icon}  />
-              <span className={styles.link__text}>Org. List</span>
-            </Link>
-          </div>
+          {
+            (!params.id && user && user.role_id===1) && 
+              <div className={styles.linkBlock}>
+              <Link to='/overview' className={pathname=="/overview" ? styles.activelink : styles.link}>
+                <OverviewIcon className={styles.icon} />
+                <span className={styles.link__text}>Overview</span>
+              </Link>
+              <Link to='/organization-list' className={pathname=="/organization-list" ? styles.activelink : styles.link}>
+                <PalceIcon className={styles.icon}  />
+                <span className={styles.link__text}>Org. List</span>
+              </Link>
+            </div>
+          }
+
           <AvatarComponent />
         </Toolbar>
       </AppBar>

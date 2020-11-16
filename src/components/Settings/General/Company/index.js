@@ -14,7 +14,6 @@ export default function Company() {
     setCompanyId(params.id)
  }, [params]);
 
-
   return (
     <MaynLayout>
       <TitleBlock  
