@@ -332,12 +332,12 @@ header {
 }
 
 .rowSelected {
-  background-color: #319cff;
+  background-color: rgba(0, 133, 255, 0.07);
 }
 
-.reportsRowSelected {
-  background-color: #fff;
-}
+// .reportsRowSelected {
+//   background-color: #fff;
+// }
 
 .flexRowGlobal {
   display: flex;
