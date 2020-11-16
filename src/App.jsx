@@ -25,7 +25,7 @@ const App = () => (
         <AuthRoute exact path='/company' component={Company} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/overview' component={Overview} />
-        <AuthRoute exact path='/settings/general/company' component={SettingCompany} />
+        <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
       </Switch>
     </Router>
   </Suspense>

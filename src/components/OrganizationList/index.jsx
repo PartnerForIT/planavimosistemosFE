@@ -202,7 +202,9 @@ export default function OrganizationList() {
       }
     );
     setCheckedItems([])
-    history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
+    //history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
+    const win = window.open(`${routes.COMPANY}/${checkedItems[0]}`, "_blank");
+    win.focus();
   }
         
   return (

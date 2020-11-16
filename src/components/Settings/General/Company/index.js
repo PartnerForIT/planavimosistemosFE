@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import CompanyIcon from '../../../Icons/Company';
 
 export default function Company() {
-  const location = useLocation();
-
+  const params = useParams();
   const [companyId, setCompanyId] = useState(null)
   
   useEffect(() => {
-    console.log('location.state', location.state); 
-    setCompanyId(location.state.company_id)
- }, [location]);
+    console.log('location.state', params);
+    setCompanyId(params.id)
+ }, [params]);
+
+
   return (
     <MaynLayout>
       <TitleBlock  
