@@ -13,6 +13,7 @@ header {
   box-shadow: 0 5px 20px rgba(62, 69, 82, 0.06);
   padding-top: 9px;
   padding-bottom: 9px;
+  margin-bottom: 5px;
   overflow: hidden;
   position: sticky;
   top: 0;
@@ -410,9 +411,9 @@ header {
   padding: 0.5em 0 !important;
 }
 
-.flexRowSelected {
-  color: #fff !important;
-}
+// .flexRowSelected {
+//   color: #fff !important;
+// }
 
 .reportsFlexRowSelected {
   color: #0085ff;
