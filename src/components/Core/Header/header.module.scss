@@ -1,0 +1,77 @@
+@import "../variables";
+
+.linkBlock {
+  display: flex;
+}
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 70px;
+  padding: 12px 15px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  color: $gray;
+
+  .icon path {
+    fill: $gray !important;
+  }
+
+  &__text {
+    display: inline-block;
+    padding-top: 5px;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    display: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    height: 2px;
+    background: $blue;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+  }
+  &:hover {
+    background: $blue-100;
+    color: $blue-2;
+    cursor: pointer;
+    .icon path {
+      fill: $blue-2 !important;
+    }
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.activelink {
+  @extend .link;
+  background: $blue-100;
+  color: $blue-2;
+  .icon path {
+    fill: $blue-2 !important;
+  }
+  &::before {
+    opacity: 1;
+  }
+}
+
+.userBlock {
+  width: 100%;
+  max-width: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__name {
+    color: $gray;
+    padding-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+}

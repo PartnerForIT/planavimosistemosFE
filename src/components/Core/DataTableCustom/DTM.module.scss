@@ -16,10 +16,40 @@ header {
   overflow: hidden;
   position: sticky;
   top: 0;
-  background: #fff;
+  background: #e5f0fa;
   z-index: 1;
 }
+// search-table
+.headerWrapperSearch {
+  @extend .headerWrapper;
+  padding-bottom: 60px;
+  box-shadow: none;
+  background: linear-gradient(to bottom, #e5f0fa 43%, #fff 43%);
 
+  .flexRowGlobal {
+    position: relative;
+  }
+
+  .headerSearch {
+    position: absolute;
+    bottom: -49px;
+    left: 10px;
+    right: 10px;
+    width: 100%;
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    display: block;
+    bottom: 1px;
+    left: 17px;
+    right: 0;
+    height: 1px;
+    width: auto;
+    background: $table-border;
+  }
+}
+// search-table END
 .cell {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
@@ -30,14 +60,15 @@ header {
   svg {
     padding-right: 5px;
     width: 18px;
+    height: 18px;
   }
 }
 
 .columnName {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #808f94;
+  color: #4d7499;
 }
 
 .column {
@@ -194,7 +225,7 @@ header {
     user-select: none;
     color: #4d7499;
     text-transform: uppercase;
-    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-family: "Helvetica Neue Medium", sans-serif;
     font-weight: 500;
   }
 }
@@ -301,12 +332,12 @@ header {
 }
 
 .rowSelected {
-  background-color: #319cff;
+  background-color: rgba(0, 133, 255, 0.07);
 }
 
-.reportsRowSelected {
-  background-color: #fff;
-}
+// .reportsRowSelected {
+//   background-color: #fff;
+// }
 
 .flexRowGlobal {
   display: flex;
@@ -334,6 +365,7 @@ header {
 }
 
 .flexRowGroup {
+  position: relative;
   color: #333945;
   min-width: 140px;
   text-align: left;
@@ -344,9 +376,18 @@ header {
     justify-content: flex-end;
   }
 }
+.IconStatus {
+  display: block;
+  position: absolute;
+  top: 6px;
+  left: 3px;
+}
+.opacityText {
+  opacity: 0;
+}
 
 .flexRowGroupReports {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 
   &:last-of-type {
@@ -357,7 +398,7 @@ header {
 
 .groupLabelReports {
   color: #4d7499;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
@@ -375,7 +416,7 @@ header {
 
 .reportsFlexRowSelected {
   color: #0085ff;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
 }
@@ -434,7 +475,7 @@ header {
 
 .footerTitle {
   color: #3e4552;
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   font-size: 14px;
   //font-weight: 600;
 }
@@ -451,18 +492,18 @@ header {
 }
 
 .bold {
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   //font-weight: 600;
 }
 
 .medium {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 }
 
 .total {
   color: #3e4552;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 }
 
@@ -568,7 +609,7 @@ div {
 
   .columnName {
     color: #4d7499;
-    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-family: "Helvetica Neue Medium", sans-serif;
     font-weight: 500;
   }
 
