@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import MaynLayout from '../Core/MainLayout';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
 import SearchIcon from '../Icons/SearchIcon';
@@ -279,94 +280,96 @@ const Logbook = () => {
   );
 
   return (
-    <div className={styles.container}>
-      <div className={styles.leftContent}>
-        <header className={styles.appHeader}>
-          <DRP initRange={dateRange} onChange={setDateRange} />
-          <div className={styles.hideOn660}>
-            <Delimiter />
-            <Input
-              icon={<SearchIcon />}
-              placeholder={`${t('Search')}...`}
-              width='100%'
-              height='36px'
-              value={search}
-              onChange={(e) => searchHandler(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
-            />
-          </div>
-          <div className={styles.hideOn750}>
-            <Delimiter />
-            <CustomSelect
-              placeholder={t('All skills')}
-              buttonLabel={t('Filter')}
-              items={skills}
-              onFilter={onSkillsSelectFilter}
-              onChange={onSkillsSelectChange}
-              width='auto'
-              type='skills'
-            />
-          </div>
-          <div className={styles.hideOn815}>
-            <Delimiter />
-            <CustomSelect
-              placeholder={t('All employees')}
-              buttonLabel={t('Filter')}
-              items={employees}
-              onFilter={onEmployeesSelectFilter}
-              onChange={onEmployeesSelectChange}
-              width='auto'
-              type='employees'
-            />
-          </div>
-          <div className={styles.hideOn936}>
-            <Delimiter />
-            <Button onClick={applyHandler}>{t('Apply')}</Button>
-          </div>
-        </header>
-        <Delimiter />
-        <DataTable
-          data={itemsArray || []}
-          columns={columnsArray || []}
-          columnsWidth={columnsWidthArray || {}}
-          onColumnsChange={setColumnsArray}
-          selectable
-          sortable
-          loading={loading}
-          onSelect={selectionHandler}
-          onSort={sortHandler}
-          lastPage={workTime.last_page}
-          activePage={workTime.current_page}
-          itemsCountPerPage={workTime.per_page}
-          totalItemsCount={workTime.total}
-          handlePagination={console.log}
-          selectedItem={selectedItem}
-          totalDuration={totalDuration}
-          setSelectedItem={rowSelectionHandler}
-          verticalOffset='123px'
-        />
-      </div>
+    <MaynLayout>
+      <div className={styles.container}>
+        <div className={styles.leftContent}>
+          <header className={styles.appHeader}>
+            <DRP initRange={dateRange} onChange={setDateRange} />
+            <div className={styles.hideOn660}>
+              <Delimiter />
+              <Input
+                icon={<SearchIcon />}
+                placeholder={`${t('Search')}...`}
+                width='100%'
+                height='36px'
+                value={search}
+                onChange={(e) => searchHandler(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
+              />
+            </div>
+            <div className={styles.hideOn750}>
+              <Delimiter />
+              <CustomSelect
+                placeholder={t('All skills')}
+                buttonLabel={t('Filter')}
+                items={skills}
+                onFilter={onSkillsSelectFilter}
+                onChange={onSkillsSelectChange}
+                width='auto'
+                type='skills'
+              />
+            </div>
+            <div className={styles.hideOn815}>
+              <Delimiter />
+              <CustomSelect
+                placeholder={t('All employees')}
+                buttonLabel={t('Filter')}
+                items={employees}
+                onFilter={onEmployeesSelectFilter}
+                onChange={onEmployeesSelectChange}
+                width='auto'
+                type='employees'
+              />
+            </div>
+            <div className={styles.hideOn936}>
+              <Delimiter />
+              <Button onClick={applyHandler}>{t('Apply')}</Button>
+            </div>
+          </header>
+          <Delimiter />
+          <DataTable
+            data={itemsArray || []}
+            columns={columnsArray || []}
+            columnsWidth={columnsWidthArray || {}}
+            onColumnsChange={setColumnsArray}
+            selectable
+            sortable
+            loading={loading}
+            onSelect={selectionHandler}
+            onSort={sortHandler}
+            lastPage={workTime.last_page}
+            activePage={workTime.current_page}
+            itemsCountPerPage={workTime.per_page}
+            totalItemsCount={workTime.total}
+            handlePagination={console.log}
+            selectedItem={selectedItem}
+            totalDuration={totalDuration}
+            setSelectedItem={rowSelectionHandler}
+            verticalOffset='123px'
+          />
+        </div>
 
-      <div className={styles.rightSidebar}>
-        {
-          // eslint-disable-next-line no-nested-ternary
-          checkedItems.length > 0
-            ? (
-              <MultipleEntries />
-            )
-            : selectedItem
+        <div className={styles.rightSidebar}>
+          {
+            // eslint-disable-next-line no-nested-ternary
+            checkedItems.length > 0
               ? (
-                <EmployeeInfo />
+                <MultipleEntries />
               )
-              : (
-                <div className={styles.emptyWrapper}>
-                  <TableIcon />
-                  <p>Select any entry to get a detailed editable info</p>
-                </div>
-              )
-        }
+              : selectedItem
+                ? (
+                  <EmployeeInfo />
+                )
+                : (
+                  <div className={styles.emptyWrapper}>
+                    <TableIcon />
+                    <p>Select any entry to get a detailed editable info</p>
+                  </div>
+                )
+          }
+        </div>
       </div>
-    </div>
+    </MaynLayout>
   );
 };
 

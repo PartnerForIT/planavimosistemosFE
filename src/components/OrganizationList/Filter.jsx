@@ -81,8 +81,6 @@ export default function Filter({
     if(search==='') {
       dispatch(getCompanies())
     }
-
-    console.log('search==', search)
   },[debouncedSearchTerm]);
 
   return(
