@@ -5,10 +5,12 @@ import {
   GET_COUNTRIES,
   POST_ORGANIZATION,
   GET_COMPANIES,
-  POST_CHANGE_OF_STATUS
+  POST_CHANGE_OF_STATUS,
+  GET_MODULES
 } from "./types";
 import { getCountriesSuccess,getCountriesError, 
-          addSnackbar,dismissSnackbar, getCompaniesSuccess, addOrganizationSuccess} from "./actions"
+          addSnackbar,dismissSnackbar, getCompaniesSuccess, 
+          addOrganizationSuccess, getModulesSuccess} from "./actions"
 
 function token() {
   const token = {
@@ -70,7 +72,15 @@ function* changeStatusOrganizations(actions) {
     yield put(addSnackbar(e, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
+  }
+}
 
+function* loadOrganizationsModules(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.params}/modules`,token() );
+    yield put(getModulesSuccess(data));
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -79,4 +89,5 @@ export default function* OrganizationListWatcher() {
   yield takeLatest(POST_ORGANIZATION, addNewOrganization);
   yield takeLatest(GET_COMPANIES, loadCompanies);
   yield takeLatest(POST_CHANGE_OF_STATUS, changeStatusOrganizations);
+  yield takeLatest(GET_MODULES, loadOrganizationsModules);
 }

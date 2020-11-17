@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import MaynLayout from '../Core/MainLayout';
 import PageLayout from '../Core/PageLayout';
 import TitleBlock from '../Core/TitleBlock';
+import moment from 'moment';
 import Filter from "./Filter";
 import AddNewOrganization from '../Core/Dialog/AddNewOrganization'
 import PeopleIcon from '../Icons/2Peple';
@@ -93,6 +94,8 @@ export default function OrganizationList() {
   useEffect(() => {
     companies.map(item => {
       item.checked = false
+      item.updated_at = item.updated_at ? moment(item.updated_at).format('lll'): '';
+      item.deleted_at = item.deleted_at ? moment(item.deleted_at).format('lll'): '';
     })
     setItemsArray(companies);
   }, [companies]);
@@ -187,11 +190,15 @@ export default function OrganizationList() {
       action: status,
       company: (checkedItems.join()),
     }
+    clearCheckbox()
     dispatch(postChangeOfStatus(data))
+  }
+
+  const clearCheckbox = () => {
     companies.map(item => {
       item.checked = false;
-    }
-  );
+      }
+    );
     setCheckedItems([])
   }
 
@@ -224,6 +231,8 @@ export default function OrganizationList() {
           changeStatusCompany={changeStatusCompany}
           checkedItems={checkedItems}
           enterOrganization={enterOrganization}
+          companies={companies}
+          clearCheckbox={clearCheckbox}
         />
         <AddNewOrganization
           open={open} 

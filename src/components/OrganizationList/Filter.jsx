@@ -67,6 +67,8 @@ export default function Filter({
   changeStatusCompany, 
   checkedItems, 
   enterOrganization,
+  companies,
+  clearCheckbox
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -85,6 +87,7 @@ export default function Filter({
   },[debouncedSearchTerm]);
 
   const handleClose = () => {
+    clearCheckbox()
     setOpen(false);
   }
 
@@ -117,10 +120,16 @@ export default function Filter({
         </FormControl>
       </div>
       <div className={styles.filterBlock__inner}>
-        <Button navyBlue onClick={()=> setOpen(true)} disabled={!checkedItems.length>0}>
+        <Button navyBlue 
+          onClick={()=> setOpen(true)} 
+          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        >
            {t('Edit Modules')}
         </Button>
-        <Button onClick={()=> {enterOrganization()}} disabled={!checkedItems.length>0}>
+        <Button 
+          onClick={()=> {enterOrganization()}} 
+          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        >
            {t('Enter Organization')}
         </Button>
         <Button green onClick={()=> changeStatusCompany('activate')} disabled={!checkedItems.length>0}>
@@ -139,8 +148,9 @@ export default function Filter({
       <EditModules
           open={open} 
           handleClose={handleClose} 
+          companies={companies}
           checkedItem = {checkedItems.length>0 ? checkedItems[0] : null}
-          title={t('Have access to these modules')}  
+          title={t('Have access to these modules')}
        />
     </div>
   )

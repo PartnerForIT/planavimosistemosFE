@@ -60,4 +60,16 @@
       margin: 0 2px;
     }
   }
+  .warningText {
+    width: 100%;
+    min-height: 105px;
+    text-align: center;
+    color: $red;
+    .buttonWarningBlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 40px;
+    }
+  }
 }
