@@ -20,7 +20,7 @@ const initialState = {
     suspended: 0,
     terminated: 0,
   },
-  companyModules: [],
+  companyModules: {},
   loading: false,
   error: null,
   snackbarText: '',

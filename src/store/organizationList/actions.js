@@ -12,6 +12,8 @@ import {
   POST_CHANGE_OF_STATUS,
   GET_MODULES,
   GET_MODULES_SUCCESS,
+  PATCH_MODULES,
+  PATCH_MODULES_SUCCESS,
 } from './types';
 
 export const getCountries = () => ({
@@ -27,8 +29,8 @@ export const getCountriesError = (data) => ({
 });
 
 export const addOrganization = (data) => ({
-    type: POST_ORGANIZATION,
-    data,
+  type: POST_ORGANIZATION,
+  data,
 });
 export const addOrganizationSuccess = (data) => ({
   type: POST_ORGANIZATION_SUCCESS,
@@ -62,5 +64,15 @@ export const getModules = (params) => ({
 })
 export const getModulesSuccess = (data) => ({
   type: GET_MODULES_SUCCESS,
+  data,
+})
+
+export const patchModules = (id, data) => ({
+  type: PATCH_MODULES,
+  id,
+  data,
+})
+export const patchModulesSuccess = (data) => ({
+  type: PATCH_MODULES_SUCCESS,
   data,
 })

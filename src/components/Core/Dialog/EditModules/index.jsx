@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
 import { useDispatch, useSelector } from 'react-redux';
 import Dialog from '../index';
 import { useTranslation } from 'react-i18next';
-import {getModules} from '../../../../store/organizationList/actions';
-import Checkbox from '../../Checkbox/Checkbox.jsx'
+import { getModules, patchModules } from '../../../../store/organizationList/actions';
+import { modulesSelector } from '../../../../store/organizationList/selectors'
+import Checkbox from '../../Checkbox/Checkbox2.jsx'
 import Button from '../../Button/Button';
 import style from '../Dialog.module.scss';
 
@@ -14,35 +15,51 @@ export default function EditModules({
 }) {
   const { t } = useTranslation()
   const dispatch = useDispatch();
-
+  const storeModules = useSelector(modulesSelector);
 
   const [modules, setModules] = useState({
-    logbook: true,
+    logbook: false,
     events: false,
     reports: false,
-    schedule: true,
-    activity_log: true,
-    create_places: true,
-    create_jobs: true,
-    create_groups: true,
-    use_manager_mobile: true,
-    use_approval_flow: true,
+    schedule: false,
+    activity_log: false,
+    create_places: false,
+    create_jobs: false,
+    create_groups: false,
+    use_manager_mobile: false,
+    use_approval_flow: false,
   });
 
   const [company, setCompany] = useState([])
 
   useEffect(() => {
-    if(open && checkedItem) {
+    if (open && checkedItem) {
       setCompany(companyById(checkedItem))
     }
-  },[open])
+  }, [open])
 
   useEffect(() => {
-   if(company[0] && company[0].status !==0) {
-    dispatch(getModules(checkedItem))
-   };
-  },[company])
+    if (company[0] && company[0].status !== 0) {
+      dispatch(getModules(checkedItem))
+    };
+  }, [company])
 
+  useEffect(() => {
+    if (Object.keys(storeModules).length > 0) {
+      setModules({
+        logbook: storeModules.logbook === 0 ? false : true,
+        events: storeModules.events === 0 ? false : true,
+        reports: storeModules.reports === 0 ? false : true,
+        schedule: storeModules.schedule === 0 ? false : true,
+        activity_log: storeModules.activity_log === 0 ? false : true,
+        create_places: storeModules.create_places === 0 ? false : true,
+        create_jobs: storeModules.create_jobs === 0 ? false : true,
+        create_groups: storeModules.create_groups === 0 ? false : true,
+        use_manager_mobile: storeModules.use_manager_mobile === 0 ? false : true,
+        use_approval_flow: storeModules.use_approval_flow === 0 ? false : true,
+      })
+    }
+  }, [storeModules])
 
   const companyById = (id) => {
     const company = companies.filter(item => item.id === id);
@@ -53,95 +70,100 @@ export default function EditModules({
     setModules({ ...modules, [event.target.name]: event.target.checked });
   };
 
-  return(
+  const saveChangeModules = () => {
+    dispatch(patchModules(checkedItem, modules))
+    handleClose(false)
+  }
+
+  return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      {(company[0] && company[0].status ===1) &&
+      {(company[0] && company[0].status === 1) &&
         <div className={style.addOrg}>
           <div className={style.addOrg__inner2}>
-            <Checkbox 
-              onChange={handleChange} 
-              checked={modules.logbook} 
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.logbook}
               label={t('Logbook')}
-              name='logbook' 
+              name='logbook'
             />
-            <Checkbox 
-              onChange={handleChange} 
-              checked={modules.events} 
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.events}
               label={t('Events')}
-              name='events' 
+              name='events'
             />
-            <Checkbox 
-              onChange={handleChange} 
-              checked={modules.reports} 
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.reports}
               label={t('Reports')}
-              name='reports' 
+              name='reports'
             />
-            <Checkbox 
-              onChange={handleChange} 
-              checked={modules.reports} 
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.schedule}
               label={t('Schedule')}
-              name='schedule' 
+              name='schedule'
             />
-            <Checkbox 
-              onChange={handleChange} 
-              checked={modules.reports} 
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.activity_log}
               label={t('Activity Log')}
-              name='activity_log' 
+              name='activity_log'
             />
             <div className={style.buttonBlock}></div>
           </div>
           <div className={style.addOrg__inner2}>
-            <Checkbox 
-                onChange={handleChange} 
-                checked={modules.create_places} 
-                label={t('Can create Places')}
-                name='create_places' 
-              />
-              <Checkbox 
-                onChange={handleChange} 
-                checked={modules.create_jobs} 
-                label={t('Can create Jobs')}
-                name='create_jobs' 
-              />
-              <Checkbox 
-                onChange={handleChange} 
-                checked={modules.create_groups} 
-                label={t('Can create Groups')}
-                name='create_groups' 
-              />
-              <Checkbox 
-                onChange={handleChange} 
-                checked={modules.use_manager_mobile} 
-                label={t('Can use Manager Mobile View')}
-                name='use_manager_mobile' 
-              />
-              <Checkbox 
-                onChange={handleChange} 
-                checked={modules.use_approval_flow} 
-                label={t('Can use Approval Flow in Logbook')}
-                name='use_approval_flow' 
-              />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.create_places}
+              label={t('Can create Places')}
+              name='create_places'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.create_jobs}
+              label={t('Can create Jobs')}
+              name='create_jobs'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.create_groups}
+              label={t('Can create Groups')}
+              name='create_groups'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.use_manager_mobile}
+              label={t('Can use Manager Mobile View')}
+              name='use_manager_mobile'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.use_approval_flow}
+              label={t('Can use Approval Flow in Logbook')}
+              name='use_approval_flow'
+            />
             <div className={style.buttonBlock}>
-                <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
-                <Button 
-                  size="big" 
-                  onClick={()=> {}}
-                >
-                  {t('Save')}
-                </Button>
-              </div>
-          </div>
-        </div> 
-      }
-      {(company[0] && company[0].status !==1) &&
-          <div className={style.addOrg}>
-            <div className={style.warningText}>
-              {t('In order to edit modules of a company, its status must be active. Change the status of the company to active, then edit the availability of its modules')}
-              <div className={style.buttonWarningBlock}>
-                <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
-              </div>
+              <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
+              <Button
+                size="big"
+                onClick={() => saveChangeModules()}
+              >
+                {t('Save')}
+              </Button>
             </div>
           </div>
+        </div>
+      }
+      {(company[0] && company[0].status !== 1) &&
+        <div className={style.addOrg}>
+          <div className={style.warningText}>
+            {t('In order to edit modules of a company, its status must be active. Change the status of the company to active, then edit the availability of its modules')}
+            <div className={style.buttonWarningBlock}>
+              <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
+            </div>
+          </div>
+        </div>
       }
     </Dialog>
   )

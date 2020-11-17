@@ -5,5 +5,5 @@ export const snackbarType = (state) => state.organizationList.snackbarType;
 export const snackbarText = (state) => state.organizationList.snackbarText;
 export const companiesSelector = (state) => state.organizationList.companies;
 export const statsSelector = (state) => state.organizationList.stats;
-
+export const modulesSelector = (state) => state.organizationList.companyModules;
                                           
