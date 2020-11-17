@@ -10,7 +10,6 @@ export default function Company() {
   const [companyId, setCompanyId] = useState(null)
   
   useEffect(() => {
-    console.log('location.state', params);
     setCompanyId(params.id)
  }, [params]);
 

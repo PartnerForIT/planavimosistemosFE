@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
+import LogbookIcon from '../../Icons/Logbook';
+
 import AvatarComponent from './Avatar'
 import styles from './header.module.scss';
 
@@ -27,6 +30,7 @@ const useStyles = makeStyles(() => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
   const {pathname} = useLocation();
+  const { t } = useTranslation();
   const params = useParams();
   const user = JSON.parse(localStorage.getItem('user'))
   
@@ -39,12 +43,26 @@ export default function ButtonAppBar() {
               <div className={styles.linkBlock}>
               <Link to='/overview' className={pathname=="/overview" ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
-                <span className={styles.link__text}>Overview</span>
+                <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
               <Link to='/organization-list' className={pathname=="/organization-list" ? styles.activelink : styles.link}>
                 <PalceIcon className={styles.icon}  />
-                <span className={styles.link__text}>Org. List</span>
+                <span className={styles.link__text}> {t('Org. List')}</span>
               </Link>
+            </div>
+          }
+          {
+            (params.id && user || user.role_id!==1) &&
+              <div className={styles.linkBlock}>
+              <Link to={`/overview/${params.id}`} className={pathname==`/overview/${params.id}` ? styles.activelink : styles.link}>
+                <OverviewIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Overview')}</span>
+              </Link>
+              <Link to={`/logbook/${params.id}`} className={pathname==`/logbook/${params.id}` ? styles.activelink : styles.link}>
+                <LogbookIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Logbook')}</span>
+              </Link>
+              
             </div>
           }
 
