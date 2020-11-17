@@ -226,13 +226,13 @@ export default function OrganizationList() {
           enterOrganization={enterOrganization}
         />
         <AddNewOrganization
-        open={open} 
-        handleClose={handleClose} 
-        title={"Add new organization"}  
-        inputValues={inputValues}
-        countries={countries}
-        handleInputChange={handleInputChange}
-        saveOrg={saveOrg}
+          open={open} 
+          handleClose={handleClose} 
+          title={"Add new organization"}  
+          inputValues={inputValues}
+          countries={countries}
+          handleInputChange={handleInputChange}
+          saveOrg={saveOrg}
         />
 
         <DataTable
