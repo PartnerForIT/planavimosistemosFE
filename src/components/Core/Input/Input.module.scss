@@ -10,15 +10,17 @@
   box-sizing: border-box;
   color: #333945;
   font-family: Helvetica Neue, sans-serif;
-  font-size: 16px;
-  padding: 8px;
+  font-size: 14px;
+  padding: 11px;
   outline: none;
 
-  &::-webkit-input-placeholder { /* Edge */
+  &::-webkit-input-placeholder {
+    /* Edge */
     color: #cbd1d8;
   }
 
-  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
     color: #cbd1d8;
   }
 
@@ -53,5 +55,5 @@
 }
 
 .withIcon {
-  padding: 8px 8px 8px 30px;
+  padding: 11px 11px 11px 30px;
 }

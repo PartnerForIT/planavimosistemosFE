@@ -15,11 +15,11 @@ export const getEmployee = (id) => ({
   },
 });
 
-export const getEmployees = () => ({
+export const getEmployees = (companyId) => ({
   type: GET_EMPLOYEES,
   request: {
     method: 'GET',
-    url: '/employees',
+    url: `/company/${companyId}/employees`,
   },
   meta: {
     thunk: true,
@@ -30,7 +30,7 @@ export const getReportsEmployees = (queryObj) => ({
   type: GET_EMPLOYEES,
   request: {
     method: 'GET',
-    url: `/reports/employees?${makeQueryString(queryObj)}`,
+    url: `/company/${queryObj.company_id}/reports/employees?${makeQueryString(queryObj)}`,
   },
   meta: {
     thunk: true,
