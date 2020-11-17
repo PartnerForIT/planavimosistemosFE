@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import React, { useEffect } from "react";
-import {authCheck} from '../../store/auth/actions';
-import {userSelector} from '../../store/auth/selectors'
-import { useDispatch,useSelector } from 'react-redux';
+import { authCheck } from '../../store/auth/actions';
+import { userSelector } from '../../store/auth/selectors'
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect } from "react-router-dom";
 import Progress from '../Core/Progress';
 import styles from './Login.module.scss';
@@ -14,9 +14,9 @@ const AuthRoute = ({ component: Component, ...rest }) => {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      if (_.isEmpty(user)) {
-         dispatch(authCheck());
-      }
+      // if (_.isEmpty(user)) {
+      dispatch(authCheck());
+      // }
     }
   }, []);
 

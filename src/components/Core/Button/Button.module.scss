@@ -12,6 +12,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   outline: transparent;
+  white-space: nowrap;
 }
 
 .inverse {
@@ -55,6 +56,11 @@
     opacity: 0.8;
   }
 }
+.navyBlue {
+  @extend .green;
+  border: 1px solid $blue-3;
+  background: $blue-3;
+}
 
 .danger {
   color: #fff;
@@ -66,6 +72,12 @@
   &:hover {
     opacity: 0.8;
   }
+}
+
+.black {
+  @extend .danger;
+  background: $black;
+  border: 1px solid $black;
 }
 
 .disabled {
@@ -82,6 +94,10 @@
   font-size: 14px;
   letter-spacing: -0.02em;
   padding: 12px 24px;
+  min-width: 150px;
+}
+.big.cancel {
+  min-width: auto;
 }
 
 .normal {
