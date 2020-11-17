@@ -9,6 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
+import HelpIcon from '../../Icons/Help';
 
 import AvatarComponent from './Avatar'
 import styles from './header.module.scss';
@@ -29,46 +30,57 @@ const useStyles = makeStyles(() => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const { t } = useTranslation();
   const params = useParams();
   const user = JSON.parse(localStorage.getItem('user'))
-  
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           {
-            (!params.id && user && user.role_id===1) && 
-              <div className={styles.linkBlock}>
-              <Link to='/overview' className={pathname=="/overview" ? styles.activelink : styles.link}>
+            (!params.id && user && user.role_id === 1) &&
+            <div className={styles.linkBlock}>
+              <Link to='/overview' className={pathname == "/overview" ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              <Link to='/organization-list' className={pathname=="/organization-list" ? styles.activelink : styles.link}>
-                <PalceIcon className={styles.icon}  />
+              <Link to='/organization-list' className={pathname == "/organization-list" ? styles.activelink : styles.link}>
+                <PalceIcon className={styles.icon} />
                 <span className={styles.link__text}> {t('Org. List')}</span>
               </Link>
             </div>
           }
           {
-            (params.id && user || user.role_id!==1) &&
-              <div className={styles.linkBlock}>
-              <Link to={`/overview/${params.id}`} className={pathname==`/overview/${params.id}` ? styles.activelink : styles.link}>
+            (params.id && user || user.role_id !== 1) &&
+            <div className={styles.linkBlock}>
+              <Link to={`/overview/${params.id}`} className={pathname == `/overview/${params.id}` ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              <Link to={`/logbook/${params.id}`} className={pathname==`/logbook/${params.id}` ? styles.activelink : styles.link}>
+              <Link to={`/logbook/${params.id}`} className={pathname == `/logbook/${params.id}` ? styles.activelink : styles.link}>
                 <LogbookIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Logbook')}</span>
               </Link>
-              
+
             </div>
           }
 
-          <AvatarComponent />
+          <div>
+            {(params.id && user || user.role_id !== 1) &&
+              <div className={styles.linkBlock}>
+                <Link to={`/overview/${params.id}`} className={pathname == `/help/${params.id}` ? styles.activelink : styles.link}>
+                  <HelpIcon className={styles.icon} />
+                  <span className={styles.link__text}>{t('Help')}</span>
+                </Link>
+              </div>
+            }
+            <AvatarComponent />
+          </div>
+
         </Toolbar>
       </AppBar>
-    </div>
+    </div >
   );
 }
