@@ -39,7 +39,7 @@ export default function EditModules({
   }, [open])
 
   useEffect(() => {
-    if (company[0] && company[0].status !== 0) {
+    if (company[0] && company[0].status === 1) {
       dispatch(getModules(checkedItem))
     };
   }, [company])
