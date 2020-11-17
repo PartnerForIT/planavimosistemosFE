@@ -123,6 +123,7 @@ const Row = ({
                   <span className={styles.IconStatus}>
                     {row[column.field] === 1 &&  <CheckStatus />}
                     {row[column.field] === 0 &&  <CheckStatus fill="#FD9D27" />}
+                    {row[column.field] === 2 &&  <CheckStatus fill="#fd0d1b" />}
                     </span>
                 }
               </div>

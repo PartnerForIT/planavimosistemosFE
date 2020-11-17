@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
+import EditModules from '../Core/Dialog/EditModules'
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Button from '../Core/Button/Button';
 import InputBase from '@material-ui/core/InputBase';
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   margin: {
-    margin: '0 5px 0 0',
+    margin: '5px 5px 5px 0',
   },
   label: {
     color: '#808F94',
@@ -66,14 +67,16 @@ export default function Filter({
   changeStatusCompany, 
   checkedItems, 
   enterOrganization,
+  companies,
+  clearCheckbox
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
 
   const debouncedSearchTerm = useDebounce(search, 500)
-
   useEffect(() => {
     if(debouncedSearchTerm) {
       dispatch(getCompanies({search}));
@@ -81,9 +84,12 @@ export default function Filter({
     if(search==='') {
       dispatch(getCompanies())
     }
-
-    console.log('search==', search)
   },[debouncedSearchTerm]);
+
+  const handleClose = () => {
+    clearCheckbox()
+    setOpen(false);
+  }
 
   return(
     <div className={styles.filterBlock}>
@@ -114,19 +120,38 @@ export default function Filter({
         </FormControl>
       </div>
       <div className={styles.filterBlock__inner}>
-        <Button onClick={()=> {enterOrganization()}} disabled={!checkedItems.length>0}>
-          Enter Organization
+        <Button navyBlue 
+          onClick={()=> setOpen(true)} 
+          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        >
+           {t('Edit Modules')}
+        </Button>
+        <Button 
+          onClick={()=> {enterOrganization()}} 
+          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        >
+           {t('Enter Organization')}
         </Button>
         <Button green onClick={()=> changeStatusCompany('activate')} disabled={!checkedItems.length>0}>
-          Active
+          {t('Active')}
         </Button>
         <Button yellow onClick={()=> changeStatusCompany('suspend')} disabled={!checkedItems.length>0}>
-          Suspend
+           {t('Suspend')}
         </Button>
         <Button danger onClick={()=> changeStatusCompany('delete')} disabled={!checkedItems.length>0}>
-          Delete
+           {t('Tetminate')}
+        </Button>
+        <Button black onClick={()=> changeStatusCompany('destroy')} disabled={!checkedItems.length>0}>
+           {t('Delete')}
         </Button>
       </div>
+      <EditModules
+          open={open} 
+          handleClose={handleClose} 
+          companies={companies}
+          checkedItem = {checkedItems.length>0 ? checkedItems[0] : null}
+          title={t('Have access to these modules')}
+       />
     </div>
   )
 }

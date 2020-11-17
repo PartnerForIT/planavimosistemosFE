@@ -29,7 +29,8 @@ const LoginContainer = () => {
   const handleLogin = () => {
     dispatch(login(email, password)).then((data) => {
       const roleId = data.data.user.role_id
-      roleId == 1 ? history.push(routes.ORG_LIST) : history.push(routes.LOGBOOK);
+      const company_id = data.data.user.id
+      roleId === 1 ? history.push(routes.ORG_LIST) : history.push(`${routes.LOGBOOK}/${company_id}`);
     }).catch((error) => {
       console.log('Login error', error);
     });

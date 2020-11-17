@@ -8,6 +8,7 @@ import {
   GET_COMPANIES,
   GET_COMPANIES_SUCCESS,
   POST_ORGANIZATION_SUCCESS,
+  GET_MODULES_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
     suspended: 0,
     terminated: 0,
   },
+  companyModules: {},
   loading: false,
   error: null,
   snackbarText: '',
@@ -69,7 +71,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
             suspended: state.stats.suspended,
             terminated: state.stats.terminated,
           } 
-        }    
+        }
+      case GET_MODULES_SUCCESS: 
+        return {
+          ...state,
+          companyModules: action.data
+        }   
     
       case ADD_SNACKBAR:
           return { 
