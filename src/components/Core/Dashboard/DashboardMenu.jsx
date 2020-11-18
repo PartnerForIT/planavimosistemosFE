@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
 import LogbookIcon from '../../Icons/Logbook2';
+import EventsIcon from '../../Icons/Events';
 import styles from './dasboard.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -20,7 +21,7 @@ const useStyles = makeStyles(() => ({
     background: 'transparent',
     '&::before': {
       display: 'none',
-    }
+    },
   },
   accordionDiv: {
     padding: '0px 0px 10px 5px',
@@ -172,6 +173,13 @@ export default function DashboardMenu() {
           </ul>
         </AccordionDetails>
       </Accordion>
+      <Link
+        to={`/settings/events/${params.id}`}
+        className={section === `events` ? styles.activeOnelink : styles.Onelink}
+      >
+        <EventsIcon />
+        <span className={styles.textLink}>{t('Events')}</span>
+      </Link>
     </div>
   )
 }
