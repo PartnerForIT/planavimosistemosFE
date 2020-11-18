@@ -11,6 +11,9 @@ import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
 import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
+import AnalyticsIcon from '../../Icons/Analytics';
+import EventsIcon from '../../Icons/Events';
+import VacationIcon from '../../Icons/Vacation';
 import AvatarComponent from './Avatar'
 import styles from './header.module.scss';
 
@@ -54,7 +57,6 @@ export default function ButtonAppBar() {
               </Link>
             </div>
           }
-          {/* SuperAdmin Link */}
           {/* Admin Link */}
           {
             (params.id && user || user.role_id !== 1) &&
@@ -63,11 +65,30 @@ export default function ButtonAppBar() {
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
+              <Link to={`/place/${params.id}`} className={pageName === `place` ? styles.activelink : styles.link}>
+                <PalceIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Place')}</span>
+              </Link>
               <Link to={`/logbook/${params.id}`} className={pageName === `logbook` ? styles.activelink : styles.link}>
                 <LogbookIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Logbook')}</span>
               </Link>
-
+              <Link to={`/analytics/${params.id}`} className={pageName === `analytics` ? styles.activelink : styles.link}>
+                <AnalyticsIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Analytics')}</span>
+              </Link>
+              <Link to={`/events/${params.id}`} className={pageName === `events` ? styles.activelink : styles.link}>
+                <EventsIcon fill={'#808f94'} viewBox={"0 0 32 32"} className={styles.icon} />
+                <span className={styles.link__text}>{t('Events')}</span>
+              </Link>
+              <Link to={`/reports/${params.id}`} className={pageName === `reports` ? styles.activelink : styles.link}>
+                <OverviewIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Reports')}</span>
+              </Link>
+              <Link to={`/vacation/${params.id}`} className={pageName === `vacation` ? styles.activelink : styles.link}>
+                <VacationIcon className={styles.icon} />
+                <span className={styles.link__text}>{t('Vacation')}</span>
+              </Link>
             </div>
           }
           {/* Admin Link */}
