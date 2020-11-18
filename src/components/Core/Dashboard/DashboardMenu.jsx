@@ -149,7 +149,7 @@ export default function DashboardMenu() {
           id="panel3-header"
         >
           <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
-          <span className={styles.menuText}>{t('LogBook')}</span>
+          <span className={styles.menuText}>{t('Logbook')}</span>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionContent}>
           <ul className={styles.dashboardLinkBlock}>
