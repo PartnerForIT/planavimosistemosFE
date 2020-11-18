@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
+import LogbookIcon from '../../Icons/Logbook2';
 import styles from './dasboard.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -17,6 +18,9 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     boxShadow: 'none',
     background: 'transparent',
+    '&::before': {
+      display: 'none',
+    }
   },
   accordionDiv: {
     padding: '0px 0px 10px 5px',
@@ -35,7 +39,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: '600',
   },
   accordionContent: {
-    margin: '5px 0',
+    margin: '0 0 5px 0',
     padding: 0,
   },
   activeIcon: {
@@ -56,15 +60,15 @@ export default function DashboardMenu() {
   return (
     <div className={styles.dashboardMenu}>
       {/* General */}
-      <Accordion className={classes.accordion} defaultExpanded>
+      <Accordion className={classes.accordion} defaultExpanded={section === 'general' ? true : false}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
           className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel1-content"
+          id="panel1-header"
         >
           <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
-          <span className={styles.menuText}>General</span>
+          <span className={styles.menuText}>{t('General')}</span>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionContent}>
           <ul className={styles.dashboardLinkBlock}>
@@ -97,15 +101,15 @@ export default function DashboardMenu() {
       </Accordion>
 
       {/* Accounts */}
-      <Accordion className={classes.accordion} defaultExpanded>
+      <Accordion className={classes.accordion} defaultExpanded={section === 'accounts' ? true : false}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
           className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel2-content"
+          id="panel2-header"
         >
           <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
-          <span className={styles.menuText}>Accounts</span>
+          <span className={styles.menuText}>{t('Accounts')}</span>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionContent}>
           <ul className={styles.dashboardLinkBlock}>
@@ -131,6 +135,38 @@ export default function DashboardMenu() {
                 className={innerSection === `grouping` ? styles.activelink : styles.link}
               >
                 {t('Grouping')}
+              </Link>
+            </li>
+          </ul>
+        </AccordionDetails>
+      </Accordion>
+      {/* Logbook */}
+      <Accordion className={classes.accordion} defaultExpanded={section === 'logbook' ? true : false}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
+          className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
+          aria-controls="panel3-content"
+          id="panel3-header"
+        >
+          <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
+          <span className={styles.menuText}>{t('LogBook')}</span>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordionContent}>
+          <ul className={styles.dashboardLinkBlock}>
+            <li>
+              <Link
+                to={`/settings/logbook/journal/${params.id}`}
+                className={innerSection === `journal` ? styles.activelink : styles.link}
+              >
+                {t('Journal')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/settings/logbook/overtime/${params.id}`}
+                className={innerSection === `overtime` ? styles.activelink : styles.link}
+              >
+                {t('Overtime')}
               </Link>
             </li>
           </ul>
