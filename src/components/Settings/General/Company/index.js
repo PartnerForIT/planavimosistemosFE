@@ -3,26 +3,29 @@ import { useParams } from "react-router-dom";
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
+import Dashboard from '../../../Core/Dashboard'
 import CompanyIcon from '../../../Icons/Company';
 
 export default function Company() {
   const params = useParams();
   const [companyId, setCompanyId] = useState(null)
-  
+
   useEffect(() => {
     setCompanyId(params.id)
- }, [params]);
+  }, [params]);
 
   return (
     <MaynLayout>
-      <TitleBlock  
-        title={"Company"} 
-      >
-        <CompanyIcon />
-      </TitleBlock>
-      <PageLayout>
-         Company id = {companyId}
-      </PageLayout>
+      <Dashboard>
+        <TitleBlock
+          title={"Company"}
+        >
+          <CompanyIcon />
+        </TitleBlock>
+        <PageLayout>
+          Company id = {companyId}
+        </PageLayout>
+      </Dashboard>
     </MaynLayout>
 
   )
