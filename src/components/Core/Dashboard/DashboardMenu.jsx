@@ -12,6 +12,9 @@ import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
 import LogbookIcon from '../../Icons/Logbook2';
 import EventsIcon from '../../Icons/Events';
+import CategoriesIcon from '../../Icons/Categories';
+import ActivityLogIcon from '../../Icons/ActivityLog';
+import DeleteIcon from '../../Icons/DeleteIcon';
 import styles from './dasboard.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -179,6 +182,27 @@ export default function DashboardMenu() {
       >
         <EventsIcon />
         <span className={styles.textLink}>{t('Events')}</span>
+      </Link>
+      <Link
+        to={`/settings/categories/${params.id}`}
+        className={section === `categories` ? styles.activeOnelink : styles.Onelink}
+      >
+        <CategoriesIcon />
+        <span className={styles.textLink}>{t('Categories')}</span>
+      </Link>
+      <Link
+        to={`/settings/activity-log/${params.id}`}
+        className={section === `activity-log` ? styles.activeOnelink : styles.Onelink}
+      >
+        <ActivityLogIcon />
+        <span className={styles.textLink}>{t('Activity Log')}</span>
+      </Link>
+      <Link
+        to={`/settings/delete/${params.id}`}
+        className={section === `delete` ? styles.activeOnelink : styles.Onelink}
+      >
+        <DeleteIcon />
+        <span className={styles.textLink}>{t('Data Delete')}</span>
       </Link>
     </div>
   )
