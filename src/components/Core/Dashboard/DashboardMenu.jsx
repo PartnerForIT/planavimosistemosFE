@@ -9,6 +9,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
 import GenaralIcon from '../../Icons/GeneralIcon';
+import AccountIcon from '../../Icons/AccountsIcon';
 import styles from './dasboard.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -54,6 +55,7 @@ export default function DashboardMenu() {
   const innerSection = pathname.split('/')[3];
   return (
     <div className={styles.dashboardMenu}>
+      {/* General */}
       <Accordion className={classes.accordion} defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
@@ -88,6 +90,47 @@ export default function DashboardMenu() {
                 className={innerSection === `security` ? styles.activelink : styles.link}
               >
                 {t('Security')}
+              </Link>
+            </li>
+          </ul>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Accounts */}
+      <Accordion className={classes.accordion} defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
+          className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
+          <span className={styles.menuText}>Accounts</span>
+        </AccordionSummary>
+        <AccordionDetails className={classes.accordionContent}>
+          <ul className={styles.dashboardLinkBlock}>
+            <li>
+              <Link
+                to={`/settings/accounts/accounts-list/${params.id}`}
+                className={innerSection === `accounts-list` ? styles.activelink : styles.link}
+              >
+                {t('Accounts list')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/settings/accounts/roles/${params.id}`}
+                className={innerSection === `roles` ? styles.activelink : styles.link}
+              >
+                {t('Roles')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/settings/accounts/grouping/${params.id}`}
+                className={innerSection === `grouping` ? styles.activelink : styles.link}
+              >
+                {t('Grouping')}
               </Link>
             </li>
           </ul>
