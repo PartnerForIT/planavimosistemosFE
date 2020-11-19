@@ -15,6 +15,7 @@ import skills from './skills/reducer';
 import reports from './reports/reducer';
 import overview from './overview/reducer';
 import organizationList from './organizationList/reducer';
+import settings from './settings/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   reports,
   overview,
   organizationList,
+  settings,
 });
 
 const middlewares = [

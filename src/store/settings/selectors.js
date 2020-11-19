@@ -1,0 +1,1 @@
+export const settingCompanySelector = (state) => state.settings.company;
