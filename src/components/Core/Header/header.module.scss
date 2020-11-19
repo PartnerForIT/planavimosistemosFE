@@ -3,6 +3,9 @@
 .linkBlock {
   display: flex;
 }
+.rightLinkBlock {
+  display: flex;
+}
 .link {
   display: flex;
   flex-direction: column;
@@ -10,7 +13,7 @@
   justify-content: center;
   position: relative;
   width: 70px;
-  padding: 12px 15px;
+  padding: 14px 6px 10px 6px;
   font-size: 14px;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
@@ -41,7 +44,7 @@
     background: $blue-100;
     color: $blue-2;
     cursor: pointer;
-    .icon path {
+    path {
       fill: $blue-2 !important;
     }
     &::before {
@@ -54,7 +57,7 @@
   @extend .link;
   background: $blue-100;
   color: $blue-2;
-  .icon path {
+  path {
     fill: $blue-2 !important;
   }
   &::before {
@@ -65,13 +68,24 @@
 .userBlock {
   width: 100%;
   max-width: 210px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 25px;
   &__name {
     color: $gray;
     padding-left: 10px;
     font-weight: 600;
     font-size: 16px;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: $light-blue;
   }
 }

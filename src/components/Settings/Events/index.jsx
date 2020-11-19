@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from "react-router-dom";
-import MaynLayout from '../../../Core/MainLayout';
-import PageLayout from '../../../Core/PageLayout';
-import TitleBlock from '../../../Core/TitleBlock';
-import Dashboard from '../../../Core/Dashboard'
-import CompanyIcon from '../../../Icons/Company';
+import MaynLayout from '../../Core/MainLayout';
+import PageLayout from '../../Core/PageLayout';
+import TitleBlock from '../../Core/TitleBlock';
+import Dashboard from '../../Core/Dashboard'
+import JournalIcon from '../../Icons/JournalIcon';
 
-export default function Company() {
+export default function Events() {
   const params = useParams();
   const [companyId, setCompanyId] = useState(null)
 
@@ -18,12 +18,12 @@ export default function Company() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Company"}
+          title={"Events"}
         >
-          <CompanyIcon />
+          <JournalIcon />
         </TitleBlock>
         <PageLayout>
-          Company id = {companyId}
+          Events id = {companyId}
         </PageLayout>
       </Dashboard>
     </MaynLayout>

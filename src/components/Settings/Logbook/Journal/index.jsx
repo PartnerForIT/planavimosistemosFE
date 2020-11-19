@@ -4,9 +4,9 @@ import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard'
-import CompanyIcon from '../../../Icons/Company';
+import JournalIcon from '../../../Icons/JournalIcon';
 
-export default function Company() {
+export default function Journal() {
   const params = useParams();
   const [companyId, setCompanyId] = useState(null)
 
@@ -18,12 +18,12 @@ export default function Company() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Company"}
+          title={"Journal"}
         >
-          <CompanyIcon />
+          <JournalIcon />
         </TitleBlock>
         <PageLayout>
-          Company id = {companyId}
+          Journal id = {companyId}
         </PageLayout>
       </Dashboard>
     </MaynLayout>
