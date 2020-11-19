@@ -17,6 +17,14 @@ export default function Company() {
   const [companyId, setCompanyId] = useState(null);
   const [open, SetOpen] = useState(false);
   const [file, setFile] = useState([]);
+  const [inputValues, setInputValues] = useState({
+    country: '',
+    lang: '',
+    name: '',
+    external_id: '',
+    contact_person_name: '',
+    contact_person_email: ''
+  });
 
   useEffect(() => {
     setCompanyId(params.id)
@@ -32,6 +40,10 @@ export default function Company() {
     SetOpen(false)
   }
 
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    setInputValues({ ...inputValues, [name]: value });
+  };
 
   return (
     <MaynLayout>
@@ -42,12 +54,12 @@ export default function Company() {
           <CompanyIcon />
         </TitleBlock>
         <PageLayout>
-
           <Form
             styles={styles}
             handleOpen={handleOpen}
+            handleInputChange={handleInputChange}
+            inputValues={inputValues}
           />
-
           <DropzoneDialog
             open={open}
             onSave={handleSave}
