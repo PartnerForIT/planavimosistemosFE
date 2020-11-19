@@ -4,9 +4,10 @@ import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import Input from '../../../Core/Input/Input';
+import SimpleSelect from '../../../Core/SimpleSelect'
 
 
-export default function CompaneForm({ styles, handleOpen, handleInputChange, inputValues }) {
+export default function CompaneForm({ styles, handleOpen, handleInputChange, inputValues, countries }) {
   const { t } = useTranslation();
 
   return (
@@ -52,6 +53,19 @@ export default function CompaneForm({ styles, handleOpen, handleInputChange, inp
           onChange={handleInputChange}
         />
       </div>
+      <div className={styles.formControl}>
+        <div className={styles.labelBlock}>
+          <Label text={t('Country')} htmlFor={"country"} />
+        </div>
+        <SimpleSelect
+          handleInputChange={handleInputChange}
+          name="country"
+          fullWidth
+          value={inputValues.country}
+          options={countries}
+        />
+      </div>
+
     </div>
   )
 }

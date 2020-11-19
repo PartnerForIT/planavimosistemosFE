@@ -21,7 +21,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         company: action.data,
         error: null,
-        loading: true,
+        loading: false,
       };
 
     default: return state;

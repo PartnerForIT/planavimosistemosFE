@@ -9,8 +9,11 @@ import Dashboard from '../../../Core/Dashboard'
 import CompanyIcon from '../../../Icons/Company';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Form from './Form';
+import Progress from '../../../Core/Progress';
 import { getSettingCompany } from '../../../../store/settings/actions';
-import { settingCompanySelector } from '../../../../store/settings/selectors'
+import { getCountries } from '../../../../store/organizationList/actions';
+import { settingCompanySelector, isLoadingSelector } from '../../../../store/settings/selectors';
+import { countriesSelector } from '../../../../store/organizationList/selectors';
 import styles from './company.module.scss';
 
 export default function Company() {
@@ -32,6 +35,7 @@ export default function Company() {
 
 
   useEffect(() => {
+    dispatch(getCountries());
     if (params.id) {
       dispatch(getSettingCompany(params.id))
     }
@@ -41,10 +45,15 @@ export default function Company() {
   }, [params]);
 
   const company = useSelector(settingCompanySelector);
+  const countries = useSelector(countriesSelector);
+  const isLoadind = useSelector(isLoadingSelector)
 
   useEffect(() => {
     setInputValues({
+      ...inputValues,
       name: company.name,
+      contact_person_name: company.contact_person_name,
+      contact_person_email: company.contact_person_email,
       country: company.country,
       lang: company.lang,
     })
@@ -75,12 +84,16 @@ export default function Company() {
           <CompanyIcon />
         </TitleBlock>
         <PageLayout>
-          <Form
-            styles={styles}
-            handleOpen={handleOpen}
-            handleInputChange={handleInputChange}
-            inputValues={inputValues}
-          />
+          {isLoadind ? <Progress /> :
+            <Form
+              styles={styles}
+              handleOpen={handleOpen}
+              handleInputChange={handleInputChange}
+              inputValues={inputValues}
+              countries={countries}
+            />
+          }
+
           <DropzoneDialog
             open={open}
             onSave={handleSave}
