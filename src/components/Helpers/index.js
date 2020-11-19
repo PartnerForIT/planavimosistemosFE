@@ -72,4 +72,4 @@ export const getInfoCardColors = (type) => {
 export const makeQueryString = (queryObj, withoutEmpty = true) => (withoutEmpty ? Object.keys(queryObj)
   .filter((item) => typeof queryObj[item] !== 'undefined' && queryObj[item].toString().length)
   .map((key) => `${key}=${queryObj[key]}`).join('&') : Object.keys(queryObj)
-  .map((key) => `${key}=${queryObj[key]}`).join('&'));
+    .map((key) => `${key}=${queryObj[key]}`).join('&'));

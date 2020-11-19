@@ -30,9 +30,10 @@ export default function Company() {
     name: '',
     external_id: '',
     contact_person_name: '',
-    contact_person_email: ''
+    contact_person_email: '',
+    timezone: '',
+    date_format: '',
   });
-
 
   useEffect(() => {
     dispatch(getCountries());
@@ -46,16 +47,19 @@ export default function Company() {
 
   const company = useSelector(settingCompanySelector);
   const countries = useSelector(countriesSelector);
-  const isLoadind = useSelector(isLoadingSelector)
+  const isLoadind = useSelector(isLoadingSelector);
 
   useEffect(() => {
     setInputValues({
       ...inputValues,
-      name: company.name,
-      contact_person_name: company.contact_person_name,
-      contact_person_email: company.contact_person_email,
+      name: company.name || '',
+      contact_person_name: company.contact_person_name || '',
+      contact_person_email: company.contact_person_email || '',
       country: company.country,
-      lang: company.lang,
+      lang: company.lang || 'EN',
+      timezone: company.timezone || 'UTC±00:00',
+      date_format: company.date_format || 'DD MM YY',
+      currency: company.currency || 'USD'
     })
   }, [company]);
 
@@ -93,7 +97,6 @@ export default function Company() {
               countries={countries}
             />
           }
-
           <DropzoneDialog
             open={open}
             onSave={handleSave}

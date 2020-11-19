@@ -4,10 +4,16 @@ import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import Input from '../../../Core/Input/Input';
+import langArray from '../../../Helpers/lang';
+import timezoneArr from '../../../Helpers/timezone';
+import formatArr from '../../../Helpers/dateFormat';
+import currencyArr from '../../../Helpers/currency';
 import SimpleSelect from '../../../Core/SimpleSelect'
 
 
-export default function CompaneForm({ styles, handleOpen, handleInputChange, inputValues, countries }) {
+export default function CompaneForm({
+  styles, handleOpen, handleInputChange,
+  inputValues, countries }) {
   const { t } = useTranslation();
 
   return (
@@ -65,7 +71,58 @@ export default function CompaneForm({ styles, handleOpen, handleInputChange, inp
           options={countries}
         />
       </div>
-
+      <div className={styles.formControl}>
+        <div className={styles.labelBlock}>
+          <Label text={t('Language')} htmlFor={"language"} />
+          <Tooltip title={t('Language')} />
+        </div>
+        <SimpleSelect
+          handleInputChange={handleInputChange}
+          name="lang"
+          fullWidth
+          value={inputValues.lang}
+          options={langArray}
+        />
+      </div>
+      <div className={styles.formControl}>
+        <div className={styles.labelBlock}>
+          <Label text={t('Timezone')} htmlFor={"timezone"} />
+          <Tooltip title={t('Indicate in what time zone you work')} />
+        </div>
+        <SimpleSelect
+          handleInputChange={handleInputChange}
+          name="timezone"
+          fullWidth
+          value={inputValues.timezone}
+          options={timezoneArr}
+        />
+      </div>
+      <div className={styles.formControl}>
+        <div className={styles.labelBlock}>
+          <Label text={t('Date format')} htmlFor={"date_format"} />
+          <Tooltip title={t('Date format')} />
+        </div>
+        <SimpleSelect
+          handleInputChange={handleInputChange}
+          name="date_format"
+          fullWidth
+          value={inputValues.date_format}
+          options={formatArr}
+        />
+      </div>
+      <div className={styles.formControl}>
+        <div className={styles.labelBlock}>
+          <Label text={t('Currency')} htmlFor={"currency"} />
+          <Tooltip title={t('Date format')} />
+        </div>
+        <SimpleSelect
+          handleInputChange={handleInputChange}
+          name="currency"
+          fullWidth
+          value={inputValues.currency}
+          options={currencyArr}
+        />
+      </div>
     </div>
   )
 }

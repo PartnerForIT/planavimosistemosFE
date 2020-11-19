@@ -9,6 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import langArray from '../../../Helpers/lang';
 import Button from '../../Button/Button';
 
 import style from '../Dialog.module.scss';
@@ -56,116 +57,117 @@ const BootstrapInput = withStyles((theme) => ({
       borderColor: '#0087ff',
     },
   },
-}))(InputBase); 
+}))(InputBase);
 
 export default function AddNewOrganization({
-  open, handleClose, countries,  title ,inputValues, handleInputChange, saveOrg
+  open, handleClose, countries, title, inputValues, handleInputChange, saveOrg
 }) {
   const classes = useStyles();
 
-  return(
+  return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.addOrg}>
-          <div className={style.addOrg__inner}>
-            <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="name" className={classes.label}>
-                Company Name
+        <div className={style.addOrg__inner}>
+          <FormControl className={classes.margin}>
+            <InputLabel shrink htmlFor="name" className={classes.label}>
+              Company Name
               </InputLabel>
-              <BootstrapInput 
-                name="name" 
-                onChange={handleInputChange} 
-                value={inputValues.name}
-                placeholder="Enter yuor company name" 
-                id="name" />
-            </FormControl>
-            <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="country-select" className={classes.label}>
-                Country
+            <BootstrapInput
+              name="name"
+              onChange={handleInputChange}
+              value={inputValues.name}
+              placeholder="Enter yuor company name"
+              id="name" />
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel shrink htmlFor="country-select" className={classes.label}>
+              Country
               </InputLabel>
-              <NativeSelect
-                id="country-select"
-                value={inputValues.country}
-                onChange={handleInputChange}
-                inputProps={{
-                  name: 'country',
-                }}
-                input={<BootstrapInput name="country" />}
-              >
-                {_.map(countries, (item) => (
-                  <option key={item.code} value={item.code}>{item.name}</option>
-                ))}
-              </NativeSelect>
-            </FormControl>
-            <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="country-select" className={classes.label}>
-                Language
+            <NativeSelect
+              id="country-select"
+              value={inputValues.country}
+              onChange={handleInputChange}
+              inputProps={{
+                name: 'country',
+              }}
+              input={<BootstrapInput name="country" />}
+            >
+              {_.map(countries, (item) => (
+                <option key={item.code} value={item.code}>{item.name}</option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel shrink htmlFor="country-select" className={classes.label}>
+              Language
               </InputLabel>
-              <NativeSelect
-                id="country-select"
-                value={inputValues.lang}
-                placeholder="Select your Language"
-                onChange={handleInputChange}
-                inputProps={{
-                  name: 'lang',
-                }}
-                input={<BootstrapInput />}
-              >
-                <option value={'EN'}>English</option>
-                <option value={'RU'}>Russian</option>
-              </NativeSelect>
-            </FormControl>
-            <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="external-id" className={classes.label}>
-                External ID
+            <NativeSelect
+              id="country-select"
+              value={inputValues.lang}
+              placeholder="Select your Language"
+              onChange={handleInputChange}
+              inputProps={{
+                name: 'lang',
+              }}
+              input={<BootstrapInput />}
+            >
+              {_.map(langArray, (item) => (
+                <option key={item.code} value={item.code}>{item.name}</option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel shrink htmlFor="external-id" className={classes.label}>
+              External ID
               </InputLabel>
+            <BootstrapInput
+              name="external_id"
+              onChange={handleInputChange}
+              value={inputValues.admin_id}
+              placeholder="Company external id"
+              id="external-id" />
+          </FormControl>
+        </div>
+        <div className={style.addOrg__inner}>
+          <div>
+            <FormControl className={classes.margin} >
+              <InputLabel shrink htmlFor="person" className={classes.label}>
+                Contact persons
+                </InputLabel>
               <BootstrapInput
-                name="external_id"
-                onChange={handleInputChange} 
-                value={inputValues.admin_id}
-                placeholder="Company external id"
-                id="external-id" />
+                placeholder="Contact persons name"
+                id="person"
+                name="contact_person_name"
+                value={inputValues.contact_person_name}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+
+            <FormControl className={classes.margin}>
+              <InputLabel shrink htmlFor="email" className={classes.label}>
+                Contact persons email
+                </InputLabel>
+              <BootstrapInput
+                placeholder="Contact persons email"
+                id="email"
+                name="contact_person_email"
+                value={inputValues.contact_person_email}
+                onChange={handleInputChange}
+              />
             </FormControl>
           </div>
-          <div className={style.addOrg__inner}>
-            <div>
-              <FormControl className={classes.margin} >
-                <InputLabel shrink htmlFor="person" className={classes.label}>
-                  Contact persons
-                </InputLabel>
-                <BootstrapInput 
-                  placeholder="Contact persons name" 
-                  id="person"
-                  name="contact_person_name"
-                  value={inputValues.contact_person_name}
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-
-              <FormControl className={classes.margin}>
-                <InputLabel shrink htmlFor="email" className={classes.label}>
-                  Contact persons email
-                </InputLabel>
-                <BootstrapInput 
-                  placeholder="Contact persons email" 
-                  id="email"
-                  name="contact_person_email"
-                  value={inputValues.contact_person_email}
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            </div>
-            <div className={style.buttonBlock}>
-              <Button cancel size="big" onClick={handleClose}>Cancel</Button>
-              <Button 
-                size="big" 
-                onClick={()=> saveOrg()}
-                disabled={!inputValues.contact_person_email || !inputValues.name}
-              >
-                Save and Invite
+          <div className={style.buttonBlock}>
+            <Button cancel size="big" onClick={handleClose}>Cancel</Button>
+            <Button
+              size="big"
+              onClick={() => saveOrg()}
+              disabled={!inputValues.contact_person_email || !inputValues.name}
+            >
+              Save and Invite
               </Button>
-            </div>
           </div>
+        </div>
       </div>
-    </Dialog> 
+    </Dialog>
   )
 }
