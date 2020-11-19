@@ -103,7 +103,6 @@ export default function OrganizationList() {
 
   useEffect(() => {
     companies.map(item => {
-      console.log('item', item)
       item.checked = false
       item.updated_at = item.updated_at ? moment(item.updated_at).format('lll') : '';
       item.deleted_at = item.deleted_at ? moment(item.deleted_at).format('lll') : '';
@@ -185,7 +184,6 @@ export default function OrganizationList() {
     setInputValues({ ...inputValues, [name]: value });
     if (name === 'country') {
       const selectCounry = countries.filter(item => item.code === value);
-      console.log('selectCounry', selectCounry)
       setInputValues({
         ...inputValues,
         timezone: selectCounry[0].timezones[0],
@@ -194,10 +192,7 @@ export default function OrganizationList() {
     }
   };
 
-  console.log('inputValues', inputValues)
-
   const saveOrg = () => {
-    console.log('inputValues', inputValues)
     dispatch(addOrganization(inputValues));
     setInputValues({
       country: 'PL',
