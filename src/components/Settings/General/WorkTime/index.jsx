@@ -15,7 +15,8 @@ import { getSettingWorkTime } from '../../../../store/settings/actions';
 import WorkTimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
-import Holidays from './holidays'
+import Holidays from './Holidays';
+import StartWeek from './StartWeek';
 import styles from './workTime.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -58,10 +59,16 @@ export default function WorkTime() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-              <Holidays
-                styles={styles}
-                holidays={workTime.national_holidays}
-              />
+              <>
+                <Holidays
+                  styles={styles}
+                  holidays={workTime.national_holidays}
+                />
+                <StartWeek
+                  days={workTime.days}
+                  workTime={workTime.work_time}
+                />
+              </>
           }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -78,6 +85,5 @@ export default function WorkTime() {
         </PageLayout>
       </Dashboard>
     </MaynLayout>
-
   )
 }

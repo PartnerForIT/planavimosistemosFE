@@ -78,7 +78,10 @@ export default function Company() {
       timezone: company.timezone || 'UTC±00:00',
       date_format: company.date_format || 'DD MM YY',
       currency: company.currency || 'USD'
-    })
+    });
+    if (company.logo) {
+      setFile(company.logo)
+    }
   }, [company]);
 
   const handleOpen = () => {
