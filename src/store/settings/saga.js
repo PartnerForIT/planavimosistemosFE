@@ -29,7 +29,6 @@ function* editSettingsCompany(action) {
     const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/update`, action.data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        "Content-Type": "multipart/form-data",
       },
     });
     yield put(addSnackbar('Company parameters edited successfully', 'success'));

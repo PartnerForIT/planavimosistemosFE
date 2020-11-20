@@ -97,13 +97,14 @@ export default function Company() {
   };
 
   const editCompany = () => {
-    const data = new FormData();
-    if (file.length > 0) {
-      data.append("logo", file);
-    }
-    Object.keys(inputValues).map(item => {
-      data.append(item, inputValues[item]);
-    })
+    // const data = new FormData();
+    // if (file.length > 0) {
+    //   data.append("logo", file);
+    // }
+    // Object.keys(inputValues).map(item => {
+    //   data.append(item, inputValues[item]);
+    // })
+    const data = { ...inputValues, logo: file }
     dispatch(editSettingCompany(data, companyId))
   }
 
