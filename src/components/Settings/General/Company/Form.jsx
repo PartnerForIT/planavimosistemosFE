@@ -13,7 +13,7 @@ import SimpleSelect from '../../../Core/SimpleSelect'
 
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
-  inputValues, countries }) {
+  inputValues, countries, editCompany }) {
   const { t } = useTranslation();
 
   return (
@@ -59,6 +59,7 @@ export default function CompaneForm({
           onChange={handleInputChange}
         />
       </div>
+      <div className={styles.formLine}></div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
           <Label text={t('Country')} htmlFor={"country"} />
@@ -123,6 +124,7 @@ export default function CompaneForm({
           options={currencyArr}
         />
       </div>
+      <Button size="big" onClick={() => editCompany()}>{t('Save')}</Button>
     </div>
   )
 }
