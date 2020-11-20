@@ -13,11 +13,14 @@ import SimpleSelect from '../../../Core/SimpleSelect'
 
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
-  inputValues, countries, editCompany }) {
+  inputValues, countries, editCompany, file, company }) {
   const { t } = useTranslation();
 
   return (
     <div className={styles.company}>
+      <div className={styles.companyLogo}>
+        <img src={file ? file : company.logo} alt="" />
+      </div>
       <div className={styles.labelBlock}>
         <Label text={t('Company logo')} htmlFor={"logo"} />
         <Tooltip title={'Add Company Logo'} />
@@ -124,7 +127,9 @@ export default function CompaneForm({
           options={currencyArr}
         />
       </div>
-      <Button size="big" onClick={() => editCompany()}>{t('Save')}</Button>
+      <div className={styles.buttonBlock}>
+        <Button size="big" onClick={() => editCompany()}>{t('Save')}</Button>
+      </div>
     </div>
   )
 }

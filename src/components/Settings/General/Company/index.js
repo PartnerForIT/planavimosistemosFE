@@ -9,6 +9,7 @@ import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard'
 import CompanyIcon from '../../../Icons/Company';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { convertBase64 } from '../../../Helpers';
 import Form from './Form';
 import Progress from '../../../Core/Progress';
 import { getSettingCompany, editSettingCompany } from '../../../../store/settings/actions';
@@ -37,7 +38,7 @@ export default function Company() {
 
   const [companyId, setCompanyId] = useState(null);
   const [open, SetOpen] = useState(false);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState(null);
   const [inputValues, setInputValues] = useState({
     country: '',
     lang: '',
@@ -86,8 +87,9 @@ export default function Company() {
   const handleClose = () => {
     SetOpen(false)
   }
-  const handleSave = (files) => {
-    setFile(files);
+  const handleSave = async (file) => {
+    const base64 = await convertBase64(file[0]);
+    setFile(base64);
     SetOpen(false)
   }
 
@@ -97,13 +99,6 @@ export default function Company() {
   };
 
   const editCompany = () => {
-    // const data = new FormData();
-    // if (file.length > 0) {
-    //   data.append("logo", file);
-    // }
-    // Object.keys(inputValues).map(item => {
-    //   data.append(item, inputValues[item]);
-    // })
     const data = { ...inputValues, logo: file }
     dispatch(editSettingCompany(data, companyId))
   }
@@ -125,6 +120,8 @@ export default function Company() {
               inputValues={inputValues}
               countries={countries}
               editCompany={editCompany}
+              file={file}
+              company={company}
             />
           }
           <DropzoneDialog
@@ -151,6 +148,5 @@ export default function Company() {
         </PageLayout>
       </Dashboard>
     </MaynLayout>
-
   )
 }
