@@ -1,8 +1,8 @@
 import {
   GET_SETTINGS_COMPANY,
   GET_SETTINGS_COMPANY_SUCCESS,
-  ADD_SNACKBAR,
-  DISMISS_SNACKBAR,
+  ADD_SETTING_SNACKBAR,
+  DISMISS_SETTING_SNACKBAR,
 } from './types';
 
 const initialState = {
@@ -25,14 +25,15 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
         loading: false,
       };
-    case ADD_SNACKBAR:
+    case ADD_SETTING_SNACKBAR:
+      console.log('action', action)
       return {
         ...state,
-        snackbarText: action.snackbarType === 'error' ? action.data.response.data.message : action.data,
+        snackbarText: action.data,
         snackbarType: action.snackbarType,
         snackbarShow: true
       };
-    case DISMISS_SNACKBAR:
+    case DISMISS_SETTING_SNACKBAR:
       return { ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '' };
 
     default: return state;

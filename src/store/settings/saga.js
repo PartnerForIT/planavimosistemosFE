@@ -32,11 +32,11 @@ function* editSettingsCompany(action) {
         "Content-Type": "multipart/form-data",
       },
     });
-    yield put(addSnackbar('company parameters edited successfully', 'success'));
+    yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar(e, 'error'));
+    yield put(addSnackbar('Company edit error', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }

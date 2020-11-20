@@ -3,8 +3,8 @@ import {
   GET_SETTINGS_COMPANY_SUCCESS,
   PATCH_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY_SUCCESS,
-  ADD_SNACKBAR,
-  DISMISS_SNACKBAR
+  ADD_SETTING_SNACKBAR,
+  DISMISS_SETTING_SNACKBAR
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -27,8 +27,8 @@ export const editSettingCompanySuccess = (data) => ({
 });
 
 export const addSnackbar = (data, snackbarType) => ({
-  type: ADD_SNACKBAR,
+  type: ADD_SETTING_SNACKBAR,
   data,
   snackbarType,
 });
-export const dismissSnackbar = () => ({ type: DISMISS_SNACKBAR });
+export const dismissSnackbar = () => ({ type: DISMISS_SETTING_SNACKBAR });
