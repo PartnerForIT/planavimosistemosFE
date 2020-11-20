@@ -1,0 +1,19 @@
+
+.holidays {
+  width: 100%;
+  max-width: 430px;
+}
+.labelBlock {
+  display: flex;
+  label {
+    margin-right: 20px;
+  }
+}
+.labelButtonBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  label {
+    margin-right: 20px;
+  }
+}

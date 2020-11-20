@@ -4,7 +4,9 @@ import {
   PATCH_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY_SUCCESS,
   ADD_SETTING_SNACKBAR,
-  DISMISS_SETTING_SNACKBAR
+  DISMISS_SETTING_SNACKBAR,
+  GET_WORK_TIME,
+  GET_WORK_TIME_SUCCESS
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -32,3 +34,12 @@ export const addSnackbar = (data, snackbarType) => ({
   snackbarType,
 });
 export const dismissSnackbar = () => ({ type: DISMISS_SETTING_SNACKBAR });
+
+export const getSettingWorkTime = (id) => ({
+  type: GET_WORK_TIME,
+  id
+});
+export const getSettingWorkTimeSuccess = (data) => ({
+  type: GET_WORK_TIME_SUCCESS,
+  data
+});

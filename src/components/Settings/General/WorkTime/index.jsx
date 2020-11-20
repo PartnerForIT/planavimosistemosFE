@@ -8,13 +8,14 @@ import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard'
 import {
-  settingCompanySelector,
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText
 } from '../../../../store/settings/selectors';
+import { getSettingWorkTime } from '../../../../store/settings/actions'
 import WorkTimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
+import Holidays from './holidays'
 import styles from './workTime.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -34,10 +35,17 @@ export default function WorkTime() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  useEffect(() => {
+    if (params.id) {
+      dispatch(getSettingWorkTime(params.id))
+    }
+  }, []);
+
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+
 
   return (
     <MaynLayout>
@@ -48,9 +56,12 @@ export default function WorkTime() {
           <WorkTimeIcon />
         </TitleBlock>
         <PageLayout>
-          {isLoadind ? <Progress /> : <div> Work Time PAge</div>}
-
-
+          {
+            isLoadind ? <Progress /> :
+              <Holidays
+                styles={styles}
+              />
+          }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             ContentProps={{
