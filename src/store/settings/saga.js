@@ -6,8 +6,10 @@ import {
   PATCH_SETTINGS_COMPANY,
   GET_WORK_TIME,
 } from "./types";
-
-import { getSettingCompanySuccess, addSnackbar, dismissSnackbar } from './actions'
+import {
+  getSettingCompanySuccess, addSnackbar,
+  dismissSnackbar, getSettingWorkTimeSuccess
+} from './actions'
 
 function token() {
   const token = {
@@ -45,12 +47,11 @@ function* editSettingsCompany(action) {
 function* loadSettingsWorkTime(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/work-time`, token());
-    //console.log('loadSettingsWorkTime', data);
+    yield put(getSettingWorkTimeSuccess(data))
   } catch (error) {
     console.log(error);
   }
 }
-
 
 
 export default function* SettingsWatcher() {

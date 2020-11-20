@@ -1,3 +1,4 @@
+@import "../../../Core/variables";
 
 .holidays {
   width: 100%;
@@ -15,5 +16,37 @@
   align-items: center;
   label {
     margin-right: 20px;
+  }
+}
+.holidays__block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $light-blue2;
+  .holidays__innerBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .holidays_data {
+    font-size: 14px;
+    font-weight: 500;
+    color: $blue;
+    margin-right: 20px;
+  }
+  .holidays_name {
+    font-size: 14px;
+    color: $dark-gray;
+    margin-left: 20px;
+  }
+  .deleteHoliday {
+    opacity: 1;
+    transition: all 0.8 ease-in-out;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
   }
 }

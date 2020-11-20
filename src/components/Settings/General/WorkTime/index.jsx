@@ -9,9 +9,9 @@ import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard'
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText
+  snackbarType, snackbarText, settingWorkTime
 } from '../../../../store/settings/selectors';
-import { getSettingWorkTime } from '../../../../store/settings/actions'
+import { getSettingWorkTime } from '../../../../store/settings/actions';
 import WorkTimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -45,7 +45,7 @@ export default function WorkTime() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-
+  const workTime = useSelector(settingWorkTime)
 
   return (
     <MaynLayout>
@@ -60,6 +60,7 @@ export default function WorkTime() {
             isLoadind ? <Progress /> :
               <Holidays
                 styles={styles}
+                holidays={workTime.national_holidays}
               />
           }
           <Snackbar
