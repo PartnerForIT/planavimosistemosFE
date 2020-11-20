@@ -88,7 +88,6 @@ function* loadOrganizationsModules(action) {
 }
 
 function* changeOrganizationModules(action) {
-  console.log('action', action)
   try {
     const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/modules`, action.data, token());
     yield put(patchModulesSuccess(data));

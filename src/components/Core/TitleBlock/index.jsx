@@ -3,14 +3,14 @@ import Button from '../Button/Button';
 import styles from './Title.module.scss';
 
 export default function TitleBlock({
-  children, 
-  title, 
-  info, 
-  TitleButtonNew, 
-  handleButtonNew, 
-  TitlebuttonImport, 
+  children,
+  title,
+  info,
+  TitleButtonNew,
+  handleButtonNew,
+  TitlebuttonImport,
   handleButtonImport }) {
-  return(
+  return (
     <div className={styles.titleBlock}>
       <div className={styles.leftBlock}>
         {children}
@@ -20,7 +20,7 @@ export default function TitleBlock({
           <div className={styles.infoBlock}>
             {Object.keys(info).map(infoId => (
               <span key={infoId} className={styles.infoBlock__inner}>
-                {infoId} {info[infoId]} 
+                {infoId} {info[infoId]}
               </span>
             ))}
           </div>
@@ -28,7 +28,7 @@ export default function TitleBlock({
       </div>
       {
         TitleButtonNew &&
-        <Button inverse onClick={()=> handleButtonNew()}>{TitleButtonNew}</Button>
+        <Button inverse onClick={() => handleButtonNew()}>{TitleButtonNew}</Button>
       }
     </div>
   )
