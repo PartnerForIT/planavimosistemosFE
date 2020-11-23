@@ -87,8 +87,9 @@
     justify-content: center;
     margin-bottom: 20px;
     label {
-      color: #69767A;
-      font-size: 14px;
+      color: #69767A !important;
+      font-size: 14px !important;
+      text-transform: capitalize;
       display: inline-block;
       width: 130px;
     }

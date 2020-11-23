@@ -5,6 +5,7 @@ import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
   GET_WORK_TIME,
+  PATCH_WORK_TIME,
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
@@ -53,9 +54,23 @@ function* loadSettingsWorkTime(action) {
   }
 }
 
+function* editSettingsWorkTime(action) {
+  try {
+    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/work-time/update`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    console.log(data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLatest(GET_WORK_TIME, loadSettingsWorkTime);
+  yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
 }

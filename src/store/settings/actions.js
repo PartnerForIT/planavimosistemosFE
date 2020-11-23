@@ -6,7 +6,9 @@ import {
   ADD_SETTING_SNACKBAR,
   DISMISS_SETTING_SNACKBAR,
   GET_WORK_TIME,
-  GET_WORK_TIME_SUCCESS
+  GET_WORK_TIME_SUCCESS,
+  PATCH_WORK_TIME,
+  PATCH_WORK_TIME_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -43,3 +45,9 @@ export const getSettingWorkTimeSuccess = (data) => ({
   type: GET_WORK_TIME_SUCCESS,
   data
 });
+
+export const patchWorkTime = (data, id) => ({
+  type: PATCH_WORK_TIME,
+  data,
+  id
+})
