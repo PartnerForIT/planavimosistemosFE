@@ -50,3 +50,30 @@
     }
   }
 }
+
+.startWeek_block {
+  width: 100%;
+  max-width: 430px;
+  .startWeek {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+    &__inner{
+      flex: 1;
+      margin-left: 7px;
+      &:first-child {
+        margin-left: 0;
+        margin-right: 7px;
+      }
+    }
+  }
+}
+.formLine {
+  width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #e8eff6;
+}

@@ -8,7 +8,7 @@ import langArray from '../../../Helpers/lang';
 import timezoneArr from '../../../Helpers/timezone';
 import formatArr from '../../../Helpers/dateFormat';
 import currencyArr from '../../../Helpers/currency';
-import SimpleSelect from '../../../Core/SimpleSelect'
+import SimpleSelect from '../../../Core/SimpleSelect';
 
 
 export default function CompaneForm({

@@ -36,6 +36,11 @@ export default function WorkTime() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  const [inputValues, setInputValues] = useState({
+    week_start: '',
+    week_start_time: '',
+  });
+
   useEffect(() => {
     if (params.id) {
       dispatch(getSettingWorkTime(params.id))
@@ -46,7 +51,20 @@ export default function WorkTime() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const workTime = useSelector(settingWorkTime)
+  const workTime = useSelector(settingWorkTime);
+
+  useEffect(() => {
+    setInputValues({
+      ...inputValues,
+      week_start: workTime.work_time.week_start || '1',
+      week_start_time: workTime.work_time.week_start_time || '08:00',
+    });
+  }, [workTime])
+
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    setInputValues({ ...inputValues, [name]: value });
+  };
 
   return (
     <MaynLayout>
@@ -60,13 +78,16 @@ export default function WorkTime() {
           {
             isLoadind ? <Progress /> :
               <>
+                <StartWeek
+                  styles={styles}
+                  days={workTime.days}
+                  workTime={workTime.work_time}
+                  handleInputChange={handleInputChange}
+                  inputValues={inputValues}
+                />
                 <Holidays
                   styles={styles}
                   holidays={workTime.national_holidays}
-                />
-                <StartWeek
-                  days={workTime.days}
-                  workTime={workTime.work_time}
                 />
               </>
           }
