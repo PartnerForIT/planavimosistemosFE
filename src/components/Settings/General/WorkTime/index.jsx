@@ -17,6 +17,7 @@ import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import Holidays from './Holidays';
 import StartWeek from './StartWeek';
+import WorkingTime from './WorkingTime';
 import styles from './workTime.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -40,6 +41,16 @@ export default function WorkTime() {
     week_start: '',
     week_start_time: '',
   });
+
+  const [days, setDays] = useState({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+  })
 
   useEffect(() => {
     if (params.id) {
@@ -66,6 +77,10 @@ export default function WorkTime() {
     setInputValues({ ...inputValues, [name]: value });
   };
 
+  const handleChangeDays = (event) => {
+    setDays({ ...days, [event.target.name]: event.target.checked });
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -83,6 +98,12 @@ export default function WorkTime() {
                   days={workTime.days}
                   workTime={workTime.work_time}
                   handleInputChange={handleInputChange}
+                  inputValues={inputValues}
+                />
+                <WorkingTime
+                  styles={styles}
+                  days={days}
+                  handleChangeDays={handleChangeDays}
                   inputValues={inputValues}
                 />
                 <Holidays

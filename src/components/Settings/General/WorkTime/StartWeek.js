@@ -5,7 +5,7 @@ import Tooltip from '../../../Core/Tooltip';
 import SimpleSelect from '../../../Core/SimpleSelect';
 import timeArr from '../../../Helpers/time'
 
-export default function StartWork({ styles, days, workTime, inputValues, handleInputChange }) {
+export default function StartWork({ styles, days, inputValues, handleInputChange }) {
   const { t } = useTranslation();
   return (
     <div className={styles.startWeek_block}>

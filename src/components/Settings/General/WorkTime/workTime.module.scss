@@ -77,3 +77,30 @@
   margin-bottom: 20px;
   background: #e8eff6;
 }
+
+.workigTime {
+  width: 100%;
+  max-width: 430px;
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    label {
+      color: #69767A;
+      font-size: 14px;
+      display: inline-block;
+      width: 130px;
+    }
+    label + div {
+      margin-top: 0 !important;
+    }
+  }
+  &__to {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 10px;
+    font-size: 13px;
+    color: #aeb2b7;
+  }
+}
