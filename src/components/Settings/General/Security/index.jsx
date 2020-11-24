@@ -15,6 +15,9 @@ import Dashboard from '../../../Core/Dashboard';
 import SecurityIcon from '../../../Icons/Security';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
+import Label from '../../../Core/InputLabel';
+import Tooltip from '../../../Core/Tooltip';
+import styles from './security.module.scss';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -55,18 +58,22 @@ export default function Sesurity() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-
-              <div>
-                <Switch
-                  onChange={handleChange}
-                  offColor={'#808F94'}
-                  onColor={'#0085FF'}
-                  uncheckedIcon={false}
-                  checkedIcon={false}
-                  checked={linkToEmail}
-                  height={21}
-                  width={40}
-                />
+              <div className={styles.securityPage}>
+                <div className={styles.labelBlock}>
+                  <Switch
+                    onChange={handleChange}
+                    offColor={'#808F94'}
+                    onColor={'#0085FF'}
+                    uncheckedIcon={false}
+                    checkedIcon={false}
+                    checked={linkToEmail}
+                    height={21}
+                    width={40}
+                  />
+                  <div className={styles.label}>{t('Invitation link via e-mail')}</div>
+                  <Tooltip title={'Invitation link via e-mail'} />
+                </div>
+                <div className={styles.formLine}></div>
               </div>
           }
 
