@@ -44,8 +44,6 @@ export default function WorkTime() {
 
   const [startTime, setStartTime] = useState({});
 
-  const [daysArr, setDayArr] = useState([])
-
   const [days, setDays] = useState({
     monday: false,
     tuesday: false,
@@ -68,6 +66,11 @@ export default function WorkTime() {
   const textSnackbar = useSelector(snackbarText);
   const workTime = useSelector(settingWorkTime);
 
+  const filterWorksday = (idDay) => {
+    const arr = workTime.work_time.work_days.days.days.filter(item => item.day === idDay);
+    return arr;
+  }
+
   useEffect(() => {
     setInputValues({
       ...inputValues,
@@ -76,29 +79,29 @@ export default function WorkTime() {
     });
     if (Object.keys(workTime.work_time).length > 0) {
       setDays({
-        monday: workTime.work_time.work_days.days.days.filter(item => item.day === 1).length > 0,
-        tuesday: workTime.work_time.work_days.days.days.filter(item => item.day === 2).length > 0,
-        wednesday: workTime.work_time.work_days.days.days.filter(item => item.day === 3).length > 0,
-        thursday: workTime.work_time.work_days.days.days.filter(item => item.day === 4).length > 0,
-        friday: workTime.work_time.work_days.days.days.filter(item => item.day === 5).length > 0,
-        saturday: workTime.work_time.work_days.days.days.filter(item => item.day === 6).length > 0,
-        sunday: workTime.work_time.work_days.days.days.filter(item => item.day === 7).length > 0,
+        monday: filterWorksday(1).length > 0,
+        tuesday: filterWorksday(2).length > 0,
+        wednesday: filterWorksday(3).length > 0,
+        thursday: filterWorksday(4).length > 0,
+        friday: filterWorksday(5).length > 0,
+        saturday: filterWorksday(6).length > 0,
+        sunday: filterWorksday(7).length > 0,
       })
       setStartTime({
-        start1: workTime.work_time.work_days.days.days.filter(item => item.day === 1).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish1: workTime.work_time.work_days.days.days.filter(item => item.day === 1).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start2: workTime.work_time.work_days.days.days.filter(item => item.day === 2).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish2: workTime.work_time.work_days.days.days.filter(item => item.day === 2).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start3: workTime.work_time.work_days.days.days.filter(item => item.day === 3).length > 0 ? workTime.work_time.work_days.days.days.start : '10:00',
-        finish3: workTime.work_time.work_days.days.days.filter(item => item.day === 3).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start4: workTime.work_time.work_days.days.days.filter(item => item.day === 4).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish4: workTime.work_time.work_days.days.days.filter(item => item.day === 4).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start5: workTime.work_time.work_days.days.days.filter(item => item.day === 5).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish5: workTime.work_time.work_days.days.days.filter(item => item.day === 5).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start6: workTime.work_time.work_days.days.days.filter(item => item.day === 6).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish6: workTime.work_time.work_days.days.days.filter(item => item.day === 6).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
-        start7: workTime.work_time.work_days.days.days.filter(item => item.day === 7).length > 0 ? workTime.work_time.work_days.days.days.start : '08:00',
-        finish7: workTime.work_time.work_days.days.days.filter(item => item.day === 7).length > 0 ? workTime.work_time.work_days.days.days.finish : '17:00',
+        start1: (filterWorksday(1).length > 0 && filterWorksday(1)[0].start) ? filterWorksday(1)[0].start : '08:00',
+        finish1: (filterWorksday(1).length > 0 && filterWorksday(1)[0].finish) ? filterWorksday(1)[0].finish : '17:00',
+        start2: (filterWorksday(2).length > 0 && filterWorksday(2)[0].start) ? filterWorksday(2)[0].start : '08:00',
+        finish2: filterWorksday(2).length > 0 ? filterWorksday(2)[0].finish : '17:00',
+        start3: filterWorksday(3).length > 0 ? filterWorksday(3)[0].start : '10:00',
+        finish3: filterWorksday(3).length > 0 ? filterWorksday(3)[0].finish : '17:00',
+        start4: filterWorksday(4).length > 0 ? filterWorksday(4)[0].start : '08:00',
+        finish4: filterWorksday(4).length > 0 ? filterWorksday(4)[0].finish : '17:00',
+        start5: filterWorksday(5).length > 0 ? filterWorksday(5)[0].start : '08:00',
+        finish5: filterWorksday(5).length > 0 ? filterWorksday(5)[0].finish : '17:00',
+        start6: filterWorksday(6).length > 0 ? filterWorksday(6)[0].start : '08:00',
+        finish6: filterWorksday(6).length > 0 ? filterWorksday(6)[0].finish : '17:00',
+        start7: filterWorksday(7).length > 0 ? filterWorksday(7)[0].start : '08:00',
+        finish7: filterWorksday(7).length > 0 ? filterWorksday(7)[0].finish : '08:00',
       })
     }
 
@@ -111,7 +114,7 @@ export default function WorkTime() {
 
   const handleChangeStartTime = event => {
     const { name, value } = event.target;
-    setStartTime({ ...inputValues, [name]: value });
+    setStartTime({ ...startTime, [name]: value });
   };
 
   const handleChangeDays = (event) => {
@@ -119,9 +122,18 @@ export default function WorkTime() {
   };
 
   const saveTime = () => {
+    const daysData = [];
+    Object.values(days).map((item, index) => {
+      if (item) {
+        daysData.push({ 'day': index + 1, 'start': startTime[`start${index + 1}`], 'finish': startTime[`finish${index + 1}`] })
+      }
+    })
+
     const data = {
+      week_start: inputValues.week_start,
+      week_start_time: inputValues.week_start_time,
       work_days: {
-        days: [{ "day": 3, "start": '08:00', "finish": '18:00' }]
+        days: daysData
       }
     };
 

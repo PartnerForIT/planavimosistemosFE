@@ -8,7 +8,7 @@ import Checkbox from '../../../Core/Checkbox/Checkbox2.jsx';
 import Button from '../../../Core/Button/Button';
 
 export default function WorkingTime({ styles, days,
-  SaveTime, handleChangeDays, startTime, handleChangeStartTime, saveTime }) {
+  handleChangeDays, startTime, handleChangeStartTime, saveTime }) {
   const { t } = useTranslation();
   return (
     <div className={styles.workigTime}>
