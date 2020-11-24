@@ -15,7 +15,6 @@ export default function Holidays({ styles, holidays, companyId, companyHolidys }
   const [open, setOpen] = useState(false)
   const dispatch = useDispatch();
 
-
   const [name, setName] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 

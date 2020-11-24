@@ -15,7 +15,7 @@ import { getSettingWorkTime, patchWorkTime } from '../../../../store/settings/ac
 import WorkTimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
-import Holidays from './Holidays';
+import Holidays from './holidays';
 import StartWeek from './StartWeek';
 import WorkingTime from './WorkingTime';
 import styles from './workTime.module.scss';
