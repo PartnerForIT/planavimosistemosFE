@@ -8,21 +8,29 @@ import AddHolidays from '../../../Core/Dialog/AddHoliday';
 import DeleteIcon from '../../../Icons/DeleteIcon';
 import { addHoliday, deleteHoliday } from '../../../../store/settings/actions';
 import { useDispatch } from 'react-redux';
-import moment from 'moment'
+import moment from 'moment';
 
 export default function Holidays({ styles, holidays, companyId, companyHolidys }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false)
   const dispatch = useDispatch();
 
+
+  const [name, setName] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   const handleClose = () => {
     setOpen(false)
   }
   const saveAddHoliday = () => {
     const data = {
-      name: "My Holiday2",
+      name,
       company_work_time_id: companyId,
-      date: moment().format('YYYY-MM-DD'),
+      date: moment(selectedDate).format('YYYY-MM-DD'),
     }
     dispatch(addHoliday(data, companyId))
     setOpen(false)
@@ -47,10 +55,14 @@ export default function Holidays({ styles, holidays, companyId, companyHolidys }
           handleClose={handleClose}
           title={t('New holidays')}
           saveAddHoliday={saveAddHoliday}
+          setName={setName}
+          name={name}
+          selectedDate={selectedDate}
+          handleDateChange={handleDateChange}
         />
       </div>
       {_.map(companyHolidys, (item) =>
-        <div key={item.name} className={styles.holidays__block}>
+        <div key={item.id + item.name} className={styles.holidays__block}>
           <div className={styles.holidays__innerBlock}>
             <div className={styles.holidays_data}>{item.date}</div>
             <div className={styles.holidays_name}>{item.name}</div>
