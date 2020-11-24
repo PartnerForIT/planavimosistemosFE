@@ -128,7 +128,6 @@ export default function WorkTime() {
         daysData.push({ 'day': index + 1, 'start': startTime[`start${index + 1}`], 'finish': startTime[`finish${index + 1}`] })
       }
     })
-
     const data = {
       week_start: inputValues.week_start,
       week_start_time: inputValues.week_start_time,
@@ -136,7 +135,6 @@ export default function WorkTime() {
         days: daysData
       }
     };
-
     dispatch(patchWorkTime(data, params.id))
   }
 

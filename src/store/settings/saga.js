@@ -61,9 +61,13 @@ function* editSettingsWorkTime(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    console.log(data);
+    yield put(addSnackbar('Work time edited successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   } catch (e) {
-    console.log(e);
+    yield put(addSnackbar('Company edit error', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   }
 }
 
