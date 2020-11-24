@@ -11,7 +11,7 @@ import {
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
-  dismissSnackbar, getSettingWorkTimeSuccess, addHoliday
+  dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess
 } from './actions'
 
 function token() {
@@ -80,6 +80,7 @@ function* addCompanyHoliday(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+    yield put(addHolidaySuccess(data));
     yield put(addSnackbar('Holiday added successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -96,6 +97,7 @@ function* deleteCompanyHoliday(action) {
     const { data } =
       yield call(axios.delete, `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
     yield put(addSnackbar('Holiday deleted successfully', 'success'));
+    yield put(deleteHolidaySuccess(action.id));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {

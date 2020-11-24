@@ -60,9 +60,17 @@ export const addHoliday = (data, id) => ({
   data,
   id
 })
+export const addHolidaySuccess = (data) => ({
+  type: ADD_HOLIDAY_SUCCESS,
+  data
+})
 
 export const deleteHoliday = (id, companyId) => ({
   type: DELETE_HOLIDAY,
   id,
   companyId
+})
+export const deleteHolidaySuccess = (id) => ({
+  type: DELETE_HOLIDAY_SUCCESS,
+  id,
 })
