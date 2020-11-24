@@ -6,10 +6,12 @@ import {
   PATCH_SETTINGS_COMPANY,
   GET_WORK_TIME,
   PATCH_WORK_TIME,
+  ADD_HOLIDAY,
+  DELETE_HOLIDAY,
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
-  dismissSnackbar, getSettingWorkTimeSuccess
+  dismissSnackbar, getSettingWorkTimeSuccess, addHoliday
 } from './actions'
 
 function token() {
@@ -65,7 +67,39 @@ function* editSettingsWorkTime(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar('Company edit error', 'error'));
+    yield put(addSnackbar('Work time edited error', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* addCompanyHoliday(action) {
+  try {
+    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/work-time/holidays/create`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(addSnackbar('Holiday added successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while adding a holiday', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteCompanyHoliday(action) {
+  try {
+    const { data } =
+      yield call(axios.delete, `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
+    yield put(addSnackbar('Holiday deleted successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while deleting a holiday', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -77,4 +111,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLatest(GET_WORK_TIME, loadSettingsWorkTime);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
+  yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
+  yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
 }

@@ -8,7 +8,10 @@ import {
   GET_WORK_TIME,
   GET_WORK_TIME_SUCCESS,
   PATCH_WORK_TIME,
-  PATCH_WORK_TIME_SUCCESS,
+  ADD_HOLIDAY,
+  ADD_HOLIDAY_SUCCESS,
+  DELETE_HOLIDAY,
+  DELETE_HOLIDAY_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -50,4 +53,16 @@ export const patchWorkTime = (data, id) => ({
   type: PATCH_WORK_TIME,
   data,
   id
+})
+
+export const addHoliday = (data, id) => ({
+  type: ADD_HOLIDAY,
+  data,
+  id
+})
+
+export const deleteHoliday = (id, companyId) => ({
+  type: DELETE_HOLIDAY,
+  id,
+  companyId
 })

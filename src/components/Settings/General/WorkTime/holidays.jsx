@@ -6,14 +6,32 @@ import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import AddHolidays from '../../../Core/Dialog/AddHoliday';
 import DeleteIcon from '../../../Icons/DeleteIcon';
+import { addHoliday, deleteHoliday } from '../../../../store/settings/actions';
+import { useDispatch } from 'react-redux';
+import moment from 'moment'
 
-export default function Holidays({ styles, holidays }) {
+export default function Holidays({ styles, holidays, companyId, companyHolidys }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch();
 
   const handleClose = () => {
     setOpen(false)
   }
+  const saveAddHoliday = () => {
+    const data = {
+      name: "My Holiday2",
+      company_work_time_id: companyId,
+      date: moment().format('YYYY-MM-DD'),
+    }
+    dispatch(addHoliday(data, companyId))
+    setOpen(false)
+  }
+
+  const delHoliday = (id) => {
+    dispatch(deleteHoliday(id, companyId))
+  }
+
   return (
     <div className={styles.holidays}>
       <div className={styles.labelButtonBlock}>
@@ -28,15 +46,24 @@ export default function Holidays({ styles, holidays }) {
           open={open}
           handleClose={handleClose}
           title={t('New holidays')}
+          saveAddHoliday={saveAddHoliday}
         />
       </div>
+      {_.map(companyHolidys, (item) =>
+        <div key={item.name} className={styles.holidays__block}>
+          <div className={styles.holidays__innerBlock}>
+            <div className={styles.holidays_data}>{item.date}</div>
+            <div className={styles.holidays_name}>{item.name}</div>
+          </div>
+          <span onClick={() => delHoliday(item.id)} className={styles.deleteHoliday}><DeleteIcon fill={"#fd0d1b"} viewBox={'0 0 32 14'} /></span>
+        </div>
+      )}
       {_.map(holidays, (item) =>
         <div key={item.name} className={styles.holidays__block}>
           <div className={styles.holidays__innerBlock}>
             <div className={styles.holidays_data}>{item.date}</div>
             <div className={styles.holidays_name}>{item.name}</div>
           </div>
-          <span className={styles.deleteHoliday}><DeleteIcon fill={"#fd0d1b"} viewBox={'0 0 32 14'} /></span>
         </div>
       )}
     </div>

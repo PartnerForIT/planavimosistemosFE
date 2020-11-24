@@ -168,6 +168,8 @@ export default function WorkTime() {
                 <Holidays
                   styles={styles}
                   holidays={workTime.national_holidays}
+                  companyHolidys={workTime.work_time.holidays}
+                  companyId={params.id}
                 />
               </>
           }
