@@ -24,7 +24,7 @@ export default function StartWork({ styles, days, inputValues, handleInputChange
           />
         </div>
         <div className={styles.startWeek__inner}>
-          <div className={styles.labelBlock}>
+          {/* <div className={styles.labelBlock}>
             <Label text={t('Day view starts')} />
             <Tooltip title={'Day view starts'} />
           </div>
@@ -34,7 +34,7 @@ export default function StartWork({ styles, days, inputValues, handleInputChange
             fullWidth
             value={inputValues.week_start_time}
             options={timeArr}
-          />
+          /> */}
         </div>
       </div>
       <div className={styles.formLine}></div>
