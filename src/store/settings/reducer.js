@@ -8,6 +8,9 @@ import {
   GET_WORK_TIME_SUCCESS,
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY_SUCCESS,
+  GET_SECURITY_COMPANY,
+  GET_SECURITY_COMPANY_SUCCESS,
+  PATCH_SECURITY_COMPANY_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -17,6 +20,7 @@ const initialState = {
     national_holidays: [],
     work_time: {},
   },
+  security: {},
   loading: false,
   error: null,
   snackbarText: '',
@@ -76,6 +80,29 @@ export const reducerOrganizationList = (state = initialState, action) => {
             holidays: filterdeleteHoliday(state.workTime.work_time.holidays, action.id)
           }
         }
+      }
+    }
+    case GET_SECURITY_COMPANY: {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      }
+    }
+    case GET_SECURITY_COMPANY_SUCCESS: {
+      return {
+        ...state,
+        security: action.data,
+        error: null,
+        loading: false,
+      }
+    }
+    case PATCH_SECURITY_COMPANY_SUCCESS: {
+      return {
+        ...state,
+        security: action.data,
+        error: null,
+        loading: false,
       }
     }
     case ADD_SETTING_SNACKBAR:

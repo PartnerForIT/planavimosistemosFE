@@ -12,6 +12,10 @@ import {
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY,
   DELETE_HOLIDAY_SUCCESS,
+  GET_SECURITY_COMPANY,
+  GET_SECURITY_COMPANY_SUCCESS,
+  PATCH_SECURITY_COMPANY,
+  PATCH_SECURITY_COMPANY_SUCCESS
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -53,24 +57,43 @@ export const patchWorkTime = (data, id) => ({
   type: PATCH_WORK_TIME,
   data,
   id
-})
+});
 
 export const addHoliday = (data, id) => ({
   type: ADD_HOLIDAY,
   data,
   id
-})
+});
 export const addHolidaySuccess = (data) => ({
   type: ADD_HOLIDAY_SUCCESS,
   data
-})
+});
 
 export const deleteHoliday = (id, companyId) => ({
   type: DELETE_HOLIDAY,
   id,
   companyId
-})
+});
 export const deleteHolidaySuccess = (id) => ({
   type: DELETE_HOLIDAY_SUCCESS,
   id,
-})
+});
+
+export const getSecurityCompany = (id) => ({
+  type: GET_SECURITY_COMPANY,
+  id
+});
+export const getSecurityCompanySuccess = (data) => ({
+  type: GET_SECURITY_COMPANY_SUCCESS,
+  data
+});
+
+export const editSecurityPage = (data, id) => ({
+  type: PATCH_SECURITY_COMPANY,
+  data,
+  id,
+});
+export const editSecurityPageSuccess = (data) => ({
+  type: PATCH_SECURITY_COMPANY_SUCCESS,
+  data
+});
