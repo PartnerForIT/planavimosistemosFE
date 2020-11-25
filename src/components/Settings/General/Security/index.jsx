@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Switch from "react-switch";
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, settingWorkTime
+  snackbarType, snackbarText, securityCompanySelector
 } from '../../../../store/settings/selectors';
+import { getSecurityCompany } from '../../../../store/settings/actions'
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -40,8 +41,17 @@ export default function Sesurity() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const security = useSelector(securityCompanySelector);
+
+  console.log('security', security)
 
   const [linkToEmail, setLinkToEmail] = useState(false);
+
+  useEffect(() => {
+    if (params.id) {
+      dispatch(getSecurityCompany(params.id))
+    }
+  }, []);
 
   const handleChange = () => {
     setLinkToEmail(!linkToEmail);

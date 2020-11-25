@@ -8,10 +8,12 @@ import {
   PATCH_WORK_TIME,
   ADD_HOLIDAY,
   DELETE_HOLIDAY,
+  GET_SECURITY_COMPANY,
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
-  dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess
+  dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
+  getSecurityCompanySuccess
 } from './actions'
 
 function token() {
@@ -107,6 +109,15 @@ function* deleteCompanyHoliday(action) {
   }
 }
 
+function* loadSecurityCompany(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/security`, token());
+    yield put(getSecurityCompanySuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
@@ -115,4 +126,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
+  yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
 }

@@ -12,6 +12,8 @@ import {
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY,
   DELETE_HOLIDAY_SUCCESS,
+  GET_SECURITY_COMPANY,
+  GET_SECURITY_COMPANY_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -74,3 +76,12 @@ export const deleteHolidaySuccess = (id) => ({
   type: DELETE_HOLIDAY_SUCCESS,
   id,
 })
+
+export const getSecurityCompany = (id) => ({
+  type: GET_SECURITY_COMPANY,
+  id
+});
+export const getSecurityCompanySuccess = (data) => ({
+  type: GET_SECURITY_COMPANY_SUCCESS,
+  data
+});
