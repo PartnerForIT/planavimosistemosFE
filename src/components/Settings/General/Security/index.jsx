@@ -65,7 +65,17 @@ export default function Sesurity() {
 
   useEffect(() => {
     if (Object.keys(security).length > 0) {
-      setInvitation(security.invitation === 1 ? true : false)
+      setInvitation(security.invitation === 1 ? true : false);
+      setSettings({
+        send_password: security.send_password === 1 ? true : false,
+        min_length: (security.min_password_length && security.min_password_length > 4) ? true : false,
+        numbers: security.numbers === 1 ? true : false,
+        special_chars: security.special_chars === 1 ? true : false,
+        uppercase: security.uppercase === 1 ? true : false,
+        notify_admin: security.notify_admin === 1 ? true : false,
+      })
+      setMin_password_length((security.min_password_length && security.min_password_length > 4) ? security.min_password_length : 6);
+      setLogin_attempts((security.login_attempts && security.login_attempts > 1) ? security.login_attempts : '')
     }
   }, [security])
 
@@ -120,6 +130,8 @@ export default function Sesurity() {
                   t={t}
                   min_password_length={min_password_length}
                   changeMinPassword={changeMinPassword}
+                  login_attempts={login_attempts}
+                  setLogin_attempts={setLogin_attempts}
                 />
               </div>
           }
