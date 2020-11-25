@@ -18,7 +18,7 @@ import SettingJournal from './components/Settings/Logbook/Journal';
 import SettingEvents from './components/Settings/Events';
 import SettingWorkTime from './components/Settings/General/WorkTime';
 import SettingSecurity from './components/Settings/General/Security';
-
+import Accounts from './components/Settings/Accounts/AccountsList';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -26,9 +26,8 @@ const App = () => (
       <Switch>
         <Route exact path='/' component={Login} />
         <Route exact path='/logout' component={Logout} />
-        <AuthRoute exact path='/logbook/:id' component={Logbook} />
-        <AuthRoute exact path='/reports' component={Reports} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
+        <AuthRoute exact path='/logbook/:id' component={Logbook} />
         <AuthRoute exact path='/overview' component={Overview} />
         <AuthRoute exact path='/overview/:id' component={Overview} />
         <AuthRoute exact path='/help/:id' component={Help} />
@@ -36,8 +35,10 @@ const App = () => (
         <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
         <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
         <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
+        <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
+        <AuthRoute exact path='/reports' component={Reports} />
       </Switch>
     </Router>
   </Suspense>
