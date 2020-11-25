@@ -24,3 +24,21 @@
   margin-bottom: 20px;
   background: #e8eff6;
 }
+
+.passwordSettings {
+  display: block;
+  width: 100%;
+}
+.settingsBlock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -8px;
+  label {
+    padding-right: 10px;
+  }
+  .tooltipBlock {
+    display: inline-block;
+    padding-left: 15px;
+  }
+}

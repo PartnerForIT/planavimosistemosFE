@@ -16,8 +16,8 @@ import Dashboard from '../../../Core/Dashboard';
 import SecurityIcon from '../../../Icons/Security';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
-import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
+import PasswordSetting from './passwordSetting';
 import styles from './security.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -44,8 +44,18 @@ export default function Sesurity() {
   const security = useSelector(securityCompanySelector);
 
   console.log('security', security)
+  const [settings, setSettings] = useState({
+    send_password: false,
+    min_length: false,
+    numbers: false,
+    special_chars: false,
+    uppercase: false,
+    notify_admin: false,
+  });
+  const [min_password_length, setMin_password_length] = useState(6);
+  const [login_attempts, setLogin_attempts] = useState('');
 
-  const [linkToEmail, setLinkToEmail] = useState(false);
+  const [invitation, setInvitation] = useState(false);
 
   useEffect(() => {
     if (params.id) {
@@ -53,8 +63,28 @@ export default function Sesurity() {
     }
   }, []);
 
-  const handleChange = () => {
-    setLinkToEmail(!linkToEmail);
+  useEffect(() => {
+    if (Object.keys(security).length > 0) {
+      setInvitation(security.invitation === 1 ? true : false)
+    }
+  }, [security])
+
+  const handleChangeInvitation = () => {
+    setInvitation(!invitation);
+  }
+
+  const handleChangeSettings = (event) => {
+    setSettings({ ...settings, [event.target.name]: event.target.checked });
+  };
+
+  const changeMinPassword = (event) => {
+    if (event.target.value < 3) {
+      setMin_password_length(3)
+    } else if (event.target.value > 12) {
+      setMin_password_length(12)
+    } else {
+      setMin_password_length(event.target.value)
+    }
   }
 
   return (
@@ -71,12 +101,12 @@ export default function Sesurity() {
               <div className={styles.securityPage}>
                 <div className={styles.labelBlock}>
                   <Switch
-                    onChange={handleChange}
+                    onChange={handleChangeInvitation}
                     offColor={'#808F94'}
                     onColor={'#0085FF'}
                     uncheckedIcon={false}
                     checkedIcon={false}
-                    checked={linkToEmail}
+                    checked={invitation}
                     height={21}
                     width={40}
                   />
@@ -84,6 +114,13 @@ export default function Sesurity() {
                   <Tooltip title={'Invitation link via e-mail'} />
                 </div>
                 <div className={styles.formLine}></div>
+                <PasswordSetting
+                  settings={settings}
+                  handleChangeSettings={handleChangeSettings}
+                  t={t}
+                  min_password_length={min_password_length}
+                  changeMinPassword={changeMinPassword}
+                />
               </div>
           }
 

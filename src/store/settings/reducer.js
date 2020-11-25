@@ -8,6 +8,7 @@ import {
   GET_WORK_TIME_SUCCESS,
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY_SUCCESS,
+  GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
 } from './types';
 
@@ -80,10 +81,19 @@ export const reducerOrganizationList = (state = initialState, action) => {
         }
       }
     }
+    case GET_SECURITY_COMPANY: {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      }
+    }
     case GET_SECURITY_COMPANY_SUCCESS: {
       return {
         ...state,
         security: action.data,
+        error: null,
+        loading: false,
       }
     }
     case ADD_SETTING_SNACKBAR:
