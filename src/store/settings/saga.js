@@ -9,11 +9,12 @@ import {
   ADD_HOLIDAY,
   DELETE_HOLIDAY,
   GET_SECURITY_COMPANY,
+  PATCH_SECURITY_COMPANY,
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
-  getSecurityCompanySuccess
+  getSecurityCompanySuccess, editSecurityPageSuccess
 } from './actions'
 
 function token() {
@@ -118,6 +119,24 @@ function* loadSecurityCompany(action) {
   }
 }
 
+function* changeSecurityCompany(action) {
+  try {
+    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/security/update`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(editSecurityPageSuccess(data));
+    yield put(addSnackbar('Security settings changed successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while changing security settings', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
@@ -127,4 +146,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
   yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
+  yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany)
 }

@@ -10,6 +10,7 @@ import {
   DELETE_HOLIDAY_SUCCESS,
   GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
+  PATCH_SECURITY_COMPANY_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -89,6 +90,14 @@ export const reducerOrganizationList = (state = initialState, action) => {
       }
     }
     case GET_SECURITY_COMPANY_SUCCESS: {
+      return {
+        ...state,
+        security: action.data,
+        error: null,
+        loading: false,
+      }
+    }
+    case PATCH_SECURITY_COMPANY_SUCCESS: {
       return {
         ...state,
         security: action.data,

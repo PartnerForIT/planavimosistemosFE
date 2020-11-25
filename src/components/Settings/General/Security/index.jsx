@@ -8,7 +8,7 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, securityCompanySelector
 } from '../../../../store/settings/selectors';
-import { getSecurityCompany } from '../../../../store/settings/actions'
+import { getSecurityCompany, editSecurityPage } from '../../../../store/settings/actions'
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -43,7 +43,6 @@ export default function Sesurity() {
   const textSnackbar = useSelector(snackbarText);
   const security = useSelector(securityCompanySelector);
 
-  console.log('security', security)
   const [settings, setSettings] = useState({
     send_password: false,
     min_length: false,
@@ -75,7 +74,7 @@ export default function Sesurity() {
         notify_admin: security.notify_admin === 1 ? true : false,
       })
       setMin_password_length((security.min_password_length && security.min_password_length > 4) ? security.min_password_length : 6);
-      setLogin_attempts((security.login_attempts && security.login_attempts > 1) ? security.login_attempts : '')
+      setLogin_attempts((security.login_attempts && security.login_attempts > 0) ? security.login_attempts : '')
     }
   }, [security])
 
@@ -95,6 +94,20 @@ export default function Sesurity() {
     } else {
       setMin_password_length(event.target.value)
     }
+  }
+
+  const changeSecuritySettings = () => {
+    const data = {
+      send_password: settings.send_password,
+      numbers: settings.numbers,
+      special_chars: settings.special_chars,
+      uppercase: settings.uppercase,
+      notify_admin: settings.notify_admin,
+      invitation: invitation === true ? 1 : 0,
+      min_password_length: settings.min_length ? min_password_length : null,
+      login_attempts: login_attempts !== '' ? login_attempts : null
+    }
+    dispatch(editSecurityPage(data, params.id))
   }
 
   return (
@@ -132,6 +145,7 @@ export default function Sesurity() {
                   changeMinPassword={changeMinPassword}
                   login_attempts={login_attempts}
                   setLogin_attempts={setLogin_attempts}
+                  changeSecuritySettings={changeSecuritySettings}
                 />
               </div>
           }
