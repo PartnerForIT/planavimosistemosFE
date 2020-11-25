@@ -137,7 +137,6 @@ function* changeSecurityCompany(action) {
   }
 }
 
-
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -146,5 +145,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
   yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
-  yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany)
+  yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany);
 }
