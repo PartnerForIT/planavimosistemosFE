@@ -15,7 +15,9 @@ import {
   GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY,
-  PATCH_SECURITY_COMPANY_SUCCESS
+  PATCH_SECURITY_COMPANY_SUCCESS,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -97,3 +99,13 @@ export const editSecurityPageSuccess = (data) => ({
   type: PATCH_SECURITY_COMPANY_SUCCESS,
   data
 });
+
+export const loadSkills = (id) => ({
+  type: GET_SKILLS,
+  id
+});
+export const loadSkillsSuccess = (data) => ({
+  type: GET_SKILLS_SUCCESS,
+  data
+});
+

@@ -14,6 +14,9 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText
 } from '../../../store/settings/selectors';
+import { loadSkills } from '../../../store/settings/actions'
+import ButtonBlock from './ButtonsBlock';
+import TableBlock from './TableBlock'
 
 import styles from './categories.module.scss';
 
@@ -34,12 +37,15 @@ export default function Categories() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  console.log('params', id)
+  useEffect(() => {
+    dispatch(loadSkills(id))
+  }, [])
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+
 
   return (
     <MaynLayout>
@@ -52,7 +58,10 @@ export default function Categories() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-              <div>Categories {id}</div>
+              <div className={styles.categoryPage}>
+                <ButtonBlock style={styles} />
+                <TableBlock style={styles} />
+              </div>
           }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
