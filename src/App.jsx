@@ -18,6 +18,7 @@ import SettingJournal from './components/Settings/Logbook/Journal';
 import SettingEvents from './components/Settings/Events';
 import SettingWorkTime from './components/Settings/General/WorkTime';
 import SettingSecurity from './components/Settings/General/Security';
+import SettingCategories from './components/Settings/Categories';
 import Accounts from './components/Settings/Accounts/AccountsList';
 
 const App = () => (
@@ -36,6 +37,7 @@ const App = () => (
         <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
         <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
         <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
+        <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
         <AuthRoute exact path='/reports' component={Reports} />
