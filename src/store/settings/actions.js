@@ -18,6 +18,8 @@ import {
   PATCH_SECURITY_COMPANY_SUCCESS,
   GET_SKILLS,
   GET_SKILLS_SUCCESS,
+  CREATE_SKILL,
+  CREATE_SKILL_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -109,3 +111,12 @@ export const loadSkillsSuccess = (data) => ({
   data
 });
 
+export const createSkill = (data, id) => ({
+  type: CREATE_SKILL,
+  data,
+  id,
+});
+export const createSkillSuccess = (data) => ({
+  type: CREATE_SKILL_SUCCESS,
+  data
+});

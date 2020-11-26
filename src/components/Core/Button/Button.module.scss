@@ -25,6 +25,12 @@
   }
 }
 
+.white {
+  @extend .inverse;
+  background: #fff;
+  border: 1px solid #0087ff;
+}
+
 .cancel {
   color: $gray;
   background: #fff;
@@ -88,7 +94,7 @@
 .big {
   height: 42px;
   line-height: 16px;
-  border-radius: 12px;
+  border-radius: 5px;
   font-family: "Helvetica Neue Bold", sans-serif;
   //font-weight: 600;
   font-size: 14px;

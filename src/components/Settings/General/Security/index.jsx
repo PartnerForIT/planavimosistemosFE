@@ -43,8 +43,6 @@ export default function Sesurity() {
   const textSnackbar = useSelector(snackbarText);
   const security = useSelector(securityCompanySelector);
 
-  console.log('params', params)
-
   const [settings, setSettings] = useState({
     send_password: false,
     min_length: false,

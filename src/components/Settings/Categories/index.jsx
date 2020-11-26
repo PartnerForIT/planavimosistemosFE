@@ -59,7 +59,7 @@ export default function Categories() {
           {
             isLoadind ? <Progress /> :
               <div className={styles.categoryPage}>
-                <ButtonBlock style={styles} />
+                <ButtonBlock style={styles} companyId={id} />
                 <TableBlock style={styles} />
               </div>
           }

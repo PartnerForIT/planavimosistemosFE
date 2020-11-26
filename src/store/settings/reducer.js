@@ -13,6 +13,7 @@ import {
   PATCH_SECURITY_COMPANY_SUCCESS,
   GET_SKILLS,
   GET_SKILLS_SUCCESS,
+  CREATE_SKILL_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -119,6 +120,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         skills: action.data,
+      }
+    }
+    case CREATE_SKILL_SUCCESS: {
+      return {
+        ...state,
+        skills: [...state.skills, action.data],
       }
     }
     case ADD_SETTING_SNACKBAR:
