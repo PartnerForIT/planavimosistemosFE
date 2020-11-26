@@ -8,7 +8,9 @@ export default function Dashboard({ children }) {
     <div className={styles.dashboard}>
       <DasboardMenu />
       <div className={styles.dashboardBody}>
-        {children}
+        <div className={styles.dashboardScroll}>
+          {children}
+        </div>
       </div>
     </div>
   )
