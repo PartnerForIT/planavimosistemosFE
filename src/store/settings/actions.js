@@ -20,6 +20,8 @@ import {
   GET_SKILLS_SUCCESS,
   CREATE_SKILL,
   CREATE_SKILL_SUCCESS,
+  CREATE_JOB,
+  CREATE_PLACE
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -120,3 +122,15 @@ export const createSkillSuccess = (data) => ({
   type: CREATE_SKILL_SUCCESS,
   data
 });
+
+export const actionCreateJob = (data, id) => ({
+  type: CREATE_JOB,
+  data,
+  id
+})
+
+export const actuionCreatePlace = (data, id) => ({
+  type: CREATE_PLACE,
+  data,
+  id
+})
