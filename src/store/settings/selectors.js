@@ -6,3 +6,4 @@ export const snackbarText = (state) => state.settings.snackbarText;
 export const settingWorkTime = (state) => state.settings.workTime;
 export const securityCompanySelector = (state) => state.settings.security;
 export const categoriesSkillsSelector = (state) => state.settings.skills;
+export const placesSelector = (state) => state.settings.places;

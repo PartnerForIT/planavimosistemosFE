@@ -14,6 +14,7 @@ import {
   GET_SKILLS,
   GET_SKILLS_SUCCESS,
   CREATE_SKILL_SUCCESS,
+  GET_PLACE, GET_PLACE_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
   },
   security: {},
   skills: [],
+  places: [],
   loading: false,
   error: null,
   snackbarText: '',
@@ -126,6 +128,20 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         skills: [...state.skills, action.data],
+      }
+    }
+    case GET_PLACE: {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      }
+    }
+    case GET_PLACE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        places: action.data,
       }
     }
     case ADD_SETTING_SNACKBAR:

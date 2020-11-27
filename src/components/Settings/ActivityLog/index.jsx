@@ -12,8 +12,10 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText
+  snackbarType, snackbarText, placesSelector
 } from '../../../store/settings/selectors';
+
+import { loadPlace } from '../../../store/settings/actions';
 
 import styles from './activity.module.scss';
 
@@ -34,13 +36,15 @@ export default function ActivityLog() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  console.log('params', id)
-
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const places = useSelector(placesSelector);
 
+  useEffect(() => {
+    dispatch(loadPlace(id))
+  }, [])
   return (
     <MaynLayout>
       <Dashboard>
