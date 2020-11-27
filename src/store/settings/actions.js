@@ -11,6 +11,7 @@ import {
   GET_SKILLS, GET_SKILLS_SUCCESS,
   CREATE_SKILL, CREATE_SKILL_SUCCESS,
   CREATE_JOB, CREATE_PLACE, GET_PLACE, GET_PLACE_SUCCESS,
+  GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -131,4 +132,13 @@ export const loadPlace = (id) => ({
 export const loadPlaceSuccess = (data) => ({
   type: GET_PLACE_SUCCESS,
   data
+})
+
+export const loadActivityLog = (id) => ({
+  type: GET_ACTIVITY_LOG,
+  id
+})
+export const loadActivityLogSuccess = (id) => ({
+  type: GET_ACTIVITY_LOG_SUCCESS,
+  id
 })

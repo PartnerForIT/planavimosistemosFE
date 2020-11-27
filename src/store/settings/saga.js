@@ -7,13 +7,13 @@ import {
   GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
-  CREATE_PLACE, GET_PLACE,
+  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess,
+  loadPlaceSuccess, loadActivityLogSuccess,
 } from './actions'
 
 function token() {
@@ -206,6 +206,16 @@ function* loadCompanyPLace(action) {
   }
 }
 
+function* loadActivityLog(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/activity-log`, token());
+    yield put(loadActivityLogSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -219,5 +229,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_SKILL, createSettingSkill);
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
-  yield takeLatest(GET_PLACE, loadCompanyPLace)
+  yield takeLatest(GET_PLACE, loadCompanyPLace);
+  yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
 }

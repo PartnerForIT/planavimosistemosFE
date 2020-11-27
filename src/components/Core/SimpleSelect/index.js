@@ -53,7 +53,7 @@ export default function SimpleSelect({ handleInputChange, name, value, options, 
       input={<BootstrapInput name="country" />}
     >
       {_.map(options, (item) => (
-        <option key={item.code || item.id} value={item.code || item.id}>{item.name}</option>
+        <option key={item.code || item.id} value={item.code || item.id}>{item.name || item.label}</option>
       ))}
     </NativeSelect>
   )

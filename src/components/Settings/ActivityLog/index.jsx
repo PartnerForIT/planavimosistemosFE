@@ -14,8 +14,8 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, placesSelector
 } from '../../../store/settings/selectors';
-
-import { loadPlace } from '../../../store/settings/actions';
+import { loadPlace, loadActivityLog } from '../../../store/settings/actions';
+import Filter from './filter'
 
 import styles from './activity.module.scss';
 
@@ -36,6 +36,14 @@ export default function ActivityLog() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  const [dateRange, setDateRange] = useState({});
+
+  const [inputValues, setInputValues] = useState({
+    from: '',
+    employee: '',
+    place: '',
+  });
+
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
@@ -44,7 +52,14 @@ export default function ActivityLog() {
 
   useEffect(() => {
     dispatch(loadPlace(id))
-  }, [])
+    dispatch(loadActivityLog(id))
+  }, []);
+
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    setInputValues({ ...inputValues, [name]: value });
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -56,7 +71,15 @@ export default function ActivityLog() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-              <div>Account list {id}</div>
+              <Filter
+                inputValues={inputValues}
+                handleInputChange={handleInputChange}
+                style={styles}
+                places={places}
+                setDateRange={setDateRange}
+                dateRange={dateRange}
+                t={t}
+              />
           }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
