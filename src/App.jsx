@@ -20,6 +20,7 @@ import SettingWorkTime from './components/Settings/General/WorkTime';
 import SettingSecurity from './components/Settings/General/Security';
 import SettingCategories from './components/Settings/Categories';
 import Accounts from './components/Settings/Accounts/AccountsList';
+import ActivityLog from './components/Settings/ActivityLog';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -39,6 +40,7 @@ const App = () => (
         <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
         <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
+        <AuthRoute exact path='/settings/activity-log/:id' component={ActivityLog} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
         <AuthRoute exact path='/reports' component={Reports} />
       </Switch>
