@@ -7,6 +7,7 @@
 .mainBody {
   padding: 90px 20px 20px 20px;
   background: $main-bg;
+  position: relative;
   min-height: calc(100vh - 111px);
 }
 .mainBlock {

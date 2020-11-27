@@ -6,6 +6,7 @@
   position: fixed;
   right: 21px;
   left: 21px;
+  z-index: 1101;
 }
 .dashboardMenu {
   width: 240px;
@@ -19,7 +20,6 @@
   width: calc(100% - 240px);
   height: calc(100vh - 143px);
   overflow: scroll;
-
 }
 .menuText {
   display: inline-block;
