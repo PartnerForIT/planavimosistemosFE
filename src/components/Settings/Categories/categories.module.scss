@@ -1,0 +1,35 @@
+
+.categoryPage {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  &__Button {
+    width: 270px;
+    padding-right: 12px;
+    button {
+      margin-bottom: 15px;
+    }
+  }
+  &__Table {
+    flex: 1;
+    padding-left: 12px;
+    min-width: 300px;
+    label {
+      margin-bottom: 15px;
+    }
+  }
+  .labelBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 20px;
+    label {
+      padding-right: 20px;
+      padding-bottom: 0;
+    }
+  }
+}
+.newSkillBlock{
+  margin-top: 15px;
+}

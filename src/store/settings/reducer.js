@@ -11,6 +11,9 @@ import {
   GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY_SUCCESS,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
+  CREATE_SKILL_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -21,6 +24,7 @@ const initialState = {
     work_time: {},
   },
   security: {},
+  skills: [],
   loading: false,
   error: null,
   snackbarText: '',
@@ -103,6 +107,25 @@ export const reducerOrganizationList = (state = initialState, action) => {
         security: action.data,
         error: null,
         loading: false,
+      }
+    }
+    case GET_SKILLS: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_SKILLS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        skills: action.data,
+      }
+    }
+    case CREATE_SKILL_SUCCESS: {
+      return {
+        ...state,
+        skills: [...state.skills, action.data],
       }
     }
     case ADD_SETTING_SNACKBAR:

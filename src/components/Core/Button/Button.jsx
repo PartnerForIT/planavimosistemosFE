@@ -7,8 +7,8 @@ import styles from './Button.module.scss';
  * Simple Button encapsulating all design variations
  */
 const Button = ({
-  children, cancel, yellow, green, inverse, 
-  onClick, fillWidth, type = 'button', size = 'normal', 
+  children, cancel, yellow, green, inverse, white,
+  onClick, fillWidth, type = 'button', size = 'normal',
   disabled = false, danger, black, navyBlue,
 }) => {
   const classes = classNames(
@@ -16,6 +16,7 @@ const Button = ({
     styles[size],
     {
       [styles.inverse]: inverse,
+      [styles.white]: white,
       [styles.cancel]: cancel,
       [styles.fullWidth]: fillWidth,
       [styles.disabled]: disabled,

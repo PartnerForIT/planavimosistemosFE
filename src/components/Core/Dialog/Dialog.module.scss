@@ -83,3 +83,16 @@
     width: 100%;
   }
 }
+// Create Skill modal
+.ratesBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $light-blue2;
+  border-bottom: 1px solid $light-blue2;
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+.formControl {
+  margin-bottom: 20px;
+}

@@ -10,11 +10,15 @@ import {
   DELETE_HOLIDAY,
   GET_SECURITY_COMPANY,
   PATCH_SECURITY_COMPANY,
+  GET_SKILLS,
+  CREATE_SKILL,
+  CREATE_JOB,
+  CREATE_PLACE,
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
-  getSecurityCompanySuccess, editSecurityPageSuccess
+  getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess
 } from './actions'
 
 function token() {
@@ -137,6 +141,68 @@ function* changeSecurityCompany(action) {
   }
 }
 
+function* loadSettingsSkills(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/specialities`, token());
+    yield put(loadSkillsSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* createSettingSkill(action) {
+  try {
+    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/specialities/create`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(createSkillSuccess(data));
+    yield put(addSnackbar('Skill creation successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the skill', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* creacteJob(action) {
+  try {
+    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/job-types/create`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(addSnackbar('Job creation successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Job', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+
+function* createPlace(action) {
+  try {
+    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}}/places/create`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(addSnackbar('Place creation successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -146,4 +212,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
   yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
   yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany);
+  yield takeLatest(GET_SKILLS, loadSettingsSkills);
+  yield takeLatest(CREATE_SKILL, createSettingSkill);
+  yield takeLatest(CREATE_JOB, creacteJob);
+  yield takeLatest(CREATE_PLACE, createPlace)
 }

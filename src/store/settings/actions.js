@@ -15,7 +15,13 @@ import {
   GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY,
-  PATCH_SECURITY_COMPANY_SUCCESS
+  PATCH_SECURITY_COMPANY_SUCCESS,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
+  CREATE_SKILL,
+  CREATE_SKILL_SUCCESS,
+  CREATE_JOB,
+  CREATE_PLACE
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -97,3 +103,34 @@ export const editSecurityPageSuccess = (data) => ({
   type: PATCH_SECURITY_COMPANY_SUCCESS,
   data
 });
+
+export const loadSkills = (id) => ({
+  type: GET_SKILLS,
+  id
+});
+export const loadSkillsSuccess = (data) => ({
+  type: GET_SKILLS_SUCCESS,
+  data
+});
+
+export const createSkill = (data, id) => ({
+  type: CREATE_SKILL,
+  data,
+  id,
+});
+export const createSkillSuccess = (data) => ({
+  type: CREATE_SKILL_SUCCESS,
+  data
+});
+
+export const actionCreateJob = (data, id) => ({
+  type: CREATE_JOB,
+  data,
+  id
+})
+
+export const actuionCreatePlace = (data, id) => ({
+  type: CREATE_PLACE,
+  data,
+  id
+})
