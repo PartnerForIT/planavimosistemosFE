@@ -204,16 +204,16 @@ export default function DataTable({
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => icon.icon)
                         }
-                        { sortable && (
+                        {sortable && (
                           <div className={classNames(styles.flexCenter, styles.sortIcon)}>
                             <SortIcon />
                           </div>
-                        ) }
+                        )}
                       </div>
-                      { (onSerach && columnsWidth[column.field]!== 80) &&
-                          <div className={styles.headerSearch}>
-                            <RowSearch />
-                          </div>
+                      { (onSerach && columnsWidth[column.field] !== 80) &&
+                        <div className={styles.headerSearch}>
+                          <RowSearch />
+                        </div>
                       }
                     </div>
                   );
@@ -221,46 +221,46 @@ export default function DataTable({
               }
             </header>
           </div>
-        {
-          tableData.map((row, idx) => (
-            <Row
-              key={idx.toString()}
-              row={row}
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              columns={visibleColumns}
-              selectable={selectable}
-              statysIcon={true}
-              onSelect={onSelect}
-              fieldIcons={fieldIcons}
-              reports={reports}
-              columnsWidth={columnsWidth}
-              totalCustomWidthColumns={totalCustomWidthColumns}
-              totalCustomColumns={totalCustomColumns}
-            />
-          ))
-        }          
+          {
+            tableData.map((row, idx) => (
+              <Row
+                key={idx.toString()}
+                row={row}
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                columns={visibleColumns}
+                selectable={selectable}
+                statysIcon={true}
+                onSelect={onSelect}
+                fieldIcons={fieldIcons}
+                reports={reports}
+                columnsWidth={columnsWidth}
+                totalCustomWidthColumns={totalCustomWidthColumns}
+                totalCustomColumns={totalCustomColumns}
+              />
+            ))
+          }
         </div>
       </Scrollbar>
       <div className={classNames(styles.tableFooter)}>
-        { typeof downloadExcel === 'function'
-        && (
-          <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
-            onClick={downloadExcel}
-          >
-            <ExcelIcon />
-          </div>
-        ) }
-        { typeof downloadPdf === 'function'
-        && (
-          <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
-            onClick={downloadPdf}
-          >
-            <PdfIcon />
-          </div>
-        ) }
+        {typeof downloadExcel === 'function'
+          && (
+            <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+              className={styles.pointer}
+              onClick={downloadExcel}
+            >
+              <ExcelIcon />
+            </div>
+          )}
+        {typeof downloadPdf === 'function'
+          && (
+            <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+              className={styles.pointer}
+              onClick={downloadPdf}
+            >
+              <PdfIcon />
+            </div>
+          )}
         {
           totalDuration && (
             <p className={footerTitleClasses}>

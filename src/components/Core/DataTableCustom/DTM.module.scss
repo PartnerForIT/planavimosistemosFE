@@ -383,6 +383,10 @@ header {
   top: 6px;
   left: 3px;
 }
+.ActionsTable {
+  display: flex;
+  align-items: center;
+}
 .opacityText {
   opacity: 0;
 }

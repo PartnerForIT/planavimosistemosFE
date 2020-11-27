@@ -12,7 +12,7 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText
+  snackbarType, snackbarText, categoriesSkillsSelector
 } from '../../../store/settings/selectors';
 import { loadSkills } from '../../../store/settings/actions'
 import ButtonBlock from './ButtonsBlock';
@@ -45,7 +45,9 @@ export default function Categories() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const skills = useSelector(categoriesSkillsSelector);
 
+  console.log('skills', skills);
 
   return (
     <MaynLayout>
@@ -60,7 +62,7 @@ export default function Categories() {
             isLoadind ? <Progress /> :
               <div className={styles.categoryPage}>
                 <ButtonBlock style={styles} companyId={id} />
-                <TableBlock style={styles} />
+                <TableBlock style={styles} skills={skills} />
               </div>
           }
           <Snackbar

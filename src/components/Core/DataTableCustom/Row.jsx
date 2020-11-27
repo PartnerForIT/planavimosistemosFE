@@ -8,6 +8,8 @@ import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
+import DeleteIcon from '../../Icons/DeleteIcon';
+import EditIcon from '../../Icons/EditIcon';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
@@ -117,14 +119,23 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                <span className={(statysIcon && width===80 ) ? styles.opacityText : ""}>{row[column.field]}</span>
+                <span className={(statysIcon && width === 80) ? styles.opacityText : ""}>
+                  {row[column.field] !== 'tableActions' && row[column.field]}
+                </span>
                 {/* icon statys */}
-                {(statysIcon && width===80 ) && 
+                {(statysIcon && width === 80) &&
                   <span className={styles.IconStatus}>
-                    {row[column.field] === 1 &&  <CheckStatus />}
-                    {row[column.field] === 0 &&  <CheckStatus fill="#FD9D27" />}
-                    {row[column.field] === 2 &&  <CheckStatus fill="#fd0d1b" />}
-                    </span>
+                    {row[column.field] === 1 && <CheckStatus />}
+                    {row[column.field] === 0 && <CheckStatus fill="#FD9D27" />}
+                    {row[column.field] === 2 && <CheckStatus fill="#fd0d1b" />}
+                  </span>
+                }
+                {
+                  row[column.field] === 'tableActions' &&
+                  <div className={styles.ActionsTable}>
+                    <EditIcon />
+                    <DeleteIcon fill={"#fd0d1b"} viewBox={'0 0 20 20'} />
+                  </div>
                 }
               </div>
             );
