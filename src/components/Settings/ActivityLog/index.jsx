@@ -12,10 +12,11 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, placesSelector, employeesSelector
+  snackbarType, snackbarText, placesSelector, employeesSelector, activityLogSelector
 } from '../../../store/settings/selectors';
 import { loadPlace, loadEmployees, loadActivityLog } from '../../../store/settings/actions';
-import Filter from './filter'
+import Filter from './filter';
+import Table from './table';
 
 import styles from './activity.module.scss';
 
@@ -29,6 +30,7 @@ const useStyles = makeStyles(() => ({
     color: "#fff",
   }
 }));
+
 
 export default function ActivityLog() {
   const { id } = useParams();
@@ -50,6 +52,7 @@ export default function ActivityLog() {
   const textSnackbar = useSelector(snackbarText);
   const places = useSelector(placesSelector);
   const employees = useSelector(employeesSelector);
+  const activityLog = useSelector(activityLogSelector);
 
   useEffect(() => {
     dispatch(loadPlace(id))
@@ -73,16 +76,25 @@ export default function ActivityLog() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-              <Filter
-                inputValues={inputValues}
-                handleInputChange={handleInputChange}
-                style={styles}
-                places={places}
-                setDateRange={setDateRange}
-                dateRange={dateRange}
-                employees={employees}
-                t={t}
-              />
+              <>
+                <Filter
+                  inputValues={inputValues}
+                  handleInputChange={handleInputChange}
+                  style={styles}
+                  places={places}
+                  setDateRange={setDateRange}
+                  dateRange={dateRange}
+                  employees={employees}
+                  t={t}
+                />
+                <Table
+                  style={styles}
+                  activityLog={activityLog}
+                  employees={employees}
+                  places={places}
+                  t={t}
+                />
+              </>
           }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

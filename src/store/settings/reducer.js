@@ -6,7 +6,7 @@ import {
   ADD_HOLIDAY_SUCCESS, DELETE_HOLIDAY_SUCCESS,
   GET_SECURITY_COMPANY, GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY_SUCCESS, GET_SKILLS, GET_SKILLS_SUCCESS, CREATE_SKILL_SUCCESS,
-  GET_PLACE, GET_PLACE_SUCCESS, GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS
+  GET_PLACE, GET_PLACE_SUCCESS, GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS
 } from './types';
 
 const initialState = {
@@ -19,6 +19,7 @@ const initialState = {
   security: {},
   skills: [],
   employees: [],
+  activity_log: [],
   places: [],
   loading: false,
   error: null,
@@ -149,6 +150,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         employees: action.data,
+      }
+    }
+    case GET_ACTIVITY_LOG: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    }
+    case GET_ACTIVITY_LOG_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        activity_log: action.data,
+        error: null,
       }
     }
     case ADD_SETTING_SNACKBAR:

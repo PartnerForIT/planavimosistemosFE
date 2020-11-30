@@ -8,3 +8,4 @@ export const securityCompanySelector = (state) => state.settings.security;
 export const categoriesSkillsSelector = (state) => state.settings.skills;
 export const placesSelector = (state) => state.settings.places;
 export const employeesSelector = (state) => state.settings.employees;
+export const activityLogSelector = (state) => state.settings.activity_log;

@@ -148,7 +148,7 @@ export const loadActivityLog = (id) => ({
   type: GET_ACTIVITY_LOG,
   id
 })
-export const loadActivityLogSuccess = (id) => ({
+export const loadActivityLogSuccess = (data) => ({
   type: GET_ACTIVITY_LOG_SUCCESS,
-  id
+  data
 })
