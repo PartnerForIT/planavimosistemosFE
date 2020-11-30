@@ -12,7 +12,7 @@ import {
   CREATE_SKILL, CREATE_SKILL_SUCCESS,
   CREATE_JOB, CREATE_PLACE, GET_PLACE, GET_PLACE_SUCCESS,
   GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS,
-  GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS
+  GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, FILTER_ACTIVITY_LOG
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -146,9 +146,15 @@ export const loadEmployeesSuccess = (data) => ({
 
 export const loadActivityLog = (id) => ({
   type: GET_ACTIVITY_LOG,
-  id
+  id,
 })
 export const loadActivityLogSuccess = (data) => ({
   type: GET_ACTIVITY_LOG_SUCCESS,
+  data
+})
+
+export const filterActivityLog = (id, data) => ({
+  type: FILTER_ACTIVITY_LOG,
+  id,
   data
 })

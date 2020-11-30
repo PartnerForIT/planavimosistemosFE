@@ -21,21 +21,18 @@ const columnsWidthArray = {
 
 const page = {};
 
-
-export default function ActivityTable({ style, activityLog, employees, places, t }) {
-  //table
+export default function ActivityTable({ style, activityLog, employees, places, t, isLoading }) {
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
   const [loading, setLoading] = useState(null);
-  const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [totalDuration, setTotalDuration] = useState(null);
 
   //filter function
   const userName = (row) => {
-    let name = employees.filter(item => item.id === row.user_id)
-    return name[0] ? name[0].label : '';
+    let name = employees.filter(item => item.user_id === row.user_id)
+    return name[0] ? `${name[0].name} ${name[0].surname}` : '';
   }
 
   const paceName = (row) => {
@@ -54,6 +51,9 @@ export default function ActivityTable({ style, activityLog, employees, places, t
     setDataArray(activityLog);
   }, [activityLog]);
 
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   const selectionHandler = (itemId, value) => {
     activityLog.map(item => {
@@ -96,7 +96,6 @@ export default function ActivityTable({ style, activityLog, employees, places, t
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedRow);
   };
-
 
   return (
     <div className={style.table}>

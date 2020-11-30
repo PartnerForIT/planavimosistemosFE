@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import MaynLayout from '../../Core/MainLayout';
@@ -14,7 +15,7 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, placesSelector, employeesSelector, activityLogSelector
 } from '../../../store/settings/selectors';
-import { loadPlace, loadEmployees, loadActivityLog } from '../../../store/settings/actions';
+import { loadPlace, loadEmployees, loadActivityLog, filterActivityLog } from '../../../store/settings/actions';
 import Filter from './filter';
 import Table from './table';
 
@@ -38,20 +39,20 @@ export default function ActivityLog() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [dateRange, setDateRange] = useState({});
-
+  const [employees, setEmployees] = useState([]);
+  const [places, setPlaces] = useState([]);
   const [inputValues, setInputValues] = useState({
-    from: '',
+    from: {},
     employee: '',
     place: '',
   });
 
-  const isLoadind = useSelector(isLoadingSelector);
+  const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const places = useSelector(placesSelector);
-  const employees = useSelector(employeesSelector);
+  const placesArr = useSelector(placesSelector);
+  const employeesArr = useSelector(employeesSelector);
   const activityLog = useSelector(activityLogSelector);
 
   useEffect(() => {
@@ -60,9 +61,42 @@ export default function ActivityLog() {
     dispatch(loadActivityLog(id))
   }, []);
 
+  useEffect(() => {
+    const data = {
+      date_from: inputValues.from.startDate ? moment(inputValues.from.startDate).format('YYYY-MM-DD') : null,
+      date_to: inputValues.from.endDate ? moment(inputValues.from.endDate).format('YYYY-MM-DD') : null,
+      user_id: inputValues.employee !== 'Select employees' ? inputValues.employee : null,
+      place_id: inputValues.place !== 'select' ? inputValues.place : null,
+    }
+    dispatch(filterActivityLog(id, data))
+  }, [inputValues]);
+
+  useEffect(() => {
+    employeesArr.unshift({ id: 'select', name: 'Select employees' })
+    setEmployees(employeesArr)
+  }, [employeesArr]);
+
+  useEffect(() => {
+    placesArr.unshift({ id: 'select', label: 'Select places' })
+    setPlaces(placesArr)
+  }, [placesArr]);
+
   const handleInputChange = event => {
-    const { name, value } = event.target;
-    setInputValues({ ...inputValues, [name]: value });
+    if (event.target) {
+      const { name, value } = event.target;
+      setInputValues({ ...inputValues, [name]: value });
+    }
+    else {
+      if (event.endDate) {
+        setInputValues({
+          ...inputValues,
+          from: {
+            startDate: event.startDate,
+            endDate: event.endDate
+          }
+        })
+      }
+    }
   };
 
   return (
@@ -75,24 +109,23 @@ export default function ActivityLog() {
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress /> :
+            isLoading ? <Progress /> :
               <>
                 <Filter
                   inputValues={inputValues}
                   handleInputChange={handleInputChange}
                   style={styles}
                   places={places}
-                  setDateRange={setDateRange}
-                  dateRange={dateRange}
                   employees={employees}
                   t={t}
                 />
                 <Table
                   style={styles}
                   activityLog={activityLog}
-                  employees={employees}
-                  places={places}
+                  employees={employeesArr}
+                  places={placesArr}
                   t={t}
+                  isLoading={isLoading}
                 />
               </>
           }
