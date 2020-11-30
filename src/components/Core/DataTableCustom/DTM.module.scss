@@ -343,13 +343,13 @@ header {
 .flexRowGlobal {
   display: flex;
   min-width: 140px;
-  text-align: left;
+  justify-content: center;
   padding: 0 1px;
 
-  &:last-of-type {
-    justify-content: flex-end;
-    padding-right: 10px;
-  }
+  // &:last-of-type {
+  //   justify-content: flex-end;
+  //   padding-right: 10px;
+  // }
 }
 
 .flexRowGlobalReports {
@@ -369,13 +369,13 @@ header {
   position: relative;
   color: #333945;
   min-width: 140px;
-  text-align: left;
+  display: flex;
+  justify-content: center;
   padding: 8px;
 
-  &:last-of-type {
-    display: flex;
-    justify-content: flex-end;
-  }
+  // &:last-of-type {
+  //   justify-content: flex-end;
+  // }
 }
 .IconStatus {
   display: block;

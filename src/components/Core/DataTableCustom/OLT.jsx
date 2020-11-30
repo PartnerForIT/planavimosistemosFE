@@ -122,7 +122,8 @@ export default function DataTable({
   const flexTableClasses = classNames(
     styles.flexTable,
     styles.header,
-    { [styles.flexTableHeaderReports]: reports, [styles.flexTableHeaderNotSelectable]: !reports && !selectable },
+    { [styles.flexTableHeaderReports]: reports },
+    // { [styles.flexTableHeaderReports]: reports, [styles.flexTableHeaderNotSelectable]: !reports && !selectable },
   );
 
   const tableContentClasses = classNames(

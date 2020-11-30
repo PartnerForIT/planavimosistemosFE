@@ -12,11 +12,11 @@ const columns = [
 ];
 
 const columnsWidthArray = {
-  created_at: 200,
-  user_id: 140,
-  place_id: 140,
-  action: 150,
-  device: 120,
+  created_at: 220,
+  user_id: 160,
+  place_id: 180,
+  action: 180,
+  device: 180,
 };
 
 const page = {};
