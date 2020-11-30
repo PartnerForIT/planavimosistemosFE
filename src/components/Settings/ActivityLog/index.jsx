@@ -12,9 +12,9 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, placesSelector
+  snackbarType, snackbarText, placesSelector, employeesSelector
 } from '../../../store/settings/selectors';
-import { loadPlace, loadActivityLog } from '../../../store/settings/actions';
+import { loadPlace, loadEmployees, loadActivityLog } from '../../../store/settings/actions';
 import Filter from './filter'
 
 import styles from './activity.module.scss';
@@ -49,9 +49,11 @@ export default function ActivityLog() {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const places = useSelector(placesSelector);
+  const employees = useSelector(employeesSelector);
 
   useEffect(() => {
     dispatch(loadPlace(id))
+    dispatch(loadEmployees(id))
     dispatch(loadActivityLog(id))
   }, []);
 

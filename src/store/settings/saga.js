@@ -7,14 +7,16 @@ import {
   GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
-  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG
+  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess, loadActivityLogSuccess,
+  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess
 } from './actions'
+import { yellow } from "@material-ui/core/colors";
+import { getEmployee } from "store/employees/actions";
 
 function token() {
   const token = {
@@ -215,6 +217,15 @@ function* loadActivityLog(action) {
   }
 }
 
+function* loadEmployee(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees`, token());
+    yield put(loadEmployeesSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
@@ -231,4 +242,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_PLACE, createPlace);
   yield takeLatest(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
+  yield takeLatest(GET_EMPLOYEES, loadEmployee);
 }
