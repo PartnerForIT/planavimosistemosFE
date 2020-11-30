@@ -5,7 +5,7 @@ import Input from '../../Core/Input/Input';
 import DRP from '../../Core/DRP/DRP';
 
 export default function filterActivity({ style, inputValues,
-  handleInputChange, places, t, dateRange, setDateRange }) {
+  handleInputChange, places, t, dateRange, setDateRange, employees }) {
 
   return (
     <div className={style.filterBlock}>
@@ -17,15 +17,20 @@ export default function filterActivity({ style, inputValues,
       </div>
       <div className={style.formControl}>
         <Label text={t('Employee')} />
-        <Input
-          value={inputValues.employee}
-          name="employee"
-          onChange={handleInputChange}
-        />
+        <div className={style.selectBlock}>
+          <SimpleSelect
+            handleInputChange={handleInputChange}
+            name="employee"
+            placeholder={'Employee'}
+            value={inputValues.employee}
+            options={employees}
+          />
+        </div>
+
       </div>
       <div className={style.formControl}>
         <Label text={t('Place')} />
-        <div>
+        <div className={style.selectBlock}>
           <SimpleSelect
             handleInputChange={handleInputChange}
             name="place"

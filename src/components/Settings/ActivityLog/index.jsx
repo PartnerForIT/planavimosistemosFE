@@ -80,6 +80,7 @@ export default function ActivityLog() {
                 places={places}
                 setDateRange={setDateRange}
                 dateRange={dateRange}
+                employees={employees}
                 t={t}
               />
           }
