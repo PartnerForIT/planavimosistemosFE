@@ -12,8 +12,11 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText
+  snackbarType, snackbarText, employeesSelector
 } from '../../../store/settings/selectors';
+import { loadEmployees } from '../../../store/settings/actions';
+
+import FilterDelete from './filterBlock'
 
 import styles from './delete.module.scss';
 
@@ -34,10 +37,44 @@ export default function AccountsList() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  const [employees, setEmployees] = useState([]);
+  const [inputValues, setInputValues] = useState({
+    from: {},
+    employee: '',
+  });
+
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const employeesArr = useSelector(employeesSelector);
+
+  useEffect(() => {
+    dispatch(loadEmployees(id))
+  }, []);
+
+  useEffect(() => {
+    employeesArr.unshift({ id: 'select', name: 'Select employees' })
+    setEmployees(employeesArr)
+  }, [employeesArr]);
+
+  const handleInputChange = event => {
+    if (event.target) {
+      const { name, value } = event.target;
+      setInputValues({ ...inputValues, [name]: value });
+    }
+    else {
+      if (event.endDate) {
+        setInputValues({
+          ...inputValues,
+          from: {
+            startDate: event.startDate,
+            endDate: event.endDate
+          }
+        })
+      }
+    }
+  };
 
   return (
     <MaynLayout>
@@ -50,7 +87,15 @@ export default function AccountsList() {
         <PageLayout>
           {
             isLoadind ? <Progress /> :
-              <div>Delete data {id}</div>
+              <>
+                <FilterDelete
+                  style={styles}
+                  inputValues={inputValues}
+                  handleInputChange={handleInputChange}
+                  employees={employees}
+                  t={t}
+                />
+              </>
           }
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
