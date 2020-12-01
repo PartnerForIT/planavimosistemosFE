@@ -47,8 +47,6 @@ export default function Categories() {
   const textSnackbar = useSelector(snackbarText);
   const skills = useSelector(categoriesSkillsSelector);
 
-  console.log('skills', skills);
-
   return (
     <MaynLayout>
       <Dashboard>

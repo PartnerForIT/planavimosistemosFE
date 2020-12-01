@@ -4,22 +4,19 @@ import axios from "axios";
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
-  GET_WORK_TIME,
-  PATCH_WORK_TIME,
-  ADD_HOLIDAY,
-  DELETE_HOLIDAY,
-  GET_SECURITY_COMPANY,
-  PATCH_SECURITY_COMPANY,
-  GET_SKILLS,
-  CREATE_SKILL,
-  CREATE_JOB,
-  CREATE_PLACE,
+  GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
+  DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
+  GET_SKILLS, CREATE_SKILL, CREATE_JOB,
+  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
-  getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess
+  getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
+  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess
 } from './actions'
+import { yellow } from "@material-ui/core/colors";
+import { getEmployee } from "store/employees/actions";
 
 function token() {
   const token = {
@@ -185,7 +182,6 @@ function* creacteJob(action) {
   }
 }
 
-
 function* createPlace(action) {
   try {
     const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}}/places/create`, action.data, {
@@ -203,6 +199,47 @@ function* createPlace(action) {
   }
 }
 
+function* loadCompanyPLace(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/places`, token());
+    yield put(loadPlaceSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadActivityLog(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/activity-log`, token());
+    yield put(loadActivityLogSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* filterActivityLog(action) {
+  try {
+    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/activity-log`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(loadActivityLogSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadEmployee(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/all`, token());
+    yield put(loadEmployeesSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -215,5 +252,9 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_SKILLS, loadSettingsSkills);
   yield takeLatest(CREATE_SKILL, createSettingSkill);
   yield takeLatest(CREATE_JOB, creacteJob);
-  yield takeLatest(CREATE_PLACE, createPlace)
+  yield takeLatest(CREATE_PLACE, createPlace);
+  yield takeLatest(GET_PLACE, loadCompanyPLace);
+  yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
+  yield takeLatest(GET_EMPLOYEES, loadEmployee);
+  yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog)
 }

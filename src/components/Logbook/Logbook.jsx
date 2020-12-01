@@ -22,7 +22,7 @@ import { employeesSelector } from '../../store/employees/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
-import {companyIdSelector} from '../../store/auth/selectors';
+import { companyIdSelector } from '../../store/auth/selectors';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -65,7 +65,7 @@ const Logbook = () => {
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
   const companyId = useSelector(companyIdSelector);
-  
+
   useEffect(() => {
     dispatch(getJobTypes(companyId)).then().catch();
     dispatch(getEmployees(companyId)).then().catch();
@@ -255,7 +255,7 @@ const Logbook = () => {
           <CheckboxIcon className={styles.checkboxIcon} />
           <div className={styles.entryTitle}>
             {`${checkedItems.length} `}
-            { checkedItems.length === 1 ? 'entry' : 'entries' }
+            {checkedItems.length === 1 ? 'entry' : 'entries'}
           </div>
           <div className={styles.entryDescription}>
             selected
@@ -273,7 +273,7 @@ const Logbook = () => {
       </div>
       <div className={styles.actions}>
         <Button onClick={() => deleteItems()} danger fillWidth>
-          { checkedItems.length === 1 ? t('Delete') : t('Delete All') }
+          {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
         </Button>
       </div>
     </div>

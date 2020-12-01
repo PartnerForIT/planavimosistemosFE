@@ -40,7 +40,7 @@ const BootstrapInput = withStyles((theme) => ({
 }))(InputBase);
 
 
-export default function SimpleSelect({ handleInputChange, name, value, options, fullWidth }) {
+export default function EmployeesSelect({ handleInputChange, name, value, options, fullWidth }) {
   return (
     <NativeSelect
       id="country-select"
@@ -53,7 +53,7 @@ export default function SimpleSelect({ handleInputChange, name, value, options, 
       input={<BootstrapInput name="country" />}
     >
       {_.map(options, (item) => (
-        <option key={item.code || item.id} value={item.code || item.id}>{item.name || item.label}</option>
+        <option key={item.id} value={item.user_id}>{item.name} {item.surname}</option>
       ))}
     </NativeSelect>
   )
