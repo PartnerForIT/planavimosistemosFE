@@ -83,6 +83,12 @@
     width: 100%;
   }
 }
+.buttonsBlock {
+  @extend .buttonSaveBlock;
+  button {
+    margin: 0 10px;
+  }
+}
 // Create Skill modal
 .ratesBlock {
   display: flex;
@@ -95,4 +101,13 @@
 }
 .formControl {
   margin-bottom: 20px;
+}
+
+.daleteData {
+  margin: 35px 15px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5em;
+  color: #808F94;
+  font-weight: 500;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import MaynLayout from '../../Core/MainLayout';
@@ -12,11 +13,11 @@ import Progress from '../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, employeesSelector
+  snackbarType, snackbarText, employeesSelector, deleteDataSelector
 } from '../../../store/settings/selectors';
-import { loadEmployees } from '../../../store/settings/actions';
-
+import { loadEmployees, loadDeleteData, deleteDataCompany } from '../../../store/settings/actions';
 import FilterDelete from './filterBlock'
+import Table from './TableBlock';
 
 import styles from './delete.module.scss';
 
@@ -43,14 +44,18 @@ export default function AccountsList() {
     employee: '',
   });
 
-  const isLoadind = useSelector(isLoadingSelector);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const employeesArr = useSelector(employeesSelector);
+  const deleteData = useSelector(deleteDataSelector)
 
   useEffect(() => {
     dispatch(loadEmployees(id))
+    dispatch(loadDeleteData(id))
   }, []);
 
   useEffect(() => {
@@ -76,6 +81,30 @@ export default function AccountsList() {
     }
   };
 
+  const handleDialog = () => {
+    setOpenDialog(false)
+  }
+  const cancelDelete = () => {
+    setInputValues({ from: {}, employee: '' })
+    setOpenDialog(false)
+  }
+
+  const employeeId = () => {
+    let id = employeesArr.filter(item => item.user_id === parseInt(inputValues.employee))
+    return id[0] ? `${id[0].id}` : '';
+  }
+
+  const submitDeleteData = () => {
+    const data = {
+      employee_id: parseInt(employeeId()),
+      date_from: moment(inputValues.from.startDate).format('YYYY-MM-DD'),
+      date_to: moment(inputValues.from.endDate).format('YYYY-MM-DD'),
+    }
+    dispatch(deleteDataCompany(id, data))
+    setOpenDialog(false)
+    setInputValues({ from: {}, employee: '' })
+  }
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -86,14 +115,27 @@ export default function AccountsList() {
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress /> :
+            isLoading ? <Progress /> :
               <>
                 <FilterDelete
                   style={styles}
                   inputValues={inputValues}
                   handleInputChange={handleInputChange}
                   employees={employees}
+                  submitDeleteData={submitDeleteData}
+                  setInputValues={setInputValues}
+                  handleDialog={handleDialog}
+                  cancelDelete={cancelDelete}
+                  openDialog={openDialog}
+                  setOpenDialog={setOpenDialog}
                   t={t}
+                />
+                <Table
+                  style={styles}
+                  deleteData={deleteData}
+                  employees={employeesArr}
+                  t={t}
+                  isLoading={isLoading}
                 />
               </>
           }

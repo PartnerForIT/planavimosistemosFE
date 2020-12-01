@@ -7,13 +7,14 @@ import {
   GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
-  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG
+  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
+  GET_DELETE_DATA, DELETE_DATA
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess
+  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess
 } from './actions'
 import { yellow } from "@material-ui/core/colors";
 import { getEmployee } from "store/employees/actions";
@@ -239,6 +240,38 @@ function* loadEmployee(action) {
   }
 }
 
+function* loadDeleteData(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/delete-data`, token());
+    yield put(loadDeleteDataSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* deleteCompanyData(action) {
+  console.log('action', action.data)
+  try {
+    const { data } =
+      yield call(axios.delete, `${config.api.url}/company/${action.id}/delete-data`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        data: {
+          employee_id: action.data.employee_id,
+          date_from: action.data.date_from,
+          date_to: action.data.date_to,
+        }
+      });
+    yield put(addSnackbar('Data deleted successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while deleting a Data', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
 
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
@@ -257,4 +290,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog)
+  yield takeLatest(GET_DELETE_DATA, loadDeleteData)
+  yield takeLatest(DELETE_DATA, deleteCompanyData)
 }

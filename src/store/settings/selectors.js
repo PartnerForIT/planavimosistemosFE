@@ -9,3 +9,4 @@ export const categoriesSkillsSelector = (state) => state.settings.skills;
 export const placesSelector = (state) => state.settings.places;
 export const employeesSelector = (state) => state.settings.employees;
 export const activityLogSelector = (state) => state.settings.activity_log;
+export const deleteDataSelector = (state) => state.settings.deleteData;
