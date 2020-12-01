@@ -19,6 +19,7 @@ import SettingEvents from './components/Settings/Events';
 import SettingWorkTime from './components/Settings/General/WorkTime';
 import SettingSecurity from './components/Settings/General/Security';
 import SettingCategories from './components/Settings/Categories';
+import SettingDelete from './components/Settings/Delete';
 import Accounts from './components/Settings/Accounts/AccountsList';
 import ActivityLog from './components/Settings/ActivityLog';
 
@@ -41,6 +42,7 @@ const App = () => (
         <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
         <AuthRoute exact path='/settings/activity-log/:id' component={ActivityLog} />
+        <AuthRoute exact path='/settings/delete/:id' component={SettingDelete} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
         <AuthRoute exact path='/reports' component={Reports} />
       </Switch>
