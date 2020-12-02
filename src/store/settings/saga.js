@@ -250,20 +250,20 @@ function* loadDeleteData(action) {
 }
 
 function* deleteCompanyData(action) {
-  console.log('action', action.data)
   try {
-    const { data } =
-      yield call(axios.delete, `${config.api.url}/company/${action.id}/delete-data`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        data: {
-          employee_id: action.data.employee_id,
-          date_from: action.data.date_from,
-          date_to: action.data.date_to,
-        }
-      });
+    yield call(axios.delete, `${config.api.url}/company/${action.id}/delete-data`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      data: {
+        employee_id: action.data.employee_id,
+        startDate: action.data.date_from,
+        endDate: action.data.date_to,
+      }
+    });
     yield put(addSnackbar('Data deleted successfully', 'success'));
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/delete-data`, token());
+    yield put(loadDeleteDataSuccess(data));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {

@@ -30,6 +30,9 @@ export default function DeleteDataTable({ style, deleteData, employees, t, isLoa
   //filter function
   const userName = (row) => {
     let name = employees.filter(item => item.user_id === row.user_id)
+    if (row.user_id === 1) {
+      return 'Admin'
+    }
     return name[0] ? `${name[0].name} ${name[0].surname}` : '';
   }
 
