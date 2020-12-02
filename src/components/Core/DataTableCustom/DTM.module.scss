@@ -50,6 +50,12 @@ header {
     background: $table-border;
   }
 }
+.simpleTable {
+  @extend .headerWrapper;
+  background: #fff;
+  box-shadow: none;
+  border-bottom: 1px solid $row-bg;
+}
 // search-table END
 .cell {
   font-family: Helvetica Neue, sans-serif;
@@ -721,4 +727,8 @@ div {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   z-index: 1;
+}
+.scrollingSimplePanel {
+  @extend .scrollingPanel;
+  box-shadow: none;
 }

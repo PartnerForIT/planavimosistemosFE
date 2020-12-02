@@ -99,7 +99,8 @@ export default function TableBlock({ style, skills }) {
         selectedItem={selectedItem}
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
-        verticalOffset='300px'
+        verticalOffset='360px'
+        simpleTable={true}
       />
     </div>
   )
