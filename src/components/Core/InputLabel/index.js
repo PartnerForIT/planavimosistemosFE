@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#808F94',
     position: 'relative',
     paddingBottom: '12px',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 500,
     transform: 'translate(0, 1.5px) scale(1)',
   }

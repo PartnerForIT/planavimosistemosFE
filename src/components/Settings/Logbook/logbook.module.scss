@@ -1,0 +1,25 @@
+
+.generalBlock {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.labelText{
+  color: #333945;
+  font-size: 14px;
+  word-wrap: break-word;
+  box-shadow: none !important;
+  text-align: left;
+  font-family: Helvetica Neue, sans-serif;
+  margin-left: 0;
+  margin-right: 20px;
+}
+.labelText2 {
+  @extend .labelText;
+  margin-left: 5px;
+}
+
+.tooltipBlock{
+  margin-left: 20px;
+}
