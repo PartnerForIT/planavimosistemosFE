@@ -6,7 +6,8 @@ import {
   ADD_HOLIDAY_SUCCESS, DELETE_HOLIDAY_SUCCESS,
   GET_SECURITY_COMPANY, GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY_SUCCESS, GET_SKILLS, GET_SKILLS_SUCCESS, CREATE_SKILL_SUCCESS,
-  GET_PLACE, GET_PLACE_SUCCESS, GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS
+  GET_PLACE, GET_PLACE_SUCCESS, GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS,
+  GET_DELETE_DATA, GET_DELETE_DATA_SUCCESS
 } from './types';
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   skills: [],
   employees: [],
   activity_log: [],
+  deleteData: [],
   places: [],
   loading: false,
   error: null,
@@ -164,6 +166,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         activity_log: action.data,
+        error: null,
+      }
+    }
+    case GET_DELETE_DATA: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    }
+    case GET_DELETE_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        deleteData: action.data,
         error: null,
       }
     }

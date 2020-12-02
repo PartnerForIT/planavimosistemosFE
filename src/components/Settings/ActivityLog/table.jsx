@@ -118,6 +118,7 @@ export default function ActivityTable({ style, activityLog, employees, places, t
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
         verticalOffset='360px'
+        simpleTable={true}
       />
     </div>
 

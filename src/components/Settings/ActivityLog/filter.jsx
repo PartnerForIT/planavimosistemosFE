@@ -2,7 +2,6 @@ import React from 'react';
 import Label from '../../Core/InputLabel'
 import SimpleSelect from '../../Core/SimpleSelect';
 import EmployeesSelect from '../../Core/EmployeesSelect';
-import Input from '../../Core/Input/Input';
 import DRP from '../../Core/DRP/DRP';
 
 export default function filterActivity({ style, inputValues,

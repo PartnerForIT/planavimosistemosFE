@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -168,7 +168,8 @@ export default function DataTable({
         }}
       >
         <div className={tableContentClasses}>
-          <div className={onSerach ? styles.headerWrapperSearch : styles.headerWrapper}>
+          {/* <div className={onSerach ? styles.headerWrapperSearch : styles.headerWrapper}> */}
+          <div className={simpleTable ? styles.simpleTable : styles.headerWrapper}>
             <header className={flexTableClasses} role='rowgroup'>
               {
                 visibleColumns.length > 0 && visibleColumns.map((column, idx) => {
@@ -211,11 +212,11 @@ export default function DataTable({
                           </div>
                         )}
                       </div>
-                      { (onSerach && columnsWidth[column.field] !== 80) &&
+                      {/* { (onSerach && columnsWidth[column.field] !== 80) &&
                         <div className={styles.headerSearch}>
                           <RowSearch />
                         </div>
-                      }
+                      } */}
                     </div>
                   );
                 })
@@ -243,55 +244,58 @@ export default function DataTable({
           }
         </div>
       </Scrollbar>
-      <div className={classNames(styles.tableFooter)}>
-        {typeof downloadExcel === 'function'
-          && (
-            <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-              className={styles.pointer}
-              onClick={downloadExcel}
-            >
-              <ExcelIcon />
-            </div>
-          )}
-        {typeof downloadPdf === 'function'
-          && (
-            <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-              className={styles.pointer}
-              onClick={downloadPdf}
-            >
-              <PdfIcon />
-            </div>
-          )}
-        {
-          totalDuration && (
-            <p className={footerTitleClasses}>
-              {
-                'Overall worktime: '
-              }
-              <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
-            </p>
-          )
-        }
-        {
-          lastPage && lastPage > 1
-            ? (
-              <div className={classNames(styles.pagination)}>
-                <Pagination
-                  activePage={activePage}
-                  itemsCountPerPage={itemsCountPerPage}
-                  totalItemsCount={totalItemsCount}
-                  pageRangeDisplayed={3}
-                  onChange={handlePagination}
-                  itemClass={classNames(styles.paginationItem)}
-                  linkClass={classNames(styles.paginationLink)}
-                  activeLinkClass={classNames(styles.paginationLinkActive)}
-                />
+      {!simpleTable &&
+        <div className={classNames(styles.tableFooter)}>
+          {typeof downloadExcel === 'function'
+            && (
+              <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+                className={styles.pointer}
+                onClick={downloadExcel}
+              >
+                <ExcelIcon />
               </div>
+            )}
+          {typeof downloadPdf === 'function'
+            && (
+              <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+                className={styles.pointer}
+                onClick={downloadPdf}
+              >
+                <PdfIcon />
+              </div>
+            )}
+          {
+            totalDuration && (
+              <p className={footerTitleClasses}>
+                {
+                  'Overall worktime: '
+                }
+                <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
+              </p>
             )
-            : null
-        }
-      </div>
-      <div className={classNames(styles.scrollingPanel)}>
+          }
+          {
+            lastPage && lastPage > 1
+              ? (
+                <div className={classNames(styles.pagination)}>
+                  <Pagination
+                    activePage={activePage}
+                    itemsCountPerPage={itemsCountPerPage}
+                    totalItemsCount={totalItemsCount}
+                    pageRangeDisplayed={3}
+                    onChange={handlePagination}
+                    itemClass={classNames(styles.paginationItem)}
+                    linkClass={classNames(styles.paginationLink)}
+                    activeLinkClass={classNames(styles.paginationLinkActive)}
+                  />
+                </div>
+              )
+              : null
+          }
+        </div>
+      }
+
+      <div className={classNames(simpleTable ? styles.scrollingSimplePanel : styles.scrollingPanel)}>
         {
           !reports && tableData.length > 0 && (
             <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>

@@ -1,44 +1,57 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import DataTable from '../../Core/DataTableCustom/OLT';
-import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 import Label from '../../Core/InputLabel';
 
 const columns = [
-  { label: "Tille", field: 'name', checked: true },
-  { label: "ID", field: 'id', checked: true },
-  { label: "Cost $/h", field: 'cost', checked: true },
-  { label: "Charge $/h", field: 'earn', checked: true },
-  { label: "actions", field: 'actions', checked: true },
+  { label: "Timestamp", field: 'created_at', checked: true },
+  { label: "User", field: 'user_id', checked: true },
+  { label: "IP", field: 'ip_address', checked: true },
+  { label: "Information", field: 'information', checked: true },
 ];
 
 const columnsWidthArray = {
-  name: 'auto',
-  id: 'auto',
-  cost: 'auto',
-  earn: 'auto',
-  actions: 90
+  created_at: 250,
+  user_id: 250,
+  ip_address: 250,
+  information: 280,
 };
 
 const page = {};
 
-export default function TableBlock({ style, skills }) {
-  const { t } = useTranslation();
+export default function DeleteDataTable({ style, deleteData, employees, t, isLoading }) {
   const [columnsArray, setColumnsArray] = useState(columns);
+  const [dataArray, setDataArray] = useState([]);
   const [loading, setLoading] = useState(null);
+  const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [totalDuration, setTotalDuration] = useState(null);
-  const [dataArray, setDataArray] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
+
+  //filter function
+  const userName = (row) => {
+    let name = employees.filter(item => item.user_id === row.user_id)
+    if (row.user_id === 1) {
+      return 'Admin'
+    }
+    return name[0] ? `${name[0].name} ${name[0].surname}` : '';
+  }
 
   useEffect(() => {
-    skills.map(item => {
-      item.actions = "tableActions"
-    })
-    setDataArray(skills);
-  }, [skills]);
+    if (deleteData.length > 0) {
+      deleteData.map(item => {
+        item.created_at = item.created_at ? moment(item.created_at).format('lll') : ''
+        item.user_id = userName(item)
+      })
+    }
+    setDataArray(deleteData);
+  }, [deleteData]);
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   const selectionHandler = (itemId, value) => {
-    skills.map(item => {
+    deleteData.map(item => {
       if (item.id === itemId) {
         item.checked = !item.checked;
       }
@@ -80,8 +93,8 @@ export default function TableBlock({ style, skills }) {
   };
 
   return (
-    <div className={style.categoryPage__Table}>
-      <Label text={t('Select Category')} htmlFor={""} />
+    <div className={style.table}>
+      <Label text={t('Log')} htmlFor={""} />
       <DataTable
         data={dataArray || []}
         columns={columnsArray || []}
@@ -99,9 +112,10 @@ export default function TableBlock({ style, skills }) {
         selectedItem={selectedItem}
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
-        verticalOffset='360px'
+        verticalOffset='380px'
         simpleTable={true}
       />
     </div>
+
   )
 }
