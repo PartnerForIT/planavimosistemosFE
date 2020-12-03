@@ -208,7 +208,6 @@ export default function Form({ t, style,
             options={durationArr}
           />
         </div>
-
       </div>
     </div>
   )
