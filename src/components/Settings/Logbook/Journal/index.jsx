@@ -11,8 +11,7 @@ import Dashboard from '../../../Core/Dashboard'
 import JournalIcon from '../../../Icons/JournalIcon';
 import Progress from '../../../Core/Progress';
 import Snackbar from '@material-ui/core/Snackbar';
-import Tooltip from '../../../Core/Tooltip';
-import General from './General';
+import Form from './Form';
 import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, JournalDataSelector
@@ -47,7 +46,14 @@ export default function Journal() {
     hourly_charge: '',
     hourly_cost: '',
     show_earned_salary: false,
-    merge_entries: false
+    merge_entries: false,
+    profitability: false,
+    approve_flow: false,
+    automatic_approval: false,
+    approved_at: 'day',
+    automatic_break: false,
+    workday_exceed: '4',
+    break_duration: '30',
   });
 
   useEffect(() => {
@@ -58,15 +64,23 @@ export default function Journal() {
 
   const handleInputChange = event => {
     const { name, value, type } = event.target;
-
-    console.log(name, value, type)
-
     if (type === 'checkbox') {
-      setJournalData({ ...journalData, [name]: !journalData.show_earned_salary });
+      setJournalData({ ...journalData, [name]: !journalData[name] });
     } else {
       setJournalData({ ...journalData, [name]: value });
     }
   };
+
+  const handleChangeApproveFlow = () => {
+    setJournalData({ ...journalData, approve_flow: !journalData.approve_flow });
+  }
+
+  const handleChangeAutomaticApprove = () => {
+    setJournalData({ ...journalData, automatic_approval: !journalData.automatic_approval });
+  }
+  const handleChangeAutomaticBreak = () => {
+    setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
+  }
 
   return (
     <MaynLayout>
@@ -80,11 +94,14 @@ export default function Journal() {
           {
             isLoadind ? <Progress /> :
               <>
-                <General
+                <Form
                   t={t}
                   style={styles}
                   handleInputChange={handleInputChange}
                   journalData={journalData}
+                  handleChangeApproveFlow={handleChangeApproveFlow}
+                  handleChangeAutomaticApprove={handleChangeAutomaticApprove}
+                  handleChangeAutomaticBreak={handleChangeAutomaticBreak}
                 />
               </>
           }
