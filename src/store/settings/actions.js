@@ -15,7 +15,8 @@ import {
   GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, FILTER_ACTIVITY_LOG,
   GET_DELETE_DATA, GET_DELETE_DATA_SUCCESS,
   DELETE_DATA, GET_LOGBOOK_JOURNAL, GET_LOGBOOK_JOURNAL_SUCCESS,
-  EDIT_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL_SUCCESS
+  EDIT_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL_SUCCESS,
+  GET_LOGBOOK_OVERTIME, GET_LOGBOOK_OVERTIME_SUCCESS
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -193,5 +194,14 @@ export const editLogbookJournal = (id, data) => ({
 })
 export const editLogbookJournalSuccess = (data) => ({
   type: EDIT_LOGBOOK_JOURNAL_SUCCESS,
+  data
+})
+
+export const loadLogbookOvertime = (id) => ({
+  type: GET_LOGBOOK_OVERTIME,
+  id,
+})
+export const loadLogbookOvertimelSuccess = (data) => ({
+  type: GET_LOGBOOK_OVERTIME_SUCCESS,
   data
 })

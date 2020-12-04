@@ -9,7 +9,6 @@ import Radio from '@material-ui/core/Radio';
 import { withStyles } from '@material-ui/core/styles';
 import Select from '../../../Core/SimpleSelect';
 import Button from '../../../Core/Button/Button';
-import { DriveEta } from '@material-ui/icons';
 
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },

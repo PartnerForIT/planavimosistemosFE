@@ -8,17 +8,15 @@ import {
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
   CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL
+  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL, GET_LOGBOOK_OVERTIME
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
   loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
-  editLogbookJournalSuccess
+  editLogbookJournalSuccess, loadLogbookOvertimelSuccess
 } from './actions'
-import { yellow } from "@material-ui/core/colors";
-import { getEmployee } from "store/employees/actions";
 
 function token() {
   const token = {
@@ -301,6 +299,15 @@ function* patchLogbookJournal(action) {
   }
 }
 
+function* loadOvertimeData(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/logbook/overtime`, token());
+    yield put(loadLogbookOvertimelSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -322,4 +329,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_DATA, deleteCompanyData)
   yield takeLatest(GET_LOGBOOK_JOURNAL, loadJournalData)
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal)
+  yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData)
 }

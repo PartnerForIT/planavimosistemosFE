@@ -14,6 +14,7 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText
 } from '../../../../store/settings/selectors';
+import { loadLogbookOvertime } from '../../../../store/settings/actions';
 
 import styles from './overtime.module.scss';
 
@@ -34,12 +35,16 @@ export default function Overtime() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  console.log('params', id)
-
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(loadLogbookOvertime(id))
+    }
+  }, [])
 
   return (
     <MaynLayout>
