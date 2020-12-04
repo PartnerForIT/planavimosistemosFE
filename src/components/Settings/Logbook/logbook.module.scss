@@ -38,6 +38,11 @@
     }
   }
 }
+.generalBlock5 {
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 15px;
+}
 .labelText{
   color: #333945;
   font-size: 14px;
@@ -64,8 +69,11 @@
 }
 
 .disabledBlock {
-  opacity: 0.3;
+  opacity: 0.4;
   pointer-events: none;
+  .disabledBlock {
+    opacity: 1;
+  }
 }
 
 .selectBlock {

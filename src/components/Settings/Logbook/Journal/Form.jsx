@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Tooltip from '../../../Core/Tooltip';
 import Input from '../../../Core/Input/Input';
 import Label from '../../../Core/InputLabel';
