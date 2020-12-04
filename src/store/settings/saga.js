@@ -8,13 +8,14 @@ import {
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
   CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL
+  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL
 } from "./types";
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess
+  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
+  editLogbookJournalSuccess
 } from './actions'
 import { yellow } from "@material-ui/core/colors";
 import { getEmployee } from "store/employees/actions";
@@ -282,6 +283,24 @@ function* loadJournalData(action) {
   }
 }
 
+function* patchLogbookJournal(action) {
+  try {
+    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/logbook/journal/store`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    yield put(editLogbookJournalSuccess(data))
+    yield put(addSnackbar('Edit Journal successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Journal', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -302,4 +321,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_DELETE_DATA, loadDeleteData)
   yield takeLatest(DELETE_DATA, deleteCompanyData)
   yield takeLatest(GET_LOGBOOK_JOURNAL, loadJournalData)
+  yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal)
 }

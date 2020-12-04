@@ -16,7 +16,7 @@ import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, JournalDataSelector
 } from '../../../../store/settings/selectors';
-import { loadLogbookJournal } from '../../../../store/settings/actions';
+import { loadLogbookJournal, editLogbookJournal } from '../../../../store/settings/actions';
 import styles from '../logbook.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -100,6 +100,23 @@ export default function Journal() {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
   }
 
+  const submit = () => {
+    const data = {
+      hourly_charge: journalData.hourly_charge,
+      hourly_cost: journalData.hourly_cost,
+      show_earned_salary: journalData.show_earned_salary ? 1 : 0,
+      merge_entries: journalData.merge_entries ? 1 : 0,
+      profitability: journalData.profitability ? 1 : 0,
+      approve_flow: journalData.approve_flow ? 1 : 0,
+      automatic_approval: journalData.automatic_approval ? 1 : 0,
+      approved_at: journalData.approved_at,
+      automatic_break: journalData.automatic_break ? 1 : 0,
+      workday_exceed: journalData.workday_exceed,
+      break_duration: journalData.break_duration,
+    }
+    dispatch(editLogbookJournal(id, data));
+  }
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -120,6 +137,7 @@ export default function Journal() {
                   handleChangeApproveFlow={handleChangeApproveFlow}
                   handleChangeAutomaticApprove={handleChangeAutomaticApprove}
                   handleChangeAutomaticBreak={handleChangeAutomaticBreak}
+                  submit={submit}
                 />
               </>
           }

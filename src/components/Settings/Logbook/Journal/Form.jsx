@@ -7,7 +7,8 @@ import Checkbox from '../../../Core/Checkbox/Checkbox2.jsx';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import { withStyles } from '@material-ui/core/styles';
-import Select from '../../../Core/SimpleSelect'
+import Select from '../../../Core/SimpleSelect';
+import Button from '../../../Core/Button/Button';
 
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },
@@ -35,7 +36,7 @@ const BlueRadio = withStyles({
 
 export default function Form({ t, style,
   handleInputChange, journalData, handleChangeApproveFlow,
-  handleChangeAutomaticApprove, handleChangeAutomaticBreak }) {
+  handleChangeAutomaticApprove, handleChangeAutomaticBreak, submit }) {
   return (
     <div className={style.logbookBlock}>
       <Label text={`${t('General Journal Settings')} :`} />
@@ -117,25 +118,26 @@ export default function Form({ t, style,
         </div>
       </div>
       <div className={style.formLine}></div>
-      <div className={style.generalBlock3}>
-        <Label text={t('Use automatic approval')} />
-        <Switch
-          onChange={handleChangeAutomaticApprove}
-          offColor={'#808F94'}
-          onColor={'#0085FF'}
-          uncheckedIcon={false}
-          checkedIcon={false}
-          name={'approve_flow'}
-          disabled={!journalData.approve_flow}
-          checked={journalData.automatic_approval}
-          height={21}
-          width={40}
-        />
-        <div className={style.tooltipBlock}>
-          <Tooltip title={'Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)'} />
-        </div>
-      </div>
+
       <div className={!journalData.approve_flow ? style.disabledBlock : ''}>
+        <div className={style.generalBlock3}>
+          <Label text={t('Use automatic approval')} />
+          <Switch
+            onChange={handleChangeAutomaticApprove}
+            offColor={'#808F94'}
+            onColor={'#0085FF'}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            name={'approve_flow'}
+            disabled={!journalData.approve_flow}
+            checked={journalData.automatic_approval}
+            height={21}
+            width={40}
+          />
+          <div className={style.tooltipBlock}>
+            <Tooltip title={'Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)'} />
+          </div>
+        </div>
         <Label text={`${t('Entries approved automatically at the end of')} :`} />
         <div className={style.generalBlock4}>
           <FormControlLabel
@@ -209,6 +211,9 @@ export default function Form({ t, style,
           />
         </div>
       </div>
+      <Button inverse onClick={() => submit()}>
+        {t('Save Journal')}
+      </Button>
     </div>
   )
 }
