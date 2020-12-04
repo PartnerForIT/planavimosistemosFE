@@ -9,6 +9,7 @@ import Radio from '@material-ui/core/Radio';
 import { withStyles } from '@material-ui/core/styles';
 import Select from '../../../Core/SimpleSelect';
 import Button from '../../../Core/Button/Button';
+import { DriveEta } from '@material-ui/icons';
 
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },
@@ -138,60 +139,64 @@ export default function Form({ t, style,
             <Tooltip title={'Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)'} />
           </div>
         </div>
-        <Label text={`${t('Entries approved automatically at the end of')} :`} />
-        <div className={style.generalBlock4}>
-          <FormControlLabel
-            value="approved_at"
-            control={<BlueRadio
-              checked={journalData.approved_at === 'day'}
-              onChange={handleInputChange}
-              value="day"
-              name="approved_at"
-              label="Each day"
-              inputProps={{ 'aria-label': 'Each day' }}
-            />}
-            label="Each day" />
+        <div className={!journalData.automatic_approval ? style.disabledBlock : ''}>
+          <Label text={`${t('Entries approved automatically at the end of')} :`} />
+          <div className={style.generalBlock4}>
+            <FormControlLabel
+              value="approved_at"
+              control={<BlueRadio
+                checked={journalData.approved_at === 'day'}
+                onChange={handleInputChange}
+                value="day"
+                name="approved_at"
+                label="Each day"
+                inputProps={{ 'aria-label': 'Each day' }}
+              />}
+              label="Each day" />
 
-          <FormControlLabel
-            value="approved_at"
-            control={<BlueRadio
-              checked={journalData.approved_at === 'week'}
-              onChange={handleInputChange}
-              value="week"
-              name="approved_at"
-              label="Each day"
-              inputProps={{ 'aria-label': 'Each week' }}
-            />}
-            label="Each week" />
+            <FormControlLabel
+              value="approved_at"
+              control={<BlueRadio
+                checked={journalData.approved_at === 'week'}
+                onChange={handleInputChange}
+                value="week"
+                name="approved_at"
+                label="Each day"
+                inputProps={{ 'aria-label': 'Each week' }}
+              />}
+              label="Each week" />
 
-          <FormControlLabel
-            value="approved_at"
-            control={<BlueRadio
-              checked={journalData.approved_at === 'month'}
-              onChange={handleInputChange}
-              value="month"
-              name="approved_at"
-              inputProps={{ 'aria-label': 'Each month' }}
-            />} label="Each month" />
-        </div>
-        <div className={style.formLine}></div>
-        <div className={style.generalBlock3}>
-          <Label text={t('Automatic lunch break')} />
-          <Switch
-            onChange={handleChangeAutomaticBreak}
-            offColor={'#808F94'}
-            onColor={'#0085FF'}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            name={'approve_flow'}
-            checked={journalData.automatic_break}
-            height={21}
-            width={40}
-          />
-          <div className={style.tooltipBlock}>
-            <Tooltip title={t('Automatic lunch break (Turn on/off) ')} />
+            <FormControlLabel
+              value="approved_at"
+              control={<BlueRadio
+                checked={journalData.approved_at === 'month'}
+                onChange={handleInputChange}
+                value="month"
+                name="approved_at"
+                inputProps={{ 'aria-label': 'Each month' }}
+              />} label="Each month" />
           </div>
         </div>
+        <div className={style.formLine}></div>
+      </div>
+      <div className={style.generalBlock3}>
+        <Label text={t('Automatic lunch break')} />
+        <Switch
+          onChange={handleChangeAutomaticBreak}
+          offColor={'#808F94'}
+          onColor={'#0085FF'}
+          uncheckedIcon={false}
+          checkedIcon={false}
+          name={'approve_flow'}
+          checked={journalData.automatic_break}
+          height={21}
+          width={40}
+        />
+        <div className={style.tooltipBlock}>
+          <Tooltip title={t('Automatic lunch break (Turn on/off) ')} />
+        </div>
+      </div>
+      <div className={!journalData.automatic_break ? style.disabledBlock : ''}>
         <div className={style.selectBlock}>
           <Label text={t('Insert break automatically')} />
           <Select
