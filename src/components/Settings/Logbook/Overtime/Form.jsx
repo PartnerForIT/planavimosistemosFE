@@ -170,7 +170,7 @@ export default function Form({
         <div className={style.radioBlock}>
           <div className={style.radioBlockItem}>
             <FormControlLabel
-              value='approved_at'
+              value='1'
               control={(
                 <BlueRadio
                   checked={overtimeData.overtime_type === '1'}
@@ -183,13 +183,20 @@ export default function Form({
               )}
               label={t('By percentage')}
             />
-            <Input width={60} type='number' min={0} step={0.1} name='overtime_rate1' />
+            <Input
+              width={60}
+              type='number'
+              min={0}
+              step={0.1}
+              name='overtime_rate1'
+              defaultValue={overtimeData.overtime_type === '1' && overtimeData.overtime_rate}
+            />
             <span className={style.value}>%</span>
           </div>
           <div className={style.radioBlockItem}>
 
             <FormControlLabel
-              value='approved_at'
+              value='2'
               control={(
                 <BlueRadio
                   checked={overtimeData.overtime_type === '2'}
@@ -202,12 +209,19 @@ export default function Form({
               )}
               label={t('By multiplication')}
             />
-            <Input width={60} type='number' min={0} step={0.1} name='overtime_rate2' />
+            <Input
+              width={60}
+              type='number'
+              min={0}
+              step={0.1}
+              name='overtime_rate2'
+              defaultValue={overtimeData.overtime_type === '2' && overtimeData.overtime_rate}
+            />
             <span className={style.value}>X</span>
           </div>
           <div className={style.radioBlockItem}>
             <FormControlLabel
-              value='approved_at'
+              value='3'
               control={(
                 <BlueRadio
                   checked={overtimeData.overtime_type === '3'}
@@ -220,7 +234,14 @@ export default function Form({
               )}
               label={t('Fixed hour rate')}
             />
-            <Input width={60} type='number' min={0} step={0.1} name='overtime_rate3' />
+            <Input
+              width={60}
+              type='number'
+              min={0}
+              step={0.1}
+              name='overtime_rate3'
+              defaultValue={overtimeData.overtime_type === '3' && overtimeData.overtime_rate}
+            />
             <span className={style.value}>$</span>
           </div>
         </div>

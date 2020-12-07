@@ -12,7 +12,7 @@ import OvertimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText,
+  snackbarType, snackbarText, OvertimeDataSelector,
 } from '../../../../store/settings/selectors';
 import { editLogbookOvertime, loadLogbookOvertime } from '../../../../store/settings/actions';
 import Form from './Form';
@@ -54,12 +54,19 @@ export default function Overtime() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const Overtime = useSelector(OvertimeDataSelector);
 
   useEffect(() => {
     if (id) {
       dispatch(loadLogbookOvertime(id));
     }
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (Object.keys(Overtime).length) {
+      setOvertimeData({ ...Overtime });
+    }
+  }, [Overtime]);
 
   const handleInputChange = (event) => {
     const {
@@ -90,11 +97,11 @@ export default function Overtime() {
   const submit = () => {
     const data = {
       ...overtimeData,
-      overtime_range: document.querySelector(
+      overtime_rate: document.querySelector(
         `[name='overtime_rate${overtimeData.overtime_type}']`,
       )?.value,
     };
-    dispatch(editLogbookOvertime(id, data))
+    dispatch(editLogbookOvertime(id, data));
   };
 
   return (
@@ -103,11 +110,11 @@ export default function Overtime() {
         <TitleBlock
           title='Overtime'
         >
-          <OvertimeIcon />
+          <OvertimeIcon/>
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress />
+            isLoadind ? <Progress/>
               : (
                 <Form
                   t={t}
