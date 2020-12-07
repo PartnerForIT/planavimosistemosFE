@@ -1,0 +1,18 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 15px;
+}
+
+.categoryBlock {
+}
+
+.labelBLock {
+  display: grid;
+  grid-template-columns: auto 20px 1fr;
+  grid-column-gap: 25px;
+}
+
+.right {
+  text-align: right;
+}
