@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
 import OvertimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
-import Snackbar from '@material-ui/core/Snackbar';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText
+  snackbarType, snackbarText,
 } from '../../../../store/settings/selectors';
-import { loadLogbookOvertime } from '../../../../store/settings/actions';
+import { editLogbookOvertime, loadLogbookOvertime } from '../../../../store/settings/actions';
 import Form from './Form';
 
 import styles from '../logbook.module.scss';
@@ -22,12 +22,12 @@ import styles from '../logbook.module.scss';
 const useStyles = makeStyles(() => ({
   error: {
     background: '#de4343',
-    color: "#fff",
+    color: '#fff',
   },
   success: {
     background: '#3bc39e',
-    color: "#fff",
-  }
+    color: '#fff',
+  },
 }));
 
 export default function Overtime() {
@@ -46,6 +46,8 @@ export default function Overtime() {
     saturday_overtime: '',
     sunday_overtime_enable: false,
     sunday_overtime: '',
+    overtime_type: '',
+    overtime_rate: '',
   });
 
   const isLoadind = useSelector(isLoadingSelector);
@@ -55,62 +57,85 @@ export default function Overtime() {
 
   useEffect(() => {
     if (id) {
-      dispatch(loadLogbookOvertime(id))
+      dispatch(loadLogbookOvertime(id));
     }
-  }, [])
+  }, [dispatch, id]);
 
-
-  const handleInputChange = event => {
-    const { name, value, type } = event.target;
+  const handleInputChange = (event) => {
+    const {
+      name,
+      value,
+      type,
+    } = event.target;
     if (type === 'checkbox') {
-      setOvertimeData({ ...overtimeData, [name]: !overtimeData[name] });
+      setOvertimeData({
+        ...overtimeData,
+        [name]: !overtimeData[name],
+      });
     } else {
-      setOvertimeData({ ...overtimeData, [name]: value });
+      setOvertimeData({
+        ...overtimeData,
+        [name]: value,
+      });
     }
   };
 
   const handleChangeCalculation = () => {
-    setOvertimeData({ ...overtimeData, status: !overtimeData.status });
-  }
+    setOvertimeData({
+      ...overtimeData,
+      status: !overtimeData.status,
+    });
+  };
 
   const submit = () => {
-    console.log('submit')
-  }
+    const data = {
+      ...overtimeData,
+      overtime_range: document.querySelector(
+        `[name='overtime_rate${overtimeData.overtime_type}']`,
+      )?.value,
+    };
+    dispatch(editLogbookOvertime(id, data))
+  };
 
   return (
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Overtime"}
+          title='Overtime'
         >
           <OvertimeIcon />
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress /> :
-              <Form
-                t={t}
-                style={styles}
-                submit={submit}
-                handleInputChange={handleInputChange}
-                handleChangeCalculation={handleChangeCalculation}
-                overtimeData={overtimeData}
-              />
+            isLoadind ? <Progress />
+              : (
+                <Form
+                  t={t}
+                  style={styles}
+                  submit={submit}
+                  handleInputChange={handleInputChange}
+                  handleChangeCalculation={handleChangeCalculation}
+                  overtimeData={overtimeData}
+                />
+              )
           }
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
             ContentProps={{
               classes: {
-                root: typeSnackbar === 'error' ? classes.error : classes.success
-              }
+                root: typeSnackbar === 'error' ? classes.error : classes.success,
+              },
             }}
-            severity="error"
+            severity='error'
             open={isSnackbar}
             message={textSnackbar}
-            key={"rigth"}
+            key='rigth'
           />
         </PageLayout>
       </Dashboard>
     </MaynLayout>
-  )
+  );
 }

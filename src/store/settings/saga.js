@@ -1,6 +1,8 @@
-import { call, put, takeLatest, delay } from "redux-saga/effects";
+import {
+  call, put, takeLatest, delay,
+} from 'redux-saga/effects';
 import config from 'config';
-import axios from "axios";
+import axios from 'axios';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
@@ -8,19 +10,19 @@ import {
   DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
   GET_SKILLS, CREATE_SKILL, CREATE_JOB,
   CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL, GET_LOGBOOK_OVERTIME
-} from "./types";
+  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL, GET_LOGBOOK_OVERTIME, EDIT_LOGBOOK_OVERTIME,
+} from './types';
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
   loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
-  editLogbookJournalSuccess, loadLogbookOvertimelSuccess
-} from './actions'
+  editLogbookJournalSuccess, loadLogbookOvertimelSuccess, editLogbookOvertimelSuccess,
+} from './actions';
 
 function token() {
   const token = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
   return token;
 }
@@ -54,7 +56,7 @@ function* editSettingsCompany(action) {
 function* loadSettingsWorkTime(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/work-time`, token());
-    yield put(getSettingWorkTimeSuccess(data))
+    yield put(getSettingWorkTimeSuccess(data));
   } catch (error) {
     console.log(error);
   }
@@ -88,7 +90,6 @@ function* addCompanyHoliday(action) {
     yield put(addSnackbar('Holiday added successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
-
   } catch (e) {
     yield put(addSnackbar('An error occurred while adding a holiday', 'error'));
     yield delay(4000);
@@ -98,8 +99,7 @@ function* addCompanyHoliday(action) {
 
 function* deleteCompanyHoliday(action) {
   try {
-    const { data } =
-      yield call(axios.delete, `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
+    const { data } = yield call(axios.delete, `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
     yield put(addSnackbar('Holiday deleted successfully', 'success'));
     yield put(deleteHolidaySuccess(action.id));
     yield delay(4000);
@@ -258,7 +258,7 @@ function* deleteCompanyData(action) {
         employee_id: action.data.employee_id,
         startDate: action.data.date_from,
         endDate: action.data.date_to,
-      }
+      },
     });
     yield put(addSnackbar('Data deleted successfully', 'success'));
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/delete-data`, token());
@@ -288,7 +288,7 @@ function* patchLogbookJournal(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    yield put(editLogbookJournalSuccess(data))
+    yield put(editLogbookJournalSuccess(data));
     yield put(addSnackbar('Edit Journal successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -308,6 +308,26 @@ function* loadOvertimeData(action) {
   }
 }
 
+function* patchLogbookOvertime(action) {
+  try {
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/logbook/overtime/store`, action.data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    yield put(editLogbookOvertimelSuccess(data));
+    yield put(addSnackbar('Edit Overtime successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Overtime', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -324,10 +344,11 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
-  yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog)
-  yield takeLatest(GET_DELETE_DATA, loadDeleteData)
-  yield takeLatest(DELETE_DATA, deleteCompanyData)
-  yield takeLatest(GET_LOGBOOK_JOURNAL, loadJournalData)
-  yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal)
-  yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData)
+  yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
+  yield takeLatest(GET_DELETE_DATA, loadDeleteData);
+  yield takeLatest(DELETE_DATA, deleteCompanyData);
+  yield takeLatest(GET_LOGBOOK_JOURNAL, loadJournalData);
+  yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
+  yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
+  yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
 }
