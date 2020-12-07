@@ -29,7 +29,6 @@ export const inversed = () => (
   </Button>
 );
 
-
 export const fullWidth = () => (
   <Button onClick={action('clicked')} fillWidth>
     Full Width Button
@@ -51,5 +50,10 @@ export const reset = () => (
 export const disabled = () => (
   <Button onClick={action('clicked')} disabled inverse>
     Disabled Button
+  </Button>
+);
+export const inline = () => (
+  <Button onClick={action('clicked')} inline inverse>
+    Inline Button
   </Button>
 );

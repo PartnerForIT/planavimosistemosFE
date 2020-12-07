@@ -20,6 +20,7 @@
   background: $light-blue2;
   border: 1px solid $light-blue2;
   transition: all 0.2s ease-in-out;
+
   &:hover {
     opacity: 0.8;
   }
@@ -35,10 +36,12 @@
   color: $gray;
   background: #fff;
   border-color: #fff;
+
   &:hover {
     background: $light-blue2;
   }
 }
+
 .yellow {
   color: #fff;
   background: $yellow;
@@ -46,6 +49,7 @@
   font-size: 14px;
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
+
   &:hover {
     opacity: 0.8;
   }
@@ -58,10 +62,12 @@
   font-size: 14px;
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
+
   &:hover {
     opacity: 0.8;
   }
 }
+
 .navyBlue {
   @extend .green;
   border: 1px solid $blue-3;
@@ -75,6 +81,7 @@
   font-size: 14px;
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
+
   &:hover {
     opacity: 0.8;
   }
@@ -102,6 +109,7 @@
   padding: 12px 24px;
   min-width: 150px;
 }
+
 .big.cancel {
   min-width: auto;
 }
@@ -124,4 +132,14 @@
 
 .fullWidth {
   width: 100%;
+}
+
+.inline {
+  background: transparent;
+  border: unset;
+  padding: unset;
+  display: inline-block;
+  box-shadow: unset;
+  height: 1em;
+  line-height: 1;
 }

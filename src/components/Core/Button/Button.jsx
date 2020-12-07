@@ -9,7 +9,7 @@ import styles from './Button.module.scss';
 const Button = ({
   children, cancel, yellow, green, inverse, white,
   onClick, fillWidth, type = 'button', size = 'normal',
-  disabled = false, danger, black, navyBlue,
+  disabled = false, danger, black, navyBlue, inline,
 }) => {
   const classes = classNames(
     styles.button,
@@ -25,6 +25,7 @@ const Button = ({
       [styles.yellow]: yellow,
       [styles.black]: black,
       [styles.navyBlue]: navyBlue,
+      [styles.inline]: inline,
     },
   );
 
