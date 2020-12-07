@@ -66,8 +66,8 @@ export default function Overtime() {
     if (Object.keys(Overtime).length) {
       setOvertimeData({ ...Overtime });
     }
+    console.log(Overtime);
   }, [Overtime]);
-
   const handleInputChange = (event) => {
     const {
       name,
@@ -98,7 +98,7 @@ export default function Overtime() {
     const data = {
       ...overtimeData,
       overtime_rate: document.querySelector(
-        `[name='overtime_rate${overtimeData.overtime_type}']`,
+        `[name='overtime_rate']:not(:disabled)`,
       )?.value,
     };
     dispatch(editLogbookOvertime(id, data));
