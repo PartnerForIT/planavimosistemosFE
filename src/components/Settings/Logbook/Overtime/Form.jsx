@@ -190,7 +190,7 @@ export default function Form({
               step={0.1}
               name='overtime_rate'
               disabled={overtimeData.overtime_type !== '1'}
-              value={overtimeData.overtime_type === '1' && overtimeData.overtime_rate}
+              value={overtimeData.overtime_type === '1' ? overtimeData.overtime_rate : ''}
               onChange={handleInputChange}
             />
             <span className={style.value}>%</span>
@@ -218,7 +218,7 @@ export default function Form({
               step={0.1}
               name='overtime_rate'
               disabled={overtimeData.overtime_type !== '2'}
-              value={overtimeData.overtime_type === '2' && overtimeData.overtime_rate}
+              value={overtimeData.overtime_type === '2' ? overtimeData.overtime_rate : ''}
               onChange={handleInputChange}
             />
             <span className={style.value}>X</span>
@@ -245,7 +245,7 @@ export default function Form({
               step={0.1}
               name='overtime_rate'
               disabled={overtimeData.overtime_type !== '3'}
-              value={overtimeData.overtime_type === '3' && overtimeData.overtime_rate}
+              value={overtimeData.overtime_type === '3' ? overtimeData.overtime_rate : ''}
               onChange={handleInputChange}
             />
             <span className={style.value}>$</span>
