@@ -87,7 +87,7 @@ export default function Form({
           uncheckedIcon={false}
           checkedIcon={false}
           name='approve_flow'
-          checked={overtimeData.status}
+          checked={!!overtimeData.status}
           height={21}
           width={40}
         />
@@ -102,7 +102,7 @@ export default function Form({
         <div className={style.generalBlock2}>
           <Checkbox
             onChange={handleInputChange}
-            checked={overtimeData.daily_overtime_enable}
+            checked={!!overtimeData.daily_overtime_enable}
             label={t('Daily work')}
             name='daily_overtime_enable'
           />
@@ -111,14 +111,14 @@ export default function Form({
           <Select
             handleInputChange={handleInputChange}
             name='daily_overtime'
-            value={overtimeData.daily_overtime}
+            value={overtimeData.daily_overtime ?? daylyWork[0].code}
             options={daylyWork}
           />
         </div>
         <div className={style.generalBlock2}>
           <Checkbox
             onChange={handleInputChange}
-            checked={overtimeData.weekly_overtime_enable}
+            checked={!!overtimeData.weekly_overtime_enable}
             label={t('Weekly work')}
             name='weekly_overtime_enable'
           />
@@ -127,14 +127,14 @@ export default function Form({
           <Select
             handleInputChange={handleInputChange}
             name='weekly_overtime'
-            value={overtimeData.weekly_overtime}
+            value={overtimeData.weekly_overtime ?? weeklyWork[0].code}
             options={weeklyWork}
           />
         </div>
         <div className={style.generalBlock2}>
           <Checkbox
             onChange={handleInputChange}
-            checked={overtimeData.saturday_overtime_enable}
+            checked={!!overtimeData.saturday_overtime_enable}
             label={t('Saturday work')}
             name='saturday_overtime_enable'
           />
@@ -143,14 +143,14 @@ export default function Form({
           <Select
             handleInputChange={handleInputChange}
             name='saturday_overtime'
-            value={overtimeData.saturday_overtime}
+            value={overtimeData.saturday_overtime ?? saturdayWork[0].code}
             options={saturdayWork}
           />
         </div>
         <div className={style.generalBlock2}>
           <Checkbox
             onChange={handleInputChange}
-            checked={overtimeData.sunday_overtime_enable}
+            checked={!!overtimeData.sunday_overtime_enable}
             label={t('Sunday work')}
             name='sunday_overtime_enable'
           />
@@ -159,7 +159,7 @@ export default function Form({
           <Select
             handleInputChange={handleInputChange}
             name='sunday_overtime'
-            value={overtimeData.sunday_overtime}
+            value={overtimeData.sunday_overtime ?? saturdayWork[0].code}
             options={saturdayWork}
           />
         </div>
@@ -188,8 +188,10 @@ export default function Form({
               type='number'
               min={0}
               step={0.1}
-              name='overtime_rate1'
-              defaultValue={overtimeData.overtime_type === '1' && overtimeData.overtime_rate}
+              name='overtime_rate'
+              disabled={overtimeData.overtime_type !== '1'}
+              value={overtimeData.overtime_type === '1' && overtimeData.overtime_rate}
+              onChange={handleInputChange}
             />
             <span className={style.value}>%</span>
           </div>
@@ -214,8 +216,10 @@ export default function Form({
               type='number'
               min={0}
               step={0.1}
-              name='overtime_rate2'
-              defaultValue={overtimeData.overtime_type === '2' && overtimeData.overtime_rate}
+              name='overtime_rate'
+              disabled={overtimeData.overtime_type !== '2'}
+              value={overtimeData.overtime_type === '2' && overtimeData.overtime_rate}
+              onChange={handleInputChange}
             />
             <span className={style.value}>X</span>
           </div>
@@ -239,8 +243,10 @@ export default function Form({
               type='number'
               min={0}
               step={0.1}
-              name='overtime_rate3'
-              defaultValue={overtimeData.overtime_type === '3' && overtimeData.overtime_rate}
+              name='overtime_rate'
+              disabled={overtimeData.overtime_type !== '3'}
+              value={overtimeData.overtime_type === '3' && overtimeData.overtime_rate}
+              onChange={handleInputChange}
             />
             <span className={style.value}>$</span>
           </div>
