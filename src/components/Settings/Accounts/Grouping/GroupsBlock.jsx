@@ -4,14 +4,24 @@ import { useTranslation } from 'react-i18next';
 import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 
-// TODO: remove
-import style from './grouping.module.scss';
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 
-// TODO: uncomment
-export default function GroupsBlock({ /* style */ }) {
+const columns = [
+  { label: 'Title', field: 'name', checked: true },
+  { label: 'Amount', field: 'users', checked: true },
+  { label: 'Sub-groups', field: 'subgroups', checked: true },
+  { label: 'ID', field: 'id', checked: true },
+  // TODO: edit & remove
+  // { label: '', field: 'actions', checked: true },
+];
+
+export default function GroupsBlock({
+  style, groups = [],
+  loading = false, setSelected, selected,
+}) {
   const { t } = useTranslation();
+
   return (
     <>
       <div className={style.categoryBlock}>
@@ -26,22 +36,22 @@ export default function GroupsBlock({ /* style */ }) {
         </div>
         <div>
           <DataTable
-            data={[]}
-            columns={[]}
+            data={groups}
+            columns={columns ?? []}
             columnsWidth={{}}
             onColumnsChange={() => {}}
             sortable
-            loading={false}
-            onSelect={() => {}}
+            loading={loading}
+            onSelect={setSelected}
+            selectedItem={selected}
             onSort={() => {}}
             // lastPage={page.last_page}
             // activePage={page.current_page}
             // itemsCountPerPage={page.per_page}
             // totalItemsCount={page.total}
             // handlePagination={console.log}
-            // selectedItem={selectedItem}
             // totalDuration={totalDuration}
-            // setSelectedItem={rowSelectionHandler}
+            setSelectedItem={setSelected}
             verticalOffset='360px'
             simpleTable
           />
