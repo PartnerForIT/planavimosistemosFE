@@ -6,18 +6,34 @@ import axios from 'axios';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
-  GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
-  DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
-  GET_SKILLS, CREATE_SKILL, CREATE_JOB,
-  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL, GET_LOGBOOK_OVERTIME, EDIT_LOGBOOK_OVERTIME,
+  GET_WORK_TIME,
+  PATCH_WORK_TIME,
+  ADD_HOLIDAY,
+  DELETE_HOLIDAY,
+  GET_SECURITY_COMPANY,
+  PATCH_SECURITY_COMPANY,
+  GET_SKILLS,
+  CREATE_SKILL,
+  CREATE_JOB,
+  CREATE_PLACE,
+  GET_PLACE,
+  GET_ACTIVITY_LOG,
+  GET_EMPLOYEES,
+  FILTER_ACTIVITY_LOG,
+  GET_DELETE_DATA,
+  DELETE_DATA,
+  GET_LOGBOOK_JOURNAL,
+  EDIT_LOGBOOK_JOURNAL,
+  GET_LOGBOOK_OVERTIME,
+  EDIT_LOGBOOK_OVERTIME,
+  GET_ACCOUNTS_GROUPS,
 } from './types';
 import {
   getSettingCompanySuccess, addSnackbar,
   dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
   getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
   loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
-  editLogbookJournalSuccess, loadLogbookOvertimelSuccess, editLogbookOvertimelSuccess,
+  editLogbookJournalSuccess, loadLogbookOvertimeSuccess, editLogbookOvertimeSuccess, getAccountGroupsSuccess,
 } from './actions';
 
 function token() {
@@ -302,7 +318,7 @@ function* patchLogbookJournal(action) {
 function* loadOvertimeData(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/logbook/overtime`, token());
-    yield put(loadLogbookOvertimelSuccess(data));
+    yield put(loadLogbookOvertimeSuccess(data));
   } catch (e) {
     console.log(e);
   }
@@ -317,7 +333,7 @@ function* patchLogbookOvertime(action) {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-    yield put(editLogbookOvertimelSuccess(data));
+    yield put(editLogbookOvertimeSuccess(data));
     yield put(addSnackbar('Edit Overtime successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -325,6 +341,17 @@ function* patchLogbookOvertime(action) {
     yield put(addSnackbar('An error occurred while creating the Overtime', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
+  }
+}
+
+function* loadAccountGroups(action) {
+  try {
+    const { data } = yield call(
+      axios.get, `${config.api.url}/company/${action.id}/groups`, token(),
+    );
+    yield put(getAccountGroupsSuccess(data));
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -351,4 +378,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
   yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
+  yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
 }

@@ -12,3 +12,4 @@ export const activityLogSelector = (state) => state.settings.activity_log;
 export const deleteDataSelector = (state) => state.settings.deleteData;
 export const JournalDataSelector = (state) => state.settings.journal;
 export const OvertimeDataSelector = (state) => state.settings.overtime;
+export const AccountGroupsSelector = (state) => state.settings.groups;

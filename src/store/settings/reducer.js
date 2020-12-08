@@ -27,7 +27,7 @@ import {
   EDIT_LOGBOOK_JOURNAL_SUCCESS,
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
-  EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  EDIT_LOGBOOK_OVERTIME_SUCCESS, GET_ACCOUNTS_GROUPS_SUCCESS, GET_ACCOUNTS_GROUPS,
 } from './types';
 
 const initialState = {
@@ -50,6 +50,7 @@ const initialState = {
   snackbarText: '',
   snackbarShow: false,
   snackbarType: '',
+  groups: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -248,6 +249,20 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         overtime: action.data,
+        error: null,
+      };
+    }
+    case GET_ACCOUNTS_GROUPS:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_ACCOUNTS_GROUPS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        groups: action.data,
         error: null,
       };
     }
