@@ -14,7 +14,7 @@ const columns = [
 ];
 
 export default function SubgroupsBlock({
-  style, selected: selectedGroup, subgroups = [], addNewSubgroup,
+  style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort,
 }) {
   const { t } = useTranslation();
 
@@ -42,7 +42,7 @@ export default function SubgroupsBlock({
             sortable
             loading={false}
             onSelect={() => {}}
-            onSort={() => {}}
+            onSort={(field, asc) => sort({ field, asc })}
           // lastPage={page.last_page}
           // activePage={page.current_page}
           // itemsCountPerPage={page.per_page}

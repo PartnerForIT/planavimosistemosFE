@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -45,33 +47,56 @@ export default function Grouping() {
   const dispatch = useDispatch();
   const addNewGroup = (data) => dispatch(createAccountGroup(id, { name: data }));
   const [selected, setSelected] = useState({});
-  const addNewSubgroup = ({ name }) => dispatch(createAccountSubgroup(id, { name, parentGroupId: selected?.id }));
+  const [sort, setSort] = useState({});
+  const [subSort, setSubSort] = useState({});
+  const addNewSubgroup = ({ name }) => dispatch(createAccountSubgroup(id, {
+    name,
+    parentGroupId: selected?.id,
+  }));
 
   useEffect(() => {
     dispatch(getAccountGroups(id));
   }, [dispatch, id]);
 
+  const sorting = useCallback((groups, { field, asc }) => groups.sort((a, b) => (
+    // eslint-disable-next-line no-nested-ternary
+    asc
+      ? (a[field] < b[field]) ? 1 : -1
+      : (a[field] > b[field]) ? 1 : -1
+  )), []);
+
   const groups = useMemo(() => {
+    // eslint-disable-next-line no-shadow
+    let groups = [];
+
     if (Groups) {
-      return Groups.map((group) => ({
+      groups = Groups.map((group) => ({
         ...group,
         users: group.users?.length ?? 0,
         subgroups: group.subgroups?.length ?? 0,
       })) ?? [];
     }
-    return [];
-  }, [Groups]);
+    if (!_.isEmpty(sort)) {
+      groups = sorting(groups, sort);
+    }
+    return groups;
+  }, [Groups, sort, sorting]);
 
   const subgroups = useMemo(() => {
+    let subGroups = [];
+
     if (!_.isEmpty(selected) && Groups) {
       const selectedGroup = Groups.find((group) => group.id === selected.id);
-      return selectedGroup.subgroups?.map((subgroup) => ({
+      subGroups = selectedGroup.subgroups?.map((subgroup) => ({
         ...subgroup,
         users: subgroup.users?.length ?? 0,
       })) ?? [];
     }
-    return [];
-  }, [Groups, selected]);
+    if (!_.isEmpty(subSort)) {
+      subGroups = sorting(subGroups, subSort);
+    }
+    return subGroups;
+  }, [Groups, selected, sorting, subSort]);
 
   return (
     <MaynLayout>
@@ -93,12 +118,14 @@ export default function Grouping() {
                     setSelected={setSelected}
                     selected={selected}
                     addNewGroup={addNewGroup}
+                    sort={setSort}
                   />
                   <SubgroupsBlock
                     style={style}
                     selected={selected}
                     subgroups={subgroups}
                     addNewSubgroup={addNewSubgroup}
+                    sort={setSubSort}
                   />
                 </div>
               )

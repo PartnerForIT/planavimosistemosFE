@@ -20,7 +20,7 @@ const columns = [
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
-  addNewGroup,
+  addNewGroup, sort,
 }) {
   const { t } = useTranslation();
 
@@ -49,7 +49,7 @@ export default function GroupsBlock({
             loading={loading}
             onSelect={setSelected}
             selectedItem={selected}
-            onSort={() => {}}
+            onSort={(field, asc) => sort({ field, asc })}
             // lastPage={page.last_page}
             // activePage={page.current_page}
             // itemsCountPerPage={page.per_page}
