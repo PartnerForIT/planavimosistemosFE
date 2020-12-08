@@ -4,6 +4,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import Dashboard from '../../../Core/Dashboard';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -17,7 +18,7 @@ import Progress from '../../../Core/Progress';
 import GroupsBlock from './GroupsBlock';
 import SubgroupsBlock from './SubgroupsBlock';
 import style from './grouping.module.scss';
-import { createAccountGroup, getAccountGroups } from '../../../../store/settings/actions';
+import { createAccountGroup, createAccountSubgroup, getAccountGroups } from '../../../../store/settings/actions';
 
 export default function Grouping() {
   const isLoading = useSelector(isLoadingSelector);
@@ -43,7 +44,8 @@ export default function Grouping() {
 
   const dispatch = useDispatch();
   const addNewGroup = (data) => dispatch(createAccountGroup(id, { name: data }));
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState({});
+  const addNewSubgroup = ({ name }) => dispatch(createAccountSubgroup(id, { name, parentGroupId: selected?.id }));
 
   useEffect(() => {
     dispatch(getAccountGroups(id));
@@ -55,18 +57,18 @@ export default function Grouping() {
         ...group,
         users: group.users?.length ?? 0,
         subgroups: group.subgroups?.length ?? 0,
-      }));
+      })) ?? [];
     }
     return [];
   }, [Groups]);
 
   const subgroups = useMemo(() => {
-    if (selected && Groups) {
+    if (!_.isEmpty(selected) && Groups) {
       const selectedGroup = Groups.find((group) => group.id === selected.id);
       return selectedGroup.subgroups?.map((subgroup) => ({
         ...subgroup,
         users: subgroup.users?.length ?? 0,
-      }));
+      })) ?? [];
     }
     return [];
   }, [Groups, selected]);
@@ -92,7 +94,12 @@ export default function Grouping() {
                     selected={selected}
                     addNewGroup={addNewGroup}
                   />
-                  <SubgroupsBlock style={style} selected={selected} subgroups={subgroups} />
+                  <SubgroupsBlock
+                    style={style}
+                    selected={selected}
+                    subgroups={subgroups}
+                    addNewSubgroup={addNewSubgroup}
+                  />
                 </div>
               )
           }

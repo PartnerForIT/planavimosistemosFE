@@ -26,7 +26,7 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
-  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP,
+  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -391,6 +391,26 @@ function* createAccountGroup(action) {
   }
 }
 
+function* createAccountSubgroup(action) {
+  try {
+    const { data } = yield call(
+      axios.post, `${config.api.url}/company/${action.id}/sub-groups/create`, {
+        company_id: action.id,
+        parent_group_id: action.data.parentGroupId,
+        name: action.data.name,
+      }, token(),
+    );
+    yield put(createAccountGroupSuccess(data));
+    yield put(addSnackbar('Added Group successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while adding new Sub-group', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -416,4 +436,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
   yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
+  yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
 }

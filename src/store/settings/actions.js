@@ -40,7 +40,11 @@ import {
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME_SUCCESS,
-  GET_ACCOUNTS_GROUPS, GET_ACCOUNTS_GROUPS_SUCCESS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_GROUP_SUCCESS,
+  GET_ACCOUNTS_GROUPS,
+  GET_ACCOUNTS_GROUPS_SUCCESS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_GROUP_SUCCESS,
+  CREATE_ACCOUNTS_SUBGROUP, CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -257,5 +261,15 @@ export const createAccountGroup = (id, data) => ({
 
 export const createAccountGroupSuccess = (data) => ({
   type: CREATE_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const createAccountSubgroup = (id, data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP,
+  data,
+  id,
+});
+export const createAccountSubgroupSuccess = (data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
   data,
 });

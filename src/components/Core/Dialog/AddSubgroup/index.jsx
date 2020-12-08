@@ -6,29 +6,29 @@ import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 
-export default function AddGroup({
+export default function AddSubgroup({
   handleClose, title, open,
-  buttonTitle, setGroupName, groupName, addNewGroup,
+  buttonTitle, setName, name, addSubgroup, selectedGroup = {},
 }) {
   const { t } = useTranslation();
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.formControl}>
-        <Label text={t('Group name')} htmlFor='name' />
+        <Label text={t('Sub-group name')} htmlFor='name' />
         <Input
-          placeholder={`${t('Enter group name')}`}
+          placeholder={`${t('Enter sub-group name')}`}
           name='name'
-          value={groupName}
+          value={name}
           fullWidth
-          onChange={(e) => setGroupName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className={style.buttonSaveBlock}>
         <Button
-          disabled={!groupName}
+          disabled={!name}
           onClick={() => {
-            addNewGroup({ name: groupName });
+            addSubgroup({ name, parentGroupId: selectedGroup.id });
             handleClose();
           }}
           fillWidth
