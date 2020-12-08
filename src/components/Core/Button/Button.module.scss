@@ -142,4 +142,9 @@
   box-shadow: unset;
   height: 1em;
   line-height: 1;
+  user-select: none;
+
+  &[disabled] {
+    color: #808f94;
+  }
 }
