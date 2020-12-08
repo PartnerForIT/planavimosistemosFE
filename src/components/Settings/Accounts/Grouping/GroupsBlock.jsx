@@ -13,8 +13,7 @@ const columns = [
   { label: 'Amount', field: 'users', checked: true },
   { label: 'Sub-groups', field: 'subgroups', checked: true },
   { label: 'ID', field: 'id', checked: true },
-  // TODO: edit & remove
-  // { label: '', field: 'actions', checked: true },
+  { label: '', field: 'actions', checked: true },
 ];
 
 export default function GroupsBlock({
@@ -39,7 +38,7 @@ export default function GroupsBlock({
             </Button>
           </div>
         </div>
-        <div>
+        <div className={style.table}>
           <DataTable
             data={groups}
             columns={columns ?? []}
