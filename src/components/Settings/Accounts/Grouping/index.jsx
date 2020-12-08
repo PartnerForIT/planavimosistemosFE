@@ -10,17 +10,18 @@ import TitleBlock from '../../../Core/TitleBlock';
 import GroupingIcon from '../../../Icons/3People';
 import PageLayout from '../../../Core/PageLayout';
 import {
-  AccountGroupsSelector,
+  AccountGroupsSelector, groupsLoadingSelector,
   isLoadingSelector, isShowSnackbar, snackbarText, snackbarType,
 } from '../../../../store/settings/selectors';
 import Progress from '../../../Core/Progress';
 import GroupsBlock from './GroupsBlock';
 import SubgroupsBlock from './SubgroupsBlock';
 import style from './grouping.module.scss';
-import { getAccountGroups } from '../../../../store/settings/actions';
+import { createAccountGroup, getAccountGroups } from '../../../../store/settings/actions';
 
 export default function Grouping() {
   const isLoading = useSelector(isLoadingSelector);
+  const groupLoading = useSelector(groupsLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
@@ -41,7 +42,7 @@ export default function Grouping() {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-
+  const addNewGroup = (data) => dispatch(createAccountGroup(id, { name: data }));
   const [selected, setSelected] = useState();
 
   useEffect(() => {
@@ -52,8 +53,8 @@ export default function Grouping() {
     if (Groups) {
       return Groups.map((group) => ({
         ...group,
-        users: group.users?.length,
-        subgroups: group.subgroups?.length,
+        users: group.users?.length ?? 0,
+        subgroups: group.subgroups?.length ?? 0,
       }));
     }
     return [];
@@ -62,17 +63,13 @@ export default function Grouping() {
   const subgroups = useMemo(() => {
     if (selected && Groups) {
       const selectedGroup = Groups.find((group) => group.id === selected.id);
-      return selectedGroup.subgroups.map((subgroup) => ({
+      return selectedGroup.subgroups?.map((subgroup) => ({
         ...subgroup,
-        users: subgroup.users.length,
+        users: subgroup.users?.length ?? 0,
       }));
     }
     return [];
   }, [Groups, selected]);
-
-  useEffect(() => {
-    console.log(subgroups);
-  }, [subgroups]);
 
   return (
     <MaynLayout>
@@ -90,9 +87,10 @@ export default function Grouping() {
                   <GroupsBlock
                     style={style}
                     groups={groups}
-                    loading={isLoading}
+                    loading={groupLoading}
                     setSelected={setSelected}
                     selected={selected}
+                    addNewGroup={addNewGroup}
                   />
                   <SubgroupsBlock style={style} selected={selected} subgroups={subgroups} />
                 </div>

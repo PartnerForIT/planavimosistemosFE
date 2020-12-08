@@ -1,4 +1,3 @@
-import { ContactSupportOutlined } from '@material-ui/icons';
 import {
   GET_SETTINGS_COMPANY,
   GET_SETTINGS_COMPANY_SUCCESS,
@@ -27,7 +26,11 @@ import {
   EDIT_LOGBOOK_JOURNAL_SUCCESS,
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
-  EDIT_LOGBOOK_OVERTIME_SUCCESS, GET_ACCOUNTS_GROUPS_SUCCESS, GET_ACCOUNTS_GROUPS,
+  EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  GET_ACCOUNTS_GROUPS_SUCCESS,
+  GET_ACCOUNTS_GROUPS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_GROUP_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -266,6 +269,18 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
       };
     }
+
+    case CREATE_ACCOUNTS_GROUP:
+      return { ...state, groupLoading: true, error: null };
+
+    case CREATE_ACCOUNTS_GROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...state.groups, action.data],
+        error: null,
+      };
 
     case ADD_SETTING_SNACKBAR:
       return {

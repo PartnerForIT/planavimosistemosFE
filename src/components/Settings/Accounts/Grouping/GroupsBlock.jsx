@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Label from '../../../Core/InputLabel';
@@ -6,6 +6,7 @@ import Tooltip from '../../../Core/Tooltip';
 
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
+import AddGroup from '../../../Core/Dialog/AddGroup';
 
 const columns = [
   { label: 'Title', field: 'name', checked: true },
@@ -19,8 +20,12 @@ const columns = [
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
+  addNewGroup,
 }) {
   const { t } = useTranslation();
+
+  const [visible, setVisible] = useState(false);
+  const [groupName, setGroupName] = useState('');
 
   return (
     <>
@@ -29,7 +34,7 @@ export default function GroupsBlock({
           <Label text={t('Groups')} htmlFor='' />
           <Tooltip title='Select Group' />
           <div className={style.right}>
-            <Button onClick={() => ({ })} inverse inline size='small'>
+            <Button onClick={() => setVisible(true)} inverse inline size='small'>
               {`+ ${t('add new group')}`}
             </Button>
           </div>
@@ -57,6 +62,15 @@ export default function GroupsBlock({
           />
         </div>
       </div>
+      <AddGroup
+        open={visible}
+        handleClose={() => setVisible(false)}
+        title={t('Create a new group')}
+        buttonTitle={t('Create Group')}
+        groupName={groupName}
+        setGroupName={setGroupName}
+        addNewGroup={addNewGroup}
+      />
     </>
   );
 }

@@ -26,14 +26,29 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
-  GET_ACCOUNTS_GROUPS,
+  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP,
 } from './types';
 import {
-  getSettingCompanySuccess, addSnackbar,
-  dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
-  getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
-  editLogbookJournalSuccess, loadLogbookOvertimeSuccess, editLogbookOvertimeSuccess, getAccountGroupsSuccess,
+  getSettingCompanySuccess,
+  addSnackbar,
+  dismissSnackbar,
+  getSettingWorkTimeSuccess,
+  addHolidaySuccess,
+  deleteHolidaySuccess,
+  getSecurityCompanySuccess,
+  editSecurityPageSuccess,
+  loadSkillsSuccess,
+  createSkillSuccess,
+  loadPlaceSuccess,
+  loadActivityLogSuccess,
+  loadEmployeesSuccess,
+  loadDeleteDataSuccess,
+  loadLogbookJournalSuccess,
+  editLogbookJournalSuccess,
+  loadLogbookOvertimeSuccess,
+  editLogbookOvertimeSuccess,
+  getAccountGroupsSuccess,
+  createAccountGroupSuccess,
 } from './actions';
 
 function token() {
@@ -351,7 +366,28 @@ function* loadAccountGroups(action) {
     );
     yield put(getAccountGroupsSuccess(data));
   } catch (e) {
-    console.log(e);
+    yield put(addSnackbar('An error occurred while getting Groups', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createAccountGroup(action) {
+  try {
+    const { data } = yield call(
+      axios.post, `${config.api.url}/company/${action.id}/groups/create`, {
+        ...action.data,
+        company_id: action.id,
+      }, token(),
+    );
+    yield put(createAccountGroupSuccess(data));
+    yield put(addSnackbar('Added Group successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while adding new Group', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   }
 }
 
@@ -379,4 +415,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
   yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
+  yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
 }
