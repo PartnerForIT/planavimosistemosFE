@@ -58,12 +58,24 @@ export default function Grouping() {
     dispatch(getAccountGroups(id));
   }, [dispatch, id]);
 
-  const sorting = useCallback((groups, { field, asc }) => groups.sort((a, b) => (
-    // eslint-disable-next-line no-nested-ternary
-    asc
-      ? (a[field] < b[field]) ? 1 : -1
-      : (a[field] > b[field]) ? 1 : -1
-  )), []);
+  const sorting = useCallback((groups, { field, asc }) => {
+    const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
+    const sortFunction = (a, b) => {
+      if (typeof a[field] === 'number' && typeof b[field] === 'number') {
+        return sortNumFunction(a, b);
+      }
+      if (typeof a[field] === 'object' || typeof b[field] === 'object') {
+        return sortNumFunction(a, b);
+      }
+      if (asc) {
+        return a[field].toString()
+          .localeCompare(b[field]);
+      }
+      return b[field].toString()
+        .localeCompare(a[field]);
+    };
+    return groups.sort(sortFunction);
+  }, []);
 
   const groups = useMemo(() => {
     // eslint-disable-next-line no-shadow
@@ -74,6 +86,7 @@ export default function Grouping() {
         ...group,
         users: group.users?.length ?? 0,
         subgroups: group.subgroups?.length ?? 0,
+        actions: 'tableActions',
       })) ?? [];
     }
     if (!_.isEmpty(sort)) {
@@ -90,6 +103,7 @@ export default function Grouping() {
       subGroups = selectedGroup.subgroups?.map((subgroup) => ({
         ...subgroup,
         users: subgroup.users?.length ?? 0,
+        actions: 'tableActions',
       })) ?? [];
     }
     if (!_.isEmpty(subSort)) {
