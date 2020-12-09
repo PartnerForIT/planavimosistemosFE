@@ -7,13 +7,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
 import styles from './DTM.module.scss';
-//import StyledCheckbox from '../Checkbox/Checkbox';
+// import StyledCheckbox from '../Checkbox/Checkbox';
 import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
-import RowSearch from './Search'
+import RowSearch from './Search';
 
 const useStyles = makeStyles({
   colorPrimary: {
@@ -24,7 +24,8 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
+  removeRow = () => ({}),
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -60,7 +61,7 @@ export default function DataTable({
       }
       return total;
     }, 0));
-  }, [columns]);
+  }, [columns, columnsWidth]);
 
   useEffect(() => {
     const initData = { checked: 0, total: 0 };
@@ -232,19 +233,22 @@ export default function DataTable({
                 setSelectedItem={setSelectedItem}
                 columns={visibleColumns}
                 selectable={selectable}
-                statysIcon={true}
+                statysIcon
                 onSelect={onSelect}
                 fieldIcons={fieldIcons}
                 reports={reports}
                 columnsWidth={columnsWidth}
                 totalCustomWidthColumns={totalCustomWidthColumns}
                 totalCustomColumns={totalCustomColumns}
+                editRow={editRow}
+                removeRow={removeRow}
               />
             ))
           }
         </div>
       </Scrollbar>
-      {!simpleTable &&
+      {!simpleTable
+        && (
         <div className={classNames(styles.tableFooter)}>
           {typeof downloadExcel === 'function'
             && (
@@ -293,7 +297,7 @@ export default function DataTable({
               : null
           }
         </div>
-      }
+        )}
 
       <div className={classNames(simpleTable ? styles.scrollingSimplePanel : styles.scrollingPanel)}>
         {
