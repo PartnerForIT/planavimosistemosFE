@@ -19,7 +19,7 @@ const columns = [
 
 export default function SubgroupsBlock({
   style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort, loading,
-  removeSubgroup,
+  removeSubgroup, edit,
 }) {
   const { t } = useTranslation();
 

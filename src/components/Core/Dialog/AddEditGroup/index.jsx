@@ -6,9 +6,9 @@ import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 
-export default function AddGroup({
+export default function AddEditGroup({
   handleClose, title, open,
-  buttonTitle, setGroupName, groupName, addNewGroup,
+  buttonTitle, setGroupName, groupName, handleOk,
 }) {
   const { t } = useTranslation();
 
@@ -28,7 +28,7 @@ export default function AddGroup({
         <Button
           disabled={!groupName}
           onClick={() => {
-            addNewGroup(groupName);
+            handleOk(groupName);
             handleClose();
           }}
           fillWidth

@@ -40,7 +40,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP_ERROR,
   DELETE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
-  DELETE_ACCOUNTS_SUBGROUP_ERROR,
+  DELETE_ACCOUNTS_SUBGROUP_ERROR, PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_GROUP_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -282,6 +282,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
 
     case CREATE_ACCOUNTS_GROUP:
     case DELETE_ACCOUNTS_GROUP:
+    case PATCH_ACCOUNTS_GROUP:
       return { ...state, groupLoading: true, error: null };
 
     case CREATE_ACCOUNTS_GROUP_SUCCESS:
@@ -293,8 +294,18 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
       };
 
+    case PATCH_ACCOUNTS_GROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
     case CREATE_ACCOUNTS_GROUP_ERROR:
     case DELETE_ACCOUNTS_GROUP_ERROR:
+    case PATCH_ACCOUNTS_GROUP_ERROR:
       return { ...state, groupLoading: false };
 
     case DELETE_ACCOUNTS_GROUP_SUCCESS:

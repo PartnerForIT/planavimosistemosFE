@@ -22,7 +22,7 @@ import SubgroupsBlock from './SubgroupsBlock';
 import style from './grouping.module.scss';
 import {
   createAccountGroup,
-  createAccountSubgroup,
+  createAccountSubgroup, editAccountGroup, editAccountSubgroup,
   getAccountGroups,
   removeAccountGroup, removeAccountSubgroup,
 } from '../../../../store/settings/actions';
@@ -61,6 +61,9 @@ export default function Grouping() {
   }));
   const removeGroup = (groupId) => dispatch(removeAccountGroup(id, groupId));
   const removeSubgroup = (subgroupId) => dispatch(removeAccountSubgroup(id, subgroupId));
+
+  const editGroupName = (name) => dispatch(editAccountGroup(id, { groupId: selected.id, name }));
+  const editSubgroupName = (name) => dispatch(editAccountSubgroup(id, { groupId: selected.id, name }));
 
   useEffect(() => {
     dispatch(getAccountGroups(id));
@@ -142,6 +145,7 @@ export default function Grouping() {
                     addNewGroup={addNewGroup}
                     sort={setSort}
                     removeGroup={removeGroup}
+                    edit={editGroupName}
                   />
                   <SubgroupsBlock
                     style={style}
@@ -151,6 +155,7 @@ export default function Grouping() {
                     sort={setSubSort}
                     loading={subGroupLoading}
                     removeSubgroup={removeSubgroup}
+                    edit={editSubgroupName}
                   />
                 </div>
               )

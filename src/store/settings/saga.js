@@ -27,7 +27,12 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
-  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP, DELETE_ACCOUNTS_GROUP, DELETE_ACCOUNTS_SUBGROUP,
+  GET_ACCOUNTS_GROUPS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_GROUP,
+  DELETE_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_GROUP,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -53,7 +58,11 @@ import {
   createAccountGroupError,
   removeAccountGroupSuccess,
   removeAccountGroupError,
-  createAccountSubgroupSuccess, removeAccountSubgroupSuccess, removeAccountSubgroupError,
+  createAccountSubgroupSuccess,
+  removeAccountSubgroupSuccess,
+  removeAccountSubgroupError,
+  editAccountSubgroup,
+  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess,
 } from './actions';
 import { AccountGroupsSelector } from './selectors';
 
@@ -459,7 +468,10 @@ function* deleteAccountGroup(action) {
       if (subgroup) {
         groups = stateGroups.map((group) => {
           const subgroups = group.subgroups.filter((sbgrp) => sbgrp.id !== action.groupId);
-          return { ...group, subgroups };
+          return {
+            ...group,
+            subgroups,
+          };
         });
         yield put(removeAccountSubgroupSuccess());
       } else {
@@ -476,6 +488,35 @@ function* deleteAccountGroup(action) {
     yield put(subgroup ? removeAccountSubgroupError() : removeAccountGroupError());
 
     yield put(addSnackbar(`An error occurred while remove ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchAccountGroup(action) {
+  const { subgroup, type: $, ...rest } = action;
+  try {
+    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/groups/update/${action.groupId}`, rest, token());
+
+    const Groups = yield select((state) => state.settings.groups);
+    let groups = [];
+    if (subgroup) {
+
+    } else {
+      groups = Groups.map((group) => {
+        if (group.id === action.groupId) {
+          return {
+            ...data,
+          };
+        }
+        return group;
+      });
+    }
+
+    yield put(editAccountGroupSuccess(groups));
+  } catch (e) {
+    yield put(subgroup ? editAccountSubgroupError() : editAccountGroupError());
+    yield put(addSnackbar(`An error occurred while edit ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -509,4 +550,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
   yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
+  yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
 }

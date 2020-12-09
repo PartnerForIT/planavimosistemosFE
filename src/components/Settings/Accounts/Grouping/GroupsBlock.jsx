@@ -6,7 +6,7 @@ import Tooltip from '../../../Core/Tooltip';
 
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
-import AddGroup from '../../../Core/Dialog/AddGroup';
+import AddEditGroup from '../../../Core/Dialog/AddEditGroup';
 import RemoveGroup from '../../../Core/Dialog/RemoveGroup';
 
 const columns = [
@@ -20,11 +20,12 @@ const columns = [
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
-  addNewGroup, sort, removeGroup,
+  addNewGroup, sort, removeGroup, edit,
 }) {
   const { t } = useTranslation();
 
   const [visible, setVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [removeVisible, setRemoveVisible] = useState(false);
 
@@ -60,19 +61,36 @@ export default function GroupsBlock({
             setSelectedItem={setSelected}
             verticalOffset='360px'
             simpleTable
-            editRow={() => ({})}
+            editRow={() => setEditVisible(true)}
             removeRow={() => setRemoveVisible(true)}
           />
         </div>
       </div>
-      <AddGroup
+      {/* add group */}
+      <AddEditGroup
         open={visible}
-        handleClose={() => setVisible(false)}
+        handleClose={() => {
+          setGroupName('');
+          setVisible(false);
+        }}
         title={t('Create a new group')}
         buttonTitle={t('Create Group')}
         groupName={groupName}
         setGroupName={setGroupName}
-        addNewGroup={addNewGroup}
+        handleOk={addNewGroup}
+      />
+      {/* edit group name */}
+      <AddEditGroup
+        open={editVisible}
+        handleClose={() => {
+          setGroupName('');
+          setEditVisible(false);
+        }}
+        title={t('Edit group name')}
+        buttonTitle={t('Save & Close')}
+        groupName={groupName}
+        setGroupName={setGroupName}
+        handleOk={edit}
       />
       <RemoveGroup
         title={t('Delete Group?')}

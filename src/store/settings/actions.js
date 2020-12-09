@@ -52,7 +52,11 @@ import {
   PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
   DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
   DELETE_ACCOUNTS_GROUP,
-  DELETE_ACCOUNTS_GROUP_SUCCESS, DELETE_ACCOUNTS_GROUP_ERROR, DELETE_ACCOUNTS_SUBGROUP_ERROR,
+  DELETE_ACCOUNTS_GROUP_SUCCESS,
+  DELETE_ACCOUNTS_GROUP_ERROR,
+  DELETE_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_GROUP_SUCCESS, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_SUBGROUP_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -293,6 +297,21 @@ export const removeAccountGroupError = (data) => ({
   data,
 });
 
+export const editAccountGroup = (id, data) => ({
+  type: PATCH_ACCOUNTS_GROUP,
+  id,
+  ...data,
+});
+
+export const editAccountGroupSuccess = (data) => ({
+  type: PATCH_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const editAccountGroupError = () => ({
+  type: PATCH_ACCOUNTS_GROUP_ERROR,
+});
+
 export const createAccountSubgroup = (id, data) => ({
   type: CREATE_ACCOUNTS_SUBGROUP,
   data,
@@ -319,6 +338,9 @@ export const editAccountSubgroup = (id, data) => ({
 export const editAccountSubgroupSuccess = (data) => ({
   type: PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
   data,
+});
+export const editAccountSubgroupError = () => ({
+  type: PATCH_ACCOUNTS_SUBGROUP_ERROR,
 });
 
 export const removeAccountSubgroup = (id, groupId) => ({
