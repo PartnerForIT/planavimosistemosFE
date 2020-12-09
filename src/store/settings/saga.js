@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -275,6 +275,7 @@ function* filterActivityLog(action) {
 }
 
 function* loadEmployee(action) {
+  // const { all } = action;
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/all`, token());
     yield put(loadEmployeesSuccess(data));
@@ -551,6 +552,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
+  yield takeLatest(GET_EMPLOYEES_ALL, loadEmployee);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
   yield takeLatest(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);

@@ -56,7 +56,7 @@ import {
   DELETE_ACCOUNTS_GROUP_ERROR,
   DELETE_ACCOUNTS_SUBGROUP_ERROR,
   PATCH_ACCOUNTS_GROUP,
-  PATCH_ACCOUNTS_GROUP_SUCCESS, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP_SUCCESS, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_SUBGROUP_ERROR, GET_EMPLOYEES_ALL,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -183,6 +183,13 @@ export const loadEmployees = (id) => ({
   type: GET_EMPLOYEES,
   id,
 });
+
+export const loadEmployeesAll = (id) => ({
+  type: GET_EMPLOYEES_ALL,
+  id,
+  all: true,
+});
+
 export const loadEmployeesSuccess = (data) => ({
   type: GET_EMPLOYEES_SUCCESS,
   data,
