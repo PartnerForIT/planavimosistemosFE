@@ -28,6 +28,7 @@ export default function GroupsBlock({
   const [editVisible, setEditVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [removeVisible, setRemoveVisible] = useState(false);
+  const [columnsArray, setColumnsArray] = useState(columns);
 
   return (
     <>
@@ -44,8 +45,8 @@ export default function GroupsBlock({
         <div className={style.table}>
           <DataTable
             data={groups}
-            columns={columns ?? []}
-            onColumnsChange={() => {}}
+            columns={columnsArray ?? []}
+            onColumnsChange={setColumnsArray}
             sortable
             loading={loading}
             onSelect={setSelected}

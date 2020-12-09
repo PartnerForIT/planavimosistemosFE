@@ -26,6 +26,7 @@ export default function SubgroupsBlock({
   const [visible, setVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [subgroupName, setSubgroupName] = useState('');
+  const [columnsArray, setColumnsArray] = useState(columns);
   const [removeVisible, setRemoveVisible] = useState(false);
   const [selectedSubgroup, setSelectedSubgroup] = useState({ });
 
@@ -44,9 +45,9 @@ export default function SubgroupsBlock({
         <div className={style.table}>
           <DataTable
             data={subgroups ?? []}
-            columns={columns ?? []}
+            columns={columnsArray ?? []}
             columnsWidth={{}}
-            onColumnsChange={() => {}}
+            onColumnsChange={setColumnsArray}
             sortable
             loading={loading}
             // onSelect={setSelectedSubgroup}
