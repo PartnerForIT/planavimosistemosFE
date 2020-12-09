@@ -6,7 +6,7 @@ import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
-import AddSubgroup from '../../../Core/Dialog/AddSubgroup';
+import AddEditSubgroup from '../../../Core/Dialog/AddEditSubgroup';
 import NoData from './NoData';
 import RemoveGroup from '../../../Core/Dialog/RemoveGroup';
 
@@ -24,6 +24,7 @@ export default function SubgroupsBlock({
   const { t } = useTranslation();
 
   const [visible, setVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const [subgroupName, setSubgroupName] = useState('');
   const [removeVisible, setRemoveVisible] = useState(false);
   const [selectedSubgroup, setSelectedSubgroup] = useState({ });
@@ -61,6 +62,7 @@ export default function SubgroupsBlock({
             verticalOffset='360px'
             simpleTable
             removeRow={() => setRemoveVisible(true)}
+            editRow={() => setEditVisible(true)}
           />
           {
             _.isEmpty(selectedGroup)
@@ -70,13 +72,31 @@ export default function SubgroupsBlock({
           }
         </div>
       </div>
-      <AddSubgroup
+      {/* add */}
+      <AddEditSubgroup
         open={visible}
-        handleClose={() => setVisible(false)}
+        handleClose={() => {
+          setVisible(false);
+          setSubgroupName('');
+        }}
         title={`${t('Create a new sub-group for')} ${selectedGroup?.name}`}
         buttonTitle={t('Create Sub-group')}
-        addSubgroup={addNewSubgroup}
+        handleOk={addNewSubgroup}
         selectedGroup={selectedGroup}
+        name={subgroupName}
+        setName={setSubgroupName}
+      />
+      {/* edit */}
+      <AddEditSubgroup
+        open={editVisible}
+        handleClose={() => {
+          setEditVisible(false);
+          setSubgroupName('');
+        }}
+        title={t('Edit sub-group name')}
+        buttonTitle={t('Save & Close')}
+        handleOk={edit}
+        selectedGroup={selectedSubgroup}
         name={subgroupName}
         setName={setSubgroupName}
       />

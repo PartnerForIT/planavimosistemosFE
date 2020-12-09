@@ -6,9 +6,9 @@ import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 
-export default function AddSubgroup({
+export default function AddEditSubgroup({
   handleClose, title, open,
-  buttonTitle, setName, name, addSubgroup, selectedGroup = {},
+  buttonTitle, setName, name, handleOk, selectedGroup = {},
 }) {
   const { t } = useTranslation();
 
@@ -28,7 +28,7 @@ export default function AddSubgroup({
         <Button
           disabled={!name}
           onClick={() => {
-            addSubgroup({ name, parentGroupId: selectedGroup.id });
+            handleOk({ name, parentGroupId: selectedGroup.id });
             handleClose();
           }}
           fillWidth
