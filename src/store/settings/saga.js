@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -61,10 +61,8 @@ import {
   createAccountSubgroupSuccess,
   removeAccountSubgroupSuccess,
   removeAccountSubgroupError,
-  editAccountSubgroup,
-  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess,
+  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess, editAccountSubgroupSuccess,
 } from './actions';
-import { AccountGroupsSelector } from './selectors';
 
 function token() {
   const token = {
@@ -494,26 +492,41 @@ function* deleteAccountGroup(action) {
 }
 
 function* patchAccountGroup(action) {
-  const { subgroup, type: $, ...rest } = action;
+  const {
+    subgroup,
+    type: $,
+    ...rest
+  } = action;
   try {
-    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/groups/update/${action.groupId}`, rest, token());
-
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/groups/update/${action.groupId}`,
+      { subgroup, ...rest }, token());
     const Groups = yield select((state) => state.settings.groups);
     let groups = [];
-    if (subgroup) {
 
+    if (subgroup) {
+      groups = Groups.map((group) => {
+        const subgroups = group.subgroups?.map((sbgrp) => {
+          if (sbgrp.id === action.groupId) {
+            return { ...data };
+          }
+          return sbgrp;
+        });
+        return { ...group, subgroups };
+      });
     } else {
       groups = Groups.map((group) => {
         if (group.id === action.groupId) {
-          return {
-            ...data,
-          };
+          return { ...data };
         }
         return group;
       });
     }
 
     yield put(editAccountGroupSuccess(groups));
+    if (subgroup) {
+      yield put(editAccountSubgroupSuccess());
+    }
   } catch (e) {
     yield put(subgroup ? editAccountSubgroupError() : editAccountGroupError());
     yield put(addSnackbar(`An error occurred while edit ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
@@ -551,4 +564,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
+  yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
 }

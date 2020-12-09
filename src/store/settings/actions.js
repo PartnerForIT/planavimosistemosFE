@@ -332,13 +332,14 @@ export const editAccountSubgroup = (id, data) => ({
   type: PATCH_ACCOUNTS_SUBGROUP,
   id,
   subgroup: true,
-  data,
+  name: data.name,
+  groupId: data.parentGroupId,
 });
 
-export const editAccountSubgroupSuccess = (data) => ({
+export const editAccountSubgroupSuccess = () => ({
   type: PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
-  data,
 });
+
 export const editAccountSubgroupError = () => ({
   type: PATCH_ACCOUNTS_SUBGROUP_ERROR,
 });

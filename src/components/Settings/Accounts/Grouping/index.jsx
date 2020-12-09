@@ -63,7 +63,7 @@ export default function Grouping() {
   const removeSubgroup = (subgroupId) => dispatch(removeAccountSubgroup(id, subgroupId));
 
   const editGroupName = (name) => dispatch(editAccountGroup(id, { groupId: selected.id, name }));
-  const editSubgroupName = (name) => dispatch(editAccountSubgroup(id, { groupId: selected.id, name }));
+  const editSubgroupName = (data) => dispatch(editAccountSubgroup(id, data));
 
   useEffect(() => {
     dispatch(getAccountGroups(id));
