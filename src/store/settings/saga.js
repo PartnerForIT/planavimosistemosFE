@@ -27,7 +27,7 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
-  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP, DELETE_ACCOUNTS_GROUP,
+  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP, DELETE_ACCOUNTS_GROUP, DELETE_ACCOUNTS_SUBGROUP,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -53,7 +53,7 @@ import {
   createAccountGroupError,
   removeAccountGroupSuccess,
   removeAccountGroupError,
-  createAccountSubgroupSuccess,
+  createAccountSubgroupSuccess, removeAccountSubgroupSuccess, removeAccountSubgroupError,
 } from './actions';
 import { AccountGroupsSelector } from './selectors';
 
@@ -442,24 +442,40 @@ function* createAccountSubgroup(action) {
 }
 
 function* deleteAccountGroup(action) {
+  const { subgroup } = action;
   try {
-    const { data } = yield call(axios.delete,
-      `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`, token());
+    const headers = token();
 
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`,
+      {
+        data: subgroup ? { subgroup } : undefined,
+        ...headers,
+      });
     if (data.message === 'Deleted') {
       const stateGroups = yield select((state) => state.settings.groups) ?? [];
-      const groups = stateGroups.filter((group) => group.id !== action.groupId);
+      let groups = [];
 
+      if (subgroup) {
+        groups = stateGroups.map((group) => {
+          const subgroups = group.subgroups.filter((sbgrp) => sbgrp.id !== action.groupId);
+          return { ...group, subgroups };
+        });
+        yield put(removeAccountSubgroupSuccess());
+      } else {
+        groups = stateGroups.filter((group) => group.id !== action.groupId);
+      }
       yield put(removeAccountGroupSuccess([...groups]));
-      yield put(addSnackbar('Removed Group successfully', 'success'));
+      yield put(addSnackbar(`Removed ${subgroup ? 'Sub-group' : 'Group'} successfully`, 'success'));
       yield delay(4000);
       yield put(dismissSnackbar());
     } else {
-      yield put(removeAccountGroupError());
+      yield put(subgroup ? removeAccountSubgroupError() : removeAccountGroupError());
     }
   } catch (e) {
-    yield put(removeAccountGroupError());
-    yield put(addSnackbar('An error occurred while remove Group', 'error'));
+    yield put(subgroup ? removeAccountSubgroupError() : removeAccountGroupError());
+
+    yield put(addSnackbar(`An error occurred while remove ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -492,4 +508,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
   yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
+  yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
 }

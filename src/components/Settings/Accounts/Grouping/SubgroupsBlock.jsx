@@ -8,6 +8,7 @@ import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import AddSubgroup from '../../../Core/Dialog/AddSubgroup';
 import NoData from './NoData';
+import RemoveGroup from '../../../Core/Dialog/RemoveGroup';
 
 const columns = [
   { label: 'Title', field: 'name', checked: true },
@@ -18,11 +19,14 @@ const columns = [
 
 export default function SubgroupsBlock({
   style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort, loading,
+  removeSubgroup,
 }) {
   const { t } = useTranslation();
 
   const [visible, setVisible] = useState(false);
   const [subgroupName, setSubgroupName] = useState('');
+  const [removeVisible, setRemoveVisible] = useState(false);
+  const [selectedSubgroup, setSelectedSubgroup] = useState({ });
 
   return (
     <>
@@ -44,18 +48,19 @@ export default function SubgroupsBlock({
             onColumnsChange={() => {}}
             sortable
             loading={loading}
-            onSelect={() => {}}
+            // onSelect={setSelectedSubgroup}
             onSort={(field, asc) => sort({ field, asc })}
             // lastPage={page.last_page}
             // activePage={page.current_page}
             // itemsCountPerPage={page.per_page}
             // totalItemsCount={page.total}
             // handlePagination={console.log}
-            // selectedItem={selectedItem}
+            selectedItem={selectedSubgroup}
             // totalDuration={totalDuration}
-            // setSelectedItem={rowSelectionHandler}
+            setSelectedItem={setSelectedSubgroup}
             verticalOffset='360px'
             simpleTable
+            removeRow={() => setRemoveVisible(true)}
           />
           {
             _.isEmpty(selectedGroup)
@@ -71,9 +76,17 @@ export default function SubgroupsBlock({
         title={`${t('Create a new sub-group for')} ${selectedGroup?.name}`}
         buttonTitle={t('Create Sub-group')}
         addSubgroup={addNewSubgroup}
-        selectedGroup={{}}
+        selectedGroup={selectedGroup}
         name={subgroupName}
         setName={setSubgroupName}
+      />
+      <RemoveGroup
+        title={t('Delete Sub-group?')}
+        open={removeVisible}
+        handleClose={() => setRemoveVisible(false)}
+        buttonTitle='Delete'
+        name={selectedSubgroup.name}
+        remove={() => removeSubgroup(selectedSubgroup.id)}
       />
     </>
   );

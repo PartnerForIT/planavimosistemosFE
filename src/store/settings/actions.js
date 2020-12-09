@@ -52,7 +52,7 @@ import {
   PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
   DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
   DELETE_ACCOUNTS_GROUP,
-  DELETE_ACCOUNTS_GROUP_SUCCESS, DELETE_ACCOUNTS_GROUP_ERROR,
+  DELETE_ACCOUNTS_GROUP_SUCCESS, DELETE_ACCOUNTS_GROUP_ERROR, DELETE_ACCOUNTS_SUBGROUP_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -321,13 +321,17 @@ export const editAccountSubgroupSuccess = (data) => ({
   data,
 });
 
-export const removeAccountSubgroup = (id, parentGroupId) => ({
+export const removeAccountSubgroup = (id, groupId) => ({
   type: DELETE_ACCOUNTS_SUBGROUP,
   id,
-  parent_group_id: parentGroupId,
+  groupId,
+  subgroup: true,
 });
 
-export const removeAccountSubgroupSuccess = (data) => ({
+export const removeAccountSubgroupSuccess = () => ({
   type: DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
-  data,
+});
+
+export const removeAccountSubgroupError = () => ({
+  type: DELETE_ACCOUNTS_SUBGROUP_ERROR,
 });

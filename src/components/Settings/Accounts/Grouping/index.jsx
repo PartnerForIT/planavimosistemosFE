@@ -24,7 +24,7 @@ import {
   createAccountGroup,
   createAccountSubgroup,
   getAccountGroups,
-  removeAccountGroup,
+  removeAccountGroup, removeAccountSubgroup,
 } from '../../../../store/settings/actions';
 
 export default function Grouping() {
@@ -60,6 +60,8 @@ export default function Grouping() {
     parent_group_id: selected?.id,
   }));
   const removeGroup = (groupId) => dispatch(removeAccountGroup(id, groupId));
+  const removeSubgroup = (subgroupId) => dispatch(removeAccountSubgroup(id, subgroupId));
+
   useEffect(() => {
     dispatch(getAccountGroups(id));
   }, [dispatch, id]);
@@ -148,6 +150,7 @@ export default function Grouping() {
                     addNewSubgroup={addNewSubgroup}
                     sort={setSubSort}
                     loading={subGroupLoading}
+                    removeSubgroup={removeSubgroup}
                   />
                 </div>
               )
