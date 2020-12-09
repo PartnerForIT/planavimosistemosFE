@@ -17,7 +17,7 @@ const columns = [
 ];
 
 export default function SubgroupsBlock({
-  style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort,
+  style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort, loading,
 }) {
   const { t } = useTranslation();
 
@@ -31,7 +31,7 @@ export default function SubgroupsBlock({
           <Label text={t('Sub-groups')} htmlFor='' />
           <Tooltip title='Select Sub-group' />
           <div className={style.right}>
-            <Button onClick={() => setVisible(true)} inverse inline size='small' disabled={!selectedGroup}>
+            <Button onClick={() => setVisible(true)} inverse inline size='small' disabled={_.isEmpty(selectedGroup)}>
               {`+ ${t('add new sub-group')}`}
             </Button>
           </div>
@@ -43,7 +43,7 @@ export default function SubgroupsBlock({
             columnsWidth={{}}
             onColumnsChange={() => {}}
             sortable
-            loading={false}
+            loading={loading}
             onSelect={() => {}}
             onSort={(field, asc) => sort({ field, asc })}
             // lastPage={page.last_page}

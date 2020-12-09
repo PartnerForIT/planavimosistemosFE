@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   call, put, takeLatest, delay, select,
 } from 'redux-saga/effects';
@@ -48,7 +49,11 @@ import {
   loadLogbookOvertimeSuccess,
   editLogbookOvertimeSuccess,
   getAccountGroupsSuccess,
-  createAccountGroupSuccess, createAccountGroupError, removeAccountGroupSuccess, removeAccountGroupError,
+  createAccountGroupSuccess,
+  createAccountGroupError,
+  removeAccountGroupSuccess,
+  removeAccountGroupError,
+  createAccountSubgroupSuccess,
 } from './actions';
 import { AccountGroupsSelector } from './selectors';
 
@@ -395,14 +400,37 @@ function* createAccountGroup(action) {
 
 function* createAccountSubgroup(action) {
   try {
+    // eslint-disable-next-line camelcase
+    const {
+      data: {
+        id: company_id,
+        parent_group_id,
+        name,
+      },
+    } = action;
     const { data } = yield call(
-      axios.post, `${config.api.url}/company/${action.id}/sub-groups/create`, {
-        company_id: action.id,
-        parent_group_id: action.data.parentGroupId,
-        name: action.data.name,
+      axios.post, `${config.api.url}/company/${action.id}/groups/create`, {
+        company_id,
+        parent_group_id,
+        name,
       }, token(),
     );
-    yield put(createAccountGroupSuccess(data));
+
+    const Groups = yield select((state) => state.settings.groups);
+
+    const groups = Groups.map((grp) => {
+      if (grp.id === parent_group_id) {
+        if (grp.subgroups) {
+          grp.subgroups.push(data);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          grp.subgroups = [data];
+        }
+      }
+      return grp;
+    });
+
+    yield put(createAccountSubgroupSuccess(groups));
     yield put(addSnackbar('Added Group successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -415,11 +443,13 @@ function* createAccountSubgroup(action) {
 
 function* deleteAccountGroup(action) {
   try {
-    const { data } = yield call(axios.delete, `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`, token());
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`, token());
 
     if (data.message === 'Deleted') {
       const stateGroups = yield select((state) => state.settings.groups) ?? [];
       const groups = stateGroups.filter((group) => group.id !== action.groupId);
+
       yield put(removeAccountGroupSuccess([...groups]));
       yield put(addSnackbar('Removed Group successfully', 'success'));
       yield delay(4000);

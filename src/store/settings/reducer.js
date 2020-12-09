@@ -35,6 +35,12 @@ import {
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_GROUP_SUCCESS,
   DELETE_ACCOUNTS_GROUP_ERROR,
+  CREATE_ACCOUNTS_SUBGROUP,
+  CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  CREATE_ACCOUNTS_SUBGROUP_ERROR,
+  DELETE_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_SUBGROUP_ERROR,
 } from './types';
 
 const initialState = {
@@ -304,6 +310,38 @@ export const reducerOrganizationList = (state = initialState, action) => {
 
     case DELETE_ACCOUNTS_GROUP_ERROR: {
       return { ...state, groupLoading: false };
+    }
+
+    case CREATE_ACCOUNTS_SUBGROUP:
+      return { ...state, subgroupLoading: true, error: null };
+
+    case CREATE_ACCOUNTS_SUBGROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        subgroupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
+    case CREATE_ACCOUNTS_SUBGROUP_ERROR: {
+      return { ...state, subgroupLoading: false };
+    }
+
+    case DELETE_ACCOUNTS_SUBGROUP:
+      return { ...state, subgroupLoading: true, error: null };
+
+    case DELETE_ACCOUNTS_SUBGROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
+    case DELETE_ACCOUNTS_SUBGROUP_ERROR: {
+      return { ...state, subgroupLoading: false };
     }
 
     case ADD_SETTING_SNACKBAR:

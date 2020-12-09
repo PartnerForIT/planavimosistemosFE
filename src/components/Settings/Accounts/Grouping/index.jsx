@@ -14,7 +14,7 @@ import GroupingIcon from '../../../Icons/3People';
 import PageLayout from '../../../Core/PageLayout';
 import {
   AccountGroupsSelector, groupsLoadingSelector,
-  isLoadingSelector, isShowSnackbar, snackbarText, snackbarType,
+  isLoadingSelector, isShowSnackbar, snackbarText, snackbarType, subGroupsLoadingSelector,
 } from '../../../../store/settings/selectors';
 import Progress from '../../../Core/Progress';
 import GroupsBlock from './GroupsBlock';
@@ -30,6 +30,7 @@ import {
 export default function Grouping() {
   const isLoading = useSelector(isLoadingSelector);
   const groupLoading = useSelector(groupsLoadingSelector);
+  const subGroupLoading = useSelector(subGroupsLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
@@ -56,7 +57,7 @@ export default function Grouping() {
   const [subSort, setSubSort] = useState({});
   const addNewSubgroup = ({ name }) => dispatch(createAccountSubgroup(id, {
     name,
-    parentGroupId: selected?.id,
+    parent_group_id: selected?.id,
   }));
   const removeGroup = (groupId) => dispatch(removeAccountGroup(id, groupId));
   useEffect(() => {
@@ -146,6 +147,7 @@ export default function Grouping() {
                     subgroups={subgroups}
                     addNewSubgroup={addNewSubgroup}
                     sort={setSubSort}
+                    loading={subGroupLoading}
                   />
                 </div>
               )

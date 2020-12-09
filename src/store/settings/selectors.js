@@ -14,3 +14,4 @@ export const JournalDataSelector = (state) => state.settings.journal;
 export const OvertimeDataSelector = (state) => state.settings.overtime;
 export const AccountGroupsSelector = (state) => state.settings.groups;
 export const groupsLoadingSelector = (state) => state.settings.groupLoading;
+export const subGroupsLoadingSelector = (state) => state.settings.subgroupLoading;
