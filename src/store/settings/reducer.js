@@ -1,4 +1,3 @@
-import { ContactSupportOutlined } from '@material-ui/icons';
 import {
   GET_SETTINGS_COMPANY,
   GET_SETTINGS_COMPANY_SUCCESS,
@@ -28,6 +27,24 @@ import {
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  GET_ACCOUNTS_GROUPS_SUCCESS,
+  GET_ACCOUNTS_GROUPS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_GROUP_SUCCESS,
+  CREATE_ACCOUNTS_GROUP_ERROR,
+  DELETE_ACCOUNTS_GROUP,
+  DELETE_ACCOUNTS_GROUP_SUCCESS,
+  DELETE_ACCOUNTS_GROUP_ERROR,
+  CREATE_ACCOUNTS_SUBGROUP,
+  CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  CREATE_ACCOUNTS_SUBGROUP_ERROR,
+  DELETE_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_GROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP_SUCCESS,
+  PATCH_ACCOUNTS_SUBGROUP, PATCH_ACCOUNTS_SUBGROUP_SUCCESS, PATCH_ACCOUNTS_SUBGROUP_ERROR,
 } from './types';
 
 const initialState = {
@@ -50,6 +67,7 @@ const initialState = {
   snackbarText: '',
   snackbarShow: false,
   snackbarType: '',
+  groups: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -251,6 +269,78 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
       };
     }
+    case GET_ACCOUNTS_GROUPS:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_ACCOUNTS_GROUPS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        groups: action.data,
+        error: null,
+      };
+    }
+
+    case CREATE_ACCOUNTS_GROUP:
+    case DELETE_ACCOUNTS_GROUP:
+    case PATCH_ACCOUNTS_GROUP:
+      return { ...state, groupLoading: true, error: null };
+
+    case CREATE_ACCOUNTS_GROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...state.groups, action.data],
+        error: null,
+      };
+
+    case PATCH_ACCOUNTS_GROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
+    case CREATE_ACCOUNTS_GROUP_ERROR:
+    case DELETE_ACCOUNTS_GROUP_ERROR:
+    case PATCH_ACCOUNTS_GROUP_ERROR:
+      return { ...state, groupLoading: false };
+
+    case DELETE_ACCOUNTS_GROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        groupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
+    case CREATE_ACCOUNTS_SUBGROUP:
+    case DELETE_ACCOUNTS_SUBGROUP:
+    case PATCH_ACCOUNTS_SUBGROUP:
+      return { ...state, subgroupLoading: true, error: null };
+
+    case CREATE_ACCOUNTS_SUBGROUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        subgroupLoading: false,
+        groups: [...action.data],
+        error: null,
+      };
+
+    case CREATE_ACCOUNTS_SUBGROUP_ERROR:
+    case DELETE_ACCOUNTS_SUBGROUP_SUCCESS:
+    case DELETE_ACCOUNTS_SUBGROUP_ERROR:
+    case PATCH_ACCOUNTS_SUBGROUP_SUCCESS:
+    case PATCH_ACCOUNTS_SUBGROUP_ERROR:
+      return { ...state, subgroupLoading: false };
 
     case ADD_SETTING_SNACKBAR:
       return {

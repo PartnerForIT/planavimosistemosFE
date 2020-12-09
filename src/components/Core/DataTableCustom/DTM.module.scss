@@ -20,6 +20,7 @@ header {
   background: #e5f0fa;
   z-index: 1;
 }
+
 // search-table
 .headerWrapperSearch {
   @extend .headerWrapper;
@@ -38,6 +39,7 @@ header {
     right: 10px;
     width: 100%;
   }
+
   &:after {
     content: "";
     position: absolute;
@@ -50,12 +52,14 @@ header {
     background: $table-border;
   }
 }
+
 .simpleTable {
   @extend .headerWrapper;
   background: #fff;
   box-shadow: none;
   border-bottom: 1px solid $row-bg;
 }
+
 // search-table END
 .cell {
   font-family: Helvetica Neue, sans-serif;
@@ -383,16 +387,32 @@ header {
   //   justify-content: flex-end;
   // }
 }
+
 .IconStatus {
   display: block;
   position: absolute;
   top: 6px;
   left: 3px;
 }
+
 .ActionsTable {
   display: flex;
   align-items: center;
+
+  button {
+    border: unset;
+    background: unset;
+    padding: unset;
+    margin: unset;
+    display: inline-block;
+    cursor: pointer;
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
 }
+
 .opacityText {
   opacity: 0;
 }
@@ -728,6 +748,7 @@ div {
   border-bottom-right-radius: 12px;
   z-index: 1;
 }
+
 .scrollingSimplePanel {
   @extend .scrollingPanel;
   box-shadow: none;

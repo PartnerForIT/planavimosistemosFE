@@ -1,22 +1,62 @@
 import {
-  GET_SETTINGS_COMPANY, GET_SETTINGS_COMPANY_SUCCESS,
-  PATCH_SETTINGS_COMPANY, PATCH_SETTINGS_COMPANY_SUCCESS,
-  ADD_SETTING_SNACKBAR, DISMISS_SETTING_SNACKBAR,
-  GET_WORK_TIME, GET_WORK_TIME_SUCCESS,
+  GET_SETTINGS_COMPANY,
+  GET_SETTINGS_COMPANY_SUCCESS,
+  PATCH_SETTINGS_COMPANY,
+  PATCH_SETTINGS_COMPANY_SUCCESS,
+  ADD_SETTING_SNACKBAR,
+  DISMISS_SETTING_SNACKBAR,
+  GET_WORK_TIME,
+  GET_WORK_TIME_SUCCESS,
   PATCH_WORK_TIME,
-  ADD_HOLIDAY, ADD_HOLIDAY_SUCCESS,
-  DELETE_HOLIDAY, DELETE_HOLIDAY_SUCCESS,
-  GET_SECURITY_COMPANY, GET_SECURITY_COMPANY_SUCCESS,
-  PATCH_SECURITY_COMPANY, PATCH_SECURITY_COMPANY_SUCCESS,
-  GET_SKILLS, GET_SKILLS_SUCCESS,
-  CREATE_SKILL, CREATE_SKILL_SUCCESS,
-  CREATE_JOB, CREATE_PLACE, GET_PLACE, GET_PLACE_SUCCESS,
-  GET_ACTIVITY_LOG, GET_ACTIVITY_LOG_SUCCESS,
-  GET_EMPLOYEES, GET_EMPLOYEES_SUCCESS, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, GET_DELETE_DATA_SUCCESS,
-  DELETE_DATA, GET_LOGBOOK_JOURNAL, GET_LOGBOOK_JOURNAL_SUCCESS,
-  EDIT_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL_SUCCESS,
-  GET_LOGBOOK_OVERTIME, GET_LOGBOOK_OVERTIME_SUCCESS, EDIT_LOGBOOK_OVERTIME, EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  ADD_HOLIDAY,
+  ADD_HOLIDAY_SUCCESS,
+  DELETE_HOLIDAY,
+  DELETE_HOLIDAY_SUCCESS,
+  GET_SECURITY_COMPANY,
+  GET_SECURITY_COMPANY_SUCCESS,
+  PATCH_SECURITY_COMPANY,
+  PATCH_SECURITY_COMPANY_SUCCESS,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
+  CREATE_SKILL,
+  CREATE_SKILL_SUCCESS,
+  CREATE_JOB,
+  CREATE_PLACE,
+  GET_PLACE,
+  GET_PLACE_SUCCESS,
+  GET_ACTIVITY_LOG,
+  GET_ACTIVITY_LOG_SUCCESS,
+  GET_EMPLOYEES,
+  GET_EMPLOYEES_SUCCESS,
+  FILTER_ACTIVITY_LOG,
+  GET_DELETE_DATA,
+  GET_DELETE_DATA_SUCCESS,
+  DELETE_DATA,
+  GET_LOGBOOK_JOURNAL,
+  GET_LOGBOOK_JOURNAL_SUCCESS,
+  EDIT_LOGBOOK_JOURNAL,
+  EDIT_LOGBOOK_JOURNAL_SUCCESS,
+  GET_LOGBOOK_OVERTIME,
+  GET_LOGBOOK_OVERTIME_SUCCESS,
+  EDIT_LOGBOOK_OVERTIME,
+  EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  GET_ACCOUNTS_GROUPS,
+  GET_ACCOUNTS_GROUPS_SUCCESS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_GROUP_SUCCESS,
+  CREATE_ACCOUNTS_SUBGROUP,
+  CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  CREATE_ACCOUNTS_GROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_GROUP,
+  DELETE_ACCOUNTS_GROUP_SUCCESS,
+  DELETE_ACCOUNTS_GROUP_ERROR,
+  DELETE_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_GROUP_SUCCESS, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_SUBGROUP_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -201,7 +241,7 @@ export const loadLogbookOvertime = (id) => ({
   type: GET_LOGBOOK_OVERTIME,
   id,
 });
-export const loadLogbookOvertimelSuccess = (data) => ({
+export const loadLogbookOvertimeSuccess = (data) => ({
   type: GET_LOGBOOK_OVERTIME_SUCCESS,
   data,
 });
@@ -210,7 +250,111 @@ export const editLogbookOvertime = (id, data) => ({
   id,
   data,
 });
-export const editLogbookOvertimelSuccess = (data) => ({
+export const editLogbookOvertimeSuccess = (data) => ({
   type: EDIT_LOGBOOK_OVERTIME_SUCCESS,
   data,
+});
+
+export const getAccountGroups = (id) => ({
+  type: GET_ACCOUNTS_GROUPS,
+  id,
+});
+
+export const getAccountGroupsSuccess = (data) => ({
+  type: GET_ACCOUNTS_GROUPS_SUCCESS,
+  data,
+});
+
+export const createAccountGroup = (id, data) => ({
+  type: CREATE_ACCOUNTS_GROUP,
+  data,
+  id,
+});
+
+export const createAccountGroupSuccess = (data) => ({
+  type: CREATE_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const createAccountGroupError = (data) => ({
+  type: CREATE_ACCOUNTS_GROUP_ERROR,
+  data,
+});
+
+export const removeAccountGroup = (id, groupId) => ({
+  type: DELETE_ACCOUNTS_GROUP,
+  id,
+  groupId,
+});
+
+export const removeAccountGroupSuccess = (data) => ({
+  type: DELETE_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const removeAccountGroupError = (data) => ({
+  type: DELETE_ACCOUNTS_GROUP_ERROR,
+  data,
+});
+
+export const editAccountGroup = (id, data) => ({
+  type: PATCH_ACCOUNTS_GROUP,
+  id,
+  ...data,
+});
+
+export const editAccountGroupSuccess = (data) => ({
+  type: PATCH_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const editAccountGroupError = () => ({
+  type: PATCH_ACCOUNTS_GROUP_ERROR,
+});
+
+export const createAccountSubgroup = (id, data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP,
+  data,
+  id,
+// parent_group_id
+});
+
+export const createAccountSubgroupSuccess = (data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  data,
+});
+export const createAccountSubgroupError = (data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  data,
+});
+
+export const editAccountSubgroup = (id, data) => ({
+  type: PATCH_ACCOUNTS_SUBGROUP,
+  id,
+  subgroup: true,
+  name: data.name,
+  groupId: data.parentGroupId,
+});
+
+export const editAccountSubgroupSuccess = () => ({
+  type: PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+});
+
+export const editAccountSubgroupError = () => ({
+  type: PATCH_ACCOUNTS_SUBGROUP_ERROR,
+});
+
+export const removeAccountSubgroup = (id, groupId) => ({
+  type: DELETE_ACCOUNTS_SUBGROUP,
+  id,
+  groupId,
+  subgroup: true,
+});
+
+export const removeAccountSubgroupSuccess = () => ({
+  type: DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
+});
+
+export const removeAccountSubgroupError = () => ({
+  type: DELETE_ACCOUNTS_SUBGROUP_ERROR,
 });

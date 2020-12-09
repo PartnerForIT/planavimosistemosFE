@@ -23,6 +23,7 @@ import Overtime from './components/Settings/Logbook/Overtime';
 import SettingDelete from './components/Settings/Delete';
 import Accounts from './components/Settings/Accounts/AccountsList';
 import ActivityLog from './components/Settings/ActivityLog';
+import Grouping from './components/Settings/Accounts/Grouping';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -40,6 +41,7 @@ const App = () => (
         <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
         <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
         <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
+        <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
         <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
         <AuthRoute exact path='/settings/logbook/overtime/:id' component={Overtime} />

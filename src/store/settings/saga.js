@@ -1,23 +1,67 @@
+/* eslint-disable camelcase */
 import {
-  call, put, takeLatest, delay,
+  call, put, takeLatest, delay, select,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
-  GET_WORK_TIME, PATCH_WORK_TIME, ADD_HOLIDAY,
-  DELETE_HOLIDAY, GET_SECURITY_COMPANY, PATCH_SECURITY_COMPANY,
-  GET_SKILLS, CREATE_SKILL, CREATE_JOB,
-  CREATE_PLACE, GET_PLACE, GET_ACTIVITY_LOG, GET_EMPLOYEES, FILTER_ACTIVITY_LOG,
-  GET_DELETE_DATA, DELETE_DATA, GET_LOGBOOK_JOURNAL, EDIT_LOGBOOK_JOURNAL, GET_LOGBOOK_OVERTIME, EDIT_LOGBOOK_OVERTIME,
+  GET_WORK_TIME,
+  PATCH_WORK_TIME,
+  ADD_HOLIDAY,
+  DELETE_HOLIDAY,
+  GET_SECURITY_COMPANY,
+  PATCH_SECURITY_COMPANY,
+  GET_SKILLS,
+  CREATE_SKILL,
+  CREATE_JOB,
+  CREATE_PLACE,
+  GET_PLACE,
+  GET_ACTIVITY_LOG,
+  GET_EMPLOYEES,
+  FILTER_ACTIVITY_LOG,
+  GET_DELETE_DATA,
+  DELETE_DATA,
+  GET_LOGBOOK_JOURNAL,
+  EDIT_LOGBOOK_JOURNAL,
+  GET_LOGBOOK_OVERTIME,
+  EDIT_LOGBOOK_OVERTIME,
+  GET_ACCOUNTS_GROUPS,
+  CREATE_ACCOUNTS_GROUP,
+  CREATE_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_GROUP,
+  DELETE_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP,
 } from './types';
 import {
-  getSettingCompanySuccess, addSnackbar,
-  dismissSnackbar, getSettingWorkTimeSuccess, addHolidaySuccess, deleteHolidaySuccess,
-  getSecurityCompanySuccess, editSecurityPageSuccess, loadSkillsSuccess, createSkillSuccess,
-  loadPlaceSuccess, loadActivityLogSuccess, loadEmployeesSuccess, loadDeleteDataSuccess, loadLogbookJournalSuccess,
-  editLogbookJournalSuccess, loadLogbookOvertimelSuccess, editLogbookOvertimelSuccess,
+  getSettingCompanySuccess,
+  addSnackbar,
+  dismissSnackbar,
+  getSettingWorkTimeSuccess,
+  addHolidaySuccess,
+  deleteHolidaySuccess,
+  getSecurityCompanySuccess,
+  editSecurityPageSuccess,
+  loadSkillsSuccess,
+  createSkillSuccess,
+  loadPlaceSuccess,
+  loadActivityLogSuccess,
+  loadEmployeesSuccess,
+  loadDeleteDataSuccess,
+  loadLogbookJournalSuccess,
+  editLogbookJournalSuccess,
+  loadLogbookOvertimeSuccess,
+  editLogbookOvertimeSuccess,
+  getAccountGroupsSuccess,
+  createAccountGroupSuccess,
+  createAccountGroupError,
+  removeAccountGroupSuccess,
+  removeAccountGroupError,
+  createAccountSubgroupSuccess,
+  removeAccountSubgroupSuccess,
+  removeAccountSubgroupError,
+  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess, editAccountSubgroupSuccess,
 } from './actions';
 
 function token() {
@@ -302,7 +346,7 @@ function* patchLogbookJournal(action) {
 function* loadOvertimeData(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/logbook/overtime`, token());
-    yield put(loadLogbookOvertimelSuccess(data));
+    yield put(loadLogbookOvertimeSuccess(data));
   } catch (e) {
     console.log(e);
   }
@@ -317,12 +361,175 @@ function* patchLogbookOvertime(action) {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-    yield put(editLogbookOvertimelSuccess(data));
+    yield put(editLogbookOvertimeSuccess(data));
     yield put(addSnackbar('Edit Overtime successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar('An error occurred while creating the Overtime', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* loadAccountGroups(action) {
+  try {
+    const { data } = yield call(
+      axios.get, `${config.api.url}/company/${action.id}/groups`, token(),
+    );
+    yield put(getAccountGroupsSuccess(data));
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while getting Groups', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createAccountGroup(action) {
+  try {
+    const { data } = yield call(
+      axios.post, `${config.api.url}/company/${action.id}/groups/create`, {
+        ...action.data,
+        company_id: action.id,
+      }, token(),
+    );
+    yield put(createAccountGroupSuccess(data));
+    yield put(addSnackbar('Added Group successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createAccountGroupError());
+    yield put(addSnackbar('An error occurred while adding new Group', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createAccountSubgroup(action) {
+  try {
+    // eslint-disable-next-line camelcase
+    const {
+      data: {
+        id: company_id,
+        parent_group_id,
+        name,
+      },
+    } = action;
+    const { data } = yield call(
+      axios.post, `${config.api.url}/company/${action.id}/groups/create`, {
+        company_id,
+        parent_group_id,
+        name,
+      }, token(),
+    );
+
+    const Groups = yield select((state) => state.settings.groups);
+
+    const groups = Groups.map((grp) => {
+      if (grp.id === parent_group_id) {
+        if (grp.subgroups) {
+          grp.subgroups.push(data);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          grp.subgroups = [data];
+        }
+      }
+      return grp;
+    });
+
+    yield put(createAccountSubgroupSuccess(groups));
+    yield put(addSnackbar('Added Group successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while adding new Sub-group', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteAccountGroup(action) {
+  const { subgroup } = action;
+  try {
+    const headers = token();
+
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`,
+      {
+        data: subgroup ? { subgroup } : undefined,
+        ...headers,
+      });
+    if (data.message === 'Deleted') {
+      const stateGroups = yield select((state) => state.settings.groups) ?? [];
+      let groups = [];
+
+      if (subgroup) {
+        groups = stateGroups.map((group) => {
+          const subgroups = group.subgroups.filter((sbgrp) => sbgrp.id !== action.groupId);
+          return {
+            ...group,
+            subgroups,
+          };
+        });
+        yield put(removeAccountSubgroupSuccess());
+      } else {
+        groups = stateGroups.filter((group) => group.id !== action.groupId);
+      }
+      yield put(removeAccountGroupSuccess([...groups]));
+      yield put(addSnackbar(`Removed ${subgroup ? 'Sub-group' : 'Group'} successfully`, 'success'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+    } else {
+      yield put(subgroup ? removeAccountSubgroupError() : removeAccountGroupError());
+    }
+  } catch (e) {
+    yield put(subgroup ? removeAccountSubgroupError() : removeAccountGroupError());
+
+    yield put(addSnackbar(`An error occurred while remove ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchAccountGroup(action) {
+  const {
+    subgroup,
+    type: $,
+    ...rest
+  } = action;
+  try {
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/groups/update/${action.groupId}`,
+      { subgroup, ...rest }, token());
+    const Groups = yield select((state) => state.settings.groups);
+    let groups = [];
+
+    if (subgroup) {
+      groups = Groups.map((group) => {
+        const subgroups = group.subgroups?.map((sbgrp) => {
+          if (sbgrp.id === action.groupId) {
+            return { ...data };
+          }
+          return sbgrp;
+        });
+        return { ...group, subgroups };
+      });
+    } else {
+      groups = Groups.map((group) => {
+        if (group.id === action.groupId) {
+          return { ...data };
+        }
+        return group;
+      });
+    }
+
+    yield put(editAccountGroupSuccess(groups));
+    if (subgroup) {
+      yield put(editAccountSubgroupSuccess());
+    }
+  } catch (e) {
+    yield put(subgroup ? editAccountSubgroupError() : editAccountGroupError());
+    yield put(addSnackbar(`An error occurred while edit ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -351,4 +558,11 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
   yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
+  yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
+  yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
+  yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
+  yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
+  yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
+  yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
+  yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
 }

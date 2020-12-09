@@ -13,7 +13,7 @@ import EditIcon from '../../Icons/EditIcon';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow,
 }) => {
   const [subTableExpanded, setSubTableExpanded] = useState(false);
 
@@ -119,23 +119,30 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                <span className={(statysIcon && width === 80) ? styles.opacityText : ""}>
+                <span className={(statysIcon && width === 80) ? styles.opacityText : ''}>
                   {row[column.field] !== 'tableActions' && row[column.field]}
                 </span>
                 {/* icon statys */}
-                {(statysIcon && width === 80) &&
+                {(statysIcon && width === 80)
+                  && (
                   <span className={styles.IconStatus}>
                     {row[column.field] === 1 && <CheckStatus />}
-                    {row[column.field] === 0 && <CheckStatus fill="#FD9D27" />}
-                    {row[column.field] === 2 && <CheckStatus fill="#fd0d1b" />}
+                    {row[column.field] === 0 && <CheckStatus fill='#FD9D27' />}
+                    {row[column.field] === 2 && <CheckStatus fill='#fd0d1b' />}
                   </span>
-                }
+                  )}
                 {
-                  row[column.field] === 'tableActions' &&
+                  row[column.field] === 'tableActions'
+                  && (
                   <div className={styles.ActionsTable}>
-                    <EditIcon />
-                    <DeleteIcon fill={"#fd0d1b"} viewBox={'0 0 20 20'} />
+                    <button onClick={editRow}>
+                      <EditIcon />
+                    </button>
+                    <button onClick={removeRow}>
+                      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
+                    </button>
                   </div>
+                  )
                 }
               </div>
             );
