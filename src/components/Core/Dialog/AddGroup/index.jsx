@@ -24,11 +24,11 @@ export default function AddGroup({
           onChange={(e) => setGroupName(e.target.value)}
         />
       </div>
-      <div className={style.buttonSaveBlock}>
+      <div className={style.buttonBlock}>
         <Button
           disabled={!groupName}
           onClick={() => {
-            addNewGroup({ name: groupName });
+            addNewGroup(groupName);
             handleClose();
           }}
           fillWidth
