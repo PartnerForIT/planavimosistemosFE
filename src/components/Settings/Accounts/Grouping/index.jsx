@@ -20,7 +20,12 @@ import Progress from '../../../Core/Progress';
 import GroupsBlock from './GroupsBlock';
 import SubgroupsBlock from './SubgroupsBlock';
 import style from './grouping.module.scss';
-import { createAccountGroup, createAccountSubgroup, getAccountGroups } from '../../../../store/settings/actions';
+import {
+  createAccountGroup,
+  createAccountSubgroup,
+  getAccountGroups,
+  removeAccountGroup,
+} from '../../../../store/settings/actions';
 
 export default function Grouping() {
   const isLoading = useSelector(isLoadingSelector);
@@ -53,7 +58,7 @@ export default function Grouping() {
     name,
     parentGroupId: selected?.id,
   }));
-
+  const removeGroup = (groupId) => dispatch(removeAccountGroup(id, groupId));
   useEffect(() => {
     dispatch(getAccountGroups(id));
   }, [dispatch, id]);
@@ -100,7 +105,7 @@ export default function Grouping() {
 
     if (!_.isEmpty(selected) && Groups) {
       const selectedGroup = Groups.find((group) => group.id === selected.id);
-      subGroups = selectedGroup.subgroups?.map((subgroup) => ({
+      subGroups = selectedGroup?.subgroups?.map((subgroup) => ({
         ...subgroup,
         users: subgroup.users?.length ?? 0,
         actions: 'tableActions',
@@ -133,6 +138,7 @@ export default function Grouping() {
                     selected={selected}
                     addNewGroup={addNewGroup}
                     sort={setSort}
+                    removeGroup={removeGroup}
                   />
                   <SubgroupsBlock
                     style={style}

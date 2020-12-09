@@ -7,6 +7,7 @@ import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import AddGroup from '../../../Core/Dialog/AddGroup';
+import RemoveGroup from '../../../Core/Dialog/RemoveGroup';
 
 const columns = [
   { label: 'Title', field: 'name', checked: true },
@@ -19,12 +20,13 @@ const columns = [
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
-  addNewGroup, sort,
+  addNewGroup, sort, removeGroup,
 }) {
   const { t } = useTranslation();
 
   const [visible, setVisible] = useState(false);
   const [groupName, setGroupName] = useState('');
+  const [removeVisible, setRemoveVisible] = useState(false);
 
   return (
     <>
@@ -42,13 +44,13 @@ export default function GroupsBlock({
           <DataTable
             data={groups}
             columns={columns ?? []}
-            columnsWidth={{}}
             onColumnsChange={() => {}}
             sortable
             loading={loading}
             onSelect={setSelected}
             selectedItem={selected}
             onSort={(field, asc) => sort({ field, asc })}
+            // columnsWidth={columnsWidthArray}
             // lastPage={page.last_page}
             // activePage={page.current_page}
             // itemsCountPerPage={page.per_page}
@@ -58,6 +60,8 @@ export default function GroupsBlock({
             setSelectedItem={setSelected}
             verticalOffset='360px'
             simpleTable
+            editRow={() => ({})}
+            removeRow={() => setRemoveVisible(true)}
           />
         </div>
       </div>
@@ -69,6 +73,14 @@ export default function GroupsBlock({
         groupName={groupName}
         setGroupName={setGroupName}
         addNewGroup={addNewGroup}
+      />
+      <RemoveGroup
+        title={t('Delete Group?')}
+        open={removeVisible}
+        handleClose={() => setRemoveVisible(false)}
+        buttonTitle='Delete'
+        name={selected.name}
+        remove={() => removeGroup(selected.id)}
       />
     </>
   );

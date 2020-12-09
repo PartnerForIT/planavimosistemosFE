@@ -1,5 +1,5 @@
 import {
-  call, put, takeLatest, delay,
+  call, put, takeLatest, delay, select,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
@@ -26,7 +26,7 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
-  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP,
+  GET_ACCOUNTS_GROUPS, CREATE_ACCOUNTS_GROUP, CREATE_ACCOUNTS_SUBGROUP, DELETE_ACCOUNTS_GROUP,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -48,8 +48,9 @@ import {
   loadLogbookOvertimeSuccess,
   editLogbookOvertimeSuccess,
   getAccountGroupsSuccess,
-  createAccountGroupSuccess,
+  createAccountGroupSuccess, createAccountGroupError, removeAccountGroupSuccess, removeAccountGroupError,
 } from './actions';
+import { AccountGroupsSelector } from './selectors';
 
 function token() {
   const token = {
@@ -385,6 +386,7 @@ function* createAccountGroup(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
+    yield put(createAccountGroupError());
     yield put(addSnackbar('An error occurred while adding new Group', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -406,6 +408,28 @@ function* createAccountSubgroup(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar('An error occurred while adding new Sub-group', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteAccountGroup(action) {
+  try {
+    const { data } = yield call(axios.delete, `${config.api.url}/company/${action.id}/groups/delete/${action.groupId}`, token());
+
+    if (data.message === 'Deleted') {
+      const stateGroups = yield select((state) => state.settings.groups) ?? [];
+      const groups = stateGroups.filter((group) => group.id !== action.groupId);
+      yield put(removeAccountGroupSuccess([...groups]));
+      yield put(addSnackbar('Removed Group successfully', 'success'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+    } else {
+      yield put(removeAccountGroupError());
+    }
+  } catch (e) {
+    yield put(removeAccountGroupError());
+    yield put(addSnackbar('An error occurred while remove Group', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -437,4 +461,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
+  yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
 }

@@ -44,7 +44,15 @@ import {
   GET_ACCOUNTS_GROUPS_SUCCESS,
   CREATE_ACCOUNTS_GROUP,
   CREATE_ACCOUNTS_GROUP_SUCCESS,
-  CREATE_ACCOUNTS_SUBGROUP, CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  CREATE_ACCOUNTS_SUBGROUP,
+  CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  CREATE_ACCOUNTS_GROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP,
+  DELETE_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
+  DELETE_ACCOUNTS_GROUP,
+  DELETE_ACCOUNTS_GROUP_SUCCESS, DELETE_ACCOUNTS_GROUP_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -264,12 +272,62 @@ export const createAccountGroupSuccess = (data) => ({
   data,
 });
 
+export const createAccountGroupError = (data) => ({
+  type: CREATE_ACCOUNTS_GROUP_ERROR,
+  data,
+});
+
+export const removeAccountGroup = (id, groupId) => ({
+  type: DELETE_ACCOUNTS_GROUP,
+  id,
+  groupId,
+});
+
+export const removeAccountGroupSuccess = (data) => ({
+  type: DELETE_ACCOUNTS_GROUP_SUCCESS,
+  data,
+});
+
+export const removeAccountGroupError = (data) => ({
+  type: DELETE_ACCOUNTS_GROUP_ERROR,
+  data,
+});
+
 export const createAccountSubgroup = (id, data) => ({
   type: CREATE_ACCOUNTS_SUBGROUP,
   data,
   id,
+// parent_group_id
 });
+
 export const createAccountSubgroupSuccess = (data) => ({
   type: CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  data,
+});
+export const createAccountSubgroupError = (data) => ({
+  type: CREATE_ACCOUNTS_SUBGROUP_SUCCESS,
+  data,
+});
+
+export const editAccountSubgroup = (id, data) => ({
+  type: PATCH_ACCOUNTS_SUBGROUP,
+  id,
+  subgroup: true,
+  data,
+});
+
+export const editAccountSubgroupSuccess = (data) => ({
+  type: PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  data,
+});
+
+export const removeAccountSubgroup = (id, parentGroupId) => ({
+  type: DELETE_ACCOUNTS_SUBGROUP,
+  id,
+  parent_group_id: parentGroupId,
+});
+
+export const removeAccountSubgroupSuccess = (data) => ({
+  type: DELETE_ACCOUNTS_SUBGROUP_SUCCESS,
   data,
 });
