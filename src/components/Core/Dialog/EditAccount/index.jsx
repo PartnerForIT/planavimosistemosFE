@@ -29,6 +29,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const defaultSkill = {
+  name: '',
+  cost: '',
+  earn: '',
+  rates: true,
+};
+
 export default function EditAccount({
   handleClose,
   handleOpen,
@@ -48,12 +55,7 @@ export default function EditAccount({
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
 
-  const [skillName, setSkillName] = useState({
-    name: '',
-    cost: '',
-    earn: '',
-    rates: true,
-  });
+  const [skillName, setSkillName] = useState(defaultSkill);
 
   const handleSkillChange = (event) => {
     const {
@@ -282,7 +284,10 @@ export default function EditAccount({
                 </pre>
                 <DialogCreateSkill
                   open={skillOpen}
-                  handleClose={() => setSkillOpen(false)}
+                  handleClose={() => {
+                    setSkillOpen(false);
+                    setSkillName(defaultSkill);
+                  }}
                   handleSkillChange={handleSkillChange}
                   skillName={skillName}
                   handleChangeRates={handleChangeRates}
