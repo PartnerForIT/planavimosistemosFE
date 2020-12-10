@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar, makeStyles } from '@material-ui/core';
 import _ from 'lodash';
+import { useDispatch } from 'react-redux';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -9,6 +11,9 @@ import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 import avatar from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
+import DialogCreateSkill from '../CreateSkill';
+import { createSkill } from '../../../../store/settings/actions';
+import BootstrapInput from '../../../shared/SelectBootstrapInput';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,44 +31,103 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditAccount({
   handleClose,
+  handleOpen,
   title,
   open,
   employee = {},
-  createJob,
   loading,
+  companyId,
+  skills = [],
+  groups = [],
+  places = [],
 }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const styles = useStyles();
 
-  const [user, setUser] = useState({ });
+  const [user, setUser] = useState({});
+  const [skillOpen, setSkillOpen] = useState(false);
 
-  useEffect(() => {
-    if (!_.isEmpty(employee)) {
-      setUser({ ...employee, ...employee.user });
-    }
-  }, [employee]);
+  const [skillName, setSkillName] = useState({
+    name: '',
+    cost: '',
+    earn: '',
+    rates: true,
+  });
 
-  const handleInput = (e) => {
+  const handleSkillChange = (event) => {
     const {
       name,
       value,
-    } = e.target;
+    } = event.target;
+    setSkillName({
+      ...skillName,
+      [name]: value,
+    });
+  };
+
+  const handleChangeRates = () => {
+    setSkillName({
+      ...skillName,
+      rates: !skillName.rates,
+    });
+  };
+  const handleCloseSkill = () => {
+
+  };
+  const createNewSkill = () => {
+    dispatch(createSkill(skillName, companyId));
+    setSkillOpen(false);
+  };
+
+  useEffect(() => {
+    if (!_.isEmpty(employee)) {
+      const {
+      // eslint-disable-next-line no-shadow
+        user,
+        ...rest
+      } = employee;
+      setUser({ ...rest, ...user });
+    }
+  }, [employee, groups]);
+
+  const groupsOpt = useMemo(() => groups?.map(({ id, name }) => ({ id, name })) ?? [], [groups]);
+
+  const skillsOptions = useMemo(() => skills?.map(({ id, name }) => ({ id, name })) ?? [], [skills]);
+
+  const subGroupsOpt = useMemo(() => {
+    // eslint-disable-next-line eqeqeq
+    const selectedGroup = groups.find((group) => group.id == user.group) ?? {};
+    const { subgroups } = selectedGroup;
+    return subgroups?.map(({ id, name }) => ({ id, name })) ?? [];
+  }, [groups, user.group]);
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
 
     setUser((prevState) => {
-      if (prevState[name] !== 'undefined') {
+      if (name !== 'group') {
         return {
           ...prevState,
           [name]: value,
         };
       }
-      if (prevState.user[name] !== undefined) {
-        return {
-          ...prevState,
-        };
-      }
-      return { ...prevState };
+      const { subgroup: $, ...rest } = prevState;
+      return {
+        ...rest,
+        [name]: value,
+      };
     });
   };
+
+  const placeOpt = useMemo(() => places.map(({ id, label }) => ({ id, name: label })), [places]);
+
+  // {
+  //   skill
+  //   group
+  //   sub-group
+  //   place
+  // }
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
@@ -125,13 +189,14 @@ export default function EditAccount({
 
                   <div className={style.center}>
                     <div className={style.skill}>
-                      <Button inline inverse>{`+${t('new skill')}`}</Button>
+                      <Button inline inverse onClick={() => setSkillOpen(true)}>{`+${t('new skill')}`}</Button>
                       <Label text={t('Skill')} htmlFor='skill' />
-                      {/* TODO: change to select */}
-                      <Input
+                      <Select
+                        id='skill'
+                        options={skillsOptions}
+                        user={user}
                         name='skill'
-                        placeholder={t('Select a skill')}
-                        onChange={handleInput}
+                        handleInput={handleInput}
                       />
                     </div>
 
@@ -160,42 +225,71 @@ export default function EditAccount({
 
                     <div>
                       <Label htmlFor='group' text={t('Assign to Group')} />
-                      {/* TODO: change to select */}
-                      <Input
+                      <Select
+                        id='group'
+                        options={groupsOpt}
+                        user={user}
                         name='group'
+                        handleInput={handleInput}
                         placeholder={t('Select a group')}
-                        onChange={handleInput}
                       />
                     </div>
 
                     <div>
                       <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-                      {/* TODO: change to select */}
-                      <Input
+                      <Select
+                        id='subgroup'
+                        options={subGroupsOpt.length
+                          ? subGroupsOpt
+                          : [{
+                            id: '',
+                            name: 'No sub-groups',
+                          }]}
+                        user={user}
+                        disabled={!subGroupsOpt.length}
                         name='subgroup'
                         placeholder={t('Select a subgroup')}
-                        onChange={handleInput}
+                        handleInput={handleInput}
                       />
                     </div>
 
                     <div>
                       <Label htmlFor='place' text={t('Assign to place')} />
-                      {/* TODO: change to select */}
-                      <Input
-                        name='place'
+                      <Select
+                        id='place'
+                        options={placeOpt}
+                        user={user}
                         placeholder={t('Select a place')}
-                        onChange={handleInput}
+                        name='place'
+                        handleInput={handleInput}
                       />
                     </div>
 
                   </div>
                 </form>
                 <div className={style.buttonBlock}>
-                  <Button cancel size='big'>{t('Cancel')}</Button>
-                  <Button onClick={() => createJob()} size='big'>
+                  <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
+                  <Button
+                    onClick={() => ({})}
+                    size='big'
+                  >
                     {t('Save an close')}
                   </Button>
                 </div>
+
+                <pre>
+                  {JSON.stringify(user, null, 2)}
+                </pre>
+                <DialogCreateSkill
+                  open={skillOpen}
+                  handleClose={() => setSkillOpen(false)}
+                  handleSkillChange={handleSkillChange}
+                  skillName={skillName}
+                  handleChangeRates={handleChangeRates}
+                  title={t('Create new skill')}
+                  buttonTitle={t('Create new skill')}
+                  createSkill={createNewSkill}
+                />
               </>
             )
         }
@@ -203,3 +297,31 @@ export default function EditAccount({
     </Dialog>
   );
 }
+
+const Select = ({
+  id,
+  user,
+  name,
+  options,
+  handleInput,
+  ...rest
+}) => (
+  <NativeSelect
+    className={style.select}
+    id={id}
+    value={user[name] ?? ''}
+    onChange={handleInput}
+    fullWidth
+    inputProps={{
+      name,
+    }}
+    input={<BootstrapInput />}
+    {...rest}
+  >
+    {
+      options.map((opt) => (
+        <option value={opt.id} key={opt.id + opt.name}>{opt.name}</option>
+      ))
+    }
+  </NativeSelect>
+);
