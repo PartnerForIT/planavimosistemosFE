@@ -58,7 +58,10 @@ const initialState = {
   journal: {},
   overtime: {},
   skills: [],
-  employees: [],
+  employees: {
+    users: [],
+    stats: {},
+  },
   activity_log: [],
   deleteData: [],
   places: [],
@@ -73,7 +76,11 @@ const initialState = {
 export const reducerOrganizationList = (state = initialState, action) => {
   switch (action.type) {
     case GET_SETTINGS_COMPANY:
-      return { ...state, error: null, loading: true };
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
     case GET_SETTINGS_COMPANY_SUCCESS:
       return {
         ...state,
@@ -287,7 +294,11 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_GROUP:
     case DELETE_ACCOUNTS_GROUP:
     case PATCH_ACCOUNTS_GROUP:
-      return { ...state, groupLoading: true, error: null };
+      return {
+        ...state,
+        groupLoading: true,
+        error: null,
+      };
 
     case CREATE_ACCOUNTS_GROUP_SUCCESS:
       return {
@@ -310,7 +321,10 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_GROUP_ERROR:
     case DELETE_ACCOUNTS_GROUP_ERROR:
     case PATCH_ACCOUNTS_GROUP_ERROR:
-      return { ...state, groupLoading: false };
+      return {
+        ...state,
+        groupLoading: false,
+      };
 
     case DELETE_ACCOUNTS_GROUP_SUCCESS:
       return {
@@ -324,7 +338,11 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_SUBGROUP:
     case DELETE_ACCOUNTS_SUBGROUP:
     case PATCH_ACCOUNTS_SUBGROUP:
-      return { ...state, subgroupLoading: true, error: null };
+      return {
+        ...state,
+        subgroupLoading: true,
+        error: null,
+      };
 
     case CREATE_ACCOUNTS_SUBGROUP_SUCCESS:
       return {
@@ -340,7 +358,10 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_ACCOUNTS_SUBGROUP_ERROR:
     case PATCH_ACCOUNTS_SUBGROUP_SUCCESS:
     case PATCH_ACCOUNTS_SUBGROUP_ERROR:
-      return { ...state, subgroupLoading: false };
+      return {
+        ...state,
+        subgroupLoading: false,
+      };
 
     case ADD_SETTING_SNACKBAR:
       return {
@@ -351,10 +372,14 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
     case DISMISS_SETTING_SNACKBAR:
       return {
-        ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '',
+        ...state,
+        snackbarText: action.data,
+        snackbarShow: false,
+        snackbarType: '',
       };
 
-    default: return state;
+    default:
+      return state;
   }
 };
 

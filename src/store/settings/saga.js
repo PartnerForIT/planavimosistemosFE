@@ -275,7 +275,6 @@ function* filterActivityLog(action) {
 }
 
 function* loadEmployee(action) {
-  // const { all } = action;
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/all`, token());
     yield put(loadEmployeesSuccess(data));
