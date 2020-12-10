@@ -93,16 +93,22 @@ export default function EditAccount({
     }
   }, [employee, groups]);
 
-  const groupsOpt = useMemo(() => groups?.map(({ id, name }) => ({ id, name })) ?? [], [groups]);
+  const groupsOpt = useMemo(() => {
+    const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
+    return [{ id: '', name: t('Select a group') }, ...grps];
+  }, [groups, t]);
 
-  const skillsOptions = useMemo(() => skills?.map(({ id, name }) => ({ id, name })) ?? [], [skills]);
+  const skillsOptions = useMemo(() => {
+    const sks = skills?.map(({ id, name }) => ({ id, name })) ?? [];
+    return [{ id: '', name: t('Select a skill') }, ...sks];
+  }, [skills, t]);
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
     const selectedGroup = groups.find((group) => group.id == user.group) ?? {};
-    const { subgroups } = selectedGroup;
-    return subgroups?.map(({ id, name }) => ({ id, name })) ?? [];
-  }, [groups, user.group]);
+    const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
+    return [{ id: '', name: t('Select a sub-group') }, ...sub];
+  }, [groups, t, user.group]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -122,7 +128,10 @@ export default function EditAccount({
     });
   };
 
-  const placeOpt = useMemo(() => places.map(({ id, label }) => ({ id, name: label })), [places]);
+  const placeOpt = useMemo(() => {
+    const pls = places.map(({ id, label }) => ({ id, name: label }) ?? []);
+    return [{ id: '', name: t('Select a place') }, ...pls];
+  }, [places, t]);
 
   // {
   //   skill
@@ -241,14 +250,9 @@ export default function EditAccount({
                       <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
                       <Select
                         id='subgroup'
-                        options={subGroupsOpt.length
-                          ? subGroupsOpt
-                          : [{
-                            id: '',
-                            name: 'No sub-groups',
-                          }]}
+                        options={subGroupsOpt}
                         user={user}
-                        disabled={!subGroupsOpt.length}
+                        disabled={subGroupsOpt.length <= 1}
                         name='subgroup'
                         placeholder={t('Select a subgroup')}
                         handleInput={handleInput}
