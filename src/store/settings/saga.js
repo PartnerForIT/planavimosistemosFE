@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, UPDATE_EMPLOYEE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -65,7 +65,12 @@ import {
   editAccountGroupError,
   editAccountGroupSuccess,
   editAccountSubgroupSuccess,
-  loadEmployeesError, loadEmployeesEditSuccess, loadEmployeesEditError,
+  loadEmployeesError,
+  loadEmployeesEditSuccess,
+  loadEmployeesEditError,
+  patchEmployeeError,
+  patchEmployeeSuccess,
+  loadEmployeesAll,
 } from './actions';
 
 function token() {
@@ -553,6 +558,24 @@ function* getEmployeeEdit(action) {
   }
 }
 
+function* updateEmployee(action) {
+  try {
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
+      action.data, token());
+    yield put(loadEmployeesAll(action.id));
+    yield put(addSnackbar('Updated account successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(patchEmployeeError(e));
+    yield put(addSnackbar('`An error occurred while edit account', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -585,4 +608,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
+  yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
 }

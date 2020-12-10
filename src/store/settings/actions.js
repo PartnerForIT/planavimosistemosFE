@@ -60,7 +60,12 @@ import {
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
   GET_EMPLOYEES_ALL,
-  GET_EMPLOYEES_ERROR, GET_EMPLOYEES_EDIT, GET_EMPLOYEES_EDIT_SUCCESS,
+  GET_EMPLOYEES_ERROR,
+  GET_EMPLOYEES_EDIT,
+  GET_EMPLOYEES_EDIT_SUCCESS,
+  UPDATE_EMPLOYEE,
+  UPDATE_EMPLOYEE_ERROR,
+  UPDATE_EMPLOYEE_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -216,6 +221,23 @@ export const loadEmployeesEditSuccess = (data) => ({
 
 export const loadEmployeesEditError = () => ({
   type: GET_EMPLOYEES_ERROR,
+});
+
+export const patchEmployee = (id, employeeId, data) => ({
+  type: UPDATE_EMPLOYEE,
+  id,
+  employeeId,
+  data,
+});
+
+export const patchEmployeeSuccess = (data) => ({
+  type: UPDATE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const patchEmployeeError = (data) => ({
+  type: UPDATE_EMPLOYEE_ERROR,
+  data,
 });
 
 export const loadActivityLog = (id) => ({

@@ -24,7 +24,7 @@ import {
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
-  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills,
+  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills, patchEmployee,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
@@ -85,7 +85,12 @@ export default function AccountsList() {
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
-  const [editVisible, setEditVisible] = useState(true);
+  const [editVisible, setEditVisible] = useState(false);
+
+  const updateEmployee = (data) => {
+    dispatch(patchEmployee(id, selected.id, data));
+    setEditVisible(false);
+  };
 
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
@@ -93,13 +98,14 @@ export default function AccountsList() {
   }, []);
 
   useEffect(() => {
-    // TODO: on account edit
-    dispatch(loadEmployeesEdit(id, 111));
+    if (selected.id) {
+      setEditVisible(true);
+    }
+    dispatch(loadEmployeesEdit(id, selected.id));
     dispatch(loadSkills(id));
     dispatch(getAccountGroups(id));
     dispatch(loadPlace(id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, id, selected.id]);
 
   const handleChangeUsers = (e) => {
     const { value } = e.target;
@@ -218,6 +224,7 @@ export default function AccountsList() {
             skills={skills}
             groups={groups}
             places={places}
+            onSubmit={updateEmployee}
           />
         </PageLayout>
       </Dashboard>

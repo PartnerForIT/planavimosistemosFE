@@ -46,6 +46,7 @@ export default function EditAccount({
   skills = [],
   groups = [],
   places = [],
+  onSubmit = () => ({}),
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -73,9 +74,7 @@ export default function EditAccount({
       rates: !skillName.rates,
     });
   };
-  const handleCloseSkill = () => {
 
-  };
   const createNewSkill = () => {
     dispatch(createSkill(skillName, companyId));
     setSkillOpen(false);
@@ -84,11 +83,16 @@ export default function EditAccount({
   useEffect(() => {
     if (!_.isEmpty(employee)) {
       const {
-      // eslint-disable-next-line no-shadow
-        user,
-        ...rest
+        // eslint-disable-next-line camelcase
+        user: { role_id, email },
+        // eslint-disable-next-line camelcase
+        name, surname, phone, speciality_id, external_id, cost, charge,
+        // eslint-disable-next-line no-shadow
+        photo, groups,
       } = employee;
-      setUser({ ...rest, ...user });
+      setUser({
+        role_id, email, name, surname, phone, speciality_id, external_id, cost, charge, photo, groups,
+      });
     }
   }, [employee, groups]);
 
@@ -275,7 +279,7 @@ export default function EditAccount({
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
                   <Button
-                    onClick={() => ({})}
+                    onClick={() => onSubmit(user)}
                     size='big'
                   >
                     {t('Save an close')}

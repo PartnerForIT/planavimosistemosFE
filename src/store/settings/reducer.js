@@ -48,7 +48,12 @@ import {
   PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
   GET_EMPLOYEES_ERROR,
-  GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, GET_EMPLOYEES_EDIT_ERROR, GET_EMPLOYEES_EDIT_SUCCESS,
+  GET_EMPLOYEES_ALL,
+  GET_EMPLOYEES_EDIT,
+  GET_EMPLOYEES_EDIT_ERROR,
+  GET_EMPLOYEES_EDIT_SUCCESS,
+  UPDATE_EMPLOYEE,
+  UPDATE_EMPLOYEE_ERROR, UPDATE_EMPLOYEE_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -211,6 +216,28 @@ export const reducerOrganizationList = (state = initialState, action) => {
         employeesLoading: false,
       };
     }
+
+    case UPDATE_EMPLOYEE:
+      return {
+        ...state,
+        employeesLoading: true,
+        error: null,
+      };
+
+    case UPDATE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+        employee: { ...action.data },
+        employeesLoading: false,
+      //  employees?
+      };
+
+    case UPDATE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+        employeesLoading: false,
+        error: action.data,
+      };
 
     case GET_EMPLOYEES_EDIT_SUCCESS:
       return {
