@@ -38,7 +38,6 @@ const defaultSkill = {
 
 export default function EditAccount({
   handleClose,
-  handleOpen,
   title,
   open,
   employee = {},
@@ -282,10 +281,6 @@ export default function EditAccount({
                     {t('Save an close')}
                   </Button>
                 </div>
-
-                <pre>
-                  {JSON.stringify(user, null, 2)}
-                </pre>
                 <DialogCreateSkill
                   open={skillOpen}
                   handleClose={() => {

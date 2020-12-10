@@ -11,12 +11,23 @@ import Dashboard from '../../../Core/Dashboard';
 import AccountsIcon from '../../../Icons/2Peple';
 import Progress from '../../../Core/Progress';
 import {
-  isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, employeesSelector,
+  isLoadingSelector,
+  isShowSnackbar,
+  snackbarType,
+  snackbarText,
+  employeesSelector,
+  employeesLoadingSelector,
+  employeeSelector,
+  categoriesSkillsSelector,
+  AccountGroupsSelector, placesSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
-import { loadEmployees } from '../../../../store/settings/actions';
+import {
+  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills,
+} from '../../../../store/settings/actions';
+import CreateAccount from '../../../Core/Dialog/CreateAccount';
+import EditAccount from '../../../Core/Dialog/EditAccount';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -34,39 +45,21 @@ const columns = [
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'name', checked: true },
   { label: 'Role', field: 'speciality_id', checked: true },
-  { label: 'Email', field: 'contact_person_email', checked: true },
-  { label: 'Skill', field: 'skill', checked: false },
-  { label: 'Group', field: 'group', checked: false },
+  { label: 'Email', field: 'email', checked: true },
+  { label: 'Actions', field: 'actions', checked: true },
+  { label: 'Skill', field: 'skills', checked: false },
+  { label: 'Group', field: 'groups', checked: false },
   { label: 'Sub-group', field: 'subgroup', checked: false },
   { label: 'Assigned Place', field: 'assigned_place', checked: false },
-  { label: '', field: 'actions', checked: true },
-  // { 'id': 111, }
-  // "user_id": 11,
-  // "name": "NIck",
-  // "surname": "New",
-  // "company_id": "23",
-  // "personal_number": "24",
-  // "phone": "0877845647",
-  // "speciality_id": null,
-  // "status": "1",
-  // "first_login": 0,
-  // "external_id": null,
-  // "cost": 22,
-  // "charge": null,
-  // "last_login": null,
-  // "photo": null,
-  // "created_at": null,
-  // "updated_at": null,
-  // "deleted_at": null
+  { label: 'ID', field: 'id', checked: true },
+  { label: 'Phone', field: 'phone', checked: true },
+  { label: 'Personal number', field: 'personal_number', checked: true },
 ];
+
 const columnsWidthArray = {
-  status: 80,
+  status: 100,
   name: 200,
-  contact_person_email: 200,
-  contact_person_name: 200,
   deleted_at: 200,
-  country: 150,
-  timezones: 120,
 };
 
 export default function AccountsList() {
@@ -79,17 +72,34 @@ export default function AccountsList() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const employeesAll = useSelector(employeesSelector);
+  const { users: employeesAll, stats } = useSelector(employeesSelector);
+  const empLoading = useSelector(employeesLoadingSelector);
+  const employee = useSelector(employeeSelector);
+  const skills = useSelector(categoriesSkillsSelector);
+  const groups = useSelector(AccountGroupsSelector);
+  const places = useSelector(placesSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
   const [checkedItems, setCheckedItems] = useState([]);
 
   const [selected, setSelected] = useState({});
+  const [newVisible, setNewVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(true);
 
   useEffect(() => {
-    dispatch(loadEmployees(id));
-  }, [dispatch, id]);
+    dispatch(loadEmployeesAll(id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // TODO: on account edit
+    dispatch(loadEmployeesEdit(id, 111));
+    dispatch(loadSkills(id));
+    dispatch(getAccountGroups(id));
+    dispatch(loadPlace(id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangeUsers = (e) => {
     const { value } = e.target;
@@ -126,18 +136,13 @@ export default function AccountsList() {
       <Dashboard>
         <TitleBlock
           title={t('Account list')}
-          info={
-            // TODO: change
-            {
-              accounts: 100,
-              active: 60,
-              suspended: 40,
-            }
-          }
+          info={stats}
           infoReverse
           TitleButtonNew={t('New account')}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
+          handleButtonImport={() => ({})}
+          handleButtonNew={() => setNewVisible(true)}
         >
           <AccountsIcon />
         </TitleBlock>
@@ -160,8 +165,13 @@ export default function AccountsList() {
                     onColumnsChange={setColumnsArray}
                     selectable
                     sortable
-                    loading={isLoading}
+                    loading={empLoading}
                     onSelect={selectionHandler}
+                    editRow={() => {
+                      dispatch(loadEmployeesEdit(id, 111));
+                      setEditVisible(true);
+                    }}
+                    removeRow={() => ({})}
                     // onSort={sortHandler}
                     // onSerach={searchHandler}
                     // lastPage={page.last_page}
@@ -191,6 +201,23 @@ export default function AccountsList() {
             open={isSnackbar}
             message={textSnackbar}
             key='rigth'
+          />
+          <CreateAccount
+            open={newVisible}
+            handleClose={() => setNewVisible(false)}
+
+          />
+          <EditAccount
+            open={editVisible}
+            employee={employee}
+            title={`${t('Edit')} ${employee.name} ${employee.surname} ${t('Account')}`}
+            handleClose={() => setEditVisible(false)}
+            handleOpen={(visible) => setEditVisible(visible)}
+            companyId={id}
+            loading={empLoading}
+            skills={skills}
+            groups={groups}
+            places={places}
           />
         </PageLayout>
       </Dashboard>

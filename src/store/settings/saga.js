@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -61,7 +61,11 @@ import {
   createAccountSubgroupSuccess,
   removeAccountSubgroupSuccess,
   removeAccountSubgroupError,
-  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess, editAccountSubgroupSuccess,
+  editAccountSubgroupError,
+  editAccountGroupError,
+  editAccountGroupSuccess,
+  editAccountSubgroupSuccess,
+  loadEmployeesError, loadEmployeesEditSuccess, loadEmployeesEditError,
 } from './actions';
 
 function token() {
@@ -280,6 +284,7 @@ function* loadEmployee(action) {
     yield put(loadEmployeesSuccess(data));
   } catch (e) {
     console.log(e);
+    yield put(loadEmployeesError());
   }
 }
 
@@ -512,7 +517,10 @@ function* patchAccountGroup(action) {
           }
           return sbgrp;
         });
-        return { ...group, subgroups };
+        return {
+          ...group,
+          subgroups,
+        };
       });
     } else {
       groups = Groups.map((group) => {
@@ -532,6 +540,16 @@ function* patchAccountGroup(action) {
     yield put(addSnackbar(`An error occurred while edit ${subgroup ? 'Sub-group' : 'Group'}`, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
+  }
+}
+
+function* getEmployeeEdit(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/edit/${action.employeeId}`, token());
+    yield put(loadEmployeesEditSuccess(data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadEmployeesEditError());
   }
 }
 
@@ -566,4 +584,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
+  yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
 }

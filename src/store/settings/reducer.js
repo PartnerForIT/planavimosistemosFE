@@ -44,7 +44,11 @@ import {
   PATCH_ACCOUNTS_GROUP,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_GROUP_SUCCESS,
-  PATCH_ACCOUNTS_SUBGROUP, PATCH_ACCOUNTS_SUBGROUP_SUCCESS, PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_EMPLOYEES_ERROR,
+  GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, GET_EMPLOYEES_EDIT_ERROR, GET_EMPLOYEES_EDIT_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -62,6 +66,7 @@ const initialState = {
     users: [],
     stats: {},
   },
+  employee: {},
   activity_log: [],
   deleteData: [],
   places: [],
@@ -187,11 +192,15 @@ export const reducerOrganizationList = (state = initialState, action) => {
         places: action.data,
       };
     }
-    case GET_EMPLOYEES: {
+    case GET_EMPLOYEES:
+    case GET_EMPLOYEES_ALL:
+    case GET_EMPLOYEES_EDIT:
+    {
       return {
         ...state,
         error: null,
         loading: true,
+        employeesLoading: true,
       };
     }
     case GET_EMPLOYEES_SUCCESS: {
@@ -199,8 +208,26 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         employees: action.data,
+        employeesLoading: false,
       };
     }
+
+    case GET_EMPLOYEES_EDIT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        employee: action.data,
+        employeesLoading: false,
+      };
+
+    case GET_EMPLOYEES_ERROR:
+    case GET_EMPLOYEES_EDIT_ERROR:
+      return {
+        ...state,
+        loading: false,
+        employeesLoading: false,
+      };
+
     case GET_ACTIVITY_LOG: {
       return {
         ...state,
