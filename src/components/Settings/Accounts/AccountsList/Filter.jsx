@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import NativeSelect from '@material-ui/core/NativeSelect';
-import InputBase from '@material-ui/core/InputBase';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
 import {
-  withStyles,
   makeStyles,
 } from '@material-ui/core/styles';
 
@@ -13,6 +11,7 @@ import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
 import Input from '../../../Core/Input/Input';
 import SearchIcon from '../../../Icons/SearchIcon';
+import BootstrapInput from '../../../shared/SelectBootstrapInput';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -29,34 +28,6 @@ const useStyles = makeStyles(() => ({
     transform: 'translate(0, 1.5px) scale(1)',
   },
 }));
-
-const BootstrapInput = withStyles((theme) => ({
-  root: {
-    'label + &': {
-      marginTop: theme.spacing(3),
-    },
-    '& label.Mui-focused': {
-      color: '#4d7499',
-    },
-  },
-  input: {
-    borderRadius: 4,
-    width: '100%',
-    position: 'relative',
-    backgroundColor: theme.palette.common.white,
-    border: '1px solid #e8eff6',
-    fontSize: 14,
-    lineHeight: '16px',
-    padding: '11px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    '&:focus': {
-      boxShadow: 'none',
-      borderRadius: 4,
-      backgroundColor: theme.palette.common.white,
-      borderColor: '#0087ff',
-    },
-  },
-}))(InputBase);
 
 export default function Filter({
   users,
