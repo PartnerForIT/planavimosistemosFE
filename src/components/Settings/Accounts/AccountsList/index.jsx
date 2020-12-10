@@ -39,6 +39,7 @@ const columns = [
   { label: 'Group', field: 'group', checked: false },
   { label: 'Sub-group', field: 'subgroup', checked: false },
   { label: 'Assigned Place', field: 'assigned_place', checked: false },
+  { label: '', field: 'actions', checked: true },
   // { 'id': 111, }
   // "user_id": 11,
   // "name": "NIck",
@@ -58,6 +59,15 @@ const columns = [
   // "updated_at": null,
   // "deleted_at": null
 ];
+const columnsWidthArray = {
+  status: 80,
+  name: 200,
+  contact_person_email: 200,
+  contact_person_name: 200,
+  deleted_at: 200,
+  country: 150,
+  timezones: 120,
+};
 
 export default function AccountsList() {
   const { id } = useParams();
@@ -72,17 +82,10 @@ export default function AccountsList() {
   const employeesAll = useSelector(employeesSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
+  const [columnsArray, setColumnsArray] = useState(columns);
+  const [checkedItems, setCheckedItems] = useState([]);
 
-  const [selected, setSelected] = useState([]);
-
-  const handleSelect = (row) => {
-    setSelected((prevState) => {
-      if (!prevState.find((rw) => rw.id === row.id)) {
-        return [...prevState, row];
-      }
-      return prevState.filter((rw) => rw.id !== row.id);
-    });
-  };
+  const [selected, setSelected] = useState({});
 
   useEffect(() => {
     dispatch(loadEmployees(id));
@@ -100,6 +103,23 @@ export default function AccountsList() {
       name: `${name} ${surname}`,
     };
   }), [employeesAll]);
+
+  const selectionHandler = (itemId, value) => {
+    // eslint-disable-next-line array-callback-return
+    employees.map((item) => {
+      if (item.id === itemId) {
+        // eslint-disable-next-line no-param-reassign
+        item.checked = !item.checked;
+      }
+    });
+    if (value) {
+      setCheckedItems([...checkedItems, itemId]);
+    } else {
+      const index = checkedItems.indexOf(itemId);
+      checkedItems.splice(index, 1);
+      setCheckedItems([...checkedItems]);
+    }
+  };
 
   return (
     <MaynLayout>
@@ -130,18 +150,18 @@ export default function AccountsList() {
                     handleChangeOrganizations={handleChangeUsers}
                     users={usersOptions}
                     changeUserStatus={() => ({})}
-                    checkedItems={[]}
+                    checkedItems={checkedItems ?? []}
                     clearCheckbox={() => ({})}
                   />
                   <DataTable
                     data={employees ?? []}
-                    columns={columns ?? []}
-                    columnsWidth={{}}
-                    // onColumnsChange={setColumnsArray}
+                    columns={columnsArray ?? []}
+                    columnsWidth={columnsWidthArray ?? {}}
+                    onColumnsChange={setColumnsArray}
                     selectable
                     sortable
                     loading={isLoading}
-                    // onSelect={selectionHandler}
+                    onSelect={selectionHandler}
                     // onSort={sortHandler}
                     // onSerach={searchHandler}
                     // lastPage={page.last_page}
@@ -151,8 +171,7 @@ export default function AccountsList() {
                     // handlePagination={console.log}
                     selectedItem={selected}
                     // totalDuration={totalDuration}
-                    setSelectedItem={handleSelect}
-                    multiselect
+                    setSelectedItem={setSelected}
                     verticalOffset='300px'
                   />
                 </>
