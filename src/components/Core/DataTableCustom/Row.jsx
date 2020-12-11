@@ -79,7 +79,7 @@ const Row = ({
     >
       {
         actionsVisible && hoverActions && (
-          <RowActions editRow={editRow} removeRow={removeRow} absolute />
+          <RowActions editRow={editRow} removeRow={removeRow} absolute id={row.id} />
         )
       }
       <div className={rowWrapperClasses}>
@@ -149,7 +149,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                    <RowActions editRow={editRow} removeRow={removeRow} />
+                    <RowActions editRow={editRow} removeRow={removeRow} id={row.id} />
                   )
                 }
               </div>
@@ -177,15 +177,16 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
+  id,
   editRow,
   removeRow,
   absolute = false,
 }) => (
   <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
-    <button onClick={editRow}>
+    <button onClick={() => editRow(id)}>
       <EditIcon />
     </button>
-    <button onClick={removeRow}>
+    <button onClick={() => removeRow(id)}>
       <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
     </button>
   </div>
