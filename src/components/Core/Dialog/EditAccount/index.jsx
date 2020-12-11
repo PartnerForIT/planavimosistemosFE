@@ -96,7 +96,7 @@ export default function EditAccount({
         photo, groups,
       } = employee;
       setUser({
-        role_id, email, name, surname, phone, speciality_id, external_id, cost, charge, photo, groups,
+        role_id, email, name, surname, phone, speciality_id, external_id, cost, charge, photo, group: groups?.id,
       });
     }
   }, [employee, groups]);
@@ -244,7 +244,7 @@ export default function EditAccount({
                             {' '}
                             <CurrencySign />
                           </>
-)}
+                        )}
                       />
                       <Input
                         name='cost'
@@ -263,7 +263,7 @@ export default function EditAccount({
                             {' '}
                             <CurrencySign />
                           </>
-                      )}
+                        )}
                       />
                       <Input
                         name='charge'

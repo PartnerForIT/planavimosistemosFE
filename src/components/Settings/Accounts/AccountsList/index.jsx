@@ -156,12 +156,15 @@ export default function AccountsList() {
 
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
-      // eslint-disable-next-line camelcase
-      name, surname, status, created_at, updated_at,
+      // eslint-disable-next-line camelcase,no-shadow
+      name, surname, status, created_at, updated_at, place, groups,
       ...rest
     } = empl;
     return {
       ...rest,
+      group: groups?.name ?? '',
+      subgroup: groups?.sub_groups?.name ?? '',
+      place: place[0]?.name ?? '',
       // eslint-disable-next-line camelcase
       created_at: created_at ? moment(created_at)
         .format('lll') : '',

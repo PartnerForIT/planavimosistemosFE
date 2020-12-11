@@ -567,19 +567,50 @@ function* getEmployeeEdit(action) {
 }
 
 function* updateEmployee(action) {
-  console.log(action);
-
   try {
+    const {
+      group,
+      subgroup,
+      place,
+      ...rest
+    } = action.data;
     // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.patch,
       `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
-      action.data, token());
+      { ...rest }, token());
+    if (place) {
+      // eslint-disable-next-line no-unused-vars,no-shadow
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${action.id}/employees/assign-place`, {
+          employee_id: action.employeeId,
+          place_id: parseInt(place, 10),
+        }, token());
+    }
+    if (group) {
+      const payload = {
+        group_id: parseInt(group, 10),
+        employee_id: action.employeeId,
+      };
+      // eslint-disable-next-line no-unused-vars,no-shadow
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${action.id}/employees/assign-group`, payload, token());
+    }
+    if (subgroup) {
+      // eslint-disable-next-line no-unused-vars,no-shadow
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${action.id}/employees/assign-group`, {
+          employee_id: action.employeeId,
+          parent_group_id: parseInt(group, 10),
+          group_id: parseInt(subgroup, 10),
+          subgroup: true,
+        }, token());
+    }
+
     yield put(loadEmployeesAll(action.id));
 
     yield put(addSnackbar('Updated account successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
-    // yield put(patchEmployeeError());
   } catch (e) {
     yield put(patchEmployeeError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
