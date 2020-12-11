@@ -113,7 +113,7 @@ export default function AccountsList() {
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
 
   const updateEmployee = (data) => {
-    dispatch(patchEmployee(id, selected.id, data));
+    dispatch(patchEmployee(id, editVisible, data));
     setEditVisible(false);
   };
 
@@ -138,7 +138,7 @@ export default function AccountsList() {
     dispatch(loadSkills(id));
     dispatch(getAccountGroups(id));
     dispatch(loadPlace(id));
-    setEditVisible(true);
+    setEditVisible(employeeId);
   };
 
   const deleteEmployee = (employeeId) => {

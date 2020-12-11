@@ -567,15 +567,19 @@ function* getEmployeeEdit(action) {
 }
 
 function* updateEmployee(action) {
+  console.log(action);
+
   try {
     // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.patch,
       `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
       action.data, token());
     yield put(loadEmployeesAll(action.id));
+
     yield put(addSnackbar('Updated account successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
+    // yield put(patchEmployeeError());
   } catch (e) {
     yield put(patchEmployeeError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
@@ -617,13 +621,18 @@ function* deleteEmployee(action) {
 
 function* setEmployeesActions(action) {
   try {
+    const headers = token();
+    // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.post,
-      `${config.api.url}/company/${action.companyId}/employees/mass-action`, {
-        users: action.employeesIds.toString(),
-        action: action.status,
-      }, token());
-    console.log(data);
+      `${config.api.url}/company/${action.companyId}/employees/mass-action`, null, {
+        params: {
+          users: JSON.stringify(action.employeesIds.map((id) => ({ id }))),
+          action: action.status,
+        },
+        ...headers,
+      });
 
+    yield put(loadEmployeesAll(action.companyId));
     yield put(addSnackbar('Changed status successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
