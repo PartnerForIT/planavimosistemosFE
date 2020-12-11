@@ -65,7 +65,7 @@ import {
   GET_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
-  UPDATE_EMPLOYEE_SUCCESS,
+  UPDATE_EMPLOYEE_SUCCESS, GET_CURRENCY, GET_CURRENCY_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -409,4 +409,13 @@ export const removeAccountSubgroupSuccess = () => ({
 
 export const removeAccountSubgroupError = () => ({
   type: DELETE_ACCOUNTS_SUBGROUP_ERROR,
+});
+
+export const getCurrencies = () => ({
+  type: GET_CURRENCY,
+});
+
+export const getCurrenciesSuccess = (data) => ({
+  type: GET_CURRENCY_SUCCESS,
+  data,
 });

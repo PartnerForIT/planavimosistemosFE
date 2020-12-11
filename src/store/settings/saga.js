@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, UPDATE_EMPLOYEE,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, UPDATE_EMPLOYEE, GET_CURRENCY,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -70,7 +70,7 @@ import {
   loadEmployeesEditError,
   patchEmployeeError,
   patchEmployeeSuccess,
-  loadEmployeesAll,
+  loadEmployeesAll, getCurrenciesSuccess,
 } from './actions';
 
 function token() {
@@ -576,6 +576,15 @@ function* updateEmployee(action) {
   }
 }
 
+function* loadCurrencies() {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/currencies`, token());
+    yield put(getCurrenciesSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -609,4 +618,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
+
+  yield takeLatest(GET_CURRENCY, loadCurrencies);
 }

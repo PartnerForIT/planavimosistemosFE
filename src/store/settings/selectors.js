@@ -17,3 +17,4 @@ export const OvertimeDataSelector = (state) => state.settings.overtime;
 export const AccountGroupsSelector = (state) => state.settings.groups;
 export const groupsLoadingSelector = (state) => state.settings.groupLoading;
 export const subGroupsLoadingSelector = (state) => state.settings.subgroupLoading;
+export const currencySelector = (state) => state.settings.currency;

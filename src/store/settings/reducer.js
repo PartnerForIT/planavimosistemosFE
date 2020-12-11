@@ -53,7 +53,7 @@ import {
   GET_EMPLOYEES_EDIT_ERROR,
   GET_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
-  UPDATE_EMPLOYEE_ERROR, UPDATE_EMPLOYEE_SUCCESS,
+  UPDATE_EMPLOYEE_ERROR, UPDATE_EMPLOYEE_SUCCESS, GET_CURRENCY_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -81,6 +81,7 @@ const initialState = {
   snackbarShow: false,
   snackbarType: '',
   groups: [],
+  currency: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -430,6 +431,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
         snackbarText: action.data,
         snackbarShow: false,
         snackbarType: '',
+      };
+
+    case GET_CURRENCY_SUCCESS:
+      return {
+        ...state,
+        currency: action.data,
       };
 
     default:

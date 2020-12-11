@@ -29,6 +29,7 @@ import {
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
+import CurrencySign from '../../../shared/CurrencySign';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -41,6 +42,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const LabelWithCurrencySign = ({ text }) => (
+  <>
+    {text}
+    <CurrencySign />
+  </>
+);
+
 const columns = [
 
   { label: 'Status', field: 'status', checked: true },
@@ -51,9 +59,9 @@ const columns = [
   { label: 'Group', field: 'groups', checked: true },
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
-  { label: 'Cost/h/$', field: 'cost', checked: true },
-  { label: 'Charge/h/$', field: 'charge', checked: true },
-  { label: 'Charge/h/$', field: 'charge', checked: true },
+  { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
+  { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
+  { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: 'Created on', field: 'created_at', checked: true },
   { label: 'Status change', field: 'updated_at', checked: true },
 ];
@@ -65,11 +73,6 @@ const columnsWidthArray = {
   updated_at: 220,
   place: 100,
 };
-
-// status
-// 1 active
-// 2 terminated
-// 0 suspend
 
 export default function AccountsList() {
   const { id } = useParams();

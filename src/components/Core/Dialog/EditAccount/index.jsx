@@ -16,6 +16,7 @@ import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
 import BootstrapInput from '../../../shared/SelectBootstrapInput';
 import { convertBase64 } from '../../../Helpers';
+import CurrencySign from '../../../shared/CurrencySign';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -221,7 +222,9 @@ export default function EditAccount({
 
                   <div className={style.center}>
                     <div className={style.skill}>
-                      <Button inline inverse onClick={() => setSkillOpen(true)}>{`+${t('new skill')}`}</Button>
+                      <Button inline inverse onClick={() => setSkillOpen(true)}>
+                        {`+${t('new skill')}`}
+                      </Button>
                       <Label text={t('Skill')} htmlFor='skill' />
                       <Select
                         id='skill'
@@ -233,7 +236,16 @@ export default function EditAccount({
                     </div>
 
                     <div>
-                      <Label htmlFor='cost' text={t('Cost, Hourly rate, $')} />
+                      <Label
+                        htmlFor='cost'
+                        text={(
+                          <>
+                            {t('Cost, Hourly rate')}
+                            {' '}
+                            <CurrencySign />
+                          </>
+)}
+                      />
                       <Input
                         name='cost'
                         value={user.cost ?? ''}
@@ -243,7 +255,16 @@ export default function EditAccount({
                     </div>
 
                     <div>
-                      <Label htmlFor='charge' text={t('Charge, Hourly rate, $')} />
+                      <Label
+                        htmlFor='charge'
+                        text={(
+                          <>
+                            {t('Charge, Hourly rate')}
+                            {' '}
+                            <CurrencySign />
+                          </>
+                      )}
+                      />
                       <Input
                         name='charge'
                         value={user.charge ?? ''}
