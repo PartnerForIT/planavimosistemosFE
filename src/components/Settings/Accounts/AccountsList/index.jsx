@@ -118,9 +118,6 @@ export default function AccountsList() {
   }, []);
 
   useEffect(() => {
-    if (selected.id) {
-      setEditVisible(true);
-    }
     dispatch(loadEmployeesEdit(id, selected.id));
     dispatch(loadSkills(id));
     dispatch(getAccountGroups(id));
@@ -202,9 +199,10 @@ export default function AccountsList() {
                     loading={empLoading}
                     onSelect={selectionHandler}
                     editRow={() => {
-                      dispatch(loadEmployeesEdit(id, 111));
+                      dispatch(loadEmployeesEdit(id, selected?.id));
                       setEditVisible(true);
                     }}
+                    hoverActions
                     removeRow={() => ({})}
                     // onSort={sortHandler}
                     // onSerach={searchHandler}
