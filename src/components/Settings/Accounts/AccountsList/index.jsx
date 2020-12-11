@@ -216,7 +216,7 @@ export default function AccountsList() {
           <EditAccount
             open={editVisible}
             employee={employee}
-            title={`${t('Edit')} ${employee.name} ${employee.surname} ${t('Account')}`}
+            title={`${t('Edit')} ${employee.name ?? ''} ${employee.surname ?? ''} ${t('Account')}`}
             handleClose={() => setEditVisible(false)}
             handleOpen={(visible) => setEditVisible(visible)}
             companyId={id}
