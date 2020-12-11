@@ -30,6 +30,7 @@ import {
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
 import CurrencySign from '../../../shared/CurrencySign';
+import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -99,13 +100,17 @@ export default function AccountsList() {
   const [newVisible, setNewVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
 
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const updateEmployee = (data) => {
     dispatch(patchEmployee(id, selected.id, data));
     setEditVisible(false);
   };
 
   const userStats = useMemo(() => {
-    const { total, ...rest } = stats;
+    const {
+      total,
+      ...rest
+    } = stats;
     return {
       accounts: total,
       ...rest,
@@ -125,7 +130,9 @@ export default function AccountsList() {
     setEditVisible(true);
   };
 
-  const deleteEmployee = (employeeId) => dispatch(removeEmployee(id, employeeId));
+  const deleteEmployee = (employeeId) => {
+    setDeleteVisible(employeeId);
+  };
 
   const handleChangeUsers = (e) => {
     const { value } = e.target;
@@ -135,14 +142,17 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase
-      name, surname, status, created_at, updated_at, ...rest
+      name, surname, status, created_at, updated_at,
+      ...rest
     } = empl;
     return {
       ...rest,
       // eslint-disable-next-line camelcase
-      created_at: created_at ? moment(created_at).format('lll') : '',
+      created_at: created_at ? moment(created_at)
+        .format('lll') : '',
       // eslint-disable-next-line camelcase
-      updated_at: updated_at ? moment(updated_at).format('lll') : '',
+      updated_at: updated_at ? moment(updated_at)
+        .format('lll') : '',
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };
@@ -252,6 +262,14 @@ export default function AccountsList() {
             places={places}
             onSubmit={updateEmployee}
           />
+          <DeleteEmployee
+            open={deleteVisible}
+            handleClose={() => setDeleteVisible(false)}
+            title={t('Delete Employee?')}
+            employees={employees}
+            remove={() => dispatch(removeEmployee(id, deleteVisible))}
+          />
+
         </PageLayout>
       </Dashboard>
     </MaynLayout>

@@ -76,7 +76,6 @@ export default function Filter({
               {' '}
               {stats.suspended ?? '' }
             </option>
-            <option value={2}>Terminated</option>
           </NativeSelect>
         </FormControl>
         <FormControl className={classes.margin}>
