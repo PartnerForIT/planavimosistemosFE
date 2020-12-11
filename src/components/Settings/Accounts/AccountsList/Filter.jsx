@@ -47,7 +47,7 @@ export default function Filter({
     clearCheckbox();
     setOpen(false);
   };
-  console.log(stats);
+
   return (
     <div className={styles.filterBlock}>
       <div>
