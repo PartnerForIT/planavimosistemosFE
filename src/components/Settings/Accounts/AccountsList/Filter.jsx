@@ -52,7 +52,7 @@ export default function Filter({
       <div>
         <FormControl className={classes.margin}>
           <NativeSelect
-            id='users-select'
+            id='users'
             value={users}
             onChange={handleChangeUser}
             inputProps={{

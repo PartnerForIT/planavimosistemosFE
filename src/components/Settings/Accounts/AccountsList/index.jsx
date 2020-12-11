@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import moment from 'moment';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -46,21 +47,29 @@ const columns = [
   { label: 'Employee', field: 'name', checked: true },
   { label: 'Role', field: 'speciality_id', checked: true },
   { label: 'Email', field: 'email', checked: true },
-  { label: 'Actions', field: 'actions', checked: true },
-  { label: 'Skill', field: 'skills', checked: false },
-  { label: 'Group', field: 'groups', checked: false },
-  { label: 'Sub-group', field: 'subgroup', checked: false },
-  { label: 'Assigned Place', field: 'assigned_place', checked: false },
-  { label: 'ID', field: 'id', checked: true },
-  { label: 'Phone', field: 'phone', checked: true },
-  { label: 'Personal number', field: 'personal_number', checked: true },
+  { label: 'Skill', field: 'skills', checked: true },
+  { label: 'Group', field: 'groups', checked: true },
+  { label: 'Sub-group', field: 'subgroup', checked: true },
+  { label: 'Assigned Place', field: 'place', checked: true },
+  { label: 'Cost/h/$', field: 'cost', checked: true },
+  { label: 'Charge/h/$', field: 'charge', checked: true },
+  { label: 'Charge/h/$', field: 'charge', checked: true },
+  { label: 'Created on', field: 'created_at', checked: true },
+  { label: 'Status change', field: 'updated_at', checked: true },
 ];
 
 const columnsWidthArray = {
-  status: 100,
+  status: 80,
   name: 200,
-  deleted_at: 200,
+  created_at: 220,
+  updated_at: 220,
+  place: 100,
 };
+
+// status
+// 1 active
+// 2 terminated
+// 0 suspend
 
 export default function AccountsList() {
   const { id } = useParams();
@@ -92,6 +101,14 @@ export default function AccountsList() {
     setEditVisible(false);
   };
 
+  const userStats = useMemo(() => {
+    const { total, ...rest } = stats;
+    return {
+      accounts: total,
+      ...rest,
+    };
+  }, [stats]);
+
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,10 +130,18 @@ export default function AccountsList() {
   };
 
   const employees = useMemo(() => employeesAll.map((empl) => {
-    const { name, surname, ...rest } = empl;
+    const {
+      // eslint-disable-next-line camelcase
+      name, surname, status, created_at, updated_at, ...rest
+    } = empl;
     return {
       ...rest,
+      // eslint-disable-next-line camelcase
+      created_at: created_at ? moment(created_at).format('lll') : '',
+      // eslint-disable-next-line camelcase
+      updated_at: updated_at ? moment(updated_at).format('lll') : '',
       name: `${name} ${surname}`,
+      status: parseInt(status, 10),
     };
   }), [employeesAll]);
 
@@ -142,8 +167,7 @@ export default function AccountsList() {
       <Dashboard>
         <TitleBlock
           title={t('Account list')}
-          info={stats}
-          infoReverse
+          info={userStats}
           TitleButtonNew={t('New account')}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
