@@ -24,7 +24,7 @@ const CurrencySign = React.memo(() => {
   }, [company, dispatch, id]);
 
   const currency = useMemo(
-    () => currencies.find((curr) => curr.code === company?.currency)?.symbol ?? '',
+    () => currencies.find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '',
     [company.currency, currencies],
   );
 
