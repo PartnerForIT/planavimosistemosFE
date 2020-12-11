@@ -65,7 +65,12 @@ import {
   GET_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
-  UPDATE_EMPLOYEE_SUCCESS, GET_CURRENCY, GET_CURRENCY_SUCCESS,
+  UPDATE_EMPLOYEE_SUCCESS,
+  GET_CURRENCY,
+  GET_CURRENCY_SUCCESS,
+  DELETE_EMPLOYEE,
+  DELETE_EMPLOYEE_SUCCESS,
+  DELETE_EMPLOYEE_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -237,6 +242,22 @@ export const patchEmployeeSuccess = (data) => ({
 
 export const patchEmployeeError = (data) => ({
   type: UPDATE_EMPLOYEE_ERROR,
+  data,
+});
+
+export const removeEmployee = (companyId, employeeId) => ({
+  type: DELETE_EMPLOYEE,
+  companyId,
+  employeeId,
+});
+
+export const removeEmployeeSuccess = (data) => ({
+  type: DELETE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const removeEmployeeError = (data) => ({
+  type: DELETE_EMPLOYEE_ERROR,
   data,
 });
 

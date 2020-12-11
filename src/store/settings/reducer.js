@@ -53,7 +53,12 @@ import {
   GET_EMPLOYEES_EDIT_ERROR,
   GET_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
-  UPDATE_EMPLOYEE_ERROR, UPDATE_EMPLOYEE_SUCCESS, GET_CURRENCY_SUCCESS,
+  UPDATE_EMPLOYEE_ERROR,
+  UPDATE_EMPLOYEE_SUCCESS,
+  GET_CURRENCY_SUCCESS,
+  DELETE_EMPLOYEE,
+  DELETE_EMPLOYEE_SUCCESS,
+  DELETE_EMPLOYEE_ERROR,
 } from './types';
 
 const initialState = {
@@ -230,7 +235,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         employee: { ...action.data },
         employeesLoading: false,
-      //  employees?
       };
 
     case UPDATE_EMPLOYEE_ERROR:
@@ -254,6 +258,26 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         employeesLoading: false,
+      };
+
+    case DELETE_EMPLOYEE: {
+      return {
+        ...state,
+        employeesLoading: true,
+      };
+    }
+    case DELETE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+        // employees: action.data,
+        employeesLoading: false,
+      };
+
+    case DELETE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+        employeesLoading: false,
+        error: action.data,
       };
 
     case GET_ACTIVITY_LOG: {

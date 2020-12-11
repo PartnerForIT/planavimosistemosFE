@@ -32,7 +32,13 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_EMPLOYEES_ALL, GET_EMPLOYEES_EDIT, UPDATE_EMPLOYEE, GET_CURRENCY,
+  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_SUBGROUP,
+  GET_EMPLOYEES_ALL,
+  GET_EMPLOYEES_EDIT,
+  UPDATE_EMPLOYEE,
+  GET_CURRENCY,
+  DELETE_EMPLOYEE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -70,7 +76,7 @@ import {
   loadEmployeesEditError,
   patchEmployeeError,
   patchEmployeeSuccess,
-  loadEmployeesAll, getCurrenciesSuccess,
+  loadEmployeesAll, getCurrenciesSuccess, removeEmployeeError, removeEmployee, removeEmployeeSuccess,
 } from './actions';
 
 function token() {
@@ -585,6 +591,28 @@ function* loadCurrencies() {
   }
 }
 
+function* deleteEmployee(action) {
+  try {
+    const { data } = yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/employees/delete/${action.employeeId}`,
+      token(),
+    );
+    if (data.message === 'Deleted') {
+      yield put(removeEmployeeSuccess());
+      yield put(loadEmployeesAll(action.companyId));
+    }
+    yield put(addSnackbar('Removed employee successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(removeEmployeeError(e));
+    yield put(addSnackbar('`An error occurred while remove employee', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -618,6 +646,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
-
   yield takeLatest(GET_CURRENCY, loadCurrencies);
+  yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
 }

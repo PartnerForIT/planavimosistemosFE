@@ -25,7 +25,7 @@ import {
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
-  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills, patchEmployee,
+  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills, patchEmployee, removeEmployee,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
@@ -117,12 +117,15 @@ export default function AccountsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    dispatch(loadEmployeesEdit(id, selected.id));
+  const editRowHandler = (employeeId) => {
+    dispatch(loadEmployeesEdit(id, employeeId));
     dispatch(loadSkills(id));
     dispatch(getAccountGroups(id));
     dispatch(loadPlace(id));
-  }, [dispatch, id, selected.id]);
+    setEditVisible(true);
+  };
+
+  const deleteEmployee = (employeeId) => dispatch(removeEmployee(id, employeeId));
 
   const handleChangeUsers = (e) => {
     const { value } = e.target;
@@ -198,12 +201,9 @@ export default function AccountsList() {
                     sortable
                     loading={empLoading}
                     onSelect={selectionHandler}
-                    editRow={() => {
-                      dispatch(loadEmployeesEdit(id, selected?.id));
-                      setEditVisible(true);
-                    }}
+                    editRow={editRowHandler}
                     hoverActions
-                    removeRow={() => ({})}
+                    removeRow={deleteEmployee}
                     // onSort={sortHandler}
                     // onSerach={searchHandler}
                     // lastPage={page.last_page}
