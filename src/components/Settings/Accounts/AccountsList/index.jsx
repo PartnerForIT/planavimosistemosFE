@@ -190,6 +190,7 @@ export default function AccountsList() {
                     changeUserStatus={() => ({})}
                     checkedItems={checkedItems ?? []}
                     clearCheckbox={() => ({})}
+                    stats={userStats}
                   />
                   <DataTable
                     data={employees ?? []}

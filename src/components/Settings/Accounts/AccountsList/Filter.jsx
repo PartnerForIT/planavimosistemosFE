@@ -35,6 +35,7 @@ export default function Filter({
   changeUserStatus = () => ({}),
   checkedItems,
   clearCheckbox,
+  stats,
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ export default function Filter({
     clearCheckbox();
     setOpen(false);
   };
-
+  console.log(stats);
   return (
     <div className={styles.filterBlock}>
       <div>
@@ -60,9 +61,21 @@ export default function Filter({
             }}
             input={<BootstrapInput />}
           >
-            <option value={3}>All Users</option>
-            <option value={1}>Active</option>
-            <option value={0}>Suspended</option>
+            <option value={3}>
+              All Users
+              {' '}
+              {stats.accounts ?? ''}
+            </option>
+            <option value={1}>
+              Active
+              {' '}
+              {stats.active}
+            </option>
+            <option value={0}>
+              Suspended
+              {' '}
+              {stats.suspended ?? '' }
+            </option>
             <option value={2}>Terminated</option>
           </NativeSelect>
         </FormControl>
