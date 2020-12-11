@@ -1,0 +1,53 @@
+@import "../../variables";
+
+.progress {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  &_inner {
+    width: 110px;
+    height: 4px;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    background-color: $light-blue;
+
+    & span {
+      display: inline-block;
+      background-color: $light-blue;
+    }
+
+    & .active {
+      background-color: $blue;
+      border-radius: 2px;
+    }
+  }
+}
+
+.newAccount {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  margin: 50px;
+
+  .info {
+    padding-right: 25px;
+  }
+
+  .divider {
+    height: 100%;
+    display: block;
+    background-color: $light-blue;
+  }
+
+  .form {
+    padding-left: 25px;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

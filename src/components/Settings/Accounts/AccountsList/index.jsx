@@ -232,7 +232,7 @@ export default function AccountsList() {
                     editRow={editRowHandler}
                     hoverActions
                     removeRow={deleteEmployee}
-                    // onSort={sortHandler}
+                    onSort={() => ({})}
                     // onSerach={searchHandler}
                     // lastPage={page.last_page}
                     // activePage={page.current_page}
