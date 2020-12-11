@@ -58,7 +58,7 @@ import {
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
   DELETE_EMPLOYEE_SUCCESS,
-  DELETE_EMPLOYEE_ERROR,
+  DELETE_EMPLOYEE_ERROR, EMPLOYEE_ACTIONS, EMPLOYEE_ACTIONS_SUCCESS, EMPLOYEE_ACTIONS_ERROR,
 } from './types';
 
 const initialState = {
@@ -260,19 +260,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
         employeesLoading: false,
       };
 
-    case DELETE_EMPLOYEE: {
+    case DELETE_EMPLOYEE:
+    case EMPLOYEE_ACTIONS:
       return {
         ...state,
         employeesLoading: true,
       };
-    }
+
+    case EMPLOYEE_ACTIONS_SUCCESS:
     case DELETE_EMPLOYEE_SUCCESS:
       return {
         ...state,
-        // employees: action.data,
         employeesLoading: false,
       };
 
+    case EMPLOYEE_ACTIONS_ERROR:
     case DELETE_EMPLOYEE_ERROR:
       return {
         ...state,

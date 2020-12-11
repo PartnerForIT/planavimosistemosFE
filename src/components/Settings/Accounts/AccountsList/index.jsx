@@ -25,12 +25,20 @@ import {
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
-  getAccountGroups, loadEmployeesAll, loadEmployeesEdit, loadPlace, loadSkills, patchEmployee, removeEmployee,
+  getAccountGroups,
+  loadEmployeesAll,
+  loadEmployeesEdit,
+  loadPlace,
+  loadSkills,
+  patchEmployee,
+  removeEmployee,
+  setEmployeesActions,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
 import CurrencySign from '../../../shared/CurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
+import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -101,6 +109,9 @@ export default function AccountsList() {
   const [editVisible, setEditVisible] = useState(false);
 
   const [deleteVisible, setDeleteVisible] = useState(false);
+
+  const [changeStatusOpen, setChangeStatusOpen] = useState(false);
+
   const updateEmployee = (data) => {
     dispatch(patchEmployee(id, selected.id, data));
     setEditVisible(false);
@@ -137,6 +148,10 @@ export default function AccountsList() {
   const handleChangeUsers = (e) => {
     const { value } = e.target;
     setUsersOptions(parseInt(value, 10));
+  };
+
+  const handleChangingStatus = (status) => {
+    dispatch(setEmployeesActions(id, checkedItems, status));
   };
 
   const employees = useMemo(() => employeesAll.map((empl) => {
@@ -197,7 +212,7 @@ export default function AccountsList() {
                   <Filter
                     handleChangeOrganizations={handleChangeUsers}
                     users={usersOptions}
-                    changeUserStatus={() => ({})}
+                    changeUserStatus={(status) => setChangeStatusOpen(status)}
                     checkedItems={checkedItems ?? []}
                     clearCheckbox={() => ({})}
                     stats={userStats}
@@ -269,7 +284,12 @@ export default function AccountsList() {
             employees={employees}
             remove={() => dispatch(removeEmployee(id, deleteVisible))}
           />
-
+          <ChangeEmplStatus
+            open={changeStatusOpen}
+            handleClose={() => setChangeStatusOpen(false)}
+            title={t('Change status?')}
+            changeStatus={handleChangingStatus}
+          />
         </PageLayout>
       </Dashboard>
     </MaynLayout>

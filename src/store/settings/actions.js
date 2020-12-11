@@ -70,7 +70,7 @@ import {
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
   DELETE_EMPLOYEE_SUCCESS,
-  DELETE_EMPLOYEE_ERROR,
+  DELETE_EMPLOYEE_ERROR, EMPLOYEE_ACTIONS, EMPLOYEE_ACTIONS_ERROR, EMPLOYEE_ACTIONS_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -258,6 +258,23 @@ export const removeEmployeeSuccess = (data) => ({
 
 export const removeEmployeeError = (data) => ({
   type: DELETE_EMPLOYEE_ERROR,
+  data,
+});
+
+export const setEmployeesActions = (companyId, employeesIds = [], status) => ({
+  type: EMPLOYEE_ACTIONS,
+  companyId,
+  status,
+  employeesIds,
+});
+
+export const setEmployeesActionsSuccess = (data) => ({
+  type: EMPLOYEE_ACTIONS_SUCCESS,
+  data,
+});
+
+export const setEmployeesActionsError = (data) => ({
+  type: EMPLOYEE_ACTIONS_ERROR,
   data,
 });
 

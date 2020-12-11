@@ -38,7 +38,7 @@ import {
   GET_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
-  DELETE_EMPLOYEE,
+  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -75,8 +75,10 @@ import {
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
   patchEmployeeError,
-  patchEmployeeSuccess,
-  loadEmployeesAll, getCurrenciesSuccess, removeEmployeeError, removeEmployee, removeEmployeeSuccess,
+  loadEmployeesAll,
+  getCurrenciesSuccess,
+  removeEmployeeError,
+  removeEmployeeSuccess, setEmployeesActionsError,
 } from './actions';
 
 function token() {
@@ -576,7 +578,7 @@ function* updateEmployee(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(patchEmployeeError(e));
-    yield put(addSnackbar('`An error occurred while edit account', 'error'));
+    yield put(addSnackbar('An error occurred while edit account', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -607,7 +609,27 @@ function* deleteEmployee(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(removeEmployeeError(e));
-    yield put(addSnackbar('`An error occurred while remove employee', 'error'));
+    yield put(addSnackbar('An error occurred while remove employee', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* setEmployeesActions(action) {
+  try {
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${action.companyId}/employees/mass-action`, {
+        users: action.employeesIds.toString(),
+        action: action.status,
+      }, token());
+    console.log(data);
+
+    yield put(addSnackbar('Changed status successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(setEmployeesActionsError(e));
+    yield put(addSnackbar('An error occurred while changing employee\'s status', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -648,4 +670,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
   yield takeLatest(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
+  yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
 }
