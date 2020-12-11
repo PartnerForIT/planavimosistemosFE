@@ -413,6 +413,17 @@ header {
   }
 }
 
+.absoluteActions {
+  position: fixed;
+  right: 75px;
+  padding: 2px 20px;
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  z-index: 1;
+  background: linear-gradient(to right, #d0dfef04 0%, #d0dfef 50%, #d0dfef 100%);
+}
+
 .opacityText {
   opacity: 0;
 }

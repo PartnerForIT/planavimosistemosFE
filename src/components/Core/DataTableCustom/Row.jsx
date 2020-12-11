@@ -13,7 +13,7 @@ import EditIcon from '../../Icons/EditIcon';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -68,12 +68,20 @@ const Row = ({
     if (typeof setSelectedItem === 'function') setSelectedItem(selectedRow);
     setSubTableExpanded(!subTableExpanded);
   };
+  const [actionsVisible, setActionsVisible] = useState(false);
 
   return (
     <div
       className={classNames(styles.flexTable, styles.row)}
       role='rowgroup'
+      onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
+      onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
     >
+      {
+        actionsVisible && hoverActions && (
+          <RowActions editRow={editRow} removeRow={removeRow} absolute />
+        )
+      }
       <div className={rowWrapperClasses}>
         {
           selectable && (
@@ -141,14 +149,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                  <div className={styles.ActionsTable}>
-                    <button onClick={editRow}>
-                      <EditIcon />
-                    </button>
-                    <button onClick={removeRow}>
-                      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
-                    </button>
-                  </div>
+                    <RowActions editRow={editRow} removeRow={removeRow} />
                   )
                 }
               </div>
@@ -174,3 +175,18 @@ const Row = ({
 };
 
 export default Row;
+
+const RowActions = ({
+  editRow,
+  removeRow,
+  absolute = false,
+}) => (
+  <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
+    <button onClick={editRow}>
+      <EditIcon />
+    </button>
+    <button onClick={removeRow}>
+      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
+    </button>
+  </div>
+);

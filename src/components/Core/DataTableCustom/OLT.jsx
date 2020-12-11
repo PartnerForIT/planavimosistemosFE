@@ -25,7 +25,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false,
+  removeRow = () => ({}), multiselect = false, hoverActions = false,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -243,6 +243,7 @@ export default function DataTable({
                 editRow={editRow}
                 removeRow={removeRow}
                 multiselect={multiselect}
+                hoverActions={hoverActions}
               />
             ))
           }
