@@ -130,11 +130,16 @@
 
 .edit {
 
-
   .avatarBlock {
     display: flex;
     align-items: center;
     margin-bottom: 40px;
+
+    & img {
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+    }
   }
 
   .form {

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Avatar, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import { DropzoneDialog } from 'material-ui-dropzone';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -14,6 +15,7 @@ import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
 import BootstrapInput from '../../../shared/SelectBootstrapInput';
+import { convertBase64 } from '../../../Helpers';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +56,8 @@ export default function EditAccount({
 
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [file, setFile] = useState(null);
 
   const [skillName, setSkillName] = useState(defaultSkill);
 
@@ -136,12 +140,26 @@ export default function EditAccount({
     return [{ id: '', name: t('Select a place') }, ...pls];
   }, [places, t]);
 
+  useEffect(() => {
+    if (file) {
+      setUser((prevState) => ({ ...prevState, photo: file }));
+      setFile(null);
+    }
+  }, [file]);
+
   // {
   //   skill
   //   group
   //   sub-group
   //   place
   // }
+
+  // eslint-disable-next-line no-shadow
+  const handleSave = async (file) => {
+    const base64 = await convertBase64(file[0]);
+    setFile(base64);
+    setDownloadOpen(false);
+  };
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
@@ -153,8 +171,8 @@ export default function EditAccount({
             : (
               <>
                 <div className={style.avatarBlock}>
-                  <Avatar src={user.photo ?? avatar} className={styles.large} />
-                  <Button size='big' inverse>Upload</Button>
+                  <img src={user.photo ?? avatar} className={styles.large} alt='Account logo' />
+                  <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
                 </div>
 
                 <form className={style.form}>
@@ -297,6 +315,15 @@ export default function EditAccount({
                   title={t('Create new skill')}
                   buttonTitle={t('Create new skill')}
                   createSkill={createNewSkill}
+                />
+                <DropzoneDialog
+                  open={downloadOpen}
+                  onSave={handleSave}
+                  acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                  showPreviews
+                  maxFileSize={500000}
+                  onClose={() => setDownloadOpen(false)}
+                  filesLimit={1}
                 />
               </>
             )
