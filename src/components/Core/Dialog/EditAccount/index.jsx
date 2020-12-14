@@ -194,6 +194,7 @@ export default function EditAccount({
                       <Label htmlFor='email' text={t('Email')} />
                       <Input
                         name='email'
+                        type='email'
                         placeholder={t('New user email/user name')}
                         value={user.email ?? ''}
                         onChange={handleInput}
