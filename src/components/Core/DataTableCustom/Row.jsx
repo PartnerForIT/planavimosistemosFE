@@ -13,7 +13,7 @@ import EditIcon from '../../Icons/EditIcon';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions, hoverable = false,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -23,6 +23,7 @@ const Row = ({
   }, [multiselect, row.id, selectedItem]);
 
   const [subTableExpanded, setSubTableExpanded] = useState(false);
+  const [actionsVisible, setActionsVisible] = useState(false);
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
@@ -45,7 +46,7 @@ const Row = ({
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: selected && selected.id === row.id && !reports },
+    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
   );
 
@@ -68,7 +69,6 @@ const Row = ({
     if (typeof setSelectedItem === 'function') setSelectedItem(selectedRow);
     setSubTableExpanded(!subTableExpanded);
   };
-  const [actionsVisible, setActionsVisible] = useState(false);
 
   return (
     <div

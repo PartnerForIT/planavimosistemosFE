@@ -231,6 +231,7 @@ export default function AccountsList() {
                     onSelect={selectionHandler}
                     editRow={editRowHandler}
                     hoverActions
+                    hoverable
                     removeRow={deleteEmployee}
                     onSort={() => ({})}
                     // onSerach={searchHandler}
