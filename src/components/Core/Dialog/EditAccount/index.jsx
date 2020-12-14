@@ -90,8 +90,8 @@ export default function EditAccount({
       const {
         // eslint-disable-next-line camelcase
         email,
-        // eslint-disable-next-line camelcase
-        name, surname, phone, speciality_id, external_id, cost, charge,
+        // eslint-disable-next-line camelcase,no-shadow
+        name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
         // eslint-disable-next-line no-shadow
         photo, groups,
       } = employee;
@@ -105,10 +105,13 @@ export default function EditAccount({
         cost,
         charge,
         photo,
-        group: Array.isArray(groups) ? groups[0]?.group_id : groups?.group_id,
+        group: Array.isArray(groups) ? groups[0]?.group_id : groups?.group_id ?? '',
+        subgroup: groups?.sub_groups ? groups?.sub_groups.id : '' ?? '',
+        skill: skills?.[0]?.id ?? '',
+        place: place?.[0]?.id ?? '',
       });
     }
-  }, [employee, groups]);
+  }, [employee, groups, skills]);
 
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
