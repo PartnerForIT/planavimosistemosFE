@@ -89,14 +89,23 @@ export default function EditAccount({
     if (!_.isEmpty(employee)) {
       const {
         // eslint-disable-next-line camelcase
-        user: { role_id, email },
+        email,
         // eslint-disable-next-line camelcase
         name, surname, phone, speciality_id, external_id, cost, charge,
         // eslint-disable-next-line no-shadow
         photo, groups,
       } = employee;
       setUser({
-        role_id, email, name, surname, phone, speciality_id, external_id, cost, charge, photo, group: groups?.id,
+        email,
+        name,
+        surname,
+        phone,
+        speciality_id,
+        external_id,
+        cost,
+        charge,
+        photo,
+        group: Array.isArray(groups) ? groups[0]?.group_id : groups?.group_id,
       });
     }
   }, [employee, groups]);
