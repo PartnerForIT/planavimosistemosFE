@@ -152,6 +152,7 @@ export default function AccountsList() {
 
   const handleChangingStatus = (status) => {
     dispatch(setEmployeesActions(id, checkedItems, status));
+    setCheckedItems([]);
   };
 
   const employees = useMemo(() => employeesAll.map((empl) => {
