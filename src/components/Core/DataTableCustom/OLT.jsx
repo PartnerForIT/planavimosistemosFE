@@ -13,7 +13,7 @@ import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
-import RowSearch from './Search';
+import StyledCheckbox from '../Checkbox/Checkbox';
 
 const useStyles = makeStyles({
   colorPrimary: {
@@ -26,6 +26,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
+  selectAll = false,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -34,6 +35,8 @@ export default function DataTable({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
+
+  const [selectedAll, setSelectedAll] = useState(false);
 
   const classes = useStyles();
 
@@ -202,6 +205,15 @@ export default function DataTable({
                         className={sortBlockClasses}
                         onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
                       >
+                        {
+                          selectAll && column.field === 'status'
+                          && (
+                            <StyledCheckbox
+                              checked={selectedAll}
+                              onChange={setSelectedAll((prevState) => !prevState)}
+                            />
+                          )
+                        }
                         <div className={classNames(styles.flexCenter)}>{column.label}</div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
