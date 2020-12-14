@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import moment from 'moment';
+import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -106,7 +107,7 @@ export default function AccountsList() {
   const [checkedItems, setCheckedItems] = useState([]);
 
   const [selected, setSelected] = useState({});
-  const [newVisible, setNewVisible] = useState(false);
+  const [newVisible, setNewVisible] = useState(true);
   const [editVisible, setEditVisible] = useState(false);
 
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -141,6 +142,18 @@ export default function AccountsList() {
     dispatch(loadPlace(id));
     setEditVisible(employeeId);
   };
+
+  useEffect(() => {
+    if (_.isEmpty(skills) && newVisible) {
+      dispatch(loadSkills(id));
+    }
+    if (_.isEmpty(groups)) {
+      dispatch(getAccountGroups(id));
+    }
+    if (_.isEmpty(places)) {
+      dispatch(loadPlace(id));
+    }
+  }, [dispatch, groups, id, newVisible, places, skills]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -196,6 +209,7 @@ export default function AccountsList() {
     }
   };
 
+  // eslint-disable-next-line no-shadow
   const sorting = useCallback((employees, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
@@ -288,7 +302,10 @@ export default function AccountsList() {
           <CreateAccount
             open={newVisible}
             handleClose={() => setNewVisible(false)}
-
+            companyId={id}
+            skills={skills}
+            groups={groups}
+            places={places}
           />
           <EditAccount
             open={editVisible}
