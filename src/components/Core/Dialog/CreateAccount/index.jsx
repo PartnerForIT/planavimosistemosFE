@@ -1,25 +1,53 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Dialog from '../index';
-import Button from '../../Button/Button';
-import Input from '../../Input/Input';
-import Label from '../../InputLabel';
 import style from './CreateAccount.module.scss';
+import FirstStep from './First';
+import SecondStep from './Second';
 
 export default function CreateAccount({
   handleClose,
   title,
   open,
-  buttonTitle,
-  job,
-  setJob,
 }) {
   const { t } = useTranslation();
 
   const [step, setStep] = useState(1);
 
+  const [user, setUser] = useState({
+    photo: '',
+    email: '',
+    name: '',
+    surname: '',
+    external_id: '',
+  });
+
   const stepUp = () => setStep((prevState) => (prevState < 3 ? prevState + 1 : prevState));
   const stepDown = () => setStep((prevState) => (prevState > 1 ? prevState - 1 : prevState));
+
+  const handleInput = (e) => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setUser((prevState) => {
+      if (name !== 'group') {
+        return {
+          ...prevState,
+          [name]: value,
+        };
+      }
+      const {
+        subgroup: $,
+        ...rest
+      } = prevState;
+      return {
+        ...rest,
+        [name]: value,
+      };
+    });
+  };
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
@@ -31,28 +59,34 @@ export default function CreateAccount({
       </div>
 
       <div className={style.newAccount}>
-        <div className={style.info}>info</div>
-        <div className={style.divider} />
-        <div className={style.form}>form</div>
+
+        <StepWrapper
+          step={step}
+          user={user}
+          handleInput={handleInput}
+          nextStep={stepUp}
+          previousStep={stepDown}
+        />
       </div>
 
-      {/* <Label text={t('Job name')} htmlFor='name' /> */}
-      {/* <Input */}
-      {/*  placeholder={`${t('Enter Job name')}`} */}
-      {/*  value={job} */}
-      {/*  name='name' */}
-      {/*  fullWidth */}
-      {/*  onChange={(e) => setJob(e.target.value)} */}
-      {/* /> */}
-      <div className={style.buttons}>
-        <Button
-          onClick={() => ({})}
-          fillWidth
-          size='big'
-        >
-          {buttonTitle}
-        </Button>
-      </div>
     </Dialog>
   );
 }
+
+const StepWrapper = ({
+  step,
+  ...rest
+}) => {
+  switch (step) {
+    case 1:
+      return (
+        <FirstStep {...rest} />
+      );
+    case 2:
+      return (
+        <SecondStep {...rest} />
+      );
+    default:
+      return (<></>);
+  }
+};

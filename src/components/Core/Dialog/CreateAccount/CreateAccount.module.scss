@@ -27,9 +27,10 @@
 }
 
 .newAccount {
-  display: grid;
-  grid-template-columns: 1fr 1px 1fr;
-  margin: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 50px;
+  min-width: 600px;
 
   .info {
     padding-right: 25px;
@@ -46,8 +47,59 @@
   }
 }
 
+.firstForm {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+}
+
+.formItem {
+  margin-bottom: 26px;
+
+  &:last-child {
+    margin-bottom: unset;
+  }
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 50px;
+
+  & span {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & svg {
+    margin-left: 1ex;
+  }
+}
+
+.avatar {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 16px;
+
+  &_block {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    &_inner {
+      width: 85px;
+    }
+  }
+}
+
+small {
+  color: $red-600;
 }
