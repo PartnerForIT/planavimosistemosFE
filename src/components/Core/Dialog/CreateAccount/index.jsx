@@ -11,16 +11,16 @@ export default function CreateAccount({
   open,
 }) {
   const { t } = useTranslation();
-
-  const [step, setStep] = useState(1);
-
-  const [user, setUser] = useState({
+  const initialUser = {
     photo: '',
     email: '',
     name: '',
     surname: '',
     external_id: '',
-  });
+  };
+  const [step, setStep] = useState(1);
+
+  const [user, setUser] = useState(initialUser);
 
   const stepUp = () => setStep((prevState) => (prevState < 3 ? prevState + 1 : prevState));
   const stepDown = () => setStep((prevState) => (prevState > 1 ? prevState - 1 : prevState));
@@ -50,7 +50,15 @@ export default function CreateAccount({
   };
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog
+      handleClose={() => {
+        setUser(initialUser);
+        setStep(1);
+        handleClose();
+      }}
+      open={open}
+      title={title}
+    >
 
       <div className={style.progress}>
         <div className={style.progress_inner}>
