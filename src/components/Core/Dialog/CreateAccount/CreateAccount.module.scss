@@ -1,5 +1,8 @@
 @import "../../variables";
 
+$padding-size: 25px;
+$info-text-color: #707070;
+
 .progress {
   display: flex;
   width: 100%;
@@ -27,33 +30,30 @@
 }
 
 .newAccount {
-  margin-left: 50px;
-  margin-right: 50px;
   margin-top: 50px;
-  min-width: 600px;
+  width: 100%;
+  max-width: 900px;
 
   .info {
-    padding-right: 25px;
-  }
-
-  .divider {
-    height: 100%;
-    display: block;
-    background-color: $light-blue;
+    padding-right: $padding-size;
   }
 
   .form {
-    padding-left: 25px;
+    padding-left: $padding-size;
   }
 }
 
 .firstForm {
   display: grid;
-  grid-template-columns: 1fr 1px 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .formItem {
-  margin-bottom: 26px;
+  margin-bottom: $padding-size;
+
+  & label + div {
+    margin-top: unset;
+  }
 
   &:last-child {
     margin-bottom: unset;
@@ -102,4 +102,107 @@
 
 small {
   color: $red-600;
+}
+
+#border {
+  border-color: $light-blue;
+  border-style: solid;
+  border-width: 0;
+}
+
+.border {
+
+  &Left {
+    @extend #border;
+
+    border-left-width: 1px;
+  }
+
+  &Right {
+    @extend #border;
+
+    border-right-width: 1px;
+  }
+}
+
+.secondForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .info {
+    padding-right: $padding-size;
+  }
+
+  .card {
+    background-color: #e2e9ed;
+    border-radius: 5px;
+    padding: 20px;
+    min-width: 290px;
+    color: $info-text-color;
+
+    &_head {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      grid-column-gap: 20px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    &_name {
+      display: flex;
+      flex-direction: column;
+
+      & p {
+        margin: 0;
+        color: black;
+      }
+
+      & small {
+        color: inherit;
+      }
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      margin-bottom: unset;
+    }
+
+    &_body {
+      padding-left: $padding-size;
+      padding-right: $padding-size;
+
+      & p {
+        margin-top: unset;
+        margin-bottom: 20px;
+
+        &:last-child {
+          margin-bottom: unset;
+        }
+      }
+    }
+  }
+
+  .center {
+    padding-left: $padding-size;
+    padding-right: $padding-size;
+  }
+
+  .right {
+    padding-left: $padding-size;
+  }
+}
+
+.skill {
+  position: relative;
+
+  & button {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+  }
+
+  & label + div {
+    margin-top: unset;
+  }
 }
