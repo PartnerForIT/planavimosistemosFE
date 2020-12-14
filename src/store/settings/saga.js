@@ -572,6 +572,7 @@ function* updateEmployee(action) {
       group,
       subgroup,
       place,
+      skill,
       ...rest
     } = action.data;
     // eslint-disable-next-line no-unused-vars
@@ -603,6 +604,15 @@ function* updateEmployee(action) {
           parent_group_id: parseInt(group, 10),
           group_id: parseInt(subgroup, 10),
           subgroup: true,
+        }, token());
+    }
+
+    if (skill) {
+      // eslint-disable-next-line no-unused-vars,no-shadow
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${action.id}/employees/assign-skill`, {
+          employee_id: action.employeeId,
+          skill_id: skill,
         }, token());
     }
 

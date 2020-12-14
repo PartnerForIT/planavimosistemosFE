@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +69,6 @@ const columns = [
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
   { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
-  { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: 'Created on', field: 'created_at', checked: true },
   { label: 'Status change', field: 'updated_at', checked: true },
@@ -158,13 +157,14 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups,
+      name, surname, status, created_at, updated_at, place, groups, skills,
       ...rest
     } = empl;
     return {
       ...rest,
       group: groups?.name ?? '',
       subgroup: groups?.sub_groups?.name ?? '',
+      skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
       // eslint-disable-next-line camelcase
       created_at: created_at ? moment(created_at)
@@ -179,7 +179,7 @@ export default function AccountsList() {
 
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
-    employees.map((item) => {
+    employees.forEach((item) => {
       if (item.id === itemId) {
         // eslint-disable-next-line no-param-reassign
         item.checked = !item.checked;
@@ -193,6 +193,25 @@ export default function AccountsList() {
       setCheckedItems([...checkedItems]);
     }
   };
+
+  const sorting = useCallback((employees, { field, asc }) => {
+    const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
+    const sortFunction = (a, b) => {
+      if (typeof a[field] === 'number' && typeof b[field] === 'number') {
+        return sortNumFunction(a, b);
+      }
+      if (typeof a[field] === 'object' || typeof b[field] === 'object') {
+        return sortNumFunction(a, b);
+      }
+      if (asc) {
+        return a[field].toString()
+          .localeCompare(b[field]);
+      }
+      return b[field].toString()
+        .localeCompare(a[field]);
+    };
+    return employees.sort(sortFunction);
+  }, []);
 
   return (
     <MaynLayout>
@@ -234,7 +253,7 @@ export default function AccountsList() {
                     hoverActions
                     hoverable
                     removeRow={deleteEmployee}
-                    onSort={() => ({})}
+                    onSort={(field, asc) => sorting(employees, { field, asc })}
                     // onSerach={searchHandler}
                     // lastPage={page.last_page}
                     // activePage={page.current_page}
