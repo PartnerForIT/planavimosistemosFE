@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Dialog from '../index';
 import Button from '../../Button/Button';
@@ -14,9 +13,9 @@ import avatar from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
-import BootstrapInput from '../../../shared/SelectBootstrapInput';
 import { convertBase64 } from '../../../Helpers';
 import CurrencySign from '../../../shared/CurrencySign';
+import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -239,7 +238,7 @@ export default function EditAccount({
                         {`+${t('new skill')}`}
                       </Button>
                       <Label text={t('Skill')} htmlFor='skill' />
-                      <Select
+                      <AddEditSelectOptions
                         id='skill'
                         options={skillsOptions}
                         user={user}
@@ -291,7 +290,7 @@ export default function EditAccount({
 
                     <div>
                       <Label htmlFor='group' text={t('Assign to Group')} />
-                      <Select
+                      <AddEditSelectOptions
                         id='group'
                         options={groupsOpt}
                         user={user}
@@ -303,7 +302,7 @@ export default function EditAccount({
 
                     <div>
                       <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-                      <Select
+                      <AddEditSelectOptions
                         id='subgroup'
                         options={subGroupsOpt}
                         user={user}
@@ -316,7 +315,7 @@ export default function EditAccount({
 
                     <div>
                       <Label htmlFor='place' text={t('Assign to place')} />
-                      <Select
+                      <AddEditSelectOptions
                         id='place'
                         options={placeOpt}
                         user={user}
@@ -366,31 +365,3 @@ export default function EditAccount({
     </Dialog>
   );
 }
-
-const Select = ({
-  id,
-  user,
-  name,
-  options,
-  handleInput,
-  ...rest
-}) => (
-  <NativeSelect
-    className={style.select}
-    id={id}
-    value={user[name] ?? ''}
-    onChange={handleInput}
-    fullWidth
-    inputProps={{
-      name,
-    }}
-    input={<BootstrapInput />}
-    {...rest}
-  >
-    {
-      options.map((opt) => (
-        <option value={opt.id} key={opt.id + opt.name}>{opt.name}</option>
-      ))
-    }
-  </NativeSelect>
-);
