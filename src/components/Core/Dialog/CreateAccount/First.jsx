@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
@@ -186,11 +186,6 @@ const FirstStep = ({
           </form>
         </div>
       </div>
-      <pre>
-        {
-          JSON.stringify(errors, null, 2)
-        }
-      </pre>
       <div className={style.buttons}>
         <NextStepButton onClick={nextWithValidate} />
       </div>
