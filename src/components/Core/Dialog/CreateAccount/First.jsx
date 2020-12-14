@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
+import classnames from 'classnames';
 import style from './CreateAccount.module.scss';
 import avatar from '../../../Icons/avatar.png';
 import Button from '../../Button/Button';
@@ -75,21 +76,21 @@ const FirstStep = ({
 
     requireError({
       name: 'email',
-      message: 'Email is required',
+      message: t('Email is required'),
     });
     requireError({
       name: 'name',
-      message: 'Name is required',
+      message: t('Name is required'),
     });
     requireError({
       name: 'surname',
-      message: 'Surname is required',
+      message: t('Surname is required'),
     });
 
     if (!validateEmail(email)) {
       setError({
         name: 'email',
-        message: 'Email is invalid',
+        message: t('Email is invalid'),
       });
     } else {
       removeError({ name: 'email' });
@@ -108,10 +109,10 @@ const FirstStep = ({
   return (
     <>
       <div className={style.firstForm}>
-        <div className={style.info}>
+        <div className={classnames(style.info, style.borderRight)}>
           <div className={style.avatar_block}>
             <div className={style.avatar_block_inner}>
-              <img className={style.avatar} src={file ?? avatar} alt='avatar' />
+              <img className={style.avatar} src={file ?? avatar} alt={t('avatar')} />
               <Button inverse fillWidth onClick={() => setUploadVisible(true)}>Upload</Button>
             </div>
             <DropzoneDialog
@@ -125,7 +126,6 @@ const FirstStep = ({
             />
           </div>
         </div>
-        <div className={style.divider} />
         <div className={style.form}>
           <form>
 
@@ -140,9 +140,9 @@ const FirstStep = ({
                 onChange={handleInput}
               />
               {
-              errors.email
-              && <small>{errors.email}</small>
-            }
+                errors.email
+                && <small>{errors.email}</small>
+              }
             </div>
 
             <div className={style.formItem}>
@@ -154,9 +154,9 @@ const FirstStep = ({
                 onChange={handleInput}
               />
               {
-              errors.name
-              && <small>{errors.name}</small>
-            }
+                errors.name
+                && <small>{errors.name}</small>
+              }
             </div>
 
             <div className={style.formItem}>
@@ -168,9 +168,9 @@ const FirstStep = ({
                 onChange={handleInput}
               />
               {
-              errors.surname
-              && <small>{errors.surname}</small>
-            }
+                errors.surname
+                && <small>{errors.surname}</small>
+              }
             </div>
 
             <div className={style.formItem}>

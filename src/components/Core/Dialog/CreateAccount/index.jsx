@@ -9,16 +9,20 @@ export default function CreateAccount({
   handleClose,
   title,
   open,
+  companyId,
+  skills,
+  groups,
+  places,
 }) {
   const { t } = useTranslation();
   const initialUser = {
     photo: '',
     email: '',
-    name: '',
-    surname: '',
-    external_id: '',
+    name: 'Anthony',
+    surname: 'Soprano',
+    external_id: '12313',
   };
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
 
   const [user, setUser] = useState(initialUser);
 
@@ -74,6 +78,10 @@ export default function CreateAccount({
           handleInput={handleInput}
           nextStep={stepUp}
           previousStep={stepDown}
+          companyId={companyId}
+          skills={skills}
+          groups={groups}
+          places={places}
         />
       </div>
 
