@@ -12,6 +12,7 @@ import { createSkill } from '../../../../store/settings/actions';
 import CurrencySign from '../../../shared/CurrencySign';
 import Input from '../../Input/Input';
 import NextStepButton from './NextStepButton';
+import UserCard from './UserCard';
 
 const defaultSkill = {
   name: '',
@@ -123,22 +124,9 @@ const SecondStep = ({
       <div className={style.secondForm}>
 
         <div className={classnames(style.info, style.border, style.borderRight)}>
-          <div className={style.card}>
-            <div className={style.card_head}>
-              <img src={user.photo || avatar} alt='avatar' className={style.avatar} />
-              <div className={style.card_name}>
-                <p>{`${user.name} ${user.surname}`}</p>
-                <small>@soprano</small>
-              </div>
-            </div>
-            <div className={style.card_body}>
-              <p>
-                {t('External id:')}
-                {user.external_id}
-              </p>
-            </div>
-          </div>
+          <UserCard user={user} groups={groups} places={places} skills={skills} />
         </div>
+
         <div className={classnames(style.center, style.borderRight)}>
           <div className={classnames(style.skill, style.formItem)}>
             <Button inline inverse onClick={() => setSkillOpen(true)}>
@@ -252,8 +240,8 @@ const SecondStep = ({
       </div>
 
       <div className={style.buttons}>
-        <Button onClick={previousStep}>prev</Button>
-        <NextStepButton onClick={() => ({})} />
+        <Button onClick={previousStep} size='big' cancel>{t('Back')}</Button>
+        <NextStepButton onClick={nextStep} />
       </div>
     </>
   );
