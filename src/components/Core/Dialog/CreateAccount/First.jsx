@@ -16,6 +16,7 @@ const FirstStep = ({
   user,
   handleInput,
   nextStep,
+  setUser,
 }) => {
   const [file, setFile] = useState(null);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -30,6 +31,10 @@ const FirstStep = ({
   const [errors, setErrors] = useState({});
 
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setUser((prevState) => ({ ...prevState, photo: file }));
+  }, [file, setUser]);
 
   const nextWithValidate = () => {
     const { email } = user;

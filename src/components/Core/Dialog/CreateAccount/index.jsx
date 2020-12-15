@@ -4,6 +4,7 @@ import Dialog from '../index';
 import style from './CreateAccount.module.scss';
 import FirstStep from './First';
 import SecondStep from './Second';
+import Third from './Third';
 
 export default function CreateAccount({
   handleClose,
@@ -17,12 +18,12 @@ export default function CreateAccount({
   const { t } = useTranslation();
   const initialUser = {
     photo: '',
-    email: '',
+    email: 'test@test.com',
     name: 'Anthony',
     surname: 'Soprano',
     external_id: '12313',
   };
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(3);
 
   const [user, setUser] = useState(initialUser);
 
@@ -82,6 +83,7 @@ export default function CreateAccount({
           skills={skills}
           groups={groups}
           places={places}
+          setUser={setUser}
         />
       </div>
 
@@ -101,6 +103,10 @@ const StepWrapper = ({
     case 2:
       return (
         <SecondStep {...rest} />
+      );
+    case 3:
+      return (
+        <Third {...rest} />
       );
     default:
       return (<></>);
