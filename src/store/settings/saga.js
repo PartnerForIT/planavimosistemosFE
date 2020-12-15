@@ -572,7 +572,7 @@ function* updateEmployee(action) {
   try {
     const {
       group,
-      subgroup,
+      subgroup = '',
       place,
       skill,
       ...rest
@@ -600,7 +600,7 @@ function* updateEmployee(action) {
       });
     }
 
-    if (subgroup) {
+    /* if (subgroup) */ {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
@@ -721,7 +721,7 @@ function* createEmployee(action) {
         });
       }
 
-      if (subgroup) {
+      /* if (subgroup) */{
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
           companyId: action.id,
