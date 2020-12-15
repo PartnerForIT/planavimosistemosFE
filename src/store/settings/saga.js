@@ -558,7 +558,9 @@ function* patchAccountGroup(action) {
 
 function* getEmployeeEdit(action) {
   try {
-    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/edit/${action.employeeId}`, token());
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.id}/employees/edit/${action.employeeId}`,
+      token());
     yield put(loadEmployeesEditSuccess(data));
   } catch (e) {
     console.log(e);

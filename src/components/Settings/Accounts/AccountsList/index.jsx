@@ -84,6 +84,8 @@ const columnsWidthArray = {
   created_at: 220,
   updated_at: 220,
   place: 100,
+  skills: 200,
+  role: 100,
 };
 
 export default function AccountsList() {
