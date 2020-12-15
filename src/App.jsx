@@ -24,6 +24,7 @@ import SettingDelete from './components/Settings/Delete';
 import Accounts from './components/Settings/Accounts/AccountsList';
 import ActivityLog from './components/Settings/ActivityLog';
 import Grouping from './components/Settings/Accounts/Grouping';
+import Roles from './components/Settings/Accounts/Roles';
 
 const App = () => (
   <Suspense fallback={<div>loading</div>}>
@@ -42,6 +43,7 @@ const App = () => (
         <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
         <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
         <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
+        <AuthRoute exact path='/settings/accounts/roles/:id' component={Roles} />
         <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
         <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
         <AuthRoute exact path='/settings/logbook/overtime/:id' component={Overtime} />
