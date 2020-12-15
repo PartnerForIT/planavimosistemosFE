@@ -33,7 +33,9 @@ const FirstStep = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    setUser((prevState) => ({ ...prevState, photo: file }));
+    if (file) {
+      setUser((prevState) => ({ ...prevState, photo: file }));
+    }
   }, [file, setUser]);
 
   const nextWithValidate = () => {
@@ -68,7 +70,7 @@ const FirstStep = ({
       name = '',
       message,
     }) => {
-      const { [name]: field } = user;
+      const { [name]: field = '' } = user;
       if (!field.trim()) {
         setError({
           name,
@@ -117,7 +119,7 @@ const FirstStep = ({
         <div className={classnames(style.info, style.borderRight)}>
           <div className={style.avatar_block}>
             <div className={style.avatar_block_inner}>
-              <img className={style.avatar} src={file ?? avatar} alt={t('avatar')} />
+              <img className={style.avatar} src={user.photo || avatar} alt={t('avatar')} />
               <Button inverse fillWidth onClick={() => setUploadVisible(true)}>Upload</Button>
             </div>
             <DropzoneDialog

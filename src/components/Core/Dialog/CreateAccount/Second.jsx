@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import style from './CreateAccount.module.scss';
-import avatar from '../../../Icons/avatar.png';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';

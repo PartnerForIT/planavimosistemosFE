@@ -4,7 +4,6 @@ $padding-size: 25px;
 $info-text-color: #707070;
 $form-inner-width: 900px;
 
-
 .progress {
   display: flex;
   width: 100%;
@@ -119,7 +118,6 @@ small {
 }
 
 .border {
-
   &Left {
     @extend #border;
 
@@ -232,5 +230,17 @@ small {
 
   .form {
     padding-left: $padding-size;
+  }
+
+  .radio {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 255px auto;
+    grid-column-gap: 20px;
+    align-items: center;
   }
 }

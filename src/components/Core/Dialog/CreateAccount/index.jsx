@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Dialog from '../index';
 import style from './CreateAccount.module.scss';
 import FirstStep from './First';
@@ -14,21 +13,40 @@ export default function CreateAccount({
   skills,
   groups,
   places,
+  security,
+  createAccount,
 }) {
-  const { t } = useTranslation();
   const initialUser = {
     photo: '',
-    email: 'test@test.com',
-    name: 'Anthony',
-    surname: 'Soprano',
-    external_id: '12313',
+    email: '',
+    name: '',
+    surname: '',
+    external_id: null,
+    skill: null,
+    subgroup: null,
+    group: null,
+    cost: null,
+    charge: null,
+    place: null,
+    password: '',
   };
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
   const [user, setUser] = useState(initialUser);
 
   const stepUp = () => setStep((prevState) => (prevState < 3 ? prevState + 1 : prevState));
   const stepDown = () => setStep((prevState) => (prevState > 1 ? prevState - 1 : prevState));
+
+  const close = () => {
+    setUser(initialUser);
+    setStep(1);
+    handleClose();
+  };
+
+  const create = (data) => {
+    createAccount(data);
+    close();
+  };
 
   const handleInput = (e) => {
     const {
@@ -56,11 +74,7 @@ export default function CreateAccount({
 
   return (
     <Dialog
-      handleClose={() => {
-        setUser(initialUser);
-        setStep(1);
-        handleClose();
-      }}
+      handleClose={close}
       open={open}
       title={title}
     >
@@ -84,6 +98,8 @@ export default function CreateAccount({
           groups={groups}
           places={places}
           setUser={setUser}
+          security={security}
+          create={create}
         />
       </div>
 
