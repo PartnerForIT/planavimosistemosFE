@@ -575,45 +575,65 @@ function* updateEmployee(action) {
       skill,
       ...rest
     } = action.data;
+    console.log(action.data);
     // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.patch,
       `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
       { ...rest }, token());
+
     if (place) {
-      // eslint-disable-next-line no-unused-vars,no-shadow
-      const { data } = yield call(axios.post,
-        `${config.api.url}/company/${action.id}/employees/assign-place`, {
-          employee_id: action.employeeId,
-          place_id: parseInt(place, 10),
-        }, token());
+      try {
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${action.id}/employees/assign-place`, {
+            employee_id: action.employeeId,
+            place_id: parseInt(place, 10),
+          }, token());
+      } catch (e) {
+        console.log(e);
+      }
     }
+
     if (group) {
-      const payload = {
-        group_id: parseInt(group, 10),
-        employee_id: action.employeeId,
-      };
-      // eslint-disable-next-line no-unused-vars,no-shadow
-      const { data } = yield call(axios.post,
-        `${config.api.url}/company/${action.id}/employees/assign-group`, payload, token());
-    }
-    if (subgroup) {
-      // eslint-disable-next-line no-unused-vars,no-shadow
-      const { data } = yield call(axios.post,
-        `${config.api.url}/company/${action.id}/employees/assign-group`, {
+      try {
+        const payload = {
+          group_id: parseInt(group, 10),
           employee_id: action.employeeId,
-          parent_group_id: parseInt(group, 10),
-          group_id: parseInt(subgroup, 10),
-          subgroup: true,
-        }, token());
+        };
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${action.id}/employees/assign-group`, payload, token());
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    if (subgroup) {
+      try {
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${action.id}/employees/assign-group`, {
+            employee_id: action.employeeId,
+            parent_group_id: parseInt(group, 10),
+            group_id: parseInt(subgroup, 10),
+            subgroup: true,
+          }, token());
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     if (skill) {
-      // eslint-disable-next-line no-unused-vars,no-shadow
-      const { data } = yield call(axios.post,
-        `${config.api.url}/company/${action.id}/employees/assign-skill`, {
-          employee_id: action.employeeId,
-          skill_id: skill,
-        }, token());
+      try {
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${action.id}/employees/assign-skill`, {
+            employee_id: action.employeeId,
+            skill_id: skill,
+          }, token());
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     yield put(loadEmployeesAll(action.id));
@@ -687,14 +707,78 @@ function* setEmployeesActions(action) {
 
 function* createEmployee(action) {
   try {
-    const { companyId, userData } = action;
+    const {
+      companyId, userData: {
+        group, subgroup, place, skill, ...rest
+      },
+    } = action;
     const { data } = yield call(axios.post,
       `${config.api.url}/company/${companyId}/employees/store`,
-      { ...userData, company_id: companyId }, token());
+      { ...rest, company_id: companyId }, token());
     console.log(data);
-    // if (data) {
-    //   yield put(loadEmployeesAll(companyId));
-    // }
+
+    const { employee_id } = data;
+
+    if (employee_id) {
+      if (place) {
+        try {
+          // eslint-disable-next-line no-unused-vars,no-shadow
+          const { data } = yield call(axios.post,
+            `${config.api.url}/company/${action.id}/employees/assign-place`, {
+              employee_id: action.employeeId,
+              place_id: parseInt(place, 10),
+            }, token());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      if (group) {
+        try {
+          const payload = {
+            group_id: parseInt(group, 10),
+            employee_id: action.employeeId,
+          };
+          // eslint-disable-next-line no-unused-vars,no-shadow
+          const { data } = yield call(axios.post,
+            `${config.api.url}/company/${action.id}/employees/assign-group`, payload, token());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      if (subgroup) {
+        try {
+          // eslint-disable-next-line no-unused-vars,no-shadow
+          const { data } = yield call(axios.post,
+            `${config.api.url}/company/${action.id}/employees/assign-group`, {
+              employee_id: action.employeeId,
+              parent_group_id: parseInt(group, 10),
+              group_id: parseInt(subgroup, 10),
+              subgroup: true,
+            }, token());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      if (skill) {
+        try {
+          // eslint-disable-next-line no-unused-vars,no-shadow
+          const { data } = yield call(axios.post,
+            `${config.api.url}/company/${action.id}/employees/assign-skill`, {
+              employee_id: action.employeeId,
+              skill_id: skill,
+            }, token());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    if (data) {
+      yield put(loadEmployeesAll(companyId));
+    }
     yield put(loadEmployeesAll(action.companyId));
     yield put(addSnackbar('Employee added successfully', 'success'));
     yield delay(4000);
