@@ -104,6 +104,7 @@ function* editSettingsCompany(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+    yield put(getSettingCompanySuccess(data));
     yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
