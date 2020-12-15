@@ -70,7 +70,12 @@ import {
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
   DELETE_EMPLOYEE_SUCCESS,
-  DELETE_EMPLOYEE_ERROR, EMPLOYEE_ACTIONS, EMPLOYEE_ACTIONS_ERROR, EMPLOYEE_ACTIONS_SUCCESS,
+  DELETE_EMPLOYEE_ERROR,
+  EMPLOYEE_ACTIONS,
+  EMPLOYEE_ACTIONS_ERROR,
+  EMPLOYEE_ACTIONS_SUCCESS,
+  CREATE_EMPLOYEE,
+  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -455,5 +460,21 @@ export const getCurrencies = () => ({
 
 export const getCurrenciesSuccess = (data) => ({
   type: GET_CURRENCY_SUCCESS,
+  data,
+});
+
+export const createEmployee = (companyId, userData) => ({
+  type: CREATE_EMPLOYEE,
+  companyId,
+  userData,
+});
+
+export const createEmployeeSuccess = (data) => ({
+  type: CREATE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const createEmployeeError = (data) => ({
+  type: CREATE_EMPLOYEE_ERROR,
   data,
 });

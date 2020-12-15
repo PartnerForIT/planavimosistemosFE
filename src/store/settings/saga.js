@@ -38,7 +38,7 @@ import {
   GET_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
-  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS,
+  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -685,6 +685,28 @@ function* setEmployeesActions(action) {
   }
 }
 
+function* createEmployee(action) {
+  try {
+    const { companyId, userData } = action;
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/store`,
+      { ...userData, company_id: companyId }, token());
+    console.log(data);
+    // if (data) {
+    //   yield put(loadEmployeesAll(companyId));
+    // }
+    yield put(loadEmployeesAll(action.companyId));
+    yield put(addSnackbar('Employee added successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(setEmployeesActionsError(e));
+    yield put(addSnackbar('An error occurred while adding employee', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -721,4 +743,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
+  yield takeLatest(CREATE_EMPLOYEE, createEmployee);
 }

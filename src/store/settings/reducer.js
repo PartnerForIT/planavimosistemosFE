@@ -58,7 +58,12 @@ import {
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
   DELETE_EMPLOYEE_SUCCESS,
-  DELETE_EMPLOYEE_ERROR, EMPLOYEE_ACTIONS, EMPLOYEE_ACTIONS_SUCCESS, EMPLOYEE_ACTIONS_ERROR,
+  DELETE_EMPLOYEE_ERROR,
+  EMPLOYEE_ACTIONS,
+  EMPLOYEE_ACTIONS_SUCCESS,
+  EMPLOYEE_ACTIONS_ERROR,
+  CREATE_EMPLOYEE,
+  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
 } from './types';
 
 const initialState = {
@@ -463,6 +468,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         currency: action.data,
+      };
+
+    case CREATE_EMPLOYEE:
+      return {
+        ...state,
+      };
+
+    case CREATE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+      };
+
+    case CREATE_EMPLOYEE_ERROR:
+      return {
+        ...state,
       };
 
     default:
