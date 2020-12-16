@@ -294,8 +294,20 @@ function* filterActivityLog(action) {
 
 function* loadEmployee(action) {
   try {
-    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/all`, token());
-    yield put(loadEmployeesSuccess(data));
+    const tokens = token();
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.id}/employees/all`,
+      {
+        params: action.params ? action.params : null,
+        ...tokens,
+      });
+
+    if (action.params) {
+      const employees = yield select((state) => state.settings.employees);
+      yield put(loadEmployeesSuccess({ stats: employees.stats, users: [...data.users] }));
+    } else {
+      yield put(loadEmployeesSuccess(data));
+    }
   } catch (e) {
     console.log(e);
     yield put(loadEmployeesError());
@@ -601,7 +613,8 @@ function* updateEmployee(action) {
       });
     }
 
-    /* if (subgroup) */ {
+    /* if (subgroup) */
+    {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
@@ -692,13 +705,21 @@ function* setEmployeesActions(action) {
 function* createEmployee(action) {
   try {
     const {
-      companyId, userData: {
-        group, subgroup, place, skill, ...rest
+      companyId,
+      userData: {
+        group,
+        subgroup,
+        place,
+        skill,
+        ...rest
       },
     } = action;
     const { data } = yield call(axios.post,
       `${config.api.url}/company/${companyId}/employees/store`,
-      { ...rest, company_id: companyId }, token());
+      {
+        ...rest,
+        company_id: companyId,
+      }, token());
     console.log(data);
 
     const { employee_id } = data;
@@ -722,7 +743,8 @@ function* createEmployee(action) {
         });
       }
 
-      /* if (subgroup) */{
+      /* if (subgroup) */
+      {
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
           companyId: action.id,
@@ -757,7 +779,11 @@ function* createEmployee(action) {
   }
 }
 
-function* assignPlace({ companyId, employeeId, place }) {
+function* assignPlace({
+  companyId,
+  employeeId,
+  place,
+}) {
   try {
     // eslint-disable-next-line no-unused-vars,no-shadow
     const { data } = yield call(axios.post,
@@ -771,7 +797,10 @@ function* assignPlace({ companyId, employeeId, place }) {
 }
 
 function* assignGroup({
-  companyId, group, employeeId, subgroup = null,
+  companyId,
+  group,
+  employeeId,
+  subgroup = null,
 }) {
   try {
     const payload = !subgroup
@@ -794,7 +823,11 @@ function* assignGroup({
   }
 }
 
-function* assignSkill({ companyId, skill, employeeId }) {
+function* assignSkill({
+  companyId,
+  skill,
+  employeeId,
+}) {
   try {
     // eslint-disable-next-line no-unused-vars,no-shadow
     const { data } = yield call(axios.post,

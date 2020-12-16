@@ -122,7 +122,6 @@ export default function AccountsList() {
     dispatch(patchEmployee(id, editVisible, data));
     setEditVisible(false);
   };
-
   const createAccount = (userData) => dispatch(createEmployee(id, userData));
 
   const userStats = useMemo(() => {
@@ -172,6 +171,7 @@ export default function AccountsList() {
   const handleChangeUsers = (e) => {
     const { value } = e.target;
     setUsersOptions(parseInt(value, 10));
+    dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 3 ? { status: value } : null));
   };
 
   const handleChangingStatus = (status) => {
@@ -259,7 +259,7 @@ export default function AccountsList() {
               : (
                 <>
                   <Filter
-                    handleChangeOrganizations={handleChangeUsers}
+                    handleChangeUser={handleChangeUsers}
                     users={usersOptions}
                     changeUserStatus={(status) => setChangeStatusOpen(status)}
                     checkedItems={checkedItems ?? []}

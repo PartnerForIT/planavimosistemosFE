@@ -203,10 +203,11 @@ export const loadEmployees = (id) => ({
   id,
 });
 
-export const loadEmployeesAll = (id) => ({
+export const loadEmployeesAll = (id, params = null) => ({
   type: GET_EMPLOYEES_ALL,
   id,
   all: true,
+  params,
 });
 
 export const loadEmployeesSuccess = (data) => ({
