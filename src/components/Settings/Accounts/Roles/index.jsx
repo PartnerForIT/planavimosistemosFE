@@ -15,7 +15,7 @@ import {
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RolesBlock';
 import {
-  createRole, deleteRole, getRoles, updateRole,
+  createRole, deleteRole, getRoleDetails, getRoles, updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
@@ -46,6 +46,10 @@ function Roles() {
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [roleName, setRoleName] = useState('');
+
+  const loadRoleDetails = () => {
+    dispatch(getRoleDetails(id, activeRole.id));
+  };
 
   useEffect(() => {
     dispatch(getRoles(id));
@@ -94,6 +98,8 @@ function Roles() {
                     createNewRole={() => setNewRoleOpen(true)}
                     remove={removeRole}
                     updateRole={patchRole}
+                    loading={loading}
+                    loadRoleDetails={loadRoleDetails}
                   />
                 </>
               )

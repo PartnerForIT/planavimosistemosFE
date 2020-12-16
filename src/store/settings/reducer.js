@@ -55,7 +55,13 @@ import {
   CREATE_ROLE_SUCCESS,
   DELETE_ROLE,
   DELETE_ROLE_ERROR,
-  DELETE_ROLE_SUCCESS, UPDATE_ROLE, UPDATE_ROLE_ERROR, UPDATE_ROLE_SUCCESS,
+  DELETE_ROLE_SUCCESS,
+  UPDATE_ROLE,
+  UPDATE_ROLE_ERROR,
+  UPDATE_ROLE_SUCCESS,
+  GET_ROLE_DETAILS,
+  GET_ROLE_DETAILS_ERROR,
+  GET_ROLE_DETAILS_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -80,6 +86,7 @@ const initialState = {
   snackbarType: '',
   groups: [],
   roles: [],
+  roleDetails: {}, // TODO: change to server data
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -358,6 +365,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ROLE:
     case DELETE_ROLE:
     case UPDATE_ROLE:
+    case GET_ROLE_DETAILS:
       return {
         ...state,
         rolesLoading: true,
@@ -370,14 +378,22 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case UPDATE_ROLE_SUCCESS:
       return {
         ...state,
-        rolesLoading: true,
+        rolesLoading: false,
         roles: action.data,
+      };
+
+    case GET_ROLE_DETAILS_SUCCESS:
+      return {
+        ...state,
+        rolesLoading: false,
+        roleDetails: action.data,
       };
 
     case DELETE_ROLE_ERROR:
     case CREATE_ROLE_ERROR:
     case GET_ROLES_ERROR:
     case UPDATE_ROLE_ERROR:
+    case GET_ROLE_DETAILS_ERROR:
       return {
         ...state,
         rolesLoading: false,

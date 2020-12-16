@@ -67,7 +67,13 @@ import {
   CREATE_ROLE_ERROR,
   DELETE_ROLE,
   DELETE_ROLE_SUCCESS,
-  DELETE_ROLE_ERROR, UPDATE_ROLE, UPDATE_ROLE_SUCCESS, UPDATE_ROLE_ERROR,
+  DELETE_ROLE_ERROR,
+  UPDATE_ROLE,
+  UPDATE_ROLE_SUCCESS,
+  UPDATE_ROLE_ERROR,
+  GET_ROLE_DETAILS,
+  GET_ROLE_DETAILS_SUCCESS,
+  GET_ROLE_DETAILS_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -431,5 +437,21 @@ export const updateRoleSuccess = (data) => ({
 
 export const updateRoleError = (data) => ({
   type: UPDATE_ROLE_ERROR,
+  data,
+});
+
+export const getRoleDetails = (companyId, roleId) => ({
+  type: GET_ROLE_DETAILS,
+  companyId,
+  roleId,
+});
+
+export const getRoleDetailsSuccess = (data) => ({
+  type: GET_ROLE_DETAILS_SUCCESS,
+  data,
+});
+
+export const getRoleDetailsError = (data) => ({
+  type: GET_ROLE_DETAILS_ERROR,
   data,
 });

@@ -6,6 +6,7 @@ import AddRolesIcon from '../../../Icons/AddRolesIcon';
 import RemoveRoleIcon from '../../../Icons/RemoveRoleIcon';
 import RemoveRole from '../../../Core/Dialog/RemoveRole';
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
+import RoleDetails from './RoleDetails';
 
 function RolesBlock({
   roles = [],
@@ -14,6 +15,8 @@ function RolesBlock({
   createNewRole,
   remove,
   updateRole,
+  loading,
+  loadRoleDetails,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -84,11 +87,9 @@ function RolesBlock({
               }
             </div>
             {
-               activeRole?.id === role.id && (
-               <div className={classes.roleEdit}>
-                 {JSON.stringify(activeRole, null, 2)}
-               </div>
-               )
+              activeRole?.id === role.id && (
+                <RoleDetails activeRole={activeRole} loading={loading} loadRoleDetails={loadRoleDetails} />
+              )
             }
           </React.Fragment>
         ))

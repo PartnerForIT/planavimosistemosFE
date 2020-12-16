@@ -2,6 +2,7 @@
 
 $card-border-color: #cbd1d8;
 $card-padding: 12px;
+$details-padding: 14px 8px 8px;
 $edit-border: 1px solid $blue-border;
 $arrow-size: 21px;
 
@@ -10,16 +11,16 @@ $arrow-size: 21px;
   grid-template-columns: repeat(auto-fit, 255px);
   grid-gap: 14px;
   grid-auto-flow: dense;
+}
 
-  .roleEdit {
-    grid-column-start: 1;
-    grid-column-end: -1;
-    background-color: $beige-color;
-    min-height: 440px;
-    padding: $card-padding;
-    border-radius: $card-padding;
-    border: $edit-border;
-  }
+.details {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  background-color: $beige-color;
+  min-height: 440px;
+  padding: $details-padding;
+  border-radius: $card-padding;
+  border: $edit-border;
 }
 
 .card {
