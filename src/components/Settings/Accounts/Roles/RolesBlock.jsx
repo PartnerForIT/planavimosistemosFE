@@ -63,7 +63,7 @@ function RolesBlock({
                   id={role.id}
                   label={t('Make default')}
                   checked={!!role.default ?? false}
-                  onChange={(id, checked) => updateRole(id, checked)}
+                  onChange={(id, checked) => updateRole(id, { checked })}
                 />
               </div>
               <button
