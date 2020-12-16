@@ -15,6 +15,7 @@ import {
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RolesBlock';
 import { getRoles } from '../../../../store/settings/actions';
+import AddRole from '../../../Core/Dialog/AddRole';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -42,11 +43,14 @@ function Roles() {
 
   const [activeRole, setActiveRole] = useState({ });
   const [newRoleOpen, setNewRoleOpen] = useState(false);
+  const [roleName, setRoleName] = useState('');
 
   useEffect(() => {
     dispatch(getRoles(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const createRole = () => ({});
 
   return (
     <MaynLayout>
@@ -84,6 +88,18 @@ function Roles() {
             open={isSnackbar}
             message={textSnackbar}
             key='rigth'
+          />
+          <AddRole
+            open={newRoleOpen}
+            handleClose={() => {
+              setNewRoleOpen(false);
+              setRoleName('');
+            }}
+            title={t('Create a new role')}
+            roleName={roleName}
+            setRoleName={setRoleName}
+            createRole={createRole}
+            buttonTitle={t('Create Role')}
           />
         </PageLayout>
       </Dashboard>
