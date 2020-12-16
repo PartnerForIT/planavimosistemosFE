@@ -68,24 +68,32 @@ function RolesBlock({
                 />
               </div>
               {
-               !!role.can_delete
+                !!role.can_delete
                 && (
-                <button
-                  className={classes.card_icon}
-                  aria-label='remove role button'
-                  onClick={() => setRemoveVisible({
-                    name: role.name,
-                    id: role.id,
-                  })}
-                >
-                  <RemoveRoleIcon aria-hidden />
-                </button>
+                  <button
+                    className={classes.card_icon}
+                    aria-label='remove role button'
+                    onClick={() => setRemoveVisible({
+                      name: role.name,
+                      id: role.id,
+                    })}
+                  >
+                    <RemoveRoleIcon aria-hidden />
+                  </button>
                 )
-}
+              }
             </div>
+            {
+               activeRole?.id === role.id && (
+               <div className={classes.roleEdit}>
+                 {JSON.stringify(activeRole, null, 2)}
+               </div>
+               )
+            }
           </React.Fragment>
         ))
       }
+
       <RemoveRole
         open={!!removeVisible}
         handleClose={() => setRemoveVisible(false)}

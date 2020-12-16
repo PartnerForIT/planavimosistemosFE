@@ -567,7 +567,6 @@ function* createRole(action) {
 
     const { data } = yield call(axios.post,
       `${config.api.url}/company/${companyId}/account-roles/store`, {
-        // company_id: companyId,
         name,
       }, token());
 

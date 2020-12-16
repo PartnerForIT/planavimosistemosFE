@@ -2,11 +2,20 @@
 
 $card-border-color: #cbd1d8;
 $card-padding: 12px;
+$edit-background-color: #e2e9ed;
 
 .roles {
   display: grid;
   grid-template-columns: repeat(auto-fit, 255px);
   grid-gap: 14px;
+  grid-auto-flow: dense;
+
+  .roleEdit {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    background-color: $edit-background-color;
+    min-height: 440px;
+  }
 }
 
 .card {
