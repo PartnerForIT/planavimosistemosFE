@@ -44,6 +44,7 @@ function RolesBlock({
           <AddRolesIcon aria-hidden />
         </span>
       </div>
+      {/* roles board */}
       {
         roles.map((role) => (
           <React.Fragment key={role.id + role.name}>
@@ -66,16 +67,21 @@ function RolesBlock({
                   onChange={(id, checked) => updateRole(id, { checked })}
                 />
               </div>
-              <button
-                className={classes.card_icon}
-                aria-label='remove role button'
-                onClick={() => setRemoveVisible({
-                  name: role.name,
-                  id: role.id,
-                })}
-              >
-                <RemoveRoleIcon aria-hidden />
-              </button>
+              {
+               !!role.can_delete
+                && (
+                <button
+                  className={classes.card_icon}
+                  aria-label='remove role button'
+                  onClick={() => setRemoveVisible({
+                    name: role.name,
+                    id: role.id,
+                  })}
+                >
+                  <RemoveRoleIcon aria-hidden />
+                </button>
+                )
+}
             </div>
           </React.Fragment>
         ))
@@ -88,7 +94,6 @@ function RolesBlock({
         buttonTitle={t('Delete')}
         remove={() => remove(removeVisible.id)}
       />
-
     </div>
   );
 }

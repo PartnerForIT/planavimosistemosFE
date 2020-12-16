@@ -18,6 +18,7 @@ $card-padding: 12px;
   padding: $card-padding;
   line-height: 1;
   cursor: pointer;
+  font-family: inherit;
 
   @include focusVisible();
 
@@ -32,7 +33,6 @@ $card-padding: 12px;
   }
 
   &.default {
-
     & .card_title {
       color: $blue-2;
     }
@@ -44,18 +44,10 @@ $card-padding: 12px;
   &_check {
     position: absolute;
     transform: translate(-9px, 9px);
-  }
-
-  &.active {
-    background-color: $blue-2;
-    color: white;
-
-    & .card_icon {
-      color: white;
-    }
 
     & label * {
-      color: white !important;
+      font-family: inherit !important;
+      color: inherit;
     }
   }
 
@@ -75,5 +67,14 @@ $card-padding: 12px;
     }
 
     @include focusVisible();
+  }
+
+  &.active {
+    background-color: $blue-2;
+    color: white;
+
+    & .card_icon {
+      color: white;
+    }
   }
 }
