@@ -44,7 +44,12 @@ import {
   PATCH_ACCOUNTS_GROUP,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_GROUP_SUCCESS,
-  PATCH_ACCOUNTS_SUBGROUP, PATCH_ACCOUNTS_SUBGROUP_SUCCESS, PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_ROLES,
+  GET_ROLES_SUCCESS,
+  GET_ROLES_ERROR,
 } from './types';
 
 const initialState = {
@@ -68,6 +73,7 @@ const initialState = {
   snackbarShow: false,
   snackbarType: '',
   groups: [],
+  roles: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -341,6 +347,25 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case PATCH_ACCOUNTS_SUBGROUP_SUCCESS:
     case PATCH_ACCOUNTS_SUBGROUP_ERROR:
       return { ...state, subgroupLoading: false };
+
+    case GET_ROLES:
+      return {
+        ...state,
+        rolesLoading: true,
+        errors: null,
+      };
+    case GET_ROLES_SUCCESS:
+      return {
+        ...state,
+        rolesLoading: true,
+        roles: action.data,
+      };
+    case GET_ROLES_ERROR:
+      return {
+        ...state,
+        rolesLoading: false,
+        errors: action.data,
+      };
 
     case ADD_SETTING_SNACKBAR:
       return {

@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -61,7 +61,12 @@ import {
   createAccountSubgroupSuccess,
   removeAccountSubgroupSuccess,
   removeAccountSubgroupError,
-  editAccountSubgroupError, editAccountGroupError, editAccountGroupSuccess, editAccountSubgroupSuccess,
+  editAccountSubgroupError,
+  editAccountGroupError,
+  editAccountGroupSuccess,
+  editAccountSubgroupSuccess,
+  getRolesSuccess,
+  getRolesError,
 } from './actions';
 
 function token() {
@@ -535,6 +540,15 @@ function* patchAccountGroup(action) {
   }
 }
 
+function* loadRoles(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/account-roles`, token());
+    yield put(getRolesSuccess(data));
+  } catch (e) {
+    yield put(getRolesError(e));
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -565,4 +579,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
+  yield takeLatest(GET_ROLES, loadRoles);
 }

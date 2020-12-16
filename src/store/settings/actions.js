@@ -56,7 +56,12 @@ import {
   DELETE_ACCOUNTS_GROUP_ERROR,
   DELETE_ACCOUNTS_SUBGROUP_ERROR,
   PATCH_ACCOUNTS_GROUP,
-  PATCH_ACCOUNTS_GROUP_SUCCESS, PATCH_ACCOUNTS_GROUP_ERROR, PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_GROUP_SUCCESS,
+  PATCH_ACCOUNTS_GROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_ROLES,
+  GET_ROLES_SUCCESS,
+  GET_ROLES_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -357,4 +362,17 @@ export const removeAccountSubgroupSuccess = () => ({
 
 export const removeAccountSubgroupError = () => ({
   type: DELETE_ACCOUNTS_SUBGROUP_ERROR,
+});
+
+export const getRoles = (companyId) => ({
+  type: GET_ROLES,
+  companyId,
+});
+export const getRolesSuccess = (data) => ({
+  type: GET_ROLES_SUCCESS,
+  data,
+});
+export const getRolesError = (data) => ({
+  type: GET_ROLES_ERROR,
+  data,
 });
