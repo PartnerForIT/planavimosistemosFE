@@ -49,7 +49,7 @@ import {
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
   GET_ROLES,
   GET_ROLES_SUCCESS,
-  GET_ROLES_ERROR,
+  GET_ROLES_ERROR, CREATE_ROLE, CREATE_ROLE_ERROR,
 } from './types';
 
 const initialState = {
@@ -349,17 +349,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return { ...state, subgroupLoading: false };
 
     case GET_ROLES:
+    case CREATE_ROLE:
       return {
         ...state,
         rolesLoading: true,
         errors: null,
       };
+
     case GET_ROLES_SUCCESS:
       return {
         ...state,
         rolesLoading: true,
         roles: action.data,
       };
+
+    case CREATE_ROLE_ERROR:
     case GET_ROLES_ERROR:
       return {
         ...state,

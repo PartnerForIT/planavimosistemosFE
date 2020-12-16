@@ -14,7 +14,7 @@ import {
 } from '../../../../store/settings/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RolesBlock';
-import { getRoles } from '../../../../store/settings/actions';
+import { createRole, getRoles } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
 const useStyles = makeStyles(() => ({
@@ -50,7 +50,13 @@ function Roles() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const createRole = () => ({});
+  const createNewRole = () => {
+    if (roleName.trim()) {
+      dispatch(createRole(id, roleName));
+      setNewRoleOpen(false);
+      setRoleName('');
+    }
+  };
 
   return (
     <MaynLayout>
@@ -71,9 +77,6 @@ function Roles() {
                     setActiveRole={setActiveRole}
                     createNewRole={() => setNewRoleOpen(true)}
                   />
-                  <pre>
-                    {JSON.stringify(roles, null, 2)}
-                  </pre>
                 </>
               )
           }
@@ -98,7 +101,7 @@ function Roles() {
             title={t('Create a new role')}
             roleName={roleName}
             setRoleName={setRoleName}
-            createRole={createRole}
+            createRole={createNewRole}
             buttonTitle={t('Create Role')}
           />
         </PageLayout>

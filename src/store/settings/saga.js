@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES, CREATE_ROLE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -66,7 +66,7 @@ import {
   editAccountGroupSuccess,
   editAccountSubgroupSuccess,
   getRolesSuccess,
-  getRolesError,
+  getRolesError, createRoleError,
 } from './actions';
 
 function token() {
@@ -549,6 +549,31 @@ function* loadRoles(action) {
   }
 }
 
+function* createRole(action) {
+  try {
+    const { companyId, name } = action;
+
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/account-roles/store`, {
+        // company_id: companyId,
+        name,
+      }, token());
+
+    const roles = yield select((state) => state.settings.roles ?? []);
+    yield put(getRolesSuccess([...roles, {
+      ...data, default: 0, account_user_roles: [], account_roles_permissions: [],
+    }]));
+    yield put(addSnackbar('Added Role successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createRoleError(e));
+    yield put(addSnackbar('An error occurred while removing Role', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -580,4 +605,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_ROLES, loadRoles);
+  yield takeLatest(CREATE_ROLE, createRole);
 }
