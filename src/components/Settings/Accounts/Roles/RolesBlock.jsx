@@ -13,13 +13,19 @@ function RolesBlock({
 }) {
   const { t } = useTranslation();
 
+  const onKeyDown = (e, func) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      func();
+    }
+  };
+
   return (
     <div className={classes.roles}>
 
       <div
         className={classnames(classes.card, classes.default)}
-        onClick={() => ({})}
-        onKeyDown={() => ({ })}
+        onClick={createNewRole}
+        onKeyDown={(e) => onKeyDown(e, createNewRole)}
         role='option'
         aria-selected='true'
         aria-label='create new role'
@@ -35,12 +41,11 @@ function RolesBlock({
       </div>
       {
         roles.map((role) => (
-          <>
+          <React.Fragment key={role.id + role.name}>
             <div
               className={classnames(classes.card, role.id === activeRole.id ? classes.active : '')}
               onClick={() => setActiveRole(role)}
               onKeyDown={() => setActiveRole(role)}
-              key={role.id + role.name}
               role='option'
               aria-label='user role'
               aria-selected='true'
@@ -55,7 +60,7 @@ function RolesBlock({
                 <RemoveRoleIcon aria-hidden />
               </button>
             </div>
-          </>
+          </React.Fragment>
         ))
       }
     </div>
