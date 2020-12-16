@@ -14,7 +14,9 @@ import {
 } from '../../../../store/settings/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RolesBlock';
-import { createRole, deleteRole, getRoles } from '../../../../store/settings/actions';
+import {
+  createRole, deleteRole, getRoles, updateRole,
+} from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
 const useStyles = makeStyles(() => ({
@@ -62,6 +64,16 @@ function Roles() {
     }
   };
 
+  const patchRole = (roleId, data) => {
+    const { name, checked } = data;
+    if (checked) {
+      dispatch(updateRole(id, roleId, { default: checked ? '1' : '0' }));
+    }
+    if (name) {
+      dispatch(updateRole(id, roleId, { name }));
+    }
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -81,6 +93,7 @@ function Roles() {
                     setActiveRole={setActiveRole}
                     createNewRole={() => setNewRoleOpen(true)}
                     remove={removeRole}
+                    updateRole={patchRole}
                   />
                 </>
               )

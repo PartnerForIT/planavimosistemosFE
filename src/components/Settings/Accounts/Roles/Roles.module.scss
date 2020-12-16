@@ -1,7 +1,7 @@
 @import "../../../core/variables";
 
 $card-border-color: #cbd1d8;
-$card-padding: 13px;
+$card-padding: 12px;
 
 .roles {
   display: grid;
@@ -41,12 +41,21 @@ $card-padding: 13px;
     background-color: $light-blue2;
   }
 
+  &_check {
+    position: absolute;
+    transform: translate(-9px, 9px);
+  }
+
   &.active {
     background-color: $blue-2;
     color: white;
 
     & .card_icon {
       color: white;
+    }
+
+    & label * {
+      color: white !important;
     }
   }
 

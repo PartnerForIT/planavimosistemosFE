@@ -55,7 +55,7 @@ import {
   CREATE_ROLE_SUCCESS,
   DELETE_ROLE,
   DELETE_ROLE_ERROR,
-  DELETE_ROLE_SUCCESS,
+  DELETE_ROLE_SUCCESS, UPDATE_ROLE, UPDATE_ROLE_ERROR, UPDATE_ROLE_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -357,6 +357,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case GET_ROLES:
     case CREATE_ROLE:
     case DELETE_ROLE:
+    case UPDATE_ROLE:
       return {
         ...state,
         rolesLoading: true,
@@ -366,6 +367,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case GET_ROLES_SUCCESS:
     case CREATE_ROLE_SUCCESS:
     case DELETE_ROLE_SUCCESS:
+    case UPDATE_ROLE_SUCCESS:
       return {
         ...state,
         rolesLoading: true,
@@ -375,6 +377,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_ROLE_ERROR:
     case CREATE_ROLE_ERROR:
     case GET_ROLES_ERROR:
+    case UPDATE_ROLE_ERROR:
       return {
         ...state,
         rolesLoading: false,

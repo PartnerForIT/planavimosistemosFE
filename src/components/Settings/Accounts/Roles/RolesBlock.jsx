@@ -5,6 +5,7 @@ import classes from './Roles.module.scss';
 import AddRolesIcon from '../../../Icons/AddRolesIcon';
 import RemoveRoleIcon from '../../../Icons/RemoveRoleIcon';
 import RemoveRole from '../../../Core/Dialog/RemoveRole';
+import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
 
 function RolesBlock({
   roles = [],
@@ -12,6 +13,7 @@ function RolesBlock({
   setActiveRole,
   createNewRole,
   remove,
+  updateRole,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -56,6 +58,14 @@ function RolesBlock({
             >
               <p className={classes.card_title}>{role.name}</p>
               <small>{`${role.account_user_roles?.length} ${t('users have this role')}`}</small>
+              <div className={classes.card_check}>
+                <StyledCheckbox
+                  id={role.id}
+                  label={t('Make default')}
+                  checked={!!role.default ?? false}
+                  onChange={(id, checked) => updateRole(id, checked)}
+                />
+              </div>
               <button
                 className={classes.card_icon}
                 aria-label='remove role button'
