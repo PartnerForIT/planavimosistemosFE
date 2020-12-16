@@ -61,7 +61,13 @@ import {
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
   GET_ROLES,
   GET_ROLES_SUCCESS,
-  GET_ROLES_ERROR, CREATE_ROLE, CREATE_ROLE_SUCCESS, CREATE_ROLE_ERROR,
+  GET_ROLES_ERROR,
+  CREATE_ROLE,
+  CREATE_ROLE_SUCCESS,
+  CREATE_ROLE_ERROR,
+  DELETE_ROLE,
+  DELETE_ROLE_SUCCESS,
+  DELETE_ROLE_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -385,7 +391,28 @@ export const createRole = (companyId, name) => ({
   name,
 });
 
+export const createRoleSuccess = (data) => ({
+  type: CREATE_ROLE_SUCCESS,
+  data,
+});
+
 export const createRoleError = (data) => ({
   type: CREATE_ROLE_ERROR,
+  data,
+});
+
+export const deleteRole = (companyId, roleId) => ({
+  type: DELETE_ROLE,
+  companyId,
+  roleId,
+});
+
+export const deleteRoleSuccess = (data) => ({
+  type: DELETE_ROLE_SUCCESS,
+  data,
+});
+
+export const deleteRoleError = (data) => ({
+  type: DELETE_ROLE_ERROR,
   data,
 });

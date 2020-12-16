@@ -32,7 +32,7 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES, CREATE_ROLE,
+  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES, CREATE_ROLE, DELETE_ROLE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -66,7 +66,7 @@ import {
   editAccountGroupSuccess,
   editAccountSubgroupSuccess,
   getRolesSuccess,
-  getRolesError, createRoleError,
+  getRolesError, createRoleError, createRoleSuccess, deleteRoleError, deleteRoleSuccess,
 } from './actions';
 
 function token() {
@@ -517,7 +517,10 @@ function* patchAccountGroup(action) {
           }
           return sbgrp;
         });
-        return { ...group, subgroups };
+        return {
+          ...group,
+          subgroups,
+        };
       });
     } else {
       groups = Groups.map((group) => {
@@ -551,7 +554,10 @@ function* loadRoles(action) {
 
 function* createRole(action) {
   try {
-    const { companyId, name } = action;
+    const {
+      companyId,
+      name,
+    } = action;
 
     const { data } = yield call(axios.post,
       `${config.api.url}/company/${companyId}/account-roles/store`, {
@@ -560,14 +566,37 @@ function* createRole(action) {
       }, token());
 
     const roles = yield select((state) => state.settings.roles ?? []);
-    yield put(getRolesSuccess([...roles, {
-      ...data, default: 0, account_user_roles: [], account_roles_permissions: [],
+    yield put(createRoleSuccess([...roles, {
+      ...data,
+      default: 0,
+      account_user_roles: [],
+      account_roles_permissions: [],
     }]));
     yield put(addSnackbar('Added Role successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(createRoleError(e));
+    yield put(addSnackbar('An error occurred while removing Role', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* removeRole(action) {
+  try {
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.companyId}/account-roles/delete/${action.roleId}`,
+      token());
+    if (data.message?.toLowerCase() === 'deleted') {
+      const roles = yield select((state) => state.settings.roles ?? []);
+      yield put(deleteRoleSuccess([...roles.filter((role) => role.id !== action.roleId)]));
+    }
+    yield put(addSnackbar('Removed Role successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(deleteRoleError(e));
     yield put(addSnackbar('An error occurred while removing Role', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -606,4 +635,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_ROLES, loadRoles);
   yield takeLatest(CREATE_ROLE, createRole);
+  yield takeLatest(DELETE_ROLE, removeRole);
 }

@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import classes from './Roles.module.scss';
 import AddRolesIcon from '../../../Icons/AddRolesIcon';
 import RemoveRoleIcon from '../../../Icons/RemoveRoleIcon';
+import RemoveRole from '../../../Core/Dialog/RemoveRole';
 
 function RolesBlock({
   roles = [],
   activeRole,
   setActiveRole,
   createNewRole,
+  remove,
 }) {
   const { t } = useTranslation();
+  const [removeVisible, setRemoveVisible] = useState(false);
 
   const onKeyDown = (e, func) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -56,6 +59,10 @@ function RolesBlock({
               <button
                 className={classes.card_icon}
                 aria-label='remove role button'
+                onClick={() => setRemoveVisible({
+                  name: role.name,
+                  id: role.id,
+                })}
               >
                 <RemoveRoleIcon aria-hidden />
               </button>
@@ -63,6 +70,15 @@ function RolesBlock({
           </React.Fragment>
         ))
       }
+      <RemoveRole
+        open={!!removeVisible}
+        handleClose={() => setRemoveVisible(false)}
+        title={t('Delete role')}
+        name={removeVisible.name}
+        buttonTitle={t('Delete')}
+        remove={() => remove(removeVisible.id)}
+      />
+
     </div>
   );
 }

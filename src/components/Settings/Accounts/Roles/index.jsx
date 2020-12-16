@@ -14,7 +14,7 @@ import {
 } from '../../../../store/settings/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RolesBlock';
-import { createRole, getRoles } from '../../../../store/settings/actions';
+import { createRole, deleteRole, getRoles } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
 const useStyles = makeStyles(() => ({
@@ -41,7 +41,7 @@ function Roles() {
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
 
-  const [activeRole, setActiveRole] = useState({ });
+  const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [roleName, setRoleName] = useState('');
 
@@ -49,6 +49,10 @@ function Roles() {
     dispatch(getRoles(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const removeRole = (roleId) => {
+    dispatch(deleteRole(id, roleId));
+  };
 
   const createNewRole = () => {
     if (roleName.trim()) {
@@ -76,12 +80,16 @@ function Roles() {
                     activeRole={activeRole}
                     setActiveRole={setActiveRole}
                     createNewRole={() => setNewRoleOpen(true)}
+                    remove={removeRole}
                   />
                 </>
               )
           }
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
             ContentProps={{
               classes: {
                 root: typeSnackbar === 'error' ? classes.error : classes.success,
