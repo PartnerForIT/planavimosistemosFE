@@ -2,7 +2,8 @@
 
 $card-border-color: #cbd1d8;
 $card-padding: 12px;
-$edit-background-color: #e2e9ed;
+$edit-border: 1px solid $blue-border;
+$arrow-size: 21px;
 
 .roles {
   display: grid;
@@ -13,8 +14,11 @@ $edit-background-color: #e2e9ed;
   .roleEdit {
     grid-column-start: 1;
     grid-column-end: -1;
-    background-color: $edit-background-color;
+    background-color: $beige-color;
     min-height: 440px;
+    padding: $card-padding;
+    border-radius: $card-padding;
+    border: $edit-border;
   }
 }
 
@@ -84,6 +88,32 @@ $edit-background-color: #e2e9ed;
 
     & .card_icon {
       color: white;
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: '';
+      width: $arrow-size;
+      height: $arrow-size;
+      transform: rotate(45deg) translateX(-50%);
+      transform-origin: center center;
+      display: block;
+      bottom: - $arrow-size * 1.5 - 7px;
+      left: 50%;
+      background-color: $beige-color;
+    }
+
+    &::before {
+      z-index: -1;
+      border: $edit-border;
+    }
+
+    &::after {
+      z-index: 1;
+      border-color: $beige-color;
+      border-radius: 21px 0;
     }
   }
 }
