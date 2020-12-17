@@ -5,7 +5,7 @@ import Progress from '../../../Core/Progress';
 function RoleDetails({
   activeRole,
   loading,
-  loadRoleDetails
+  loadRoleDetails,
 }) {
   useEffect(() => {
     loadRoleDetails();
@@ -22,7 +22,7 @@ function RoleDetails({
           JSON.stringify(activeRole, null, 2)
         }
       </pre>
-      <div/>
+      <div />
     </div>
   );
 }

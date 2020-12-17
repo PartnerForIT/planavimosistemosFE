@@ -45,6 +45,7 @@ function Roles() {
 
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const [roleName, setRoleName] = useState('');
 
   const loadRoleDetails = () => {
@@ -62,8 +63,16 @@ function Roles() {
 
   const createNewRole = () => {
     if (roleName.trim()) {
-      dispatch(createRole(id, roleName));
+      dispatch(createRole(id, roleName.trim()));
       setNewRoleOpen(false);
+      setRoleName('');
+    }
+  };
+
+  const changeRoleName = () => {
+    if (roleName.trim()) {
+      dispatch(updateRole(id, activeRole.id, { name: roleName.trim() }));
+      setEditVisible(false);
       setRoleName('');
     }
   };
@@ -71,7 +80,7 @@ function Roles() {
   const patchRole = (roleId, data) => {
     const { name, checked } = data;
     if (checked) {
-      dispatch(updateRole(id, roleId, { default: checked ? '1' : '0' }));
+      dispatch(updateRole(id, roleId, { default: checked ? 1 : 0 }));
     }
     if (name) {
       dispatch(updateRole(id, roleId, { name }));
@@ -100,6 +109,7 @@ function Roles() {
                     updateRole={patchRole}
                     loading={loading}
                     loadRoleDetails={loadRoleDetails}
+                    setEditVisible={setEditVisible}
                   />
                 </>
               )
@@ -120,6 +130,19 @@ function Roles() {
             key='rigth'
           />
           <AddRole
+            open={editVisible}
+            handleClose={() => {
+              setEditVisible(false);
+              setRoleName('');
+            }}
+            roleName={roleName || activeRole.name}
+            setRoleName={setRoleName}
+            title={t('Edit role name')}
+            buttonTitle={t('Change name')}
+            onsubmit={changeRoleName}
+          />
+
+          <AddRole
             open={newRoleOpen}
             handleClose={() => {
               setNewRoleOpen(false);
@@ -128,7 +151,7 @@ function Roles() {
             title={t('Create a new role')}
             roleName={roleName}
             setRoleName={setRoleName}
-            createRole={createNewRole}
+            onsubmit={createNewRole}
             buttonTitle={t('Create Role')}
           />
         </PageLayout>

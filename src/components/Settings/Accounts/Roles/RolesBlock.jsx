@@ -7,6 +7,7 @@ import RemoveRoleIcon from '../../../Icons/RemoveRoleIcon';
 import RemoveRole from '../../../Core/Dialog/RemoveRole';
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
 import RoleDetails from './RoleDetails';
+import EditIcon from '../../../Icons/EditIcon';
 
 function RolesBlock({
   roles = [],
@@ -17,6 +18,7 @@ function RolesBlock({
   updateRole,
   loading,
   loadRoleDetails,
+  setEditVisible = () => ({}),
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -70,21 +72,34 @@ function RolesBlock({
                   onChange={(id, checked) => updateRole(id, { checked })}
                 />
               </div>
-              {
-                !!role.can_delete
-                && (
-                  <button
-                    className={classes.card_icon}
-                    aria-label='remove role button'
-                    onClick={() => setRemoveVisible({
-                      name: role.name,
-                      id: role.id,
-                    })}
-                  >
-                    <RemoveRoleIcon aria-hidden />
-                  </button>
-                )
-              }
+
+              <div className={classes.card_actions}>
+                <button
+                  className={classes.card_edit}
+                  aria-label='edit role button'
+                  onClick={() => setEditVisible({
+                    name: role.name,
+                    id: role.id,
+                  })}
+                >
+                  <EditIcon aria-hidden />
+                </button>
+                {
+                  !!role.can_delete
+                  && (
+                    <button
+                      className={classes.card_remove}
+                      aria-label='remove role button'
+                      onClick={() => setRemoveVisible({
+                        name: role.name,
+                        id: role.id,
+                      })}
+                    >
+                      <RemoveRoleIcon aria-hidden />
+                    </button>
+                  )
+                }
+              </div>
             </div>
             {
               activeRole?.id === role.id && (
@@ -94,7 +109,6 @@ function RolesBlock({
           </React.Fragment>
         ))
       }
-
       <RemoveRole
         open={!!removeVisible}
         handleClose={() => setRemoveVisible(false)}
