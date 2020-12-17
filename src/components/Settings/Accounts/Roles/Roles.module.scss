@@ -21,6 +21,23 @@ $arrow-size: 21px;
   padding: $details-padding;
   border-radius: $card-padding;
   border: $edit-border;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-column-gap: $card-padding;
+
+  &_inner {
+    &_title {
+      & span {
+        display: inline-block;
+      }
+    }
+  }
+
+  .content {
+    background-color: white;
+    padding: $card-padding;
+    border-radius: $card-padding;
+  }
 }
 
 .card {

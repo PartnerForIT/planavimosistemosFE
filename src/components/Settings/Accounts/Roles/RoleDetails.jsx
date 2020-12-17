@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classes from './Roles.module.scss';
-import Progress from '../../../Core/Progress';
+// import Progress from '../../../Core/Progress';
+import Users from './RoleDetails/Users';
+import AccessModule from './RoleDetails/AccessModule';
+import OrganisationAccess from './RoleDetails/OrganisationAccess';
 
 function RoleDetails({
   activeRole,
   loading,
-  loadRoleDetails,
 }) {
-  useEffect(() => {
-    loadRoleDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <div className={classes.details}>
       {
         // loading && <Progress />
       }
+      <Users />
+      <AccessModule />
+      <OrganisationAccess />
       <pre>
         {
           // TODO: details
