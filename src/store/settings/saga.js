@@ -720,16 +720,15 @@ function* createEmployee(action) {
         ...rest,
         company_id: companyId,
       }, token());
-    console.log(data);
 
-    const { employee_id } = data;
+    const { id } = data;
 
-    if (employee_id) {
+    if (id) {
       if (place) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignPlace, {
-          companyId: action.id,
-          employeeId: action.employeeId,
+          companyId,
+          employeeId: id,
           place,
         });
       }
@@ -737,29 +736,28 @@ function* createEmployee(action) {
       if (group) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
-          companyId: action.id,
+          companyId,
           group,
-          employeeId: action.employeeId,
+          employeeId: id,
         });
       }
 
-      /* if (subgroup) */
-      {
+      if (subgroup) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
-          companyId: action.id,
+          companyId,
           group,
           subgroup,
-          employeeId: action.employeeId,
+          employeeId: id,
         });
       }
 
       if (skill) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignSkill, {
-          companyId: action.id,
+          companyId,
           skill,
-          employeeId: action.employeeId,
+          employeeId: id,
         });
       }
     }
