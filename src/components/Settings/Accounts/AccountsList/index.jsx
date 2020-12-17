@@ -43,6 +43,7 @@ import EditAccount from '../../../Core/Dialog/EditAccount';
 import CurrencySign from '../../../shared/CurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
+import TimeFormat from '../../../shared/TimeFormat';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -192,11 +193,9 @@ export default function AccountsList() {
       skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
       // eslint-disable-next-line camelcase
-      created_at: created_at ? moment(created_at)
-        .format('lll') : '',
+      created_at: created_at ? <TimeFormat date={created_at} /> : '',
       // eslint-disable-next-line camelcase
-      updated_at: updated_at ? moment(updated_at)
-        .format('lll') : '',
+      updated_at: updated_at ? <TimeFormat date={updated_at} /> : '',
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };

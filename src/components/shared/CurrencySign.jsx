@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { currencySelector, settingCompanySelector } from '../../store/settings/selectors';
 import { getCurrencies, getSettingCompany } from '../../store/settings/actions';
+import { isLoadingSelector } from '../../store/organizationList/selectors';
 
 const CurrencySign = React.memo(() => {
   const dispatch = useDispatch();
@@ -11,12 +12,13 @@ const CurrencySign = React.memo(() => {
   const { id } = useParams();
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
+  const loading = useSelector(isLoadingSelector);
 
   useEffect(() => {
-    if (!currencies.length) {
+    if (!currencies.length && !loading) {
       dispatch(getCurrencies());
     }
-  }, [currencies.length, dispatch]);
+  }, [currencies.length, dispatch, loading]);
   useEffect(() => {
     if (_.isEmpty(company)) {
       dispatch(getSettingCompany(id));
