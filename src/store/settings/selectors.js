@@ -20,3 +20,4 @@ export const subGroupsLoadingSelector = (state) => state.settings.subgroupLoadin
 export const currencySelector = (state) => state.settings.currency;
 export const rolesSelector = (state) => state.settings.roles;
 export const rolesLoading = (state) => state.settings.rolesLoading;
+export const permissionsSelector = (state) => state.settings.permissions;

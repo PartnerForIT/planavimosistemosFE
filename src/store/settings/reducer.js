@@ -78,7 +78,7 @@ import {
   EMPLOYEE_ACTIONS_SUCCESS,
   EMPLOYEE_ACTIONS_ERROR,
   CREATE_EMPLOYEE,
-  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
+  CREATE_EMPLOYEE_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR,
 } from './types';
 
 const initialState = {
@@ -108,7 +108,8 @@ const initialState = {
   groups: [],
   currency: [],
   roles: [],
-  roleDetails: {}, // TODO: change to server data
+  roleDetails: {},
+  permissions: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -474,7 +475,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         rolesLoading: true,
-        errors: null,
+        error: null,
       };
 
     case GET_ROLES_SUCCESS:
@@ -502,7 +503,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         rolesLoading: false,
-        errors: action.data,
+        error: action.data,
       };
 
     case ADD_SETTING_SNACKBAR:
@@ -531,14 +532,28 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
       };
 
-    case CREATE_EMPLOYEE_SUCCESS:
-      return {
-        ...state,
-      };
-
     case CREATE_EMPLOYEE_ERROR:
       return {
         ...state,
+        error: action.data,
+      };
+
+    case LOAD_PERMISSIONS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    case LOAD_PERMISSIONS_SUCCESS:
+      return {
+        ...state,
+        permissions: action.data,
+      };
+
+    case LOAD_PERMISSIONS_ERROR:
+      return {
+        ...state,
+        error: action.data,
       };
 
     default:

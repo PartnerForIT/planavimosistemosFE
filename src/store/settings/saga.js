@@ -39,7 +39,7 @@ import {
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
   DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
-  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS,
+  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -87,7 +87,7 @@ import {
   loadEmployeesAll,
   getCurrenciesSuccess,
   removeEmployeeError,
-  removeEmployeeSuccess, setEmployeesActionsError,
+  removeEmployeeSuccess, setEmployeesActionsError, createEmployeeError, loadPermissionsSuccess, loadPermissionsError,
 } from './actions';
 
 function token() {
@@ -674,27 +674,6 @@ function* patchRole(action) {
   }
 }
 
-function* loadRoleDetails(action) {
-  try {
-    yield all [
-      // eslint-disable-next-line no-use-before-define
-      call(loadPermissions, action.companyId)
-    ];
-  } catch (e) {
-  }
-}
-
-// eslint-disable-next-line consistent-return
-function* loadPermissions(companyId) {
-  try {
-    const { data } = yield call(axios.get,
-      `${config.api.url}/company/${companyId}/account-roles/permissions`, token());
-    console.log(data);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 function* getEmployeeEdit(action) {
   try {
     const { data } = yield call(axios.get,
@@ -896,7 +875,7 @@ function* createEmployee(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(setEmployeesActionsError(e));
+    yield put(createEmployeeError(e));
     yield put(addSnackbar('An error occurred while adding employee', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -964,6 +943,16 @@ function* assignSkill({
   }
 }
 
+function* loadPermissions({ companyId }) {
+  try {
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${companyId}/account-roles/permissions`, token());
+    yield put(loadPermissionsSuccess(data));
+  } catch (e) {
+    yield put(loadPermissionsError(e));
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -1005,5 +994,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_ROLE, createRole);
   yield takeLatest(DELETE_ROLE, removeRole);
   yield takeLatest(UPDATE_ROLE, patchRole);
-  yield takeLatest(GET_ROLE_DETAILS, loadRoleDetails);
+  yield takeLatest(LOAD_PERMISSIONS, loadPermissions);
 }

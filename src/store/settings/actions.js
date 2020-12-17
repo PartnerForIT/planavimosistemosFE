@@ -75,7 +75,7 @@ import {
   EMPLOYEE_ACTIONS_ERROR,
   EMPLOYEE_ACTIONS_SUCCESS,
   CREATE_EMPLOYEE,
-  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
+  CREATE_EMPLOYEE_ERROR,
   GET_ROLES,
   GET_ROLES_SUCCESS,
   GET_ROLES_ERROR,
@@ -90,7 +90,7 @@ import {
   UPDATE_ROLE_ERROR,
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_SUCCESS,
-  GET_ROLE_DETAILS_ERROR,
+  GET_ROLE_DETAILS_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -485,11 +485,6 @@ export const createEmployee = (companyId, userData) => ({
   userData,
 });
 
-export const createEmployeeSuccess = (data) => ({
-  type: CREATE_EMPLOYEE_SUCCESS,
-  data,
-});
-
 export const createEmployeeError = (data) => ({
   type: CREATE_EMPLOYEE_ERROR,
   data,
@@ -572,5 +567,20 @@ export const getRoleDetailsSuccess = (data) => ({
 
 export const getRoleDetailsError = (data) => ({
   type: GET_ROLE_DETAILS_ERROR,
+  data,
+});
+
+export const loadPermissions = (companyId) => ({
+  type: LOAD_PERMISSIONS,
+  companyId,
+});
+
+export const loadPermissionsSuccess = (data) => ({
+  type: LOAD_PERMISSIONS_SUCCESS,
+  data,
+});
+
+export const loadPermissionsError = (data) => ({
+  type: LOAD_PERMISSIONS_ERROR,
   data,
 });
