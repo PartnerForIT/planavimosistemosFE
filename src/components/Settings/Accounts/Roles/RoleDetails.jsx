@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import classes from './Roles.module.scss';
 import Progress from '../../../Core/Progress';
 
-function RoleDetails({ activeRole, loading, loadRoleDetails }) {
+function RoleDetails({
+  activeRole,
+  loading,
+  loadRoleDetails
+}) {
   useEffect(() => {
     loadRoleDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -10,13 +14,15 @@ function RoleDetails({ activeRole, loading, loadRoleDetails }) {
   return (
     <div className={classes.details}>
       {
-        loading && <Progress />
+        // loading && <Progress />
       }
-      {
-        // TODO: details
-        JSON.stringify(activeRole, null, 2)
-      }
-      <div />
+      <pre>
+        {
+          // TODO: details
+          JSON.stringify(activeRole, null, 2)
+        }
+      </pre>
+      <div/>
     </div>
   );
 }
