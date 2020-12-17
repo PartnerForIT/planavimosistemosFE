@@ -44,7 +44,26 @@ import {
   PATCH_ACCOUNTS_GROUP,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_GROUP_SUCCESS,
-  PATCH_ACCOUNTS_SUBGROUP, PATCH_ACCOUNTS_SUBGROUP_SUCCESS, PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  PATCH_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
+  PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_EMPLOYEES_ERROR,
+  GET_EMPLOYEES_ALL,
+  GET_EMPLOYEES_EDIT,
+  GET_EMPLOYEES_EDIT_ERROR,
+  GET_EMPLOYEES_EDIT_SUCCESS,
+  UPDATE_EMPLOYEE,
+  UPDATE_EMPLOYEE_ERROR,
+  UPDATE_EMPLOYEE_SUCCESS,
+  GET_CURRENCY_SUCCESS,
+  DELETE_EMPLOYEE,
+  DELETE_EMPLOYEE_SUCCESS,
+  DELETE_EMPLOYEE_ERROR,
+  EMPLOYEE_ACTIONS,
+  EMPLOYEE_ACTIONS_SUCCESS,
+  EMPLOYEE_ACTIONS_ERROR,
+  CREATE_EMPLOYEE,
+  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
 } from './types';
 
 const initialState = {
@@ -58,7 +77,11 @@ const initialState = {
   journal: {},
   overtime: {},
   skills: [],
-  employees: [],
+  employees: {
+    users: [],
+    stats: {},
+  },
+  employee: {},
   activity_log: [],
   deleteData: [],
   places: [],
@@ -68,12 +91,17 @@ const initialState = {
   snackbarShow: false,
   snackbarType: '',
   groups: [],
+  currency: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
   switch (action.type) {
     case GET_SETTINGS_COMPANY:
-      return { ...state, error: null, loading: true };
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
     case GET_SETTINGS_COMPANY_SUCCESS:
       return {
         ...state,
@@ -180,11 +208,15 @@ export const reducerOrganizationList = (state = initialState, action) => {
         places: action.data,
       };
     }
-    case GET_EMPLOYEES: {
+    case GET_EMPLOYEES:
+    case GET_EMPLOYEES_ALL:
+    case GET_EMPLOYEES_EDIT:
+    {
       return {
         ...state,
         error: null,
         loading: true,
+        employeesLoading: true,
       };
     }
     case GET_EMPLOYEES_SUCCESS: {
@@ -192,8 +224,69 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         employees: action.data,
+        employeesLoading: false,
       };
     }
+
+    case UPDATE_EMPLOYEE:
+      return {
+        ...state,
+        employeesLoading: true,
+        error: null,
+      };
+
+    case UPDATE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+        employee: { ...action.data },
+        employeesLoading: false,
+      };
+
+    case UPDATE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+        employeesLoading: false,
+        error: action.data,
+      };
+
+    case GET_EMPLOYEES_EDIT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        employee: action.data,
+        employeesLoading: false,
+      };
+
+    case GET_EMPLOYEES_ERROR:
+    case GET_EMPLOYEES_EDIT_ERROR:
+      return {
+        ...state,
+        loading: false,
+        employeesLoading: false,
+      };
+
+    case DELETE_EMPLOYEE:
+    case EMPLOYEE_ACTIONS:
+      return {
+        ...state,
+        employeesLoading: true,
+      };
+
+    case EMPLOYEE_ACTIONS_SUCCESS:
+    case DELETE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+        employeesLoading: false,
+      };
+
+    case EMPLOYEE_ACTIONS_ERROR:
+    case DELETE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+        employeesLoading: false,
+        error: action.data,
+      };
+
     case GET_ACTIVITY_LOG: {
       return {
         ...state,
@@ -287,7 +380,11 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_GROUP:
     case DELETE_ACCOUNTS_GROUP:
     case PATCH_ACCOUNTS_GROUP:
-      return { ...state, groupLoading: true, error: null };
+      return {
+        ...state,
+        groupLoading: true,
+        error: null,
+      };
 
     case CREATE_ACCOUNTS_GROUP_SUCCESS:
       return {
@@ -310,7 +407,10 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_GROUP_ERROR:
     case DELETE_ACCOUNTS_GROUP_ERROR:
     case PATCH_ACCOUNTS_GROUP_ERROR:
-      return { ...state, groupLoading: false };
+      return {
+        ...state,
+        groupLoading: false,
+      };
 
     case DELETE_ACCOUNTS_GROUP_SUCCESS:
       return {
@@ -324,7 +424,11 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_ACCOUNTS_SUBGROUP:
     case DELETE_ACCOUNTS_SUBGROUP:
     case PATCH_ACCOUNTS_SUBGROUP:
-      return { ...state, subgroupLoading: true, error: null };
+      return {
+        ...state,
+        subgroupLoading: true,
+        error: null,
+      };
 
     case CREATE_ACCOUNTS_SUBGROUP_SUCCESS:
       return {
@@ -340,7 +444,10 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_ACCOUNTS_SUBGROUP_ERROR:
     case PATCH_ACCOUNTS_SUBGROUP_SUCCESS:
     case PATCH_ACCOUNTS_SUBGROUP_ERROR:
-      return { ...state, subgroupLoading: false };
+      return {
+        ...state,
+        subgroupLoading: false,
+      };
 
     case ADD_SETTING_SNACKBAR:
       return {
@@ -351,10 +458,35 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
     case DISMISS_SETTING_SNACKBAR:
       return {
-        ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '',
+        ...state,
+        snackbarText: action.data,
+        snackbarShow: false,
+        snackbarType: '',
       };
 
-    default: return state;
+    case GET_CURRENCY_SUCCESS:
+      return {
+        ...state,
+        currency: action.data,
+      };
+
+    case CREATE_EMPLOYEE:
+      return {
+        ...state,
+      };
+
+    case CREATE_EMPLOYEE_SUCCESS:
+      return {
+        ...state,
+      };
+
+    case CREATE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+      };
+
+    default:
+      return state;
   }
 };
 

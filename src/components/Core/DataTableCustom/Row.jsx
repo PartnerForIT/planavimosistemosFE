@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -13,15 +13,23 @@ import EditIcon from '../../Icons/EditIcon';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions, hoverable = false,
 }) => {
+  const selected = useMemo(() => {
+    if (multiselect) {
+      return selectedItem.find((item) => item.id === row.id);
+    }
+    return selectedItem;
+  }, [multiselect, row.id, selectedItem]);
+
   const [subTableExpanded, setSubTableExpanded] = useState(false);
+  const [actionsVisible, setActionsVisible] = useState(false);
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
     {
       [styles.collapsIconRotated]: subTableExpanded,
-      [styles.collapsIconSelected]: selectedItem && selectedItem.id === row.id && !reports,
+      [styles.collapsIconSelected]: selected && selected.id === row.id && !reports,
     },
   );
 
@@ -30,7 +38,7 @@ const Row = ({
     styles.cell,
     {
       [styles.pointer]: row.data && row.data.columns && row.data.items,
-      [styles.flexRowSelected]: selectedItem && selectedItem.id === row.id && !reports,
+      [styles.flexRowSelected]: selected && selected.id === row.id && !reports,
       [styles.reportsFlexRowSelected]: subTableExpanded && reports,
       [styles.flexRowGroupReports]: reports,
     },
@@ -38,21 +46,21 @@ const Row = ({
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: selectedItem && selectedItem.id === row.id && !reports },
+    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
   );
 
   const Components = {
     Approved: <ApprovedIcon className={classNames(
-      { [styles.approvedIconSelected]: selectedItem && selectedItem.id === row.id },
+      { [styles.approvedIconSelected]: selected && selected.id === row.id },
     )}
     />,
     Suspended: <SuspendedIcon className={classNames(
-      { [styles.suspendedIconSelected]: selectedItem && selectedItem.id === row.id },
+      { [styles.suspendedIconSelected]: selected && selected.id === row.id },
     )}
     />,
     Pending: <PendingIcon className={classNames(
-      { [styles.pendingIconSelected]: selectedItem && selectedItem.id === row.id },
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
   };
@@ -66,7 +74,14 @@ const Row = ({
     <div
       className={classNames(styles.flexTable, styles.row)}
       role='rowgroup'
+      onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
+      onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
     >
+      {
+        actionsVisible && hoverActions && (
+          <RowActions editRow={editRow} removeRow={removeRow} absolute id={row.id} />
+        )
+      }
       <div className={rowWrapperClasses}>
         {
           selectable && (
@@ -134,14 +149,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                  <div className={styles.ActionsTable}>
-                    <button onClick={editRow}>
-                      <EditIcon />
-                    </button>
-                    <button onClick={removeRow}>
-                      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
-                    </button>
-                  </div>
+                    <RowActions editRow={editRow} removeRow={removeRow} id={row.id} />
                   )
                 }
               </div>
@@ -167,3 +175,19 @@ const Row = ({
 };
 
 export default Row;
+
+const RowActions = ({
+  id,
+  editRow,
+  removeRow,
+  absolute = false,
+}) => (
+  <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
+    <button onClick={() => editRow(id)}>
+      <EditIcon />
+    </button>
+    <button onClick={() => removeRow(id)}>
+      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
+    </button>
+  </div>
+);
