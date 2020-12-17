@@ -9,7 +9,7 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
 import DeleteIcon from '../../Icons/DeleteIcon';
-import EditIcon from '../../Icons/EditIcon';
+import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
@@ -184,7 +184,7 @@ const RowActions = ({
 }) => (
   <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
     <button onClick={() => editRow(id)}>
-      <EditIcon />
+      <EditIconFixedFill />
     </button>
     <button onClick={() => removeRow(id)}>
       <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
