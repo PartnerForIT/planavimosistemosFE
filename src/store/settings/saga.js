@@ -39,7 +39,7 @@ import {
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
   DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
-  PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS,
+  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -80,10 +80,6 @@ import {
   deleteRoleSuccess,
   updateRoleSuccess,
   updateRoleError,
-  editAccountSubgroupError,
-  editAccountGroupError,
-  editAccountGroupSuccess,
-  editAccountSubgroupSuccess,
   loadEmployeesError,
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
