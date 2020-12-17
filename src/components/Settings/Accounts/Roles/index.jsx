@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import Dashboard from '../../../Core/Dashboard';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -53,6 +54,14 @@ function Roles() {
     dispatch(getRoleDetails(id, activeRole.id));
   };
 
+  const availableDetails = useMemo(() => {
+    if (!_.isEmpty(activeRole) && permissions.length) {
+      // eslint-disable-next-line no-shadow
+      return permissions.filter((perm) => activeRole.account_roles_permissions.some(({ id }) => id === perm.id));
+    }
+    return [];
+  }, [activeRole, permissions]);
+
   useEffect(() => {
     dispatch(getRoles(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +94,10 @@ function Roles() {
   };
 
   const patchRole = (roleId, data) => {
-    const { name, checked } = data;
+    const {
+      name,
+      checked,
+    } = data;
     if (checked) {
       dispatch(updateRole(id, roleId, { default: checked ? 1 : 0 }));
     }
@@ -117,6 +129,7 @@ function Roles() {
                     loading={loading}
                     loadRoleDetails={loadRoleDetails}
                     setEditVisible={setEditVisible}
+                    availableDetails={availableDetails}
                   />
                 </>
               )

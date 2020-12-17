@@ -73,6 +73,7 @@ function RolesBlock({
   loading,
   loadRoleDetails,
   setEditVisible = () => ({}),
+  availableDetails = [],
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -128,6 +129,7 @@ function RolesBlock({
               </div>
 
               <div className={classes.card_actions}>
+                {/* edit button */}
                 <button
                   className={classes.card_edit}
                   aria-label='edit role button'
@@ -135,6 +137,7 @@ function RolesBlock({
                 >
                   <EditIcon aria-hidden />
                 </button>
+                {/* delete button */}
                 {
                   !!role.can_delete
                   && (
@@ -152,9 +155,16 @@ function RolesBlock({
                 }
               </div>
             </div>
+            {/* Role details */}
             {
               activeRole?.id === role.id && (
-                <RoleDetails activeRole={activeRole} loading={loading} loadRoleDetails={loadRoleDetails} />
+                <RoleDetails
+                  activeRole={activeRole}
+                  loading={loading}
+                  loadRoleDetails={loadRoleDetails}
+                  availableDetails={availableDetails}
+                  roleAccess={roleAccess}
+                />
               )
             }
           </React.Fragment>

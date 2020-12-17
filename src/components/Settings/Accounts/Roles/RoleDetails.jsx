@@ -8,6 +8,8 @@ import OrganisationAccess from './RoleDetails/OrganisationAccess';
 function RoleDetails({
   activeRole,
   loading,
+  availableDetails,
+  roleAccess,
 }) {
   return (
     <div className={classes.details}>
@@ -15,8 +17,8 @@ function RoleDetails({
         // loading && <Progress />
       }
       <Users />
-      <AccessModule />
-      <OrganisationAccess />
+      <AccessModule availableDetails={availableDetails} roleAccess={roleAccess} />
+      <OrganisationAccess availableDetails={availableDetails} roleAccess={roleAccess} />
       <pre>
         {
           // TODO: details

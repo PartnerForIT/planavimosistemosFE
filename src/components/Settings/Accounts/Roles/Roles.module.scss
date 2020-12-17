@@ -22,7 +22,7 @@ $arrow-size: 21px;
   border-radius: $card-padding;
   border: $edit-border;
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr 1fr;
   grid-column-gap: $card-padding;
 
   &_inner {
@@ -173,4 +173,10 @@ $arrow-size: 21px;
       border-radius: 21px 0;
     }
   }
+}
+
+.checklist {
+
+  list-style: none;
+  margin: 0;
 }

@@ -7,7 +7,7 @@ function Users() {
 
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
-      content
+      <p>content</p>
     </Content>
   );
 }
