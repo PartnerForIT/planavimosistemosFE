@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
-import classes from './Roles.module.scss';
-import AddRolesIcon from '../../../Icons/AddRolesIcon';
-import RemoveRoleIcon from '../../../Icons/RemoveRoleIcon';
-import RemoveRole from '../../../Core/Dialog/RemoveRole';
-import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
-import RoleDetails from './RoleDetails';
-import EditIcon from '../../../Icons/EditIcon';
+import classes from '../Roles.module.scss';
+import AddRolesIcon from '../../../../Icons/AddRolesIcon';
+import RemoveRoleIcon from '../../../../Icons/RemoveRoleIcon';
+import RemoveRole from '../../../../Core/Dialog/RemoveRole';
+import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
+import RoleDetails from '../RoleDetails';
+import EditIcon from '../../../../Icons/EditIcon';
 
 function RolesBlock({
   roles = [],
@@ -77,10 +77,7 @@ function RolesBlock({
                 <button
                   className={classes.card_edit}
                   aria-label='edit role button'
-                  onClick={() => setEditVisible({
-                    name: role.name,
-                    id: role.id,
-                  })}
+                  onClick={() => setEditVisible(true)}
                 >
                   <EditIcon aria-hidden />
                 </button>

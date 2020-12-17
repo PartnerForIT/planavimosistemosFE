@@ -10,12 +10,12 @@ import TitleBlock from '../../../Core/TitleBlock';
 import PageLayout from '../../../Core/PageLayout';
 import Progress from '../../../Core/Progress';
 import {
-  isLoadingSelector, isShowSnackbar, rolesLoading, rolesSelector, snackbarText, snackbarType,
+  isLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
 } from '../../../../store/settings/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
-import RolesBlock from './RolesBlock';
+import RolesBlock from './RoleDetails/RolesBlock';
 import {
-  createRole, deleteRole, getRoleDetails, getRoles, updateRole,
+  createRole, deleteRole, getRoleDetails, getRoles, loadPermissions, updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
@@ -36,12 +36,13 @@ function Roles() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const isLoadind = useSelector(isLoadingSelector);
+  const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
+  const permissions = useSelector(permissionsSelector);
 
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
@@ -56,6 +57,12 @@ function Roles() {
     dispatch(getRoles(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!permissions.length) {
+      dispatch(loadPermissions(id));
+    }
+  }, [dispatch, id, permissions.length]);
 
   const removeRole = (roleId) => {
     dispatch(deleteRole(id, roleId));
@@ -97,7 +104,7 @@ function Roles() {
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress />
+            isLoading ? <Progress />
               : (
                 <>
                   <RolesBlock
