@@ -32,6 +32,13 @@ import {
   CREATE_ACCOUNTS_SUBGROUP,
   DELETE_ACCOUNTS_GROUP,
   DELETE_ACCOUNTS_SUBGROUP,
+  PATCH_ACCOUNTS_GROUP,
+  PATCH_ACCOUNTS_SUBGROUP,
+  GET_EMPLOYEES_ALL,
+  GET_EMPLOYEES_EDIT,
+  UPDATE_EMPLOYEE,
+  GET_CURRENCY,
+  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
   PATCH_ACCOUNTS_GROUP, PATCH_ACCOUNTS_SUBGROUP, GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS,
 } from './types';
 import {
@@ -73,6 +80,18 @@ import {
   deleteRoleSuccess,
   updateRoleSuccess,
   updateRoleError,
+  editAccountSubgroupError,
+  editAccountGroupError,
+  editAccountGroupSuccess,
+  editAccountSubgroupSuccess,
+  loadEmployeesError,
+  loadEmployeesEditSuccess,
+  loadEmployeesEditError,
+  patchEmployeeError,
+  loadEmployeesAll,
+  getCurrenciesSuccess,
+  removeEmployeeError,
+  removeEmployeeSuccess, setEmployeesActionsError,
 } from './actions';
 
 function token() {
@@ -98,6 +117,7 @@ function* editSettingsCompany(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+    yield put(getSettingCompanySuccess(data));
     yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -287,10 +307,23 @@ function* filterActivityLog(action) {
 
 function* loadEmployee(action) {
   try {
-    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/employees/all`, token());
-    yield put(loadEmployeesSuccess(data));
+    const tokens = token();
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.id}/employees/all`,
+      {
+        params: action.params ? action.params : null,
+        ...tokens,
+      });
+
+    if (action.params) {
+      const employees = yield select((state) => state.settings.employees);
+      yield put(loadEmployeesSuccess({ stats: employees.stats, users: [...data.users] }));
+    } else {
+      yield put(loadEmployeesSuccess(data));
+    }
   } catch (e) {
     console.log(e);
+    yield put(loadEmployeesError());
   }
 }
 
@@ -666,6 +699,275 @@ function* loadPermissions(companyId) {
   }
 }
 
+function* getEmployeeEdit(action) {
+  try {
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.id}/employees/edit/${action.employeeId}`,
+      token());
+    yield put(loadEmployeesEditSuccess(data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadEmployeesEditError());
+  }
+}
+
+function* updateEmployee(action) {
+  try {
+    const {
+      group,
+      subgroup = '',
+      place,
+      skill,
+      ...rest
+    } = action.data;
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
+      { ...rest }, token());
+
+    if (place) {
+      // eslint-disable-next-line no-use-before-define
+      yield call(assignPlace, {
+        companyId: action.id,
+        employeeId: action.employeeId,
+        place,
+      });
+    }
+
+    if (group) {
+      // eslint-disable-next-line no-use-before-define
+      yield call(assignGroup, {
+        companyId: action.id,
+        group,
+        employeeId: action.employeeId,
+      });
+    }
+
+    /* if (subgroup) */
+    {
+      // eslint-disable-next-line no-use-before-define
+      yield call(assignGroup, {
+        companyId: action.id,
+        group,
+        subgroup,
+        employeeId: action.employeeId,
+      });
+    }
+
+    if (skill) {
+      // eslint-disable-next-line no-use-before-define
+      yield call(assignSkill, {
+        companyId: action.id,
+        skill,
+        employeeId: action.employeeId,
+      });
+    }
+
+    yield put(loadEmployeesAll(action.id));
+
+    yield put(addSnackbar('Updated account successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(patchEmployeeError(e));
+    yield put(addSnackbar('An error occurred while edit account', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* loadCurrencies() {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/currencies`, token());
+    yield put(getCurrenciesSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* deleteEmployee(action) {
+  try {
+    const { data } = yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/employees/delete/${action.employeeId}`,
+      token(),
+    );
+    if (data.message === 'Deleted') {
+      yield put(removeEmployeeSuccess());
+      yield put(loadEmployeesAll(action.companyId));
+    }
+    yield put(addSnackbar('Removed employee successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(removeEmployeeError(e));
+    yield put(addSnackbar('An error occurred while remove employee', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* setEmployeesActions(action) {
+  try {
+    const headers = token();
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${action.companyId}/employees/mass-action`, null, {
+        params: {
+          users: JSON.stringify(action.employeesIds.map((id) => ({ id }))),
+          action: action.status,
+        },
+        ...headers,
+      });
+
+    yield put(loadEmployeesAll(action.companyId));
+    yield put(addSnackbar('Changed status successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(setEmployeesActionsError(e));
+    yield put(addSnackbar('An error occurred while changing employee\'s status', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createEmployee(action) {
+  try {
+    const {
+      companyId,
+      userData: {
+        group,
+        subgroup,
+        place,
+        skill,
+        ...rest
+      },
+    } = action;
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/store`,
+      {
+        ...rest,
+        company_id: companyId,
+      }, token());
+
+    const { id } = data;
+
+    if (id) {
+      if (place) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(assignPlace, {
+          companyId,
+          employeeId: id,
+          place,
+        });
+      }
+
+      if (group) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(assignGroup, {
+          companyId,
+          group,
+          employeeId: id,
+        });
+      }
+
+      if (subgroup) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(assignGroup, {
+          companyId,
+          group,
+          subgroup,
+          employeeId: id,
+        });
+      }
+
+      if (skill) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(assignSkill, {
+          companyId,
+          skill,
+          employeeId: id,
+        });
+      }
+    }
+
+    if (data) {
+      yield put(loadEmployeesAll(companyId));
+    }
+    yield put(loadEmployeesAll(action.companyId));
+    yield put(addSnackbar('Employee added successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(setEmployeesActionsError(e));
+    yield put(addSnackbar('An error occurred while adding employee', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* assignPlace({
+  companyId,
+  employeeId,
+  place,
+}) {
+  try {
+    // eslint-disable-next-line no-unused-vars,no-shadow
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/assign-place`, {
+        employee_id: employeeId,
+        place_id: parseInt(place, 10),
+      }, token());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* assignGroup({
+  companyId,
+  group,
+  employeeId,
+  subgroup = null,
+}) {
+  try {
+    const payload = !subgroup
+      ? {
+        group_id: parseInt(group, 10),
+        employee_id: employeeId,
+      }
+      : {
+        employee_id: employeeId,
+        parent_group_id: parseInt(group, 10),
+        group_id: parseInt(subgroup, 10),
+        subgroup: true,
+      };
+
+    // eslint-disable-next-line no-unused-vars,no-shadow
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/assign-group`, payload, token());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* assignSkill({
+  companyId,
+  skill,
+  employeeId,
+}) {
+  try {
+    // eslint-disable-next-line no-unused-vars,no-shadow
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/assign-skill`, {
+        employee_id: employeeId,
+        skill_id: skill,
+      }, token());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -682,6 +984,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
+  yield takeLatest(GET_EMPLOYEES_ALL, loadEmployee);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
   yield takeLatest(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);
@@ -696,6 +999,12 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
+  yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
+  yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
+  yield takeLatest(GET_CURRENCY, loadCurrencies);
+  yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
+  yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
+  yield takeLatest(CREATE_EMPLOYEE, createEmployee);
   yield takeLatest(GET_ROLES, loadRoles);
   yield takeLatest(CREATE_ROLE, createRole);
   yield takeLatest(DELETE_ROLE, removeRole);

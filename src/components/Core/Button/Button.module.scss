@@ -66,6 +66,16 @@
   &:hover {
     opacity: 0.8;
   }
+
+  &.inverse {
+    background-color: $light-green;
+    color: $light-green-text;
+    border: 0;
+  }
+
+  &[disabled] {
+    color: $gray;
+  }
 }
 
 .navyBlue {
@@ -145,6 +155,6 @@
   user-select: none;
 
   &[disabled] {
-    color: #808f94;
+    color: $gray;
   }
 }

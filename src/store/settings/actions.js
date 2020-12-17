@@ -59,6 +59,23 @@ import {
   PATCH_ACCOUNTS_GROUP_SUCCESS,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_EMPLOYEES_ALL,
+  GET_EMPLOYEES_ERROR,
+  GET_EMPLOYEES_EDIT,
+  GET_EMPLOYEES_EDIT_SUCCESS,
+  UPDATE_EMPLOYEE,
+  UPDATE_EMPLOYEE_ERROR,
+  UPDATE_EMPLOYEE_SUCCESS,
+  GET_CURRENCY,
+  GET_CURRENCY_SUCCESS,
+  DELETE_EMPLOYEE,
+  DELETE_EMPLOYEE_SUCCESS,
+  DELETE_EMPLOYEE_ERROR,
+  EMPLOYEE_ACTIONS,
+  EMPLOYEE_ACTIONS_ERROR,
+  EMPLOYEE_ACTIONS_SUCCESS,
+  CREATE_EMPLOYEE,
+  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
   GET_ROLES,
   GET_ROLES_SUCCESS,
   GET_ROLES_ERROR,
@@ -200,8 +217,85 @@ export const loadEmployees = (id) => ({
   type: GET_EMPLOYEES,
   id,
 });
+
+export const loadEmployeesAll = (id, params = null) => ({
+  type: GET_EMPLOYEES_ALL,
+  id,
+  all: true,
+  params,
+});
+
 export const loadEmployeesSuccess = (data) => ({
   type: GET_EMPLOYEES_SUCCESS,
+  data,
+});
+
+export const loadEmployeesError = () => ({
+  type: GET_EMPLOYEES_ERROR,
+});
+
+export const loadEmployeesEdit = (id, employeeId) => ({
+  type: GET_EMPLOYEES_EDIT,
+  id,
+  employeeId,
+});
+
+export const loadEmployeesEditSuccess = (data) => ({
+  type: GET_EMPLOYEES_EDIT_SUCCESS,
+  data,
+});
+
+export const loadEmployeesEditError = () => ({
+  type: GET_EMPLOYEES_ERROR,
+});
+
+export const patchEmployee = (id, employeeId, data) => ({
+  type: UPDATE_EMPLOYEE,
+  id,
+  employeeId,
+  data,
+});
+
+export const patchEmployeeSuccess = (data) => ({
+  type: UPDATE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const patchEmployeeError = (data) => ({
+  type: UPDATE_EMPLOYEE_ERROR,
+  data,
+});
+
+export const removeEmployee = (companyId, employeeId) => ({
+  type: DELETE_EMPLOYEE,
+  companyId,
+  employeeId,
+});
+
+export const removeEmployeeSuccess = (data) => ({
+  type: DELETE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const removeEmployeeError = (data) => ({
+  type: DELETE_EMPLOYEE_ERROR,
+  data,
+});
+
+export const setEmployeesActions = (companyId, employeesIds = [], status) => ({
+  type: EMPLOYEE_ACTIONS,
+  companyId,
+  status,
+  employeesIds,
+});
+
+export const setEmployeesActionsSuccess = (data) => ({
+  type: EMPLOYEE_ACTIONS_SUCCESS,
+  data,
+});
+
+export const setEmployeesActionsError = (data) => ({
+  type: EMPLOYEE_ACTIONS_ERROR,
   data,
 });
 
@@ -374,6 +468,31 @@ export const removeAccountSubgroupSuccess = () => ({
 
 export const removeAccountSubgroupError = () => ({
   type: DELETE_ACCOUNTS_SUBGROUP_ERROR,
+});
+
+export const getCurrencies = () => ({
+  type: GET_CURRENCY,
+});
+
+export const getCurrenciesSuccess = (data) => ({
+  type: GET_CURRENCY_SUCCESS,
+  data,
+});
+
+export const createEmployee = (companyId, userData) => ({
+  type: CREATE_EMPLOYEE,
+  companyId,
+  userData,
+});
+
+export const createEmployeeSuccess = (data) => ({
+  type: CREATE_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const createEmployeeError = (data) => ({
+  type: CREATE_EMPLOYEE_ERROR,
+  data,
 });
 
 export const getRoles = (companyId) => ({
