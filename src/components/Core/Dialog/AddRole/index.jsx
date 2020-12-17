@@ -8,7 +8,7 @@ import style from '../Dialog.module.scss';
 
 export default function AddRole({
   handleClose, title, open,
-  buttonTitle, roleName, setRoleName, createRole,
+  buttonTitle, roleName = '', setRoleName = () => ({}), onsubmit = () => ({}),
 }) {
   const { t } = useTranslation();
 
@@ -25,7 +25,7 @@ export default function AddRole({
         />
       </div>
       <div className={style.buttonSaveBlock}>
-        <Button disabled={!roleName.trim()} onClick={() => createRole()} fillWidth size='big'>
+        <Button disabled={!roleName.trim()} onClick={() => onsubmit()} fillWidth size='big'>
           {buttonTitle}
         </Button>
       </div>
