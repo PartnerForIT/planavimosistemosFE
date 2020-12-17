@@ -9,6 +9,60 @@ import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
 
+const roleAccess = {
+  // Access by Module
+  logbook: {
+    edit_settings: 'Can edit Logbook settings',
+    edit_logs: 'Can edit entry logs',
+    delete_logs: 'Can delete entry logs',
+    earnings: 'Can see earnings',
+    requests: 'Get approval requests',
+    requests_in_place: 'Get approval requests in assigned place',
+  },
+  reports: {
+    generate: 'Can generate reports',
+    assigned_place: 'Reports only for assigned place',
+  },
+  events: {
+    receive_app: 'Receive notifications',
+    receive_email: 'receive_email',
+    create: 'Can create Events',
+  },
+
+  // Organization access
+  groups: {
+    create: 'Can create Groups',
+  },
+  roles: {
+    create: 'Can create Roles',
+  },
+  categories: {
+    create: 'Can create Categories',
+  },
+  data: {
+    delete: 'Can delete entry data',
+  },
+  accounts: {
+    create: 'Can create New accounts',
+    delete: 'delete',
+  },
+  activity_log: {
+    view: 'Can see Activity Log',
+  },
+  pto: {
+    edit_settings: 'Can edit General Settings',
+    edit_entries: 'edit_entries',
+    requests: 'requests',
+  },
+};
+
+// Organization access
+
+// Use Managers Mobile View
+// Can see & edit Accounts List
+// Can delete Accounts list
+// Can edit Logbook settings
+
 function RolesBlock({
   roles = [],
   activeRole,
