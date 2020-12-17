@@ -50,13 +50,15 @@ $arrow-size: 21px;
   line-height: 1;
   cursor: pointer;
   font-family: inherit;
+  overflow: hidden;
 
   @include focusVisible();
 
   &_title {
     font-weight: bold;
-    padding: 0;
+    padding: 0 calc(1em + 5px) 0 0;
     margin: 0;
+    word-break: break-word;
   }
 
   & small {
@@ -75,6 +77,8 @@ $arrow-size: 21px;
 
   &_check {
     position: absolute;
+    bottom: $card-padding;
+    left: $card-padding;
     transform: translate(-9px, 9px);
 
     & label * {
@@ -145,6 +149,8 @@ $arrow-size: 21px;
     & .card_remove,
     & .card_actions {
       color: white;
+      opacity: 1;
+      z-index: 2;
     }
 
     &::before,
@@ -176,7 +182,6 @@ $arrow-size: 21px;
 }
 
 .checklist {
-
   list-style: none;
   margin: 0;
 }

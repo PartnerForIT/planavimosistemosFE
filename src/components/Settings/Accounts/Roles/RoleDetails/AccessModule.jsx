@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Content from './Content';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
@@ -10,6 +10,8 @@ function AccessModule({
   categoriesNames = {},
 }) {
   const { t } = useTranslation();
+
+  const labels = useMemo(() => ({}), []);
 
   return (
 

@@ -119,14 +119,19 @@ function RolesBlock({
             >
               <p className={classes.card_title}>{role.name}</p>
               <small>{`${role.account_user_roles?.length} ${t('users have this role')}`}</small>
-              <div className={classes.card_check}>
-                <StyledCheckbox
-                  id={role.id}
-                  label={t('Make default')}
-                  checked={!!role.default ?? false}
-                  onChange={(id, checked) => updateRole(id, { checked })}
-                />
-              </div>
+              {
+                (!!role.default || activeRole.id === role.id)
+                && (
+                  <div className={classes.card_check}>
+                    <StyledCheckbox
+                      id={role.id}
+                      label={t('Make default')}
+                      checked={!!role.default}
+                      onChange={(id, checked) => updateRole(id, { checked })}
+                    />
+                  </div>
+                )
+              }
 
               <div className={classes.card_actions}>
                 {/* edit button */}
