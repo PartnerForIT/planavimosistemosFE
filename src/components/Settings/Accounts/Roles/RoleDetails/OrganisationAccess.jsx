@@ -1,32 +1,48 @@
-import React, { useMemo } from 'react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Content from './Content';
+import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 
-function OrganisationAccess({ availableDetails, categoriesNames, roleAccess }) {
-  const available = useMemo(() => availableDetails.map((item) => ({ [item.name]: item.action })), [availableDetails]);
+const defaultAvailable = {
+  pto: ['edit_settings'],
+  groups: ['create'],
+  roles: ['create'],
+  data: ['delete'],
+  categories: ['create'],
+  accounts: ['create'],
+  events: ['create'],
+  activity_log: ['view'],
+};
+
+const OrganisationAccess = React.memo(({
+  availableDetails,
+  categoriesNames,
+  roleAccess,
+}) => {
+  const { t } = useTranslation();
 
   return (
     <Content tooltip='Tooltip' title='Organisation access'>
+      {
+        Object.keys(defaultAvailable)
+          .map((key, i) => (
+            <React.Fragment key={key + i.toString()}>
+              {
+                defaultAvailable[key].map((name) => (
+                  <StyledCheckbox
+                    key={key + name}
+                    label={t(roleAccess[key][name])}
+                    id={key}
+                    onChange={() => ({})}
+                  />
+                ))
+              }
+            </React.Fragment>
+          ))
+      }
 
       {/* Use Managers Mobile View */}
       {/* ???? */}
-
-      {/* Can edit General Settings */}
-      {/* pto ~> edit_settings */}
-
-      {/* Can create Groups */}
-      {/* groups ~> create */}
-
-      {/* Can create Roles */}
-      {/* roles ~> create */}
-
-      {/* Can delete entry data */}
-      {/* data ~> delete */}
-
-      {/* Can create Categories */}
-      {/* categories ~> create */}
-
-      {/* Can create New accounts */}
-      {/* accounts ~> create */}
 
       {/* Can see & edit Accounts List */}
       {/* ??? */}
@@ -37,18 +53,8 @@ function OrganisationAccess({ availableDetails, categoriesNames, roleAccess }) {
       {/* Can edit Logbook settings */}
       {/* ??? */}
 
-      {/* Can create Events */}
-      {/* events ~> create */}
-
-      {/* Can see Activity Log */}
-      {/* activity_log ~> view */}
-
-      <pre>
-        {/* {JSON.stringify(roleAccess, null, 2)} */}
-        {JSON.stringify(available, null, 2)}
-      </pre>
     </Content>
   );
-}
+});
 
 export default OrganisationAccess;
