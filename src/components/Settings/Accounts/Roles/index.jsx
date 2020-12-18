@@ -11,12 +11,13 @@ import TitleBlock from '../../../Core/TitleBlock';
 import PageLayout from '../../../Core/PageLayout';
 import Progress from '../../../Core/Progress';
 import {
+  AccountGroupsSelector, employeesSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
 } from '../../../../store/settings/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RoleDetails/RolesBlock';
 import {
-  createRole, deleteRole, getRoleDetails, getRoles, loadPermissions, updateRole,
+  createRole, deleteRole, getAccountGroups, getRoleDetails, getRoles, loadEmployeesAll, loadPermissions, updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
@@ -44,6 +45,8 @@ function Roles() {
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
   const permissions = useSelector(permissionsSelector);
+  const { users: employees } = useSelector(employeesSelector);
+  const groups = useSelector(AccountGroupsSelector);
 
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
@@ -64,6 +67,8 @@ function Roles() {
 
   useEffect(() => {
     dispatch(getRoles(id));
+    dispatch(loadEmployeesAll(id));
+    dispatch(getAccountGroups(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -130,6 +135,8 @@ function Roles() {
                     loadRoleDetails={loadRoleDetails}
                     setEditVisible={setEditVisible}
                     availableDetails={availableDetails}
+                    employees={employees}
+                    groups={groups}
                   />
                 </>
               )

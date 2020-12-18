@@ -23,13 +23,15 @@ function RoleDetails({
   loading,
   availableDetails,
   roleAccess,
+  employees,
+  groups,
 }) {
   return (
     <div className={classes.details}>
       {
         // loading && <Progress />
       }
-      <Users />
+      <Users employees={employees} groups={groups} />
       <AccessModule
         availableDetails={availableDetails}
         roleAccess={roleAccess}
@@ -40,12 +42,6 @@ function RoleDetails({
         roleAccess={roleAccess}
         categoriesNames={categoriesNames}
       />
-      <pre>
-        {
-          // TODO: details
-          JSON.stringify(activeRole, null, 2)
-        }
-      </pre>
       <div />
     </div>
   );

@@ -75,6 +75,8 @@ function RolesBlock({
   loadRoleDetails,
   setEditVisible = () => ({}),
   availableDetails = [],
+  employees = [],
+  groups = [],
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -175,6 +177,8 @@ function RolesBlock({
                     loadRoleDetails={loadRoleDetails}
                     availableDetails={availableDetails}
                     roleAccess={roleAccess}
+                    employees={employees}
+                    groups={groups}
                   />
                 )
               }
