@@ -13,11 +13,11 @@ function Content({
   return (
     <div className={classes.details_inner}>
       <div className={classes.details_inner_title}>
-        <p>
+        <span>
           {t(title)}
           {' '}
           <span><Tooltip title={t(tooltip)} /></span>
-        </p>
+        </span>
         <div className={classes.content}>
           {
             scroll
