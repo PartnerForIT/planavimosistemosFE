@@ -1,5 +1,4 @@
-import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 
@@ -8,10 +7,6 @@ function AccessModule({
   roleAccess = {},
   categoriesNames = {},
 }) {
-  const { t } = useTranslation();
-
-  const labels = useMemo(() => ({}), []);
-
   return (
 
     <Content title='Access by module' tooltip='Tooltip'>
