@@ -50,7 +50,7 @@ const App = () => (
         <AuthRoute exact path='/settings/activity-log/:id' component={ActivityLog} />
         <AuthRoute exact path='/settings/delete/:id' component={SettingDelete} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
-        <AuthRoute exact path='/reports' component={Reports} />
+        <AuthRoute exact path='/reports/:id' component={Reports} />
       </Switch>
     </Router>
   </Suspense>
