@@ -9,7 +9,7 @@ export default function MainLayout({ children }) {
 
   useEffect(() => {
     const expires = localStorage.getItem('expires_in');
-    if (new Date(parseInt(expires, 10)) < new Date(new Date().getTime() + 5 * 1000)) {
+    if (new Date(parseInt(expires, 10)) < new Date(new Date().getTime() + 5 * 60 * 1000)) {
       dispatch(refreshToken());
     }
   });
