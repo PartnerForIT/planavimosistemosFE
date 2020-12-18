@@ -18,8 +18,9 @@ function Content({
           {' '}
           <span><Tooltip title={t(tooltip)} /></span>
         </span>
-        <div className={classes.content}>
-          {
+      </div>
+      <div className={classes.content}>
+        {
             scroll
               ? (
                 <Scrollbar
@@ -62,7 +63,6 @@ function Content({
               )
               : { children }
           }
-        </div>
       </div>
     </div>
   );
