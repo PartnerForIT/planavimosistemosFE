@@ -50,7 +50,6 @@ $arrow-size: 21px;
   line-height: 1;
   cursor: pointer;
   font-family: inherit;
-  overflow: hidden;
 
   @include focusVisible();
 
@@ -176,7 +175,7 @@ $arrow-size: 21px;
     &::after {
       z-index: 1;
       border-color: $beige-color;
-      border-radius: 21px 0;
+      border-radius: 17px 0;
     }
   }
 }
