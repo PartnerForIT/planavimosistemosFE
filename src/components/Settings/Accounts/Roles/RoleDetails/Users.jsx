@@ -21,7 +21,6 @@ function Users({
     ?.subgroups
     ?.find((sbgrp) => sbgrp.id === subGroupId)?.name, [groups]);
 
-  console.log(employees);
   const groupsToCheck = ({ id }) => ({
     id,
     label: findGroupName(id),
@@ -65,7 +64,6 @@ function Users({
 
     let groupName;
 
-    console.log(r);
     if (grps && grps.group_id) {
       // eslint-disable-next-line no-shadow
       groupName = groups?.find(({ id }) => id === grps.group_id)?.name;
@@ -80,7 +78,6 @@ function Users({
       groupName,
     };
   }) ?? [], [employees, findGroupName, groups]);
-  console.log(employees);
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
       <pre>

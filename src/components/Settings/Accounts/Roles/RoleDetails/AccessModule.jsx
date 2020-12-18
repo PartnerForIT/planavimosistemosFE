@@ -3,37 +3,27 @@ import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 
 const AccessModule = React.memo(({
-  availableDetails = [],
   roleAccess = {},
   categoriesNames = {},
-}) => (
+}) => {
+  const { moduleAccess } = roleAccess;
 
-  <Content title='Access by module' tooltip='Tooltip'>
-
-    {/* Logbook */}
-    <OptionsCheckBoxGroup
-      name='logbook'
-      availableDetails={availableDetails}
-      categoriesNames={categoriesNames}
-      roleAccess={roleAccess}
-    />
-
-    {/* Reports */}
-    <OptionsCheckBoxGroup
-      name='reports'
-      availableDetails={availableDetails}
-      categoriesNames={categoriesNames}
-      roleAccess={roleAccess}
-    />
-
-    {/* Events */}
-    <OptionsCheckBoxGroup
-      name='events'
-      availableDetails={availableDetails}
-      categoriesNames={categoriesNames}
-      roleAccess={roleAccess}
-    />
-  </Content>
-));
+  return (
+    <Content title='Access by module' tooltip='Tooltip'>
+      {
+        Object.keys(moduleAccess).map((key) => (
+          <OptionsCheckBoxGroup
+            key={key}
+            name={key}
+            active={moduleAccess[key].enabled}
+            details={moduleAccess[key].options}
+            categoriesNames={categoriesNames}
+            roleAccess={roleAccess}
+          />
+        ))
+      }
+    </Content>
+  );
+});
 
 export default AccessModule;

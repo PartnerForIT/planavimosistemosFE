@@ -12,48 +12,96 @@ import Progress from '../../../../Core/Progress';
 
 const roleAccess = {
   // Access by Module
-  logbook: {
-    edit_settings: 'Can edit Logbook settings',
-    edit_logs: 'Can edit entry logs',
-    delete_logs: 'Can delete entry logs',
-    earnings: 'Can see earnings',
-    requests: 'Get approval requests',
-    requests_in_place: 'Get approval requests in assigned place',
-  },
-  reports: {
-    generate: 'Can generate reports',
-    assigned_place: 'Reports only for assigned place',
-  },
-  events: {
-    receive_app: 'Receive notifications',
-    receive_email: 'receive_email',
-    create: 'Can create Events',
+  moduleAccess: {
+
+    logbook: {
+      enabled: true,
+      options: {
+        edit_settings: 'Can edit Logbook settings',
+        edit_logs: 'Can edit entry logs',
+        delete_logs: 'Can delete entry logs',
+        earnings: 'Can see earnings',
+        requests: 'Get approval requests',
+        requests_in_place: 'Get approval requests in assigned place',
+      },
+    },
+    reports: {
+      enabled: false,
+      options: {
+        generate: 'Can generate reports',
+        assigned_place: 'Reports only for assigned place',
+      },
+    },
+    events: {
+      enabled: true,
+      options: {
+        receive_app: 'Receive notifications',
+        receive_email: 'events ~> receive_email',
+        create: 'Can create Events',
+      },
+    },
   },
 
   // Organization access
-  groups: {
-    create: 'Can create Groups',
-  },
-  roles: {
-    create: 'Can create Roles',
-  },
-  categories: {
-    create: 'Can create Categories',
-  },
-  data: {
-    delete: 'Can delete entry data',
-  },
-  accounts: {
-    create: 'Can create New accounts',
-    delete: 'delete',
-  },
-  activity_log: {
-    view: 'Can see Activity Log',
-  },
-  pto: {
-    edit_settings: 'Can edit General Settings',
-    edit_entries: 'edit_entries',
-    requests: 'requests',
+  organisation: {
+
+    groups: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Groups',
+      },
+    },
+    roles: {
+      enabled: false,
+
+      options: {
+        create: 'Can create Roles',
+      },
+
+    },
+    categories: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Categories',
+      },
+
+    },
+    data: {
+      enabled: true,
+
+      options: {
+        delete: 'Can delete entry data',
+      },
+
+    },
+    accounts: {
+      enabled: true,
+
+      options: {
+        create: 'Can create New accounts',
+        delete: 'accounts ~> delete',
+      },
+
+    },
+    activity_log: {
+      enabled: true,
+
+      options: {
+        view: 'Can see Activity Log',
+      },
+
+    },
+    pto: {
+      enabled: true,
+
+      options: {
+        edit_settings: 'Can edit General Settings',
+        edit_entries: 'pto ~> edit_entries',
+        requests: 'pto ~> requests',
+      },
+    },
   },
 };
 
@@ -114,77 +162,77 @@ function RolesBlock({
               </div>
               {/* roles board */}
               {
-          roles.map((role) => (
-            <React.Fragment key={role.id + role.name}>
-              <div
-                className={classnames(classes.card, role.id === activeRole.id ? classes.active : '')}
-                onClick={() => setActiveRole(role)}
-                onKeyDown={() => setActiveRole(role)}
-                role='option'
-                aria-label='user role'
-                aria-selected='true'
-                tabIndex={0}
-              >
-                <p className={classes.card_title}>{role.name}</p>
-                <small>{`${role.account_user_roles?.length} ${t('users have this role')}`}</small>
-                {
-                  (!!role.default || activeRole.id === role.id)
-                  && (
-                    <div className={classes.card_check}>
-                      <StyledCheckbox
-                        id={role.id}
-                        label={t('Make default')}
-                        checked={!!role.default}
-                        onChange={(id, checked) => updateRole(id, { checked })}
-                      />
-                    </div>
-                  )
-                }
+                roles.map((role) => (
+                  <React.Fragment key={role.id + role.name}>
+                    <div
+                      className={classnames(classes.card, role.id === activeRole.id ? classes.active : '')}
+                      onClick={() => setActiveRole(role)}
+                      onKeyDown={() => setActiveRole(role)}
+                      role='option'
+                      aria-label='user role'
+                      aria-selected='true'
+                      tabIndex={0}
+                    >
+                      <p className={classes.card_title}>{role.name}</p>
+                      <small>{`${role.account_user_roles?.length} ${t('users have this role')}`}</small>
+                      {
+                        (!!role.default || activeRole.id === role.id)
+                        && (
+                          <div className={classes.card_check}>
+                            <StyledCheckbox
+                              id={role.id}
+                              label={t('Make default')}
+                              checked={!!role.default}
+                              onChange={(id, checked) => updateRole(id, { checked })}
+                            />
+                          </div>
+                        )
+                      }
 
-                <div className={classes.card_actions}>
-                  {/* edit button */}
-                  <button
-                    className={classes.card_edit}
-                    aria-label='edit role button'
-                    onClick={() => setEditVisible(true)}
-                  >
-                    <EditIcon aria-hidden />
-                  </button>
-                  {/* delete button */}
-                  {
-                    !!role.can_delete
-                    && (
-                      <button
-                        className={classes.card_remove}
-                        aria-label='remove role button'
-                        onClick={() => setRemoveVisible({
-                          name: role.name,
-                          id: role.id,
-                        })}
-                      >
-                        <RemoveRoleIcon aria-hidden />
-                      </button>
-                    )
-                  }
-                </div>
-              </div>
-              {/* Role details */}
-              {
-                activeRole?.id === role.id && (
-                  <RoleDetails
-                    activeRole={activeRole}
-                    loading={loading}
-                    loadRoleDetails={loadRoleDetails}
-                    availableDetails={availableDetails}
-                    roleAccess={roleAccess}
-                    employees={employees}
-                    groups={groups}
-                  />
-                )
+                      <div className={classes.card_actions}>
+                        {/* edit button */}
+                        <button
+                          className={classes.card_edit}
+                          aria-label='edit role button'
+                          onClick={() => setEditVisible(true)}
+                        >
+                          <EditIcon aria-hidden />
+                        </button>
+                        {/* delete button */}
+                        {
+                          !!role.can_delete
+                          && (
+                            <button
+                              className={classes.card_remove}
+                              aria-label='remove role button'
+                              onClick={() => setRemoveVisible({
+                                name: role.name,
+                                id: role.id,
+                              })}
+                            >
+                              <RemoveRoleIcon aria-hidden />
+                            </button>
+                          )
+                        }
+                      </div>
+                    </div>
+                    {/* Role details */}
+                    {
+                      activeRole?.id === role.id && (
+                        <RoleDetails
+                          activeRole={activeRole}
+                          loading={loading}
+                          loadRoleDetails={loadRoleDetails}
+                          availableDetails={availableDetails}
+                          roleAccess={roleAccess}
+                          employees={employees}
+                          groups={groups}
+                        />
+                      )
+                    }
+                  </React.Fragment>
+                ))
               }
-            </React.Fragment>
-          ))
-        }
               <RemoveRole
                 open={!!removeVisible}
                 handleClose={() => setRemoveVisible(false)}
