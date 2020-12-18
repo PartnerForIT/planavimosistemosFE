@@ -30,8 +30,16 @@ function RoleDetails({
         // loading && <Progress />
       }
       <Users />
-      <AccessModule availableDetails={availableDetails} roleAccess={roleAccess} categoriesNames={categoriesNames} />
-      <OrganisationAccess availableDetails={availableDetails} roleAccess={roleAccess} categoriesNames={categoriesNames} />
+      <AccessModule
+        availableDetails={availableDetails}
+        roleAccess={roleAccess}
+        categoriesNames={categoriesNames}
+      />
+      <OrganisationAccess
+        availableDetails={availableDetails}
+        roleAccess={roleAccess}
+        categoriesNames={categoriesNames}
+      />
       <pre>
         {
           // TODO: details

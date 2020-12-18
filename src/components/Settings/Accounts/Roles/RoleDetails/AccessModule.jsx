@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Content from './Content';
-import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
-import classes from '../Roles.module.scss';
+import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 
 function AccessModule({
   availableDetails = [],
@@ -18,30 +17,28 @@ function AccessModule({
     <Content title='Access by module' tooltip='Tooltip'>
 
       {/* Logbook */}
-      {
-        availableDetails.some((item) => item.name === 'logbook')
-        && (
-          <>
-            <StyledCheckbox
-              label={t(categoriesNames.logbook ?? '')}
-              style={{ lineHeight: 0.5 }}
-              onChange={() => ({})}
-              id='logbook'
-            />
-            <ul className={classes.checklist}>
-              <li>
-                <StyledCheckbox id='id' label='label' style={{ lineHeight: 0.5 }} onChange={() => ({})} />
-                <StyledCheckbox id='id' label='label' style={{ lineHeight: 0.5 }} onChange={() => ({})} />
-                <StyledCheckbox id='id' label='label' style={{ lineHeight: 0.5 }} onChange={() => ({})} />
-              </li>
-            </ul>
-          </>
-        )
-      }
-      <pre>
-        {/* {JSON.stringify(roleAccess, null, 2)} */}
-        {JSON.stringify(availableDetails, null, 2)}
-      </pre>
+      <OptionsCheckBoxGroup
+        name='logbook'
+        availableDetails={availableDetails}
+        categoriesNames={categoriesNames}
+        roleAccess={roleAccess}
+      />
+
+      {/* Reports */}
+      <OptionsCheckBoxGroup
+        name='reports'
+        availableDetails={availableDetails}
+        categoriesNames={categoriesNames}
+        roleAccess={roleAccess}
+      />
+
+      {/* Events */}
+      <OptionsCheckBoxGroup
+        name='events'
+        availableDetails={availableDetails}
+        categoriesNames={categoriesNames}
+        roleAccess={roleAccess}
+      />
     </Content>
   );
 }
