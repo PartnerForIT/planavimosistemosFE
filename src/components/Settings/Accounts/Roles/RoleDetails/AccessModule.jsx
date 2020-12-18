@@ -5,6 +5,7 @@ import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 const AccessModule = React.memo(({
   roleAccess = {},
   categoriesNames = {},
+  setRoleAccess,
 }) => {
   const { moduleAccess } = roleAccess;
 
@@ -19,6 +20,7 @@ const AccessModule = React.memo(({
             details={moduleAccess[key].options}
             categoriesNames={categoriesNames}
             roleAccess={roleAccess}
+            setRoleAccess={setRoleAccess}
           />
         ))
       }

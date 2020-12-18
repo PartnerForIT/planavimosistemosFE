@@ -10,7 +10,7 @@ import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
 import Progress from '../../../../Core/Progress';
 
-const roleAccess = {
+const defaultRoleAcces = {
   // Access by Module
   moduleAccess: {
 
@@ -128,6 +128,7 @@ function RolesBlock({
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
+  const [roleAccess, setRoleAccess] = useState(defaultRoleAcces);
 
   const onKeyDown = (e, func) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -227,6 +228,7 @@ function RolesBlock({
                           roleAccess={roleAccess}
                           employees={employees}
                           groups={groups}
+                          setRoleAccess={setRoleAccess}
                         />
                       )
                     }

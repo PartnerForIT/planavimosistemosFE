@@ -25,6 +25,7 @@ function RoleDetails({
   roleAccess,
   employees,
   groups,
+  setRoleAccess,
 }) {
   return (
     <div className={classes.details}>
@@ -36,11 +37,13 @@ function RoleDetails({
         availableDetails={availableDetails}
         roleAccess={roleAccess}
         categoriesNames={categoriesNames}
+        setRoleAccess={setRoleAccess}
       />
       <OrganisationAccess
         availableDetails={availableDetails}
         roleAccess={roleAccess}
         categoriesNames={categoriesNames}
+        setRoleAccess={setRoleAccess}
       />
       <div />
     </div>
