@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
 import Dropdown from '../Dropdown/Dropdown';
@@ -6,7 +6,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
 import styles from '../Select/Select.module.scss';
 
-const CheckboxGroupWrapper = ({ items, onChange }) => {
+const CheckboxGroupWrapper = ({ items = [], onChange = () => ({}) }) => {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
@@ -15,8 +15,8 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
-    const setCheckedToAll = () => {
-      const arrayCopy = [...items];
+    const setCheckedToAll = (array) => {
+      const arrayCopy = array.length ? [...array] : items;
       if (!arrayCopy.length) return arrayCopy;
 
       return arrayCopy.map((item) => {
@@ -35,12 +35,12 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
         return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setItemsStat(stat);
-      setCheckedItems(checkedItemsArray);
-    });
-  }, [items]);
+
+    setItemsArray(setCheckedToAll);
+    setCheckedItems(checkedItemsArray);
+    setItemsStat({ ...stat });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, setCheckedItems]);
 
   useEffect(() => {
     setItemsStat({
@@ -48,9 +48,10 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       checked: checkedItems.length,
       unchecked: itemsStat.total - checkedItems.length,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
 
-  const selectAll = (check) => {
+  const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array) => {
       const arrayCopy = [...array];
@@ -78,9 +79,9 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       setCheckedItems(checkedItemsArray);
       onChange(checkedItemsArray);
     });
-  };
+  }, [itemsArray, itemsStat, onChange]);
 
-  const handleCheckboxChange = (item) => {
+  const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -106,7 +107,7 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       setCheckedItems(checkedItemsArray);
       onChange(checkedItemsArray);
     });
-  };
+  }, [itemsArray, onChange]);
 
   return (
     <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>

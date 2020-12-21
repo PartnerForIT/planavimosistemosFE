@@ -20,6 +20,7 @@ export default function CustomSelect({
 
   useEffect(() => {
     const checkedItemsArray = [];
+    const stat = { checked: 0, unchecked: 0, total: 0 };
 
     const setCheckedToAll = (array) => {
       const arrayCopy = array.length ? [...array] : items;
@@ -28,11 +29,11 @@ export default function CustomSelect({
         if (!item.disabled) {
           if (item.checked) {
             checkedItemsArray.push(item);
-            itemsStat.checked += 1;
+            stat.checked += 1;
           } else {
-            itemsStat.unchecked += 1;
+            stat.unchecked += 1;
           }
-          itemsStat.total += 1;
+          stat.total += 1;
         }
         if (item.items) {
           setCheckedToAll(item.items);
@@ -42,7 +43,8 @@ export default function CustomSelect({
     };
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-    setItemsStat({ ...itemsStat });
+    setItemsStat({ ...stat });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, setCheckedItems]);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function CustomSelect({
       checked: checkedItems.length,
       unchecked: itemsStat.total - checkedItems.length,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
 
   const handleCheckboxChange = (item) => {
@@ -109,7 +112,7 @@ export default function CustomSelect({
       setCheckedItems(checkedItemsArray);
       onChange(checkedItemsArray);
     });
-  }, [itemsStat]);
+  }, [itemsArray, itemsStat, onChange]);
 
   const wrapperClasses = classNames(
     styles.inputWrapper,
