@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import moment from 'moment';
 import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -138,6 +137,8 @@ export default function AccountsList() {
 
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
+    dispatch(loadSkills(id));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,20 +151,17 @@ export default function AccountsList() {
   };
 
   useEffect(() => {
-    if (_.isEmpty(skills) && newVisible) {
+    if (newVisible || editVisible) {
       dispatch(loadSkills(id));
-    }
-    if (_.isEmpty(groups) && newVisible) {
       dispatch(getAccountGroups(id));
-    }
-    if (_.isEmpty(places) && newVisible) {
       dispatch(loadPlace(id));
+      dispatch(getSecurityCompany(id));
     }
-    if (_.isEmpty(security) && newVisible) {
-      // TODO: uncomment next line on server changes
-      // dispatch(getSecurityCompany(id));
-    }
-  }, [dispatch, groups, id, newVisible, places, security, skills]);
+  }, [dispatch, editVisible, id, newVisible]);
+
+  console.log('skills', skills);
+  console.log('groups', groups);
+  console.log('places', places);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -183,13 +181,13 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups, skills,
+      name, surname, status, created_at, updated_at, place, groups, skills, subgroups,
       ...rest
     } = empl;
     return {
       ...rest,
-      group: groups?.name ?? '',
-      subgroup: groups?.sub_groups?.name ?? '',
+      groups: groups[0]?.name ?? '',
+      subgroup: subgroups[0]?.name ?? '',
       skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
       // eslint-disable-next-line camelcase

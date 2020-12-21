@@ -718,8 +718,7 @@ function* updateEmployee(action) {
       });
     }
 
-    /* if (subgroup) */
-    {
+    if (subgroup) {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
