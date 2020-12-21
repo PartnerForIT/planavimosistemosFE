@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import { useParams } from 'react-router-dom';
 import MaynLayout from '../Core/MainLayout';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -22,7 +23,6 @@ import { employeesSelector } from '../../store/employees/selectors';
 import { getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
-import { companyIdSelector } from '../../store/auth/selectors';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -64,15 +64,16 @@ const Logbook = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
-  const companyId = useSelector(companyIdSelector);
+  const { id: companyId } = useParams();
 
   useEffect(() => {
     dispatch(getJobTypes(companyId)).then().catch();
     dispatch(getEmployees(companyId)).then().catch();
     dispatch(getSkills(companyId)).then().catch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const sendRequest = (props) => {
+  const sendRequest = useCallback((props) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
     dispatch(getWorkTime({
@@ -86,10 +87,11 @@ const Logbook = () => {
       setCheckedItems([]);
       setSelectedItem(null);
     }).catch();
-  };
+  });
 
   useEffect(() => {
-    sendRequest();
+    sendRequest({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]);
 
   useEffect(() => {
@@ -160,7 +162,7 @@ const Logbook = () => {
   const Delimiter = () => (<div className={styles.delimiter} />);
 
   const applyHandler = () => {
-    sendRequest();
+    sendRequest({});
   };
 
   const rowSelectionHandler = (selectedRow) => {
@@ -190,7 +192,7 @@ const Logbook = () => {
     const confirm = window.confirm('Are you sure you want to delete this entry/entries?');
     if (confirm) {
       dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
-        sendRequest();
+        sendRequest({});
       }).catch();
     }
   };
