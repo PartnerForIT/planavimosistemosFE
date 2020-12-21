@@ -159,10 +159,6 @@ export default function AccountsList() {
     }
   }, [dispatch, editVisible, id, newVisible]);
 
-  console.log('skills', skills);
-  console.log('groups', groups);
-  console.log('places', places);
-
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
   };
