@@ -10,7 +10,6 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './Dropdown.module.scss';
 import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw';
 
-
 const useStyles = makeStyles({
   root: {
     minHeight: '30px',
@@ -32,7 +31,7 @@ const useStyles = makeStyles({
     height: '30px',
     minHeight: '30px',
     paddingLeft: '3px',
-    paddingRight: 0,
+    paddingRight: 12,
   },
 
   expanded: {
@@ -71,6 +70,7 @@ export default function Dropdown({
       setItemsArray(resultedItems);
       setItemsStat({ ...itemsStat });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   // const selectAll = useCallback((check) => {

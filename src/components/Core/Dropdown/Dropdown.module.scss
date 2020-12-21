@@ -14,8 +14,12 @@
   color: #0085ff;
   fill: #0085ff;
   transform: rotate(-90deg);
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .expandIconExpanded {
   transform: rotate(180deg) !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
