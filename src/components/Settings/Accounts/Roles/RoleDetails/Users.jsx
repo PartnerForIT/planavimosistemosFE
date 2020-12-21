@@ -1,13 +1,28 @@
 /* eslint-disable camelcase */
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Content from './Content';
+import SearchIcon from '../../../../Icons/SearchIcon';
+import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
+import Input from '../../../../Core/Input/Input';
+import classes from '../Roles.module.scss';
 
 function Users({
   employees = [],
   groups = [],
 }) {
   const { t } = useTranslation();
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+  const handleInputChange = (term, items, setter) => {
+    const filterData = () => {
+      const arrayCopy = [...items];
+      return arrayCopy.filter((item) => item.label.toLowerCase()
+        .includes(term.toLowerCase()));
+    };
+    setter(filterData);
+  };
+
   const employToCheck = ({
     id,
     name,
@@ -16,74 +31,121 @@ function Users({
     id,
     label: `${name} ${surname}`,
   });
-  const findGroupName = useCallback((groupId) => groups?.find(({ id }) => id === groupId)?.name, [groups]);
-  const findSubGroupName = useCallback((subGroupId, parentGroupId) => groups?.find((grp) => grp.group_id === parentGroupId)
-    ?.subgroups
-    ?.find((sbgrp) => sbgrp.id === subGroupId)?.name, [groups]);
-
-  const groupsToCheck = ({ id }) => ({
-    id,
-    label: findGroupName(id),
-    type: 'groups',
-  });
-
-  const groupsWithEmployees = useMemo(() => employees?.map((employee) => {
-    const {
-      id,
-      name,
-      surname,
-      groups: grps,
-    } = employee;
-    const r = {};
-
-    employees.forEach((empl) => {
-      const { groups: grops } = empl;
-
-      if (grops) {
-        const {
-          group_id,
-          sub_groups,
-        } = grops;
-        // eslint-disable-next-line no-shadow
-        const groupName = findGroupName(group_id);
-        if (sub_groups) {
-          // eslint-disable-next-line no-nested-ternary
-          r[groupName] = r[groupName]
-            ? r[groupName][sub_groups.name]
-              ? [...r[groupName][sub_groups.name], employToCheck(empl)]
-              : { ...r[groupName], [sub_groups.name]: [employToCheck(empl)] }
-            : [sub_groups.name] = [employToCheck(empl)];
-        } else {
-          r[groupName] = !r[groupName] ? { without: [employToCheck(empl)] } : {
-            ...r[groupName],
-            without: [employToCheck(empl)],
-          };
-        }
-      }
-    });
-
-    let groupName;
-
-    if (grps && grps.group_id) {
-      // eslint-disable-next-line no-shadow
-      groupName = groups?.find(({ id }) => id === grps.group_id)?.name;
-      if (grps.sub_groups) {
-        // id, parent_group_id
-      }
+  const findGroupName = useCallback((groupId, sub = 0) => {
+    if (sub <= 1) {
+      return groups?.find(({ id }) => id === groupId)?.name;
     }
-    return {
-      id,
-      name,
-      surname,
-      groupName,
-    };
-  }) ?? [], [employees, findGroupName, groups]);
+    return groups
+      ?.map((item) => item?.subgroups
+        .find((it) => it.id === groupId))
+      .filter((i) => !!i)[0]?.name;
+  }, [groups]);
+
+  const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length)
+    .map((i) => employToCheck(i));
+  const employeesWithSubgroups = employees.filter((empl) => !!empl.subgroups.length);
+  const employeesWithGroups = employees.filter((empl) => empl.groups.length && !empl.subgroups.length);
+
+  const mapEmployeesGroups = (employeeArray) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const _temp = {};
+
+    employeeArray.forEach((item) => {
+      const {
+        // eslint-disable-next-line no-shadow
+        groups,
+        subgroups,
+      } = item;
+
+      const groupId = groups[0]?.id ?? '';
+      const subGroupId = subgroups[0]?.id ?? '';
+
+      // eslint-disable-next-line no-nested-ternary
+      _temp[groupId] = _temp[groupId]
+        // eslint-disable-next-line no-nested-ternary
+        ? _temp[groupId][subGroupId]
+          ? {
+            ..._temp[groupId],
+            [subGroupId]: [..._temp[groupId][subGroupId], item],
+          }
+          : subGroupId ? { [subGroupId]: [item] } : [item] // FIXME ??
+        : subGroupId ? { [subGroupId]: [item] } : [item];
+    });
+    return _temp;
+  };
+
+  const emplWithSubs = mapEmployeesGroups(employeesWithSubgroups);
+  const emplWithgroups = mapEmployeesGroups(employeesWithGroups);
+
+  const groupObj = { ...emplWithSubs, ...emplWithgroups };
+
+  const mapObj = (obj = {}) => Object.keys(obj)
+    .map((key) => {
+      const temp = obj[key];
+      let subgroup = 0;
+      if (typeof temp === 'object' && !Array.isArray(temp)) {
+        subgroup += 1;
+        return {
+          id: key.toString(),
+          type: 'group',
+          label: findGroupName(parseInt(key, 10), subgroup),
+          items: [
+            ...mapObj(temp),
+          ],
+        };
+      }
+
+      if (Array.isArray(temp)) {
+        subgroup += 1;
+        return {
+          id: key.toString(),
+          label: findGroupName(parseInt(key, 10), subgroup),
+          items: [
+            ...temp.map((item) => employToCheck(item)),
+          ],
+        };
+      }
+      return employToCheck(temp);
+    });
+  console.log(mapObj(groupObj));
+
+  const h = [...employeesWithoutGroups];
+
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
-      <pre>
-        {/* {JSON.stringify(employees, null, 2)} */}
-        {JSON.stringify(employees, null, 2)}
-      </pre>
+      <>
+        <div className={classes.sidebarTitle}>Employees</div>
+        <Input
+          icon={<SearchIcon />}
+          placeholder='Search by employees'
+          onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+          fullWidth
+        />
+        <div className={classes.checkboxGroupWrapper}>
+          <CheckboxGroupWrapper
+            items={[{
+              id: '2',
+              label: 'ober 1',
+              type: 'group',
+              items: [{
+                id: 1,
+                label: 'label',
+              }, {
+                id: 2,
+                label: 'hippy',
+              },
+              {
+                type: 'group',
+                label: 'nacatomy plaza',
+                items: [{
+                  id: 3,
+                  label: 'hippy',
+                }],
+              }],
+            }]}
+          />
+        </div>
+      </>
     </Content>
   );
 }
