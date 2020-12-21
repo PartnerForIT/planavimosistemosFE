@@ -2,9 +2,11 @@ import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import { currencySelector, settingCompanySelector } from '../../store/settings/selectors';
+import {
+  currencySelector,
+  settingCompanySelector, settingsLoadingSelector,
+} from '../../store/settings/selectors';
 import { getCurrencies, getSettingCompany } from '../../store/settings/actions';
-import { isLoadingSelector } from '../../store/organizationList/selectors';
 
 const CurrencySign = React.memo(() => {
   const dispatch = useDispatch();
@@ -12,18 +14,19 @@ const CurrencySign = React.memo(() => {
   const { id } = useParams();
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
-  const loading = useSelector(isLoadingSelector);
+  const settingsLoading = useSelector(settingsLoadingSelector);
 
   useEffect(() => {
-    if (!currencies.length && !loading) {
+    if (!currencies.length && !settingsLoading) {
       dispatch(getCurrencies());
     }
-  }, [currencies.length, dispatch, loading]);
+  }, [currencies, dispatch, settingsLoading]);
+
   useEffect(() => {
-    if (_.isEmpty(company)) {
+    if (_.isEmpty(company) && !settingsLoading) {
       dispatch(getSettingCompany(id));
     }
-  }, [company, dispatch, id]);
+  }, [company, dispatch, id, settingsLoading]);
 
   const currency = useMemo(
     () => currencies.find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '',

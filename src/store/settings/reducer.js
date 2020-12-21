@@ -119,6 +119,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: null,
         loading: true,
+        settingsLoading: true,
       };
     case GET_SETTINGS_COMPANY_SUCCESS:
       return {
@@ -126,6 +127,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         company: action.data,
         error: null,
         loading: false,
+        settingsLoading: false,
       };
     case GET_WORK_TIME:
       return {
