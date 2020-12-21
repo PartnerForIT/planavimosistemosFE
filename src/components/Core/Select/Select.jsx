@@ -11,7 +11,7 @@ import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
 export default function CustomSelect({
-  items, placeholder, buttonLabel, onChange, onFilter, width = '100%', type = 'items',
+  items = [], placeholder, buttonLabel, onChange = () => ({}), onFilter, width = '100%', type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
