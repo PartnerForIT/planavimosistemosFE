@@ -1,0 +1,19 @@
+@import "../../variables";
+
+$padding-size: 25px;
+
+.formItem {
+  margin-bottom: $padding-size;
+
+  & label + div {
+    margin-top: unset;
+  }
+
+  &:last-child {
+    margin-bottom: unset;
+  }
+}
+
+small.error {
+  color: $red-600;
+}
