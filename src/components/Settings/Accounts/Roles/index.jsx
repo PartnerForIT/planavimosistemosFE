@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
-import { combine } from 'custom-react-daterange-picker/build/utils';
 import MaynLayout from '../../../Core/MainLayout';
 import Dashboard from '../../../Core/Dashboard';
 import TitleBlock from '../../../Core/TitleBlock';
