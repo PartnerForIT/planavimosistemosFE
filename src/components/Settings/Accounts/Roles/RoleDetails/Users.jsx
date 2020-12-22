@@ -1,6 +1,7 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase,no-confusing-arrow */
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -59,17 +60,47 @@ function Users({
 
       const groupId = groups[0]?.id ?? '';
       const subGroupId = subgroups[0]?.id ?? '';
-
+      const groupname = groups[0]?.name ?? '';
+      const subGroupName = subgroups[0]?.name ?? '';
+      const type = 'group';
       // eslint-disable-next-line no-nested-ternary
       _temp[groupId] = _temp[groupId]
         // eslint-disable-next-line no-nested-ternary
         ? _temp[groupId][subGroupId]
           ? {
             ..._temp[groupId],
-            [subGroupId]: [..._temp[groupId][subGroupId], item],
+            label: groupname,
+            type,
+            [subGroupId]: {
+              label: subGroupName,
+              type,
+              items: [..._temp[groupId][subGroupId].items, item],
+            },
           }
-          : subGroupId ? { [subGroupId]: [item] } : [item] // FIXME ??
-        : subGroupId ? { [subGroupId]: [item] } : [item];
+          : subGroupId ? {
+            [subGroupId]: {
+              label: subGroupName,
+              type,
+              items: [item],
+            },
+          } : {
+            items: [item],
+            label: groupname,
+            type,
+          }
+        : subGroupId ? {
+          label: groupname,
+          type,
+          [subGroupId]: {
+            label: subGroupName,
+            type,
+            items: [item],
+          },
+        } : {
+          items: [item],
+          label: groupname,
+          type,
+        };
     });
     return _temp;
   };
@@ -77,39 +108,44 @@ function Users({
   const emplWithSubs = mapEmployeesGroups(employeesWithSubgroups);
   const emplWithgroups = mapEmployeesGroups(employeesWithGroups);
 
-  const groupObj = { ...emplWithSubs, ...emplWithgroups };
+  function customizer(objValue, srcValue) {
+    if (_.isArray(objValue)) {
+      return objValue.concat(srcValue);
+    }
+  }
 
-  const mapObj = (obj = {}) => Object.keys(obj)
-    .map((key) => {
-      const temp = obj[key];
-      let subgroup = 0;
-      if (typeof temp === 'object' && !Array.isArray(temp)) {
-        subgroup += 1;
-        return {
-          id: key.toString(),
-          type: 'group',
-          label: findGroupName(parseInt(key, 10), subgroup),
-          items: [
-            ...mapObj(temp),
-          ],
-        };
-      }
+  const merged = _.mergeWith(emplWithgroups, emplWithSubs, customizer);
+  const mappedMerged = Object.keys(merged).map((key) => {
+    const item = merged[key];
 
-      if (Array.isArray(temp)) {
-        subgroup += 1;
-        return {
-          id: key.toString(),
-          label: findGroupName(parseInt(key, 10), subgroup),
-          items: [
-            ...temp.map((item) => employToCheck(item)),
-          ],
-        };
-      }
-      return employToCheck(temp);
-    });
-  console.log(mapObj(groupObj));
+    const mapObjToNamedGroup = (obj) => Object.keys(obj).map((k) => ({
+      id: k.toString(),
+      ...obj[k],
+    }))[0];
 
-  const h = [...employeesWithoutGroups];
+    if (item.type && Array.isArray(item.items)) {
+      const {
+        type, label, items, ...rest
+      } = item;
+
+      return {
+        id: key.toString(), type, label, items: [...items, mapObjToNamedGroup(rest)],
+      };
+    }
+    if (item.type && !Array.isArray(item.items)) {
+      const {
+        type, label, ...rest
+      } = item;
+
+      return {
+        id: key.toString(), type, label, items: [mapObjToNamedGroup(rest)],
+      };
+    }
+
+    return employToCheck(item);
+  });
+
+  console.log(mappedMerged);
 
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
@@ -123,26 +159,7 @@ function Users({
         />
         <div className={classes.checkboxGroupWrapper}>
           <CheckboxGroupWrapper
-            items={[{
-              id: '2',
-              label: 'ober 1',
-              type: 'group',
-              items: [{
-                id: 1,
-                label: 'label',
-              }, {
-                id: 2,
-                label: 'hippy',
-              },
-              {
-                type: 'group',
-                label: 'nacatomy plaza',
-                items: [{
-                  id: 3,
-                  label: 'hippy',
-                }],
-              }],
-            }]}
+            items={[]}
           />
         </div>
       </>
