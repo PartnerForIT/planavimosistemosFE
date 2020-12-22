@@ -148,7 +148,7 @@ const FirstStep = ({
               />
               {
                 errors.email
-                && <small>{errors.email}</small>
+                && <small className={style.error}>{errors.email}</small>
               }
             </div>
 
@@ -162,7 +162,7 @@ const FirstStep = ({
               />
               {
                 errors.name
-                && <small>{errors.name}</small>
+                && <small className={style.error}>{errors.name}</small>
               }
             </div>
 
@@ -176,7 +176,7 @@ const FirstStep = ({
               />
               {
                 errors.surname
-                && <small>{errors.surname}</small>
+                && <small className={style.error}>{errors.surname}</small>
               }
             </div>
 
