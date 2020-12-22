@@ -92,7 +92,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
         // eslint-disable-next-line no-shadow
-        photo, groups,
+        photo, groups, subgroups,
       } = employee;
       setUser({
         email,
@@ -104,8 +104,8 @@ export default function EditAccount({
         cost,
         charge,
         photo,
-        group: Array.isArray(groups) ? groups[0]?.group_id : groups?.group_id ?? '',
-        subgroup: groups?.sub_groups ? groups?.sub_groups.id : '' ?? '',
+        group: Array.isArray(groups) ? groups[0]?.id : groups?.id ?? '',
+        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
       });
@@ -124,7 +124,7 @@ export default function EditAccount({
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
-    const selectedGroup = groups.find((group) => group.id == user.group) ?? {};
+    const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
     return [{ id: '', name: t('Select a sub-group') }, ...sub];
   }, [groups, t, user.group]);
