@@ -113,7 +113,7 @@ const Users = React.memo(({
       } = item;
 
       return {
-        id: key.toString(), type, label, items: [...items, mapObjToNamedGroup(rest)],
+        id: `gr_${key.toString()}`, type, label, items: [...items, mapObjToNamedGroup(rest)],
       };
     }
     if (item.type && !Array.isArray(item.items)) {
@@ -121,7 +121,7 @@ const Users = React.memo(({
         type, label, ...rest
       } = item;
       return {
-        id: key.toString(), type, label, items: [mapObjToNamedGroup(rest)],
+        id: `sg_${key.toString()}`, type, label, items: [mapObjToNamedGroup(rest)],
       };
     }
 
