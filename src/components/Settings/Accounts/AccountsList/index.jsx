@@ -98,7 +98,7 @@ export default function AccountsList() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const { users: employeesAll, stats } = useSelector(employeesSelector);
+  const { users: employeesAll = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
   const skills = useSelector(categoriesSkillsSelector);
@@ -125,14 +125,17 @@ export default function AccountsList() {
   const createAccount = (userData) => dispatch(createEmployee(id, userData));
 
   const userStats = useMemo(() => {
-    const {
-      total,
-      ...rest
-    } = stats;
-    return {
-      accounts: total,
-      ...rest,
-    };
+    if (stats) {
+      const {
+        total,
+        ...rest
+      } = stats;
+      return {
+        accounts: total,
+        ...rest,
+      };
+    }
+    return {};
   }, [stats]);
 
   useEffect(() => {
@@ -193,7 +196,7 @@ export default function AccountsList() {
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };
-  }), [employeesAll]);
+  }) ?? [], [employeesAll]);
 
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
