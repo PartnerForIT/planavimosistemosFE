@@ -109,8 +109,8 @@ export default function EditAccount({
         cost,
         charge,
         photo,
-        group: Array.isArray(groups) ? groups[0]?.id : groups?.id ?? '',
-        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
+        group: Array.isArray(groups) ? groups[0]?.id : groups?.id ?? '0',
+        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '0' ?? '0',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
       });
@@ -119,7 +119,7 @@ export default function EditAccount({
 
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
-    return [{ id: '', name: t('Select a group') }, ...grps];
+    return [{ id: '0', name: t('Select a group') }, ...grps];
   }, [groups, t]);
 
   const skillsOptions = useMemo(() => {
@@ -131,7 +131,7 @@ export default function EditAccount({
     // eslint-disable-next-line eqeqeq
     const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
-    return [{ id: '', name: t('Select a sub-group') }, ...sub];
+    return [{ id: '0', name: t('Select a sub-group') }, ...sub];
   }, [groups, t, user.group]);
 
   const handleInput = (e) => {

@@ -54,7 +54,7 @@ const SecondStep = ({
       name,
     })) ?? [];
     return [{
-      id: '',
+      id: '0',
       name: t('Select a group'),
     }, ...grps];
   }, [groups, t]);
@@ -78,7 +78,7 @@ const SecondStep = ({
     }))
       .slice() ?? [];
     return [{
-      id: '',
+      id: '0',
       name: t('Select a sub-group'),
     }, ...sub];
   }, [groups, t, user.group]);
