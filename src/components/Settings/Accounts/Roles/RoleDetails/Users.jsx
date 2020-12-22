@@ -1,5 +1,5 @@
 /* eslint-disable camelcase,no-confusing-arrow */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 import Content from './Content';
@@ -7,22 +7,14 @@ import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
 import Input from '../../../../Core/Input/Input';
 import classes from '../Roles.module.scss';
+import Button from '../../../../Core/Button/Button';
 
 function Users({
   employees = [],
-  groups = [],
 }) {
   const { t } = useTranslation();
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
 
-  const handleInputChange = (term, items, setter) => {
-    const filterData = () => {
-      const arrayCopy = [...items];
-      return arrayCopy.filter((item) => item.label.toLowerCase()
-        .includes(term.toLowerCase()));
-    };
-    setter(filterData);
-  };
+  const [search, setSearch] = useState('');
 
   const employToCheck = ({
     id,
@@ -32,22 +24,13 @@ function Users({
     id,
     label: `${name} ${surname}`,
   });
-  const findGroupName = useCallback((groupId, sub = 0) => {
-    if (sub <= 1) {
-      return groups?.find(({ id }) => id === groupId)?.name;
-    }
-    return groups
-      ?.map((item) => item?.subgroups
-        .find((it) => it.id === groupId))
-      .filter((i) => !!i)[0]?.name;
-  }, [groups]);
 
   const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length)
     .map((i) => employToCheck(i));
   const employeesWithSubgroups = employees.filter((empl) => !!empl.subgroups.length);
   const employeesWithGroups = employees.filter((empl) => empl.groups.length && !empl.subgroups.length);
 
-  const mapEmployeesGroups = (employeeArray) => {
+  const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
 
@@ -103,7 +86,7 @@ function Users({
         };
     });
     return _temp;
-  };
+  }, []);
 
   const emplWithSubs = mapEmployeesGroups(employeesWithSubgroups);
   const emplWithgroups = mapEmployeesGroups(employeesWithGroups);
@@ -136,7 +119,6 @@ function Users({
       const {
         type, label, ...rest
       } = item;
-
       return {
         id: key.toString(), type, label, items: [mapObjToNamedGroup(rest)],
       };
@@ -145,7 +127,26 @@ function Users({
     return employToCheck(item);
   });
 
-  const allSortedEmployees = mappedMerged.concat(employeesWithoutGroups);
+  const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
+    [employeesWithoutGroups, mappedMerged]);
+
+  const [filteredEmployees, setFilteredEmployees] = useState(allSortedEmployees);
+
+  const handleInputChange = (term) => {
+    setSearch(term);
+  };
+
+  const filtering = (items, setter) => {
+    const filterData = () => {
+      const arrayCopy = [...items];
+
+      return arrayCopy;
+      //   return arrayCopy.filter((item) => item.label.toLowerCase()
+      //     .includes(term.toLowerCase()));
+      // };
+    };
+    setter(filterData);
+  };
 
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
@@ -154,15 +155,17 @@ function Users({
         <Input
           icon={<SearchIcon />}
           placeholder='Search by employees'
-          onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+          onChange={(e) => handleInputChange(e.target.value)}
           fullWidth
+          value={search}
         />
         <div className={classes.checkboxGroupWrapper}>
           <CheckboxGroupWrapper
             height={300}
-            items={allSortedEmployees ?? []}
+            items={filteredEmployees ?? []}
           />
         </div>
+        <Button fillWidth onClick={() => filtering(filteredEmployees, setFilteredEmployees)}>{t('Filter')}</Button>
       </>
     </Content>
   );
