@@ -70,7 +70,6 @@ export default function Dropdown({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
-
   // const selectAll = useCallback((check) => {
   //   setItemsArray((state) => state.map((item) => {
   //     if (item.type === 'group') {
@@ -123,17 +122,25 @@ export default function Dropdown({
   //   </SvgIcon>
   // );
 
-  const renderCheckboxGroup = () => (
-    <CheckboxGroup items={itemsArray} onChange={onChange} />
+  const renderCheckboxGroup = (arr) => (
+    <CheckboxGroup items={arr ?? itemsArray} onChange={onChange} />
   );
 
   const renderDropdown = () => (
     <Accordion
-      classes={{ root: classes.root, expanded: classes.rootExpanded }}
-      onChange={(e, state) => { setExpanded(state); }}
+      classes={{
+        root: classes.root,
+        expanded: classes.rootExpanded,
+      }}
+      onChange={(e, state) => {
+        setExpanded(state);
+      }}
     >
       <AccordionSummary
-        classes={{ root: classes.summary, expanded: classes.expanded }}
+        classes={{
+          root: classes.summary,
+          expanded: classes.expanded,
+        }}
         expandIcon={(
           <ExpandMoreIcon
             className={classNames(styles.expandIcon, expanded ? styles.expandIconExpanded : '')}
@@ -157,19 +164,42 @@ export default function Dropdown({
         />
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
+        {/* FIXME: commented to testing new render method */}
+        {/* { */}
+        {/*  itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group' */}
+        {/*    ? itemsArray.map((item, idx) => ( */}
+        {/*      <Dropdown */}
+        {/*        key={idx.toString()} */}
+        {/*        label={item.label} */}
+        {/*        currentItem={item} */}
+        {/*        checked={item.checked} */}
+        {/*        items={item.items} */}
+        {/*        onChange={onChange} */}
+        {/*      /> */}
+        {/*    )) */}
+        {/*    : renderCheckboxGroup(itemsArray) */}
+        {/* } */}
         {
-          itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group'
-            ? itemsArray.map((item, idx) => (
-              <Dropdown
-                key={idx.toString()}
-                label={item.label}
-                currentItem={item}
-                checked={item.checked}
-                items={item.items}
-                onChange={onChange}
-              />
-            ))
-            : renderCheckboxGroup(itemsArray)
+          itemsArray.map((item, idx) => (
+            item?.type === 'group'
+              ? (
+                <Dropdown
+                  key={item.label + idx.toString()}
+                  label={item.label}
+                  currentItem={item}
+                  checked={item.checked}
+                  items={item.items}
+                  onChange={onChange}
+                />
+              )
+              : (
+                <React.Fragment key={item.label + idx.toString()}>
+                  {
+                    renderCheckboxGroup([item])
+                  }
+                </React.Fragment>
+              )
+          ))
         }
       </AccordionDetails>
     </Accordion>

@@ -146,7 +146,7 @@ function Users({
   });
 
   const allSortedEmployees = mappedMerged.concat(employeesWithoutGroups);
-  console.log(allSortedEmployees);
+
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
       <>
