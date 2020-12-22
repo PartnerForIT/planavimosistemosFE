@@ -6,7 +6,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
 import styles from '../Select/Select.module.scss';
 
-const CheckboxGroupWrapper = ({ items = [], onChange = () => ({}) }) => {
+const CheckboxGroupWrapper = ({ items = [], onChange = () => ({}), height }) => {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
@@ -110,7 +110,7 @@ const CheckboxGroupWrapper = ({ items = [], onChange = () => ({}) }) => {
   }, [itemsArray, onChange]);
 
   return (
-    <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
+    <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat} height={height}>
       <Scrollbar
         className={styles.scrollableContent}
         removeTracksWhenNotUsed

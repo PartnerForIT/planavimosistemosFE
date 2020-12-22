@@ -5,7 +5,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroup.module.scss';
 
 export default function CheckboxGroup({
-  items, children, selectAll, itemsStat,
+  items, children, selectAll, itemsStat, height,
 }) {
   const { t } = useTranslation();
 
@@ -81,7 +81,7 @@ export default function CheckboxGroup({
           {t('Select None')}
         </button>
       </div>
-      <div className={classNames(styles.contentBox)}>
+      <div className={classNames(styles.contentBox)} style={height ? { height } : null}>
         {
           children || items.map((item, idx) => (
             <StyledCheckbox

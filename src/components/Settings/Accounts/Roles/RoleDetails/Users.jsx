@@ -74,17 +74,17 @@ function Users({
             [subGroupId]: {
               label: subGroupName,
               type,
-              items: [..._temp[groupId][subGroupId].items, item],
+              items: [..._temp[groupId][subGroupId].items, employToCheck(item)],
             },
           }
           : subGroupId ? {
             [subGroupId]: {
               label: subGroupName,
               type,
-              items: [item],
+              items: [employToCheck(item)],
             },
           } : {
-            items: [item],
+            items: [employToCheck(item)],
             label: groupname,
             type,
           }
@@ -94,10 +94,10 @@ function Users({
           [subGroupId]: {
             label: subGroupName,
             type,
-            items: [item],
+            items: [employToCheck(item)],
           },
         } : {
-          items: [item],
+          items: [employToCheck(item)],
           label: groupname,
           type,
         };
@@ -145,8 +145,8 @@ function Users({
     return employToCheck(item);
   });
 
-  console.log(mappedMerged);
-
+  const allSortedEmployees = mappedMerged.concat(employeesWithoutGroups);
+  console.log(allSortedEmployees);
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
       <>
@@ -159,7 +159,8 @@ function Users({
         />
         <div className={classes.checkboxGroupWrapper}>
           <CheckboxGroupWrapper
-            items={[]}
+            height={300}
+            items={allSortedEmployees ?? []}
           />
         </div>
       </>
