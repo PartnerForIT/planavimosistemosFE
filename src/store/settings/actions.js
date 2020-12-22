@@ -90,7 +90,7 @@ import {
   UPDATE_ROLE_ERROR,
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_SUCCESS,
-  GET_ROLE_DETAILS_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR,
+  GET_ROLE_DETAILS_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR, GET_EMPLOYEES_QUERY,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -223,6 +223,12 @@ export const loadEmployeesAll = (id, params = null) => ({
   id,
   all: true,
   params,
+});
+
+export const loadEmployeesQuery = (companyId, data = {}) => ({
+  type: GET_EMPLOYEES_QUERY,
+  companyId,
+  data,
 });
 
 export const loadEmployeesSuccess = (data) => ({

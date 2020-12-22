@@ -39,7 +39,7 @@ import {
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
   DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
-  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS,
+  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS, GET_EMPLOYEES_QUERY,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -89,6 +89,7 @@ import {
   removeEmployeeError,
   removeEmployeeSuccess, setEmployeesActionsError, createEmployeeError, loadPermissionsSuccess, loadPermissionsError,
 } from './actions';
+import { makeQueryString } from '../../components/Helpers';
 
 function token() {
   const token = {
@@ -320,6 +321,22 @@ function* loadEmployee(action) {
   } catch (e) {
     console.log(e);
     yield put(loadEmployeesError());
+  }
+}
+
+function* loadQueryEmployees(action) {
+  try {
+    const tokens = token();
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.companyId}/employees/`,
+      {
+        params: makeQueryString(action.data),
+        ...tokens,
+      });
+    // FIXME: awaiting backend
+    yield put(loadEmployeesSuccess(data));
+  } catch (e) {
+    yield put(loadEmployeesError(e));
   }
 }
 
@@ -976,6 +993,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
   yield takeLatest(GET_EMPLOYEES_ALL, loadEmployee);
+  yield takeLatest(GET_EMPLOYEES_QUERY, loadQueryEmployees);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
   yield takeLatest(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);

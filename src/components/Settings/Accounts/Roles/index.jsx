@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
+import { combine } from 'custom-react-daterange-picker/build/utils';
 import MaynLayout from '../../../Core/MainLayout';
 import Dashboard from '../../../Core/Dashboard';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -17,7 +18,15 @@ import {
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RoleDetails/RolesBlock';
 import {
-  createRole, deleteRole, getAccountGroups, getRoleDetails, getRoles, loadEmployeesAll, loadPermissions, updateRole,
+  createRole,
+  deleteRole,
+  getAccountGroups,
+  getRoleDetails,
+  getRoles,
+  loadEmployeesAll,
+  loadEmployeesQuery,
+  loadPermissions,
+  updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
 
@@ -64,6 +73,8 @@ function Roles() {
     }
     return [];
   }, [activeRole, permissions]);
+
+  const filterEmployees = (data) => dispatch(loadEmployeesQuery(id, data));
 
   useEffect(() => {
     dispatch(getRoles(id));
@@ -137,6 +148,7 @@ function Roles() {
                     availableDetails={availableDetails}
                     employees={employees}
                     groups={groups}
+                    filterEmployees={filterEmployees}
                   />
                 </>
               )

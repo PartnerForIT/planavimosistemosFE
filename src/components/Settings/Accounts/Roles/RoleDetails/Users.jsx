@@ -9,9 +9,10 @@ import Input from '../../../../Core/Input/Input';
 import classes from '../Roles.module.scss';
 import Button from '../../../../Core/Button/Button';
 
-function Users({
+const Users = React.memo(({
   employees = [],
-}) {
+  filterEmployees = () => ({}),
+}) => {
   const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
@@ -130,22 +131,8 @@ function Users({
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
 
-  const [filteredEmployees, setFilteredEmployees] = useState(allSortedEmployees);
-
   const handleInputChange = (term) => {
     setSearch(term);
-  };
-
-  const filtering = (items, setter) => {
-    const filterData = () => {
-      const arrayCopy = [...items];
-
-      return arrayCopy;
-      //   return arrayCopy.filter((item) => item.label.toLowerCase()
-      //     .includes(term.toLowerCase()));
-      // };
-    };
-    setter(filterData);
   };
 
   return (
@@ -162,13 +149,13 @@ function Users({
         <div className={classes.checkboxGroupWrapper}>
           <CheckboxGroupWrapper
             height={300}
-            items={filteredEmployees ?? []}
+            items={allSortedEmployees ?? []}
           />
         </div>
-        <Button fillWidth onClick={() => filtering(filteredEmployees, setFilteredEmployees)}>{t('Filter')}</Button>
+        <Button fillWidth onClick={() => filterEmployees(search)}>{t('Filter')}</Button>
       </>
     </Content>
   );
-}
+});
 
 export default Users;

@@ -26,13 +26,15 @@ function RoleDetails({
   employees,
   groups,
   setRoleAccess,
+  filterEmployees,
 }) {
   return (
     <div className={classes.details}>
       {
         // loading && <Progress />
       }
-      <Users employees={employees} groups={groups} />
+      <Users employees={employees} groups={groups} filterEmployees={filterEmployees} />
+
       <AccessModule
         availableDetails={availableDetails}
         roleAccess={roleAccess}
