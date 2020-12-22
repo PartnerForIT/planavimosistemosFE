@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 export const settingCompanySelector = (state) => state.settings.company;
 export const isLoadingSelector = (state) => state.settings.loading;
 export const settingsLoadingSelector = (state) => state.settings.settingsLoading;
@@ -8,7 +10,10 @@ export const settingWorkTime = (state) => state.settings.workTime;
 export const securityCompanySelector = (state) => state.settings.security;
 export const categoriesSkillsSelector = (state) => state.settings.skills;
 export const placesSelector = (state) => state.settings.places;
-export const employeesSelector = (state) => state.settings.employees;
+
+export const employees = (state) => state.settings.employees;
+export const employeesSelector = createSelector(employees, (e) => e);
+
 export const employeeSelector = (state) => state.settings.employee;
 export const employeesLoadingSelector = (state) => state.settings.employeesLoading;
 export const activityLogSelector = (state) => state.settings.activity_log;

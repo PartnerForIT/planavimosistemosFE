@@ -99,14 +99,13 @@ const Users = React.memo(({
   }
 
   const merged = _.mergeWith(emplWithgroups, emplWithSubs, customizer);
-  const mappedMerged = Object.keys(merged).map((key) => {
+  const mappedMerged = useMemo(() => Object.keys(merged).map((key) => {
     const item = merged[key];
-
+    console.log('mapped');
     const mapObjToNamedGroup = (obj) => Object.keys(obj).map((k) => ({
       id: k.toString(),
       ...obj[k],
     }))[0];
-
     if (item.type && Array.isArray(item.items)) {
       const {
         type, label, items, ...rest
@@ -126,7 +125,7 @@ const Users = React.memo(({
     }
 
     return employToCheck(item);
-  });
+  }), [merged]);
 
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
