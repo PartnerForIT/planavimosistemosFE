@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import classNames from 'classnames';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './Dropdown.module.scss';
 import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw';
@@ -130,11 +128,11 @@ export default function Dropdown({
   );
 
   const renderDropdown = () => (
-    <ExpansionPanel
+    <Accordion
       classes={{ root: classes.root, expanded: classes.rootExpanded }}
       onChange={(e, state) => { setExpanded(state); }}
     >
-      <ExpansionPanelSummary
+      <AccordionSummary
         classes={{ root: classes.summary, expanded: classes.expanded }}
         expandIcon={(
           <ExpandMoreIcon
@@ -157,8 +155,8 @@ export default function Dropdown({
           )}
           label={label}
         />
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails className={classes.details}>
+      </AccordionSummary>
+      <AccordionDetails className={classes.details}>
         {
           itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group'
             ? itemsArray.map((item, idx) => (
@@ -173,8 +171,8 @@ export default function Dropdown({
             ))
             : renderCheckboxGroup(itemsArray)
         }
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   );
 
   return (
