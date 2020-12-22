@@ -689,8 +689,8 @@ function* getEmployeeEdit(action) {
 function* updateEmployee(action) {
   try {
     const {
-      group,
-      subgroup = '',
+      group = 0,
+      subgroup = 0,
       place,
       skill,
       ...rest
@@ -714,6 +714,13 @@ function* updateEmployee(action) {
       yield call(assignGroup, {
         companyId: action.id,
         group,
+        employeeId: action.employeeId,
+      });
+    } else {
+      // eslint-disable-next-line no-use-before-define
+      yield call(assignGroup, {
+        companyId: action.id,
+        group: 0,
         employeeId: action.employeeId,
       });
     }
