@@ -28,8 +28,7 @@ const Users = React.memo(({
 
   const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length)
     .map((i) => employToCheck(i));
-  const employeesWithSubgroups = employees.filter((empl) => !!empl.subgroups.length);
-  const employeesWithGroups = employees.filter((empl) => empl.groups.length && !empl.subgroups.length);
+  const employeesWithGroupsSubGroups = employees.filter((empl) => empl.groups.length || empl.subgroups.length);
 
   const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
@@ -42,9 +41,9 @@ const Users = React.memo(({
         subgroups,
       } = item;
 
-      const groupId = groups[0]?.id ?? '';
+      const groupId = groups[0]?.id ?? subgroups[0]?.parent_group_id ?? '';
       const subGroupId = subgroups[0]?.id ?? '';
-      const groupname = groups[0]?.name ?? '';
+      const groupname = groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '';
       const subGroupName = subgroups[0]?.name ?? '';
       const type = 'group';
       // eslint-disable-next-line no-nested-ternary
@@ -89,19 +88,10 @@ const Users = React.memo(({
     return _temp;
   }, []);
 
-  const emplWithSubs = mapEmployeesGroups(employeesWithSubgroups);
-  const emplWithgroups = mapEmployeesGroups(employeesWithGroups);
+  const merged = mapEmployeesGroups(employeesWithGroupsSubGroups);
 
-  function customizer(objValue, srcValue) {
-    if (_.isArray(objValue)) {
-      return objValue.concat(srcValue);
-    }
-  }
-
-  const merged = _.mergeWith(emplWithgroups, emplWithSubs, customizer);
   const mappedMerged = useMemo(() => Object.keys(merged).map((key) => {
     const item = merged[key];
-    console.log('mapped');
     const mapObjToNamedGroup = (obj) => Object.keys(obj).map((k) => ({
       id: k.toString(),
       ...obj[k],
