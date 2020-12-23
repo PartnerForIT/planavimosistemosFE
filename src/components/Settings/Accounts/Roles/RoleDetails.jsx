@@ -27,13 +27,20 @@ function RoleDetails({
   groups,
   setRoleAccess,
   filterEmployees,
+  roleEmployeesEdit = () => ({}),
 }) {
   return (
     <div className={classes.details}>
       {
         // loading && <Progress />
       }
-      <Users employees={employees} groups={groups} filterEmployees={filterEmployees} />
+      <Users
+        employees={employees}
+        groups={groups}
+        filterEmployees={filterEmployees}
+        activeRole={activeRole}
+        roleEmployeesEdit={roleEmployeesEdit}
+      />
 
       <AccessModule
         availableDetails={availableDetails}

@@ -1,7 +1,8 @@
 /* eslint-disable camelcase,no-confusing-arrow */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import _ from 'lodash';
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -12,22 +13,33 @@ import Button from '../../../../Core/Button/Button';
 const Users = React.memo(({
   employees = [],
   filterEmployees = () => ({}),
+  activeRole,
+  roleEmployeesEdit,
 }) => {
   const { t } = useTranslation();
 
-  const [search, setSearch] = useState('');
-  const [checkedItems, setCheckedItems] = useState([]);
-
-  const employToCheck = ({
+  const employToCheck = useCallback(({
     id,
     name,
     surname,
-    checked,
   }) => ({
     id,
     label: `${name} ${surname}`,
-    checked,
-  });
+    checked: activeRole?.account_user_roles.some(({ employee_id }) => employee_id === id),
+  }));
+  const checkedByDefault = activeRole?.account_user_roles.map(({ employee }) => employToCheck(employee)) ?? [];
+
+  const [search, setSearch] = useState('');
+  const [checkedItems, setCheckedItems] = useState(checkedByDefault);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const users = checkedItems.map(({ id }) => id).filter((item) => typeof item !== 'string');
+    if (ready) {
+      setReady(false);
+      roleEmployeesEdit(users);
+    }
+  }, [checkedItems, ready, roleEmployeesEdit]);
 
   const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i));
@@ -89,7 +101,7 @@ const Users = React.memo(({
         };
     });
     return _temp;
-  }, []);
+  }, [employToCheck]);
 
   const merged = mapEmployeesGroups(employeesWithGroupsSubGroups);
 
@@ -118,7 +130,7 @@ const Users = React.memo(({
     }
 
     return employToCheck(item);
-  }), [merged]);
+  }), [employToCheck, merged]);
 
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
@@ -142,7 +154,10 @@ const Users = React.memo(({
           <CheckboxGroupWrapper
             height={300}
             items={allSortedEmployees ?? []}
-            onChange={(checked) => setCheckedItems(checked)}
+            onChange={(checked) => {
+              setCheckedItems(checked);
+              setReady(true);
+            }}
           />
         </div>
         <Button fillWidth onClick={() => filterEmployees(search)} disabled={!search.trim()}>{t('Filter')}</Button>

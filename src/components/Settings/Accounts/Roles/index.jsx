@@ -65,6 +65,14 @@ function Roles() {
     dispatch(getRoleDetails(id, activeRole.id));
   };
 
+  const roleEmployeesEdit = (data) => {
+    dispatch(updateRole(id, activeRole.id, { users: data.length ? data.toString() : '' }));
+  };
+
+  const rolesPermissionsEdit = (data) => {
+    dispatch(updateRole(id, activeRole.id, data));
+  };
+
   const availableDetails = useMemo(() => {
     if (!_.isEmpty(activeRole) && permissions.length) {
       // eslint-disable-next-line no-shadow
@@ -141,13 +149,14 @@ function Roles() {
                     createNewRole={() => setNewRoleOpen(true)}
                     remove={removeRole}
                     updateRole={patchRole}
-                    loading={loading}
+                    // loading={loading}
                     loadRoleDetails={loadRoleDetails}
                     setEditVisible={setEditVisible}
                     availableDetails={availableDetails}
                     employees={employees}
                     groups={groups}
                     filterEmployees={filterEmployees}
+                    roleEmployeesEdit={roleEmployeesEdit}
                   />
                 </>
               )

@@ -125,7 +125,8 @@ function RolesBlock({
   availableDetails = [],
   employees = [],
   groups = [],
-  filterEmployees,
+  filterEmployees = () => ({}),
+  roleEmployeesEdit = () => ({}),
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -231,6 +232,7 @@ function RolesBlock({
                           groups={groups}
                           setRoleAccess={setRoleAccess}
                           filterEmployees={filterEmployees}
+                          roleEmployeesEdit={roleEmployeesEdit}
                         />
                       )
                     }
