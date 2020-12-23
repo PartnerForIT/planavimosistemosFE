@@ -242,11 +242,12 @@ export default function EditAccount({
   useEffect(() => {
     if (_.isEmpty(errors) && ready) {
       onSubmit(user);
+      setReady(false);
     }
   }, [errors, onSubmit, ready, user]);
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} open={!!open} title={title}>
       <div className={style.edit}>
 
         {

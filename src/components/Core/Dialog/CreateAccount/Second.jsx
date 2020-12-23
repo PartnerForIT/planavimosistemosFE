@@ -42,6 +42,7 @@ const SecondStep = ({
   useEffect(() => {
     if (_.isEmpty(errors) && ready) {
       nextStep();
+      setReady(false);
     }
   }, [errors, nextStep, ready]);
 
@@ -293,7 +294,7 @@ const SecondStep = ({
       </div>
 
       <div className={style.buttons}>
-        <Button onClick={previousStep} size='big' cancel>{t('Back')}</Button>
+        <Button onClick={() => { previousStep(); setReady(false); }} size='big' cancel>{t('Back')}</Button>
         <NextStepButton onClick={nextWithValidate} />
       </div>
     </>
