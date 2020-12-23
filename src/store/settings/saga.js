@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 import {
-  call, put, takeLatest, delay, select, all,
+  call, put, takeLatest, delay, select,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
+import _ from 'lodash';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
@@ -314,7 +315,10 @@ function* loadEmployee(action) {
 
     if (action.params) {
       const employees = yield select((state) => state.settings.employees);
-      yield put(loadEmployeesSuccess({ stats: employees.stats, users: [...data.users] }));
+      yield put(loadEmployeesSuccess({
+        stats: employees.stats,
+        users: [...data.users],
+      }));
     } else {
       yield put(loadEmployeesSuccess(data));
     }
@@ -670,7 +674,8 @@ function* patchRole(action) {
       roles.map((role) => {
         if (action.data.default && role.id !== action.roleId && role.default) {
           return {
-            ...role, default: 0,
+            ...role,
+            default: 0,
           };
         }
 
@@ -706,8 +711,8 @@ function* getEmployeeEdit(action) {
 function* updateEmployee(action) {
   try {
     const {
-      group = 0,
-      subgroup = 0,
+      group,
+      subgroup,
       place,
       skill,
       ...rest
@@ -726,18 +731,11 @@ function* updateEmployee(action) {
       });
     }
 
-    if (group) {
+    if (group && !subgroup) {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
         group,
-        employeeId: action.employeeId,
-      });
-    } else {
-      // eslint-disable-next-line no-use-before-define
-      yield call(assignGroup, {
-        companyId: action.id,
-        group: 0,
         employeeId: action.employeeId,
       });
     }
@@ -861,7 +859,7 @@ function* createEmployee(action) {
         });
       }
 
-      if (group) {
+      if (group && !subgroup) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
           companyId,
@@ -929,17 +927,41 @@ function* assignGroup({
   subgroup = null,
 }) {
   try {
+    const groupId = parseInt(group, 10);
+    const subgroupId = parseInt(subgroup, 10);
+
     const payload = !subgroup
       ? {
-        group_id: parseInt(group, 10),
+        group_id: groupId,
         employee_id: employeeId,
       }
       : {
         employee_id: employeeId,
-        parent_group_id: parseInt(group, 10),
-        group_id: parseInt(subgroup, 10),
+        parent_group_id: groupId,
+        group_id: subgroupId,
         subgroup: true,
       };
+
+    const employee = yield select((state) => state.settings.employee);
+    const oldGroupId = employee.groups?.[0]?.id;
+    const oldSubGroupId = employee.subgroups?.[0]?.id;
+    const oldSubGroupParentId = employee.subgroups?.[0]?.parent_group_id;
+
+    if (oldGroupId) {
+      if (groupId !== oldGroupId || subgroup) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(detachGroup, { companyId, group: oldGroupId, employeeId });
+      }
+    }
+
+    if (oldSubGroupId) {
+      if ((!Number.isNaN(subgroupId) && subgroupId !== oldSubGroupId) || !subgroup) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(detachGroup, {
+          companyId, group: oldSubGroupParentId, employeeId, subgroup: oldSubGroupId,
+        });
+      }
+    }
 
     // eslint-disable-next-line no-unused-vars,no-shadow
     const { data } = yield call(axios.post,
@@ -961,6 +983,32 @@ function* assignSkill({
         employee_id: employeeId,
         skill_id: skill,
       }, token());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* detachGroup({
+  companyId,
+  group,
+  employeeId,
+  subgroup = null,
+}) {
+  const payload = !subgroup
+    ? {
+      group_id: parseInt(group, 10),
+      employee_id: employeeId,
+    }
+    : {
+      employee_id: employeeId,
+      parent_group_id: parseInt(group, 10),
+      group_id: parseInt(subgroup, 10),
+      subgroup: true,
+    };
+  try {
+    // eslint-disable-next-line no-unused-vars,no-shadow
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/detach-group`, payload, token());
   } catch (e) {
     console.log(e);
   }

@@ -155,7 +155,7 @@ const SecondStep = ({
 
     const { group, subgroup } = user;
     if (group) {
-      if (subGroupsOpt.length && !subgroup) {
+      if (subGroupsOpt.length > 1 && !subgroup) {
         setError({
           name: 'subgroup',
           message: t('You cant select group only if any sub-group is crated for that group'),

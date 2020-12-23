@@ -217,7 +217,7 @@ export default function EditAccount({
     requireError({ fieldName: 'surname', message: t('Surname is required') });
 
     if (group) {
-      if (subGroupsOpt.length && !subgroup) {
+      if (subGroupsOpt.length > 1 && !subgroup) {
         setError({
           fieldName: 'subgroup',
           message: t('You cant select group only if any sub-group is crated for that group'),
