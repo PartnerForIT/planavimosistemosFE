@@ -16,17 +16,20 @@ const Users = React.memo(({
   const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
+  const [checkedItems, setCheckedItems] = useState([]);
 
   const employToCheck = ({
     id,
     name,
     surname,
+    checked,
   }) => ({
     id,
     label: `${name} ${surname}`,
+    checked,
   });
 
-  const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length)
+  const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i));
   const employeesWithGroupsSubGroups = employees.filter((empl) => empl.groups.length || empl.subgroups.length);
 
@@ -139,9 +142,10 @@ const Users = React.memo(({
           <CheckboxGroupWrapper
             height={300}
             items={allSortedEmployees ?? []}
+            onChange={(checked) => setCheckedItems(checked)}
           />
         </div>
-        <Button fillWidth onClick={() => filterEmployees(search)}>{t('Filter')}</Button>
+        <Button fillWidth onClick={() => filterEmployees(search)} disabled={!search.trim()}>{t('Filter')}</Button>
       </>
     </Content>
   );
