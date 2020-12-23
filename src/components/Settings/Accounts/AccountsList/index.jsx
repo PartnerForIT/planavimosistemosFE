@@ -118,8 +118,10 @@ export default function AccountsList() {
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
 
   const updateEmployee = (data) => {
-    dispatch(patchEmployee(id, editVisible, data));
-    setEditVisible(false);
+    if (editVisible) {
+      dispatch(patchEmployee(id, editVisible, data));
+      setEditVisible(false);
+    }
   };
   const createAccount = (userData) => dispatch(createEmployee(id, userData));
 
@@ -184,7 +186,7 @@ export default function AccountsList() {
     } = empl;
     return {
       ...rest,
-      groups: groups[0]?.name ?? '',
+      groups: groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '',
       subgroup: subgroups[0]?.name ?? '',
       skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
@@ -315,7 +317,7 @@ export default function AccountsList() {
             createAccount={createAccount}
           />
           <EditAccount
-            open={editVisible}
+            open={!!editVisible}
             employee={employee}
             title={`${t('Edit')} ${employee.name ?? ''} ${employee.surname ?? ''} ${t('Account')}`}
             handleClose={() => setEditVisible(false)}
