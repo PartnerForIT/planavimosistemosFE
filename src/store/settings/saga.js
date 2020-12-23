@@ -668,6 +668,7 @@ function* patchRole(action) {
     const tokens = token();
 
     const { permissions } = action.data;
+
     const roles = yield select((state) => state.settings.roles ?? []);
 
     if (permissions) {
@@ -690,21 +691,26 @@ function* patchRole(action) {
           params: { ...action.data },
           ...tokens,
         });
-      yield put(updateRoleSuccess(
-        roles.map((role) => {
-          if (action.data.default && role.id !== action.roleId && role.default) {
-            return {
-              ...role,
-              default: 0,
-            };
-          }
 
-          if (role.id === action.roleId) {
-            return { ...role, ...data };
-          }
-          return role;
-        }),
-      ));
+      if (action.data.default || action.data.name) {
+        yield put(updateRoleSuccess(
+          roles.map((role) => {
+            if (action.data.default && role.id !== action.roleId && role.default) {
+              return {
+                ...role,
+                default: 0,
+              };
+            }
+
+            if (role.id === action.roleId) {
+              return { ...role, ...data };
+            }
+            return role;
+          }),
+        ));
+      } else {
+        yield put(getRoles(action.companyId));
+      }
     }
 
     yield put(addSnackbar('Updated Role successfully', 'success'));
