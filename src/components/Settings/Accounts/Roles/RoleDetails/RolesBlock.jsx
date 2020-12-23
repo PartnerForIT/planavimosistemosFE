@@ -143,31 +143,27 @@ function RolesBlock({
 
   return (
     <div className={classes.roles}>
-      {
-        loading
-          ? <Progress />
-          : (
-            <>
-              {/* create new */}
-              <div
-                className={classnames(classes.card, classes.default)}
-                onClick={createNewRole}
-                onKeyDown={(e) => onKeyDown(e, createNewRole)}
-                role='option'
-                aria-selected='true'
-                aria-label='create new role'
-                tabIndex={0}
-              >
-                <p className={classes.card_title}>New role</p>
-                <small>{t('Create a new role')}</small>
-                <span
-                  className={classes.card_icon}
-                >
-                  <AddRolesIcon aria-hidden />
-                </span>
-              </div>
-              {/* roles board */}
-              {
+      <>
+        {/* create new */}
+        <div
+          className={classnames(classes.card, classes.default)}
+          onClick={createNewRole}
+          onKeyDown={(e) => onKeyDown(e, createNewRole)}
+          role='option'
+          aria-selected='true'
+          aria-label='create new role'
+          tabIndex={0}
+        >
+          <p className={classes.card_title}>New role</p>
+          <small>{t('Create a new role')}</small>
+          <span
+            className={classes.card_icon}
+          >
+            <AddRolesIcon aria-hidden />
+          </span>
+        </div>
+        {/* roles board */}
+        {
                 roles.map((role) => (
                   <React.Fragment key={role.id + role.name}>
                     <div
@@ -246,18 +242,15 @@ function RolesBlock({
                   </React.Fragment>
                 ))
               }
-              <RemoveRole
-                open={!!removeVisible}
-                handleClose={() => setRemoveVisible(false)}
-                title={t('Delete role')}
-                name={removeVisible.name}
-                buttonTitle={t('Delete')}
-                remove={() => remove(removeVisible.id)}
-              />
-            </>
-          )
-
-      }
+        <RemoveRole
+          open={!!removeVisible}
+          handleClose={() => setRemoveVisible(false)}
+          title={t('Delete role')}
+          name={removeVisible.name}
+          buttonTitle={t('Delete')}
+          remove={() => remove(removeVisible.id)}
+        />
+      </>
     </div>
   );
 }

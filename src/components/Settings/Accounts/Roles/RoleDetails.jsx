@@ -4,6 +4,7 @@ import classes from './Roles.module.scss';
 import Users from './RoleDetails/Users';
 import AccessModule from './RoleDetails/AccessModule';
 import OrganisationAccess from './RoleDetails/OrganisationAccess';
+import Progress from '../../../Core/Progress';
 
 const categoriesNames = {
   logbook: 'Logbook',
@@ -33,12 +34,17 @@ function RoleDetails({
   permissionsIds,
 }) {
   const [activePermissions, setActivePermissions] = useState(
+    // eslint-disable-next-line camelcase
     activeRole?.account_roles_permissions?.map(({ permission_id }) => permission_id) ?? [],
   );
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    console.log(activePermissions);
-  }, [activePermissions]);
+    if (ready) {
+      setReady(false);
+      rolesPermissionsEdit(activePermissions);
+    }
+  }, [activePermissions, ready, rolesPermissionsEdit]);
 
   const onChangeHandler = (id) => {
     setActivePermissions((prevState) => {
@@ -47,12 +53,18 @@ function RoleDetails({
       }
       return [...prevState, id];
     });
+    setReady(true);
   };
 
   return (
     <div className={classes.details}>
       {
-        // loading && <Progress />
+        loading
+        && (
+        <div className={classes.loader}>
+          <Progress />
+        </div>
+        )
       }
       <Users
         employees={employees}
