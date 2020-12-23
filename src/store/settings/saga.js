@@ -88,7 +88,12 @@ import {
   loadEmployeesAll,
   getCurrenciesSuccess,
   removeEmployeeError,
-  removeEmployeeSuccess, setEmployeesActionsError, createEmployeeError, loadPermissionsSuccess, loadPermissionsError,
+  removeEmployeeSuccess,
+  setEmployeesActionsError,
+  createEmployeeError,
+  loadPermissionsSuccess,
+  loadPermissionsError,
+  getRoles,
 } from './actions';
 import { makeQueryString } from '../../components/Helpers';
 
@@ -662,29 +667,46 @@ function* patchRole(action) {
   try {
     const tokens = token();
 
-    const { data } = yield call(axios.patch,
-      `${config.api.url}/company/${action.companyId}/account-roles/update/${action.roleId}`,
-      null,
-      {
-        params: { ...action.data },
-        ...tokens,
-      });
+    const { permissions } = action.data;
     const roles = yield select((state) => state.settings.roles ?? []);
-    yield put(updateRoleSuccess(
-      roles.map((role) => {
-        if (action.data.default && role.id !== action.roleId && role.default) {
-          return {
-            ...role,
-            default: 0,
-          };
-        }
 
-        if (role.id === action.roleId) {
-          return { ...role, ...data };
-        }
-        return role;
-      }),
-    ));
+    if (permissions) {
+      // eslint-disable-next-line no-unused-vars
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.companyId}/account-roles/update/${action.roleId}`,
+        null,
+        {
+          params: { permissions: JSON.stringify(permissions) },
+          ...tokens,
+        });
+      yield put(getRoles(action.companyId));
+    }
+
+    if (!permissions) {
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.companyId}/account-roles/update/${action.roleId}`,
+        null,
+        {
+          params: { ...action.data },
+          ...tokens,
+        });
+      yield put(updateRoleSuccess(
+        roles.map((role) => {
+          if (action.data.default && role.id !== action.roleId && role.default) {
+            return {
+              ...role,
+              default: 0,
+            };
+          }
+
+          if (role.id === action.roleId) {
+            return { ...role, ...data };
+          }
+          return role;
+        }),
+      ));
+    }
+
     yield put(addSnackbar('Updated Role successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());

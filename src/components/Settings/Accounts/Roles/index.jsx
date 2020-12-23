@@ -91,7 +91,11 @@ function Roles() {
   };
 
   const rolesPermissionsEdit = (data) => {
-    dispatch(updateRole(id, activeRole.id, data));
+    dispatch(updateRole(id, activeRole.id, {
+      permissions: data.length ? data.map((item) => ({
+        id: item, access: 1,
+      })) : [],
+    }));
   };
 
   const availableDetails = useMemo(() => {
@@ -170,7 +174,7 @@ function Roles() {
                     createNewRole={() => setNewRoleOpen(true)}
                     remove={removeRole}
                     updateRole={patchRole}
-                    // loading={loading}
+                    loading={loading}
                     loadRoleDetails={loadRoleDetails}
                     setEditVisible={setEditVisible}
                     availableDetails={availableDetails}
