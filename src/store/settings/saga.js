@@ -710,6 +710,13 @@ function* getEmployeeEdit(action) {
 
 function* updateEmployee(action) {
   try {
+    const employees = yield select((state) => state.settings.employees);
+    const employee = yield select((state) => state.settings.employee);
+    const oldGroupId = employee.groups?.[0]?.id ?? employee.subgroups?.[0]?.parent_group_id;
+    const oldSubGroupId = employee.subgroups?.[0]?.id;
+    const oldSkillId = employee.skills[0]?.id;
+    const oldPlaceId = employee.place[0]?.id;
+
     const {
       group,
       subgroup,
@@ -717,10 +724,21 @@ function* updateEmployee(action) {
       skill,
       ...rest
     } = action.data;
+
+    const newOptions = {};
+
+    Object.keys(rest).forEach((key) => {
+      if (employee[key] !== rest[key]) {
+        newOptions[key] = rest[key];
+      }
+    });
+
+    if (!_.isEmpty(newOptions)) {
     // eslint-disable-next-line no-unused-vars
-    const { data } = yield call(axios.patch,
-      `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
-      { ...rest }, token());
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
+        { ...rest }, token());
+    }
 
     if (place) {
       // eslint-disable-next-line no-use-before-define
@@ -759,11 +777,17 @@ function* updateEmployee(action) {
       });
     }
 
-    yield put(loadEmployeesAll(action.id));
+    if (!_.isEmpty(newOptions) || +group !== oldGroupId
+      || +subgroup !== oldSubGroupId
+      || +place !== oldPlaceId || +skill !== oldSkillId) {
+      yield put(loadEmployeesAll(action.id));
 
-    yield put(addSnackbar('Updated account successfully', 'success'));
-    yield delay(4000);
-    yield put(dismissSnackbar());
+      yield put(addSnackbar('Updated account successfully', 'success'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+    } else {
+      yield put(loadEmployeesSuccess(employees));
+    }
   } catch (e) {
     yield put(patchEmployeeError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
@@ -909,12 +933,17 @@ function* assignPlace({
   place,
 }) {
   try {
+    const employee = yield select((state) => state.settings.employee);
+    const oldPlaceId = employee.place[0]?.id;
+
+    if (place !== oldPlaceId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-place`, {
-        employee_id: employeeId,
-        place_id: parseInt(place, 10),
-      }, token());
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${companyId}/employees/assign-place`, {
+          employee_id: employeeId,
+          place_id: parseInt(place, 10),
+        }, token());
+    }
   } catch (e) {
     console.log(e);
   }
@@ -980,12 +1009,16 @@ function* assignSkill({
   employeeId,
 }) {
   try {
+    const employee = yield select((state) => state.settings.employee);
+    const oldSkillId = employee.skills[0]?.id;
+    if (skill !== oldSkillId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-skill`, {
-        employee_id: employeeId,
-        skill_id: skill,
-      }, token());
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${companyId}/employees/assign-skill`, {
+          employee_id: employeeId,
+          skill_id: skill,
+        }, token());
+    }
   } catch (e) {
     console.log(e);
   }
