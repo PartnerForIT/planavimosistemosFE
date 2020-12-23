@@ -10,7 +10,7 @@ import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
 import Progress from '../../../../Core/Progress';
 
-const defaultRoleAcces = {
+const defaultRoleAccess = {
   // Access by Module
   moduleAccess: {
 
@@ -26,7 +26,7 @@ const defaultRoleAcces = {
       },
     },
     reports: {
-      enabled: false,
+      enabled: true,
       options: {
         generate: 'Can generate reports',
         assigned_place: 'Reports only for assigned place',
@@ -53,7 +53,7 @@ const defaultRoleAcces = {
       },
     },
     roles: {
-      enabled: false,
+      enabled: true,
 
       options: {
         create: 'Can create Roles',
@@ -127,10 +127,13 @@ function RolesBlock({
   groups = [],
   filterEmployees = () => ({}),
   roleEmployeesEdit = () => ({}),
+  rolesPermissionsEdit = () => ({}),
+  permissions,
+  permissionsIds,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
-  const [roleAccess, setRoleAccess] = useState(defaultRoleAcces);
+  const [roleAccess, setRoleAccess] = useState(defaultRoleAccess);
 
   const onKeyDown = (e, func) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -223,6 +226,7 @@ function RolesBlock({
                     {
                       activeRole?.id === role.id && (
                         <RoleDetails
+                          roles={roles}
                           activeRole={activeRole}
                           loading={loading}
                           loadRoleDetails={loadRoleDetails}
@@ -233,6 +237,9 @@ function RolesBlock({
                           setRoleAccess={setRoleAccess}
                           filterEmployees={filterEmployees}
                           roleEmployeesEdit={roleEmployeesEdit}
+                          rolesPermissionsEdit={rolesPermissionsEdit}
+                          permissions={permissions}
+                          permissionsIds={permissionsIds}
                         />
                       )
                     }

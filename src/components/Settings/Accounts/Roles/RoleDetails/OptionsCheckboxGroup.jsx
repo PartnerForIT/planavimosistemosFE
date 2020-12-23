@@ -9,6 +9,9 @@ const OptionsCheckBoxGroup = ({
   categoriesNames = {},
   active = false,
   setRoleAccess,
+  onChangeHandler,
+  permissionsIds,
+  activePermissions,
 }) => {
   const { t } = useTranslation();
   return (
@@ -34,16 +37,20 @@ const OptionsCheckBoxGroup = ({
         <li>
           {
             Object.keys(details)
-              .map((x) => (
-                <StyledCheckbox
-                  key={x}
-                  id={x}
-                  label={t(details[x])}
-                  style={{ lineHeight: 0.5 }}
-                  onChange={() => ({})}
-                  disabled={!active}
-                />
-              ))
+              .map((x) => {
+                const id = permissionsIds[name][x] ?? 0;
+                return (
+                  <StyledCheckbox
+                    key={x}
+                    id={id}
+                    label={t(details[x])}
+                    style={{ lineHeight: 0.5 }}
+                    onChange={onChangeHandler}
+                    disabled={!active}
+                    checked={activePermissions.some((i) => i === id)}
+                  />
+                );
+              })
           }
         </li>
       </ul>

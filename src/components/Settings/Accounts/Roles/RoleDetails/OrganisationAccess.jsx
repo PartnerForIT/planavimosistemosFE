@@ -5,9 +5,13 @@ import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 
 const OrganisationAccess = React.memo(({
   roleAccess = {},
+  activePermissions = [],
+  permissionsIds,
+  onChangeHandler,
 }) => {
   const { t } = useTranslation();
   const { organisation } = roleAccess;
+
   return (
     <Content tooltip='Tooltip' title='Organisation access'>
       {
@@ -15,15 +19,19 @@ const OrganisationAccess = React.memo(({
           .map((key, i) => (
             <React.Fragment key={key + i.toString()}>
               {
-                Object.keys(organisation[key].options).map((name) => (
-                  <StyledCheckbox
-                    key={key + name}
-                    label={t(organisation[key].options[name])}
-                    id={key}
-                    onChange={() => ({})}
-                    disabled={!organisation[key].enabled}
-                  />
-                ))
+                Object.keys(organisation[key].options).map((name) => {
+                  const id = permissionsIds[key][name] ?? 0;
+                  return (
+                    <StyledCheckbox
+                      key={key + name}
+                      label={t(organisation[key].options[name])}
+                      id={id}
+                      onChange={onChangeHandler}
+                      disabled={!organisation[key].enabled}
+                      checked={activePermissions.some((i) => i === id)}
+                    />
+                  );
+                })
               }
             </React.Fragment>
           ))

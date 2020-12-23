@@ -6,9 +6,12 @@ const AccessModule = React.memo(({
   roleAccess = {},
   categoriesNames = {},
   setRoleAccess,
+  activeRole,
+  activePermissions = [],
+  onChangeHandler,
+  permissionsIds,
 }) => {
   const { moduleAccess } = roleAccess;
-
   return (
     <Content title='Access by module' tooltip='Tooltip'>
       {
@@ -21,6 +24,10 @@ const AccessModule = React.memo(({
             categoriesNames={categoriesNames}
             roleAccess={roleAccess}
             setRoleAccess={setRoleAccess}
+            activeRole={activeRole}
+            onChangeHandler={onChangeHandler}
+            permissionsIds={permissionsIds}
+            activePermissions={activePermissions}
           />
         ))
       }

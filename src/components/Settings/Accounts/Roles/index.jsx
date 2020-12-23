@@ -61,6 +61,27 @@ function Roles() {
   const [editVisible, setEditVisible] = useState(false);
   const [roleName, setRoleName] = useState('');
 
+  const permissionsIds = useMemo(() => {
+    // eslint-disable-next-line no-underscore-dangle
+    const _temp = {};
+
+    permissions.forEach((perm) => {
+      // eslint-disable-next-line no-shadow
+      const { name, action, id } = perm;
+
+      // eslint-disable-next-line no-nested-ternary
+      _temp[name] = _temp[name]
+        ? _temp[name][action]
+          ? { ..._temp[name], [action]: id }
+          : {
+            ..._temp[name],
+            [action]: id,
+          }
+        : { [action]: id };
+    });
+
+    return _temp;
+  }, [permissions]);
   const loadRoleDetails = () => {
     dispatch(getRoleDetails(id, activeRole.id));
   };
@@ -157,6 +178,9 @@ function Roles() {
                     groups={groups}
                     filterEmployees={filterEmployees}
                     roleEmployeesEdit={roleEmployeesEdit}
+                    rolesPermissionsEdit={rolesPermissionsEdit}
+                    permissions={permissions}
+                    permissionsIds={permissionsIds}
                   />
                 </>
               )
