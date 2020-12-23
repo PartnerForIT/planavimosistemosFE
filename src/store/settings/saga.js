@@ -962,10 +962,13 @@ function* assignGroup({
         });
       }
     }
-
-    // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-group`, payload, token());
+    if (group || subgroup) {
+      if ((!subgroup && groupId !== oldSubGroupId) || (subgroup && subgroupId !== oldSubGroupId)) {
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${companyId}/employees/assign-group`, payload, token());
+      }
+    }
   } catch (e) {
     console.log(e);
   }
