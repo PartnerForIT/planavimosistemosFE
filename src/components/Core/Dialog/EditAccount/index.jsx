@@ -109,8 +109,8 @@ export default function EditAccount({
         cost,
         charge,
         photo,
-        group: Array.isArray(groups) ? groups[0]?.id : groups?.id ?? '0',
-        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '0' ?? '0',
+        group: Array.isArray(groups) && groups.length ? groups[0]?.id : subgroups[0]?.parent_group_id ?? '',
+        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
       });
