@@ -14,6 +14,8 @@ const Users = React.memo(({
   filterEmployees = () => ({}),
   activeRole,
   roleEmployeesEdit,
+  search,
+  setSearch,
 }) => {
   const { t } = useTranslation();
 
@@ -25,24 +27,29 @@ const Users = React.memo(({
     id,
     label: `${name} ${surname}`,
     checked: activeRole?.account_user_roles.some(({ employee_id }) => employee_id === id),
-  }));
-  const checkedByDefault = activeRole?.account_user_roles.map(({ employee }) => employToCheck(employee)) ?? [];
+  }), [activeRole.account_user_roles]);
 
-  const [search, setSearch] = useState('');
+  const checkedByDefault = useMemo(() => activeRole?.account_user_roles
+    .map(({ employee }) => employToCheck(employee)) ?? [], [activeRole.account_user_roles, employToCheck]);
+
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const users = checkedItems.map(({ id }) => id).filter((item) => typeof item !== 'string');
+    const users = checkedItems.map(({ id }) => id)
+      .filter((item) => typeof item !== 'string');
     if (ready) {
       setReady(false);
       roleEmployeesEdit(users);
     }
   }, [checkedItems, ready, roleEmployeesEdit]);
 
-  const employeesWithoutGroups = employees.filter((empl) => !empl.groups.length && !empl.subgroups.length)
-    .map((i) => employToCheck(i));
-  const employeesWithGroupsSubGroups = employees.filter((empl) => empl.groups.length || empl.subgroups.length);
+  const employeesWithoutGroups = useMemo(() => employees
+    .filter((empl) => !empl.groups.length && !empl.subgroups.length)
+    .map((i) => employToCheck(i)), [employToCheck, employees]);
+
+  const employeesWithGroupsSubGroups = useMemo(() => employees
+    .filter((empl) => empl.groups.length || empl.subgroups.length), [employees]);
 
   const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
@@ -102,34 +109,35 @@ const Users = React.memo(({
     return _temp;
   }, [employToCheck]);
 
-  const merged = mapEmployeesGroups(employeesWithGroupsSubGroups);
+  const merged = useMemo(() => mapEmployeesGroups(employeesWithGroupsSubGroups),
+    [employeesWithGroupsSubGroups, mapEmployeesGroups]);
 
-  const mappedMerged = useMemo(() => Object.keys(merged).map((key) => {
-    const item = merged[key];
-    const mapObjToNamedGroup = (obj) => Object.keys(obj).map((k) => ({
-      id: k.toString(),
-      ...obj[k],
-    }))[0];
-    if (item.type && Array.isArray(item.items)) {
-      const {
-        type, label, items, ...rest
-      } = item;
+  const mappedMerged = useMemo(() => Object.keys(merged)
+    .map((key) => {
+      const item = merged[key];
+      const mapObjToNamedGroup = (obj) => Object.keys(obj)
+        .map((k) => ({
+          id: k.toString(),
+          ...obj[k],
+        }))[0];
+      if (item.type && Array.isArray(item.items)) {
+        const {
+          type, label, items, ...rest
+        } = item;
 
-      return {
-        id: `gr_${key.toString()}`, type, label, items: [...items, mapObjToNamedGroup(rest)],
-      };
-    }
-    if (item.type && !Array.isArray(item.items)) {
-      const {
-        type, label, ...rest
-      } = item;
-      return {
-        id: `sg_${key.toString()}`, type, label, items: [mapObjToNamedGroup(rest)],
-      };
-    }
+        return {
+          id: `gr_${key.toString()}`, type, label, items: [...items, mapObjToNamedGroup(rest)],
+        };
+      }
+      if (item.type && !Array.isArray(item.items)) {
+        const { type, label, ...rest } = item;
+        return {
+          id: `sg_${key.toString()}`, type, label, items: [mapObjToNamedGroup(rest)],
+        };
+      }
 
-    return employToCheck(item);
-  }), [employToCheck, merged]);
+      return employToCheck(item);
+    }), [employToCheck, merged]);
 
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
