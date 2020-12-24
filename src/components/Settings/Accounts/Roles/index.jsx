@@ -91,10 +91,30 @@ function Roles() {
   };
 
   const rolesPermissionsEdit = (data) => {
+    // eslint-disable-next-line no-shadow
+    const oldRolePermissions = roles.find(({ id }) => id === activeRole.id)
+      ?.account_roles_permissions
+      // eslint-disable-next-line no-shadow
+      ?.map(({ permission_id: id, access }) => ({ id, access }));
+
+    const newPermissions = data.length ? data.map((item) => ({
+      id: item, access: 1,
+    })) : [];
+
+    // console.log(_.unionWith(oldRolePermissions, newPermissions, _.isEqual));
+    // eslint-disable-next-line no-nested-ternary,no-shadow
+    const oldFiltered = oldRolePermissions.map(({ id, access }) => (newPermissions.some((i) => id === i.id)
+      ? access
+        ? ({ id, access })
+        : ({ id, access: newPermissions.find((item) => item.id).access })
+      : ({ id, access: 0 })
+    ));
+
+    // eslint-disable-next-line no-shadow
+    const permissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
+
     dispatch(updateRole(id, activeRole.id, {
-      permissions: data.length ? data.map((item) => ({
-        id: item, access: 1,
-      })) : [],
+      permissions,
     }));
   };
 

@@ -8,7 +8,6 @@ import RemoveRole from '../../../../Core/Dialog/RemoveRole';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
-import Progress from '../../../../Core/Progress';
 
 const defaultRoleAccess = {
   // Access by Module

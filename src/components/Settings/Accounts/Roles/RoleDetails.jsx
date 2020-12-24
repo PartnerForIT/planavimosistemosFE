@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import classes from './Roles.module.scss';
-// import Progress from '../../../Core/Progress';
 import Users from './RoleDetails/Users';
 import AccessModule from './RoleDetails/AccessModule';
 import OrganisationAccess from './RoleDetails/OrganisationAccess';
