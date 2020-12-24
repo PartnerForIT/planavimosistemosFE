@@ -34,8 +34,10 @@ function RoleDetails({
   permissionsIds,
 }) {
   const [activePermissions, setActivePermissions] = useState(
+    activeRole?.account_roles_permissions
     // eslint-disable-next-line camelcase
-    activeRole?.account_roles_permissions?.map(({ permission_id }) => permission_id) ?? [],
+      ?.map(({ permission_id, access }) => (access ? permission_id : null))
+      .filter((item) => !!item) ?? [],
   );
   const [ready, setReady] = useState(false);
 

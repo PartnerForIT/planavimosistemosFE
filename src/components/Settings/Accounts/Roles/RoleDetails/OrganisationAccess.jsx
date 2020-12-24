@@ -28,7 +28,7 @@ const OrganisationAccess = React.memo(({
                       id={id}
                       onChange={onChangeHandler}
                       disabled={!organisation[key].enabled}
-                      checked={activePermissions.some((i) => i === id)}
+                      checked={activePermissions.some((it) => it === id)}
                     />
                   );
                 })

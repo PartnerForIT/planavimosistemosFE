@@ -667,7 +667,7 @@ function* patchRole(action) {
   try {
     const tokens = token();
 
-    const { permissions } = action.data;
+    const { permissions, name } = action.data;
 
     const roles = yield select((state) => state.settings.roles ?? []);
 
@@ -695,15 +695,23 @@ function* patchRole(action) {
       if (action.data.default || action.data.name) {
         yield put(updateRoleSuccess(
           roles.map((role) => {
-            if (action.data.default && role.id !== action.roleId && role.default) {
-              return {
-                ...role,
-                default: 0,
-              };
+            if (action.data.default) {
+              if (role.id !== action.roleId && role.default) {
+                return {
+                  ...role,
+                  default: 0,
+                };
+              }
+              if (role.id === action.roleId) {
+                return {
+                  ...role,
+                  default: 1,
+                };
+              }
             }
 
-            if (role.id === action.roleId) {
-              return { ...role, ...data };
+            if (name && role.id === action.roleId) {
+              return { ...role, name };
             }
             return role;
           }),
