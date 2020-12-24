@@ -2,6 +2,7 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
+import _ from 'lodash';
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -24,9 +25,17 @@ const Users = React.memo(({
   }), [activeRole.account_user_roles]);
 
   const [search, setSearch] = useState('');
-  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().match(search), [search]);
-
+  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().match(search.toLowerCase()), [search]);
+  const [sorted, setSorted] = useState(false);
   const [empList, setEmpList] = useState(employees);
+
+  useEffect(() => {
+    if (search.trim()) {
+      setSorted(true);
+    } else {
+      setSorted(false);
+    }
+  }, [search, setSorted]);
 
   useEffect(() => {
     if (search.trim() && employees) {
@@ -49,13 +58,16 @@ const Users = React.memo(({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const users = checkedItems.map(({ id }) => id)
-      .filter((item) => typeof item !== 'string');
-    if (ready) {
-      setReady(false);
-      roleEmployeesEdit(users);
+    if (sorted) {
+    } else {
+      const users = checkedItems.map(({ id }) => id)
+        .filter((item) => typeof item !== 'string');
+      if (ready) {
+        setReady(false);
+        roleEmployeesEdit(users);
+      }
     }
-  }, [checkedItems, ready, roleEmployeesEdit]);
+  }, [activeRole.account_user_roles, checkedItems, ready, roleEmployeesEdit, sorted]);
 
   const employeesWithoutGroups = useMemo(() => empList
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
@@ -181,6 +193,8 @@ const Users = React.memo(({
               setCheckedItems(checked);
               setReady(true);
             }}
+            sorted={sorted}
+            defaultChecked={checkedByDefault}
           />
         </div>
       </>

@@ -120,12 +120,10 @@ function RolesBlock({
   remove = () => ({}),
   updateRole = () => ({}),
   loading = false,
-  loadRoleDetails = () => ({}),
   setEditVisible = () => ({}),
   availableDetails = [],
   employees = [],
   groups = [],
-  filterEmployees = () => ({}),
   roleEmployeesEdit = () => ({}),
   rolesPermissionsEdit = () => ({}),
   permissions,
@@ -245,16 +243,13 @@ function RolesBlock({
                     {
                       activeRole?.id === role.id && (
                         <RoleDetails
-                          roles={roles}
                           activeRole={activeRole}
                           loading={loading}
-                          loadRoleDetails={loadRoleDetails}
                           availableDetails={availableDetails}
                           roleAccess={roleAccess}
                           employees={employees}
                           groups={groups}
                           setRoleAccess={setRoleAccess}
-                          filterEmployees={filterEmployees}
                           roleEmployeesEdit={roleEmployeesEdit}
                           rolesPermissionsEdit={rolesPermissionsEdit}
                           permissions={permissions}

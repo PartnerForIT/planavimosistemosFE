@@ -82,9 +82,6 @@ function Roles() {
 
     return _temp;
   }, [permissions]);
-  const loadRoleDetails = () => {
-    dispatch(getRoleDetails(id, activeRole.id));
-  };
 
   const roleEmployeesEdit = (data) => {
     dispatch(updateRole(id, activeRole.id, { users: data.length ? data.toString() : '' }));
@@ -130,8 +127,6 @@ function Roles() {
     }
     return [];
   }, [activeRole, permissions]);
-
-  const filterEmployees = (data) => dispatch(loadEmployeesQuery(id, data));
 
   useEffect(() => {
     dispatch(getRoles(id));
@@ -200,12 +195,10 @@ function Roles() {
                     remove={removeRole}
                     updateRole={patchRole}
                     loading={loading}
-                    loadRoleDetails={loadRoleDetails}
                     setEditVisible={setEditVisible}
                     availableDetails={availableDetails}
                     employees={employees}
                     groups={groups}
-                    filterEmployees={filterEmployees}
                     roleEmployeesEdit={roleEmployeesEdit}
                     rolesPermissionsEdit={rolesPermissionsEdit}
                     permissions={permissions}
