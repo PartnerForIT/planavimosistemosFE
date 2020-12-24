@@ -8,23 +8,22 @@ import CheckboxGroup from './CheckboxGroup';
 import styles from '../Select/Select.module.scss';
 
 const CheckboxGroupWrapper = ({
-  items = [], onChange = () => ({}), height, maxHeight, wrapperMarginBottom, sorted = false,
-  defaultChecked = [],
+  items = [], onChange = () => ({}), height, maxHeight, wrapperMarginBottom,
+  defaultChecked = [], sorted,
 }) => {
   const [itemsArray, setItemsArray] = useState([]);
-  const [checkedItems, setCheckedItems] = useState(defaultChecked);
+  const [checkedItems, setCheckedItems] = useState([...defaultChecked]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [itemsCopy, setItemsCopy] = useState([...items]);
   const [forceUpdate, setForceUpdate] = useState(false);
-
-  const [sortedChecked, setSortedChecked] = useState([defaultChecked]);
+  const def = _.cloneDeep(defaultChecked);
 
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
     const setCheckedToAll = (array) => {
-      const arrayCopy = array.length ? [...array] : itemsCopy;
+      const arrayCopy = array.length ? [...array] : [...itemsCopy];
       if (!arrayCopy.length) return arrayCopy;
 
       return arrayCopy.map((item) => {
@@ -47,16 +46,18 @@ const CheckboxGroupWrapper = ({
     if (forceUpdate) {
       setForceUpdate(false);
       setItemsArray(setCheckedToAll(itemsCopy));
+      setCheckedItems([...checkedItemsArray]);
+    } else {
+      setItemsArray(setCheckedToAll(items));
+      setCheckedItems([...checkedItemsArray]);
     }
-    setItemsArray(setCheckedToAll);
-    setCheckedItems([...checkedItemsArray]);
     setItemsStat({ ...stat });
-  }, [defaultChecked, forceUpdate, itemsCopy]);
+  }, [defaultChecked, forceUpdate, items, itemsCopy]);
 
   useEffect(() => {
     if (items) {
       setItemsCopy((prevState) => {
-        if (_.difference(prevState, items)) {
+        if (!_.isEqual(prevState, items)) {
           setForceUpdate(true);
           return [...items];
         }
@@ -98,12 +99,16 @@ const CheckboxGroupWrapper = ({
       });
     };
 
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  }, [itemsArray, itemsStat, onChange]);
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    //   setCheckedItems(checkedItemsArray);
+    //   onChange(checkedItemsArray);
+    // });
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(!sorted ? checkedItemsArray
+      : [...def.filter((i) => checkedItems.some(({ id }) => id !== i.id)), ...checkedItemsArray]);
+  }, [checkedItems, def, itemsArray, itemsStat, onChange, sorted]);
 
   const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
@@ -126,12 +131,16 @@ const CheckboxGroupWrapper = ({
         return newObj;
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  }, [itemsArray, onChange]);
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    //   setCheckedItems(checkedItemsArray);
+    //   onChange(checkedItemsArray);
+    // });
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(!sorted ? checkedItemsArray
+      : [...def.filter((i) => checkedItems.some(({ id }) => id !== i.id)), ...checkedItemsArray]);
+  }, [checkedItems, def, itemsArray, onChange, sorted]);
 
   return (
     <CheckboxGroup

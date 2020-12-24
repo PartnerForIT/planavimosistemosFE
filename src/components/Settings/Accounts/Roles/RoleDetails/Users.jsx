@@ -52,22 +52,21 @@ const Users = React.memo(({
   }, [employees, search, stringMatch]);
 
   const checkedByDefault = useMemo(() => activeRole?.account_user_roles
-    .map(({ employee }) => employToCheck(employee)) ?? [], [activeRole.account_user_roles, employToCheck]);
+    .map(({ employee }) => employToCheck(employee)) ?? [],
+  [activeRole.account_user_roles, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (sorted) {
-    } else {
-      const users = checkedItems.map(({ id }) => id)
-        .filter((item) => typeof item !== 'string');
-      if (ready) {
-        setReady(false);
-        roleEmployeesEdit(users);
-      }
+    const users = checkedItems.map(({ id }) => id)
+      .filter((item) => typeof item !== 'string');
+    if (ready) {
+      setReady(false);
+      console.log(users);
+      // roleEmployeesEdit(users);
     }
-  }, [activeRole.account_user_roles, checkedItems, ready, roleEmployeesEdit, sorted]);
+  }, [checkedItems, ready, roleEmployeesEdit]);
 
   const employeesWithoutGroups = useMemo(() => empList
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
@@ -189,7 +188,11 @@ const Users = React.memo(({
             maxHeight={342}
             wrapperMarginBottom={0}
             items={allSortedEmployees ?? []}
-            onChange={(checked) => {
+            onChange={(checked, oldChecked) => {
+              console.log(oldChecked);
+              console.log(sorted);
+              console.log(checked);
+              console.log(checkedByDefault);
               setCheckedItems(checked);
               setReady(true);
             }}

@@ -56,7 +56,7 @@ export default function CustomSelect({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
 
-  const handleCheckboxChange = (item) => {
+  const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -77,12 +77,13 @@ export default function CustomSelect({
         return newObj;
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  };
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(checkedItemsArray);
+  }, [itemsArray, onChange]);
+  // };
 
   const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
@@ -107,11 +108,12 @@ export default function CustomSelect({
       });
     };
 
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(checkedItemsArray);
+    // });
   }, [itemsArray, itemsStat, onChange]);
 
   const wrapperClasses = classNames(
