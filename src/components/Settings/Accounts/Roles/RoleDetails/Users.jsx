@@ -8,7 +8,6 @@ import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
 import Input from '../../../../Core/Input/Input';
 import classes from '../Roles.module.scss';
-import Button from '../../../../Core/Button/Button';
 
 const Users = React.memo(({
   employees = [],
@@ -152,7 +151,9 @@ const Users = React.memo(({
         />
         <div className={classes.checkboxGroupWrapper}>
           <CheckboxGroupWrapper
-            height={300}
+            height={342}
+            maxHeight={342}
+            wrapperMarginBottom={0}
             items={allSortedEmployees ?? []}
             onChange={(checked) => {
               setCheckedItems(checked);
@@ -160,7 +161,6 @@ const Users = React.memo(({
             }}
           />
         </div>
-        <Button fillWidth onClick={() => filterEmployees(search)} disabled={!search.trim()}>{t('Filter')}</Button>
       </>
     </Content>
   );
