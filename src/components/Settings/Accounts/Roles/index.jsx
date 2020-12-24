@@ -90,6 +90,11 @@ function Roles() {
     dispatch(updateRole(id, activeRole.id, { users: data.length ? data.toString() : '' }));
   };
 
+  const removeRolesPermissions = (data = []) => {
+    // eslint-disable-next-line no-shadow
+    dispatch(updateRole(id, activeRole.id, { permissions: data.map((id) => ({ id, access: 0 })) }));
+  };
+
   const rolesPermissionsEdit = (data) => {
     // eslint-disable-next-line no-shadow
     const oldRolePermissions = roles.find(({ id }) => id === activeRole.id)
@@ -205,6 +210,7 @@ function Roles() {
                     rolesPermissionsEdit={rolesPermissionsEdit}
                     permissions={permissions}
                     permissionsIds={permissionsIds}
+                    removeRolesPermissions={removeRolesPermissions}
                   />
                 </>
               )

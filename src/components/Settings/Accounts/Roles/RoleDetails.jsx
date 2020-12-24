@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import classes from './Roles.module.scss';
 import Users from './RoleDetails/Users';
 import AccessModule from './RoleDetails/AccessModule';
@@ -31,6 +32,9 @@ function RoleDetails({
   rolesPermissionsEdit = () => ({}),
   permissions = [],
   permissionsIds,
+  disable,
+  setDisable,
+  setDisableReady,
 }) {
   const [activePermissions, setActivePermissions] = useState(
     activeRole?.account_roles_permissions
@@ -46,6 +50,13 @@ function RoleDetails({
       rolesPermissionsEdit(activePermissions);
     }
   }, [activePermissions, ready, rolesPermissionsEdit]);
+
+  useEffect(() => {
+    if (disable.length) {
+      setActivePermissions((prevState) => _.difference(prevState, disable));
+      setDisable([]);
+    }
+  }, [activePermissions, disable, disable.length, setDisable]);
 
   const onChangeHandler = (id) => {
     setActivePermissions((prevState) => {
@@ -86,6 +97,7 @@ function RoleDetails({
         permissions={permissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
+        setDisableReady={setDisableReady}
       />
       <OrganisationAccess
         activeRole={activeRole}

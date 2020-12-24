@@ -12,6 +12,7 @@ const OptionsCheckBoxGroup = ({
   onChangeHandler,
   permissionsIds,
   activePermissions,
+  setDisableReady,
 }) => {
   const { t } = useTranslation();
   return (
@@ -20,16 +21,21 @@ const OptionsCheckBoxGroup = ({
         label={t(categoriesNames[name] ?? '')}
         style={{ lineHeight: 0.5 }}
         /* eslint-disable-next-line no-shadow */
-        onChange={(opt, checked) => setRoleAccess((prevState) => ({
-          ...prevState,
-          moduleAccess: {
-            ...prevState.moduleAccess,
-            [opt]: {
-              ...prevState.moduleAccess[opt],
-              enabled: checked,
+        onChange={(opt, checked) => {
+          setRoleAccess((prevState) => ({
+            ...prevState,
+            moduleAccess: {
+              ...prevState.moduleAccess,
+              [opt]: {
+                ...prevState.moduleAccess[opt],
+                enabled: checked,
+              },
             },
-          },
-        }))}
+          }));
+          if (!checked) {
+            setDisableReady(true);
+          }
+        }}
         id={name}
         checked={active}
       />

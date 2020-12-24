@@ -10,6 +10,7 @@ const AccessModule = React.memo(({
   activePermissions = [],
   onChangeHandler,
   permissionsIds,
+  setDisableReady,
 }) => {
   const { moduleAccess } = roleAccess;
   return (
@@ -28,6 +29,7 @@ const AccessModule = React.memo(({
             onChangeHandler={onChangeHandler}
             permissionsIds={permissionsIds}
             activePermissions={activePermissions}
+            setDisableReady={setDisableReady}
           />
         ))
       }

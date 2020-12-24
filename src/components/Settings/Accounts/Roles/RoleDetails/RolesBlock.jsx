@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
 import classnames from 'classnames';
 import classes from '../Roles.module.scss';
 import AddRolesIcon from '../../../../Icons/AddRolesIcon';
@@ -129,10 +130,33 @@ function RolesBlock({
   rolesPermissionsEdit = () => ({}),
   permissions,
   permissionsIds,
+  removeRolesPermissions,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
   const [roleAccess, setRoleAccess] = useState(defaultRoleAccess);
+  const [disableReady, setDisableReady] = useState(false);
+  const [disable, setDisable] = useState([]);
+
+  useEffect(() => {
+    const { moduleAccess } = roleAccess;
+    if (moduleAccess && permissionsIds) {
+      const disabled = Object.keys(moduleAccess)?.map((key) => {
+      // eslint-disable-next-line no-underscore-dangle
+        const _inner = moduleAccess[key];
+        if (!_inner.enabled) {
+          return Object.keys(_inner.options)?.map((opt) => permissionsIds?.[key]?.[opt]);
+        }
+        return null;
+      }).filter((item) => !!item);
+      if (disableReady) {
+        const dis = _.flatten(disabled);
+        setDisable(dis);
+        setDisableReady(false);
+        removeRolesPermissions(dis);
+      }
+    }
+  }, [disableReady, permissionsIds, removeRolesPermissions, removeVisible, roleAccess]);
 
   const onKeyDown = (e, func) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -235,6 +259,9 @@ function RolesBlock({
                           rolesPermissionsEdit={rolesPermissionsEdit}
                           permissions={permissions}
                           permissionsIds={permissionsIds}
+                          setDisableReady={setDisableReady}
+                          disable={disable}
+                          setDisable={setDisable}
                         />
                       )
                     }
