@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import classes from './Roles.module.scss';
 import Users from './RoleDetails/Users';
@@ -42,24 +42,6 @@ function RoleDetails({
       .filter((item) => !!item) ?? [],
   );
   const [ready, setReady] = useState(false);
-  const [search, setSearch] = useState('');
-  const stringMatch = (str1 = '', str2 = '') => str1.toLowerCase().match(str2);
-
-  const [empList, setEmpList] = useState(employees);
-
-  useEffect(() => {
-    if (search.trim() && employees.length) {
-      const filtered = employees.filter((e) => stringMatch(e.name, search)
-        || stringMatch(e.surname, search)
-        || stringMatch(e.groups[0]?.name, search)
-        || stringMatch(e.groups[0]?.name, search)
-        || stringMatch(e.subgroups[0]?.name, search)
-        || stringMatch(e.subgroups[0]?.parent_group?.name, search));
-      setEmpList([...filtered]);
-    } else {
-      setEmpList(employees);
-    }
-  }, [employees, search]);
 
   useEffect(() => {
     if (ready) {
@@ -96,12 +78,10 @@ function RoleDetails({
         )
       }
       <Users
-        employees={empList}
+        employees={employees}
         groups={groups}
         activeRole={activeRole}
         roleEmployeesEdit={roleEmployeesEdit}
-        search={search}
-        setSearch={setSearch}
       />
 
       <AccessModule

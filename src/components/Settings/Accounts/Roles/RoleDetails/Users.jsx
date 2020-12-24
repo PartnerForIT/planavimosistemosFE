@@ -2,7 +2,6 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -11,14 +10,9 @@ import classes from '../Roles.module.scss';
 
 const Users = React.memo(({
   employees = [],
-  filterEmployees = () => ({}),
   activeRole,
   roleEmployeesEdit,
-  search,
-  setSearch,
 }) => {
-  const { t } = useTranslation();
-
   const employToCheck = useCallback(({
     id,
     name,
@@ -28,6 +22,25 @@ const Users = React.memo(({
     label: `${name} ${surname}`,
     checked: activeRole?.account_user_roles.some(({ employee_id }) => employee_id === id),
   }), [activeRole.account_user_roles]);
+
+  const [search, setSearch] = useState('');
+  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().match(search), [search]);
+
+  const [empList, setEmpList] = useState(employees);
+
+  useEffect(() => {
+    if (search.trim() && employees) {
+      const filtered = employees.filter((e) => stringMatch(e.name)
+        || stringMatch(e.surname)
+        || stringMatch(e.groups[0]?.name)
+        || stringMatch(e.groups[0]?.name)
+        || stringMatch(e.subgroups[0]?.name)
+        || stringMatch(e.subgroups[0]?.parent_group?.name));
+      setEmpList([...filtered]);
+    } else {
+      setEmpList([...employees]);
+    }
+  }, [employees, search, stringMatch]);
 
   const checkedByDefault = useMemo(() => activeRole?.account_user_roles
     .map(({ employee }) => employToCheck(employee)) ?? [], [activeRole.account_user_roles, employToCheck]);
@@ -44,18 +57,18 @@ const Users = React.memo(({
     }
   }, [checkedItems, ready, roleEmployeesEdit]);
 
-  const employeesWithoutGroups = useMemo(() => employees
+  const employeesWithoutGroups = useMemo(() => empList
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
-    .map((i) => employToCheck(i)), [employToCheck, employees]);
+    .map((i) => employToCheck(i)), [empList, employToCheck]);
 
-  const employeesWithGroupsSubGroups = useMemo(() => employees
-    .filter((empl) => empl.groups.length || empl.subgroups.length), [employees]);
+  const employeesWithGroupsSubGroups = useMemo(() => empList
+    .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
 
   const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
 
-    employeeArray.forEach((item) => {
+    [...employeeArray].map((item) => {
       const {
         // eslint-disable-next-line no-shadow
         groups,
@@ -105,8 +118,9 @@ const Users = React.memo(({
           label: groupname,
           type,
         };
+      return item;
     });
-    return _temp;
+    return { ..._temp };
   }, [employToCheck]);
 
   const merged = useMemo(() => mapEmployeesGroups(employeesWithGroupsSubGroups),

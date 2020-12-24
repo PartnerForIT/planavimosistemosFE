@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
+import _ from 'lodash';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
@@ -12,13 +13,15 @@ const CheckboxGroupWrapper = ({
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
+  const [itemsCopy, setItemsCopy] = useState([...items]);
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
     const setCheckedToAll = (array) => {
-      const arrayCopy = array.length ? [...array] : items;
+      const arrayCopy = array.length ? [...array] : itemsCopy;
       if (!arrayCopy.length) return arrayCopy;
 
       return arrayCopy.map((item) => {
@@ -38,11 +41,27 @@ const CheckboxGroupWrapper = ({
       });
     };
 
+    if (forceUpdate) {
+      setForceUpdate(false);
+      setItemsArray(setCheckedToAll(itemsCopy));
+    }
     setItemsArray(setCheckedToAll);
-    setCheckedItems(checkedItemsArray);
+    setCheckedItems([...checkedItemsArray]);
     setItemsStat({ ...stat });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, setCheckedItems]);
+  }, [forceUpdate, itemsCopy]);
+
+  useEffect(() => {
+    if (items) {
+      setItemsCopy((prevState) => {
+        if (_.difference(prevState, items)) {
+          setForceUpdate(true);
+          return [...items];
+        }
+        setForceUpdate(false);
+        return prevState;
+      });
+    }
+  }, [items]);
 
   useEffect(() => {
     setItemsStat({
