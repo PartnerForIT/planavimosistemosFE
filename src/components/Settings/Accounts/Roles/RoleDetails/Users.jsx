@@ -24,7 +24,7 @@ const Users = React.memo(({
   }), [activeRole.account_user_roles]);
 
   const [search, setSearch] = useState('');
-  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().match(search.toLowerCase()), [search]);
+  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
   const [sorted, setSorted] = useState(false);
   const [empList, setEmpList] = useState(employees);
 
@@ -38,8 +38,7 @@ const Users = React.memo(({
 
   useEffect(() => {
     if (search.trim() && employees) {
-      const filtered = employees.filter((e) => stringMatch(e.name)
-        || stringMatch(e.surname)
+      const filtered = employees.filter((e) => stringMatch(`${e.name} ${e.surname}`)
         || stringMatch(e.groups[0]?.name)
         || stringMatch(e.groups[0]?.name)
         || stringMatch(e.subgroups[0]?.name)
