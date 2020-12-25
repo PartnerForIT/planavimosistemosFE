@@ -667,7 +667,7 @@ function* patchRole(action) {
   try {
     const tokens = token();
 
-    const { data: { permissions, name }, roleId } = action;
+    const { data: { permissions, name, users }, roleId } = action;
 
     const roles = yield select((state) => state.settings.roles ?? []);
 
@@ -683,7 +683,6 @@ function* patchRole(action) {
 
       yield put(getRolesSuccess(roles.map((role) => (role.id === roleId ? { ...role, data } : role))));
     }
-
     if (!permissions) {
       // eslint-disable-next-line no-unused-vars
       const { data } = yield call(axios.patch,
@@ -694,7 +693,7 @@ function* patchRole(action) {
           ...tokens,
         });
 
-      if (action.data.default || action.data.name) {
+      if (action.data.default || action.data.name || typeof users === 'string') {
         yield put(updateRoleSuccess(
           roles.map((role) => {
             if (action.data.default) {
@@ -714,6 +713,12 @@ function* patchRole(action) {
 
             if (name && role.id === action.roleId) {
               return { ...role, name };
+            }
+
+            if (role.id === action.roleId) {
+              return {
+                ...role, data,
+              };
             }
             return role;
           }),
