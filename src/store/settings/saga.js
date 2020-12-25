@@ -629,6 +629,7 @@ function* createRole(action) {
     yield put(createRoleSuccess([...roles, {
       ...data,
       default: 0,
+      can_delete: 1,
       account_user_roles: [],
       account_roles_permissions: [],
     }]));
@@ -649,7 +650,7 @@ function* removeRole(action) {
       `${config.api.url}/company/${action.companyId}/account-roles/delete/${action.roleId}`,
       token());
     if (data.message?.toLowerCase() === 'deleted') {
-      const roles = yield select((state) => state.settings.roles ?? []);
+      const roles = yield select((state) => state.settings.roles);
       yield put(deleteRoleSuccess([...roles.filter((role) => role.id !== action.roleId)]));
     }
     yield put(addSnackbar('Removed Role successfully', 'success'));

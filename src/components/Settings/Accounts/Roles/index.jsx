@@ -237,7 +237,7 @@ function Roles() {
               setEditVisible(false);
               setRoleName('');
             }}
-            roleName={roleName || activeRole.name}
+            roleName={roleName || activeRole?.name}
             setRoleName={setRoleName}
             title={t('Edit role name')}
             buttonTitle={t('Change name')}
