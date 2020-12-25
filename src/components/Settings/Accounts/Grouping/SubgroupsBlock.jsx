@@ -100,6 +100,7 @@ export default function SubgroupsBlock({
         selectedGroup={selectedSubgroup}
         name={subgroupName}
         setName={setSubgroupName}
+        edit
       />
       <RemoveGroup
         title={t('Delete Sub-group?')}

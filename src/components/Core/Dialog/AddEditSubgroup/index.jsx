@@ -9,17 +9,22 @@ import style from '../Dialog.module.scss';
 export default function AddEditSubgroup({
   handleClose, title, open,
   buttonTitle, setName, name, handleOk, selectedGroup = {},
+  edit = false,
 }) {
   const { t } = useTranslation();
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.formControl}>
+        {
+         edit && selectedGroup.name
+          && <p className={style.subtitle}>{selectedGroup.name}</p>
+        }
         <Label text={t('Sub-group name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter sub-group name')}`}
           name='name'
-          value={name}
+          value={edit ? selectedGroup.name ?? '' : name}
           fullWidth
           onChange={(e) => setName(e.target.value)}
         />
