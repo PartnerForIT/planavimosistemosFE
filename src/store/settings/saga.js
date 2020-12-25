@@ -717,7 +717,7 @@ function* patchRole(action) {
 
             if (role.id === action.roleId) {
               return {
-                ...role, data,
+                ...role, ...data,
               };
             }
             return role;

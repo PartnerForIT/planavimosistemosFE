@@ -145,6 +145,14 @@ function Roles() {
     dispatch(deleteRole(id, roleId));
   };
 
+  useEffect(() => {
+    if (roles.length && !_.isEmpty(activeRole)) {
+      // eslint-disable-next-line no-shadow
+      const role = roles.find(({ id }) => id === activeRole.id);
+      setActiveRole(role);
+    }
+  }, [activeRole, roles, roles.length]);
+
   const createNewRole = () => {
     if (roleName.trim()) {
       dispatch(createRole(id, roleName.trim()));
