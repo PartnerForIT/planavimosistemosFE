@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
 import _ from 'lodash';
@@ -16,7 +18,7 @@ const CheckboxGroupWrapper = ({
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [itemsCopy, setItemsCopy] = useState([...items]);
   const [forceUpdate, setForceUpdate] = useState(false);
-  const def = _.cloneDeep(defaultChecked);
+  const def = useMemo(() => _.cloneDeep(defaultChecked), [defaultChecked]);
 
   useEffect(() => {
     const checkedItemsArray = [];
@@ -139,8 +141,8 @@ const CheckboxGroupWrapper = ({
     setItemsArray(setCheckedToAll(itemsArray));
     setCheckedItems(checkedItemsArray);
     onChange(!sorted ? checkedItemsArray
-      : [...def.filter((i) => checkedItems.some(({ id }) => id !== i.id)), ...checkedItemsArray]);
-  }, [checkedItems, def, itemsArray, onChange, sorted]);
+      : [...def.filter(({ id }) => id !== item.id), ...checkedItemsArray]);
+  }, [def, itemsArray, onChange, sorted]);
 
   return (
     <CheckboxGroup

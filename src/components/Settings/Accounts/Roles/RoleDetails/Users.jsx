@@ -2,7 +2,6 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
-import _ from 'lodash';
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -59,12 +58,11 @@ const Users = React.memo(({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const users = checkedItems.map(({ id }) => id)
-      .filter((item) => typeof item !== 'string');
     if (ready) {
+      const users = checkedItems.map(({ id }) => id)
+        .filter((item) => typeof item !== 'string');
       setReady(false);
-      console.log(users);
-      // roleEmployeesEdit(users);
+      roleEmployeesEdit(users);
     }
   }, [checkedItems, ready, roleEmployeesEdit]);
 
@@ -188,11 +186,7 @@ const Users = React.memo(({
             maxHeight={342}
             wrapperMarginBottom={0}
             items={allSortedEmployees ?? []}
-            onChange={(checked, oldChecked) => {
-              console.log(oldChecked);
-              console.log(sorted);
-              console.log(checked);
-              console.log(checkedByDefault);
+            onChange={(checked) => {
               setCheckedItems(checked);
               setReady(true);
             }}
