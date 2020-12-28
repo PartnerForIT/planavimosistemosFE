@@ -1,7 +1,10 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
+import Snackbar from '@material-ui/core/Snackbar';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -9,17 +12,11 @@ import style from '../Dialog.module.scss';
 import classes from './ImportAccounts.module.scss';
 import Label from '../../InputLabel';
 import DataTable from '../../DataTableCustom/OLT';
-import CurrencySign from '../../../shared/CurrencySign';
 import StyledCheckbox from '../../Checkbox/Checkbox';
 import OverView from './OverView';
 import FancyInput from './FancyInput';
-
-const LabelWithCurrencySign = ({ text }) => (
-  <>
-    {text}
-    <CurrencySign />
-  </>
-);
+import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
+import { showSnackbar } from '../../../../store/settings/actions';
 
 const columns = [
 
@@ -29,8 +26,12 @@ const columns = [
     checked: true,
   },
   {
-    label: 'Employee',
+    label: 'Name',
     field: 'name',
+    checked: true,
+  }, {
+    label: 'Surname',
+    field: 'surname',
     checked: true,
   },
   {
@@ -45,12 +46,12 @@ const columns = [
   },
   {
     label: 'Skill',
-    field: 'skills',
+    field: 'skill',
     checked: true,
   },
   {
     label: 'Group',
-    field: 'groups',
+    field: 'group',
     checked: true,
   },
   {
@@ -63,27 +64,22 @@ const columns = [
     field: 'place',
     checked: true,
   },
-  {
-    label: <LabelWithCurrencySign text='Cost/h/' />,
-    field: 'cost',
-    checked: true,
-  },
-  {
-    label: <LabelWithCurrencySign text='Charge/h/' />,
-    field: 'charge',
-    checked: true,
-  },
-  {
-    label: 'Created on',
-    field: 'created_at',
-    checked: true,
-  },
-  {
-    label: 'Status change',
-    field: 'updated_at',
-    checked: true,
-  },
 ];
+
+const order = [
+  'status', 'name', 'surname', 'role', 'email', 'skill', 'group', 'subgroup', 'place',
+];
+
+const useStyles = makeStyles(() => ({
+  error: {
+    background: '#de4343',
+    color: '#fff',
+  },
+  success: {
+    background: '#3bc39e',
+    color: '#fff',
+  },
+}));
 
 export default function ImportAccounts({
   handleClose,
@@ -91,12 +87,55 @@ export default function ImportAccounts({
   open,
 }) {
   const { t } = useTranslation();
-  const [file, setFile] = useState('');
+  const styles = useStyles();
+  const dispatch = useDispatch();
+
+  const typeSnackbar = useSelector(snackbarType);
+  const textSnackbar = useSelector(snackbarText);
+  const isSnackbar = useSelector(isShowSnackbar);
+
+  const [fileName, setFileName] = useState('');
   const [data, setData] = useState([]);
+  const [file, setFile] = useState(null);
+  const [tempFile, setTempFile] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState();
 
-  // console.log(ref.current);
+  useEffect(() => {
+    if (file) {
+      const mappedFile = file.map((emp) => {
+        if (!emp.errors.length) {
+          if (emp.data.length && order.length) {
+            const temp = {};
+            emp.data.forEach((field, idx) => {
+              temp[order[idx]] = field;
+            });
+            return temp;
+          }
+        }
+        return emp;
+      });
+      setData(mappedFile);
+    }
+  }, [file]);
 
+  useEffect(() => {
+    if (fileName) {
+      if (fileName.split('.').pop() !== 'csv') {
+        dispatch(showSnackbar(t('Only CSV files are supported.'), 'error'));
+        setTempFile(null);
+        setFileName('');
+      }
+    }
+  }, [dispatch, fileName, t, tempFile]);
+
+  const fakeUpload = () => {
+    if (tempFile) {
+      if (fileName.split('.').pop() === 'csv') {
+        setFile(tempFile);
+      }
+    }
+  };
+  console.log(file);
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={classes.inner}>
@@ -105,14 +144,24 @@ export default function ImportAccounts({
         <div className={style.formControl}>
           <Label htmlFor='text' text={t('Company name')} />
           <div className={classes.import}>
-            <Input type='text' fullWidth disabled value={file} />
+            <Input type='text' fullWidth disabled value={fileName} />
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label className={classes.upload}>
-              <FancyInput setFile={setFile} setBackgroundColor={setBackgroundColor} />
+              <FancyInput
+                setFileName={setFileName}
+                setFile={setTempFile}
+                setBackgroundColor={setBackgroundColor}
+              />
               {t('Select file')}
             </label>
 
-            <Button size='medium'>{t('Upload')}</Button>
+            <Button
+              size='medium'
+              onClick={fakeUpload}
+              disabled={!tempFile || fileName.split('.').pop() !== 'csv'}
+            >
+              {t('Upload')}
+            </Button>
           </div>
         </div>
 
@@ -126,7 +175,7 @@ export default function ImportAccounts({
                 {t('EXAMPLE')}
                 :
               </span>
-            }
+                        }
             {' '}
             {`${t('active')};John;Doe;${t('manager')};example@email.com;${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};`}
           </div>
@@ -137,14 +186,10 @@ export default function ImportAccounts({
             data={data}
             columns={columns ?? []}
             verticalOffset='55vh'
+            selectable
           />
-          {
-            !data.length
-            && <OverView />
-          }
-          {
-            //   loader?
-          }
+          {!data.length && <OverView />}
+          {/*   loader? */}
         </div>
         <div className={classnames(style.formControl, classes.importFooter)}>
           <div>
@@ -157,6 +202,21 @@ export default function ImportAccounts({
           </div>
         </div>
       </div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        ContentProps={{
+          classes: {
+            root: typeSnackbar === 'error' ? styles.error : styles.success,
+          },
+        }}
+        severity='error'
+        open={isSnackbar}
+        message={textSnackbar}
+        key='right'
+      />
     </Dialog>
   );
 }
