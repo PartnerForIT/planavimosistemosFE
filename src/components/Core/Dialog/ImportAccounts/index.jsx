@@ -146,11 +146,16 @@ export default function ImportAccounts({
             //   loader?
           }
         </div>
-        <div className={style.formControl}>
-          <StyledCheckbox label={t('Create missing Role, Skill, Group, Sub-Group, Place')} />
-          <StyledCheckbox label={t('Ignore empty values')} />
+        <div className={classnames(style.formControl, classes.importFooter)}>
+          <div>
+            <StyledCheckbox label={t('Create missing Role, Skill, Group, Sub-Group, Place')} checked />
+            <StyledCheckbox label={t('Ignore empty values')} />
+          </div>
+          <div className={classes.importStats}>
+            <Input disabled fullWidth />
+            <Button size='big'>{t('Import')}</Button>
+          </div>
         </div>
-        <div className={style.buttonBlock} />
       </div>
     </Dialog>
   );
