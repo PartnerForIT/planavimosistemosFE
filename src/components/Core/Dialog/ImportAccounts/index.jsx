@@ -164,7 +164,16 @@ export default function ImportAccounts({
   };
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog
+      handleClose={() => {
+        handleClose();
+        setTempFile(null);
+        setFile(null);
+        setFileName('');
+      }}
+      open={open}
+      title={title}
+    >
       <div className={classes.inner}>
 
         {/* import CSV */}
