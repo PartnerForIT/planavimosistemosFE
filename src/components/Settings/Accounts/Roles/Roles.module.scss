@@ -1,0 +1,220 @@
+@import "../../../core/variables";
+
+$card-border-color: #cbd1d8;
+$card-padding: 12px;
+$details-padding: 14px 8px 8px;
+$edit-border: 1px solid $blue-border;
+$arrow-size: 21px;
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  grid-gap: 14px;
+  grid-auto-flow: dense;
+}
+
+.details {
+  position: relative;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  background-color: $beige-color;
+  min-height: 440px;
+  padding: $details-padding;
+  border-radius: $card-padding;
+  border: $edit-border;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-column-gap: $card-padding;
+
+  &_inner {
+    &_title {
+      margin-bottom: 7px;
+
+      & span {
+        display: inline-block;
+      }
+    }
+  }
+
+  .content {
+    background-color: white;
+    padding: $card-padding;
+    border-radius: $card-padding;
+  }
+}
+
+.card {
+  height: 92px;
+  position: relative;
+  color: $gray;
+  border: 1px solid $card-border-color;
+  border-radius: $card-padding;
+  padding: $card-padding;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+
+  @include focusVisible();
+
+  &_title {
+    font-weight: bold;
+    padding: 0 calc(1em + 5px) 0 0;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  & small {
+    font-size: $small-font-size;
+    color: inherit;
+  }
+
+  &.default {
+    & .card_title {
+      color: $blue-2;
+    }
+
+    border-color: transparent;
+    background-color: $light-blue2;
+  }
+
+  &_check {
+    position: absolute;
+    bottom: $card-padding;
+    left: $card-padding;
+    transform: translate(-9px, 9px);
+
+    & label * {
+      font-family: inherit !important;
+      color: inherit;
+    }
+  }
+
+  &_actions {
+    position: absolute;
+    top: $card-padding;
+    right: $card-padding;
+    grid-template-rows: $normal-font-size $normal-font-size;
+    grid-row-gap: 0.5em;
+    display: grid;
+    z-index: -1;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    & .card_actions {
+      opacity: 1;
+      z-index: 2;
+    }
+  }
+
+  &_icon {
+    position: absolute;
+    top: $card-padding;
+    right: $card-padding;
+  }
+
+  &_edit {
+    color: $edit-icon-color;
+  }
+
+  &_remove {
+    color: red;
+  }
+
+  &_icon,
+  &_edit,
+  &_remove {
+    background-color: unset;
+    border: unset;
+    padding: unset;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    & svg {
+      font-size: $normal-font-size;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    @include focusVisible();
+  }
+
+  &.active {
+    background-color: $blue-2;
+    color: white;
+
+    & .card_icon,
+    & .card_edit,
+    & .card_remove,
+    & .card_actions {
+      color: white;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: '';
+      width: $arrow-size;
+      height: $arrow-size;
+      transform: rotate(45deg) translateX(-50%);
+      transform-origin: center center;
+      display: block;
+      bottom: - $arrow-size * 1.5 - 7px;
+      left: 50%;
+      background-color: $beige-color;
+    }
+
+    &::before {
+      z-index: -1;
+      border: $edit-border;
+    }
+
+    &::after {
+      z-index: 1;
+      border-color: $beige-color;
+      border-radius: 17px 0;
+    }
+  }
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+}
+
+.sidebarTitle {
+  color: #808f94;
+  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  padding-top: 10px;
+  padding-bottom: 5px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.checkboxGroupWrapper {
+  height: 100%;
+  margin-top: 10px;
+}
+
+.loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  z-index: 9;
+  border-radius: inherit;
+}

@@ -6,6 +6,11 @@ $link-text-color: #6a42d3;
 $light-green: #eaf9ea;
 $light-green-text: #57d05a;
 
+$edit-icon-color: #69767a;
+
+$beige-color: #f8fafb;
+$blue-border: #e5edf4;
+
 $white: #fff;
 $blue: #4080ff;
 $blue-2: #4080fc;
@@ -19,7 +24,7 @@ $red: #fd0d1b;
 $gray: #808f94;
 $dark-gray: #313946;
 $black: #000;
-$dashboard-bg:#808f940d;
+$dashboard-bg: #808f940d;
 
 $main-bg: #e8eff6;
 
@@ -79,3 +84,9 @@ $red-900: #9c3939;
 $base-cell-width: 14.2857142857%;
 $picker-max-width: 430px;
 $expanded-picker-max-width: 570px;
+
+@mixin focusVisible {
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}

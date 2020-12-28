@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import classNames from 'classnames';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './Dropdown.module.scss';
 import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw';
-
 
 const useStyles = makeStyles({
   root: {
@@ -32,7 +29,7 @@ const useStyles = makeStyles({
     height: '30px',
     minHeight: '30px',
     paddingLeft: '3px',
-    paddingRight: 0,
+    paddingRight: 12,
   },
 
   expanded: {
@@ -71,8 +68,8 @@ export default function Dropdown({
       setItemsArray(resultedItems);
       setItemsStat({ ...itemsStat });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
-
   // const selectAll = useCallback((check) => {
   //   setItemsArray((state) => state.map((item) => {
   //     if (item.type === 'group') {
@@ -125,17 +122,25 @@ export default function Dropdown({
   //   </SvgIcon>
   // );
 
-  const renderCheckboxGroup = () => (
-    <CheckboxGroup items={itemsArray} onChange={onChange} />
+  const renderCheckboxGroup = (arr) => (
+    <CheckboxGroup items={arr ?? itemsArray} onChange={onChange} />
   );
 
   const renderDropdown = () => (
-    <ExpansionPanel
-      classes={{ root: classes.root, expanded: classes.rootExpanded }}
-      onChange={(e, state) => { setExpanded(state); }}
+    <Accordion
+      classes={{
+        root: classes.root,
+        expanded: classes.rootExpanded,
+      }}
+      onChange={(e, state) => {
+        setExpanded(state);
+      }}
     >
-      <ExpansionPanelSummary
-        classes={{ root: classes.summary, expanded: classes.expanded }}
+      <AccordionSummary
+        classes={{
+          root: classes.summary,
+          expanded: classes.expanded,
+        }}
         expandIcon={(
           <ExpandMoreIcon
             className={classNames(styles.expandIcon, expanded ? styles.expandIconExpanded : '')}
@@ -157,24 +162,47 @@ export default function Dropdown({
           )}
           label={label}
         />
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails className={classes.details}>
+      </AccordionSummary>
+      <AccordionDetails className={classes.details}>
+        {/* FIXME: commented to testing new render method */}
+        {/* { */}
+        {/*  itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group' */}
+        {/*    ? itemsArray.map((item, idx) => ( */}
+        {/*      <Dropdown */}
+        {/*        key={idx.toString()} */}
+        {/*        label={item.label} */}
+        {/*        currentItem={item} */}
+        {/*        checked={item.checked} */}
+        {/*        items={item.items} */}
+        {/*        onChange={onChange} */}
+        {/*      /> */}
+        {/*    )) */}
+        {/*    : renderCheckboxGroup(itemsArray) */}
+        {/* } */}
         {
-          itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group'
-            ? itemsArray.map((item, idx) => (
-              <Dropdown
-                key={idx.toString()}
-                label={item.label}
-                currentItem={item}
-                checked={item.checked}
-                items={item.items}
-                onChange={onChange}
-              />
-            ))
-            : renderCheckboxGroup(itemsArray)
+          itemsArray.map((item, idx) => (
+            item?.type === 'group'
+              ? (
+                <Dropdown
+                  key={item.label + idx.toString()}
+                  label={item.label}
+                  currentItem={item}
+                  checked={item.checked}
+                  items={item.items}
+                  onChange={onChange}
+                />
+              )
+              : (
+                <React.Fragment key={item.label + idx.toString()}>
+                  {
+                    renderCheckboxGroup([item])
+                  }
+                </React.Fragment>
+              )
+          ))
         }
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   );
 
   return (

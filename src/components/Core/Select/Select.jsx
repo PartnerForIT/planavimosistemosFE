@@ -11,7 +11,7 @@ import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
 export default function CustomSelect({
-  items, placeholder, buttonLabel, onChange, onFilter, width = '100%', type = 'items',
+  items = [], placeholder, buttonLabel, onChange = () => ({}), onFilter, width = '100%', type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -20,6 +20,7 @@ export default function CustomSelect({
 
   useEffect(() => {
     const checkedItemsArray = [];
+    const stat = { checked: 0, unchecked: 0, total: 0 };
 
     const setCheckedToAll = (array) => {
       const arrayCopy = array.length ? [...array] : items;
@@ -28,11 +29,11 @@ export default function CustomSelect({
         if (!item.disabled) {
           if (item.checked) {
             checkedItemsArray.push(item);
-            itemsStat.checked += 1;
+            stat.checked += 1;
           } else {
-            itemsStat.unchecked += 1;
+            stat.unchecked += 1;
           }
-          itemsStat.total += 1;
+          stat.total += 1;
         }
         if (item.items) {
           setCheckedToAll(item.items);
@@ -42,7 +43,8 @@ export default function CustomSelect({
     };
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
-    setItemsStat({ ...itemsStat });
+    setItemsStat({ ...stat });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, setCheckedItems]);
 
   useEffect(() => {
@@ -51,9 +53,10 @@ export default function CustomSelect({
       checked: checkedItems.length,
       unchecked: itemsStat.total - checkedItems.length,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
 
-  const handleCheckboxChange = (item) => {
+  const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -74,12 +77,13 @@ export default function CustomSelect({
         return newObj;
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  };
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(checkedItemsArray);
+  }, [itemsArray, onChange]);
+  // };
 
   const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
@@ -104,12 +108,13 @@ export default function CustomSelect({
       });
     };
 
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  }, [itemsStat]);
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(checkedItemsArray);
+    // });
+  }, [itemsArray, itemsStat, onChange]);
 
   const wrapperClasses = classNames(
     styles.inputWrapper,

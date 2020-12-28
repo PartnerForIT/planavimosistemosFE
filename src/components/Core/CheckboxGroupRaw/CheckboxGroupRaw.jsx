@@ -16,7 +16,7 @@ export default function CheckboxGroup({ items, onChange }) {
         {
           itemsArray.map((item, idx) => (
             <StyledCheckbox
-              key={idx.toString()}
+              key={item.label + idx.toString()}
               label={item.label}
               checked={item.checked}
               disabled={item.disabled}

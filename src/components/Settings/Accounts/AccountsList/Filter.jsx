@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React  from 'react';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +8,6 @@ import {
 
 import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
-import Input from '../../../Core/Input/Input';
-import SearchIcon from '../../../Icons/SearchIcon';
 import BootstrapInput from '../../../shared/SelectBootstrapInput';
 
 const useStyles = makeStyles(() => ({
@@ -34,19 +31,17 @@ export default function Filter({
   handleChangeUser,
   changeUserStatus = () => ({}),
   checkedItems,
-  clearCheckbox,
   stats,
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const [search, setSearch] = useState('');
-  const [open, setOpen] = useState(false);
+  // const [search, setSearch] = useState('');
+  // const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
-    clearCheckbox();
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   clearCheckbox();
+  //   setOpen(false);
+  // };
 
   return (
     <div className={styles.filterBlock}>
@@ -78,14 +73,14 @@ export default function Filter({
             </option>
           </NativeSelect>
         </FormControl>
-        <FormControl className={classes.margin}>
-          <Input
-            icon={<SearchIcon />}
-            placeholder={`${t('Search')}...`}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </FormControl>
+        {/* <FormControl className={classes.margin}> */}
+        {/*  <Input */}
+        {/*    icon={<SearchIcon />} */}
+        {/*    placeholder={`${t('Search')}...`} */}
+        {/*    value={search} */}
+        {/*    onChange={(e) => setSearch(e.target.value)} */}
+        {/*  /> */}
+        {/* </FormControl> */}
       </div>
 
       <div className={styles.filterBlock__inner}>

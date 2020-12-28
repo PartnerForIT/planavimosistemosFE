@@ -4,6 +4,7 @@ import {
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
+import _ from 'lodash';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
@@ -39,6 +40,7 @@ import {
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
   DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
+  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS, GET_EMPLOYEES_QUERY,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -71,6 +73,14 @@ import {
   editAccountGroupError,
   editAccountGroupSuccess,
   editAccountSubgroupSuccess,
+  getRolesSuccess,
+  getRolesError,
+  createRoleError,
+  createRoleSuccess,
+  deleteRoleError,
+  deleteRoleSuccess,
+  updateRoleSuccess,
+  updateRoleError,
   loadEmployeesError,
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
@@ -78,8 +88,14 @@ import {
   loadEmployeesAll,
   getCurrenciesSuccess,
   removeEmployeeError,
-  removeEmployeeSuccess, setEmployeesActionsError,
+  removeEmployeeSuccess,
+  setEmployeesActionsError,
+  createEmployeeError,
+  loadPermissionsSuccess,
+  loadPermissionsError,
+  getRoles,
 } from './actions';
+import { makeQueryString } from '../../components/Helpers';
 
 function token() {
   const token = {
@@ -304,13 +320,32 @@ function* loadEmployee(action) {
 
     if (action.params) {
       const employees = yield select((state) => state.settings.employees);
-      yield put(loadEmployeesSuccess({ stats: employees.stats, users: [...data.users] }));
+      yield put(loadEmployeesSuccess({
+        stats: employees.stats,
+        users: [...data.users],
+      }));
     } else {
       yield put(loadEmployeesSuccess(data));
     }
   } catch (e) {
     console.log(e);
     yield put(loadEmployeesError());
+  }
+}
+
+function* loadQueryEmployees(action) {
+  try {
+    const tokens = token();
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${action.companyId}/employees/`,
+      {
+        params: makeQueryString(action.data),
+        ...tokens,
+      });
+    // FIXME: awaiting backend
+    yield put(loadEmployeesSuccess(data));
+  } catch (e) {
+    yield put(loadEmployeesError(e));
   }
 }
 
@@ -569,6 +604,142 @@ function* patchAccountGroup(action) {
   }
 }
 
+function* loadRoles(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/account-roles`, token());
+    yield put(getRolesSuccess(data));
+  } catch (e) {
+    yield put(getRolesError(e));
+  }
+}
+
+function* createRole(action) {
+  try {
+    const {
+      companyId,
+      name,
+    } = action;
+
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/account-roles/store`, {
+        name,
+      }, token());
+
+    const roles = yield select((state) => state.settings.roles ?? []);
+    yield put(createRoleSuccess([...roles, {
+      ...data,
+      default: 0,
+      can_delete: 1,
+      account_user_roles: [],
+      account_roles_permissions: [],
+    }]));
+    yield put(addSnackbar('Added Role successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createRoleError(e));
+    yield put(addSnackbar('An error occurred while removing Role', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* removeRole(action) {
+  try {
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.companyId}/account-roles/delete/${action.roleId}`,
+      token());
+    if (data.message?.toLowerCase() === 'deleted') {
+      const roles = yield select((state) => state.settings.roles);
+      yield put(deleteRoleSuccess([...roles.filter((role) => role.id !== action.roleId)]));
+    }
+    yield put(addSnackbar('Removed Role successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(deleteRoleError(e));
+    yield put(addSnackbar('An error occurred while removing Role', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchRole(action) {
+  try {
+    const tokens = token();
+
+    const { data: { permissions, name, users }, roleId } = action;
+
+    const roles = yield select((state) => state.settings.roles ?? []);
+
+    if (permissions) {
+      // eslint-disable-next-line no-unused-vars
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.companyId}/account-roles/update/${roleId}`,
+        null,
+        {
+          params: { permissions: JSON.stringify(permissions) },
+          ...tokens,
+        });
+
+      yield put(getRolesSuccess(roles.map((role) => (role.id === roleId ? { ...role, data } : role))));
+    }
+    if (!permissions) {
+      // eslint-disable-next-line no-unused-vars
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.companyId}/account-roles/update/${roleId}`,
+        null,
+        {
+          params: { ...action.data },
+          ...tokens,
+        });
+
+      if (action.data.default || action.data.name || typeof users === 'string') {
+        yield put(updateRoleSuccess(
+          roles.map((role) => {
+            if (action.data.default) {
+              if (role.id !== action.roleId && role.default) {
+                return {
+                  ...role,
+                  default: 0,
+                };
+              }
+              if (role.id === action.roleId) {
+                return {
+                  ...role,
+                  default: 1,
+                };
+              }
+            }
+
+            if (name && role.id === action.roleId) {
+              return { ...role, name };
+            }
+
+            if (role.id === action.roleId) {
+              return {
+                ...role, ...data,
+              };
+            }
+            return role;
+          }),
+        ));
+      } else {
+        yield put(getRoles(action.companyId));
+      }
+    }
+
+    yield put(addSnackbar('Updated Role successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updateRoleError(e));
+    yield put(addSnackbar('An error occurred while updating Role', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* getEmployeeEdit(action) {
   try {
     const { data } = yield call(axios.get,
@@ -583,17 +754,35 @@ function* getEmployeeEdit(action) {
 
 function* updateEmployee(action) {
   try {
+    const employees = yield select((state) => state.settings.employees);
+    const employee = yield select((state) => state.settings.employee);
+    const oldGroupId = employee.groups?.[0]?.id ?? employee.subgroups?.[0]?.parent_group_id;
+    const oldSubGroupId = employee.subgroups?.[0]?.id;
+    const oldSkillId = employee.skills[0]?.id;
+    const oldPlaceId = employee.place[0]?.id;
+
     const {
       group,
-      subgroup = '',
+      subgroup,
       place,
       skill,
       ...rest
     } = action.data;
+
+    const newOptions = {};
+
+    Object.keys(rest).forEach((key) => {
+      if (employee[key] !== rest[key]) {
+        newOptions[key] = rest[key];
+      }
+    });
+
+    if (!_.isEmpty(newOptions)) {
     // eslint-disable-next-line no-unused-vars
-    const { data } = yield call(axios.patch,
-      `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
-      { ...rest }, token());
+      const { data } = yield call(axios.patch,
+        `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
+        { ...rest }, token());
+    }
 
     if (place) {
       // eslint-disable-next-line no-use-before-define
@@ -604,7 +793,7 @@ function* updateEmployee(action) {
       });
     }
 
-    if (group) {
+    if (group && !subgroup) {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
@@ -613,8 +802,7 @@ function* updateEmployee(action) {
       });
     }
 
-    /* if (subgroup) */
-    {
+    if (subgroup) {
       // eslint-disable-next-line no-use-before-define
       yield call(assignGroup, {
         companyId: action.id,
@@ -633,11 +821,17 @@ function* updateEmployee(action) {
       });
     }
 
-    yield put(loadEmployeesAll(action.id));
+    if (!_.isEmpty(newOptions) || +group !== oldGroupId
+      || +subgroup !== oldSubGroupId
+      || +place !== oldPlaceId || +skill !== oldSkillId) {
+      yield put(loadEmployeesAll(action.id));
 
-    yield put(addSnackbar('Updated account successfully', 'success'));
-    yield delay(4000);
-    yield put(dismissSnackbar());
+      yield put(addSnackbar('Updated account successfully', 'success'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+    } else {
+      yield put(loadEmployeesSuccess(employees));
+    }
   } catch (e) {
     yield put(patchEmployeeError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
@@ -733,7 +927,7 @@ function* createEmployee(action) {
         });
       }
 
-      if (group) {
+      if (group && !subgroup) {
         // eslint-disable-next-line no-use-before-define
         yield call(assignGroup, {
           companyId,
@@ -770,7 +964,7 @@ function* createEmployee(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(setEmployeesActionsError(e));
+    yield put(createEmployeeError(e));
     yield put(addSnackbar('An error occurred while adding employee', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -783,12 +977,17 @@ function* assignPlace({
   place,
 }) {
   try {
+    const employee = yield select((state) => state.settings.employee);
+    const oldPlaceId = employee.place[0]?.id;
+
+    if (place !== oldPlaceId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-place`, {
-        employee_id: employeeId,
-        place_id: parseInt(place, 10),
-      }, token());
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${companyId}/employees/assign-place`, {
+          employee_id: employeeId,
+          place_id: parseInt(place, 10),
+        }, token());
+    }
   } catch (e) {
     console.log(e);
   }
@@ -801,21 +1000,48 @@ function* assignGroup({
   subgroup = null,
 }) {
   try {
+    const groupId = parseInt(group, 10);
+    const subgroupId = parseInt(subgroup, 10);
+
     const payload = !subgroup
       ? {
-        group_id: parseInt(group, 10),
+        group_id: groupId,
         employee_id: employeeId,
       }
       : {
         employee_id: employeeId,
-        parent_group_id: parseInt(group, 10),
-        group_id: parseInt(subgroup, 10),
+        parent_group_id: groupId,
+        group_id: subgroupId,
         subgroup: true,
       };
 
-    // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-group`, payload, token());
+    const employee = yield select((state) => state.settings.employee);
+    const oldGroupId = employee.groups?.[0]?.id;
+    const oldSubGroupId = employee.subgroups?.[0]?.id;
+    const oldSubGroupParentId = employee.subgroups?.[0]?.parent_group_id;
+
+    if (oldGroupId) {
+      if (groupId !== oldGroupId || subgroup) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(detachGroup, { companyId, group: oldGroupId, employeeId });
+      }
+    }
+
+    if (oldSubGroupId) {
+      if ((!Number.isNaN(subgroupId) && subgroupId !== oldSubGroupId) || !subgroup) {
+        // eslint-disable-next-line no-use-before-define
+        yield call(detachGroup, {
+          companyId, group: oldSubGroupParentId, employeeId, subgroup: oldSubGroupId,
+        });
+      }
+    }
+    if (group || subgroup) {
+      if ((!subgroup && groupId !== oldSubGroupId) || (subgroup && subgroupId !== oldSubGroupId)) {
+        // eslint-disable-next-line no-unused-vars,no-shadow
+        const { data } = yield call(axios.post,
+          `${config.api.url}/company/${companyId}/employees/assign-group`, payload, token());
+      }
+    }
   } catch (e) {
     console.log(e);
   }
@@ -827,14 +1053,54 @@ function* assignSkill({
   employeeId,
 }) {
   try {
+    const employee = yield select((state) => state.settings.employee);
+    const oldSkillId = employee.skills[0]?.id;
+    if (skill !== oldSkillId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
-    const { data } = yield call(axios.post,
-      `${config.api.url}/company/${companyId}/employees/assign-skill`, {
-        employee_id: employeeId,
-        skill_id: skill,
-      }, token());
+      const { data } = yield call(axios.post,
+        `${config.api.url}/company/${companyId}/employees/assign-skill`, {
+          employee_id: employeeId,
+          skill_id: skill,
+        }, token());
+    }
   } catch (e) {
     console.log(e);
+  }
+}
+
+function* detachGroup({
+  companyId,
+  group,
+  employeeId,
+  subgroup = null,
+}) {
+  const payload = !subgroup
+    ? {
+      group_id: parseInt(group, 10),
+      employee_id: employeeId,
+    }
+    : {
+      employee_id: employeeId,
+      parent_group_id: parseInt(group, 10),
+      group_id: parseInt(subgroup, 10),
+      subgroup: true,
+    };
+  try {
+    // eslint-disable-next-line no-unused-vars,no-shadow
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${companyId}/employees/detach-group`, payload, token());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadPermissions({ companyId }) {
+  try {
+    const { data } = yield call(axios.get,
+      `${config.api.url}/company/${companyId}/account-roles/permissions`, token());
+    yield put(loadPermissionsSuccess(data));
+  } catch (e) {
+    yield put(loadPermissionsError(e));
   }
 }
 
@@ -855,6 +1121,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLatest(GET_EMPLOYEES, loadEmployee);
   yield takeLatest(GET_EMPLOYEES_ALL, loadEmployee);
+  yield takeLatest(GET_EMPLOYEES_QUERY, loadQueryEmployees);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
   yield takeLatest(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);
@@ -875,4 +1142,9 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
   yield takeLatest(CREATE_EMPLOYEE, createEmployee);
+  yield takeLatest(GET_ROLES, loadRoles);
+  yield takeLatest(CREATE_ROLE, createRole);
+  yield takeLatest(DELETE_ROLE, removeRole);
+  yield takeLatest(UPDATE_ROLE, patchRole);
+  yield takeLatest(LOAD_PERMISSIONS, loadPermissions);
 }

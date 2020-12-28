@@ -16,6 +16,8 @@ import { createSkill } from '../../../../store/settings/actions';
 import { convertBase64 } from '../../../Helpers';
 import CurrencySign from '../../../shared/CurrencySign';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
+import classes from './EditAccount.module.scss';
+import { validateEmail } from '../../../Helpers/emailValidation';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,6 +61,9 @@ export default function EditAccount({
   const [downloadOpen, setDownloadOpen] = useState(false);
   const [file, setFile] = useState(null);
 
+  const [ready, setReady] = useState(false);
+  const [errors, setErrors] = useState({});
+
   const [skillName, setSkillName] = useState(defaultSkill);
 
   const handleSkillChange = (event) => {
@@ -92,7 +97,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
         // eslint-disable-next-line no-shadow
-        photo, groups,
+        photo, groups, subgroups,
       } = employee;
       setUser({
         email,
@@ -104,8 +109,8 @@ export default function EditAccount({
         cost,
         charge,
         photo,
-        group: Array.isArray(groups) ? groups[0]?.group_id : groups?.group_id ?? '',
-        subgroup: groups?.sub_groups ? groups?.sub_groups.id : '' ?? '',
+        group: Array.isArray(groups) && groups.length ? groups[0]?.id : subgroups[0]?.parent_group_id ?? '',
+        subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
       });
@@ -114,7 +119,7 @@ export default function EditAccount({
 
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
-    return [{ id: '', name: t('Select a group') }, ...grps];
+    return [{ id: '0', name: t('Select a group') }, ...grps];
   }, [groups, t]);
 
   const skillsOptions = useMemo(() => {
@@ -124,9 +129,9 @@ export default function EditAccount({
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
-    const selectedGroup = groups.find((group) => group.id == user.group) ?? {};
+    const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
-    return [{ id: '', name: t('Select a sub-group') }, ...sub];
+    return [{ id: '0', name: t('Select a sub-group') }, ...sub];
   }, [groups, t, user.group]);
 
   const handleInput = (e) => {
@@ -173,8 +178,76 @@ export default function EditAccount({
     setDownloadOpen(false);
   };
 
+  const handleSubmit = () => {
+    const {
+      email, group, subgroup,
+    } = user;
+
+    const setError = ({ fieldName, message }) => {
+      setErrors((prevState) => ({
+        ...prevState,
+        [fieldName]: message,
+      }));
+      setReady(false);
+    };
+
+    const removeError = ({ fieldName }) => {
+      setErrors((prevState) => {
+        /* eslint-disable-next-line no-shadow */
+        const { [fieldName]: $, ...rest } = prevState;
+        return { ...rest };
+      });
+      setReady(true);
+    };
+
+    const requireError = ({ fieldName = '', message }) => {
+      const { [fieldName]: field = '' } = user;
+      if (!field.trim()) {
+        setError({
+          fieldName,
+          message,
+        });
+      } else {
+        removeError({ fieldName });
+      }
+    };
+
+    requireError({ fieldName: 'email', message: t('Email is required') });
+    requireError({ fieldName: 'name', message: t('Name is required') });
+    requireError({ fieldName: 'surname', message: t('Surname is required') });
+
+    if (group) {
+      if (subGroupsOpt.length > 1 && !subgroup) {
+        setError({
+          fieldName: 'subgroup',
+          message: t('You cant select group only if any sub-group is crated for that group'),
+        });
+      } else {
+        removeError({ fieldName: 'subgroup' });
+      }
+    } else {
+      removeError({ fieldName: 'subgroup' });
+    }
+
+    if (!validateEmail(email)) {
+      setError({
+        fieldName: 'email',
+        message: t('Email is invalid'),
+      });
+    } else {
+      removeError({ fieldName: 'email' });
+    }
+  };
+
+  useEffect(() => {
+    if (_.isEmpty(errors) && ready) {
+      onSubmit(user);
+      setReady(false);
+    }
+  }, [errors, onSubmit, ready, user]);
+
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} open={!!open} title={title}>
       <div className={style.edit}>
 
         {
@@ -189,7 +262,7 @@ export default function EditAccount({
 
                 <form className={style.form}>
                   <div className={style.left}>
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='email' text={t('Email')} />
                       <Input
                         name='email'
@@ -198,9 +271,13 @@ export default function EditAccount({
                         value={user.email ?? ''}
                         onChange={handleInput}
                       />
+                      {
+                        errors.email
+                        && <small className={classes.error}>{errors.email}</small>
+                      }
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='name' text={t('Name')} />
                       <Input
                         name='name'
@@ -208,9 +285,13 @@ export default function EditAccount({
                         value={user.name}
                         onChange={handleInput}
                       />
+                      {
+                        errors.name
+                        && <small className={classes.error}>{errors.name}</small>
+                      }
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='surname' text={t('Surname')} />
                       <Input
                         name='surname'
@@ -218,9 +299,13 @@ export default function EditAccount({
                         value={user.surname}
                         onChange={handleInput}
                       />
+                      {
+                        errors.surname
+                        && <small className={classes.error}>{errors.surname}</small>
+                      }
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='external_id' text={t('External ID')} />
                       <Input
                         name='external_id'
@@ -247,7 +332,7 @@ export default function EditAccount({
                       />
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label
                         htmlFor='cost'
                         text={(
@@ -266,7 +351,7 @@ export default function EditAccount({
                       />
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label
                         htmlFor='charge'
                         text={(
@@ -284,11 +369,10 @@ export default function EditAccount({
                         onChange={handleInput}
                       />
                     </div>
-
                   </div>
-                  <div className={style.right}>
 
-                    <div>
+                  <div className={style.right}>
+                    <div className={classes.formItem}>
                       <Label htmlFor='group' text={t('Assign to Group')} />
                       <AddEditSelectOptions
                         id='group'
@@ -300,7 +384,7 @@ export default function EditAccount({
                       />
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
                       <AddEditSelectOptions
                         id='subgroup'
@@ -311,9 +395,13 @@ export default function EditAccount({
                         placeholder={t('Select a subgroup')}
                         handleInput={handleInput}
                       />
+                      {
+                        errors.subgroup
+                        && <small className={classes.error}>{errors.subgroup}</small>
+                      }
                     </div>
 
-                    <div>
+                    <div className={classes.formItem}>
                       <Label htmlFor='place' text={t('Assign to place')} />
                       <AddEditSelectOptions
                         id='place'
@@ -330,7 +418,7 @@ export default function EditAccount({
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
                   <Button
-                    onClick={() => onSubmit(user)}
+                    onClick={handleSubmit}
                     size='big'
                   >
                     {t('Save an close')}

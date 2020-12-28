@@ -8,13 +8,17 @@ import style from '../Dialog.module.scss';
 
 export default function AddEditGroup({
   handleClose, title, open,
-  buttonTitle, setGroupName, groupName, handleOk,
+  buttonTitle, setGroupName, groupName, handleOk, oldGroupName = '',
 }) {
   const { t } = useTranslation();
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.formControl}>
+        {
+          oldGroupName
+          && <p className={style.subtitle}>{oldGroupName}</p>
+        }
         <Label text={t('Group name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter group name')}`}

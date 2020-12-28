@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import moment from 'moment';
-import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -99,7 +97,7 @@ export default function AccountsList() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const { users: employeesAll, stats } = useSelector(employeesSelector);
+  const { users: employeesAll = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
   const skills = useSelector(categoriesSkillsSelector);
@@ -120,24 +118,31 @@ export default function AccountsList() {
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
 
   const updateEmployee = (data) => {
-    dispatch(patchEmployee(id, editVisible, data));
-    setEditVisible(false);
+    if (editVisible) {
+      dispatch(patchEmployee(id, editVisible, data));
+      setEditVisible(false);
+    }
   };
   const createAccount = (userData) => dispatch(createEmployee(id, userData));
 
   const userStats = useMemo(() => {
-    const {
-      total,
-      ...rest
-    } = stats;
-    return {
-      accounts: total,
-      ...rest,
-    };
+    if (stats) {
+      const {
+        total,
+        ...rest
+      } = stats;
+      return {
+        accounts: total,
+        ...rest,
+      };
+    }
+    return {};
   }, [stats]);
 
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
+    dispatch(loadSkills(id));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,20 +155,13 @@ export default function AccountsList() {
   };
 
   useEffect(() => {
-    if (_.isEmpty(skills) && newVisible) {
+    if (newVisible || editVisible) {
       dispatch(loadSkills(id));
-    }
-    if (_.isEmpty(groups) && newVisible) {
       dispatch(getAccountGroups(id));
-    }
-    if (_.isEmpty(places) && newVisible) {
       dispatch(loadPlace(id));
+      dispatch(getSecurityCompany(id));
     }
-    if (_.isEmpty(security) && newVisible) {
-      // TODO: uncomment next line on server changes
-      // dispatch(getSecurityCompany(id));
-    }
-  }, [dispatch, groups, id, newVisible, places, security, skills]);
+  }, [dispatch, editVisible, id, newVisible]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -183,13 +181,13 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups, skills,
+      name, surname, status, created_at, updated_at, place, groups, skills, subgroups,
       ...rest
     } = empl;
     return {
       ...rest,
-      group: groups?.name ?? '',
-      subgroup: groups?.sub_groups?.name ?? '',
+      groups: groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '',
+      subgroup: subgroups[0]?.name ?? '',
       skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
       // eslint-disable-next-line camelcase
@@ -199,7 +197,7 @@ export default function AccountsList() {
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };
-  }), [employeesAll]);
+  }) ?? [], [employeesAll]);
 
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
@@ -319,7 +317,7 @@ export default function AccountsList() {
             createAccount={createAccount}
           />
           <EditAccount
-            open={editVisible}
+            open={!!editVisible}
             employee={employee}
             title={`${t('Edit')} ${employee.name ?? ''} ${employee.surname ?? ''} ${t('Account')}`}
             handleClose={() => setEditVisible(false)}

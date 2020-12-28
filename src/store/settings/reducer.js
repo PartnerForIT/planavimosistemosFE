@@ -47,6 +47,21 @@ import {
   PATCH_ACCOUNTS_SUBGROUP,
   PATCH_ACCOUNTS_SUBGROUP_SUCCESS,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
+  GET_ROLES,
+  GET_ROLES_SUCCESS,
+  GET_ROLES_ERROR,
+  CREATE_ROLE,
+  CREATE_ROLE_ERROR,
+  CREATE_ROLE_SUCCESS,
+  DELETE_ROLE,
+  DELETE_ROLE_ERROR,
+  DELETE_ROLE_SUCCESS,
+  UPDATE_ROLE,
+  UPDATE_ROLE_ERROR,
+  UPDATE_ROLE_SUCCESS,
+  GET_ROLE_DETAILS,
+  GET_ROLE_DETAILS_ERROR,
+  GET_ROLE_DETAILS_SUCCESS,
   GET_EMPLOYEES_ERROR,
   GET_EMPLOYEES_ALL,
   GET_EMPLOYEES_EDIT,
@@ -63,7 +78,7 @@ import {
   EMPLOYEE_ACTIONS_SUCCESS,
   EMPLOYEE_ACTIONS_ERROR,
   CREATE_EMPLOYEE,
-  CREATE_EMPLOYEE_SUCCESS, CREATE_EMPLOYEE_ERROR,
+  CREATE_EMPLOYEE_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR, GET_EMPLOYEES_QUERY,
 } from './types';
 
 const initialState = {
@@ -92,6 +107,9 @@ const initialState = {
   snackbarType: '',
   groups: [],
   currency: [],
+  roles: [],
+  roleDetails: {},
+  permissions: [],
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -101,6 +119,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: null,
         loading: true,
+        settingsLoading: true,
       };
     case GET_SETTINGS_COMPANY_SUCCESS:
       return {
@@ -108,6 +127,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         company: action.data,
         error: null,
         loading: false,
+        settingsLoading: false,
       };
     case GET_WORK_TIME:
       return {
@@ -210,6 +230,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     }
     case GET_EMPLOYEES:
     case GET_EMPLOYEES_ALL:
+    case GET_EMPLOYEES_QUERY:
     case GET_EMPLOYEES_EDIT:
     {
       return {
@@ -449,6 +470,45 @@ export const reducerOrganizationList = (state = initialState, action) => {
         subgroupLoading: false,
       };
 
+    case GET_ROLES:
+    case CREATE_ROLE:
+    case DELETE_ROLE:
+    case UPDATE_ROLE:
+    case GET_ROLE_DETAILS:
+      return {
+        ...state,
+        rolesLoading: true,
+        error: null,
+      };
+
+    case GET_ROLES_SUCCESS:
+    case CREATE_ROLE_SUCCESS:
+    case DELETE_ROLE_SUCCESS:
+    case UPDATE_ROLE_SUCCESS:
+      return {
+        ...state,
+        rolesLoading: false,
+        roles: action.data,
+      };
+
+    case GET_ROLE_DETAILS_SUCCESS:
+      return {
+        ...state,
+        rolesLoading: false,
+        roleDetails: action.data,
+      };
+
+    case DELETE_ROLE_ERROR:
+    case CREATE_ROLE_ERROR:
+    case GET_ROLES_ERROR:
+    case UPDATE_ROLE_ERROR:
+    case GET_ROLE_DETAILS_ERROR:
+      return {
+        ...state,
+        rolesLoading: false,
+        error: action.data,
+      };
+
     case ADD_SETTING_SNACKBAR:
       return {
         ...state,
@@ -475,14 +535,28 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
       };
 
-    case CREATE_EMPLOYEE_SUCCESS:
-      return {
-        ...state,
-      };
-
     case CREATE_EMPLOYEE_ERROR:
       return {
         ...state,
+        error: action.data,
+      };
+
+    case LOAD_PERMISSIONS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    case LOAD_PERMISSIONS_SUCCESS:
+      return {
+        ...state,
+        permissions: action.data,
+      };
+
+    case LOAD_PERMISSIONS_ERROR:
+      return {
+        ...state,
+        error: action.data,
       };
 
     default:

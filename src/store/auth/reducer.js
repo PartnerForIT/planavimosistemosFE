@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 import { success, error } from 'redux-saga-requests';
 import {
   LOGIN,
-  LOGIN_CHECK,
+  LOGIN_CHECK, REFRESH_TOKEN,
 } from './types';
 
 const initialState = {
@@ -14,11 +15,14 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN:
+    case REFRESH_TOKEN:
       return { ...state, error: null, loading: true };
 
     case success(LOGIN):
+    case success(REFRESH_TOKEN):
       localStorage.setItem('token', action.data.access_token);
       localStorage.setItem('user', JSON.stringify(action.data.user));
+      localStorage.setItem('expires_in', (new Date().getTime() + action.data.expires_in * 1000).toString());
       return {
         ...state, user: action.data.user, loading: false, isAuthorized: true,
       };
@@ -37,9 +41,10 @@ export const reducer = (state = initialState, action) => {
       };
     }
 
+    case error(REFRESH_TOKEN):
     case error(LOGIN_CHECK):
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       return {
         ...state, loading: false, error: action.error, isAuthorized: false,
       };

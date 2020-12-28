@@ -93,7 +93,7 @@ const useStyles = makeStyles({
 });
 
 export default function StyledCheckbox({
-  item, label, id, onChange, ...props
+  item, label = '', id, onChange = () => ({}), ...props
 }) {
   const classes = useStyles();
 

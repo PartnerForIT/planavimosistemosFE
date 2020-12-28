@@ -89,9 +89,10 @@ export default function GroupsBlock({
         }}
         title={t('Edit group name')}
         buttonTitle={t('Save & Close')}
-        groupName={groupName}
+        groupName={groupName || selected.name}
         setGroupName={setGroupName}
         handleOk={edit}
+        oldGroupName={selected.name}
       />
       <RemoveGroup
         title={t('Delete Group?')}

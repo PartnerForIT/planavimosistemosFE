@@ -53,6 +53,7 @@ $form-inner-width: 900px;
 
 .formItem {
   margin-bottom: $padding-size;
+  position: relative;
 
   & label + div {
     margin-top: unset;
@@ -107,7 +108,7 @@ $form-inner-width: 900px;
   }
 }
 
-small {
+small.error {
   color: $red-600;
 }
 
