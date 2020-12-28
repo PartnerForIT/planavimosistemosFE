@@ -1,0 +1,37 @@
+@import "../../variables";
+@import "../../Button/Button.module";
+@import "../../Input/Input.module";
+
+.inner {
+  max-width: 1300px;
+  min-width: 900px;
+  width: 100%;
+  padding: 10px 15px;
+}
+
+.import {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 430px repeat(2, 150px);
+  grid-column-gap: 15px;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.upload {
+  @extend %button;
+  @extend %inverse;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textarea {
+  //@extend .input;
+  @extend %input !optional;
+  width: 100%;
+  resize: none;
+}

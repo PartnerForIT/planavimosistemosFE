@@ -42,6 +42,7 @@ import CurrencySign from '../../../shared/CurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import TimeFormat from '../../../shared/TimeFormat';
+import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -108,6 +109,7 @@ export default function AccountsList() {
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [importVisible, setImportVisible] = useState(true);
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
@@ -245,7 +247,7 @@ export default function AccountsList() {
           TitleButtonNew={t('New account')}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
-          handleButtonImport={() => ({})}
+          handleButtonImport={() => setImportVisible(true)}
           handleButtonNew={() => setNewVisible(true)}
         >
           <AccountsIcon />
@@ -341,6 +343,11 @@ export default function AccountsList() {
             handleClose={() => setChangeStatusOpen(false)}
             title={t('Change status?')}
             changeStatus={handleChangingStatus}
+          />
+          <ImportAccounts
+            title={t('Import accounts')}
+            open={importVisible}
+            handleClose={() => setImportVisible(false)}
           />
         </PageLayout>
       </Dashboard>
