@@ -100,21 +100,47 @@ export default function ImportAccounts({
   const [tempFile, setTempFile] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState();
 
+  const [ignoreEmpty, setIgnoreEmpty] = useState(false);
+  const [createMissing, setCreateMissing] = useState(true);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selected, setSelected] = useState({});
+
+  const selectionHandler = (itemId, value) => {
+    // eslint-disable-next-line array-callback-return
+    data.forEach((item) => {
+      if (item.id === itemId) {
+        // eslint-disable-next-line no-param-reassign
+        item.checked = !item.checked;
+      }
+    });
+    if (value) {
+      setSelectedItems([...selectedItems, itemId]);
+    } else {
+      const index = selectedItems.indexOf(itemId);
+      selectedItems.splice(index, 1);
+      setSelectedItems([...selectedItems]);
+    }
+  };
+
   useEffect(() => {
     if (file) {
-      const mappedFile = file.map((emp) => {
-        if (!emp.errors.length) {
-          if (emp.data.length && order.length) {
-            const temp = {};
-            emp.data.forEach((field, idx) => {
-              temp[order[idx]] = field;
-            });
-            return temp;
+      const mappedFile = file
+        ?.filter((item) => item.data.length)
+        .map((emp, index) => {
+          if (!emp.errors.length) {
+            if (emp.data.length && order.length) {
+              const temp = {
+                id: index,
+              };
+              emp.data.forEach((field, idx) => {
+                temp[order[idx]] = field;
+              });
+              return temp;
+            }
           }
-        }
-        return emp;
-      });
-      setData(mappedFile);
+          return emp;
+        });
+      setData(mappedFile ?? null);
     }
   }, [file]);
 
@@ -135,7 +161,7 @@ export default function ImportAccounts({
       }
     }
   };
-  console.log(file);
+
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={classes.inner}>
@@ -170,12 +196,10 @@ export default function ImportAccounts({
           <Label text={t('Example of CSV file contents')} />
           <div className={classes.textarea} style={{ backgroundColor }}>
             <p>{`${t('status')};${t('name')};${t('surname')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};`}</p>
-            {
-              <span>
-                {t('EXAMPLE')}
-                :
-              </span>
-                        }
+            <span>
+              {t('EXAMPLE')}
+              {':'}
+            </span>
             {' '}
             {`${t('active')};John;Doe;${t('manager')};example@email.com;${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};`}
           </div>
@@ -187,14 +211,26 @@ export default function ImportAccounts({
             columns={columns ?? []}
             verticalOffset='55vh'
             selectable
+            onColumnsChange={() => ({})}
+            selectedItem={selected}
+            setSelectedItem={setSelected}
+            onSelect={selectionHandler}
           />
           {!data.length && <OverView />}
           {/*   loader? */}
         </div>
         <div className={classnames(style.formControl, classes.importFooter)}>
           <div>
-            <StyledCheckbox label={t('Create missing Role, Skill, Group, Sub-Group, Place')} checked />
-            <StyledCheckbox label={t('Ignore empty values')} />
+            <StyledCheckbox
+              label={t('Create missing Role, Skill, Group, Sub-Group, Place')}
+              checked={createMissing}
+              onChange={() => setCreateMissing((prevState) => !prevState)}
+            />
+            <StyledCheckbox
+              label={t('Ignore empty values')}
+              checked={ignoreEmpty}
+              onChange={() => setIgnoreEmpty((prevState) => !prevState)}
+            />
           </div>
           <div className={classes.importStats}>
             <Input disabled fullWidth />
