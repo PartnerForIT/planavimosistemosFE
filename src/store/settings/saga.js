@@ -39,8 +39,17 @@ import {
   GET_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
-  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
-  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS, GET_EMPLOYEES_QUERY,
+  DELETE_EMPLOYEE,
+  EMPLOYEE_ACTIONS,
+  CREATE_EMPLOYEE,
+  GET_ROLES,
+  CREATE_ROLE,
+  DELETE_ROLE,
+  UPDATE_ROLE,
+  GET_ROLE_DETAILS,
+  LOAD_PERMISSIONS,
+  GET_EMPLOYEES_QUERY,
+  ADD_INFO_SETTING_SNACKBAR,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -1104,6 +1113,20 @@ function* loadPermissions({ companyId }) {
   }
 }
 
+function* showSnackBar(action) {
+  try {
+    console.log(action);
+
+    const { data, snackbarType } = action;
+
+    yield put(addSnackbar(data, snackbarType));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -1147,4 +1170,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ROLE, removeRole);
   yield takeLatest(UPDATE_ROLE, patchRole);
   yield takeLatest(LOAD_PERMISSIONS, loadPermissions);
+  yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
 }

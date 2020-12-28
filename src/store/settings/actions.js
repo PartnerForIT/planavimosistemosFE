@@ -90,7 +90,12 @@ import {
   UPDATE_ROLE_ERROR,
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_SUCCESS,
-  GET_ROLE_DETAILS_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR, GET_EMPLOYEES_QUERY,
+  GET_ROLE_DETAILS_ERROR,
+  LOAD_PERMISSIONS,
+  LOAD_PERMISSIONS_SUCCESS,
+  LOAD_PERMISSIONS_ERROR,
+  GET_EMPLOYEES_QUERY,
+  ADD_INFO_SETTING_SNACKBAR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -110,6 +115,11 @@ export const editSettingCompany = (data, id) => ({
 export const editSettingCompanySuccess = (data) => ({
   type: PATCH_SETTINGS_COMPANY_SUCCESS,
   data,
+});
+export const showSnackbar = (data, snackbarType) => ({
+  type: ADD_INFO_SETTING_SNACKBAR,
+  data,
+  snackbarType,
 });
 
 export const addSnackbar = (data, snackbarType) => ({
