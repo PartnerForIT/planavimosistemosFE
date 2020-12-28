@@ -66,7 +66,7 @@ const columns = [
 
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'name', checked: true },
-  { label: 'Role', field: 'speciality_id', checked: true },
+  { label: 'Role', field: 'role', checked: true },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
   { label: 'Group', field: 'groups', checked: true },
@@ -183,7 +183,7 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups, skills, subgroups,
+      name, surname, status, created_at, updated_at, place, groups, skills, subgroups, permissions,
       ...rest
     } = empl;
     return {
@@ -192,6 +192,7 @@ export default function AccountsList() {
       subgroup: subgroups[0]?.name ?? '',
       skills: skills[0]?.name ?? '',
       place: place[0]?.name ?? '',
+      role: permissions[0]?.account_roles?.name ?? '',
       // eslint-disable-next-line camelcase
       created_at: created_at ? <TimeFormat date={created_at} /> : '',
       // eslint-disable-next-line camelcase
