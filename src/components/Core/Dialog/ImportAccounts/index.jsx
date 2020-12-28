@@ -104,6 +104,7 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selected, setSelected] = useState({});
+  const [importSuccess, setImportSuccess] = useState(false);
 
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
@@ -233,7 +234,16 @@ export default function ImportAccounts({
             />
           </div>
           <div className={classes.importStats}>
-            <Input disabled fullWidth />
+            <div
+              className={classes.fakeInput}
+              style={{ backgroundColor: importSuccess ? '#E6FAE3' : backgroundColor }}
+            >
+              {
+                !importSuccess
+                  ? `${selectedItems.length} ${t('entries will be imported')}`
+                  : `${0} ${t('from')} ${data.length} ${t('entries has been imported')}`
+              }
+            </div>
             <Button size='big'>{t('Import')}</Button>
           </div>
         </div>

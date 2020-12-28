@@ -38,6 +38,12 @@ input[type='file'] {
   }
 }
 
+.fakeInput {
+  @extend %input !optional;
+
+  min-height: 40px;
+}
+
 .import {
   display: grid;
   align-items: center;
