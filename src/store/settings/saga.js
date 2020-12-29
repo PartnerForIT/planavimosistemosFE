@@ -1136,7 +1136,6 @@ function* sendCsv(action) {
 function* sendImportedEmployees(action) {
   try {
     const { companyId, data: _data } = action;
-    const tokens = token();
 
     const { data } = yield call(
       axios.post,
@@ -1146,7 +1145,8 @@ function* sendImportedEmployees(action) {
         params: {
           users: JSON.stringify([..._data]),
         },
-        ...tokens,
+        ...token(),
+        timeout: 0,
       },
     );
 
