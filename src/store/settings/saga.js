@@ -101,7 +101,7 @@ import {
   createEmployeeError,
   loadPermissionsSuccess,
   loadPermissionsError,
-  getRoles, showSnackbar,
+  getRoles, sendImportedEmployeesSuccess,
 } from './actions';
 import { makeQueryString } from '../../components/Helpers';
 
@@ -1148,6 +1148,7 @@ function* sendImportedEmployees(action) {
     );
 
     console.log(data);
+    yield put(sendImportedEmployeesSuccess(data));
   } catch (e) {
     yield call(showSnackBar,
       {
@@ -1166,7 +1167,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
   yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
   yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany);
-  yield takeLatest(GET_SKILLS, loadSettingsSkills);
+  yield takeLeading(GET_SKILLS, loadSettingsSkills);
   yield takeLatest(CREATE_SKILL, createSettingSkill);
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
@@ -1182,7 +1183,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
   yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
-  yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
+  yield takeLeading(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
   yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
@@ -1195,7 +1196,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
   yield takeLatest(CREATE_EMPLOYEE, createEmployee);
-  yield takeLatest(GET_ROLES, loadRoles);
+  yield takeLeading(GET_ROLES, loadRoles);
   yield takeLatest(CREATE_ROLE, createRole);
   yield takeLatest(DELETE_ROLE, removeRole);
   yield takeLatest(UPDATE_ROLE, patchRole);

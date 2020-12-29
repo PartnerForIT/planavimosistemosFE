@@ -21,7 +21,7 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
@@ -33,7 +33,7 @@ import {
   loadPlace,
   loadSkills,
   patchEmployee,
-  removeEmployee,
+  removeEmployee, sendImportedEmployeesSuccess,
   setEmployeesActions,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
@@ -105,11 +105,12 @@ export default function AccountsList() {
   const groups = useSelector(AccountGroupsSelector);
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
+  const imported = useSelector(importedEmployees);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
   const [checkedItems, setCheckedItems] = useState([]);
-  const [importVisible, setImportVisible] = useState(true);
+  const [importVisible, setImportVisible] = useState(false);
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
@@ -155,6 +156,8 @@ export default function AccountsList() {
     dispatch(loadPlace(id));
     setEditVisible(employeeId);
   };
+
+  const clearImported = () => dispatch(sendImportedEmployeesSuccess());
 
   useEffect(() => {
     if (newVisible || editVisible) {
@@ -349,6 +352,8 @@ export default function AccountsList() {
             title={t('Import accounts')}
             open={importVisible}
             handleClose={() => setImportVisible(false)}
+            imported={imported}
+            clearImported={clearImported}
           />
         </PageLayout>
       </Dashboard>

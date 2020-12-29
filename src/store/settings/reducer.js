@@ -121,6 +121,7 @@ const initialState = {
   roles: [],
   roleDetails: {},
   permissions: [],
+  import: {},
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -591,7 +592,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return state;
 
     case SEND_IMPORTED_EMPLOYEES_SUCCESS:
-      return state;
+      return { ...state, import: action.data };
 
     case SEND_IMPORTED_EMPLOYEES_ERROR:
       return state;

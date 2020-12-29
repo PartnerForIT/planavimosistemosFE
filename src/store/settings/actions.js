@@ -629,9 +629,9 @@ export const sendImportedEmployees = (companyId, data) => ({
   data,
 });
 
-export const sendImportedEmployeesSuccess = (data) => ({
+export const sendImportedEmployeesSuccess = (data = {}) => ({
   type: SEND_IMPORTED_EMPLOYEES_SUCCESS,
-  data,
+  data: data?.import ?? {},
 });
 
 export const sendImportedEmployeesError = (data) => ({

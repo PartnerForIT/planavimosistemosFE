@@ -6,6 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
+import _ from 'lodash';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -86,6 +87,8 @@ export default function ImportAccounts({
   handleClose,
   title,
   open,
+  imported,
+  clearImported,
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -123,6 +126,14 @@ export default function ImportAccounts({
       setSelectedItems([...selectedItems]);
     }
   };
+
+  useEffect(() => {
+    if (!_.isEmpty(imported)) {
+      setImportSuccess(true);
+    } else {
+      setImportSuccess(false);
+    }
+  }, [imported]);
 
   useEffect(() => {
     if (file) {
@@ -189,18 +200,21 @@ export default function ImportAccounts({
     dispatch(sendImportedEmployees(companyId, users));
   };
 
+  const handleCloseHandler = () => {
+    handleClose();
+    setTempFile(null);
+    setFile(null);
+    setFileName('');
+    setData([]);
+    setSelectedItems([]);
+    setIgnoreEmpty(false);
+    setCreateMissing(true);
+    clearImported();
+  };
+
   return (
     <Dialog
-      handleClose={() => {
-        handleClose();
-        setTempFile(null);
-        setFile(null);
-        setFileName('');
-        setData([]);
-        setSelectedItems([]);
-        setIgnoreEmpty(false);
-        setCreateMissing(true);
-      }}
+      handleClose={handleCloseHandler}
       open={open}
       title={title}
     >
@@ -279,9 +293,10 @@ export default function ImportAccounts({
               style={{ backgroundColor: importSuccess ? '#E6FAE3' : backgroundColor }}
             >
               {
+                // eslint-disable-next-line no-nested-ternary
                 !importSuccess
-                  ? `${selectedItems.length} ${t('entries will be imported')}`
-                  : `${0} ${t('from')} ${data.length} ${t('entries has been imported')}`
+                  ? file ? `${selectedItems.length} ${t('entries will be imported')}` : ''
+                  : `${imported?.success} ${t('from')} ${imported?.total} ${t('entries has been imported')}`
               }
             </div>
             <Button size='big' disabled={!selectedItems.length} onClick={importHandler}>{t('Import')}</Button>
