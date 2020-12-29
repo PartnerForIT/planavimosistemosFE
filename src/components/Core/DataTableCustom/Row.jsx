@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -73,6 +73,18 @@ const Row = ({
     setSubTableExpanded(!subTableExpanded);
   };
 
+  const onSelectHandler = (id, checked) => {
+    if (!(colored.warning && row.warning) && !(colored.error && row.error)) {
+      onSelect(id, checked);
+    }
+  };
+
+  useEffect(() => {
+    if (((colored.warning && row.warning) || (colored.error && row.error)) && row.checked) {
+      onSelect(row.id, false);
+    }
+  }, [colored.error, colored.warning, onSelect, row.checked, row.error, row.id, row.warning]);
+
   return (
     <div
       className={classNames(styles.flexTable, styles.row)}
@@ -96,7 +108,7 @@ const Row = ({
                 id={row.id}
                 className={classNames(styles.checkbox)}
                 checked={!!row.checked}
-                onChange={onSelect}
+                onChange={onSelectHandler}
                 disabled={(colored.warning && row.warning) || (colored.error && row.error)}
               />
             </div>
