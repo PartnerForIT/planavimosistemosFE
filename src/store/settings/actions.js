@@ -96,12 +96,18 @@ import {
   LOAD_PERMISSIONS_ERROR,
   GET_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR,
+  SEND_SCV,
+  SEND_SCV_SUCCESS,
+  SEND_SCV_ERROR,
+  SEND_IMPORTED_EMPLOYEES,
+  SEND_IMPORTED_EMPLOYEES_SUCCESS, SEND_IMPORTED_EMPLOYEES_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
   type: GET_SETTINGS_COMPANY,
   id,
 });
+
 export const getSettingCompanySuccess = (data) => ({
   type: GET_SETTINGS_COMPANY_SUCCESS,
   data,
@@ -598,5 +604,37 @@ export const loadPermissionsSuccess = (data) => ({
 
 export const loadPermissionsError = (data) => ({
   type: LOAD_PERMISSIONS_ERROR,
+  data,
+});
+
+export const sendCSV = (companyId, file) => ({
+  type: SEND_SCV,
+  companyId,
+  file,
+});
+
+export const sendCSVSuccess = (data) => ({
+  type: SEND_SCV_SUCCESS,
+  data,
+});
+
+export const sendCSVError = (data) => ({
+  type: SEND_SCV_ERROR,
+  data,
+});
+
+export const sendImportedEmployees = (companyId, data) => ({
+  type: SEND_IMPORTED_EMPLOYEES,
+  companyId,
+  data,
+});
+
+export const sendImportedEmployeesSuccess = (data) => ({
+  type: SEND_IMPORTED_EMPLOYEES_SUCCESS,
+  data,
+});
+
+export const sendImportedEmployeesError = (data) => ({
+  type: SEND_IMPORTED_EMPLOYEES_ERROR,
   data,
 });

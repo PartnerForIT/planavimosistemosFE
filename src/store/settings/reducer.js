@@ -84,6 +84,12 @@ import {
   LOAD_PERMISSIONS_ERROR,
   GET_EMPLOYEES_QUERY,
   GET_CURRENCY,
+  SEND_SCV,
+  SEND_SCV_SUCCESS,
+  SEND_SCV_ERROR,
+  SEND_IMPORTED_EMPLOYEES,
+  SEND_IMPORTED_EMPLOYEES_SUCCESS,
+  SEND_IMPORTED_EMPLOYEES_ERROR,
 } from './types';
 
 const initialState = {
@@ -571,6 +577,24 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: action.data,
       };
+
+    case SEND_SCV:
+      return state;
+
+    case SEND_SCV_SUCCESS:
+      return state;
+
+    case SEND_SCV_ERROR:
+      return state;
+
+    case SEND_IMPORTED_EMPLOYEES:
+      return state;
+
+    case SEND_IMPORTED_EMPLOYEES_SUCCESS:
+      return state;
+
+    case SEND_IMPORTED_EMPLOYEES_ERROR:
+      return state;
 
     default:
       return state;
