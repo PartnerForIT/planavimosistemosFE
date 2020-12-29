@@ -151,7 +151,9 @@ const Row = ({
                   : null}
                 {IconComponent}
                 <span className={(statysIcon && width === 80) ? styles.opacityText : ''}>
-                  {row[column.field] !== 'tableActions' && row[column.field]}
+                  <>
+                    {row[column.field] !== 'tableActions' && row[column.field] }
+                  </>
                 </span>
                 {/* icon statys */}
                 {(statysIcon && width === 80)

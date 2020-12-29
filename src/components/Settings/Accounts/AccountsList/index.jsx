@@ -145,7 +145,7 @@ export default function AccountsList() {
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
     dispatch(loadSkills(id));
-
+    dispatch(getAccountGroups(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -191,11 +191,11 @@ export default function AccountsList() {
     } = empl;
     return {
       ...rest,
-      groups: groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '',
-      subgroup: subgroups[0]?.name ?? '',
-      skills: skills[0]?.name ?? '',
-      place: place[0]?.name ?? '',
-      role: permissions[0]?.account_roles?.name ?? '',
+      groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
+      subgroup: subgroups?.[0]?.name ?? '',
+      skills: skills?.[0]?.name ?? '',
+      place: place?.[0]?.name ?? '',
+      role: permissions?.[0]?.account_roles?.name ?? '',
       // eslint-disable-next-line camelcase
       created_at: created_at ? <TimeFormat date={created_at} /> : '',
       // eslint-disable-next-line camelcase
