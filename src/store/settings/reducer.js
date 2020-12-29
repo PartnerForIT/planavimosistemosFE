@@ -78,7 +78,12 @@ import {
   EMPLOYEE_ACTIONS_SUCCESS,
   EMPLOYEE_ACTIONS_ERROR,
   CREATE_EMPLOYEE,
-  CREATE_EMPLOYEE_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR, GET_EMPLOYEES_QUERY,
+  CREATE_EMPLOYEE_ERROR,
+  LOAD_PERMISSIONS,
+  LOAD_PERMISSIONS_SUCCESS,
+  LOAD_PERMISSIONS_ERROR,
+  GET_EMPLOYEES_QUERY,
+  GET_CURRENCY,
 } from './types';
 
 const initialState = {
@@ -129,6 +134,20 @@ export const reducerOrganizationList = (state = initialState, action) => {
         loading: false,
         settingsLoading: false,
       };
+
+    case GET_CURRENCY: {
+      return {
+        ...state,
+        settingsLoading: true,
+      };
+    }
+    case GET_CURRENCY_SUCCESS:
+      return {
+        ...state,
+        currency: action.data,
+        settingsLoading: false,
+      };
+
     case GET_WORK_TIME:
       return {
         ...state,
@@ -522,12 +541,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
         snackbarText: action.data,
         snackbarShow: false,
         snackbarType: '',
-      };
-
-    case GET_CURRENCY_SUCCESS:
-      return {
-        ...state,
-        currency: action.data,
       };
 
     case CREATE_EMPLOYEE:
