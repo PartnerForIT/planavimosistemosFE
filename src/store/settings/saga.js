@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-  call, put, takeLatest, delay, select,
+  call, put, takeLatest, delay, select, takeLeading,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
@@ -46,10 +46,9 @@ import {
   CREATE_ROLE,
   DELETE_ROLE,
   UPDATE_ROLE,
-  GET_ROLE_DETAILS,
   LOAD_PERMISSIONS,
   GET_EMPLOYEES_QUERY,
-  ADD_INFO_SETTING_SNACKBAR,
+  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -102,7 +101,7 @@ import {
   createEmployeeError,
   loadPermissionsSuccess,
   loadPermissionsError,
-  getRoles,
+  getRoles, showSnackbar,
 } from './actions';
 import { makeQueryString } from '../../components/Helpers';
 
@@ -1113,22 +1112,53 @@ function* loadPermissions({ companyId }) {
   }
 }
 
-function* showSnackBar(action) {
+function* showSnackBar({ message, snackbarType }) {
   try {
-    console.log(action);
-
-    const { data, snackbarType } = action;
-
-    yield put(addSnackbar(data, snackbarType));
+    yield put(addSnackbar(message, snackbarType));
     yield delay(4000);
     yield put(dismissSnackbar());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* sendCsv(action) {
+  try {
+
   } catch (e) {
 
   }
 }
 
+function* sendImportedEmployees(action) {
+  try {
+    const { companyId, data: _data } = action;
+    const tokens = token();
+
+    const { data } = yield call(
+      axios.post,
+      `${config.api.url}/company/${companyId}/employees/import-store`,
+      null,
+      {
+        params: {
+          users: JSON.stringify([..._data]),
+        },
+        ...tokens,
+      },
+    );
+
+    console.log(data);
+  } catch (e) {
+    yield call(showSnackBar,
+      {
+        message: 'An error occurred while importing employee',
+        snackbarType: 'error',
+      });
+  }
+}
+
 export default function* SettingsWatcher() {
-  yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
+  yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLatest(GET_WORK_TIME, loadSettingsWorkTime);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
@@ -1161,7 +1191,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
-  yield takeLatest(GET_CURRENCY, loadCurrencies);
+  yield takeLeading(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
   yield takeLatest(CREATE_EMPLOYEE, createEmployee);
@@ -1171,4 +1201,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_ROLE, patchRole);
   yield takeLatest(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
+  yield takeLatest(SEND_SCV, sendCsv);
+  yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
 }

@@ -122,9 +122,9 @@ export const editSettingCompanySuccess = (data) => ({
   type: PATCH_SETTINGS_COMPANY_SUCCESS,
   data,
 });
-export const showSnackbar = (data, snackbarType) => ({
+export const showSnackbar = (message, snackbarType) => ({
   type: ADD_INFO_SETTING_SNACKBAR,
-  data,
+  message,
   snackbarType,
 });
 

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import { useParams } from 'react-router-dom';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -16,7 +17,7 @@ import StyledCheckbox from '../../Checkbox/Checkbox';
 import OverView from './OverView';
 import FancyInput from './FancyInput';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
-import { showSnackbar } from '../../../../store/settings/actions';
+import { sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
 
 const columns = [
 
@@ -89,6 +90,7 @@ export default function ImportAccounts({
   const { t } = useTranslation();
   const styles = useStyles();
   const dispatch = useDispatch();
+  const { id: companyId } = useParams();
 
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
@@ -171,6 +173,20 @@ export default function ImportAccounts({
         setFile(tempFile);
       }
     }
+  };
+
+  useEffect(() => {
+
+  }, []);
+
+  const importHandler = () => {
+    const users = data
+      .filter((item) => selectedItems.some((i) => i === item.id))
+      .map(({
+        id, warning, error, ...rest
+      }) => ({ ...rest }));
+
+    dispatch(sendImportedEmployees(companyId, users));
   };
 
   return (
@@ -268,7 +284,7 @@ export default function ImportAccounts({
                   : `${0} ${t('from')} ${data.length} ${t('entries has been imported')}`
               }
             </div>
-            <Button size='big' disabled={!selectedItems.length}>{t('Import')}</Button>
+            <Button size='big' disabled={!selectedItems.length} onClick={importHandler}>{t('Import')}</Button>
           </div>
         </div>
       </div>
