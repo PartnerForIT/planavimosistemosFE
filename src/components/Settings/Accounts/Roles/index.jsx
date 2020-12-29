@@ -20,10 +20,8 @@ import {
   createRole,
   deleteRole,
   getAccountGroups,
-  getRoleDetails,
   getRoles,
   loadEmployeesAll,
-  loadEmployeesQuery,
   loadPermissions,
   updateRole,
 } from '../../../../store/settings/actions';

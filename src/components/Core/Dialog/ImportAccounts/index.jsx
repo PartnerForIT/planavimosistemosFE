@@ -89,6 +89,10 @@ export default function ImportAccounts({
   open,
   imported,
   clearImported,
+  groups = [],
+  skills = [],
+  roles = [],
+  places = [],
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -194,8 +198,25 @@ export default function ImportAccounts({
     const users = data
       .filter((item) => selectedItems.some((i) => i === item.id))
       .map(({
-        id, warning, error, ...rest
-      }) => ({ ...rest }));
+        id, warning, error, checked, // ~> not used when importing on the backend
+        group, subgroup, skill, place, role,
+        ...rest
+      }) => {
+        const userGroup = groups.find((gr) => gr.name === group && gr.subgroups.some(({ name }) => name === subgroup));
+        const userSubgroup = userGroup?.subgroups.find(({ name }) => name === subgroup);
+        const roleId = roles.find(({ name }) => name === role)?.id;
+        const skillId = skills.find(({ name }) => name === skill)?.id;
+        const placeId = places.find(({ label }) => label === place)?.id;
+
+        return {
+          subgroup: userSubgroup?.id,
+          group: userGroup?.id,
+          skill: skillId,
+          role: roleId,
+          place: placeId,
+          ...rest,
+        };
+      });
 
     dispatch(sendImportedEmployees(companyId, users));
   };

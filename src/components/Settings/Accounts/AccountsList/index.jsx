@@ -21,13 +21,13 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, rolesSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
   createEmployee,
-  getAccountGroups, getSecurityCompany,
+  getAccountGroups, getRoles, getSecurityCompany,
   loadEmployeesAll,
   loadEmployeesEdit,
   loadPlace,
@@ -106,6 +106,7 @@ export default function AccountsList() {
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
+  const roles = useSelector(rolesSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -154,6 +155,12 @@ export default function AccountsList() {
   };
 
   const clearImported = () => dispatch(sendImportedEmployeesSuccess());
+
+  useEffect(() => {
+    if (importVisible) {
+      dispatch(getRoles(id));
+    }
+  }, [dispatch, id, importVisible]);
 
   useEffect(() => {
     if (newVisible || editVisible || importVisible) {
@@ -351,6 +358,9 @@ export default function AccountsList() {
             imported={imported}
             clearImported={clearImported}
             groups={groups}
+            skills={skills}
+            places={places}
+            roles={roles}
           />
         </PageLayout>
       </Dashboard>
