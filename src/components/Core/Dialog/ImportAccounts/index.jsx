@@ -103,7 +103,6 @@ export default function ImportAccounts({
   const [ignoreEmpty, setIgnoreEmpty] = useState(false);
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selected, setSelected] = useState({});
   const [importSuccess, setImportSuccess] = useState(false);
 
   const selectionHandler = (itemId, value) => {
@@ -181,6 +180,8 @@ export default function ImportAccounts({
         setTempFile(null);
         setFile(null);
         setFileName('');
+        setData([]);
+        setSelectedItems([]);
       }}
       open={open}
       title={title}
@@ -233,8 +234,8 @@ export default function ImportAccounts({
             verticalOffset='55vh'
             selectable
             onColumnsChange={() => ({})}
-            selectedItem={selected}
-            setSelectedItem={setSelected}
+            selectedItem={{}}
+            setSelectedItem={() => ({})}
             onSelect={selectionHandler}
             colored={{ warning: !ignoreEmpty, error: true }}
           />
