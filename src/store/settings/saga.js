@@ -103,7 +103,10 @@ import {
   loadPermissionsError,
   getRoles, sendImportedEmployeesSuccess,
 } from './actions';
+
 import { makeQueryString } from '../../components/Helpers';
+
+axios.defaults.timeout = 10000;
 
 function token() {
   const token = {
