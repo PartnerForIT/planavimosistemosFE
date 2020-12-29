@@ -174,10 +174,6 @@ export default function ImportAccounts({
     }
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <Dialog
       handleClose={() => {
