@@ -199,7 +199,7 @@ export default function ImportAccounts({
       .filter((item) => selectedItems.some((i) => i === item.id))
       .map(({
         id, warning, error, checked, // ~> not used when importing on the backend
-        group, subgroup, skill, place, role,
+        status, group, subgroup, skill, place, role,
         ...rest
       }) => {
         const userGroup = groups.find((gr) => gr.name === group && gr.subgroups.some(({ name }) => name === subgroup));
@@ -208,12 +208,26 @@ export default function ImportAccounts({
         const skillId = skills.find(({ name }) => name === skill)?.id;
         const placeId = places.find(({ label }) => label === place)?.id;
 
+        const statusId = () => {
+          switch (status.toLowerCase()) {
+            case 'active':
+              return 1;
+            case 'suspended':
+              return 2;
+            case 'deleted':
+              return 0;
+            default:
+              return 0;
+          }
+        };
+
         return {
           subgroup: userSubgroup?.id,
           group: userGroup?.id,
           skill: skillId,
           role: roleId,
           place: placeId,
+          status: statusId(),
           ...rest,
         };
       });
