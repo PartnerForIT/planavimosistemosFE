@@ -182,6 +182,8 @@ export default function ImportAccounts({
         setFileName('');
         setData([]);
         setSelectedItems([]);
+        setIgnoreEmpty(false);
+        setCreateMissing(true);
       }}
       open={open}
       title={title}
@@ -266,7 +268,7 @@ export default function ImportAccounts({
                   : `${0} ${t('from')} ${data.length} ${t('entries has been imported')}`
               }
             </div>
-            <Button size='big'>{t('Import')}</Button>
+            <Button size='big' disabled={!selectedItems.length}>{t('Import')}</Button>
           </div>
         </div>
       </div>
