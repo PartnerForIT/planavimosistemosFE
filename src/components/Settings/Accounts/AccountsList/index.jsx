@@ -145,28 +145,24 @@ export default function AccountsList() {
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
     dispatch(loadSkills(id));
-    dispatch(getAccountGroups(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const editRowHandler = (employeeId) => {
     dispatch(loadEmployeesEdit(id, employeeId));
-    dispatch(loadSkills(id));
-    dispatch(getAccountGroups(id));
-    dispatch(loadPlace(id));
     setEditVisible(employeeId);
   };
 
   const clearImported = () => dispatch(sendImportedEmployeesSuccess());
 
   useEffect(() => {
-    if (newVisible || editVisible) {
+    if (newVisible || editVisible || importVisible) {
       dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
     }
-  }, [dispatch, editVisible, id, newVisible]);
+  }, [dispatch, editVisible, id, importVisible, newVisible]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -354,6 +350,7 @@ export default function AccountsList() {
             handleClose={() => setImportVisible(false)}
             imported={imported}
             clearImported={clearImported}
+            groups={groups}
           />
         </PageLayout>
       </Dashboard>
