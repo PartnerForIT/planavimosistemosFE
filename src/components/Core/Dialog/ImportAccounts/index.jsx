@@ -128,13 +128,24 @@ export default function ImportAccounts({
       const mappedFile = file
         ?.filter((item) => item.data.length)
         .map((emp, index) => {
+          const temp = {
+            id: index,
+          };
+
+          if (emp.errors.length || emp.data.length !== order.length) {
+            emp.data.forEach((field, idx) => {
+              temp[order[idx]] = field;
+            });
+            temp.error = true;
+            return temp;
+          }
           if (!emp.errors.length) {
             if (emp.data.length && order.length) {
-              const temp = {
-                id: index,
-              };
               emp.data.forEach((field, idx) => {
                 temp[order[idx]] = field;
+                if (!field.trim()) {
+                  temp.warning = true;
+                }
               });
               return temp;
             }
@@ -162,6 +173,10 @@ export default function ImportAccounts({
       }
     }
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <Dialog
@@ -225,6 +240,7 @@ export default function ImportAccounts({
             selectedItem={selected}
             setSelectedItem={setSelected}
             onSelect={selectionHandler}
+            colored={{ warning: !ignoreEmpty, error: true }}
           />
           {!data.length && <OverView />}
           {/*   loader? */}

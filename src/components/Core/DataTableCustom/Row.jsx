@@ -13,7 +13,8 @@ import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions, hoverable = false,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
+  hoverActions, hoverable = false, colored = { warning: false, error: false },
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -47,6 +48,8 @@ const Row = ({
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
     { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
+    { [styles.rowWarning]: (colored.warning && row.warning) },
+    { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
   );
 
@@ -94,6 +97,7 @@ const Row = ({
                 className={classNames(styles.checkbox)}
                 checked={!!row.checked}
                 onChange={onSelect}
+                disabled={(colored.warning && row.warning) || (colored.error && row.error)}
               />
             </div>
           )

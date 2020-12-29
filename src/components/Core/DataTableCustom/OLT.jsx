@@ -26,7 +26,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
-  selectAll = false,
+  selectAll = false, colored = { warning: false, error: false },
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -257,6 +257,7 @@ export default function DataTable({
                 multiselect={multiselect}
                 hoverActions={hoverActions}
                 hoverable={hoverable}
+                colored={colored}
               />
             ))
           }
