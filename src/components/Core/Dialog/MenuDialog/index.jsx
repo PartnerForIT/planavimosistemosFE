@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu, MenuItem } from '@material-ui/core';
 import classnames from 'classnames';
@@ -20,13 +20,17 @@ function MenuDialog({
   open, anchorEl = null, setAnchorEl, setMenuOpen, logOut = () => ({}),
 }) {
   const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const [language, setLanguage] = useState('');
 
   const handleClose = () => {
     setMenuOpen(false);
     setAnchorEl(null);
   };
 
-  const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    setLanguage(localStorage.getItem('i18nextLng'));
+  }, []);
 
   return (
     <Menu
@@ -52,7 +56,7 @@ function MenuDialog({
           {t('Change password')}
         </MenuItem>
         <MenuItem className={classnames(classes.menu_item, expanded ? classes.language : '')}>
-          <LanguageDropdown expanded={expanded} setExpanded={setExpanded} />
+          <LanguageDropdown expanded={expanded} setExpanded={setExpanded} language={language} />
         </MenuItem>
 
       </div>

@@ -9,6 +9,9 @@ import { useTranslation } from 'react-i18next';
 import GlobeIcon from '../../../Icons/GlobeIcon';
 
 import classes from './MenuDialog.module.scss';
+import CheckedLanguage from '../../../Icons/CheckedLanguage';
+import EngLang from '../../../Icons/EngLang';
+import LtLang from '../../../Icons/LtLang';
 
 const useStyles = makeStyles({
   root: {
@@ -58,7 +61,7 @@ const useStyles = makeStyles({
   },
 });
 
-function LanguageDropdown({ expanded, setExpanded }) {
+function LanguageDropdown({ expanded, setExpanded, language = '' }) {
   const { t } = useTranslation();
   const st = useStyles();
 
@@ -93,10 +96,10 @@ function LanguageDropdown({ expanded, setExpanded }) {
       </AccordionSummary>
       <AccordionDetails className={st.details}>
         <ul>
-          <MenuItem className={classes.menu_item}>lang 1</MenuItem>
-          <MenuItem className={classes.menu_item}>lang 2</MenuItem>
-          <MenuItem className={classes.menu_item}>lang 3</MenuItem>
-          <MenuItem className={classes.menu_item}>lang 4</MenuItem>
+
+          <Lang value='en' language={language} name={t('English')}><EngLang /></Lang>
+          <Lang value='lt' language={language} name={t('Lithuanian')}><LtLang /></Lang>
+
         </ul>
       </AccordionDetails>
 
@@ -105,3 +108,17 @@ function LanguageDropdown({ expanded, setExpanded }) {
 }
 
 export default LanguageDropdown;
+
+const Lang = ({
+  value, name, language, children,
+}) => (
+  <MenuItem
+    value={value}
+    className={classnames(classes.menu_item, language === value ? classes.active : '')}
+  >
+    {children}
+    {name}
+    { language === value
+        && <CheckedLanguage className={classes.status} />}
+  </MenuItem>
+);
