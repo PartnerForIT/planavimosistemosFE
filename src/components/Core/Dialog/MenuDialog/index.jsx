@@ -21,7 +21,7 @@ function MenuDialog({
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState(localStorage.getItem('i18nextLng'));
 
   const handleClose = () => {
     setMenuOpen(false);
@@ -29,8 +29,8 @@ function MenuDialog({
   };
 
   useEffect(() => {
-    setLanguage(localStorage.getItem('i18nextLng'));
-  }, []);
+    localStorage.setItem('i18nextLng', language);
+  }, [language]);
 
   return (
     <Menu
@@ -56,7 +56,12 @@ function MenuDialog({
           {t('Change password')}
         </MenuItem>
         <MenuItem className={classnames(classes.menu_item, expanded ? classes.language : '')}>
-          <LanguageDropdown expanded={expanded} setExpanded={setExpanded} language={language} />
+          <LanguageDropdown
+            expanded={expanded}
+            setExpanded={setExpanded}
+            language={language}
+            setLanguage={setLanguage}
+          />
         </MenuItem>
 
       </div>

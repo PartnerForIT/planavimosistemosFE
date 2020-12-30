@@ -62,7 +62,9 @@ const useStyles = makeStyles({
   },
 });
 
-function LanguageDropdown({ expanded, setExpanded, language = '' }) {
+function LanguageDropdown({
+  expanded, setExpanded, language = '', setLanguage = () => ({}),
+}) {
   const { t } = useTranslation();
   const st = useStyles();
 
@@ -98,8 +100,8 @@ function LanguageDropdown({ expanded, setExpanded, language = '' }) {
       <AccordionDetails className={st.details}>
         <ul>
 
-          <Lang value='en' language={language} name={t('English')}><EngLang /></Lang>
-          <Lang value='lt' language={language} name={t('Lithuanian')}><LtLang /></Lang>
+          <Lang value='en' language={language} name={t('English')} setLanguage={setLanguage}><EngLang /></Lang>
+          <Lang value='lt' language={language} name={t('Lithuanian')} setLanguage={setLanguage}><LtLang /></Lang>
 
         </ul>
       </AccordionDetails>
@@ -111,13 +113,13 @@ function LanguageDropdown({ expanded, setExpanded, language = '' }) {
 export default LanguageDropdown;
 
 const Lang = ({
-  value, name, language, children,
+  value, name, language, children, setLanguage = () => ({}),
 }) => (
   <MenuItem
     value={value}
     className={classnames(classes.menu_item, classes.language_item, language === value ? classes.active : '')}
   >
-    <button className={classes.btn}>
+    <button className={classes.btn} onClick={() => setLanguage(value)}>
       {children}
       {name}
       { language === value
