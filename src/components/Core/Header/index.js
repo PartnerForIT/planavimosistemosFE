@@ -32,6 +32,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const initialPasswords = {
+  current: '',
+  new: '',
+  repeatNew: '',
+};
+
 export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
   const { pathname } = useLocation();
@@ -43,11 +49,11 @@ export default function ButtonAppBar({ logOut }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
-
-  const [oldPassword, setOldPassword] = useState('');
+  const [passwords, setPasswords] = useState(initialPasswords);
 
   const editHandleClose = () => {
     setEditPasswordVisible(false);
+    setPasswords(initialPasswords);
   };
 
   return (
@@ -153,12 +159,16 @@ export default function ButtonAppBar({ logOut }) {
         open={menuOpen}
         setMenuOpen={setMenuOpen}
         logOut={logOut}
+        editPassword={() => setEditPasswordVisible(true)}
       />
 
       <EditPassword
         open={editPasswordVisible}
         handleClose={editHandleClose}
         title={t('Change password')}
+        buttonTitle={t('Change password')}
+        passwords={passwords}
+        setPasswords={setPasswords}
       />
     </div>
   );

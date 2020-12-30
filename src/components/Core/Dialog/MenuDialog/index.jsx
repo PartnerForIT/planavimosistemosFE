@@ -17,6 +17,7 @@ const paperStyle = {
 
 function MenuDialog({
   open, anchorEl = null, setAnchorEl, setMenuOpen, logOut = () => ({}),
+  editPassword = () => ({}),
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -51,7 +52,13 @@ function MenuDialog({
 
       <div className={classes.top}>
         <MenuItem className={classes.menu_item}>
-          <button className={classes.changePass}>
+          <button
+            className={classes.changePass}
+            onClick={() => {
+              editPassword();
+              handleClose();
+            }}
+          >
             <LockIcon aria-hidden />
             {t('Change password')}
           </button>
