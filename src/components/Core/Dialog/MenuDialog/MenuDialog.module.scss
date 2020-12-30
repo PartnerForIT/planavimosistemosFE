@@ -24,13 +24,13 @@ $top-padding-gap: 10px;
   }
 
   &_item {
-    padding-left: $top-padding-gap !important;
-    padding-right: $top-padding-gap !important;
-    width: 100% !important;
-    margin-top: $top-padding-gap !important;
-    margin-bottom: $top-padding-gap !important;
-    font-size: 14px !important;
-    color: $gray !important;
+    padding-left: $top-padding-gap !important;      // reassignment of MiUi root
+    padding-right: $top-padding-gap !important;     // reassignment of MiUi root
+    width: 100% !important;                         // reassignment of MiUi root
+    margin-top: $top-padding-gap !important;        // reassignment of MiUi root
+    margin-bottom: $top-padding-gap !important;     // reassignment of MiUi root
+    font-size: 14px !important;                     // reassignment of MiUi root
+    color: $gray !important;                        // reassignment of MiUi root
 
     svg {
       margin-right: 20px;
