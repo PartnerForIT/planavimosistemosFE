@@ -48,7 +48,7 @@ import {
   UPDATE_ROLE,
   LOAD_PERMISSIONS,
   GET_EMPLOYEES_QUERY,
-  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES,
+  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -101,7 +101,7 @@ import {
   createEmployeeError,
   loadPermissionsSuccess,
   loadPermissionsError,
-  getRoles, sendImportedEmployeesSuccess,
+  getRoles, sendImportedEmployeesSuccess, changePasswordSuccess, changePasswordError,
 } from './actions';
 
 import { makeQueryString } from '../../components/Helpers';
@@ -1161,6 +1161,25 @@ function* sendImportedEmployees(action) {
   }
 }
 
+function* changePassword(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/password`,
+      action.data, token());
+
+    yield put(changePasswordSuccess(data));
+    yield call(showSnackBar, {
+      message: 'Password was successfully changed',
+      snackbarType: 'success',
+    });
+  } catch (e) {
+    yield put(changePasswordError(e));
+    yield call(showSnackBar, {
+      message: 'An error occurred while changing password',
+      snackbarType: 'error',
+    });
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
@@ -1207,4 +1226,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_SCV, sendCsv);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
+  yield takeLeading(CHANGE_PASSWORD, changePassword);
 }

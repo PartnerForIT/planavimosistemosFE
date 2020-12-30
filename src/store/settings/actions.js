@@ -100,7 +100,11 @@ import {
   SEND_SCV_SUCCESS,
   SEND_SCV_ERROR,
   SEND_IMPORTED_EMPLOYEES,
-  SEND_IMPORTED_EMPLOYEES_SUCCESS, SEND_IMPORTED_EMPLOYEES_ERROR,
+  SEND_IMPORTED_EMPLOYEES_SUCCESS,
+  SEND_IMPORTED_EMPLOYEES_ERROR,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -636,5 +640,21 @@ export const sendImportedEmployeesSuccess = (data = {}) => ({
 
 export const sendImportedEmployeesError = (data) => ({
   type: SEND_IMPORTED_EMPLOYEES_ERROR,
+  data,
+});
+
+export const changePassword = (companyId, data) => ({
+  type: CHANGE_PASSWORD,
+  companyId,
+  data,
+});
+
+export const changePasswordSuccess = (data) => ({
+  type: CHANGE_PASSWORD_SUCCESS,
+  data,
+});
+
+export const changePasswordError = (data) => ({
+  type: CHANGE_PASSWORD_ERROR,
   data,
 });

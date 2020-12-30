@@ -8,7 +8,7 @@ import style from '../Dialog.module.scss';
 
 export default function EditPassword({
   handleClose, title, open, passwords = '', setPasswords = () => ({}),
-  buttonTitle = '',
+  buttonTitle = '', onSubmit = () => ({}),
 }) {
   const { t } = useTranslation();
 
@@ -43,6 +43,7 @@ export default function EditPassword({
           value={passwords.current}
           name='current'
           fullWidth
+          autoComplete='current-password'
           onChange={handleChange}
         />
       </div>
@@ -54,8 +55,10 @@ export default function EditPassword({
         <Input
           placeholder={`${t('Enter new password')}`}
           value={passwords.new}
+          type='password'
           name='new'
           fullWidth
+          autoComplete='new-password'
           onChange={handleChange}
         />
       </div>
@@ -65,14 +68,16 @@ export default function EditPassword({
           placeholder={`${t('Enter new password again')}`}
           value={passwords.repeatNew}
           name='repeatNew'
+          type='password'
           fullWidth
           onChange={handleChange}
+          autoComplete='new-password'
         />
       </div>
       <div className={style.buttonSaveBlock}>
         <Button
           disabled={disabled}
-          onClick={() => ({})}
+          onClick={!disabled ? onSubmit : () => ({})}
           fillWidth
           size='big'
         >
