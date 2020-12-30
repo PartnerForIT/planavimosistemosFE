@@ -77,7 +77,7 @@ $top-padding-gap: 10px;
     padding: 0 !important;
 
     .btn {
-      padding: $top-padding-gap;
+      padding: $bottom-padding $top-padding-gap;
       background-color: unset;
       width: 100%;
       display: flex;

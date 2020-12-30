@@ -94,14 +94,28 @@ function LanguageDropdown({
         aria-controls='additional-actions1-content'
         id='additional-actions1-header'
       >
-        <GlobeIcon />
+        <GlobeIcon aria-hidden />
         {t('Change language')}
       </AccordionSummary>
       <AccordionDetails className={st.details}>
         <ul>
 
-          <Lang value='en' language={language} name={t('English')} setLanguage={setLanguage}><EngLang /></Lang>
-          <Lang value='lt' language={language} name={t('Lithuanian')} setLanguage={setLanguage}><LtLang /></Lang>
+          <Lang
+            value='en'
+            language={language}
+            name={t('English')}
+            setLanguage={setLanguage}
+          >
+            <EngLang aria-hidden />
+          </Lang>
+          <Lang
+            value='lt'
+            language={language}
+            name={t('Lithuanian')}
+            setLanguage={setLanguage}
+          >
+            <LtLang aria-hidden />
+          </Lang>
 
         </ul>
       </AccordionDetails>

@@ -37,7 +37,6 @@ function MenuDialog({
       onClose={handleClose}
       open={open}
       className={classes.menu}
-      disablePortal
       anchorEl={anchorEl}
       style={{ transformOrigin: 'center bottom', position: 'absolute' }}
       PaperProps={{
@@ -52,7 +51,7 @@ function MenuDialog({
 
       <div className={classes.top}>
         <MenuItem className={classes.menu_item}>
-          <LockIcon />
+          <LockIcon aria-hidden />
           {t('Change password')}
         </MenuItem>
         <MenuItem className={classnames(classes.menu_item, expanded ? classes.language : '')}>
@@ -75,7 +74,7 @@ function MenuDialog({
             handleClose();
           }}
         >
-          <LogOutIcon className={classes.icon} />
+          <LogOutIcon className={classes.icon} aria-hidden />
           {t('Logout')}
         </Button>
       </div>
