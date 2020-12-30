@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu, MenuItem } from '@material-ui/core';
 import classnames from 'classnames';
-import Button from '../../Button/Button';
 import classes from './MenuDialog.module.scss';
 import LockIcon from '../../../Icons/LockIcon';
 import LogOutIcon from '../../../Icons/LogOutIcon';
@@ -26,6 +25,7 @@ function MenuDialog({
   const handleClose = () => {
     setMenuOpen(false);
     setAnchorEl(null);
+    setExpanded(false);
   };
 
   useEffect(() => {
@@ -51,8 +51,10 @@ function MenuDialog({
 
       <div className={classes.top}>
         <MenuItem className={classes.menu_item}>
-          <LockIcon aria-hidden />
-          {t('Change password')}
+          <button className={classes.changePass}>
+            <LockIcon aria-hidden />
+            {t('Change password')}
+          </button>
         </MenuItem>
         <MenuItem className={classnames(classes.menu_item, expanded ? classes.language : '')}>
           <LanguageDropdown
@@ -65,18 +67,16 @@ function MenuDialog({
 
       </div>
       <div className={classes.bottom}>
-        <Button
-          inverse
-          fillWidth
-          size='big'
+        <button
+          className={classes.logoutBtn}
           onClick={() => {
             logOut();
             handleClose();
           }}
         >
-          <LogOutIcon className={classes.icon} aria-hidden />
+          <LogOutIcon aria-hidden />
           {t('Logout')}
-        </Button>
+        </button>
       </div>
     </Menu>
   );

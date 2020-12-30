@@ -49,6 +49,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     color: '#808f94',
+    fontSize: 13.3333,
   },
 
   expanded: {

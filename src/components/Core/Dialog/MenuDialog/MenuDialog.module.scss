@@ -1,14 +1,23 @@
 @import "../../variables";
+@import "../../Button/Button.module";
 
 $bottom-padding: 6px;
 $top-padding-gap: 10px;
+
+%btn_unset {
+  background-color: unset;
+  border: unset;
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
 
 .menu {
   position: absolute;
   right: 25px;
   color: $gray;
   top: 65px;
-  border: 1px solid $light-blue;
   min-width: 200px;
   max-width: 250px;
   border-radius: 13px;
@@ -25,6 +34,29 @@ $top-padding-gap: 10px;
 
   .bottom {
     padding: $bottom-padding;
+
+    .logoutBtn {
+      @extend %inverse;
+      @extend %fullWidth;
+
+      cursor: pointer;
+      display: flex;
+      background-color: white;
+      border-color: transparent;
+      padding: $bottom-padding $top-padding-gap;
+      min-height: auto;
+      height: auto;
+      align-items: center;
+      border-radius: 5px;
+
+      svg {
+        margin-right: 20px;
+      }
+
+      &:hover {
+        background: $light-blue2;
+      }
+    }
   }
 
   &_item {
@@ -82,17 +114,13 @@ $top-padding-gap: 10px;
 
     .btn {
       padding: $bottom-padding $top-padding-gap;
-      background-color: unset;
       width: 100%;
       display: flex;
       text-align: left;
       align-items: center;
       color: $gray;
-      border: unset;
 
-      &:focus:not(:focus-visible) {
-        outline: none;
-      }
+      @extend %btn_unset;
     }
   }
 
@@ -127,4 +155,16 @@ $top-padding-gap: 10px;
   padding: 0 !important; // reassignment of MiUi root
   margin: 0 !important; // reassignment of MiUi root
   border: 0 !important; // reassignment of MiUi root
+}
+
+.changePass {
+  @extend %btn_unset;
+
+  text-align: left;
+  color: $gray;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: unset;
+  width: 100%;
 }
