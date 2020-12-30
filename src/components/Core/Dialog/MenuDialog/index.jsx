@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Menu, MenuItem,
-} from '@material-ui/core';
+import {Menu, MenuItem,} from '@material-ui/core';
+import classnames from 'classnames';
 import Button from '../../Button/Button';
 import classes from './MenuDialog.module.scss';
 import LockIcon from '../../../Icons/LockIcon';
-import GlobeIcon from '../../../Icons/GlobeIcon';
 import LogOutIcon from '../../../Icons/LogOutIcon';
+import LanguageDropdown from './LanguageDropdown';
 
 const paperStyle = {
   transform: 'translateY(45px)',
@@ -27,6 +26,8 @@ function MenuDialog({
     setAnchorEl(null);
   };
 
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <Menu
       onClose={handleClose}
@@ -44,17 +45,16 @@ function MenuDialog({
         },
       }}
     >
-      {/* <Pop handleClose={handleClose} open={open} /> */}
 
       <div className={classes.top}>
         <MenuItem className={classes.menu_item}>
           <LockIcon />
           {t('Change password')}
         </MenuItem>
-        <MenuItem className={classes.menu_item}>
-          <GlobeIcon />
-          {t('Change language')}
+        <MenuItem className={classnames(classes.menu_item, expanded ? classes.language : '')}>
+          <LanguageDropdown expanded={expanded} setExpanded={setExpanded} />
         </MenuItem>
+
       </div>
       <div className={classes.bottom}>
         <Button

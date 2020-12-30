@@ -24,15 +24,15 @@ $top-padding-gap: 10px;
   }
 
   &_item {
-    padding-left: $top-padding-gap !important;      // reassignment of MiUi root
-    padding-right: $top-padding-gap !important;     // reassignment of MiUi root
-    width: 100% !important;                         // reassignment of MiUi root
-    margin-top: $top-padding-gap !important;        // reassignment of MiUi root
-    margin-bottom: $top-padding-gap !important;     // reassignment of MiUi root
-    font-size: 14px !important;                     // reassignment of MiUi root
-    color: $gray !important;                        // reassignment of MiUi root
+    padding-left: $top-padding-gap !important; // reassignment of MiUi root
+    padding-right: $top-padding-gap !important; // reassignment of MiUi root
+    width: 100% !important; // reassignment of MiUi root
+    margin-top: $top-padding-gap !important; // reassignment of MiUi root
+    margin-bottom: $top-padding-gap !important; // reassignment of MiUi root
+    font-size: 14px !important; // reassignment of MiUi root
+    color: $gray !important; // reassignment of MiUi root
 
-    svg {
+    svg:first-child {
       margin-right: 20px;
     }
   }
@@ -43,4 +43,47 @@ $top-padding-gap: 10px;
     bottom: $bottom-padding + 21px;
     transform: translateY(50%);
   }
+
+  ul {
+    padding: 0;
+  }
+}
+
+.language {
+  position: relative;
+  margin-bottom: 0 !important; // reassignment of MiUi root
+  padding-bottom: 0 !important; // reassignment of MiUi root
+  overflow: visible !important; // reassignment of MiUi root
+
+  &:hover {
+    background-color: white !important; // reassignment of MiUi root
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    width: calc(100% + 40px);
+    height: 1px;
+    background: $light-blue;
+    display: block;
+    left: -20px;
+    top: 36px;
+  }
+}
+
+.expandIconPosition {
+  position: absolute;
+}
+
+.expandIcon {
+  color: $blue-grownu;
+  fill: $blue-grownu;
+  padding: 0 !important; // reassignment of MiUi root
+  margin: 0 !important; // reassignment of MiUi root
+}
+
+.expandIconExpanded {
+  padding: 0 !important; // reassignment of MiUi root
+  margin: 0 !important; // reassignment of MiUi root
+  border: 0 !important; // reassignment of MiUi root
 }
