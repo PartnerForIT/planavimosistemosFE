@@ -83,6 +83,10 @@
   padding-left: 25px;
   cursor: pointer;
 
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
   &__name {
     color: $gray;
     padding-left: 10px;

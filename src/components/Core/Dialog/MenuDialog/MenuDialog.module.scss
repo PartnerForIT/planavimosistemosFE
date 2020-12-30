@@ -17,6 +17,10 @@ $top-padding-gap: 10px;
   .top {
     padding: $top-padding-gap;
     border-bottom: 1px solid $light-blue;
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
   }
 
   .bottom {
