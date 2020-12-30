@@ -1,6 +1,7 @@
 @import "../variables";
 
-.button {
+.button,
+%button {
   height: 32px;
   box-shadow: 0 1px 2px rgba(9, 16, 43, 0.03);
   border-radius: 6px;
@@ -15,7 +16,8 @@
   white-space: nowrap;
 }
 
-.inverse {
+.inverse,
+%inverse {
   color: #0087ff;
   background: $light-blue2;
   border: 1px solid $light-blue2;

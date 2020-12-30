@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -13,7 +13,8 @@ import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect, hoverActions, hoverable = false,
+  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
+  hoverActions, hoverable = false, colored = { warning: false, error: false },
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -47,6 +48,8 @@ const Row = ({
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
     { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
+    { [styles.rowWarning]: (colored.warning && row.warning) },
+    { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
   );
 
@@ -69,6 +72,18 @@ const Row = ({
     if (typeof setSelectedItem === 'function') setSelectedItem(selectedRow);
     setSubTableExpanded(!subTableExpanded);
   };
+
+  const onSelectHandler = (id, checked) => {
+    if (!(colored.warning && row.warning) && !(colored.error && row.error)) {
+      onSelect(id, checked);
+    }
+  };
+
+  useEffect(() => {
+    if (((colored.warning && row.warning) || (colored.error && row.error)) && row.checked) {
+      onSelect(row.id, false);
+    }
+  }, [colored.error, colored.warning, onSelect, row.checked, row.error, row.id, row.warning]);
 
   return (
     <div
@@ -93,7 +108,8 @@ const Row = ({
                 id={row.id}
                 className={classNames(styles.checkbox)}
                 checked={!!row.checked}
-                onChange={onSelect}
+                onChange={onSelectHandler}
+                disabled={(colored.warning && row.warning) || (colored.error && row.error)}
               />
             </div>
           )
@@ -135,7 +151,9 @@ const Row = ({
                   : null}
                 {IconComponent}
                 <span className={(statysIcon && width === 80) ? styles.opacityText : ''}>
-                  {row[column.field] !== 'tableActions' && row[column.field]}
+                  <>
+                    {row[column.field] !== 'tableActions' && row[column.field] }
+                  </>
                 </span>
                 {/* icon statys */}
                 {(statysIcon && width === 80)

@@ -6,7 +6,7 @@ import moment from 'moment';
 import { settingCompanySelector, settingsLoadingSelector } from '../../store/settings/selectors';
 import { getSettingCompany } from '../../store/settings/actions';
 
-const TimeFormat = React.memo(({ date = null }) => {
+const TimeFormat = ({ date = null }) => {
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -28,6 +28,6 @@ const TimeFormat = React.memo(({ date = null }) => {
       {formatDate}
     </>
   );
-});
+};
 
 export default TimeFormat;

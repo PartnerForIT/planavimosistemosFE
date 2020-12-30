@@ -21,19 +21,19 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, rolesSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
   createEmployee,
-  getAccountGroups, getSecurityCompany,
+  getAccountGroups, getRoles, getSecurityCompany,
   loadEmployeesAll,
   loadEmployeesEdit,
   loadPlace,
   loadSkills,
   patchEmployee,
-  removeEmployee,
+  removeEmployee, sendImportedEmployeesSuccess,
   setEmployeesActions,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
@@ -42,6 +42,7 @@ import CurrencySign from '../../../shared/CurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import TimeFormat from '../../../shared/TimeFormat';
+import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -65,7 +66,7 @@ const columns = [
 
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'name', checked: true },
-  { label: 'Role', field: 'speciality_id', checked: true },
+  { label: 'Role', field: 'role', checked: true },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
   { label: 'Group', field: 'groups', checked: true },
@@ -104,10 +105,13 @@ export default function AccountsList() {
   const groups = useSelector(AccountGroupsSelector);
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
+  const imported = useSelector(importedEmployees);
+  const roles = useSelector(rolesSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [importVisible, setImportVisible] = useState(false);
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
@@ -142,26 +146,30 @@ export default function AccountsList() {
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
     dispatch(loadSkills(id));
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const editRowHandler = (employeeId) => {
     dispatch(loadEmployeesEdit(id, employeeId));
-    dispatch(loadSkills(id));
-    dispatch(getAccountGroups(id));
-    dispatch(loadPlace(id));
     setEditVisible(employeeId);
   };
 
+  const clearImported = () => dispatch(sendImportedEmployeesSuccess());
+
   useEffect(() => {
-    if (newVisible || editVisible) {
+    if (importVisible) {
+      dispatch(getRoles(id));
+    }
+  }, [dispatch, id, importVisible]);
+
+  useEffect(() => {
+    if (newVisible || editVisible || importVisible) {
       dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
     }
-  }, [dispatch, editVisible, id, newVisible]);
+  }, [dispatch, editVisible, id, importVisible, newVisible]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -181,15 +189,16 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups, skills, subgroups,
+      name, surname, status, created_at, updated_at, place, groups, skills, subgroups, permissions,
       ...rest
     } = empl;
     return {
       ...rest,
-      groups: groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '',
-      subgroup: subgroups[0]?.name ?? '',
-      skills: skills[0]?.name ?? '',
-      place: place[0]?.name ?? '',
+      groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
+      subgroup: subgroups?.[0]?.name ?? '',
+      skills: skills?.[0]?.name ?? '',
+      place: place?.[0]?.name ?? '',
+      role: permissions?.[0]?.account_roles?.name ?? '',
       // eslint-disable-next-line camelcase
       created_at: created_at ? <TimeFormat date={created_at} /> : '',
       // eslint-disable-next-line camelcase
@@ -245,7 +254,7 @@ export default function AccountsList() {
           TitleButtonNew={t('New account')}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
-          handleButtonImport={() => ({})}
+          handleButtonImport={() => setImportVisible(true)}
           handleButtonNew={() => setNewVisible(true)}
         >
           <AccountsIcon />
@@ -341,6 +350,17 @@ export default function AccountsList() {
             handleClose={() => setChangeStatusOpen(false)}
             title={t('Change status?')}
             changeStatus={handleChangingStatus}
+          />
+          <ImportAccounts
+            title={t('Import accounts')}
+            open={importVisible}
+            handleClose={() => setImportVisible(false)}
+            imported={imported}
+            clearImported={clearImported}
+            groups={groups}
+            skills={skills}
+            places={places}
+            roles={roles}
           />
         </PageLayout>
       </Dashboard>

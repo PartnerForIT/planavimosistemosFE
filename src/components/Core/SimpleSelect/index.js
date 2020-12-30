@@ -1,15 +1,10 @@
-
-import React from "react";
+import React from 'react';
 import {
   withStyles,
-  makeStyles,
 } from '@material-ui/core/styles';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import InputBase from '@material-ui/core/InputBase';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
-
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -39,22 +34,28 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 
-
-export default function SimpleSelect({ handleInputChange, name, value, options, fullWidth }) {
+export default function SimpleSelect({
+  handleInputChange, name, value, options,
+}) {
   return (
     <NativeSelect
-      id="country-select"
+      id='country-select'
       value={value}
       fullWidth
       onChange={handleInputChange}
       inputProps={{
         name: `${name}`,
       }}
-      input={<BootstrapInput name="country" />}
+      input={<BootstrapInput name='country' />}
     >
       {_.map(options, (item) => (
-        <option key={item.code || item.id} value={item.code || item.id}>{item.name || item.label}</option>
+        <option
+          key={(item.code || item.id) + (item.name || item.label)}
+          value={item.code || item.id}
+        >
+          {item.name || item.label}
+        </option>
       ))}
     </NativeSelect>
-  )
+  );
 }

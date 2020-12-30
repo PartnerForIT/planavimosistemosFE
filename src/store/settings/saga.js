@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-  call, put, takeLatest, delay, select,
+  call, put, takeLatest, delay, select, takeLeading,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
@@ -39,8 +39,16 @@ import {
   GET_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
-  DELETE_EMPLOYEE, EMPLOYEE_ACTIONS, CREATE_EMPLOYEE,
-  GET_ROLES, CREATE_ROLE, DELETE_ROLE, UPDATE_ROLE, GET_ROLE_DETAILS, LOAD_PERMISSIONS, GET_EMPLOYEES_QUERY,
+  DELETE_EMPLOYEE,
+  EMPLOYEE_ACTIONS,
+  CREATE_EMPLOYEE,
+  GET_ROLES,
+  CREATE_ROLE,
+  DELETE_ROLE,
+  UPDATE_ROLE,
+  LOAD_PERMISSIONS,
+  GET_EMPLOYEES_QUERY,
+  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -93,9 +101,12 @@ import {
   createEmployeeError,
   loadPermissionsSuccess,
   loadPermissionsError,
-  getRoles,
+  getRoles, sendImportedEmployeesSuccess,
 } from './actions';
+
 import { makeQueryString } from '../../components/Helpers';
+
+axios.defaults.timeout = 10000;
 
 function token() {
   const token = {
@@ -1104,32 +1115,78 @@ function* loadPermissions({ companyId }) {
   }
 }
 
+function* showSnackBar({ message, snackbarType }) {
+  try {
+    yield put(addSnackbar(message, snackbarType));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* sendCsv(action) {
+  try {
+
+  } catch (e) {
+
+  }
+}
+
+function* sendImportedEmployees(action) {
+  try {
+    const { companyId, data: _data } = action;
+
+    const { data } = yield call(
+      axios.post,
+      `${config.api.url}/company/${companyId}/employees/import-store`,
+      null,
+      {
+        params: {
+          users: JSON.stringify([..._data]),
+        },
+        ...token(),
+        timeout: 0,
+      },
+    );
+
+    console.log(data);
+    yield put(sendImportedEmployeesSuccess(data));
+  } catch (e) {
+    yield call(showSnackBar,
+      {
+        message: 'An error occurred while importing employee',
+        snackbarType: 'error',
+      });
+  }
+}
+
 export default function* SettingsWatcher() {
-  yield takeLatest(GET_SETTINGS_COMPANY, loadSettingsCompany);
+  yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
-  yield takeLatest(GET_WORK_TIME, loadSettingsWorkTime);
+  yield takeLeading(GET_WORK_TIME, loadSettingsWorkTime);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
-  yield takeLatest(GET_SECURITY_COMPANY, loadSecurityCompany);
+  yield takeLeading(GET_SECURITY_COMPANY, loadSecurityCompany);
   yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany);
-  yield takeLatest(GET_SKILLS, loadSettingsSkills);
+  yield takeLeading(GET_SKILLS, loadSettingsSkills);
   yield takeLatest(CREATE_SKILL, createSettingSkill);
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
-  yield takeLatest(GET_PLACE, loadCompanyPLace);
+  yield takeLeading(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
-  yield takeLatest(GET_EMPLOYEES, loadEmployee);
-  yield takeLatest(GET_EMPLOYEES_ALL, loadEmployee);
+  yield takeLeading(GET_EMPLOYEES, loadEmployee);
+  yield takeLeading(GET_EMPLOYEES_ALL, loadEmployee);
   yield takeLatest(GET_EMPLOYEES_QUERY, loadQueryEmployees);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
-  yield takeLatest(GET_DELETE_DATA, loadDeleteData);
+  yield takeLeading(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);
-  yield takeLatest(GET_LOGBOOK_JOURNAL, loadJournalData);
+  yield takeLeading(GET_LOGBOOK_JOURNAL, loadJournalData);
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
-  yield takeLatest(GET_LOGBOOK_OVERTIME, loadOvertimeData);
+  yield takeLeading(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
-  yield takeLatest(GET_ACCOUNTS_GROUPS, loadAccountGroups);
+  yield takeLeading(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);
   yield takeLatest(DELETE_ACCOUNTS_GROUP, deleteAccountGroup);
@@ -1138,13 +1195,16 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
-  yield takeLatest(GET_CURRENCY, loadCurrencies);
+  yield takeLeading(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
   yield takeLatest(CREATE_EMPLOYEE, createEmployee);
-  yield takeLatest(GET_ROLES, loadRoles);
+  yield takeLeading(GET_ROLES, loadRoles);
   yield takeLatest(CREATE_ROLE, createRole);
   yield takeLatest(DELETE_ROLE, removeRole);
   yield takeLatest(UPDATE_ROLE, patchRole);
-  yield takeLatest(LOAD_PERMISSIONS, loadPermissions);
+  yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
+  yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
+  yield takeLatest(SEND_SCV, sendCsv);
+  yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
 }

@@ -2,6 +2,8 @@ $table-header: #1976d2;
 $table-header-border: #1565c0;
 $table-border: #d9d9d9;
 $row-bg: #f4f2f1;
+$row-warn-bg: #fffbea;
+$row-error-bg: #ffebec;
 
 header {
   box-sizing: border-box;
@@ -344,6 +346,14 @@ header {
 
 .rowSelected {
   background-color: rgba(0, 133, 255, 0.07);
+}
+
+.rowWarning {
+  background-color: $row-warn-bg;
+}
+
+.rowError {
+  background-color: $row-error-bg;
 }
 
 // .reportsRowSelected {

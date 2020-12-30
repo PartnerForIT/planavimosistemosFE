@@ -78,7 +78,18 @@ import {
   EMPLOYEE_ACTIONS_SUCCESS,
   EMPLOYEE_ACTIONS_ERROR,
   CREATE_EMPLOYEE,
-  CREATE_EMPLOYEE_ERROR, LOAD_PERMISSIONS, LOAD_PERMISSIONS_SUCCESS, LOAD_PERMISSIONS_ERROR, GET_EMPLOYEES_QUERY,
+  CREATE_EMPLOYEE_ERROR,
+  LOAD_PERMISSIONS,
+  LOAD_PERMISSIONS_SUCCESS,
+  LOAD_PERMISSIONS_ERROR,
+  GET_EMPLOYEES_QUERY,
+  GET_CURRENCY,
+  SEND_SCV,
+  SEND_SCV_SUCCESS,
+  SEND_SCV_ERROR,
+  SEND_IMPORTED_EMPLOYEES,
+  SEND_IMPORTED_EMPLOYEES_SUCCESS,
+  SEND_IMPORTED_EMPLOYEES_ERROR,
 } from './types';
 
 const initialState = {
@@ -110,6 +121,7 @@ const initialState = {
   roles: [],
   roleDetails: {},
   permissions: [],
+  import: {},
 };
 
 export const reducerOrganizationList = (state = initialState, action) => {
@@ -129,6 +141,20 @@ export const reducerOrganizationList = (state = initialState, action) => {
         loading: false,
         settingsLoading: false,
       };
+
+    case GET_CURRENCY: {
+      return {
+        ...state,
+        settingsLoading: true,
+      };
+    }
+    case GET_CURRENCY_SUCCESS:
+      return {
+        ...state,
+        currency: action.data,
+        settingsLoading: false,
+      };
+
     case GET_WORK_TIME:
       return {
         ...state,
@@ -524,12 +550,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
         snackbarType: '',
       };
 
-    case GET_CURRENCY_SUCCESS:
-      return {
-        ...state,
-        currency: action.data,
-      };
-
     case CREATE_EMPLOYEE:
       return {
         ...state,
@@ -558,6 +578,24 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: action.data,
       };
+
+    case SEND_SCV:
+      return state;
+
+    case SEND_SCV_SUCCESS:
+      return state;
+
+    case SEND_SCV_ERROR:
+      return state;
+
+    case SEND_IMPORTED_EMPLOYEES:
+      return state;
+
+    case SEND_IMPORTED_EMPLOYEES_SUCCESS:
+      return { ...state, import: action.data };
+
+    case SEND_IMPORTED_EMPLOYEES_ERROR:
+      return state;
 
     default:
       return state;
