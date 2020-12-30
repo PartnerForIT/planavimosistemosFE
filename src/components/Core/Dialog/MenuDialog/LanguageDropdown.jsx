@@ -48,6 +48,7 @@ const useStyles = makeStyles({
   content: {
     display: 'flex',
     alignItems: 'center',
+    color: '#808f94',
   },
 
   expanded: {
@@ -114,11 +115,13 @@ const Lang = ({
 }) => (
   <MenuItem
     value={value}
-    className={classnames(classes.menu_item, language === value ? classes.active : '')}
+    className={classnames(classes.menu_item, classes.language_item, language === value ? classes.active : '')}
   >
-    {children}
-    {name}
-    { language === value
+    <button className={classes.btn}>
+      {children}
+      {name}
+      { language === value
         && <CheckedLanguage className={classes.status} />}
+    </button>
   </MenuItem>
 );
