@@ -8,9 +8,8 @@ export default function AvatarComponent() {
     <div className={styles.userBlock}>
       <Avatar>{user?.employee?.photo}</Avatar>
       <span className={styles.userBlock__name}>
-        {user?.employee?.name}
-        {' '}
-        {user?.employee?.surname}
+        {user?.employee?.name?.slice(0, 1)}
+        {user?.employee?.surname?.slice(0, 1)}
       </span>
     </div>
   );
