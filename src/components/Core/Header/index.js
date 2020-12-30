@@ -16,6 +16,7 @@ import VacationIcon from '../../Icons/Vacation';
 import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
+import EditPassword from '../Dialog/EditPassword';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,6 +42,13 @@ export default function ButtonAppBar({ logOut }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [editPasswordVisible, setEditPasswordVisible] = useState(false);
+
+  const [oldPassword, setOldPassword] = useState('');
+
+  const editHandleClose = () => {
+    setEditPasswordVisible(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -145,6 +153,12 @@ export default function ButtonAppBar({ logOut }) {
         open={menuOpen}
         setMenuOpen={setMenuOpen}
         logOut={logOut}
+      />
+
+      <EditPassword
+        open={editPasswordVisible}
+        handleClose={editHandleClose}
+        title={t('Change password')}
       />
     </div>
   );

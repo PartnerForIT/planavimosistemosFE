@@ -1,5 +1,9 @@
 @import "../variables";
 
+%transition {
+  transition: all 0.2s ease-in-out;
+}
+
 .button,
 %button {
   height: 32px;
@@ -21,7 +25,8 @@
   color: #0087ff;
   background: $light-blue2;
   border: 1px solid $light-blue2;
-  transition: all 0.2s ease-in-out;
+
+  @extend %transition;
 
   &:hover {
     opacity: 0.8;
