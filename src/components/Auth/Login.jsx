@@ -24,12 +24,13 @@ const LoginContainer = () => {
     };
 
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = () => {
     dispatch(login(email, password)).then((data) => {
-      const roleId = data.data.user.role_id
-      const company_id = data.data.user.id
+      const roleId = data.data.user.role_id;
+      const company_id = data.data.user.id;
       roleId === 1 ? history.push(routes.ORG_LIST) : history.push(`${routes.LOGBOOK}/${company_id}`);
     }).catch((error) => {
       console.log('Login error', error);
@@ -54,6 +55,7 @@ const LoginContainer = () => {
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete='current-password'
           />
           <Delimiter />
           <Button onClick={handleLogin}>{t('Sign in')}</Button>

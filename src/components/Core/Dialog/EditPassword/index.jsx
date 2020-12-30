@@ -43,6 +43,7 @@ export default function EditPassword({
           value={passwords.current}
           name='current'
           fullWidth
+          type='password'
           autoComplete='current-password'
           onChange={handleChange}
         />

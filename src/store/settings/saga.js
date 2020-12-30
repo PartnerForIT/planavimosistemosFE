@@ -1150,7 +1150,6 @@ function* sendImportedEmployees(action) {
       },
     );
 
-    console.log(data);
     yield put(sendImportedEmployeesSuccess(data));
   } catch (e) {
     yield call(showSnackBar,
