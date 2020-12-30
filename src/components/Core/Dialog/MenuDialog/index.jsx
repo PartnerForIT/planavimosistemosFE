@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {Menu, MenuItem,} from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import classnames from 'classnames';
 import Button from '../../Button/Button';
 import classes from './MenuDialog.module.scss';
