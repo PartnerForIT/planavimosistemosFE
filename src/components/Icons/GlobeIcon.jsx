@@ -2,6 +2,7 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import classnames from 'classnames';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -10,10 +11,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function GlobeIcon() {
+export default function GlobeIcon({ className }) {
   const classes = useStyles();
   return (
-    <SvgIcon viewBox='0 0 15.4 15.4' className={classes.root}>
+    <SvgIcon viewBox='0 0 15.4 15.4' className={classnames(classes.root, className)}>
       <g id='globe' transform='translate(-1.098 -1.098)'>
         <circle id='Эллипс_153' data-name='Эллипс 153' cx='7' cy='7' r='7' transform='translate(1.798 1.798)' fill='none' stroke='#808f94' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.4' />
         <line id='Линия_640' data-name='Линия 640' x2='14' transform='translate(1.798 8.798)' fill='none' stroke='#808f94' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.4' />

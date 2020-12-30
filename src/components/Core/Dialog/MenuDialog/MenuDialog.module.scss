@@ -1,5 +1,8 @@
 @import "../../variables";
 
+$bottom-padding: 6px;
+$top-padding-gap: 10px;
+
 .menu {
   position: absolute;
   right: 25px;
@@ -12,21 +15,32 @@
   z-index: 9999;
 
   .top {
-    padding: 20px;
+    padding: $top-padding-gap;
     border-bottom: 1px solid $light-blue;
   }
 
   .bottom {
-    padding: 6px;
+    padding: $bottom-padding;
   }
 
   &_item {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: $top-padding-gap !important;
+    padding-right: $top-padding-gap !important;
     width: 100% !important;
+    margin-top: $top-padding-gap !important;
+    margin-bottom: $top-padding-gap !important;
+    font-size: 14px !important;
+    color: $gray !important;
 
     svg {
       margin-right: 20px;
     }
+  }
+
+  .icon {
+    position: absolute;
+    left: $top-padding-gap * 2;
+    bottom: $bottom-padding + 21px;
+    transform: translateY(50%);
   }
 }
