@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1];
@@ -144,6 +144,7 @@ export default function ButtonAppBar() {
         anchorEl={anchorEl}
         open={menuOpen}
         setMenuOpen={setMenuOpen}
+        logOut={logOut}
       />
     </div>
   );

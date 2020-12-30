@@ -18,7 +18,7 @@ const paperStyle = {
 };
 
 function MenuDialog({
-  open, anchorEl = null, setAnchorEl, setMenuOpen,
+  open, anchorEl = null, setAnchorEl, setMenuOpen, logOut = () => ({}),
 }) {
   const { t } = useTranslation();
 
@@ -57,7 +57,15 @@ function MenuDialog({
         </MenuItem>
       </div>
       <div className={classes.bottom}>
-        <Button inverse fillWidth size='big'>
+        <Button
+          inverse
+          fillWidth
+          size='big'
+          onClick={() => {
+            logOut();
+            handleClose();
+          }}
+        >
           <LogOutIcon className={classes.icon} />
           {t('Logout')}
         </Button>
