@@ -98,10 +98,7 @@
     opacity: 1;
     transition: all 0.8s ease-in-out;
 
-    &:hover {
-      cursor: pointer;
-      opacity: 0.7;
-    }
+    @extend %button-hover;
   }
 }
 
