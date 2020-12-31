@@ -12,6 +12,7 @@ import classes from './MenuDialog.module.scss';
 import CheckedLanguage from '../../../Icons/CheckedLanguage';
 import EngLang from '../../../Icons/EngLang';
 import LtLang from '../../../Icons/LtLang';
+import { onKeyDown } from '../../../Helpers';
 
 const useStyles = makeStyles({
   root: {
@@ -69,15 +70,17 @@ function LanguageDropdown({
   const { t } = useTranslation();
   const st = useStyles();
 
+  const onChange = (e, state) => {
+    setExpanded(state);
+  };
+
   return (
     <Accordion
       classes={{
         root: st.root,
         expanded: st.rootExpanded,
       }}
-      onChange={(e, state) => {
-        setExpanded(state);
-      }}
+      onChange={onChange}
     >
       <AccordionSummary
         classes={{
@@ -88,6 +91,7 @@ function LanguageDropdown({
         }}
         expandIcon={(
           <ExpandMoreIcon
+            aria-hidden
             className={classnames(classes.expandIcon, expanded ? classes.expandIconExpanded : '')}
           />
                 )}

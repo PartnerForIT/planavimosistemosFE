@@ -18,11 +18,12 @@ export default function AvatarComponent({
       tabIndex={0}
       className={styles.userBlock}
       onClick={clickHandler}
-      role='menu'
+      role='button'
+      aria-haspopup='menu'
       onKeyDown={(event) => onKeyDown(event, () => clickHandler(event))}
     >
-      <Avatar>{user?.employee?.photo}</Avatar>
-      <span className={styles.userBlock__name}>
+      <Avatar aria-hidden>{user?.employee?.photo}</Avatar>
+      <span className={styles.userBlock__name} aria-label='user shortened name'>
         {user?.employee?.name?.slice(0, 1)}
         {user?.employee?.surname?.slice(0, 1)}
       </span>

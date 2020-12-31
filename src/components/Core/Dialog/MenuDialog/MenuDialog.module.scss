@@ -25,41 +25,41 @@ $top-padding-gap: 10px;
 
   .bottom {
     padding: $bottom-padding;
+  }
 
-    .logoutBtn {
-      @extend %btn_unset;
-      @extend %transition;
-      @extend %fullWidth;
+  .logoutBtn {
+    @extend %btn_unset;
+    @extend %transition;
+    @extend %fullWidth;
 
-      color: $blue-grownu;
-      display: flex;
-      background-color: white;
-      border-color: transparent;
-      padding: $bottom-padding $top-padding-gap;
-      min-height: auto;
-      height: auto;
-      align-items: center;
-      border-radius: 5px;
+    color: $blue-grownu;
+    display: flex;
+    //background-color: white;
+    border-color: transparent;
+    padding: $bottom-padding $top-padding-gap;
+    min-height: auto;
+    height: auto;
+    align-items: center;
+    border-radius: 5px;
 
-      svg {
-        margin-right: 20px;
-      }
+    svg {
+      margin-right: 20px;
+    }
 
-      &:hover {
-        background: $light-blue2;
-      }
+    &:hover {
+      background: $light-blue2;
     }
   }
 
   &_item {
     padding-left: $top-padding-gap !important; // reassignment of MiUi root
     padding-right: $top-padding-gap !important; // reassignment of MiUi root
-    width: 100% !important; // reassignment of MiUi root
-    margin-top: $top-padding-gap !important; // reassignment of MiUi root
-    margin-bottom: $top-padding-gap !important; // reassignment of MiUi root
+    width: calc(100% - #{$top-padding-gap*2}) !important; // reassignment of MiUi root
+    margin: $top-padding-gap !important;
     font-size: 14px !important; // reassignment of MiUi root
     color: $gray !important; // reassignment of MiUi root
     border: 1px solid white;
+    font-family: Helvetica Neue, sans-serif !important;
 
     svg:first-child {
       margin-right: 20px;
