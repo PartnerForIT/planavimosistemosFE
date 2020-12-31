@@ -69,6 +69,17 @@ export default function WorkTime() {
     ?.days?.days.filter((item) => item.day === idDay) ?? [],
   [workTime]);
 
+  const [nationalHolidays, setNationalHolidays] = useState([]);
+  const [companyHolidays, setCompanyHolidays] = useState([]);
+
+  useEffect(() => {
+    setCompanyHolidays(workTime.work_time?.holidays?.filter((item) => new Date(item.date).getFullYear() === year));
+  }, [workTime.work_time.holidays, year]);
+
+  useEffect(() => {
+    setNationalHolidays(workTime.national_holidays?.filter((item) => new Date(item.date).getFullYear() === year));
+  }, [workTime.national_holidays, year]);
+
   useEffect(() => {
     setInputValues({
 
@@ -169,8 +180,8 @@ export default function WorkTime() {
                   />
                   <Holidays
                     styles={styles}
-                    holidays={workTime.national_holidays}
-                    companyHolidays={workTime.work_time.holidays}
+                    holidays={nationalHolidays}
+                    companyHolidays={companyHolidays}
                     companyId={params.id}
                     year={year}
                     setYear={setYear}
