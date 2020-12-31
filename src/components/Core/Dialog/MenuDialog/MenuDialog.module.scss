@@ -4,16 +4,6 @@
 $bottom-padding: 6px;
 $top-padding-gap: 10px;
 
-%btn_unset {
-  background-color: unset;
-  border: unset;
-  cursor: pointer;
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
-}
-
 .menu {
   position: absolute;
   right: 25px;
