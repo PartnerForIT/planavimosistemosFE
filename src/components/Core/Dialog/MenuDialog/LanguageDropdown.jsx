@@ -138,7 +138,7 @@ const Lang = ({
       {children}
       {name}
       { language === value
-        && <CheckedLanguage className={classes.status} />}
+        && <CheckedLanguage className={classes.status} aria-hidden />}
     </button>
   </MenuItem>
 );
