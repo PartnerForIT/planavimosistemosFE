@@ -18,7 +18,7 @@ import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
-import { changePassword } from '../../../store/settings/actions';
+import { changePassword, editSettingCompany } from '../../../store/settings/actions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -62,6 +62,10 @@ export default function ButtonAppBar({ logOut }) {
   const submitPassword = () => {
     dispatch(changePassword(id, passwords));
     editHandleClose();
+  };
+
+  const changeLanguage = (data) => {
+    dispatch(editSettingCompany({ lang: data.toUpperCase() }, id));
   };
 
   return (
@@ -168,6 +172,7 @@ export default function ButtonAppBar({ logOut }) {
         setMenuOpen={setMenuOpen}
         logOut={logOut}
         editPassword={() => setEditPasswordVisible(true)}
+        changeLanguage={changeLanguage}
       />
 
       <EditPassword

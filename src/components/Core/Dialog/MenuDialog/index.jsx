@@ -17,7 +17,7 @@ const paperStyle = {
 
 function MenuDialog({
   open, anchorEl = null, setAnchorEl, setMenuOpen, logOut = () => ({}),
-  editPassword = () => ({}),
+  editPassword = () => ({}), changeLanguage = () => ({}),
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -30,8 +30,13 @@ function MenuDialog({
   };
 
   useEffect(() => {
-    localStorage.setItem('i18nextLng', language);
-  }, [language]);
+    if (expanded && language !== localStorage.getItem('i18nextLng')) {
+      localStorage.setItem('i18nextLng', language);
+      changeLanguage(language);
+      handleClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language, expanded]);
 
   return (
     <Menu
