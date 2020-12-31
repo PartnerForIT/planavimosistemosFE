@@ -102,3 +102,9 @@ $expanded-picker-max-width: 570px;
     outline: none;
   }
 }
+
+%button-hover {
+  &:hover {
+    opacity: 0.8;
+  }
+}

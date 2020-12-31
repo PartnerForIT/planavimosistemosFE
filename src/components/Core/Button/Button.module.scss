@@ -27,14 +27,12 @@
   border: 1px solid $light-blue2;
 
   @extend %transition;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  @extend %button-hover;
 }
 
 .white {
-  @extend .inverse;
+  @extend %inverse;
+
   background: #fff;
   border: 1px solid #0087ff;
 }
@@ -57,12 +55,11 @@
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 
-  &:hover {
-    opacity: 0.8;
-  }
+  @extend %button-hover;
 }
 
-.green {
+.green,
+%green {
   color: #fff;
   background: $green;
   border: 1px solid $green;
@@ -70,9 +67,7 @@
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 
-  &:hover {
-    opacity: 0.8;
-  }
+  @extend %button-hover;
 
   &.inverse {
     background-color: $light-green;
@@ -86,12 +81,14 @@
 }
 
 .navyBlue {
-  @extend .green;
+  @extend %green;
+
   border: 1px solid $blue-3;
   background: $blue-3;
 }
 
-.danger {
+.danger,
+%danger {
   color: #fff;
   background: $red;
   border: 1px solid $red;
@@ -99,13 +96,12 @@
   font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 
-  &:hover {
-    opacity: 0.8;
-  }
+  @extend %button-hover;
 }
 
 .black {
-  @extend .danger;
+  @extend %danger;
+
   background: $black;
   border: 1px solid $black;
 }
