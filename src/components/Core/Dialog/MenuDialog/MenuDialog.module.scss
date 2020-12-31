@@ -59,7 +59,7 @@ $top-padding-gap: 10px;
     font-size: 14px !important; // reassignment of MiUi root
     color: $gray !important; // reassignment of MiUi root
     border: 1px solid white;
-    font-family: Helvetica Neue, sans-serif !important;
+    font-family: Helvetica Neue, sans-serif !important; // reassignment of MiUi root
 
     svg:first-child {
       margin-right: 20px;
@@ -79,7 +79,7 @@ $top-padding-gap: 10px;
 
     &:hover {
       border-radius: 5px;
-      background-color: $light-blue !important;
+      background-color: $light-blue !important; // reassignment of MiUi root
     }
   }
 
@@ -102,7 +102,14 @@ $top-padding-gap: 10px;
   overflow: visible !important; // reassignment of MiUi root
 
   &_item {
-    padding: 0 !important;
+    padding: 0 !important; // reassignment of MiUi root
+    margin-right: 0 !important; // reassignment of MiUi root
+    margin-left: 0 !important; // reassignment of MiUi root
+    width: 100% !important; // reassignment of MiUi root
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
 
     .btn {
       padding: $bottom-padding $top-padding-gap;
