@@ -48,7 +48,7 @@ import {
   UPDATE_ROLE,
   LOAD_PERMISSIONS,
   GET_EMPLOYEES_QUERY,
-  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
+  ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -1125,17 +1125,9 @@ function* showSnackBar({ message, snackbarType }) {
   }
 }
 
-function* sendCsv(action) {
-  try {
-
-  } catch (e) {
-
-  }
-}
-
 function* sendImportedEmployees(action) {
   try {
-    const { companyId, data: _data } = action;
+    const { companyId, data: { users, createMissing } } = action;
 
     const { data } = yield call(
       axios.post,
@@ -1143,7 +1135,8 @@ function* sendImportedEmployees(action) {
       null,
       {
         params: {
-          users: JSON.stringify([..._data]),
+          users: JSON.stringify([...users]),
+          create_missing: createMissing,
         },
         ...token(),
         timeout: 0,
@@ -1223,7 +1216,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_ROLE, patchRole);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
-  yield takeLatest(SEND_SCV, sendCsv);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
   yield takeLeading(CHANGE_PASSWORD, changePassword);
 }
