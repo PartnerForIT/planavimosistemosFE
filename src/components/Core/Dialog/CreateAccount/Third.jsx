@@ -62,7 +62,6 @@ function Third({
       password,
     }));
   };
-  console.log(simpleInvitation);
   useEffect(() => {
     const { password = '' } = user;
     const {
