@@ -3,20 +3,20 @@ import {
   GET_SETTINGS_COMPANY_SUCCESS,
   ADD_SETTING_SNACKBAR,
   DISMISS_SETTING_SNACKBAR,
-  GET_WORK_TIME,
-  GET_WORK_TIME_SUCCESS,
+  GET_SETTINGS_WORK_TIME,
+  GET_SETTINGS_WORK_TIME_SUCCESS,
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY_SUCCESS,
   GET_SECURITY_COMPANY,
   GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY_SUCCESS,
-  GET_SKILLS,
-  GET_SKILLS_SUCCESS,
+  GET_SETTINGS_SKILLS,
+  GET_SETTINGS_SKILLS_SUCCESS,
   CREATE_SKILL_SUCCESS,
   GET_PLACE,
   GET_PLACE_SUCCESS,
-  GET_EMPLOYEES,
-  GET_EMPLOYEES_SUCCESS,
+  GET_SETTINGS_EMPLOYEES,
+  GET_SETTINGS_EMPLOYEES_SUCCESS,
   GET_ACTIVITY_LOG,
   GET_ACTIVITY_LOG_SUCCESS,
   GET_DELETE_DATA,
@@ -62,11 +62,11 @@ import {
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_ERROR,
   GET_ROLE_DETAILS_SUCCESS,
-  GET_EMPLOYEES_ERROR,
-  GET_EMPLOYEES_ALL,
-  GET_EMPLOYEES_EDIT,
-  GET_EMPLOYEES_EDIT_ERROR,
-  GET_EMPLOYEES_EDIT_SUCCESS,
+  GET_SETTINGS_EMPLOYEES_ERROR,
+  GET_SETTINGS_EMPLOYEES_ALL,
+  GET_SETTINGS_EMPLOYEES_EDIT,
+  GET_SETTINGS_EMPLOYEES_EDIT_ERROR,
+  GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
   UPDATE_EMPLOYEE_SUCCESS,
@@ -82,7 +82,7 @@ import {
   LOAD_PERMISSIONS,
   LOAD_PERMISSIONS_SUCCESS,
   LOAD_PERMISSIONS_ERROR,
-  GET_EMPLOYEES_QUERY,
+  GET_SETTINGS_EMPLOYEES_QUERY,
   GET_CURRENCY,
   SEND_IMPORTED_EMPLOYEES,
   SEND_IMPORTED_EMPLOYEES_SUCCESS,
@@ -152,13 +152,13 @@ export const reducerOrganizationList = (state = initialState, action) => {
         settingsLoading: false,
       };
 
-    case GET_WORK_TIME:
+    case GET_SETTINGS_WORK_TIME:
       return {
         ...state,
         error: null,
         loading: true,
       };
-    case GET_WORK_TIME_SUCCESS:
+    case GET_SETTINGS_WORK_TIME_SUCCESS:
       return {
         ...state,
         workTime: {
@@ -218,13 +218,13 @@ export const reducerOrganizationList = (state = initialState, action) => {
         loading: false,
       };
     }
-    case GET_SKILLS: {
+    case GET_SETTINGS_SKILLS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_SKILLS_SUCCESS: {
+    case GET_SETTINGS_SKILLS_SUCCESS: {
       return {
         ...state,
         loading: false,
@@ -251,10 +251,10 @@ export const reducerOrganizationList = (state = initialState, action) => {
         places: action.data,
       };
     }
-    case GET_EMPLOYEES:
-    case GET_EMPLOYEES_ALL:
-    case GET_EMPLOYEES_QUERY:
-    case GET_EMPLOYEES_EDIT:
+    case GET_SETTINGS_EMPLOYEES:
+    case GET_SETTINGS_EMPLOYEES_ALL:
+    case GET_SETTINGS_EMPLOYEES_QUERY:
+    case GET_SETTINGS_EMPLOYEES_EDIT:
     {
       return {
         ...state,
@@ -263,7 +263,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         employeesLoading: true,
       };
     }
-    case GET_EMPLOYEES_SUCCESS: {
+    case GET_SETTINGS_EMPLOYEES_SUCCESS: {
       return {
         ...state,
         loading: false,
@@ -293,7 +293,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: action.data,
       };
 
-    case GET_EMPLOYEES_EDIT_SUCCESS:
+    case GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -301,8 +301,8 @@ export const reducerOrganizationList = (state = initialState, action) => {
         employeesLoading: false,
       };
 
-    case GET_EMPLOYEES_ERROR:
-    case GET_EMPLOYEES_EDIT_ERROR:
+    case GET_SETTINGS_EMPLOYEES_ERROR:
+    case GET_SETTINGS_EMPLOYEES_EDIT_ERROR:
       return {
         ...state,
         loading: false,
