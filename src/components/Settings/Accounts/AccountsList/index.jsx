@@ -106,7 +106,6 @@ export default function AccountsList() {
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
-  const roles = useSelector(rolesSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -357,10 +356,6 @@ export default function AccountsList() {
             handleClose={() => setImportVisible(false)}
             imported={imported}
             clearImported={clearImported}
-            groups={groups}
-            skills={skills}
-            places={places}
-            roles={roles}
           />
         </PageLayout>
       </Dashboard>
