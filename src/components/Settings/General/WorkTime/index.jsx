@@ -66,7 +66,7 @@ export default function WorkTime() {
   const workTime = useSelector(settingWorkTime);
 
   const filterWorksDay = useCallback((idDay) => workTime.work_time?.work_days
-    ?.days?.days.filter((item) => item.day === idDay) ?? [],
+    ?.days.filter((item) => item.day === idDay) ?? [],
   [workTime]);
 
   const [nationalHolidays, setNationalHolidays] = useState([]);
@@ -143,9 +143,7 @@ export default function WorkTime() {
     const data = {
       week_start: inputValues.week_start,
       week_start_time: inputValues.week_start_time,
-      work_days: {
-        days: daysData,
-      },
+      work_days: [...daysData],
     };
     dispatch(patchWorkTime(data, params.id));
   };

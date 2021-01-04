@@ -153,11 +153,20 @@ function* loadSettingsWorkTime(action) {
 
 function* editSettingsWorkTime(action) {
   try {
-    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/work-time/update`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const { data: { week_start, week_start_time, work_days } } = action;
+
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/work-time/update`, null,
+      {
+        params: {
+          week_start,
+          week_start_time,
+          work_days: JSON.stringify(work_days),
+        },
+        ...token(),
+      });
+
     yield put(addSnackbar('Work time edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
