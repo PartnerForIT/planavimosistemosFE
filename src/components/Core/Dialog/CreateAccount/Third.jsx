@@ -13,6 +13,7 @@ import Label from '../../InputLabel';
 import Input from '../../Input/Input';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import passwordGenerator from '../../../Helpers/passwordGenerator';
+import passwordValidator from '../../../Helpers/passwordValidator';
 
 const BlueRadio = withStyles({
   root: {
@@ -61,6 +62,26 @@ function Third({
       password,
     }));
   };
+
+  useEffect(() => {
+    const { password = '' } = user;
+    const {
+      // eslint-disable-next-line no-shadow
+      min_password_length: minLength = 8, numbers = false,
+      // eslint-disable-next-line no-shadow
+      special_chars: specialChars = true, uppercase = true,
+    } = security;
+
+    const error = passwordValidator({
+      password, minLength, numbers, specialChars, uppercase,
+    });
+    if (password.trim()) {
+      setErrors((prevState) => ({
+        ...prevState,
+        ...error,
+      }));
+    }
+  }, [security, user]);
 
   const checkboxHandler = () => {
     setSimpleInvitation((prevState) => !prevState);
@@ -127,8 +148,6 @@ function Third({
         message: t('Password is required'),
       });
     }
-
-    //  TODO: password validation
   };
 
   useEffect(() => {
@@ -187,7 +206,7 @@ function Third({
                   <Email user={user} handleInput={handleInput} errors={errors} />
                   <div className={style.formItem}>
                     <Label htmlFor='password' text={t('Password')} />
-                    <div className={style.grid}>
+                    <div className={classnames(style.grid, style.start)}>
                       <div>
                         <Input
                           type='password'
@@ -200,7 +219,7 @@ function Third({
                         />
                         {
                           errors.password
-                          && <small>{errors.password}</small>
+                          && <small className='error'>{errors.password.message}</small>
                         }
                       </div>
                       <Button size='big' onClick={generatePass}>{t('Generate')}</Button>
