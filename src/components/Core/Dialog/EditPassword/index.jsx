@@ -78,7 +78,7 @@ export default function EditPassword({
             value={passwords.current}
             name='current'
             fullWidth
-            type='text'
+            type='password'
             autoComplete='current-password'
             onChange={handleChange}
           />
@@ -91,7 +91,7 @@ export default function EditPassword({
           <Input
             placeholder={`${t('Enter new password')}`}
             value={passwords.new}
-            type='text'
+            type='password'
             name='password'
             fullWidth
             autoComplete='new-password'
@@ -105,7 +105,7 @@ export default function EditPassword({
             placeholder={`${t('Enter new password again')}`}
             value={passwords.repeatPassword}
             name='repeatPassword'
-            type='text'
+            type='password'
             fullWidth
             onChange={handleChange}
             autoComplete='new-password'
