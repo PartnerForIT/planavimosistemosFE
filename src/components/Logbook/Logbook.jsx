@@ -44,7 +44,7 @@ const columns = [
   { label: 'Duration, h', field: 'duration', checked: true },
 ];
 const columnsWidth = {
-  status: 200,
+  status: 250,
   skill: 120,
   start: 100,
   end: 100,
@@ -180,7 +180,7 @@ const Logbook = () => {
   useEffect(() => {
     setEmployees(getAllEmployees);
   }, [getAllEmployees]);
-
+  console.log(workTime);
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
     const setCheckedToAll = (state) => {
