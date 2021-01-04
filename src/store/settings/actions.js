@@ -96,11 +96,12 @@ import {
   LOAD_PERMISSIONS_ERROR,
   GET_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR,
-  SEND_SCV,
-  SEND_SCV_SUCCESS,
-  SEND_SCV_ERROR,
   SEND_IMPORTED_EMPLOYEES,
-  SEND_IMPORTED_EMPLOYEES_SUCCESS, SEND_IMPORTED_EMPLOYEES_ERROR,
+  SEND_IMPORTED_EMPLOYEES_SUCCESS,
+  SEND_IMPORTED_EMPLOYEES_ERROR,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -607,22 +608,6 @@ export const loadPermissionsError = (data) => ({
   data,
 });
 
-export const sendCSV = (companyId, file) => ({
-  type: SEND_SCV,
-  companyId,
-  file,
-});
-
-export const sendCSVSuccess = (data) => ({
-  type: SEND_SCV_SUCCESS,
-  data,
-});
-
-export const sendCSVError = (data) => ({
-  type: SEND_SCV_ERROR,
-  data,
-});
-
 export const sendImportedEmployees = (companyId, data) => ({
   type: SEND_IMPORTED_EMPLOYEES,
   companyId,
@@ -636,5 +621,21 @@ export const sendImportedEmployeesSuccess = (data = {}) => ({
 
 export const sendImportedEmployeesError = (data) => ({
   type: SEND_IMPORTED_EMPLOYEES_ERROR,
+  data,
+});
+
+export const changePassword = (companyId, data) => ({
+  type: CHANGE_PASSWORD,
+  companyId,
+  data,
+});
+
+export const changePasswordSuccess = (data) => ({
+  type: CHANGE_PASSWORD_SUCCESS,
+  data,
+});
+
+export const changePasswordError = (data) => ({
+  type: CHANGE_PASSWORD_ERROR,
   data,
 });

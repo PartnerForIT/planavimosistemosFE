@@ -3,9 +3,11 @@
 .linkBlock {
   display: flex;
 }
+
 .rightLinkBlock {
   display: flex;
 }
+
 .link {
   display: flex;
   flex-direction: column;
@@ -27,6 +29,7 @@
     display: inline-block;
     padding-top: 5px;
   }
+
   &::before {
     content: "";
     position: absolute;
@@ -40,13 +43,16 @@
     opacity: 0;
     transition: all 0.2s ease-in-out;
   }
+
   &:hover {
     background: $blue-100;
     color: $blue-2;
     cursor: pointer;
+
     path {
       fill: $blue-2 !important;
     }
+
     &::before {
       opacity: 1;
     }
@@ -57,9 +63,11 @@
   @extend .link;
   background: $blue-100;
   color: $blue-2;
+
   path {
     fill: $blue-2 !important;
   }
+
   &::before {
     opacity: 1;
   }
@@ -72,17 +80,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 25px;
+  padding-left: 25px;
+  cursor: pointer;
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
   &__name {
     color: $gray;
     padding-left: 10px;
     font-weight: 600;
     font-size: 16px;
   }
-  &:after {
+
+  &::after {
     content: '';
     position: absolute;
-    left: -25px;
+    left: 0;
     top: 0;
     bottom: 0;
     width: 1px;

@@ -90,3 +90,26 @@ $expanded-picker-max-width: 570px;
     outline: none;
   }
 }
+
+%btn_unset {
+  background-color: unset;
+  border: unset;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica Neue, sans-serif;
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+%button-hover {
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+small.error {
+  color: $red-600;
+}

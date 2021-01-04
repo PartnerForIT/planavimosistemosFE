@@ -9,6 +9,7 @@ import RemoveRole from '../../../../Core/Dialog/RemoveRole';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
+import { onKeyDown } from '../../../../Helpers';
 
 const defaultRoleAccess = {
   // Access by Module
@@ -155,12 +156,6 @@ function RolesBlock({
       }
     }
   }, [disableReady, permissionsIds, removeRolesPermissions, removeVisible, roleAccess]);
-
-  const onKeyDown = (e, func) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      func();
-    }
-  };
 
   return (
     <div className={classes.roles}>

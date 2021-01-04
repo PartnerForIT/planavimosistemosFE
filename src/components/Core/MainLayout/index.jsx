@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import Header from '../Header';
 import styles from './Layout.module.scss';
-import { refreshToken } from '../../../store/auth/actions';
+import { logout, refreshToken } from '../../../store/auth/actions';
 
 export default function MainLayout({ children }) {
   const dispatch = useDispatch();
@@ -13,14 +14,29 @@ export default function MainLayout({ children }) {
       dispatch(refreshToken());
     }
   });
+
+  const [redirect, setRedirect] = useState(false);
+  const logOut = () => {
+    dispatch(logout());
+    localStorage.clear();
+    setRedirect(true);
+  };
+
+  useEffect(() => () => setRedirect(false), []);
+
   return (
-    <div className={styles.mainLayout}>
-      <Header />
-      <main className={styles.mainBody}>
-        <div className={styles.mainBlock}>
-          {children}
+
+    redirect
+      ? <Redirect to='/' />
+      : (
+        <div className={styles.mainLayout}>
+          <Header logOut={logOut} />
+          <main className={styles.mainBody}>
+            <div className={styles.mainBlock}>
+              {children}
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
+      )
   );
 }

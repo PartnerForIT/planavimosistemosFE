@@ -89,10 +89,6 @@ export default function ImportAccounts({
   open,
   imported,
   clearImported,
-  groups = [],
-  skills = [],
-  roles = [],
-  places = [],
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -199,22 +195,13 @@ export default function ImportAccounts({
       .filter((item) => selectedItems.some((i) => i === item.id))
       .map(({
         id, warning, error, checked, // ~> not used when importing on the backend
-        status, group, subgroup, skill, place, role,
-        ...rest
+        status, ...rest
       }) => {
-        const userGroup = groups.find((gr) => gr.name === group && gr.subgroups.some(({ name }) => name === subgroup));
-        const userSubgroup = userGroup?.subgroups.find(({ name }) => name === subgroup);
-        const roleId = roles.find(({ name }) => name === role)?.id;
-        const skillId = skills.find(({ name }) => name === skill)?.id;
-        const placeId = places.find(({ label }) => label === place)?.id;
-
         const statusId = () => {
           switch (status.toLowerCase()) {
             case 'active':
               return 1;
             case 'suspended':
-              return 2;
-            case 'deleted':
               return 0;
             default:
               return 0;
@@ -222,17 +209,12 @@ export default function ImportAccounts({
         };
 
         return {
-          subgroup: userSubgroup?.id,
-          group: userGroup?.id,
-          skill: skillId,
-          role: roleId,
-          place: placeId,
           status: statusId(),
           ...rest,
         };
       });
 
-    dispatch(sendImportedEmployees(companyId, users));
+    dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
   };
 
   const handleCloseHandler = () => {

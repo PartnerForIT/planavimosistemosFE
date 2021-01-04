@@ -1,0 +1,169 @@
+@import "../../variables";
+@import "../../Button/Button.module";
+
+$bottom-padding: 6px;
+$top-padding-gap: 10px;
+
+.menu {
+  position: absolute;
+  right: 25px;
+  color: $gray;
+  top: 65px;
+  min-width: 200px;
+  max-width: 250px;
+  border-radius: 13px;
+  z-index: 9999;
+
+  .top {
+    padding: $top-padding-gap;
+    border-bottom: 1px solid $light-blue;
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+
+  .bottom {
+    padding: $bottom-padding;
+  }
+
+  .logoutBtn {
+    @extend %btn_unset;
+    @extend %transition;
+    @extend %fullWidth;
+
+    color: $blue-grownu;
+    display: flex;
+    //background-color: white;
+    border-color: transparent;
+    padding: $bottom-padding $top-padding-gap;
+    min-height: auto;
+    height: auto;
+    align-items: center;
+    border-radius: 5px;
+
+    svg {
+      margin-right: 20px;
+    }
+
+    &:hover {
+      background: $light-blue2;
+    }
+  }
+
+  &_item {
+    padding-left: $top-padding-gap !important; // reassignment of MiUi root
+    padding-right: $top-padding-gap !important; // reassignment of MiUi root
+    width: calc(100% - #{$top-padding-gap*2}) !important; // reassignment of MiUi root
+    margin: $top-padding-gap !important;
+    font-size: 14px !important; // reassignment of MiUi root
+    color: $gray !important; // reassignment of MiUi root
+    border: 1px solid white;
+    font-family: Helvetica Neue, sans-serif !important; // reassignment of MiUi root
+
+    svg:first-child {
+      margin-right: 20px;
+    }
+
+    .active {
+      border: 1px solid $light-blue;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    svg.status {
+      position: absolute;
+      right: 0;
+      margin-right: 0;
+    }
+
+    &:hover {
+      border-radius: 5px;
+      background-color: $light-blue !important; // reassignment of MiUi root
+    }
+  }
+
+  .icon {
+    position: absolute;
+    left: $top-padding-gap * 2;
+    bottom: $bottom-padding + 21px;
+    transform: translateY(50%);
+  }
+
+  ul {
+    padding: 0;
+  }
+}
+
+.language {
+  position: relative;
+  margin-bottom: 0 !important; // reassignment of MiUi root
+  padding-bottom: 0 !important; // reassignment of MiUi root
+  overflow: visible !important; // reassignment of MiUi root
+
+  &_item {
+    padding: 0 !important; // reassignment of MiUi root
+    margin-right: 0 !important; // reassignment of MiUi root
+    margin-left: 0 !important; // reassignment of MiUi root
+    width: 100% !important; // reassignment of MiUi root
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    .btn {
+      padding: $bottom-padding $top-padding-gap;
+      width: 100%;
+      display: flex;
+      text-align: left;
+      align-items: center;
+      color: $gray;
+
+      @extend %btn_unset;
+    }
+  }
+
+  &:hover {
+    background-color: white !important; // reassignment of MiUi root
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    width: calc(100% + 40px);
+    height: 1px;
+    background: $light-blue;
+    display: block;
+    left: -20px;
+    top: 36px;
+  }
+}
+
+.expandIconPosition {
+  position: absolute;
+}
+
+.expandIcon {
+  color: $blue-grownu;
+  fill: $blue-grownu;
+  padding: 0 !important; // reassignment of MiUi root
+  margin: 0 !important; // reassignment of MiUi root
+}
+
+.expandIconExpanded {
+  padding: 0 !important; // reassignment of MiUi root
+  margin: 0 !important; // reassignment of MiUi root
+  border: 0 !important; // reassignment of MiUi root
+}
+
+.changePass {
+  @extend %btn_unset;
+
+  text-align: left;
+  color: $gray;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: unset;
+  width: 100%;
+}

@@ -1,11 +1,11 @@
-import React from 'react';
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { useDispatch, useSelector } from 'react-redux';
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
@@ -14,8 +14,12 @@ import SettingsIcon from '../../Icons/Settings';
 import AnalyticsIcon from '../../Icons/Analytics';
 import EventsIcon from '../../Icons/Events';
 import VacationIcon from '../../Icons/Vacation';
-import AvatarComponent from './Avatar'
+import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
+import MenuDialog from '../Dialog/MenuDialog';
+import EditPassword from '../Dialog/EditPassword';
+import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
+import { securityCompanySelector } from '../../../store/settings/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,91 +31,168 @@ const useStyles = makeStyles(() => ({
   },
   toolbar: {
     display: 'flex',
-    justifyContent: "space-between",
-  }
+    justifyContent: 'space-between',
+  },
 }));
 
-export default function ButtonAppBar() {
+const initialPasswords = {
+  current: '',
+  password: '',
+  repeatPassword: '',
+};
+
+export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1];
-  const { t } = useTranslation();
-  const params = useParams();
-  const user = JSON.parse(localStorage.getItem('user'))
+  const { id } = useParams();
+  const user = JSON.parse(localStorage.getItem('user'));
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [editPasswordVisible, setEditPasswordVisible] = useState(false);
+  const [passwords, setPasswords] = useState(initialPasswords);
+  const security = useSelector(securityCompanySelector);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSecurityCompany(id));
+    }
+  }, [dispatch, id]);
+
+  const editHandleClose = () => {
+    setEditPasswordVisible(false);
+    setPasswords(initialPasswords);
+  };
+  const submitPassword = () => {
+    const { password } = passwords;
+    dispatch(changePassword(id, password));
+    editHandleClose();
+  };
+
+  const changeLanguage = (data) => {
+    dispatch(editSettingCompany({ lang: data.toUpperCase() }, id));
+  };
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position='fixed' className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           {/* SuperAdmin Link */}
           {
-            (!params.id && user && user.role_id === 1) &&
+            (!id && user && user.role_id === 1)
+            && (
             <div className={styles.linkBlock}>
-              <Link to='/overview' className={pageName === "overview" ? styles.activelink : styles.link}>
+              <Link to='/overview' className={pageName === 'overview' ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              <Link to='/organization-list' className={pageName === "organization-list" ? styles.activelink : styles.link}>
+              <Link
+                to='/organization-list'
+                className={pageName === 'organization-list' ? styles.activelink : styles.link}
+              >
                 <PalceIcon className={styles.icon} />
-                <span className={styles.link__text}> {t('Org. List')}</span>
+                <span className={styles.link__text}>
+                  {' '}
+                  {t('Org. List')}
+                </span>
               </Link>
             </div>
+            )
           }
           {/* Admin Link */}
           {
-            (params.id && user || user.role_id !== 1) &&
+            ((id && user) || user.role_id !== 1)
+            && (
             <div className={styles.linkBlock}>
-              <Link to={`/overview/${params.id}`} className={pageName === `overview` ? styles.activelink : styles.link}>
+              <Link to={`/overview/${id}`} className={pageName === 'overview' ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              <Link to={`/place/${params.id}`} className={pageName === `place` ? styles.activelink : styles.link}>
+              <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
                 <PalceIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Place')}</span>
               </Link>
-              <Link to={`/logbook/${params.id}`} className={pageName === `logbook` ? styles.activelink : styles.link}>
+              <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
                 <LogbookIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Logbook')}</span>
               </Link>
-              <Link to={`/analytics/${params.id}`} className={pageName === `analytics` ? styles.activelink : styles.link}>
+              <Link
+                to={`/analytics/${id}`}
+                className={pageName === 'analytics' ? styles.activelink : styles.link}
+              >
                 <AnalyticsIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Analytics')}</span>
               </Link>
-              <Link to={`/events/${params.id}`} className={pageName === `events` ? styles.activelink : styles.link}>
-                <EventsIcon fill={'#808f94'} viewBox={"0 0 32 32"} className={styles.icon} />
+              <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
+                <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
                 <span className={styles.link__text}>{t('Events')}</span>
               </Link>
-              <Link to={`/reports/${params.id}`} className={pageName === `reports` ? styles.activelink : styles.link}>
+              <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Reports')}</span>
               </Link>
-              <Link to={`/vacation/${params.id}`} className={pageName === `vacation` ? styles.activelink : styles.link}>
+              <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
                 <VacationIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Vacation')}</span>
               </Link>
             </div>
+            )
           }
           {/* Admin Link */}
           <div className={styles.rightLinkBlock}>
             {/* Admin Link */}
-            {(params.id && user || user.role_id !== 1) &&
+            {((id && user) || user.role_id !== 1)
+              && (
               <div className={styles.linkBlock}>
-                <Link to={`/settings/${params.id}`} className={pageName == `settings` ? styles.activelink : styles.link}>
+                <Link
+                  to={`/settings/${id}`}
+                  className={pageName === 'settings' ? styles.activelink : styles.link}
+                >
                   <SettingsIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Settings')}</span>
                 </Link>
-                <Link to={`/help/${params.id}`} className={pageName == `help` ? styles.activelink : styles.link}>
+                <Link
+                  to={`/help/${id}`}
+                  className={pageName === 'help' ? styles.activelink : styles.link}
+                >
                   <HelpIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Help')}</span>
                 </Link>
               </div>
-            }
+              )}
             {/* Admin Link */}
-            <AvatarComponent />
+            <AvatarComponent
+              setAnchorEl={setAnchorEl}
+              setMenuOpen={setMenuOpen}
+            />
           </div>
 
         </Toolbar>
       </AppBar>
-    </div >
+
+      <MenuDialog
+        setAnchorEl={setAnchorEl}
+        anchorEl={anchorEl}
+        open={menuOpen}
+        setMenuOpen={setMenuOpen}
+        logOut={logOut}
+        editPassword={() => setEditPasswordVisible(true)}
+        changeLanguage={changeLanguage}
+      />
+
+      <EditPassword
+        open={editPasswordVisible}
+        handleClose={editHandleClose}
+        title={t('Change password')}
+        buttonTitle={t('Change password')}
+        passwords={passwords}
+        setPasswords={setPasswords}
+        onSubmit={submitPassword}
+        security={security}
+      />
+    </div>
   );
 }

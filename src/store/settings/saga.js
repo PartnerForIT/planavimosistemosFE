@@ -48,7 +48,7 @@ import {
   UPDATE_ROLE,
   LOAD_PERMISSIONS,
   GET_EMPLOYEES_QUERY,
-  ADD_INFO_SETTING_SNACKBAR, SEND_SCV, SEND_IMPORTED_EMPLOYEES,
+  ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -101,7 +101,7 @@ import {
   createEmployeeError,
   loadPermissionsSuccess,
   loadPermissionsError,
-  getRoles, sendImportedEmployeesSuccess,
+  getRoles, sendImportedEmployeesSuccess, changePasswordSuccess, changePasswordError,
 } from './actions';
 
 import { makeQueryString } from '../../components/Helpers';
@@ -1125,17 +1125,9 @@ function* showSnackBar({ message, snackbarType }) {
   }
 }
 
-function* sendCsv(action) {
-  try {
-
-  } catch (e) {
-
-  }
-}
-
 function* sendImportedEmployees(action) {
   try {
-    const { companyId, data: _data } = action;
+    const { companyId, data: { users, createMissing } } = action;
 
     const { data } = yield call(
       axios.post,
@@ -1143,14 +1135,14 @@ function* sendImportedEmployees(action) {
       null,
       {
         params: {
-          users: JSON.stringify([..._data]),
+          users: JSON.stringify([...users]),
+          create_missing: createMissing,
         },
         ...token(),
         timeout: 0,
       },
     );
 
-    console.log(data);
     yield put(sendImportedEmployeesSuccess(data));
   } catch (e) {
     yield call(showSnackBar,
@@ -1158,6 +1150,27 @@ function* sendImportedEmployees(action) {
         message: 'An error occurred while importing employee',
         snackbarType: 'error',
       });
+  }
+}
+
+function* changePassword(action) {
+  try {
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/update`,
+      action.data,
+      token());
+
+    yield put(changePasswordSuccess(data));
+    yield call(showSnackBar, {
+      message: 'Password was successfully changed',
+      snackbarType: 'success',
+    });
+  } catch (e) {
+    yield put(changePasswordError(e));
+    yield call(showSnackBar, {
+      message: 'An error occurred while changing password',
+      snackbarType: 'error',
+    });
   }
 }
 
@@ -1205,6 +1218,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_ROLE, patchRole);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
-  yield takeLatest(SEND_SCV, sendCsv);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
+  yield takeLeading(CHANGE_PASSWORD, changePassword);
 }
