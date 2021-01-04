@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth,
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -221,7 +221,15 @@ export default function DataTable({
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => (
                             <React.Fragment key={icon.value}>
-                              {icon.icon}
+                              {
+                               statusClickable
+                                 ? (
+                                   <button className={styles.iconButton}>
+                                     {icon.icon}
+                                   </button>
+                                 )
+                                 : icon.icon
+                              }
                             </React.Fragment>
                           ))
                         }
