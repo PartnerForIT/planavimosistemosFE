@@ -1155,8 +1155,10 @@ function* sendImportedEmployees(action) {
 
 function* changePassword(action) {
   try {
-    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/password`,
-      action.data, token());
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/update`,
+      action.data,
+      token());
 
     yield put(changePasswordSuccess(data));
     yield call(showSnackBar, {

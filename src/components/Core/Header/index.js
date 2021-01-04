@@ -66,7 +66,6 @@ export default function ButtonAppBar({ logOut }) {
     setEditPasswordVisible(false);
     setPasswords(initialPasswords);
   };
-
   const submitPassword = () => {
     const { password } = passwords;
     dispatch(changePassword(id, password));
