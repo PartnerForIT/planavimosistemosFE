@@ -62,7 +62,7 @@ function Third({
       password,
     }));
   };
-
+  console.log(simpleInvitation);
   useEffect(() => {
     const { password = '' } = user;
     const {
@@ -219,7 +219,7 @@ function Third({
                         />
                         {
                           errors.password
-                          && <small className='error'>{errors.password.message}</small>
+                          && <small className='error'>{errors.password?.message}</small>
                         }
                       </div>
                       <Button size='big' onClick={generatePass}>{t('Generate')}</Button>
@@ -233,7 +233,15 @@ function Third({
       </div>
       <div className={style.buttons}>
         <Button onClick={previousStep} size='big' cancel>{t('Back')}</Button>
-        <Button onClick={handleSubmit} size='big' green inverse>{t('Create and Invite')}</Button>
+        <Button
+          onClick={handleSubmit}
+          size='big'
+          green
+          inverse
+          disabled={!simpleInvitation ? !(user.password && _.isEmpty(errors.password)) : false}
+        >
+          {t('Create and Invite')}
+        </Button>
       </div>
     </>
   );
