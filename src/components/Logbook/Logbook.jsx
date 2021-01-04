@@ -14,8 +14,6 @@ import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
 import {
   workTimeSelector,
-  columnsSelector,
-  columnsWidthSelector,
   totalDurationSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
@@ -32,7 +30,26 @@ import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
 import { skillsSelector } from '../../store/skills/selectors';
 import { getSkills } from '../../store/skills/actions';
+import ApprovedIcon from '../Icons/ApprovedIcon';
+import SuspendedIcon from '../Icons/SuspendedIcon';
 
+const columns = [
+  { label: 'Status', field: 'status', checked: true },
+  { label: 'Employee', field: 'employee', checked: true },
+  { label: 'Skill', field: 'skill', checked: true },
+  { label: 'Place', field: 'place', checked: true },
+  { label: 'Job Type', field: 'jobType', checked: true },
+  { label: 'Start', field: 'start', checked: true },
+  { label: 'End', field: 'end', checked: true },
+  { label: 'Duration, h', field: 'duration', checked: true },
+];
+const columnsWidth = {
+  status: 200,
+  skill: 120,
+  start: 100,
+  end: 100,
+  duration: 140,
+};
 const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -59,12 +76,39 @@ const Logbook = () => {
   const dispatch = useDispatch();
   const workTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
-  const columns = useSelector(columnsSelector);
-  const columnsWidth = useSelector(columnsWidthSelector);
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
   const { id: companyId } = useParams();
+
+  const icons = {
+    status: [
+      {
+        value: 'Pending',
+        icon: <PendingIcon />,
+      },
+      {
+        value: 'Approved',
+        icon: <ApprovedIcon />,
+      },
+      {
+        value: 'Suspended',
+        icon: <SuspendedIcon />,
+      },
+    ],
+  };
+
+  const statusSelector = (num) => {
+    switch (num) {
+      case 0:
+        return 'Pending';
+      case 1:
+        return 'Approved';
+      case 2:
+      default:
+        return 'Suspended';
+    }
+  };
 
   useEffect(() => {
     dispatch(getJobTypes(companyId)).then().catch();
@@ -73,7 +117,7 @@ const Logbook = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const sendRequest = useCallback((props) => {
+  const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
     dispatch(getWorkTime({
@@ -87,19 +131,27 @@ const Logbook = () => {
       setCheckedItems([]);
       setSelectedItem(null);
     }).catch();
-  });
+  }, [checkedEmployees, checkedSkills, companyId, dateRange, dispatch, search]);
 
   useEffect(() => {
-    sendRequest({});
+    sendRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]);
 
   useEffect(() => {
-    setItemsArray(workTime);
+    setItemsArray(workTime.map((item) => {
+      let { items } = item;
+
+      if (items?.length) {
+        items = items.map((it) => ({ ...it, status: statusSelector(it.works[0].status) }));
+      }
+      return { ...item, items };
+    }));
+
     setColumnsArray(columns);
     setColumnsWidthArray(columnsWidth);
     setTotalDuration(getTotalDuration);
-  }, [workTime, columns, columnsWidth, getTotalDuration]);
+  }, [workTime, getTotalDuration]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -136,7 +188,6 @@ const Logbook = () => {
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItms);
   }, []);
-
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
@@ -162,7 +213,7 @@ const Logbook = () => {
   const Delimiter = () => (<div className={styles.delimiter} />);
 
   const applyHandler = () => {
-    sendRequest({});
+    sendRequest();
   };
 
   const rowSelectionHandler = (selectedRow) => {
@@ -192,7 +243,7 @@ const Logbook = () => {
     const confirm = window.confirm('Are you sure you want to delete this entry/entries?');
     if (confirm) {
       dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
-        sendRequest({});
+        sendRequest();
       }).catch();
     }
   };
@@ -311,12 +362,13 @@ const Logbook = () => {
                 type='skills'
               />
             </div>
+
             <div className={styles.hideOn815}>
               <Delimiter />
               <CustomSelect
                 placeholder={t('All employees')}
                 buttonLabel={t('Filter')}
-                items={employees}
+                items={employees ?? []}
                 onFilter={onEmployeesSelectFilter}
                 onChange={onEmployeesSelectChange}
                 width='auto'
@@ -348,6 +400,7 @@ const Logbook = () => {
             totalDuration={totalDuration}
             setSelectedItem={rowSelectionHandler}
             verticalOffset='123px'
+            fieldIcons={icons}
           />
         </div>
 
