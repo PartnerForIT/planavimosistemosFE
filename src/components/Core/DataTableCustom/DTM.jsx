@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false,
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -224,7 +224,14 @@ export default function DataTable({
                               {
                                statusClickable
                                  ? (
-                                   <button className={styles.iconButton}>
+                                   <button
+                                     className={classNames(styles.iconButton,
+                                       sortStatus.some((i) => i === icon.value) ? styles.deselect : '')}
+                                     onClick={(e) => {
+                                       e.stopPropagation();
+                                       icon.onClick(icon.value);
+                                     }}
+                                   >
                                      {icon.icon}
                                    </button>
                                  )

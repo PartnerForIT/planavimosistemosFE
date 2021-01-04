@@ -780,4 +780,8 @@ div {
 .iconButton {
   @extend %btn_unset;
   @extend %button-hover;
+
+  &.deselect {
+    filter: grayscale(1);
+  }
 }

@@ -81,19 +81,33 @@ const Logbook = () => {
   const selectSkills = useSelector(skillsSelector);
   const { id: companyId } = useParams();
 
+  const [sortStatus, setSortStatus] = useState([]);
+
+  const sorting = (status) => {
+    setSortStatus((prevState) => {
+      if (prevState.find((i) => i === status)) {
+        return prevState.filter((i) => i !== status);
+      }
+      return [...prevState, status];
+    });
+  };
+
   const icons = {
     status: [
       {
         value: 'Pending',
         icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
       },
       {
         value: 'Approved',
         icon: <ApprovedIcon />,
+        onClick: (status) => sorting(status),
       },
       {
         value: 'Suspended',
         icon: <SuspendedIcon />,
+        onClick: (status) => sorting(status),
       },
     ],
   };
@@ -143,15 +157,17 @@ const Logbook = () => {
       let { items } = item;
 
       if (items?.length) {
-        items = items.map((it) => ({ ...it, status: statusSelector(it.works[0].status) }));
+        items = items
+          .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
+          .filter((it) => !sortStatus.some((status) => status === it.status));
       }
       return { ...item, items };
-    }));
+    }).filter(({ items }) => items.length));
 
     setColumnsArray(columns);
     setColumnsWidthArray(columnsWidth);
     setTotalDuration(getTotalDuration);
-  }, [workTime, getTotalDuration]);
+  }, [workTime, getTotalDuration, sortStatus]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -401,6 +417,8 @@ const Logbook = () => {
             setSelectedItem={rowSelectionHandler}
             verticalOffset='123px'
             fieldIcons={icons}
+            statusClickable
+            sortStatus={sortStatus}
           />
         </div>
 
