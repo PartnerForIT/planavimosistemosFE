@@ -59,7 +59,7 @@ export default function DataTable({
       }
       return total;
     }, 0));
-  }, [columns]);
+  }, [columns, columnsWidth]);
 
   useEffect(() => {
     const initData = { checked: 0, total: 0 };
@@ -219,7 +219,11 @@ export default function DataTable({
                         <div className={classNames(styles.flexCenter)}>{column.label}</div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
-                          && fieldIcons[column.field].map((icon) => icon.icon)
+                          && fieldIcons[column.field].map((icon) => (
+                            <React.Fragment key={icon.value}>
+                              {icon.icon}
+                            </React.Fragment>
+                          ))
                         }
                         { sortable && (
                           <div className={classNames(styles.flexCenter, styles.sortIcon)}>
