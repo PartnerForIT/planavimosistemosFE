@@ -103,6 +103,7 @@ function MenuDialog({
         className={classes.menu_item}
         autoFocus
         onKeyDown={(e) => onKeyDown(e, () => passwordClick())}
+        onClick={passwordClick}
         role='button'
         aria-label='change password'
       >
