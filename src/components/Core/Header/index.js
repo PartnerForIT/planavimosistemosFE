@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
@@ -18,7 +18,8 @@ import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
-import { changePassword, editSettingCompany } from '../../../store/settings/actions';
+import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
+import { securityCompanySelector } from '../../../store/settings/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -36,8 +37,8 @@ const useStyles = makeStyles(() => ({
 
 const initialPasswords = {
   current: '',
-  new: '',
-  repeatNew: '',
+  password: '',
+  repeatPassword: '',
 };
 
 export default function ButtonAppBar({ logOut }) {
@@ -53,6 +54,13 @@ export default function ButtonAppBar({ logOut }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
   const [passwords, setPasswords] = useState(initialPasswords);
+  const security = useSelector(securityCompanySelector);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSecurityCompany(id));
+    }
+  }, [dispatch, id]);
 
   const editHandleClose = () => {
     setEditPasswordVisible(false);
@@ -60,7 +68,8 @@ export default function ButtonAppBar({ logOut }) {
   };
 
   const submitPassword = () => {
-    dispatch(changePassword(id, passwords));
+    const { password } = passwords;
+    dispatch(changePassword(id, password));
     editHandleClose();
   };
 
@@ -183,6 +192,7 @@ export default function ButtonAppBar({ logOut }) {
         passwords={passwords}
         setPasswords={setPasswords}
         onSubmit={submitPassword}
+        security={security}
       />
     </div>
   );
