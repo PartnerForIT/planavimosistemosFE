@@ -180,7 +180,7 @@ const Logbook = () => {
   useEffect(() => {
     setEmployees(getAllEmployees);
   }, [getAllEmployees]);
-  console.log(workTime);
+
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
     const setCheckedToAll = (state) => {
