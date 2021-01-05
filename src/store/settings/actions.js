@@ -624,9 +624,10 @@ export const sendImportedEmployeesError = (data) => ({
   data,
 });
 
-export const changePassword = (companyId, data) => ({
+export const changePassword = (companyId, employeeId, data) => ({
   type: CHANGE_PASSWORD,
   companyId,
+  employeeId,
   data,
 });
 
