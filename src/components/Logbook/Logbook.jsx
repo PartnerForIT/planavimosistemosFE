@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useLayoutEffect, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
@@ -32,6 +34,7 @@ import { skillsSelector } from '../../store/skills/selectors';
 import { getSkills } from '../../store/skills/actions';
 import ApprovedIcon from '../Icons/ApprovedIcon';
 import SuspendedIcon from '../Icons/SuspendedIcon';
+import { companyModules } from '../../store/company/selectors';
 
 const columns = [
   { label: 'Status', field: 'status', checked: true },
@@ -79,7 +82,22 @@ const Logbook = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
+  const modules = useSelector(companyModules);
   const { id: companyId } = useParams();
+
+  const [approval, setApproval] = useState(false);
+
+  useEffect(() => {
+    const { use_approval_flow: approveFlow } = modules;
+    const user = localStorage.getItem('user');
+    const superAdmin = user ? JSON.parse(user)?.role_id : false;
+
+    if (approveFlow === 1 || superAdmin === 1) {
+      setApproval(true);
+    } else {
+      setApproval(false);
+    }
+  }, [modules]);
 
   const [sortStatus, setSortStatus] = useState([]);
 
