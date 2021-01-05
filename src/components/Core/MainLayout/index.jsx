@@ -17,7 +17,7 @@ export default function MainLayout({ children }) {
   });
 
   useLayoutEffect(() => {
-    dispatch(getOrganisationModules(companyId));
+    if (companyId) dispatch(getOrganisationModules(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

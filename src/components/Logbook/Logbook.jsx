@@ -39,6 +39,7 @@ import SuspendedIcon from '../Icons/SuspendedIcon';
 import { companyModules } from '../../store/company/selectors';
 import ApproveIcon from '../Icons/ApproveIcon';
 import SuspendIcon from '../Icons/SuspendIcon';
+import { downloadExcel, downloadPdf } from '../../store/reports/actions';
 
 const columns = [
   { label: 'Status', field: 'status', checked: true },
@@ -71,12 +72,11 @@ const Logbook = () => {
 
   const [dateRange, setDateRange] = useState({});
 
-  const [search, setSearch] = useState('');
-
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
-
+  const [search, setSearch] = useState('');
   const [employees, setEmployees] = useState([]);
+
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
   const { t } = useTranslation();
@@ -305,6 +305,76 @@ const Logbook = () => {
     }
   };
 
+  const downloadReport = (action, ext) => {
+    const { startDate, endDate } = dateRange;
+
+    const requestObj = {
+      // 'date-start': startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      // 'date-end': endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      // places: null,
+      // jobTypes: null,
+      // skills: null,
+      // employees: null,
+    };
+    // dispatch(getReport(
+    //   startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+    //   endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+    //   null,
+    //   null,
+    //   null,
+    //   null,
+    //   companyId,
+    // )).then().catch();
+
+    dispatch(action(requestObj, companyId)).then(({ data }) => {
+      const downloadUrl = window.URL.createObjectURL(new Blob([data],
+        { type: data.type }));
+      const link = document.createElement('a');
+
+      link.href = downloadUrl;
+      link.setAttribute('download',
+        `Report_yyy-MM-dd'.${ext}`);
+      document.body.appendChild(link);
+      link.click();
+      // link.remove();
+    }).catch();
+  };
+
+  // const selectedReport = itemsArray.find((report) => report.id === activeReport);
+  // if (selectedReport) {
+  //   let filter = '';
+  //   if (selectedReport.places.length && !selectedReport.jobTypes.length && !selectedReport.employees.length) {
+  //     filter = 0;
+  //   } else if (!selectedReport.jobTypes.length && selectedReport.employees.length) {
+  //     filter = 1;
+  //   } else if (selectedReport.jobTypes.length && !selectedReport.employees.length) {
+  //     filter = 2;
+  //   } else if (selectedReport.jobTypes.length && selectedReport.employees.length) {
+  //     filter = 3;
+  //   }
+  //
+  //   const requestObj = {
+  //     'date-start': selectedReport.startDate,
+  //     'date-end': selectedReport.endDate,
+  //     places: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
+  //     jobTypes: selectedReport.jobTypes.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : '',
+  //     employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
+  //     filter,
+  //   };
+
+  //   dispatch(action(requestObj)).then((data) => {
+  //     const downloadUrl = window.URL.createObjectURL(new Blob([data.data]));
+  //     const link = document.createElement('a');
+  //     link.href = downloadUrl;
+  //     link.setAttribute('download',
+  //       `Report_${format(dateToUCT(selectedReport.startDate),
+  //         'yyyy-MM-dd')}_${format(dateToUCT(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.remove();
+  //   }).catch();
+  // }
+
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
       <div className={styles.hero}>
@@ -511,10 +581,10 @@ const Logbook = () => {
             loading={loading}
             onSelect={selectionHandler}
             onSort={sortHandler}
-            lastPage={workTime.last_page}
-            activePage={workTime.current_page}
-            itemsCountPerPage={workTime.per_page}
-            totalItemsCount={workTime.total}
+            lastPage={workTime?.last_page}
+            activePage={workTime?.current_page}
+            itemsCountPerPage={workTime?.per_page}
+            totalItemsCount={workTime?.total}
             handlePagination={console.log}
             selectedItem={selectedItem}
             totalDuration={totalDuration}
@@ -523,8 +593,8 @@ const Logbook = () => {
             fieldIcons={icons}
             statusClickable
             sortStatus={sortStatus}
-            downloadExcel={() => ({})}
-            downloadPdf={() => ({})}
+            downloadExcel={() => downloadReport(downloadExcel, 'xls')}
+            downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
           />
         </div>
 
