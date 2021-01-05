@@ -288,7 +288,7 @@ export default function DataTable({
         { typeof downloadExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
+            className={classNames(styles.pointer, styles.mr10)}
             onClick={downloadExcel}
           >
             <ExcelIcon />
