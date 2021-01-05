@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
+import Scrollbar from 'react-scrollbars-custom';
+import classNames from 'classnames';
 import MaynLayout from '../Core/MainLayout';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -35,6 +37,8 @@ import { getSkills } from '../../store/skills/actions';
 import ApprovedIcon from '../Icons/ApprovedIcon';
 import SuspendedIcon from '../Icons/SuspendedIcon';
 import { companyModules } from '../../store/company/selectors';
+import ApproveIcon from '../Icons/ApproveIcon';
+import SuspendIcon from '../Icons/SuspendIcon';
 
 const columns = [
   { label: 'Status', field: 'status', checked: true },
@@ -290,6 +294,14 @@ const Logbook = () => {
 
   };
 
+  const approveItem = () => {
+
+  };
+
+  const suspendItem = () => {
+
+  };
+
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
       <div className={styles.hero}>
@@ -310,27 +322,71 @@ const Logbook = () => {
         {
           selectedItem && (
             <>
-              <Timeline
-                works={selectedItem.works}
-                breaks={selectedItem.breaks}
-                total={selectedItem.total_work_sec + selectedItem.total_break_sec}
-                startMinute={selectedItem.started_at}
-                startTime={selectedItem.start}
-                endTime={selectedItem.end}
-                withTimeBreaks
-              />
-              <Delimiter />
-              <InfoCard
-                type='total'
-                time={selectedItem}
-                showRange
-              />
-              <Delimiter />
-              <InfoCard
-                type='break'
-                time={selectedItem}
-                durationSec={selectedItem.total_break_sec}
-              />
+              <Scrollbar
+                style={{ height: `calc(100vh - 218px - ${approval ? '64px' : '0px'})` }}
+                removeTracksWhenNotUsed
+                trackXProps={{
+                  renderer: (props) => {
+                    const { elementRef, ...restProps } = props;
+                    return (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                      />
+                    );
+                  },
+                }}
+                trackYProps={{
+                  renderer: (props) => {
+                    const { elementRef, ...restProps } = props;
+                    return (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                      />
+                    );
+                  },
+                }}
+              >
+                <Timeline
+                  works={selectedItem.works}
+                  breaks={selectedItem.breaks}
+                  total={selectedItem.total_work_sec + selectedItem.total_break_sec}
+                  startMinute={selectedItem.started_at}
+                  startTime={selectedItem.start}
+                  endTime={selectedItem.end}
+                  withTimeBreaks
+                />
+                <Delimiter />
+                <InfoCard
+                  type='total'
+                  time={selectedItem}
+                  showRange
+                />
+                <Delimiter />
+                <InfoCard
+                  type='break'
+                  time={selectedItem}
+                  durationSec={selectedItem.total_break_sec}
+                />
+              </Scrollbar>
+              {
+                approval
+                    && (
+                    <div className={styles.actionButtons}>
+                      <button className={styles.approve} onClick={approveItem}>
+                        <span aria-hidden><ApproveIcon aria-hidden /></span>
+                        <span>{t('Approve')}</span>
+                      </button>
+                      <button className={styles.suspend} onClick={suspendItem}>
+                        <span aria-hidden><SuspendIcon aria-hidden /></span>
+                        <span>{t('Suspend')}</span>
+                      </button>
+                    </div>
+                    )
+              }
             </>
           )
         }
@@ -371,16 +427,16 @@ const Logbook = () => {
        approval
          && (
          <>
-           <Button onClick={() => approveItems()} green fillWidth>
+           <Button onClick={approveItems} green fillWidth>
              {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
            </Button>
-           <Button onClick={() => suspendItems()} yellow fillWidth>
+           <Button onClick={suspendItems} yellow fillWidth>
              {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
            </Button>
          </>
          )
         }
-        <Button onClick={() => deleteItems()} danger fillWidth>
+        <Button onClick={deleteItems} danger fillWidth>
           {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
         </Button>
       </div>
