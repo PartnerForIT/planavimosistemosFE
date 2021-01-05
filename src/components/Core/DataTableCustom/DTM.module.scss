@@ -6,7 +6,7 @@ $table-border: #d9d9d9;
 $row-bg: #f4f2f1;
 $row-warn-bg: #fffbea;
 $row-error-bg: #ffebec;
-$icon-transform-default: translateY(-50%);
+$icon-transform-default: translateY(0);
 
 header {
   box-sizing: border-box;
@@ -317,13 +317,10 @@ header {
 }
 
 .collapsIcon {
-  position: absolute;
-  left: 0;
-  top: 50%;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transform: $icon-transform-default rotate(-90deg);
   width: 8.315px !important;
-  height: 10px !important;
+  height: 100% !important;
   margin-right: 5px;
   padding-right: 0 !important;
 
@@ -370,13 +367,13 @@ header {
 .flexRowGlobal {
   display: flex;
   min-width: 140px;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0 1px;
 
-  // &:last-of-type {
-  //   justify-content: flex-end;
-  //   padding-right: 10px;
-  // }
+  &:last-of-type {
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
 }
 
 .flexRowGlobalReports {
@@ -397,12 +394,12 @@ header {
   color: #333945;
   min-width: 140px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 8px;
 
-  // &:last-of-type {
-  //   justify-content: flex-end;
-  // }
+  &:last-of-type {
+    justify-content: flex-end;
+  }
 }
 
 .IconStatus {
