@@ -1,3 +1,5 @@
+$actions-min-height: 114px;
+
 .container {
   background-color: #edf4fa;
   box-sizing: border-box;
@@ -101,7 +103,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 25px - #{$actions-min-height});
 
     > div {
       align-items: center;
@@ -190,5 +192,20 @@
 
   @media only screen and (max-width: 660px) {
     display: none;
+  }
+}
+
+.actions {
+  min-height: $actions-min-height;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+
+  button {
+    margin-top: 9px;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }

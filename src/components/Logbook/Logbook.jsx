@@ -282,6 +282,14 @@ const Logbook = () => {
     }
   };
 
+  const approveItems = () => {
+
+  };
+
+  const suspendItems = () => {
+
+  };
+
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
       <div className={styles.hero}>
@@ -359,6 +367,19 @@ const Logbook = () => {
         </div>
       </div>
       <div className={styles.actions}>
+        {
+       approval
+         && (
+         <>
+           <Button onClick={() => approveItems()} green fillWidth>
+             {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
+           </Button>
+           <Button onClick={() => suspendItems()} yellow fillWidth>
+             {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
+           </Button>
+         </>
+         )
+        }
         <Button onClick={() => deleteItems()} danger fillWidth>
           {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
         </Button>
@@ -437,6 +458,8 @@ const Logbook = () => {
             fieldIcons={icons}
             statusClickable
             sortStatus={sortStatus}
+            downloadExcel={() => ({})}
+            downloadPdf={() => ({})}
           />
         </div>
 
