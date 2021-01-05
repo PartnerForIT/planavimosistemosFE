@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useLayoutEffect, useState,
+  useCallback, useEffect, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ import {
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
-import { getWorkTime, removeItems } from '../../store/worktime/actions';
+import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import avatar from '../Icons/avatar.png';
@@ -134,15 +134,22 @@ const Logbook = () => {
     ],
   };
 
-  const statusSelector = (num) => {
-    switch (num) {
+  const statusSelector = (status) => {
+    switch (status) {
       case 0:
         return 'Pending';
       case 1:
         return 'Approved';
       case 2:
-      default:
         return 'Suspended';
+      case 'approve':
+      case 'Approve':
+        return 1;
+      case 'suspend':
+      case 'Suspend':
+        return 2;
+      default:
+        return 0;
     }
   };
 
@@ -280,26 +287,22 @@ const Logbook = () => {
   const deleteItems = () => {
     const confirm = window.confirm('Are you sure you want to delete this entry/entries?');
     if (confirm) {
-      dispatch(removeItems({ items: checkedItems.map((item) => (item.id)) })).then(() => {
+      dispatch(removeItems(companyId, { items: checkedItems.map((item) => (item.id)) })).then(() => {
         sendRequest();
       }).catch();
     }
   };
 
-  const approveItems = () => {
-
-  };
-
-  const suspendItems = () => {
-
-  };
-
-  const approveItem = () => {
-
-  };
-
-  const suspendItem = () => {
-
+  const changeItemStatus = (status, entryId = null) => {
+    const confirm = window.confirm(`Are you sure you want to ${status} this entry/entries?`);
+    if (confirm) {
+      dispatch(changeStatusItems(companyId, {
+        items: entryId ?? checkedItems.map((item) => (item.id)),
+        status: statusSelector(status),
+      })).then(() => {
+        sendRequest();
+      }).catch();
+    }
   };
 
   const EmployeeInfo = () => (
@@ -376,11 +379,17 @@ const Logbook = () => {
                 approval
                     && (
                     <div className={styles.actionButtons}>
-                      <button className={styles.approve} onClick={approveItem}>
+                      <button
+                        className={styles.approve}
+                        onClick={() => changeItemStatus('approve', selectedItem.id)}
+                      >
                         <span aria-hidden><ApproveIcon aria-hidden /></span>
                         <span>{t('Approve')}</span>
                       </button>
-                      <button className={styles.suspend} onClick={suspendItem}>
+                      <button
+                        className={styles.suspend}
+                        onClick={() => changeItemStatus('suspend', selectedItem.id)}
+                      >
                         <span aria-hidden><SuspendIcon aria-hidden /></span>
                         <span>{t('Suspend')}</span>
                       </button>
@@ -427,10 +436,10 @@ const Logbook = () => {
        approval
          && (
          <>
-           <Button onClick={approveItems} green fillWidth>
+           <Button onClick={() => changeItemStatus('approve')} green fillWidth>
              {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
            </Button>
-           <Button onClick={suspendItems} yellow fillWidth>
+           <Button onClick={() => changeItemStatus('suspend')} yellow fillWidth>
              {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
            </Button>
          </>

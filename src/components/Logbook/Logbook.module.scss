@@ -227,6 +227,7 @@ $sidebar-border-radius: 12px;
   border-bottom-right-radius: $sidebar-border-radius;
   border-bottom-left-radius: $sidebar-border-radius;
 
+  //noinspection Stylelint
   button {
     @extend %btn_unset;
 
@@ -266,6 +267,7 @@ $sidebar-border-radius: 12px;
   right: -9px !important;
   z-index: 2;
 
+  //noinspection Stylelint
   div {
     background-color: #d5dde1 !important;
     border-radius: 10px !important;
