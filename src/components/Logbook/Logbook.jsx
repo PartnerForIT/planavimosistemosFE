@@ -4,6 +4,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
@@ -314,110 +315,31 @@ const Logbook = () => {
   const downloadReport = (action, ext) => {
     const { startDate, endDate } = dateRange;
 
+    const checkedEmp = checkedEmployees.map((item) => item.id);
+    const checkedSk = checkedSkills.map((item) => item.id);
     const requestObj = {
-      // 'date-start': startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
-      // 'date-end': endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      'date-start': startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      'date-end': endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
       // places: null,
       // jobTypes: null,
-      // skills: null,
-      // employees: null,
+      employees: checkedEmp.length ? checkedEmp : null,
+      skills: checkedSk.length ? checkedSk : null,
     };
-    // dispatch(getReport(
-    //   startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
-    //   endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
-    //   null,
-    //   null,
-    //   null,
-    //   null,
-    //   companyId,
-    // )).then().catch();
 
-    // dispatch(action(requestObj, companyId)).then(({ data }) => {
-    //   const downloadUrl = window.URL.createObjectURL(new Blob([data]));
-    //   const link = document.createElement('a');
-    //
-    //   link.href = downloadUrl;
-    //   link.setAttribute('download',
-    //     `Report_yyyy-MM-dd')}.${ext}`);
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   // link.remove();
-    // }).catch();
-
-    dispatch(action(requestObj, companyId)).then((data) => {
-      const blob = new Blob([data.data], { type: 'text/plain' });
-      // The full Blob Object can be seen
-      // in the Console of the Browser
-
-      const reader = new FileReader();
-      reader.readAsBinaryString(blob);
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        const file = JSON.parse(base64String)?.file;
-        // console.log('Base64 String - ', base64String);
-        // Simply Print the Base64 Encoded String,
-        // without additional data: Attributes.
-        // console.log(atob(file));
-
-        const downloadUrl = window.URL.createObjectURL(new Blob(
-          [atob(file)],
-          { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
-        ));
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.setAttribute('download',
-          `Reportyyy-MM-dd')}.${ext}`);
-        document.body.appendChild(link);
-
-        link.click();
-        // link.remove();
-      };
+    dispatch(action(requestObj, companyId)).then(({ data }) => {
+      // eslint-disable-next-line no-shadow
+      const { startDate, endDate } = dateRange;
+      // Insert a link that allows the user to download the PDF file
+      const link = document.createElement('a');
+      link.download = _.isEmpty(dateRange) ? `Report_${format(new Date(), 'yyyy-MM-dd')}.${ext}`
+        : `Report_${format(startDate,
+          'yyyy-MM-dd')}_${format(endDate,
+          'yyyy-MM-dd')}.${ext}`;
+      link.href = `data:application/octet-stream;base64,${data}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     }).catch();
-  };
-
-  // const selectedReport = itemsArray.find((report) => report.id === activeReport);
-  // if (selectedReport) {
-  //   let filter = '';
-  //   if (selectedReport.places.length && !selectedReport.jobTypes.length && !selectedReport.employees.length) {
-  //     filter = 0;
-  //   } else if (!selectedReport.jobTypes.length && selectedReport.employees.length) {
-  //     filter = 1;
-  //   } else if (selectedReport.jobTypes.length && !selectedReport.employees.length) {
-  //     filter = 2;
-  //   } else if (selectedReport.jobTypes.length && selectedReport.employees.length) {
-  //     filter = 3;
-  //   }
-  //
-  //   const requestObj = {
-  //     'date-start': selectedReport.startDate,
-  //     'date-end': selectedReport.endDate,
-  //     places: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-  //     jobTypes: selectedReport.jobTypes.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : '',
-  //     employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
-  //     filter,
-  //   };
-
-  //   dispatch(action(requestObj)).then((data) => {
-  //     const downloadUrl = window.URL.createObjectURL(new Blob([data.data]));
-  //     const link = document.createElement('a');
-  //     link.href = downloadUrl;
-  //     link.setAttribute('download',
-  //       `Report_${format(dateToUCT(selectedReport.startDate),
-  //         'yyyy-MM-dd')}_${format(dateToUCT(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     link.remove();
-  //   }).catch();
-  // }
-
-  const blobToBase64 = (blob, callback) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      const base64 = dataUrl.split(',')[1];
-      callback(base64);
-    };
-    reader.readAsDataURL(blob);
   };
 
   const EmployeeInfo = () => (
@@ -638,7 +560,7 @@ const Logbook = () => {
             fieldIcons={icons}
             statusClickable
             sortStatus={sortStatus}
-            downloadExcel={() => downloadReport(downloadExcel, 'xls')}
+            downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
           />
         </div>
