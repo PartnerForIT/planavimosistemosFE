@@ -118,23 +118,31 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    setPlaces(getAllPlaces);
-    setFilteredPlaces(getAllPlaces);
+    if (Array.isArray(getAllPlaces)) {
+      setPlaces(getAllPlaces);
+      setFilteredPlaces(getAllPlaces);
+    }
   }, [getAllPlaces]);
 
   useEffect(() => {
-    setEmployees(getAllEmployees);
-    setFilteredEmployees(getAllEmployees);
+    if (Array.isArray(getAllEmployees)) {
+      setEmployees(getAllEmployees);
+      setFilteredEmployees(getAllEmployees);
+    }
   }, [getAllEmployees]);
 
   useEffect(() => {
-    setJobTypes(getAllJobTypes);
-    setFilteredJobTypes(getAllJobTypes);
+    if (Array.isArray(getAllJobTypes)) {
+      setJobTypes(getAllJobTypes);
+      setFilteredJobTypes(getAllJobTypes);
+    }
   }, [getAllJobTypes]);
 
   useEffect(() => {
-    setSkills(getAllSkills);
-    setFilteredSkills(getAllSkills);
+    if (Array.isArray(getAllSkills)) {
+      setSkills(getAllSkills);
+      setFilteredSkills(getAllSkills);
+    }
   }, [getAllSkills]);
 
   useEffect(() => {

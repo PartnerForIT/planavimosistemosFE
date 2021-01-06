@@ -182,20 +182,22 @@ const Logbook = () => {
   }, [dateRange]);
 
   useEffect(() => {
-    setItemsArray(workTime.map((item) => {
-      let { items } = item;
+    if (Array.isArray(workTime)) {
+      setItemsArray(workTime.map((item) => {
+        let { items } = item;
 
-      if (items?.length) {
-        items = items
-          .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
-          .filter((it) => !sortStatus.some((status) => status === it.status));
-      }
-      return { ...item, items };
-    }).filter(({ items }) => items.length));
+        if (items?.length) {
+          items = items
+            .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
+            .filter((it) => !sortStatus.some((status) => status === it.status));
+        }
+        return { ...item, items };
+      }).filter(({ items }) => items.length));
 
-    setColumnsArray(columns);
-    setColumnsWidthArray(columnsWidth);
-    setTotalDuration(getTotalDuration);
+      setColumnsArray(columns);
+      setColumnsWidthArray(columnsWidth);
+      setTotalDuration(getTotalDuration);
+    }
   }, [workTime, getTotalDuration, sortStatus]);
 
   useEffect(() => {
@@ -203,11 +205,15 @@ const Logbook = () => {
   }, [workTimeLoading]);
 
   useEffect(() => {
-    setSkills(selectSkills);
+    if (Array.isArray(selectSkills)) {
+      setSkills(selectSkills);
+    }
   }, [selectSkills]);
 
   useEffect(() => {
-    setEmployees(getAllEmployees);
+    if (Array.isArray(getAllEmployees)) {
+      setEmployees(getAllEmployees);
+    }
   }, [getAllEmployees]);
 
   const selectionHandler = useCallback((itemId, value) => {
@@ -326,17 +332,46 @@ const Logbook = () => {
     //   companyId,
     // )).then().catch();
 
-    dispatch(action(requestObj, companyId)).then(({ data }) => {
-      const downloadUrl = window.URL.createObjectURL(new Blob([data],
-        { type: data.type }));
-      const link = document.createElement('a');
+    // dispatch(action(requestObj, companyId)).then(({ data }) => {
+    //   const downloadUrl = window.URL.createObjectURL(new Blob([data]));
+    //   const link = document.createElement('a');
+    //
+    //   link.href = downloadUrl;
+    //   link.setAttribute('download',
+    //     `Report_yyyy-MM-dd')}.${ext}`);
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   // link.remove();
+    // }).catch();
 
-      link.href = downloadUrl;
-      link.setAttribute('download',
-        `Report_yyy-MM-dd'.${ext}`);
-      document.body.appendChild(link);
-      link.click();
-      // link.remove();
+    dispatch(action(requestObj, companyId)).then((data) => {
+      const blob = new Blob([data.data], { type: 'text/plain' });
+      // The full Blob Object can be seen
+      // in the Console of the Browser
+
+      const reader = new FileReader();
+      reader.readAsBinaryString(blob);
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        const file = JSON.parse(base64String)?.file;
+        // console.log('Base64 String - ', base64String);
+        // Simply Print the Base64 Encoded String,
+        // without additional data: Attributes.
+        // console.log(atob(file));
+
+        const downloadUrl = window.URL.createObjectURL(new Blob(
+          [atob(file)],
+          { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+        ));
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download',
+          `Reportyyy-MM-dd')}.${ext}`);
+        document.body.appendChild(link);
+
+        link.click();
+        // link.remove();
+      };
     }).catch();
   };
 
@@ -374,6 +409,16 @@ const Logbook = () => {
   //     link.remove();
   //   }).catch();
   // }
+
+  const blobToBase64 = (blob, callback) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      const base64 = dataUrl.split(',')[1];
+      callback(base64);
+    };
+    reader.readAsDataURL(blob);
+  };
 
   const EmployeeInfo = () => (
     <div className={styles.employeeInfo}>
@@ -545,7 +590,7 @@ const Logbook = () => {
               <CustomSelect
                 placeholder={t('All skills')}
                 buttonLabel={t('Filter')}
-                items={skills}
+                items={skills ?? []}
                 onFilter={onSkillsSelectFilter}
                 onChange={onSkillsSelectChange}
                 width='auto'
