@@ -101,7 +101,7 @@ export default function AccountsList() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const { users: employeesAll = [], stats = {} } = useSelector(employeesSelector);
+  const { users: Allemployees = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
   const skills = useSelector(categoriesSkillsSelector);
@@ -122,6 +122,7 @@ export default function AccountsList() {
   const [deleteVisible, setDeleteVisible] = useState(false);
 
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
+  const [employeesAll, setEmployeesAll] = useState([]);
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -150,6 +151,12 @@ export default function AccountsList() {
     dispatch(loadSkills(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (Array.isArray(Allemployees)) {
+      setEmployeesAll([...Allemployees]);
+    }
+  }, [Allemployees]);
 
   const editRowHandler = (employeeId) => {
     dispatch(loadEmployeesEdit(id, employeeId));
@@ -247,6 +254,14 @@ export default function AccountsList() {
     return employees.sort(sortFunction);
   }, []);
 
+  const selectAllHandler = (data = []) => {
+    const value = data.length;
+    // eslint-disable-next-line no-shadow
+    const checkedItems = data.map(({ id }) => id);
+    setCheckedItems(checkedItems);
+    setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -288,17 +303,10 @@ export default function AccountsList() {
                     hoverable
                     removeRow={deleteEmployee}
                     onSort={(field, asc) => sorting(employees, { field, asc })}
-                    // onSerach={searchHandler}
-                    // lastPage={page.last_page}
-                    // activePage={page.current_page}
-                    // itemsCountPerPage={page.per_page}
-                    // totalItemsCount={page.total}
-                    // handlePagination={console.log}
                     selectedItem={selected}
-                    // totalDuration={totalDuration}
                     setSelectedItem={setSelected}
                     verticalOffset='300px'
-                    selectAll
+                    selectAllItems={selectAllHandler}
                   />
                 </>
               )
