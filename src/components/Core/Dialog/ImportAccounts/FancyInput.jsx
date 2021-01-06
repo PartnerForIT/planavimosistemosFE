@@ -21,7 +21,7 @@ const FancyInput = ({ setFileName, setBackgroundColor, setFile }) => {
       />
       <CSVReader
         noDrag
-        onDrop={(data, file1) => {
+        onFileLoad={(data, file1) => {
           setFile(data);
           setFileName(file1.name);
         }}

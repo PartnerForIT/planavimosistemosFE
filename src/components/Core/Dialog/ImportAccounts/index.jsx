@@ -180,7 +180,7 @@ export default function ImportAccounts({
 
   useEffect(() => {
     if (fileName) {
-      if (fileName.split('.').pop() !== 'csv') {
+      if (fileName?.split('.').pop() !== 'csv') {
         dispatch(showSnackbar(t('Only CSV files are supported.'), 'error'));
         setTempFile(null);
         setFileName('');
@@ -190,7 +190,7 @@ export default function ImportAccounts({
 
   const fakeUpload = () => {
     if (tempFile) {
-      if (fileName.split('.').pop() === 'csv') {
+      if (fileName?.split('.').pop() === 'csv') {
         setFile(tempFile);
       }
     }
@@ -280,7 +280,6 @@ export default function ImportAccounts({
       title={title}
     >
       <div className={classes.inner}>
-
         {/* import CSV */}
         <div className={style.formControl}>
           <Label htmlFor='text' text={t('Company name')} />
