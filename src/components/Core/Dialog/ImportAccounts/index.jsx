@@ -68,6 +68,16 @@ const columns = [
   },
 ];
 
+const columnsWidth = {
+  status: 120,
+  name: 200,
+  place: 150,
+  skills: 200,
+  role: 150,
+  email: 250,
+  groups: 150,
+  subgroup: 150,
+};
 const order = [
   'status', 'name', 'surname', 'role', 'email', 'skill', 'group', 'subgroup', 'place',
 ];
@@ -280,6 +290,7 @@ export default function ImportAccounts({
           <DataTable
             data={data}
             columns={columns ?? []}
+            columnsWidth={columnsWidth}
             verticalOffset='55vh'
             selectable
             onColumnsChange={() => ({})}
@@ -287,6 +298,7 @@ export default function ImportAccounts({
             setSelectedItem={() => ({})}
             onSelect={selectionHandler}
             colored={{ warning: !ignoreEmpty, error: true }}
+            selectAll
           />
           {!data.length && <OverView />}
           {/*   loader? */}
