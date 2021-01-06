@@ -196,9 +196,43 @@ export default function ImportAccounts({
     }
   };
 
-  useEffect(() => {
+  const selectAllHandler = (items = []) => {
+    const value = items.length;
+    // eslint-disable-next-line no-shadow
+    const checkedItems = items.filter(({ warning, error }) => {
+      if (!error) {
+        if (ignoreEmpty && warning) {
+          return true;
+        }
+        if (!ignoreEmpty && warning) {
+          return false;
+        }
+        if (!error && !warning) {
+          return true;
+        }
+      }
+      return true;
+    });
 
-  }, []);
+    setData(data.map(({
+      warning, error, checked, ...rest
+    }) => {
+      let check = !!value;
+      if (!error) {
+        if (ignoreEmpty && warning) {
+          check = !!value;
+        }
+        if (!ignoreEmpty && warning) {
+          check = false;
+        }
+      }
+
+      return {
+        ...rest, warning, error, checked: check,
+      };
+    }));
+    setSelectedItems(checkedItems);
+  };
 
   const importHandler = () => {
     const users = data
@@ -298,7 +332,7 @@ export default function ImportAccounts({
             setSelectedItem={() => ({})}
             onSelect={selectionHandler}
             colored={{ warning: !ignoreEmpty, error: true }}
-            selectAll
+            selectAllItems={selectAllHandler}
           />
           {!data.length && <OverView />}
           {/*   loader? */}
