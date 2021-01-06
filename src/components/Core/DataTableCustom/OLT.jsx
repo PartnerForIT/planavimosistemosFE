@@ -210,7 +210,7 @@ export default function DataTable({
                           && (
                             <StyledCheckbox
                               checked={selectedAll}
-                              onChange={setSelectedAll((prevState) => !prevState)}
+                              onChange={() => setSelectedAll((prevState) => !prevState)}
                             />
                           )
                         }
