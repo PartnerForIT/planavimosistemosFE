@@ -201,20 +201,23 @@ export default function DataTable({
                       style={{ width, minWidth }}
                       role='columnheader'
                     >
+                      {
+                        selectAll && column.field === 'status'
+                        && (
+                        <StyledCheckbox
+                          style={{ padding: '0 9px 0 2px' }}
+                          checked={selectedAll}
+                          onChange={() => setSelectedAll((prevState) => !prevState)}
+                        />
+                        )
+                      }
                       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
                         className={sortBlockClasses}
                         onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
                       >
-                        {
-                          selectAll && column.field === 'status'
-                          && (
-                            <StyledCheckbox
-                              checked={selectedAll}
-                              onChange={() => setSelectedAll((prevState) => !prevState)}
-                            />
-                          )
-                        }
-                        <div className={classNames(styles.flexCenter)}>{column.label}</div>
+                        <div className={classNames(styles.flexCenter)}>
+                          {column.label}
+                        </div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => icon.icon)

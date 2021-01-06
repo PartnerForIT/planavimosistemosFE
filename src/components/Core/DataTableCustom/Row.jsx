@@ -125,8 +125,10 @@ const Row = ({
             let minWidth = null;
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {
-                width = columnsWidth[column.field];
-                minWidth = columnsWidth[column.field];
+                minWidth = selectable && column.field === 'status'
+                  ? columnsWidth[column.field] - 35
+                  : columnsWidth[column.field];
+                width = minWidth;
               } else {
                 width = selectable
                   ? `calc((100% - ${totalCustomWidthColumns + 35}px) / ${columns.length - totalCustomColumns})`
@@ -156,7 +158,7 @@ const Row = ({
                   </>
                 </span>
                 {/* icon statys */}
-                {(statysIcon && width === 80)
+                {(statysIcon && (width === 80 || 80 - 35))
                   && (
                   <span className={styles.IconStatus}>
                     {row[column.field] === 1 && <CheckStatus />}

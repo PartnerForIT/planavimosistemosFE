@@ -79,13 +79,16 @@ const columns = [
 ];
 
 const columnsWidthArray = {
-  status: 80,
+  status: 120,
   name: 200,
   created_at: 220,
   updated_at: 220,
-  place: 100,
+  place: 150,
   skills: 200,
-  role: 100,
+  role: 150,
+  email: 250,
+  groups: 150,
+  subgroup: 150,
 };
 
 export default function AccountsList() {
@@ -295,6 +298,7 @@ export default function AccountsList() {
                     // totalDuration={totalDuration}
                     setSelectedItem={setSelected}
                     verticalOffset='300px'
+                    selectAll
                   />
                 </>
               )
