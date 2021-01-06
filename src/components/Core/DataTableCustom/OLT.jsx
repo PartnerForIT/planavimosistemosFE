@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -26,7 +26,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
-  selectAll = false, colored = { warning: false, error: false },
+  selectAllItems = null, colored = { warning: false, error: false },
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -35,10 +35,17 @@ export default function DataTable({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
+  const [selectAll, setSelectAll] = useState(false);
 
-  const [selectedAll, setSelectedAll] = useState(false);
+  const [all, setAll] = useState(false);
 
   const classes = useStyles();
+
+  useLayoutEffect(() => {
+    if (typeof selectAllItems === 'function') {
+      setSelectAll(true);
+    }
+  }, [selectAllItems]);
 
   useEffect(() => {
     const initSortOptions = (options) => {
@@ -202,12 +209,20 @@ export default function DataTable({
                       role='columnheader'
                     >
                       {
-                        selectAll && column.field === 'status'
+                       selectAll && column.field === 'status'
                         && (
                         <StyledCheckbox
                           style={{ padding: '0 9px 0 2px' }}
-                          checked={selectedAll}
-                          onChange={() => setSelectedAll((prevState) => !prevState)}
+                          onChange={() => {
+                            setAll((prevState) => {
+                              if (!prevState) {
+                                selectAllItems(tableData);
+                              } else {
+                                selectAllItems([]);
+                              }
+                              return !prevState;
+                            });
+                          }}
                         />
                         )
                       }
