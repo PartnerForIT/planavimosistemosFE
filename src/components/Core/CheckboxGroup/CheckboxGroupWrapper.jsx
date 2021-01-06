@@ -11,7 +11,7 @@ import styles from '../Select/Select.module.scss';
 
 const CheckboxGroupWrapper = ({
   items = [], onChange = () => ({}), height, maxHeight, wrapperMarginBottom,
-  defaultChecked = [], sorted,
+  defaultChecked = [], sorted = false,
 }) => {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([...defaultChecked]);
@@ -47,14 +47,12 @@ const CheckboxGroupWrapper = ({
 
     if (forceUpdate) {
       setForceUpdate(false);
-      setItemsArray(setCheckedToAll(itemsCopy));
-      setCheckedItems([...checkedItemsArray]);
-    } else {
-      setItemsArray(setCheckedToAll(items));
-      setCheckedItems([...checkedItemsArray]);
     }
+    setItemsArray(setCheckedToAll(itemsCopy));
+    setCheckedItems([...checkedItemsArray]);
+
     setItemsStat({ ...stat });
-  }, [defaultChecked, forceUpdate, items, itemsCopy]);
+  }, [forceUpdate, items, itemsCopy]);
 
   useEffect(() => {
     if (items) {
