@@ -21,13 +21,13 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, rolesSelector,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
   createEmployee,
-  getAccountGroups, getRoles, getSecurityCompany,
+  getAccountGroups, getSecurityCompany,
   loadEmployeesAll,
   loadEmployeesEdit,
   loadPlace,

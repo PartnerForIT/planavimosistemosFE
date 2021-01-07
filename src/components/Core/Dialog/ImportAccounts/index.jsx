@@ -120,7 +120,6 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
-  const [selectionReady, setSelectionReady] = useState(false);
 
   const clearData = () => {
     setTempFile(null);
