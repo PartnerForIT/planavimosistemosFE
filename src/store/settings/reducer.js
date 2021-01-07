@@ -252,7 +252,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
     }
     case GET_SETTINGS_EMPLOYEES:
-    case GET_SETTINGS_EMPLOYEES_ALL:
     case GET_SETTINGS_EMPLOYEES_QUERY:
     case GET_SETTINGS_EMPLOYEES_EDIT:
     {
@@ -260,9 +259,15 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: null,
         loading: true,
-        employeesLoading: true,
       };
     }
+    case GET_SETTINGS_EMPLOYEES_ALL:
+      return {
+        ...state,
+        error: null,
+        employeesLoading: true,
+      };
+
     case GET_SETTINGS_EMPLOYEES_SUCCESS: {
       return {
         ...state,

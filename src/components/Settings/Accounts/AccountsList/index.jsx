@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -181,6 +182,7 @@ export default function AccountsList() {
   const handleChangeUsers = (e) => {
     const { value } = e.target;
     setUsersOptions(parseInt(value, 10));
+    setCheckedItems([]);
     dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 3 ? { status: value } : null));
   };
 
@@ -359,7 +361,12 @@ export default function AccountsList() {
           <ImportAccounts
             title={t('Import accounts')}
             open={importVisible}
-            handleClose={() => setImportVisible(false)}
+            handleClose={() => {
+              setImportVisible(false);
+              if (!_.isEmpty(imported)) {
+                setCheckedItems([]);
+              }
+            }}
             imported={imported}
             clearImported={clearImported}
             employees={employees}
