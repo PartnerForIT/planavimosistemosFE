@@ -120,6 +120,16 @@ export default function ImportAccounts({
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
 
+  const clearData = () => {
+    setTempFile(null);
+    setFile(null);
+    setFileName('');
+    setData([]);
+    setSelectedItems([]);
+    setIgnoreEmpty(false);
+    setCreateMissing(true);
+  };
+
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
     data.forEach((item) => {
@@ -147,6 +157,20 @@ export default function ImportAccounts({
 
   useEffect(() => {
     if (file) {
+      const errorIndex = file?.findIndex((item) => item.errors?.length);
+
+      if (errorIndex !== -1) {
+        const errorRow = file[errorIndex];
+        const errors = errorRow?.errors;
+        dispatch(showSnackbar(t('An error was found in the CSV file. Only correct CSV file should be loaded.'), 'error'));
+        const timeOut = setTimeout(() => {
+          dispatch(showSnackbar((`${t('Row')} ${errorIndex}: ${errors[0].message}`), 'error'));
+          clearTimeout(timeOut);
+        }, 4000);
+        clearData();
+        return;
+      }
+
       const mappedFile = file
         ?.filter((item) => item.data.length)
         .map((emp, index) => {
@@ -176,7 +200,7 @@ export default function ImportAccounts({
         });
       setData(mappedFile ?? null);
     }
-  }, [file]);
+  }, [dispatch, file, t]);
 
   useEffect(() => {
     if (fileName) {
@@ -252,18 +276,12 @@ export default function ImportAccounts({
         };
       });
 
-    dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
+    // dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
   };
 
   const handleCloseHandler = () => {
     handleClose();
-    setTempFile(null);
-    setFile(null);
-    setFileName('');
-    setData([]);
-    setSelectedItems([]);
-    setIgnoreEmpty(false);
-    setCreateMissing(true);
+    clearData();
     clearImported();
   };
 
@@ -285,6 +303,7 @@ export default function ImportAccounts({
                 setFileName={setFileName}
                 setFile={setTempFile}
                 setBackgroundColor={setBackgroundColor}
+                clearData={clearData}
               />
               {t('Select file')}
             </label>
