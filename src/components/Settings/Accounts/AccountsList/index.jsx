@@ -22,7 +22,7 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, importLoadingSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
@@ -110,6 +110,7 @@ export default function AccountsList() {
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
+  const importLoading = useSelector(importLoadingSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -384,6 +385,7 @@ export default function AccountsList() {
             imported={imported}
             clearImported={clearImported}
             employees={employees}
+            loading={importLoading}
           />
         </PageLayout>
       </Dashboard>

@@ -582,13 +582,13 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
 
     case SEND_IMPORTED_EMPLOYEES:
-      return state;
+      return { ...state, importLoading: true };
 
     case SEND_IMPORTED_EMPLOYEES_SUCCESS:
-      return { ...state, import: action.data };
+      return { ...state, import: action.data, importLoading: false };
 
     case SEND_IMPORTED_EMPLOYEES_ERROR:
-      return state;
+      return { ...state, importLoading: false };
 
     default:
       return state;

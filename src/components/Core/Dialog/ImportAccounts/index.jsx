@@ -19,6 +19,7 @@ import OverView from './OverView';
 import FancyInput from './FancyInput';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
 import { loadEmployeesAll, sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
+import Progress from '../../Progress';
 
 const columns = [
 
@@ -100,6 +101,7 @@ export default function ImportAccounts({
   imported,
   clearImported,
   employees = [],
+  loading = false,
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -334,6 +336,14 @@ export default function ImportAccounts({
       title={title}
     >
       <div className={classes.inner}>
+        {
+        loading
+        && (
+        <div className={classes.loader}>
+          <Progress />
+        </div>
+        )
+        }
         {/* import CSV */}
         <div className={style.formControl}>
           <Label htmlFor='text' text={t('Company name')} />

@@ -14,6 +14,7 @@ export const placesSelector = (state) => state.settings.places;
 export const employees = (state) => state.settings.employees;
 export const employeesSelector = createSelector(employees, (e) => e);
 export const importedEmployees = (state) => state.settings.import;
+export const importLoadingSelector = (state) => state.settings.importLoading;
 
 export const employeeSelector = (state) => state.settings.employee;
 export const employeesLoadingSelector = (state) => state.settings.employeesLoading;
