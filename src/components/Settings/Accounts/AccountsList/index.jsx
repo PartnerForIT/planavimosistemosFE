@@ -166,19 +166,13 @@ export default function AccountsList() {
   const clearImported = () => dispatch(sendImportedEmployeesSuccess());
 
   useEffect(() => {
-    if (importVisible) {
-      dispatch(getRoles(id));
-    }
-  }, [dispatch, id, importVisible]);
-
-  useEffect(() => {
-    if (newVisible || editVisible || importVisible) {
+    if (newVisible || editVisible) {
       dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
     }
-  }, [dispatch, editVisible, id, importVisible, newVisible]);
+  }, [dispatch, editVisible, id, newVisible]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);

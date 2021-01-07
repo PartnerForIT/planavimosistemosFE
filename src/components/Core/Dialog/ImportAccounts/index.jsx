@@ -18,7 +18,7 @@ import StyledCheckbox from '../../Checkbox/Checkbox';
 import OverView from './OverView';
 import FancyInput from './FancyInput';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
-import { sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
+import { loadEmployeesAll, sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
 
 const columns = [
 
@@ -133,7 +133,10 @@ export default function ImportAccounts({
     setImportSuccess(false);
   };
 
-  const selectionHandler = (itemId, value) => {
+  const selectionHandler = (itemId, value, e) => {
+    if (typeof e === 'object') {
+      setImportSuccess(false);
+    }
     // eslint-disable-next-line array-callback-return
     data.forEach((item) => {
       if (item.id === itemId) {
@@ -319,6 +322,9 @@ export default function ImportAccounts({
     handleClose();
     clearData();
     clearImported();
+    if (!_.isEmpty(imported)) {
+      dispatch(loadEmployeesAll(companyId));
+    }
   };
 
   return (

@@ -75,11 +75,11 @@ const Row = ({
     setSubTableExpanded(!subTableExpanded);
   };
 
-  const onSelectHandler = (id, checked) => {
+  const onSelectHandler = (id, checked, e) => {
     if (!(colored.warning && row.warning)
         // && !(colored.error && row.error)
         && !(colored.success && row.success)) {
-      onSelect(id, checked);
+      onSelect(id, checked, e);
     }
   };
 
