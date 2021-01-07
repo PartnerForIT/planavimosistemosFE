@@ -365,6 +365,9 @@ export default function AccountsList() {
               setImportVisible(false);
               if (!_.isEmpty(imported)) {
                 setCheckedItems([]);
+                dispatch(loadSkills(id));
+                dispatch(getAccountGroups(id));
+                dispatch(loadPlace(id));
               }
             }}
             imported={imported}
