@@ -368,6 +368,7 @@ export default function AccountsList() {
             handleClose={() => setImportVisible(false)}
             imported={imported}
             clearImported={clearImported}
+            employees={employees}
           />
         </PageLayout>
       </Dashboard>

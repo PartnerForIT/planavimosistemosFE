@@ -213,6 +213,7 @@ export default function DataTable({
                         && (
                         <StyledCheckbox
                           style={{ padding: '0 9px 0 2px' }}
+                          checked={all}
                           onChange={() => {
                             setAll((prevState) => {
                               if (!prevState) {

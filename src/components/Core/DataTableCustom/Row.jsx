@@ -14,7 +14,7 @@ import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 const Row = ({
   row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
   totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
-  hoverActions, hoverable = false, colored = { warning: false, error: false },
+  hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -52,6 +52,7 @@ const Row = ({
     { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
     { [styles.contentVisibility]: !hoverActions },
+    { [styles.rowSuccess]: row.success },
   );
 
   const Components = {
@@ -75,16 +76,20 @@ const Row = ({
   };
 
   const onSelectHandler = (id, checked) => {
-    if (!(colored.warning && row.warning) && !(colored.error && row.error)) {
+    if (!(colored.warning && row.warning) && !(colored.error && row.error)
+        && !(colored.success && row.success)) {
       onSelect(id, checked);
     }
   };
 
   useEffect(() => {
-    if (((colored.warning && row.warning) || (colored.error && row.error)) && row.checked) {
+    if (((colored.warning && row.warning)
+        || (colored.error && row.error)
+        || (colored.success && row.success)) && row.checked) {
       onSelect(row.id, false);
     }
-  }, [colored.error, colored.warning, onSelect, row.checked, row.error, row.id, row.warning]);
+  }, [colored.error, colored.success, colored.warning,
+    onSelect, row.checked, row.error, row.id, row.success, row.warning]);
 
   return (
     <div
@@ -110,7 +115,9 @@ const Row = ({
                 className={classNames(styles.checkbox)}
                 checked={!!row.checked}
                 onChange={onSelectHandler}
-                disabled={(colored.warning && row.warning) || (colored.error && row.error)}
+                disabled={(colored.warning && row.warning)
+                || (colored.error && row.error)
+                || (colored.success && row.success)}
               />
             </div>
           )

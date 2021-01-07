@@ -99,6 +99,7 @@ export default function ImportAccounts({
   open,
   imported,
   clearImported,
+  employees = [],
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -156,8 +157,8 @@ export default function ImportAccounts({
   }, [imported]);
 
   useEffect(() => {
-    if (file) {
-      const errorIndex = file?.findIndex((item) => item.errors?.length);
+    if (Array.isArray(file)) {
+      const errorIndex = file.findIndex((item) => item.errors?.length);
 
       if (errorIndex !== -1) {
         const errorRow = file[errorIndex];
@@ -178,33 +179,35 @@ export default function ImportAccounts({
             id: index,
           };
 
-          if (emp.errors.length || emp.data.length !== order.length) {
+          // TODO error on unsuccessful import
+          if (emp.data.length !== order.length) {
             emp.data.forEach((field, idx) => {
               temp[order[idx]] = field;
             });
-            temp.error = true;
+            temp.warning = true;
             return temp;
           }
-          if (!emp.errors.length) {
-            if (emp.data.length && order.length) {
-              emp.data.forEach((field, idx) => {
-                temp[order[idx]] = field;
-                if (!field.trim()) {
-                  temp.warning = true;
-                }
-              });
-              return temp;
+
+          emp.data.forEach((field, idx) => {
+            temp[order[idx]] = field;
+            if (!field.trim()) {
+              temp.warning = true;
             }
+          });
+
+          if (employees.some(({ email }) => email === temp.email)) {
+            temp.success = true;
           }
-          return emp;
+
+          return temp;
         });
       setData(mappedFile ?? null);
     }
-  }, [dispatch, file, t]);
+  }, [dispatch, employees, file, t]);
 
   useEffect(() => {
     if (fileName) {
-      if (fileName?.split('.').pop() !== 'csv') {
+      if (fileName.split('.').pop() !== 'csv') {
         dispatch(showSnackbar(t('Only CSV files are supported.'), 'error'));
         setTempFile(null);
         setFileName('');
@@ -233,10 +236,10 @@ export default function ImportAccounts({
     }).map(({ id }) => id);
 
     setData(data.map(({
-      warning, error, checked, ...rest
+      warning, error, success, checked, ...rest
     }) => {
       let check = !!value;
-      if (!error) {
+      if (!success) {
         if (ignoreEmpty && warning) {
           check = !!value;
         }
@@ -246,7 +249,7 @@ export default function ImportAccounts({
       }
 
       return {
-        ...rest, warning, error, checked: check,
+        ...rest, warning, error, success, checked: check,
       };
     }));
     setSelectedItems(checkedItems);
@@ -256,7 +259,7 @@ export default function ImportAccounts({
     const users = data
       .filter((item) => selectedItems.some((i) => i === item.id))
       .map(({
-        id, warning, error, checked, // ~> not used when importing on the backend
+        id, warning, error, checked, success, // ~> not used when importing on the backend
         status, ...rest
       }) => {
         const statusId = () => {
@@ -276,7 +279,7 @@ export default function ImportAccounts({
         };
       });
 
-    // dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
+    dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
   };
 
   const handleCloseHandler = () => {
@@ -343,7 +346,7 @@ export default function ImportAccounts({
             selectedItem={{}}
             setSelectedItem={() => ({})}
             onSelect={selectionHandler}
-            colored={{ warning: !ignoreEmpty, error: true }}
+            colored={{ warning: !ignoreEmpty, error: true, success: true }}
             selectAllItems={selectAllHandler}
           />
           {!data.length && <OverView />}
