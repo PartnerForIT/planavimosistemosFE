@@ -27,6 +27,7 @@ export default function DataTable({
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
   selectAllItems = null, colored = { warning: false, error: false },
+  all = false, setAll = () => ({}),
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -36,8 +37,6 @@ export default function DataTable({
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
   const [selectAll, setSelectAll] = useState(false);
-
-  const [all, setAll] = useState(false);
 
   const classes = useStyles();
 

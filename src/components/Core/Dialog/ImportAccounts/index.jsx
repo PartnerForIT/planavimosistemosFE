@@ -120,6 +120,7 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [all, setAll] = useState(false);
 
   const clearData = () => {
     setTempFile(null);
@@ -386,6 +387,8 @@ export default function ImportAccounts({
             onSelect={selectionHandler}
             colored={{ warning: !ignoreEmpty, error: true, success: true }}
             selectAllItems={selectAllHandler}
+            all={all}
+            setAll={setAll}
           />
           {!data.length && <OverView />}
           {/*   loader? */}

@@ -124,6 +124,7 @@ export default function AccountsList() {
 
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
   const [employeesAll, setEmployeesAll] = useState([]);
+  const [all, setAll] = useState(false);
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -258,6 +259,14 @@ export default function AccountsList() {
     setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
   };
 
+  useEffect(() => {
+    if (employees.length && checkedItems.length === employees.length) {
+      setAll(true);
+    } else {
+      setAll(false);
+    }
+  }, [checkedItems.length, employees.length]);
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -303,6 +312,8 @@ export default function AccountsList() {
                     setSelectedItem={setSelected}
                     verticalOffset='300px'
                     selectAllItems={selectAllHandler}
+                    all={all}
+                    setAll={setAll}
                   />
                 </>
               )
