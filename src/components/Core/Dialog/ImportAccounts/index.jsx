@@ -120,6 +120,7 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [selectionReady, setSelectionReady] = useState(false);
 
   const clearData = () => {
     setTempFile(null);
@@ -129,6 +130,7 @@ export default function ImportAccounts({
     setSelectedItems([]);
     setIgnoreEmpty(false);
     setCreateMissing(true);
+    setImportSuccess(false);
   };
 
   const selectionHandler = (itemId, value) => {
@@ -214,6 +216,37 @@ export default function ImportAccounts({
       }
     }
   }, [dispatch, fileName, t, tempFile]);
+
+  useEffect(() => {
+    const { users } = imported;
+    if (importSuccess) {
+      if (selectedItems.length) {
+        if (Array.isArray(users)) {
+          setData((prevState) => prevState.map(({
+            id, email, error, success, ...rest
+          }) => {
+            if (selectedItems.some((i) => i === id)) {
+              const suc = users.some(({ user }) => user.email === email);
+              return {
+                id,
+                email,
+                ...rest,
+                // eslint-disable-next-line no-nested-ternary
+                error: !suc,
+                success: suc,
+              };
+            }
+
+            return {
+              id, success, email, ...rest,
+            };
+          }));
+        } else {
+          setData((prevState) => prevState.map(({ id, ...rest }) => ({ id, ...rest, error: !!selectedItems.some((i) => i === id) })));
+        }
+      }
+    }
+  }, [importSuccess, imported, imported.users, selectedItems, selectedItems.length]);
 
   const fakeUpload = () => {
     if (tempFile) {
