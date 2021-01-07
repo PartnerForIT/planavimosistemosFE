@@ -157,7 +157,7 @@ function Third({
 
   return (
     <>
-      <div className={style.thirdForm}>
+      <form className={style.thirdForm}>
 
         <div className={classnames(style.info, style.borderRight)}>
           <UserCard user={user} groups={groups} places={places} skills={skills} />
@@ -171,7 +171,7 @@ function Third({
                 value='invitation'
                 control={(
                   <BlueRadio
-                    checked={simpleInvitation}
+                    checked={!!simpleInvitation}
                     onChange={checkboxHandler}
                     value='simple'
                     name='invitation'
@@ -215,6 +215,7 @@ function Third({
                           value={user.password ?? ''}
                           onChange={handleInput}
                           required
+                          autoComplete='new-password'
                         />
                         {
                           errors.password
@@ -229,7 +230,7 @@ function Third({
           }
         </div>
 
-      </div>
+      </form>
       <div className={style.buttons}>
         <Button onClick={previousStep} size='big' cancel>{t('Back')}</Button>
         <Button
@@ -264,6 +265,7 @@ const Email = ({
               type='email'
               required
               fullWidth
+              autoComplete='email'
               placeholder={t('User email')}
               value={user.email ?? ''}
               onChange={handleInput}

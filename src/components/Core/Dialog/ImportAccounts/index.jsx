@@ -192,6 +192,7 @@ export default function ImportAccounts({
     if (tempFile) {
       if (fileName?.split('.').pop() === 'csv') {
         setFile(tempFile);
+        setTempFile(null);
       }
     }
   };
@@ -200,19 +201,12 @@ export default function ImportAccounts({
     const value = items.length;
     // eslint-disable-next-line no-shadow
     const checkedItems = items.filter(({ warning, error }) => {
-      if (!error) {
-        if (ignoreEmpty && warning) {
-          return true;
-        }
-        if (!ignoreEmpty && warning) {
-          return false;
-        }
-        if (!error && !warning) {
-          return true;
-        }
+      if (error) { return false; }
+      if (ignoreEmpty) {
+        return true;
       }
-      return true;
-    });
+      return !(!ignoreEmpty && warning);
+    }).map(({ id }) => id);
 
     setData(data.map(({
       warning, error, checked, ...rest
