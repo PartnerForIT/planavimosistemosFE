@@ -76,7 +76,8 @@ const Row = ({
   };
 
   const onSelectHandler = (id, checked) => {
-    if (!(colored.warning && row.warning) && !(colored.error && row.error)
+    if (!(colored.warning && row.warning)
+        // && !(colored.error && row.error)
         && !(colored.success && row.success)) {
       onSelect(id, checked);
     }
@@ -84,12 +85,11 @@ const Row = ({
 
   useEffect(() => {
     if (((colored.warning && row.warning)
-        || (colored.error && row.error)
+        // || (colored.error && row.error)
         || (colored.success && row.success)) && row.checked) {
       onSelect(row.id, false);
     }
-  }, [colored.error, colored.success, colored.warning,
-    onSelect, row.checked, row.error, row.id, row.success, row.warning]);
+  }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning]);
 
   return (
     <div
@@ -116,7 +116,7 @@ const Row = ({
                 checked={!!row.checked}
                 onChange={onSelectHandler}
                 disabled={(colored.warning && row.warning)
-                || (colored.error && row.error)
+                // || (colored.error && row.error)
                 || (colored.success && row.success)}
               />
             </div>
