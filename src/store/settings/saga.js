@@ -1141,10 +1141,9 @@ function* sendImportedEmployees(action) {
     const { data } = yield call(
       axios.post,
       `${config.api.url}/company/${companyId}/employees/import-store`,
-      null,
+      { users },
       {
         params: {
-          users: JSON.stringify([...users]),
           create_missing: createMissing,
         },
         ...token(),
