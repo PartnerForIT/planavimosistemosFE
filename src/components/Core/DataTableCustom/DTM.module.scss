@@ -352,6 +352,11 @@ header {
   cursor: pointer;
 }
 
+.contentVisibility {
+  content-visibility: auto;
+  contain-intrinsic-size: 32px 1000px;
+}
+
 .rowSelected {
   background-color: rgba(0, 133, 255, 0.07);
 }

@@ -51,6 +51,7 @@ const Row = ({
     { [styles.rowWarning]: (colored.warning && row.warning) },
     { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
+    { [styles.contentVisibility]: !hoverActions },
   );
 
   const Components = {
