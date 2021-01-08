@@ -118,6 +118,7 @@ header {
   padding: 0 10px;
   width: fit-content;
   min-width: 100%;
+  position: relative;
 
   &.header {
     padding-left: 15px;
@@ -440,9 +441,18 @@ header {
   }
 }
 
+.actions {
+  &Visible {
+    visibility: initial;
+  }
+
+  &Hidden {
+    visibility: hidden;
+  }
+}
+
 .absoluteActions {
-  position: fixed;
-  right: 75px;
+  position: absolute;
   padding: 2px 20px;
   display: inline-block;
   width: 120px;

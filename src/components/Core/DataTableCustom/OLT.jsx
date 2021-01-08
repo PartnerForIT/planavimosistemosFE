@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -39,6 +41,8 @@ export default function DataTable({
   const [selectAll, setSelectAll] = useState(false);
 
   const classes = useStyles();
+
+  const tableRef = useRef(null);
 
   useLayoutEffect(() => {
     if (typeof selectAllItems === 'function') {
@@ -147,6 +151,7 @@ export default function DataTable({
       style={{ height: `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'
+      ref={tableRef}
     >
       <Scrollbar
         className={scrollableContentClasses}
@@ -257,6 +262,7 @@ export default function DataTable({
           {
             tableData.map((row, idx) => (
               <Row
+                index={idx}
                 key={idx.toString()}
                 row={row}
                 selectedItem={selectedItem}
@@ -276,6 +282,7 @@ export default function DataTable({
                 hoverActions={hoverActions}
                 hoverable={hoverable}
                 colored={colored}
+                tableRef={tableRef}
               />
             ))
           }

@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -12,9 +14,10 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
+  index, row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
   totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
+  tableRef = null,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -25,6 +28,8 @@ const Row = ({
 
   const [subTableExpanded, setSubTableExpanded] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
+
+  const [actionsPositionLeft, setActionsPositionLeft] = useState(0);
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
@@ -83,6 +88,20 @@ const Row = ({
     }
   };
 
+  const rowRef = useRef(null);
+
+  useEffect(() => {
+    if (rowRef && tableRef) {
+      const windowWidth = window.innerWidth;
+      const { left: rowLeft } = rowRef.current.getBoundingClientRect();
+      const { right: tableRight } = tableRef.current.getBoundingClientRect();
+      // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
+      setActionsPositionLeft(
+        windowWidth - (rowLeft + windowWidth - tableRight) - 120 /* actions width */ - 32, /* scroll width */
+      );
+    }
+  }, [tableRef]);
+
   useEffect(() => {
     if (((colored.warning && row.warning)
         // || (colored.error && row.error)
@@ -97,10 +116,18 @@ const Row = ({
       role='rowgroup'
       onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
       onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
+      ref={rowRef}
     >
       {
-        actionsVisible && hoverActions && (
-          <RowActions editRow={editRow} removeRow={removeRow} absolute id={row.id} />
+        hoverActions && (
+          <RowActions
+            editRow={editRow}
+            removeRow={removeRow}
+            visible={actionsVisible}
+            absolute
+            id={row.id}
+            left={actionsPositionLeft}
+          />
         )
       }
       <div className={rowWrapperClasses}>
@@ -201,16 +228,16 @@ const Row = ({
     </div>
   );
 };
-
 export default Row;
 
 const RowActions = ({
-  id,
-  editRow,
-  removeRow,
-  absolute = false,
+  id, editRow, removeRow, absolute = false, visible = false, left,
 }) => (
-  <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
+  <div
+    className={classNames([styles.ActionsTable,
+      visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
+    style={absolute ? { left } : {}}
+  >
     <button onClick={() => editRow(id)}>
       <EditIconFixedFill />
     </button>
