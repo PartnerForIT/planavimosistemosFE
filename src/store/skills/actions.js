@@ -14,14 +14,13 @@ export const getSkills = (companyId) => ({
   },
 });
 
-export const getReportsSkills = (queryObj) => ({
+export const getReportsSkills = ({ companyId, ...rest }) => ({
   type: GET_SKILLS,
   request: {
     method: 'GET',
-    url: `/company/${queryObj.company_id}/reports/skills?${makeQueryString(queryObj)}`,
+    url: `/company/${companyId}/reports/skills?${makeQueryString(rest)}`,
   },
   meta: {
     thunk: true,
   },
 });
-

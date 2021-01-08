@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createRequestInstance, watchRequests } from 'redux-saga-requests';
-import { all } from "redux-saga/effects";
+import { all } from 'redux-saga/effects';
 import { createDriver } from 'redux-saga-requests-axios';
 import config from 'config';
 import routes from 'config/routes';

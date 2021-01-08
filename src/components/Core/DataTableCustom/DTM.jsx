@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth,
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -59,7 +59,7 @@ export default function DataTable({
       }
       return total;
     }, 0));
-  }, [columns]);
+  }, [columns, columnsWidth]);
 
   useEffect(() => {
     const initData = { checked: 0, total: 0 };
@@ -219,7 +219,26 @@ export default function DataTable({
                         <div className={classNames(styles.flexCenter)}>{column.label}</div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
-                          && fieldIcons[column.field].map((icon) => icon.icon)
+                          && fieldIcons[column.field].map((icon) => (
+                            <React.Fragment key={icon.value}>
+                              {
+                               statusClickable
+                                 ? (
+                                   <button
+                                     className={classNames(styles.iconButton,
+                                       sortStatus.some((i) => i === icon.value) ? styles.deselect : '')}
+                                     onClick={(e) => {
+                                       e.stopPropagation();
+                                       icon.onClick(icon.value);
+                                     }}
+                                   >
+                                     {icon.icon}
+                                   </button>
+                                 )
+                                 : icon.icon
+                              }
+                            </React.Fragment>
+                          ))
                         }
                         { sortable && (
                           <div className={classNames(styles.flexCenter, styles.sortIcon)}>
@@ -269,7 +288,7 @@ export default function DataTable({
         { typeof downloadExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
+            className={classNames(styles.pointer, styles.mr10)}
             onClick={downloadExcel}
           >
             <ExcelIcon />

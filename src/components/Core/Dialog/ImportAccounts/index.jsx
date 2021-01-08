@@ -18,7 +18,8 @@ import StyledCheckbox from '../../Checkbox/Checkbox';
 import OverView from './OverView';
 import FancyInput from './FancyInput';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
-import { sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
+import { loadEmployeesAll, sendImportedEmployees, showSnackbar } from '../../../../store/settings/actions';
+import Progress from '../../Progress';
 
 const columns = [
 
@@ -68,6 +69,16 @@ const columns = [
   },
 ];
 
+const columnsWidth = {
+  status: 120,
+  name: 200,
+  place: 150,
+  skills: 200,
+  role: 150,
+  email: 250,
+  groups: 150,
+  subgroup: 150,
+};
 const order = [
   'status', 'name', 'surname', 'role', 'email', 'skill', 'group', 'subgroup', 'place',
 ];
@@ -89,6 +100,8 @@ export default function ImportAccounts({
   open,
   imported,
   clearImported,
+  employees = [],
+  loading = false,
 }) {
   const { t } = useTranslation();
   const styles = useStyles();
@@ -109,8 +122,23 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [all, setAll] = useState(false);
 
-  const selectionHandler = (itemId, value) => {
+  const clearData = () => {
+    setTempFile(null);
+    setFile(null);
+    setFileName('');
+    setData([]);
+    setSelectedItems([]);
+    setIgnoreEmpty(false);
+    setCreateMissing(true);
+    setImportSuccess(false);
+  };
+
+  const selectionHandler = (itemId, value, e) => {
+    if (typeof e === 'object') {
+      setImportSuccess(false);
+    }
     // eslint-disable-next-line array-callback-return
     data.forEach((item) => {
       if (item.id === itemId) {
@@ -136,7 +164,21 @@ export default function ImportAccounts({
   }, [imported]);
 
   useEffect(() => {
-    if (file) {
+    if (Array.isArray(file)) {
+      const errorIndex = file.findIndex((item) => item.errors?.length);
+
+      if (errorIndex !== -1) {
+        const errorRow = file[errorIndex];
+        const errors = errorRow?.errors;
+        dispatch(showSnackbar(t('An error was found in the CSV file. Only correct CSV file should be loaded.'), 'error'));
+        const timeOut = setTimeout(() => {
+          dispatch(showSnackbar((`${t('Row')} ${errorIndex}: ${errors[0].message}`), 'error'));
+          clearTimeout(timeOut);
+        }, 4000);
+        clearData();
+        return;
+      }
+
       const mappedFile = file
         ?.filter((item) => item.data.length)
         .map((emp, index) => {
@@ -144,29 +186,31 @@ export default function ImportAccounts({
             id: index,
           };
 
-          if (emp.errors.length || emp.data.length !== order.length) {
+          // TODO error on unsuccessful import
+          if (emp.data.length !== order.length) {
             emp.data.forEach((field, idx) => {
               temp[order[idx]] = field;
             });
-            temp.error = true;
+            temp.warning = true;
             return temp;
           }
-          if (!emp.errors.length) {
-            if (emp.data.length && order.length) {
-              emp.data.forEach((field, idx) => {
-                temp[order[idx]] = field;
-                if (!field.trim()) {
-                  temp.warning = true;
-                }
-              });
-              return temp;
+
+          emp.data.forEach((field, idx) => {
+            temp[order[idx]] = field;
+            if (!field.trim()) {
+              temp.warning = true;
             }
+          });
+
+          if (employees.some(({ email }) => email === temp.email)) {
+            temp.success = true;
           }
-          return emp;
+
+          return temp;
         });
       setData(mappedFile ?? null);
     }
-  }, [file]);
+  }, [dispatch, employees, file, t]);
 
   useEffect(() => {
     if (fileName) {
@@ -178,23 +222,82 @@ export default function ImportAccounts({
     }
   }, [dispatch, fileName, t, tempFile]);
 
+  useEffect(() => {
+    const { users } = imported;
+    if (importSuccess) {
+      if (selectedItems.length) {
+        if (Array.isArray(users)) {
+          setData((prevState) => prevState.map(({
+            id, email, error, success, ...rest
+          }) => {
+            if (selectedItems.some((i) => i === id)) {
+              const suc = users.some(({ user }) => user.email === email);
+              return {
+                id,
+                email,
+                ...rest,
+                // eslint-disable-next-line no-nested-ternary
+                error: !suc,
+                success: suc,
+              };
+            }
+
+            return {
+              id, success, email, ...rest,
+            };
+          }));
+        } else {
+          setData((prevState) => prevState.map(({ id, ...rest }) => ({ id, ...rest, error: !!selectedItems.some((i) => i === id) })));
+        }
+      }
+    }
+  }, [importSuccess, imported, imported.users, selectedItems, selectedItems.length]);
+
   const fakeUpload = () => {
     if (tempFile) {
-      if (fileName.split('.').pop() === 'csv') {
+      if (fileName?.split('.').pop() === 'csv') {
         setFile(tempFile);
+        setTempFile(null);
       }
     }
   };
 
-  useEffect(() => {
+  const selectAllHandler = (items = []) => {
+    const value = items.length;
+    // eslint-disable-next-line no-shadow
+    const checkedItems = items.filter(({ warning, error }) => {
+      if (error) { return false; }
+      if (ignoreEmpty) {
+        return true;
+      }
+      return !(!ignoreEmpty && warning);
+    }).map(({ id }) => id);
 
-  }, []);
+    setData(data.map(({
+      warning, error, success, checked, ...rest
+    }) => {
+      let check = !!value;
+      if (!success) {
+        if (ignoreEmpty && warning) {
+          check = !!value;
+        }
+        if (!ignoreEmpty && warning) {
+          check = false;
+        }
+      }
+
+      return {
+        ...rest, warning, error, success, checked: check,
+      };
+    }));
+    setSelectedItems(checkedItems);
+  };
 
   const importHandler = () => {
     const users = data
       .filter((item) => selectedItems.some((i) => i === item.id))
       .map(({
-        id, warning, error, checked, // ~> not used when importing on the backend
+        id, warning, error, checked, success, // ~> not used when importing on the backend
         status, ...rest
       }) => {
         const statusId = () => {
@@ -219,14 +322,11 @@ export default function ImportAccounts({
 
   const handleCloseHandler = () => {
     handleClose();
-    setTempFile(null);
-    setFile(null);
-    setFileName('');
-    setData([]);
-    setSelectedItems([]);
-    setIgnoreEmpty(false);
-    setCreateMissing(true);
+    clearData();
     clearImported();
+    if (!_.isEmpty(imported)) {
+      dispatch(loadEmployeesAll(companyId));
+    }
   };
 
   return (
@@ -236,7 +336,14 @@ export default function ImportAccounts({
       title={title}
     >
       <div className={classes.inner}>
-
+        {
+        loading
+        && (
+        <div className={classes.loader}>
+          <Progress />
+        </div>
+        )
+        }
         {/* import CSV */}
         <div className={style.formControl}>
           <Label htmlFor='text' text={t('Company name')} />
@@ -248,6 +355,7 @@ export default function ImportAccounts({
                 setFileName={setFileName}
                 setFile={setTempFile}
                 setBackgroundColor={setBackgroundColor}
+                clearData={clearData}
               />
               {t('Select file')}
             </label>
@@ -280,13 +388,17 @@ export default function ImportAccounts({
           <DataTable
             data={data}
             columns={columns ?? []}
+            columnsWidth={columnsWidth}
             verticalOffset='55vh'
             selectable
             onColumnsChange={() => ({})}
             selectedItem={{}}
             setSelectedItem={() => ({})}
             onSelect={selectionHandler}
-            colored={{ warning: !ignoreEmpty, error: true }}
+            colored={{ warning: !ignoreEmpty, error: true, success: true }}
+            selectAllItems={selectAllHandler}
+            all={all}
+            setAll={setAll}
           />
           {!data.length && <OverView />}
           {/*   loader? */}

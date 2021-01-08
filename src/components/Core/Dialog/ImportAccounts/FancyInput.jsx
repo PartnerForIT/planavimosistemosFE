@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { CSVReader } from 'react-papaparse';
 
-const FancyInput = ({ setFileName, setBackgroundColor, setFile }) => {
+const FancyInput = ({
+  setFileName, setBackgroundColor, setFile, clearData,
+}) => {
   useEffect(() => {
     const backgroundColor = window.getComputedStyle(document.querySelector('input[disabled]'))?.backgroundColor;
     setBackgroundColor(backgroundColor);
@@ -21,7 +23,8 @@ const FancyInput = ({ setFileName, setBackgroundColor, setFile }) => {
       />
       <CSVReader
         noDrag
-        onDrop={(data, file1) => {
+        onFileLoad={(data, file1) => {
+          clearData();
           setFile(data);
           setFileName(file1.name);
         }}

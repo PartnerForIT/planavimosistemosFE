@@ -1,9 +1,12 @@
+@import "../variables";
+
 $table-header: #1976d2;
 $table-header-border: #1565c0;
 $table-border: #d9d9d9;
 $row-bg: #f4f2f1;
 $row-warn-bg: #fffbea;
 $row-error-bg: #ffebec;
+$icon-transform-default: translateY(0);
 
 header {
   box-sizing: border-box;
@@ -26,6 +29,7 @@ header {
 // search-table
 .headerWrapperSearch {
   @extend .headerWrapper;
+
   padding-bottom: 60px;
   box-shadow: none;
   background: linear-gradient(to bottom, #e5f0fa 43%, #fff 43%);
@@ -42,7 +46,7 @@ header {
     width: 100%;
   }
 
-  &:after {
+  &::after {
     content: "";
     position: absolute;
     display: block;
@@ -57,6 +61,7 @@ header {
 
 .simpleTable {
   @extend .headerWrapper;
+
   background: #fff;
   box-shadow: none;
   border-bottom: 1px solid $row-bg;
@@ -113,6 +118,7 @@ header {
   padding: 0 10px;
   width: fit-content;
   min-width: 100%;
+  position: relative;
 
   &.header {
     padding-left: 15px;
@@ -244,8 +250,7 @@ header {
 }
 
 .groupContainer {
-  padding: 0 15px;
-  padding-right: 30px;
+  padding: 0 30px 0 15px;
   min-width: 100%;
 
   &:first-of-type {
@@ -308,15 +313,19 @@ header {
   cursor: pointer;
 }
 
+.mr10 {
+  margin-right: 10px;
+}
+
 .nowrap {
   white-space: nowrap;
 }
 
 .collapsIcon {
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transform: rotate(-90deg);
+  transform: $icon-transform-default rotate(-90deg);
   width: 8.315px !important;
-  height: 10px !important;
+  height: 100% !important;
   margin-right: 5px;
   padding-right: 0 !important;
 
@@ -332,7 +341,7 @@ header {
 }
 
 .collapsIconRotated {
-  transform: rotate(0deg);
+  transform: $icon-transform-default rotate(0deg);
 }
 
 .rowWrapper {
@@ -342,6 +351,11 @@ header {
   user-select: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.contentVisibility {
+  content-visibility: auto;
+  contain-intrinsic-size: 32px 1000px;
 }
 
 .rowSelected {
@@ -356,6 +370,10 @@ header {
   background-color: $row-error-bg;
 }
 
+.rowSuccess {
+  background-color: $light-green-row-background;
+}
+
 // .reportsRowSelected {
 //   background-color: #fff;
 // }
@@ -363,13 +381,13 @@ header {
 .flexRowGlobal {
   display: flex;
   min-width: 140px;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0 1px;
 
-  // &:last-of-type {
-  //   justify-content: flex-end;
-  //   padding-right: 10px;
-  // }
+  &:last-of-type {
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
 }
 
 .flexRowGlobalReports {
@@ -390,12 +408,12 @@ header {
   color: #333945;
   min-width: 140px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 8px;
 
-  // &:last-of-type {
-  //   justify-content: flex-end;
-  // }
+  &:last-of-type {
+    justify-content: flex-end;
+  }
 }
 
 .IconStatus {
@@ -423,9 +441,18 @@ header {
   }
 }
 
+.actions {
+  &Visible {
+    visibility: initial;
+  }
+
+  &Hidden {
+    visibility: hidden;
+  }
+}
+
 .absoluteActions {
-  position: fixed;
-  right: 75px;
+  position: absolute;
   padding: 2px 20px;
   display: inline-block;
   width: 120px;
@@ -772,5 +799,15 @@ div {
 
 .scrollingSimplePanel {
   @extend .scrollingPanel;
+
   box-shadow: none;
+}
+
+.iconButton {
+  @extend %btn_unset;
+  @extend %button-hover;
+
+  &.deselect {
+    filter: grayscale(1);
+  }
 }

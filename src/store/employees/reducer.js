@@ -5,9 +5,7 @@ import {
 } from './types';
 
 const initialState = {
-  employees: {
-    users: [],
-  },
+  employees: [],
   employee: null,
   loading: false,
   error: null,

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -21,13 +22,13 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, rolesSelector,
+  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, importLoadingSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import {
   createEmployee,
-  getAccountGroups, getRoles, getSecurityCompany,
+  getAccountGroups, getSecurityCompany,
   loadEmployeesAll,
   loadEmployeesEdit,
   loadPlace,
@@ -79,13 +80,16 @@ const columns = [
 ];
 
 const columnsWidthArray = {
-  status: 80,
+  status: 120,
   name: 200,
   created_at: 220,
   updated_at: 220,
-  place: 100,
+  place: 150,
   skills: 200,
-  role: 100,
+  role: 150,
+  email: 250,
+  groups: 150,
+  subgroup: 150,
 };
 
 export default function AccountsList() {
@@ -98,7 +102,7 @@ export default function AccountsList() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const { users: employeesAll = [], stats = {} } = useSelector(employeesSelector);
+  const { users: Allemployees = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
   const skills = useSelector(categoriesSkillsSelector);
@@ -106,6 +110,7 @@ export default function AccountsList() {
   const places = useSelector(placesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
+  const importLoading = useSelector(importLoadingSelector);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -119,6 +124,8 @@ export default function AccountsList() {
   const [deleteVisible, setDeleteVisible] = useState(false);
 
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
+  const [employeesAll, setEmployeesAll] = useState([]);
+  const [all, setAll] = useState(false);
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -148,6 +155,12 @@ export default function AccountsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (Array.isArray(Allemployees)) {
+      setEmployeesAll([...Allemployees]);
+    }
+  }, [Allemployees]);
+
   const editRowHandler = (employeeId) => {
     dispatch(loadEmployeesEdit(id, employeeId));
     setEditVisible(employeeId);
@@ -156,19 +169,13 @@ export default function AccountsList() {
   const clearImported = () => dispatch(sendImportedEmployeesSuccess());
 
   useEffect(() => {
-    if (importVisible) {
-      dispatch(getRoles(id));
-    }
-  }, [dispatch, id, importVisible]);
-
-  useEffect(() => {
-    if (newVisible || editVisible || importVisible) {
+    if (newVisible || editVisible) {
       dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
     }
-  }, [dispatch, editVisible, id, importVisible, newVisible]);
+  }, [dispatch, editVisible, id, newVisible]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -177,6 +184,7 @@ export default function AccountsList() {
   const handleChangeUsers = (e) => {
     const { value } = e.target;
     setUsersOptions(parseInt(value, 10));
+    setCheckedItems([]);
     dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 3 ? { status: value } : null));
   };
 
@@ -244,6 +252,22 @@ export default function AccountsList() {
     return employees.sort(sortFunction);
   }, []);
 
+  const selectAllHandler = (data = []) => {
+    const value = data.length;
+    // eslint-disable-next-line no-shadow
+    const checkedItems = data.map(({ id }) => id);
+    setCheckedItems(checkedItems);
+    setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
+  };
+
+  useEffect(() => {
+    if (employees.length && checkedItems.length === employees.length) {
+      setAll(true);
+    } else {
+      setAll(false);
+    }
+  }, [checkedItems.length, employees.length]);
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -285,16 +309,12 @@ export default function AccountsList() {
                     hoverable
                     removeRow={deleteEmployee}
                     onSort={(field, asc) => sorting(employees, { field, asc })}
-                    // onSerach={searchHandler}
-                    // lastPage={page.last_page}
-                    // activePage={page.current_page}
-                    // itemsCountPerPage={page.per_page}
-                    // totalItemsCount={page.total}
-                    // handlePagination={console.log}
                     selectedItem={selected}
-                    // totalDuration={totalDuration}
                     setSelectedItem={setSelected}
                     verticalOffset='300px'
+                    selectAllItems={selectAllHandler}
+                    all={all}
+                    setAll={setAll}
                   />
                 </>
               )
@@ -353,9 +373,19 @@ export default function AccountsList() {
           <ImportAccounts
             title={t('Import accounts')}
             open={importVisible}
-            handleClose={() => setImportVisible(false)}
+            handleClose={() => {
+              setImportVisible(false);
+              if (!_.isEmpty(imported)) {
+                setCheckedItems([]);
+                dispatch(loadSkills(id));
+                dispatch(getAccountGroups(id));
+                dispatch(loadPlace(id));
+              }
+            }}
             imported={imported}
             clearImported={clearImported}
+            employees={employees}
+            loading={importLoading}
           />
         </PageLayout>
       </Dashboard>

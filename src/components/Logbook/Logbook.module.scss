@@ -1,3 +1,8 @@
+@import "../Core/variables";
+
+$actions-min-height: 114px;
+$sidebar-border-radius: 12px;
+
 .container {
   background-color: #edf4fa;
   box-sizing: border-box;
@@ -5,8 +10,8 @@
   //justify-content: center;
   height: 100vh;
   min-height: 435px;
-  padding: 0 25px 0 0;
-  width: 100vw;
+  //padding: 0 25px 0 0;
+  //width: calc(100vw - 20px * 2);
   //min-width: fit-content;
 }
 
@@ -34,8 +39,9 @@
 
 .rightSidebar {
   //align-items: center;
+  position: relative;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: $sidebar-border-radius;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   justify-content: center;
@@ -101,7 +107,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 25px - #{$actions-min-height});
 
     > div {
       align-items: center;
@@ -190,5 +196,80 @@
 
   @media only screen and (max-width: 660px) {
     display: none;
+  }
+}
+
+.actions {
+  min-height: $actions-min-height;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+
+  button {
+    margin-top: 9px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.actionButtons {
+  position: absolute;
+  height: 84px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: white;
+  border-bottom-right-radius: $sidebar-border-radius;
+  border-bottom-left-radius: $sidebar-border-radius;
+
+  //noinspection Stylelint
+  button {
+    @extend %btn_unset;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .approve,
+  .suspend {
+    svg {
+      height: 28px;
+      width: 28px;
+      margin-bottom: 9px;
+    }
+
+    text-transform: uppercase;
+    font-size: $small-font-size;
+  }
+
+  .approve {
+    color: $light-green-text;
+  }
+
+  .suspend {
+    color: $red-text;
+  }
+}
+
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 55px) !important;
+  top: 45px !important;
+  right: -9px !important;
+  z-index: 2;
+
+  //noinspection Stylelint
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
   }
 }

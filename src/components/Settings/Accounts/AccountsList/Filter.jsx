@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
@@ -73,14 +73,6 @@ export default function Filter({
             </option>
           </NativeSelect>
         </FormControl>
-        {/* <FormControl className={classes.margin}> */}
-        {/*  <Input */}
-        {/*    icon={<SearchIcon />} */}
-        {/*    placeholder={`${t('Search')}...`} */}
-        {/*    value={search} */}
-        {/*    onChange={(e) => setSearch(e.target.value)} */}
-        {/*  /> */}
-        {/* </FormControl> */}
       </div>
 
       <div className={styles.filterBlock__inner}>
@@ -101,13 +93,6 @@ export default function Filter({
           {t('Delete')}
         </Button>
       </div>
-      {/* <EditModules */}
-      {/*  open={open} */}
-      {/*  handleClose={handleClose} */}
-      {/*  companies={companies} */}
-      {/*  checkedItem={checkedItems.length > 0 ? checkedItems[0] : null} */}
-      {/*  title={t('Have access to these modules')} */}
-      {/* /> */}
     </div>
   );
 }

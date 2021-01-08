@@ -19,24 +19,24 @@ export const getReport = (startDate, endDate, jobTypes, employees, places, skill
   },
 });
 
-export const downloadExcel = (queryObj) => ({
+export const downloadExcel = (queryObj, companyId) => ({
   type: EXCEL,
   request: {
     method: 'GET',
-    url: `/reports/export/excel?${makeQueryString(queryObj, false)}`,
-    responseType: 'blob',
+    url: `/company/${companyId}/reports/export/excel?${makeQueryString(queryObj, true)}`,
+    responseType: 'application/json',
   },
   meta: {
     thunk: true,
   },
 });
 
-export const downloadPdf = (queryObj) => ({
+export const downloadPdf = (queryObj, companyId) => ({
   type: PDF,
   request: {
     method: 'GET',
-    url: `/reports/export/pdf?${makeQueryString(queryObj, false)}`,
-    responseType: 'blob',
+    url: `/company/${companyId}/reports/export/pdf?${makeQueryString(queryObj, true)}`,
+    responseType: 'application/json',
   },
   meta: {
     thunk: true,

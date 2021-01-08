@@ -5,8 +5,8 @@ import {
   PATCH_SETTINGS_COMPANY_SUCCESS,
   ADD_SETTING_SNACKBAR,
   DISMISS_SETTING_SNACKBAR,
-  GET_WORK_TIME,
-  GET_WORK_TIME_SUCCESS,
+  GET_SETTINGS_WORK_TIME,
+  GET_SETTINGS_WORK_TIME_SUCCESS,
   PATCH_WORK_TIME,
   ADD_HOLIDAY,
   ADD_HOLIDAY_SUCCESS,
@@ -16,8 +16,8 @@ import {
   GET_SECURITY_COMPANY_SUCCESS,
   PATCH_SECURITY_COMPANY,
   PATCH_SECURITY_COMPANY_SUCCESS,
-  GET_SKILLS,
-  GET_SKILLS_SUCCESS,
+  GET_SETTINGS_SKILLS,
+  GET_SETTINGS_SKILLS_SUCCESS,
   CREATE_SKILL,
   CREATE_SKILL_SUCCESS,
   CREATE_JOB,
@@ -26,8 +26,8 @@ import {
   GET_PLACE_SUCCESS,
   GET_ACTIVITY_LOG,
   GET_ACTIVITY_LOG_SUCCESS,
-  GET_EMPLOYEES,
-  GET_EMPLOYEES_SUCCESS,
+  GET_SETTINGS_EMPLOYEES,
+  GET_SETTINGS_EMPLOYEES_SUCCESS,
   FILTER_ACTIVITY_LOG,
   GET_DELETE_DATA,
   GET_DELETE_DATA_SUCCESS,
@@ -59,10 +59,10 @@ import {
   PATCH_ACCOUNTS_GROUP_SUCCESS,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
-  GET_EMPLOYEES_ALL,
-  GET_EMPLOYEES_ERROR,
-  GET_EMPLOYEES_EDIT,
-  GET_EMPLOYEES_EDIT_SUCCESS,
+  GET_SETTINGS_EMPLOYEES_ALL,
+  GET_SETTINGS_EMPLOYEES_ERROR,
+  GET_SETTINGS_EMPLOYEES_EDIT,
+  GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS,
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
   UPDATE_EMPLOYEE_SUCCESS,
@@ -94,7 +94,7 @@ import {
   LOAD_PERMISSIONS,
   LOAD_PERMISSIONS_SUCCESS,
   LOAD_PERMISSIONS_ERROR,
-  GET_EMPLOYEES_QUERY,
+  GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR,
   SEND_IMPORTED_EMPLOYEES,
   SEND_IMPORTED_EMPLOYEES_SUCCESS,
@@ -137,11 +137,11 @@ export const addSnackbar = (data, snackbarType) => ({
 export const dismissSnackbar = () => ({ type: DISMISS_SETTING_SNACKBAR });
 
 export const getSettingWorkTime = (id) => ({
-  type: GET_WORK_TIME,
+  type: GET_SETTINGS_WORK_TIME,
   id,
 });
 export const getSettingWorkTimeSuccess = (data) => ({
-  type: GET_WORK_TIME_SUCCESS,
+  type: GET_SETTINGS_WORK_TIME_SUCCESS,
   data,
 });
 
@@ -191,11 +191,11 @@ export const editSecurityPageSuccess = (data) => ({
 });
 
 export const loadSkills = (id) => ({
-  type: GET_SKILLS,
+  type: GET_SETTINGS_SKILLS,
   id,
 });
 export const loadSkillsSuccess = (data) => ({
-  type: GET_SKILLS_SUCCESS,
+  type: GET_SETTINGS_SKILLS_SUCCESS,
   data,
 });
 
@@ -231,45 +231,45 @@ export const loadPlaceSuccess = (data) => ({
 });
 
 export const loadEmployees = (id) => ({
-  type: GET_EMPLOYEES,
+  type: GET_SETTINGS_EMPLOYEES,
   id,
 });
 
 export const loadEmployeesAll = (id, params = null) => ({
-  type: GET_EMPLOYEES_ALL,
+  type: GET_SETTINGS_EMPLOYEES_ALL,
   id,
   all: true,
   params,
 });
 
 export const loadEmployeesQuery = (companyId, data = {}) => ({
-  type: GET_EMPLOYEES_QUERY,
+  type: GET_SETTINGS_EMPLOYEES_QUERY,
   companyId,
   data,
 });
 
 export const loadEmployeesSuccess = (data) => ({
-  type: GET_EMPLOYEES_SUCCESS,
+  type: GET_SETTINGS_EMPLOYEES_SUCCESS,
   data,
 });
 
 export const loadEmployeesError = () => ({
-  type: GET_EMPLOYEES_ERROR,
+  type: GET_SETTINGS_EMPLOYEES_ERROR,
 });
 
 export const loadEmployeesEdit = (id, employeeId) => ({
-  type: GET_EMPLOYEES_EDIT,
+  type: GET_SETTINGS_EMPLOYEES_EDIT,
   id,
   employeeId,
 });
 
 export const loadEmployeesEditSuccess = (data) => ({
-  type: GET_EMPLOYEES_EDIT_SUCCESS,
+  type: GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS,
   data,
 });
 
 export const loadEmployeesEditError = () => ({
-  type: GET_EMPLOYEES_ERROR,
+  type: GET_SETTINGS_EMPLOYEES_ERROR,
 });
 
 export const patchEmployee = (id, employeeId, data) => ({
@@ -624,9 +624,10 @@ export const sendImportedEmployeesError = (data) => ({
   data,
 });
 
-export const changePassword = (companyId, data) => ({
+export const changePassword = (companyId, employeeId, data) => ({
   type: CHANGE_PASSWORD,
   companyId,
+  employeeId,
   data,
 });
 

@@ -84,7 +84,6 @@ export default function CreateAccount({
           <span className={style.active} style={{ width: `${step * 33}%` }} />
         </div>
       </div>
-
       <div className={style.newAccount}>
 
         <StepWrapper

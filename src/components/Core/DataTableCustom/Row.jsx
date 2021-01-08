@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -12,9 +14,10 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
+  index, row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
   totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
-  hoverActions, hoverable = false, colored = { warning: false, error: false },
+  hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
+  tableRef = null,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -25,6 +28,9 @@ const Row = ({
 
   const [subTableExpanded, setSubTableExpanded] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
+
+  const [actionsPositionLeft, setActionsPositionLeft] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
@@ -51,6 +57,8 @@ const Row = ({
     { [styles.rowWarning]: (colored.warning && row.warning) },
     { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
+    { [styles.contentVisibility]: !hoverActions },
+    { [styles.rowSuccess]: row.success },
   );
 
   const Components = {
@@ -73,17 +81,40 @@ const Row = ({
     setSubTableExpanded(!subTableExpanded);
   };
 
-  const onSelectHandler = (id, checked) => {
-    if (!(colored.warning && row.warning) && !(colored.error && row.error)) {
-      onSelect(id, checked);
+  const onSelectHandler = (id, checked, e) => {
+    if (!(colored.warning && row.warning)
+        // && !(colored.error && row.error)
+        && !(colored.success && row.success)) {
+      onSelect(id, checked, e);
     }
   };
 
+  const rowRef = useRef(null);
+
   useEffect(() => {
-    if (((colored.warning && row.warning) || (colored.error && row.error)) && row.checked) {
+    const resize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  useEffect(() => {
+    if (rowRef && tableRef) {
+      const { left: rowLeft } = rowRef.current.getBoundingClientRect();
+      const { right: tableRight } = tableRef.current.getBoundingClientRect();
+      // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
+      setActionsPositionLeft(
+        windowWidth - (rowLeft + windowWidth - tableRight) - 120 /* actions width */ - 32, /* scroll width */
+      );
+    }
+  }, [tableRef, windowWidth]);
+
+  useEffect(() => {
+    if (((colored.warning && row.warning)
+        // || (colored.error && row.error)
+        || (colored.success && row.success)) && row.checked) {
       onSelect(row.id, false);
     }
-  }, [colored.error, colored.warning, onSelect, row.checked, row.error, row.id, row.warning]);
+  }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning]);
 
   return (
     <div
@@ -91,10 +122,18 @@ const Row = ({
       role='rowgroup'
       onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
       onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
+      ref={rowRef}
     >
       {
-        actionsVisible && hoverActions && (
-          <RowActions editRow={editRow} removeRow={removeRow} absolute id={row.id} />
+        hoverActions && (
+          <RowActions
+            editRow={editRow}
+            removeRow={removeRow}
+            visible={actionsVisible}
+            absolute
+            id={row.id}
+            left={actionsPositionLeft}
+          />
         )
       }
       <div className={rowWrapperClasses}>
@@ -109,7 +148,9 @@ const Row = ({
                 className={classNames(styles.checkbox)}
                 checked={!!row.checked}
                 onChange={onSelectHandler}
-                disabled={(colored.warning && row.warning) || (colored.error && row.error)}
+                disabled={(colored.warning && row.warning)
+                // || (colored.error && row.error)
+                || (colored.success && row.success)}
               />
             </div>
           )
@@ -125,8 +166,10 @@ const Row = ({
             let minWidth = null;
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {
-                width = columnsWidth[column.field];
-                minWidth = columnsWidth[column.field];
+                minWidth = selectable && column.field === 'status'
+                  ? columnsWidth[column.field] - 35
+                  : columnsWidth[column.field];
+                width = minWidth;
               } else {
                 width = selectable
                   ? `calc((100% - ${totalCustomWidthColumns + 35}px) / ${columns.length - totalCustomColumns})`
@@ -156,7 +199,7 @@ const Row = ({
                   </>
                 </span>
                 {/* icon statys */}
-                {(statysIcon && width === 80)
+                {(statysIcon && (width === 80 || 80 - 35))
                   && (
                   <span className={styles.IconStatus}>
                     {row[column.field] === 1 && <CheckStatus />}
@@ -191,16 +234,16 @@ const Row = ({
     </div>
   );
 };
-
 export default Row;
 
 const RowActions = ({
-  id,
-  editRow,
-  removeRow,
-  absolute = false,
+  id, editRow, removeRow, absolute = false, visible = true, left,
 }) => (
-  <div className={[styles.ActionsTable, absolute ? styles.absoluteActions : ''].join(' ')}>
+  <div
+    className={classNames([styles.ActionsTable,
+      visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
+    style={absolute ? { left } : {}}
+  >
     <button onClick={() => editRow(id)}>
       <EditIconFixedFill />
     </button>

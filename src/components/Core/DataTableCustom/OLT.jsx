@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -26,7 +28,8 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
-  selectAll = false, colored = { warning: false, error: false },
+  selectAllItems = null, colored = { warning: false, error: false },
+  all = false, setAll = () => ({}), statusIcon = true,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -35,10 +38,17 @@ export default function DataTable({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
-
-  const [selectedAll, setSelectedAll] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
 
   const classes = useStyles();
+
+  const tableRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (typeof selectAllItems === 'function') {
+      setSelectAll(true);
+    }
+  }, [selectAllItems]);
 
   useEffect(() => {
     const initSortOptions = (options) => {
@@ -141,6 +151,7 @@ export default function DataTable({
       style={{ height: `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'
+      ref={tableRef}
     >
       <Scrollbar
         className={scrollableContentClasses}
@@ -201,20 +212,32 @@ export default function DataTable({
                       style={{ width, minWidth }}
                       role='columnheader'
                     >
+                      {
+                       selectAll && column.field === 'status'
+                        && (
+                        <StyledCheckbox
+                          style={{ padding: '0 9px 0 2px' }}
+                          checked={all}
+                          onChange={() => {
+                            setAll((prevState) => {
+                              if (!prevState) {
+                                selectAllItems(tableData);
+                              } else {
+                                selectAllItems([]);
+                              }
+                              return !prevState;
+                            });
+                          }}
+                        />
+                        )
+                      }
                       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
                         className={sortBlockClasses}
                         onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
                       >
-                        {
-                          selectAll && column.field === 'status'
-                          && (
-                            <StyledCheckbox
-                              checked={selectedAll}
-                              onChange={setSelectedAll((prevState) => !prevState)}
-                            />
-                          )
-                        }
-                        <div className={classNames(styles.flexCenter)}>{column.label}</div>
+                        <div className={classNames(styles.flexCenter)}>
+                          {column.label}
+                        </div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => icon.icon)
@@ -239,13 +262,14 @@ export default function DataTable({
           {
             tableData.map((row, idx) => (
               <Row
+                index={idx}
                 key={idx.toString()}
                 row={row}
                 selectedItem={selectedItem}
                 setSelectedItem={setSelectedItem}
                 columns={visibleColumns}
                 selectable={selectable}
-                statysIcon
+                statysIcon={statusIcon}
                 onSelect={onSelect}
                 fieldIcons={fieldIcons}
                 reports={reports}
@@ -258,6 +282,7 @@ export default function DataTable({
                 hoverActions={hoverActions}
                 hoverable={hoverable}
                 colored={colored}
+                tableRef={tableRef}
               />
             ))
           }

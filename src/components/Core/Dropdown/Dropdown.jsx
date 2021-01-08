@@ -164,21 +164,6 @@ export default function Dropdown({
         />
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
-        {/* FIXME: commented to testing new render method */}
-        {/* { */}
-        {/*  itemsArray[0] && itemsArray[0].type && itemsArray[0].type === 'group' */}
-        {/*    ? itemsArray.map((item, idx) => ( */}
-        {/*      <Dropdown */}
-        {/*        key={idx.toString()} */}
-        {/*        label={item.label} */}
-        {/*        currentItem={item} */}
-        {/*        checked={item.checked} */}
-        {/*        items={item.items} */}
-        {/*        onChange={onChange} */}
-        {/*      /> */}
-        {/*    )) */}
-        {/*    : renderCheckboxGroup(itemsArray) */}
-        {/* } */}
         {
           itemsArray.map((item, idx) => (
             item?.type === 'group'

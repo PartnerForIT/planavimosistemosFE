@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
+import { useParams } from 'react-router-dom';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -15,7 +16,6 @@ import {
   columnsSelector,
   reportLoadingSelector,
 } from '../../store/reports/selectors';
-import {companyIdSelector} from '../../store/auth/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 import { getReportsEmployees } from '../../store/employees/actions';
@@ -73,6 +73,7 @@ const Reports = () => {
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { id: companyId } = useParams();
   const generatedReport = useSelector(reportSelector);
   const reportLoading = useSelector(reportLoadingSelector);
   const columns = useSelector(columnsSelector);
@@ -82,17 +83,17 @@ const Reports = () => {
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
-  const companyId = useSelector(companyIdSelector);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
 
   useEffect(() => {
-    dispatch(getReportsPlaces({company_id: companyId},)).then().catch();
-    dispatch(getReportsEmployees({company_id: companyId})).then().catch();
-    dispatch(getReportsJobTypes({company_id: companyId})).then().catch();
-    dispatch(getReportsSkills({company_id: companyId})).then().catch();
+    dispatch(getReportsPlaces({ companyId })).then().catch();
+    dispatch(getReportsEmployees({ companyId })).then().catch();
+    dispatch(getReportsJobTypes({ companyId })).then().catch();
+    dispatch(getReportsSkills({ companyId })).then().catch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // useEffect(() => {
@@ -117,23 +118,31 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    setPlaces(getAllPlaces);
-    setFilteredPlaces(getAllPlaces);
+    if (Array.isArray(getAllPlaces)) {
+      setPlaces(getAllPlaces);
+      setFilteredPlaces(getAllPlaces);
+    }
   }, [getAllPlaces]);
 
   useEffect(() => {
-    setEmployees(getAllEmployees);
-    setFilteredEmployees(getAllEmployees);
+    if (Array.isArray(getAllEmployees)) {
+      setEmployees(getAllEmployees);
+      setFilteredEmployees(getAllEmployees);
+    }
   }, [getAllEmployees]);
 
   useEffect(() => {
-    setJobTypes(getAllJobTypes);
-    setFilteredJobTypes(getAllJobTypes);
+    if (Array.isArray(getAllJobTypes)) {
+      setJobTypes(getAllJobTypes);
+      setFilteredJobTypes(getAllJobTypes);
+    }
   }, [getAllJobTypes]);
 
   useEffect(() => {
-    setSkills(getAllSkills);
-    setFilteredSkills(getAllSkills);
+    if (Array.isArray(getAllSkills)) {
+      setSkills(getAllSkills);
+      setFilteredSkills(getAllSkills);
+    }
   }, [getAllSkills]);
 
   useEffect(() => {
@@ -180,7 +189,6 @@ const Reports = () => {
 
     setItemsArray(sortItems);
   }, [activeReport]);
-
 
   const Delimiter = () => (<div className={styles.delimiter} />);
 
@@ -251,6 +259,7 @@ const Reports = () => {
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
+          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -265,6 +274,7 @@ const Reports = () => {
           employees: checkedArray.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
+          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -279,6 +289,7 @@ const Reports = () => {
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedArray.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
+          companyId,
         };
 
         if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
@@ -293,6 +304,7 @@ const Reports = () => {
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedArray.map((skill) => skill.id),
+          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -426,7 +438,7 @@ const Reports = () => {
                   fullWidth
                 />
                 <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredPlaces} onChange={(c) => filterChecked(c, 'places')} />
+                  <CheckboxGroupWrapper items={filteredPlaces ?? []} onChange={(c) => filterChecked(c, 'places')} />
                 </div>
               </>
             }
@@ -440,7 +452,10 @@ const Reports = () => {
                   fullWidth
                 />
                 <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredEmployees} onChange={(c) => filterChecked(c, 'employees')} />
+                  <CheckboxGroupWrapper
+                    items={filteredEmployees ?? []}
+                    onChange={(c) => filterChecked(c, 'employees')}
+                  />
                 </div>
               </>
             }
@@ -454,7 +469,7 @@ const Reports = () => {
                   fullWidth
                 />
                 <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredJobTypes} onChange={(c) => filterChecked(c, 'jobTypes')} />
+                  <CheckboxGroupWrapper items={filteredJobTypes ?? []} onChange={(c) => filterChecked(c, 'jobTypes')} />
                 </div>
               </>
             }
@@ -468,7 +483,7 @@ const Reports = () => {
                   fullWidth
                 />
                 <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredSkills} onChange={(c) => filterChecked(c, 'skills')} />
+                  <CheckboxGroupWrapper items={filteredSkills ?? []} onChange={(c) => filterChecked(c, 'skills')} />
                 </div>
               </>
             }

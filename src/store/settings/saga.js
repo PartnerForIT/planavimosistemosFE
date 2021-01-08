@@ -8,19 +8,19 @@ import _ from 'lodash';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
-  GET_WORK_TIME,
+  GET_SETTINGS_WORK_TIME,
   PATCH_WORK_TIME,
   ADD_HOLIDAY,
   DELETE_HOLIDAY,
   GET_SECURITY_COMPANY,
   PATCH_SECURITY_COMPANY,
-  GET_SKILLS,
+  GET_SETTINGS_SKILLS,
   CREATE_SKILL,
   CREATE_JOB,
   CREATE_PLACE,
   GET_PLACE,
   GET_ACTIVITY_LOG,
-  GET_EMPLOYEES,
+  GET_SETTINGS_EMPLOYEES,
   FILTER_ACTIVITY_LOG,
   GET_DELETE_DATA,
   DELETE_DATA,
@@ -35,8 +35,8 @@ import {
   DELETE_ACCOUNTS_SUBGROUP,
   PATCH_ACCOUNTS_GROUP,
   PATCH_ACCOUNTS_SUBGROUP,
-  GET_EMPLOYEES_ALL,
-  GET_EMPLOYEES_EDIT,
+  GET_SETTINGS_EMPLOYEES_ALL,
+  GET_SETTINGS_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
   GET_CURRENCY,
   DELETE_EMPLOYEE,
@@ -47,7 +47,7 @@ import {
   DELETE_ROLE,
   UPDATE_ROLE,
   LOAD_PERMISSIONS,
-  GET_EMPLOYEES_QUERY,
+  GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
 } from './types';
 import {
@@ -153,11 +153,20 @@ function* loadSettingsWorkTime(action) {
 
 function* editSettingsWorkTime(action) {
   try {
-    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/work-time/update`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const { data: { week_start, week_start_time, work_days } } = action;
+
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/work-time/update`, null,
+      {
+        params: {
+          week_start,
+          week_start_time,
+          work_days: JSON.stringify(work_days),
+        },
+        ...token(),
+      });
+
     yield put(addSnackbar('Work time edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -1132,10 +1141,9 @@ function* sendImportedEmployees(action) {
     const { data } = yield call(
       axios.post,
       `${config.api.url}/company/${companyId}/employees/import-store`,
-      null,
+      { users },
       {
         params: {
-          users: JSON.stringify([...users]),
           create_missing: createMissing,
         },
         ...token(),
@@ -1156,7 +1164,7 @@ function* sendImportedEmployees(action) {
 function* changePassword(action) {
   try {
     const { data } = yield call(axios.patch,
-      `${config.api.url}/company/${action.companyId}/update`,
+      `${config.api.url}/company/${action.companyId}/employees/update/${action.employeeId}`,
       action.data,
       token());
 
@@ -1177,21 +1185,21 @@ function* changePassword(action) {
 export default function* SettingsWatcher() {
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
-  yield takeLeading(GET_WORK_TIME, loadSettingsWorkTime);
+  yield takeLeading(GET_SETTINGS_WORK_TIME, loadSettingsWorkTime);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);
   yield takeLeading(GET_SECURITY_COMPANY, loadSecurityCompany);
   yield takeLatest(PATCH_SECURITY_COMPANY, changeSecurityCompany);
-  yield takeLeading(GET_SKILLS, loadSettingsSkills);
+  yield takeLeading(GET_SETTINGS_SKILLS, loadSettingsSkills);
   yield takeLatest(CREATE_SKILL, createSettingSkill);
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
   yield takeLeading(GET_PLACE, loadCompanyPLace);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
-  yield takeLeading(GET_EMPLOYEES, loadEmployee);
-  yield takeLeading(GET_EMPLOYEES_ALL, loadEmployee);
-  yield takeLatest(GET_EMPLOYEES_QUERY, loadQueryEmployees);
+  yield takeLeading(GET_SETTINGS_EMPLOYEES, loadEmployee);
+  yield takeLeading(GET_SETTINGS_EMPLOYEES_ALL, loadEmployee);
+  yield takeLatest(GET_SETTINGS_EMPLOYEES_QUERY, loadQueryEmployees);
   yield takeLatest(FILTER_ACTIVITY_LOG, filterActivityLog);
   yield takeLeading(GET_DELETE_DATA, loadDeleteData);
   yield takeLatest(DELETE_DATA, deleteCompanyData);
@@ -1206,7 +1214,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_ACCOUNTS_SUBGROUP, deleteAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_GROUP, patchAccountGroup);
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
-  yield takeLatest(GET_EMPLOYEES_EDIT, getEmployeeEdit);
+  yield takeLatest(GET_SETTINGS_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
   yield takeLeading(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);

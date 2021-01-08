@@ -64,6 +64,7 @@ export default function GroupsBlock({
             simpleTable
             editRow={() => setEditVisible(true)}
             removeRow={() => setRemoveVisible(true)}
+            statusIcon={false}
           />
         </div>
       </div>

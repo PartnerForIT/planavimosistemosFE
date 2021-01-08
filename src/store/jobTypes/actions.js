@@ -14,11 +14,11 @@ export const getJobTypes = (companyId) => ({
   },
 });
 
-export const getReportsJobTypes = (queryObj) => ({
+export const getReportsJobTypes = ({ companyId, ...rest }) => ({
   type: GET_JOB_TYPES,
   request: {
     method: 'GET',
-    url: `/company/${queryObj.company_id}/reports/jobtypes?${makeQueryString(queryObj)}`,
+    url: `/company/${companyId}/reports/jobtypes?${makeQueryString(rest)}`,
   },
   meta: {
     thunk: true,
