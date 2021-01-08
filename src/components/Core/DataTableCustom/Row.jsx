@@ -237,7 +237,7 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, absolute = false, visible = false, left,
+  id, editRow, removeRow, absolute = false, visible = true, left,
 }) => (
   <div
     className={classNames([styles.ActionsTable,
