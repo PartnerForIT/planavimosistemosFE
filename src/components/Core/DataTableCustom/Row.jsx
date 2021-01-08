@@ -30,6 +30,7 @@ const Row = ({
   const [actionsVisible, setActionsVisible] = useState(false);
 
   const [actionsPositionLeft, setActionsPositionLeft] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const triangleIconClasses = classNames(
     styles.collapsIcon,
@@ -91,8 +92,13 @@ const Row = ({
   const rowRef = useRef(null);
 
   useEffect(() => {
+    const resize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  useEffect(() => {
     if (rowRef && tableRef) {
-      const windowWidth = window.innerWidth;
       const { left: rowLeft } = rowRef.current.getBoundingClientRect();
       const { right: tableRight } = tableRef.current.getBoundingClientRect();
       // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
@@ -100,7 +106,7 @@ const Row = ({
         windowWidth - (rowLeft + windowWidth - tableRight) - 120 /* actions width */ - 32, /* scroll width */
       );
     }
-  }, [tableRef]);
+  }, [tableRef, windowWidth]);
 
   useEffect(() => {
     if (((colored.warning && row.warning)
