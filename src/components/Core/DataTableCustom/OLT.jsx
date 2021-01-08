@@ -29,7 +29,7 @@ export default function DataTable({
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
   selectAllItems = null, colored = { warning: false, error: false },
-  all = false, setAll = () => ({}),
+  all = false, setAll = () => ({}), statusIcon = true,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -269,7 +269,7 @@ export default function DataTable({
                 setSelectedItem={setSelectedItem}
                 columns={visibleColumns}
                 selectable={selectable}
-                statysIcon
+                statysIcon={statusIcon}
                 onSelect={onSelect}
                 fieldIcons={fieldIcons}
                 reports={reports}
