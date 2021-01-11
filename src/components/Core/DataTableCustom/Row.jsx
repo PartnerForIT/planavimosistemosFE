@@ -14,7 +14,7 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
-  index, row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
+  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
   totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   tableRef = null,
@@ -29,7 +29,6 @@ const Row = ({
   const [subTableExpanded, setSubTableExpanded] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
 
-  const [actionsPositionLeft, setActionsPositionLeft] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const triangleIconClasses = classNames(
@@ -102,9 +101,9 @@ const Row = ({
       const { left: rowLeft } = rowRef.current.getBoundingClientRect();
       const { right: tableRight } = tableRef.current.getBoundingClientRect();
       // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
-      setActionsPositionLeft(
-        windowWidth - (rowLeft + windowWidth - tableRight) - 120 /* actions width */ - 32, /* scroll width */
-      );
+      document.documentElement.style.setProperty('--hover-actions-left',
+        `${windowWidth - (rowLeft + windowWidth - tableRight)
+        /* actions width */ - 120 /* scroll width */ - 32}px`);
     }
   }, [tableRef, windowWidth]);
 
@@ -132,7 +131,6 @@ const Row = ({
             visible={actionsVisible}
             absolute
             id={row.id}
-            left={actionsPositionLeft}
           />
         )
       }
@@ -237,12 +235,11 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, absolute = false, visible = true, left,
+  id, editRow, removeRow, absolute = false, visible = true,
 }) => (
   <div
     className={classNames([styles.ActionsTable,
       visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
-    style={absolute ? { left } : {}}
   >
     <button onClick={() => editRow(id)}>
       <EditIconFixedFill />
