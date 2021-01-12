@@ -14,7 +14,7 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
-  row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
+  index, row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
   totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   tableRef = null,
@@ -97,15 +97,17 @@ const Row = ({
   }, []);
 
   useEffect(() => {
-    if (rowRef && tableRef) {
-      const { left: rowLeft } = rowRef.current.getBoundingClientRect();
-      const { right: tableRight } = tableRef.current.getBoundingClientRect();
-      // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
-      document.documentElement.style.setProperty('--hover-actions-left',
-        `${windowWidth - (rowLeft + windowWidth - tableRight)
-        /* actions width */ - 120 /* scroll width */ - 32}px`);
+    if (!index) {
+      if (rowRef && tableRef) {
+        const { left: rowLeft } = rowRef.current.getBoundingClientRect();
+        const { right: tableRight } = tableRef.current.getBoundingClientRect();
+        // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
+        document.documentElement.style.setProperty('--hover-actions-left',
+          `${windowWidth - (rowLeft + windowWidth - tableRight)
+          /* actions width */ - 120 /* scroll width */ - 32}px`);
+      }
     }
-  }, [tableRef, windowWidth]);
+  }, [index, tableRef, windowWidth]);
 
   useEffect(() => {
     if (((colored.warning && row.warning)

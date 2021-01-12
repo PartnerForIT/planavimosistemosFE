@@ -443,11 +443,11 @@ header {
 
 .actions {
   &Visible {
-    visibility: initial;
+    display: initial;
   }
 
   &Hidden {
-    visibility: hidden;
+    display: none !important;
   }
 }
 
