@@ -26,6 +26,8 @@ import {
   updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
+import { companyModules } from '../../../../store/company/selectors';
+import { userSelector } from '../../../../store/auth/selectors';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -37,6 +39,108 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
   },
 }));
+
+const initialRoleAccess = {
+  // Access by Module
+  moduleAccess: {
+
+    logbook: {
+      enabled: false,
+      options: {
+        edit_settings: 'Can edit Logbook settings',
+        edit_logs: 'Can edit entry logs',
+        delete_logs: 'Can delete entry logs',
+        earnings: 'Can see earnings',
+        requests: 'Get approval requests',
+        requests_in_place: 'Get approval requests in assigned place',
+      },
+    },
+    reports: {
+      enabled: false,
+      options: {
+        generate: 'Can generate reports',
+        assigned_place: 'Reports only for assigned place',
+      },
+    },
+    events: {
+      enabled: false,
+      options: {
+        receive_app: 'Receive notifications',
+        receive_email: 'events ~> receive_email',
+        create: 'Can create Events',
+      },
+    },
+  },
+
+  // Organization access
+  organisation: {
+
+    groups: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Groups',
+      },
+    },
+    roles: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Roles',
+      },
+
+    },
+    categories: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Categories',
+      },
+
+    },
+    data: {
+      enabled: true,
+
+      options: {
+        delete: 'Can delete entry data',
+      },
+
+    },
+    accounts: {
+      enabled: true,
+
+      options: {
+        create: 'Can create New accounts',
+        delete: 'accounts ~> delete',
+      },
+
+    },
+    activity_log: {
+      enabled: true,
+
+      options: {
+        view: 'Can see Activity Log',
+      },
+
+    },
+    pto: {
+      enabled: true,
+
+      options: {
+        edit_settings: 'Can edit General Settings',
+        edit_entries: 'pto ~> edit_entries',
+        requests: 'pto ~> requests',
+      },
+    },
+  },
+};
+
+// Organization access
+
+// Use Managers Mobile View
+// Can see & edit Accounts List
+// Can delete Accounts list
+// Can edit Logbook settings
 
 function Roles() {
   const { id } = useParams();
@@ -53,11 +157,14 @@ function Roles() {
   const permissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
+  const modules = useSelector(companyModules);
+  const { role_id: SuperAdmin } = useSelector(userSelector);
 
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [roleName, setRoleName] = useState('');
+  const [defaultRoleAccess, setDefaultRoleAccess] = useState({});
 
   const permissionsIds = useMemo(() => {
     // eslint-disable-next-line no-underscore-dangle
@@ -139,6 +246,23 @@ function Roles() {
     }
   }, [dispatch, id, permissions.length]);
 
+  useEffect(() => {
+    setDefaultRoleAccess(() => {
+      const temp = {};
+      const { moduleAccess } = initialRoleAccess;
+      Object.keys(moduleAccess).map((key) => {
+        temp[key] = {
+          ...moduleAccess[key],
+          enabled: SuperAdmin === 1 ? true : !!modules[key],
+        };
+        return key;
+      });
+      return {
+        ...initialRoleAccess, moduleAccess: temp,
+      };
+    });
+  }, [SuperAdmin, modules]);
+
   const removeRole = (roleId) => {
     dispatch(deleteRole(id, roleId));
   };
@@ -180,6 +304,10 @@ function Roles() {
     }
   };
 
+  useState(() => {
+    console.log(modules);
+  });
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -210,6 +338,7 @@ function Roles() {
                     permissions={permissions}
                     permissionsIds={permissionsIds}
                     removeRolesPermissions={removeRolesPermissions}
+                    defaultRoleAccess={defaultRoleAccess}
                   />
                 </>
               )

@@ -20,7 +20,8 @@ const AccessModule = React.memo(({
           <OptionsCheckBoxGroup
             key={key}
             name={key}
-            active={moduleAccess[key].enabled}
+            active={moduleAccess[key].enabled ? moduleAccess[key].checked ?? true : false}
+            enabled={moduleAccess[key].enabled}
             details={moduleAccess[key].options}
             categoriesNames={categoriesNames}
             roleAccess={roleAccess}
