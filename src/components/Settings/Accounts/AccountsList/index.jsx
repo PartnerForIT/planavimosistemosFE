@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'lodash';
+import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -111,6 +112,7 @@ export default function AccountsList() {
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
+  const modules = useSelector(companyModules);
 
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -343,6 +345,7 @@ export default function AccountsList() {
             places={places}
             security={security}
             createAccount={createAccount}
+            modules={modules}
           />
           <EditAccount
             open={!!editVisible}
@@ -356,6 +359,7 @@ export default function AccountsList() {
             groups={groups}
             places={places}
             onSubmit={updateEmployee}
+            modules={modules}
           />
           <DeleteEmployee
             open={deleteVisible}
