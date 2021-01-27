@@ -8,7 +8,7 @@ import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
 import getOrganisationModules from '../../../store/company/actions';
 
-const AdminContext = React.createContext(false);
+export const AdminContext = React.createContext(false);
 
 export default function MainLayout({ children }) {
   const dispatch = useDispatch();
