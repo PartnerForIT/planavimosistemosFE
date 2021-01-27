@@ -1,9 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import classnames from 'classnames';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { companyModules } from '../../../../store/company/selectors';
+import { AdminContext } from '../../MainLayout';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -55,6 +60,9 @@ export default function EditAccount({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
+
+  const { cost_earning: cost, profitability } = useSelector(companyModules);
+  const SuperAdmin = useContext(AdminContext);
 
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
@@ -261,7 +269,7 @@ export default function EditAccount({
                 </div>
 
                 <form className={style.form}>
-                  <div className={style.left}>
+                  <div className={classnames(style.left, style.bordered)}>
                     <div className={classes.formItem}>
                       <Label htmlFor='email' text={t('Email')} />
                       <Input
@@ -331,47 +339,55 @@ export default function EditAccount({
                         handleInput={handleInput}
                       />
                     </div>
-
-                    <div className={classes.formItem}>
-                      <Label
-                        htmlFor='cost'
-                        text={(
-                          <>
-                            {t('Cost, Hourly rate')}
-                            {' '}
-                            <CurrencySign />
-                          </>
+                    {
+                     (!!cost || SuperAdmin) && (
+                     <div className={classes.formItem}>
+                       <Label
+                         htmlFor='cost'
+                         text={(
+                           <>
+                             {t('Cost, Hourly rate')}
+                             {' '}
+                             <CurrencySign />
+                           </>
                         )}
-                      />
-                      <Input
-                        name='cost'
-                        value={user.cost ?? ''}
-                        placeholder={t('How much new user cost/h')}
-                        onChange={handleInput}
-                      />
-                    </div>
-
-                    <div className={classes.formItem}>
-                      <Label
-                        htmlFor='charge'
-                        text={(
-                          <>
-                            {t('Charge, Hourly rate')}
-                            {' '}
-                            <CurrencySign />
-                          </>
+                       />
+                       <Input
+                         name='cost'
+                         value={user.cost ?? ''}
+                         placeholder={t('How much new user cost/h')}
+                         onChange={handleInput}
+                       />
+                     </div>
+                     )
+                    }
+                    {
+                      ((!!cost && !!profitability) || SuperAdmin) && (
+                      <div className={classes.formItem}>
+                        <Label
+                          htmlFor='charge'
+                          text={(
+                            <>
+                              {t('Charge, Hourly rate')}
+                              {' '}
+                              <CurrencySign />
+                            </>
                         )}
-                      />
-                      <Input
-                        name='charge'
-                        value={user.charge ?? ''}
-                        placeholder={t('How much you charge per h')}
-                        onChange={handleInput}
-                      />
-                    </div>
+                        />
+                        <Input
+                          name='charge'
+                          value={user.charge ?? ''}
+                          placeholder={t('How much you charge per h')}
+                          onChange={handleInput}
+                        />
+                      </div>
+                      )
+                    }
                   </div>
 
-                  <div className={style.right}>
+                  <div
+                    className={classnames(style.right, style.bordered)}
+                  >
                     <div className={classes.formItem}>
                       <Label htmlFor='group' text={t('Assign to Group')} />
                       <AddEditSelectOptions
