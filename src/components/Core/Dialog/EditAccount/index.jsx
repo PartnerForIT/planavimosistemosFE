@@ -5,9 +5,8 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { companyModules } from '../../../../store/company/selectors';
 import { AdminContext } from '../../MainLayout';
 import Dialog from '../index';
 import Button from '../../Button/Button';
@@ -56,12 +55,12 @@ export default function EditAccount({
   groups = [],
   places = [],
   onSubmit = () => ({}),
+  modules: { cost_earning: cost, profitability },
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
 
-  const { cost_earning: cost, profitability } = useSelector(companyModules);
   const SuperAdmin = useContext(AdminContext);
 
   const [user, setUser] = useState({});
