@@ -443,11 +443,11 @@ header {
 
 .actions {
   &Visible {
-    visibility: initial;
+    display: initial;
   }
 
   &Hidden {
-    visibility: hidden;
+    display: none !important;
   }
 }
 
@@ -458,6 +458,7 @@ header {
   width: 120px;
   text-align: right;
   z-index: 1;
+  left: var(--hover-actions-left);
   background: linear-gradient(to right, #d0dfef04 0%, #d0dfef 50%, #d0dfef 100%);
 }
 

@@ -11,108 +11,6 @@ import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
 import { onKeyDown } from '../../../../Helpers';
 
-const defaultRoleAccess = {
-  // Access by Module
-  moduleAccess: {
-
-    logbook: {
-      enabled: true,
-      options: {
-        edit_settings: 'Can edit Logbook settings',
-        edit_logs: 'Can edit entry logs',
-        delete_logs: 'Can delete entry logs',
-        earnings: 'Can see earnings',
-        requests: 'Get approval requests',
-        requests_in_place: 'Get approval requests in assigned place',
-      },
-    },
-    reports: {
-      enabled: true,
-      options: {
-        generate: 'Can generate reports',
-        assigned_place: 'Reports only for assigned place',
-      },
-    },
-    events: {
-      enabled: true,
-      options: {
-        receive_app: 'Receive notifications',
-        receive_email: 'events ~> receive_email',
-        create: 'Can create Events',
-      },
-    },
-  },
-
-  // Organization access
-  organisation: {
-
-    groups: {
-      enabled: true,
-
-      options: {
-        create: 'Can create Groups',
-      },
-    },
-    roles: {
-      enabled: true,
-
-      options: {
-        create: 'Can create Roles',
-      },
-
-    },
-    categories: {
-      enabled: true,
-
-      options: {
-        create: 'Can create Categories',
-      },
-
-    },
-    data: {
-      enabled: true,
-
-      options: {
-        delete: 'Can delete entry data',
-      },
-
-    },
-    accounts: {
-      enabled: true,
-
-      options: {
-        create: 'Can create New accounts',
-        delete: 'accounts ~> delete',
-      },
-
-    },
-    activity_log: {
-      enabled: true,
-
-      options: {
-        view: 'Can see Activity Log',
-      },
-
-    },
-    pto: {
-      enabled: true,
-
-      options: {
-        edit_settings: 'Can edit General Settings',
-        edit_entries: 'pto ~> edit_entries',
-        requests: 'pto ~> requests',
-      },
-    },
-  },
-};
-
-// Organization access
-
-// Use Managers Mobile View
-// Can see & edit Accounts List
-// Can delete Accounts list
-// Can edit Logbook settings
-
 function RolesBlock({
   roles = [],
   activeRole = {},
@@ -130,6 +28,7 @@ function RolesBlock({
   permissions,
   permissionsIds,
   removeRolesPermissions,
+  defaultRoleAccess = {},
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);

@@ -13,6 +13,7 @@ const OptionsCheckBoxGroup = ({
   permissionsIds,
   activePermissions,
   setDisableReady,
+  enabled = false,
 }) => {
   const { t } = useTranslation();
   return (
@@ -28,7 +29,7 @@ const OptionsCheckBoxGroup = ({
               ...prevState.moduleAccess,
               [opt]: {
                 ...prevState.moduleAccess[opt],
-                enabled: checked,
+                checked,
               },
             },
           }));
@@ -38,6 +39,7 @@ const OptionsCheckBoxGroup = ({
         }}
         id={name}
         checked={active}
+        disabled={!enabled}
       />
       <ul className={classes.checklist}>
         <li>

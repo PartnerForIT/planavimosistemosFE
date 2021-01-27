@@ -29,7 +29,6 @@ const Row = ({
   const [subTableExpanded, setSubTableExpanded] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
 
-  const [actionsPositionLeft, setActionsPositionLeft] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const triangleIconClasses = classNames(
@@ -98,15 +97,17 @@ const Row = ({
   }, []);
 
   useEffect(() => {
-    if (rowRef && tableRef) {
-      const { left: rowLeft } = rowRef.current.getBoundingClientRect();
-      const { right: tableRight } = tableRef.current.getBoundingClientRect();
-      // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
-      setActionsPositionLeft(
-        windowWidth - (rowLeft + windowWidth - tableRight) - 120 /* actions width */ - 32, /* scroll width */
-      );
+    if (!index) {
+      if (rowRef && tableRef) {
+        const { left: rowLeft } = rowRef.current.getBoundingClientRect();
+        const { right: tableRight } = tableRef.current.getBoundingClientRect();
+        // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
+        document.documentElement.style.setProperty('--hover-actions-left',
+          `${windowWidth - (rowLeft + windowWidth - tableRight)
+          /* actions width */ - 120 /* scroll width */ - 32}px`);
+      }
     }
-  }, [tableRef, windowWidth]);
+  }, [index, tableRef, windowWidth]);
 
   useEffect(() => {
     if (((colored.warning && row.warning)
@@ -132,7 +133,6 @@ const Row = ({
             visible={actionsVisible}
             absolute
             id={row.id}
-            left={actionsPositionLeft}
           />
         )
       }
@@ -237,12 +237,11 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, absolute = false, visible = true, left,
+  id, editRow, removeRow, absolute = false, visible = true,
 }) => (
   <div
     className={classNames([styles.ActionsTable,
       visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
-    style={absolute ? { left } : {}}
   >
     <button onClick={() => editRow(id)}>
       <EditIconFixedFill />
