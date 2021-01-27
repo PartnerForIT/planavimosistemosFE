@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import Switch from "react-switch";
+import Snackbar from '@material-ui/core/Snackbar';
+import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
-import Dashboard from '../../../Core/Dashboard'
+import Dashboard from '../../../Core/Dashboard';
 import JournalIcon from '../../../Icons/JournalIcon';
 import Progress from '../../../Core/Progress';
-import Snackbar from '@material-ui/core/Snackbar';
 import Form from './Form';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, JournalDataSelector
+  snackbarType, snackbarText, JournalDataSelector,
 } from '../../../../store/settings/selectors';
 import { loadLogbookJournal, editLogbookJournal } from '../../../../store/settings/actions';
 import styles from '../logbook.module.scss';
@@ -22,12 +22,12 @@ import styles from '../logbook.module.scss';
 const useStyles = makeStyles(() => ({
   error: {
     background: '#de4343',
-    color: "#fff",
+    color: '#fff',
   },
   success: {
     background: '#3bc39e',
-    color: "#fff",
-  }
+    color: '#fff',
+  },
 }));
 
 export default function Journal() {
@@ -40,7 +40,8 @@ export default function Journal() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const Journal = useSelector(JournalDataSelector)
+  const journal = useSelector(JournalDataSelector);
+  const modules = useSelector(companyModules);
 
   const [journalData, setJournalData] = useState({
     hourly_charge: '',
@@ -57,30 +58,28 @@ export default function Journal() {
   });
 
   useEffect(() => {
-    if (id) {
-      dispatch(loadLogbookJournal(id))
-    }
-  }, []);
+    dispatch(loadLogbookJournal(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
-    if (Object.keys(Journal).length > 0) {
+    if (Object.keys(journal).length > 0) {
       setJournalData({
-        hourly_charge: Journal.hourly_charge ? Journal.hourly_charge : '',
-        hourly_cost: Journal.hourly_cost ? Journal.hourly_cost : '',
-        show_earned_salary: Journal.show_earned_salary === 0 ? false : true,
-        merge_entries: Journal.merge_entries === 0 ? false : true,
-        profitability: Journal.profitability === 0 ? false : true,
-        approve_flow: Journal.approve_flow === 0 ? false : true,
-        automatic_approval: Journal.automatic_approval === 0 ? false : true,
-        approved_at: Journal.approved_at ? Journal.approved_at : 'day',
-        automatic_break: Journal.automatic_break === 0 ? false : true,
-        workday_exceed: Journal.workday_exceed ? Journal.workday_exceed : '4',
-        break_duration: Journal.break_duration ? Journal.break_duration : '30',
-      })
+        hourly_charge: journal.hourly_charge ? journal.hourly_charge : '',
+        hourly_cost: journal.hourly_cost ? journal.hourly_cost : '',
+        show_earned_salary: journal.show_earned_salary !== 0,
+        merge_entries: journal.merge_entries !== 0,
+        profitability: journal.profitability !== 0,
+        approve_flow: journal.approve_flow !== 0,
+        automatic_approval: journal.automatic_approval !== 0,
+        approved_at: journal.approved_at ? journal.approved_at : 'day',
+        automatic_break: journal.automatic_break !== 0,
+        workday_exceed: journal.workday_exceed ? journal.workday_exceed : '4',
+        break_duration: journal.break_duration ? journal.break_duration : '30',
+      });
     }
-  }, [Journal]);
+  }, [journal]);
 
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     const { name, value, type } = event.target;
     if (type === 'checkbox') {
       setJournalData({ ...journalData, [name]: !journalData[name] });
@@ -91,14 +90,14 @@ export default function Journal() {
 
   const handleChangeApproveFlow = () => {
     setJournalData({ ...journalData, approve_flow: !journalData.approve_flow });
-  }
+  };
 
   const handleChangeAutomaticApprove = () => {
     setJournalData({ ...journalData, automatic_approval: !journalData.automatic_approval });
-  }
+  };
   const handleChangeAutomaticBreak = () => {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
-  }
+  };
 
   const submit = () => {
     const data = {
@@ -113,49 +112,51 @@ export default function Journal() {
       automatic_break: journalData.automatic_break ? 1 : 0,
       workday_exceed: journalData.workday_exceed,
       break_duration: journalData.break_duration,
-    }
+    };
     dispatch(editLogbookJournal(id, data));
-  }
+  };
 
   return (
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Journal"}
+          title='Journal'
         >
           <JournalIcon />
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress /> :
-              <>
-                <Form
-                  t={t}
-                  style={styles}
-                  handleInputChange={handleInputChange}
-                  journalData={journalData}
-                  handleChangeApproveFlow={handleChangeApproveFlow}
-                  handleChangeAutomaticApprove={handleChangeAutomaticApprove}
-                  handleChangeAutomaticBreak={handleChangeAutomaticBreak}
-                  submit={submit}
-                />
-              </>
+            isLoadind ? <Progress />
+              : (
+                <>
+                  <Form
+                    t={t}
+                    style={styles}
+                    handleInputChange={handleInputChange}
+                    journalData={journalData}
+                    handleChangeApproveFlow={handleChangeApproveFlow}
+                    handleChangeAutomaticApprove={handleChangeAutomaticApprove}
+                    handleChangeAutomaticBreak={handleChangeAutomaticBreak}
+                    submit={submit}
+                    modules={modules}
+                  />
+                </>
+              )
           }
         </PageLayout>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           ContentProps={{
             classes: {
-              root: typeSnackbar === 'error' ? classes.error : classes.success
-            }
+              root: typeSnackbar === 'error' ? classes.error : classes.success,
+            },
           }}
-          severity="error"
+          severity='error'
           open={isSnackbar}
           message={textSnackbar}
-          key={"rigth"}
+          key='rigth'
         />
       </Dashboard>
     </MaynLayout>
-
-  )
+  );
 }
