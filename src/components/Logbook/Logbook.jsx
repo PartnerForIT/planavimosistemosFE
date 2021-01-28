@@ -112,8 +112,9 @@ const Logbook = () => {
   const user = useSelector(userSelector);
 
   const [approval, setApproval] = useState(false);
-
   const [workTime, setWorkTime] = useState([]);
+
+  const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
 
   useEffect(() => {
     const { cost_earning: costEarning, profitability: profitAccess } = modules;
@@ -132,6 +133,12 @@ const Logbook = () => {
           cost += itemCost;
           sallary += itemSalary;
           profit += itemProfit;
+
+          setTotal((prevState) => ({
+            profit: prevState.profit + profit,
+            salary: prevState.salary + sallary,
+            cost: prevState.cost + cost,
+          }));
 
           return {
             ...rest,
@@ -635,11 +642,7 @@ const Logbook = () => {
             downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
             modules={modules}
-            amount={{
-              salary: 0,
-              cost: 0,
-              profit: 0,
-            }}
+            amount={total}
           />
         </div>
 
