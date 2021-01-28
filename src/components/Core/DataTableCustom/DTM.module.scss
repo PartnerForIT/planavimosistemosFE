@@ -560,15 +560,30 @@ header {
   //font-weight: 600;
 }
 
+.footerCost {
+  min-width: 6ex;
+}
+
 .footerTitleReports {
   margin-left: auto;
   padding-right: 35px;
 }
 
-.blueTotals {
-  color: #0085ff;
+.totals {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
+
+  &.blue {
+    color: #0085ff;
+  }
+
+  &.red {
+    color: $red;
+  }
+
+  &.green {
+    color: $green;
+  }
 }
 
 .bold {
