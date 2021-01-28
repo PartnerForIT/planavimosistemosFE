@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import { companyModules } from '../../../store/company/selectors';
@@ -62,7 +61,7 @@ export default function Categories() {
               : (
                 <div className={styles.categoryPage}>
                   <ButtonBlock style={styles} companyId={id} modules={modules} />
-                  <TableBlock style={styles} skills={skills} />
+                  <TableBlock style={styles} skills={skills} modules={modules} />
                 </div>
               )
           }

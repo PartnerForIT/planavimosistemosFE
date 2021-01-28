@@ -104,7 +104,7 @@ export default function ButtonBlock({ style, companyId, modules }) {
         open={openPlace}
         handleClose={handleClosePlace}
         title={t('Create Place name')}
-        buttonTitle={t('Create Palce Name')}
+        buttonTitle={t('Create Place Name')}
         setPlace={setPlace}
         createPlace={createPlace}
         job={place}
