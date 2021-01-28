@@ -51,7 +51,7 @@ export default function TableBlock({ style, skills, modules }) {
 
   useEffect(() => {
     const { cost_earning: cost, profitability } = modules;
-    if (!profitability && SuperAdmin !== 1) {
+    if (!profitability && !SuperAdmin) {
       if (!cost) {
         setColumnsArray(
           columns.filter(({ field }) => (field !== 'cost' && field !== 'earn')),
