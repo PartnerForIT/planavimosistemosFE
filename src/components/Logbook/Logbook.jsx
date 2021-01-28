@@ -74,9 +74,9 @@ const columnsWidth = {
   place: 140,
   jobType: 140,
   duration: 180,
-  salary: 180,
-  cost: 180,
-  profit: 180,
+  sallary: 140,
+  cost: 140,
+  profit: 140,
 };
 
 const Logbook = () => {
@@ -634,6 +634,12 @@ const Logbook = () => {
             sortStatus={sortStatus}
             downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
+            modules={modules}
+            amount={{
+              salary: 0,
+              cost: 0,
+              profit: 0,
+            }}
           />
         </div>
 
