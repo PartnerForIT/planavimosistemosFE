@@ -74,6 +74,7 @@ const columns = [
   { label: 'Group', field: 'groups', checked: true },
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
+  { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
   { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
   { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: 'Created on', field: 'created_at', checked: true },
@@ -115,7 +116,7 @@ export default function AccountsList() {
   const modules = useSelector(companyModules);
 
   const [usersOptions, setUsersOptions] = useState(3);
-  const [columnsArray, setColumnsArray] = useState(columns);
+  const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [importVisible, setImportVisible] = useState(false);
 
@@ -178,6 +179,23 @@ export default function AccountsList() {
       dispatch(getSecurityCompany(id));
     }
   }, [dispatch, editVisible, id, newVisible]);
+
+  useEffect(() => {
+    const { cost_earning: cost, profitability } = modules;
+    if (!profitability) {
+      if (!cost) {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'cost' && field !== 'charge' && field !== 'salary')),
+        );
+      } else {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'charge' && field !== 'salary')),
+        );
+      }
+    } else {
+      setColumnsArray(columns);
+    }
+  }, [modules]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
