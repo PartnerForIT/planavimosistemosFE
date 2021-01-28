@@ -171,7 +171,7 @@ export default function EditModules({
               checked={modules.cost_earning}
               label={t('Can use Cost and Earnings')}
               name='cost_earning'
-              disabled={costDisabled}
+              disabled={costDisabled || modules.profitability}
             />
             <Checkbox
               onChange={handleChange}
