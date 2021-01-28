@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'lodash';
+import { userSelector } from '../../../../store/auth/selectors';
 import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -114,7 +115,7 @@ export default function AccountsList() {
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
   const modules = useSelector(companyModules);
-
+  const { role_id: SuperAdmin } = useSelector(userSelector);
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -182,7 +183,7 @@ export default function AccountsList() {
 
   useEffect(() => {
     const { cost_earning: cost, profitability } = modules;
-    if (!profitability) {
+    if (!profitability && SuperAdmin !== 1) {
       if (!cost) {
         setColumnsArray(
           columns.filter(({ field }) => (field !== 'cost' && field !== 'charge' && field !== 'salary')),
@@ -195,7 +196,7 @@ export default function AccountsList() {
     } else {
       setColumnsArray(columns);
     }
-  }, [modules]);
+  }, [SuperAdmin, modules]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
