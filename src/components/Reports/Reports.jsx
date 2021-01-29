@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
+import { companyModules } from '../../store/company/selectors';
+import StyledCheckbox from '../Core/Checkbox/Checkbox';
+import MainLayout from '../Core/MainLayout';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -71,6 +74,12 @@ const Reports = () => {
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
 
+  const [costState, setCostState] = useState({
+    show_costs: false,
+    show_earnings: false,
+    show_profit: false,
+  });
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id: companyId } = useParams();
@@ -84,6 +93,7 @@ const Reports = () => {
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
 
+  const { cost_earning: costs, profitability } = useSelector(companyModules);
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
@@ -96,9 +106,27 @@ const Reports = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   reportTabs.current.scrollLeft = itemsArray.length * 246;
-  // }, [itemsArray]);
+  const costsCheckboxesHandler = (id, checked) => {
+    setCostState((prevState) => ({
+      ...prevState,
+      ...(id !== 'show_costs' && checked
+        ? { show_costs: true, [id]: checked }
+        : { [id]: checked }
+      ),
+    }));
+  };
+
+  const showCostsInReport = () => {
+    // eslint-disable-next-line no-underscore-dangle
+    const _temp = {};
+    Object.keys(costState).map((key) => {
+      if (costState[key]) {
+        _temp[key] = 1;
+      }
+      return key;
+    });
+    return _temp;
+  };
 
   const sendRequest = () => {
     const { startDate, endDate } = dateRange;
@@ -106,15 +134,16 @@ const Reports = () => {
     const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     const skillsArr = checkedSkills.map((emp) => emp.id);
-    dispatch(getReport(
-      startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
-      endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+
+    dispatch(getReport(companyId, {
+      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
       jobTypesArr,
       employeesArr,
       placesArr,
       skillsArr,
-      companyId,
-    )).then().catch();
+      ...showCostsInReport(),
+    })).then().catch();
   };
 
   useEffect(() => {
@@ -207,32 +236,33 @@ const Reports = () => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
     if (selectedReport) {
       let filter = '';
-      if (selectedReport.places.length && !selectedReport.jobTypes.length && !selectedReport.employees.length) {
+      if (selectedReport.places?.length && !selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
         filter = 0;
-      } else if (!selectedReport.jobTypes.length && selectedReport.employees.length) {
+      } else if (!selectedReport.jobTypes?.length && selectedReport.employees?.length) {
         filter = 1;
-      } else if (selectedReport.jobTypes.length && !selectedReport.employees.length) {
+      } else if (selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
         filter = 2;
-      } else if (selectedReport.jobTypes.length && selectedReport.employees.length) {
+      } else if (selectedReport.jobTypes?.length && selectedReport.employees?.length) {
         filter = 3;
       }
 
       const requestObj = {
         'date-start': selectedReport.startDate,
         'date-end': selectedReport.endDate,
-        places: selectedReport.places.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-        jobTypes: selectedReport.jobTypes.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : '',
-        employees: selectedReport.employees.length > 0 ? `[${selectedReport.employees.join(',')}]` : '',
+        places: selectedReport.places?.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
+        jobTypes: selectedReport.jobTypes?.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : undefined,
+        employees: selectedReport.employees?.length > 0 ? `[${selectedReport.employees.join(',')}]` : undefined,
         filter,
+        ...showCostsInReport(),
       };
 
-      dispatch(action(requestObj)).then((data) => {
-        const downloadUrl = window.URL.createObjectURL(new Blob([data.data]));
+      dispatch(action(companyId, requestObj)).then(({ data }) => {
         const link = document.createElement('a');
-        link.href = downloadUrl;
         link.setAttribute('download',
           `Report_${format(dateToUCT(selectedReport.startDate),
-            'yyyy-MM-dd')}_${format(dateToUCT(selectedReport.endDate), 'yyyy-MM-dd')}.${ext}`);
+            'yyyy-MM-dd')}_${format(dateToUCT(selectedReport.endDate),
+            'yyyy-MM-dd')}.${ext}`);
+        link.href = `data:application/octet-stream;base64,${data}`;
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -255,11 +285,11 @@ const Reports = () => {
         setCheckedPlaces(checkedArray);
 
         requestObj = {
+          companyId,
           places: checkedArray.map((place) => place.id),
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
-          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -270,11 +300,11 @@ const Reports = () => {
         setCheckedEmployees(checkedArray);
 
         requestObj = {
+          companyId,
           places: checkedPlaces.map((place) => place.id),
           employees: checkedArray.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
-          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -285,11 +315,11 @@ const Reports = () => {
         setCheckedJobTypes(checkedArray);
 
         requestObj = {
+          companyId,
           places: checkedPlaces.map((place) => place.id),
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedArray.map((jobType) => jobType.id),
           skills: checkedSkills.map((skill) => skill.id),
-          companyId,
         };
 
         if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
@@ -300,11 +330,11 @@ const Reports = () => {
         setCheckedSkills(checkedArray);
 
         requestObj = {
+          companyId,
           places: checkedPlaces.map((place) => place.id),
           employees: checkedEmployees.map((emp) => emp.id),
           jobTypes: checkedJobTypes.map((jobType) => jobType.id),
           skills: checkedArray.map((skill) => skill.id),
-          companyId,
         };
 
         if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
@@ -317,183 +347,216 @@ const Reports = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.leftContent}>
-        {itemsArray.length > 0 && (
-          <Scrollbar
-            className={styles.scrollableContent}
-            style={{ height: '85px' }}
-            removeTracksWhenNotUsed
-            disableTrackYMousewheelScrolling
-            noScrollY
-            trackXProps={{
-              renderer: (props) => {
-                const { elementRef, ...restProps } = props;
-                return (
-                  <span
-                    {...restProps}
-                    ref={elementRef}
-                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                  />
-                );
-              },
-            }}
-            trackYProps={{
-              renderer: (props) => {
-                const { elementRef, ...restProps } = props;
-                return (
-                  <span
-                    {...restProps}
-                    ref={elementRef}
-                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                  />
-                );
-              },
-            }}
-          >
-            <div
-              ref={reportTabs}
-              style={{
-                display: 'flex',
-                maxHeight: '85px',
-                paddingRight: '5px',
-                width: 'fit-content',
-                paddingLeft: '10px',
+    <MainLayout>
+      <div className={styles.container}>
+        <div className={styles.leftContent}>
+          {itemsArray.length > 0 && (
+            <Scrollbar
+              className={styles.scrollableContent}
+              style={{ height: '85px' }}
+              removeTracksWhenNotUsed
+              disableTrackYMousewheelScrolling
+              noScrollY
+              trackXProps={{
+                renderer: (props) => {
+                  const { elementRef, ...restProps } = props;
+                  return (
+                    <span
+                      {...restProps}
+                      ref={elementRef}
+                      className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                    />
+                  );
+                },
+              }}
+              trackYProps={{
+                renderer: (props) => {
+                  const { elementRef, ...restProps } = props;
+                  return (
+                    <span
+                      {...restProps}
+                      ref={elementRef}
+                      className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                    />
+                  );
+                },
               }}
             >
-              {
-                itemsArray.length > 0 && itemsArray.map((report) => (
-                  <ClosableCard
+              <div
+                ref={reportTabs}
+                style={{
+                  display: 'flex',
+                  maxHeight: '85px',
+                  paddingRight: '5px',
+                  width: 'fit-content',
+                  paddingLeft: '10px',
+                }}
+              >
+                {
+                  itemsArray.length > 0 && itemsArray.map((report) => (
+                    <ClosableCard
+                      key={report.id.toString()}
+                      title={report.title}
+                      description={report.description}
+                      reportId={report.id}
+                      selected={report.id === activeReport}
+                      onClick={setActiveReport}
+                      onClose={closeReportTabHandler}
+                    />
+                  ))
+                }
+              </div>
+            </Scrollbar>
+          )}
+          <div
+            className={mainContainerClasses}
+            style={{ height: itemsArray.length > 0 ? 'calc(100vh - 125px)' : 'calc(100vh - 40px)' }}
+          >
+            {
+              itemsArray.length > 0 && activeReport
+                ? itemsArray.map((report) => report.id === activeReport && (
+                  <DataTable
                     key={report.id.toString()}
-                    title={report.title}
-                    description={report.description}
-                    reportId={report.id}
-                    selected={report.id === activeReport}
-                    onClick={setActiveReport}
-                    onClose={closeReportTabHandler}
+                    data={report.report || []}
+                    columns={columnsArray || []}
+                    onColumnsChange={setColumnsArray}
+                    loading={loading}
+                    onSort={sortHandler}
+                    selectedItem={selectedItem}
+                    totalDuration={report.totalDuration}
+                    setSelectedItem={rowSelectionHandler}
+                    reports
+                    downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
+                    downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
+                    verticalOffset='127px'
                   />
                 ))
-              }
-            </div>
-          </Scrollbar>
-        )}
-        <div
-          className={mainContainerClasses}
-          style={{ height: itemsArray.length > 0 ? 'calc(100vh - 125px)' : 'calc(100vh - 40px)' }}
-        >
-          {
-            itemsArray.length > 0 && activeReport
-              ? itemsArray.map((report) => report.id === activeReport && (
-                <DataTable
-                  key={report.id.toString()}
-                  data={report.report || []}
-                  columns={columnsArray || []}
-                  onColumnsChange={setColumnsArray}
-                  loading={loading}
-                  onSort={sortHandler}
-                  selectedItem={selectedItem}
-                  totalDuration={report.totalDuration}
-                  setSelectedItem={rowSelectionHandler}
-                  reports
-                  downloadExcel={() => downloadReport(downloadExcel, 'xls')}
-                  downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
-                  verticalOffset='127px'
-                />
-              ))
-              : (
-                <div className={styles.emptyContainer}>
-                  <div className={styles.emptyContent}>
-                    <div>
-                      <ReportsIcon className={styles.reportsIcon} />
-                      <p className={styles.title}>NOTHING SELECTED</p>
-                      <p className={styles.description}>Please select an object or place to genenerate report</p>
-                    </div>
-                    <div className={styles.arrowIcon}>
-                      <ArrowRightIcon />
+                : (
+                  <div className={styles.emptyContainer}>
+                    <div className={styles.emptyContent}>
+                      <div>
+                        <ReportsIcon className={styles.reportsIcon} />
+                        <p className={styles.title}>NOTHING SELECTED</p>
+                        <p className={styles.description}>Please select an object or place to genenerate report</p>
+                      </div>
+                      <div className={styles.arrowIcon}>
+                        <ArrowRightIcon />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-          }
+                )
+            }
+          </div>
         </div>
-      </div>
 
-      <div className={styles.rightSidebar}>
-        <div className={styles.multipleEntries}>
-          <div className={styles.header}>
-            <InfoIcon />
-            <Delimiter />
-            Generate Report
-          </div>
-          <div className={styles.sidebarContent}>
-            <div className={styles.sidebarTitle}>Report period</div>
-            <DRP initRange={dateRange} onChange={setDateRange} small right />
-            {
-              <>
-                <div className={styles.sidebarTitle}>Places</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by places'
-                  onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredPlaces ?? []} onChange={(c) => filterChecked(c, 'places')} />
-                </div>
-              </>
-            }
-            {
-              <>
-                <div className={styles.sidebarTitle}>Employees</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by employees'
-                  onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper
-                    items={filteredEmployees ?? []}
-                    onChange={(c) => filterChecked(c, 'employees')}
+        <div className={styles.rightSidebar}>
+          <div className={styles.multipleEntries}>
+            <div className={styles.header}>
+              <InfoIcon />
+              <Delimiter />
+              Generate Report
+            </div>
+            <div className={styles.sidebarContent}>
+              <div className={styles.sidebarTitle}>Report period</div>
+              <DRP initRange={dateRange} onChange={setDateRange} small right />
+              {
+                !!costs && (
+                  <StyledCheckbox
+                    label={t('Show Costs')}
+                    id='show_costs'
+                    onChange={costsCheckboxesHandler}
+                    checked={costState.show_costs}
+                    disabled={costState.show_profit || costState.show_earnings}
                   />
-                </div>
-              </>
-            }
-            {
-              <>
-                <div className={styles.sidebarTitle}>Job types</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by job types'
-                  onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredJobTypes ?? []} onChange={(c) => filterChecked(c, 'jobTypes')} />
-                </div>
-              </>
-            }
-            {
-              <>
-                <div className={styles.sidebarTitle}>Skills</div>
-                <Input
-                  icon={<SearchIcon />}
-                  placeholder='Search by skills'
-                  onChange={(e) => handleInputChange(e.target.value, skills, setFilteredSkills)}
-                  fullWidth
-                />
-                <div className={styles.checkboxGroupWrapper}>
-                  <CheckboxGroupWrapper items={filteredSkills ?? []} onChange={(c) => filterChecked(c, 'skills')} />
-                </div>
-              </>
-            }
-          </div>
-          <div className={styles.actions}>
-            <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
+                )
+              }
+              { !!costs && !!profitability
+                && (
+                <>
+                  <StyledCheckbox
+                    label={t('Show Earnings')}
+                    id='show_earnings'
+                    onChange={costsCheckboxesHandler}
+                    checked={costState.show_earnings}
+                  />
+                  <StyledCheckbox
+                    label={t('Show Profit')}
+                    id='show_profit'
+                    onChange={costsCheckboxesHandler}
+                    checked={costState.show_profit}
+                  />
+                </>
+                )}
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Places</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by places'
+                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper items={filteredPlaces ?? []} onChange={(c) => filterChecked(c, 'places')} />
+                  </div>
+                </>
+              }
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Employees</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by employees'
+                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper
+                      items={filteredEmployees ?? []}
+                      onChange={(c) => filterChecked(c, 'employees')}
+                    />
+                  </div>
+                </>
+              }
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Job types</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by job types'
+                    onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper
+                      items={filteredJobTypes ?? []}
+                      onChange={(c) => filterChecked(c, 'jobTypes')}
+                    />
+                  </div>
+                </>
+              }
+              {
+                <>
+                  <div className={styles.sidebarTitle}>Skills</div>
+                  <Input
+                    icon={<SearchIcon />}
+                    placeholder='Search by skills'
+                    onChange={(e) => handleInputChange(e.target.value, skills, setFilteredSkills)}
+                    fullWidth
+                  />
+                  <div className={styles.checkboxGroupWrapper}>
+                    <CheckboxGroupWrapper items={filteredSkills ?? []} onChange={(c) => filterChecked(c, 'skills')} />
+                  </div>
+                </>
+              }
+            </div>
+            <div className={styles.actions}>
+              <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

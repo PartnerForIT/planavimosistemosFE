@@ -1,17 +1,16 @@
-import { makeQueryString } from '../../components/Helpers';
 import {
   GET_REPORT,
   EXCEL,
   PDF,
 } from './types';
 
-export const getReport = (startDate, endDate, jobTypes, employees, places, skills, companyId) => ({
+export const getReport = (companyId, data) => ({
   type: GET_REPORT,
   request: {
     method: 'POST',
     url: `/company/${companyId}/reports/generate`,
     data: {
-      startDate, endDate, jobTypes, employees, places, skills,
+      ...data,
     },
   },
   meta: {
@@ -19,11 +18,14 @@ export const getReport = (startDate, endDate, jobTypes, employees, places, skill
   },
 });
 
-export const downloadExcel = (queryObj, companyId) => ({
+export const downloadExcel = (companyId, queryObj) => ({
   type: EXCEL,
   request: {
     method: 'GET',
-    url: `/company/${companyId}/reports/export/excel?${makeQueryString(queryObj, true)}`,
+    url: `/company/${companyId}/reports/export/excel`,
+    params: {
+      ...queryObj,
+    },
     responseType: 'application/json',
   },
   meta: {
@@ -31,11 +33,14 @@ export const downloadExcel = (queryObj, companyId) => ({
   },
 });
 
-export const downloadPdf = (queryObj, companyId) => ({
+export const downloadPdf = (companyId, queryObj) => ({
   type: PDF,
   request: {
     method: 'GET',
-    url: `/company/${companyId}/reports/export/pdf?${makeQueryString(queryObj, true)}`,
+    url: `/company/${companyId}/reports/export/pdf`,
+    params: {
+      ...queryObj,
+    },
     responseType: 'application/json',
   },
   meta: {

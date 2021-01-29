@@ -227,14 +227,14 @@ const Logbook = () => {
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
-    dispatch(getWorkTime({
+    dispatch(getWorkTime(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
       search,
       employees: checkedEmployees.map((item) => item.id),
       skills: checkedSkills.map((item) => item.id),
       ...props,
-    }, companyId)).then(() => {
+    })).then(() => {
       setCheckedItems([]);
       setSelectedItem(null);
     }).catch();
@@ -405,7 +405,7 @@ const Logbook = () => {
       skills: checkedSk.length ? checkedSk : null,
     };
 
-    dispatch(action(requestObj, companyId)).then(({ data }) => {
+    dispatch(action(companyId, requestObj)).then(({ data }) => {
       // eslint-disable-next-line no-shadow
       const { startDate, endDate } = dateRange;
       // Insert a link that allows the user to download the PDF file

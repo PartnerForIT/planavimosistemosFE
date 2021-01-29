@@ -5,7 +5,7 @@ import {
   DELETE_ITEMS, CHANGE_STATUS_ITEMS,
 } from './types';
 
-export const getWorkTime = (queryObj, companyId) => ({
+export const getWorkTime = (companyId, queryObj) => ({
   type: GET_WORK_TIME,
   request: {
     method: 'GET',
