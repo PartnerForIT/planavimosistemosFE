@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { companyModules } from '../../store/company/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import MainLayout from '../Core/MainLayout';
+import CurrencySign from '../shared/CurrencySign';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -39,6 +40,24 @@ import Input from '../Core/Input/Input';
 import { dateToUCT } from '../Helpers';
 import { skillsSelector } from '../../store/skills/selectors';
 import { getReportsSkills } from '../../store/skills/actions';
+
+const TextWithSign = ({ label }) => (
+  <>
+    {label}
+    {', '}
+    <CurrencySign />
+  </>
+);
+
+const costColumns = [
+  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+];
+
+const profitabilityColumns = [
+  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
+  ...costColumns,
+  { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
+];
 
 const Reports = () => {
   /* Reports data */
@@ -74,6 +93,12 @@ const Reports = () => {
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
 
+  const [totalStat, setTotalStat] = useState({
+    cost: 0,
+    sallary: 0,
+    profit: 0,
+  });
+
   const [costState, setCostState] = useState({
     show_costs: false,
     show_earnings: false,
@@ -93,7 +118,8 @@ const Reports = () => {
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
 
-  const { cost_earning: costs, profitability } = useSelector(companyModules);
+  const modules = useSelector(companyModules);
+  const { cost_earning: costs, profitability } = modules;
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
@@ -115,6 +141,10 @@ const Reports = () => {
       ),
     }));
   };
+
+  useEffect(() => {
+    console.log(itemsArray);
+  }, [itemsArray]);
 
   const showCostsInReport = () => {
     // eslint-disable-next-line no-underscore-dangle
@@ -176,14 +206,78 @@ const Reports = () => {
 
   useEffect(() => {
     if (generatedReport.report) {
-      setItemsArray((state) => (
-        [...state, generatedReport]
-      ));
+      setItemsArray((state) => {
+        const reportId = generatedReport.id;
+        const reportIndex = state.findIndex(({ id }) => id === reportId);
+        const mappedReport = {
+          ...generatedReport,
+          report: generatedReport.report.map(({ items, ...rest }) => {
+            let reportsCost = 0;
+            let reportsSalary = 0;
+            let reportsProfit = 0;
+
+            return {
+              ...rest,
+              items: items.map(({ data, ...other }) => ({
+                ...other,
+                data: {
+                  ...data,
+                  columns: [...data.columns,
+                  // eslint-disable-next-line no-nested-ternary
+                    ...profitability ? profitabilityColumns : costs ? costColumns : []]
+                    .filter(({ field }) => {
+                      if (!costState.show_earnings && field === 'sallary') {
+                        return false;
+                      } if (!costState.show_costs && field === 'cost') {
+                        return false;
+                      }
+                      return !(!costState.show_profit && field === 'profit');
+                    }),
+                  items: [...data.items].map(({ profitability: prof, ...all }) => {
+                    const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
+                    reportsCost += cost;
+                    reportsSalary += sallary;
+                    reportsProfit += profit;
+                    setTotalStat((prevState) => ({
+                      sallary: prevState.sallary + sallary,
+                      profit: prevState.profit + profit,
+                      cost: prevState.profit + profit,
+                    }));
+                    return {
+                      ...all,
+                      ...(prof || {}),
+                    };
+                  }),
+                },
+              })),
+              cost: reportsCost,
+              sallary: reportsSalary,
+              profit: reportsProfit,
+            };
+          }),
+        };
+        if (reportIndex >= 0) {
+          return [...state].splice(reportIndex, 1, { ...mappedReport });
+        }
+
+        return [...state, mappedReport];
+      });
       setActiveReport(generatedReport.id);
     }
-    setColumnsArray(columns);
     // setTotalDuration(getTotalDuration);
-  }, [generatedReport, columns]);
+  }, [costState.show_costs, costState.show_earnings, costState.show_profit, costs, generatedReport, profitability]);
+
+  useEffect(() => {
+    setColumnsArray([...columns,
+      // eslint-disable-next-line no-nested-ternary
+      ...(profitability ? profitabilityColumns : costs ? costColumns : []),
+    ].filter(({ field }) => {
+      if (!costState.show_earnings && field === 'sallary') return false;
+      if (!costState.show_profit && field === 'profit') return false;
+      return !(!costState.show_costs && field === 'cost');
+    }));
+  }, [activeReport, columns, costState.show_costs,
+    costState.show_earnings, costState.show_profit, costs, profitability]);
 
   useEffect(() => {
     setLoading(reportLoading);
@@ -429,6 +523,8 @@ const Reports = () => {
                     downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
                     downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                     verticalOffset='127px'
+                    amount={totalStat}
+                    modules={modules}
                   />
                 ))
                 : (
@@ -470,8 +566,8 @@ const Reports = () => {
                   />
                 )
               }
-              { !!costs && !!profitability
-                && (
+              {!!costs && !!profitability
+              && (
                 <>
                   <StyledCheckbox
                     label={t('Show Earnings')}
@@ -486,7 +582,7 @@ const Reports = () => {
                     checked={costState.show_profit}
                   />
                 </>
-                )}
+              )}
               {
                 <>
                   <div className={styles.sidebarTitle}>Places</div>
