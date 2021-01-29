@@ -24,8 +24,8 @@ const useStyles = makeStyles({
 
 const TextWithSign = ({ label }) => (
   <>
-    {label}
     <CurrencySign />
+    {label}
   </>
 );
 
