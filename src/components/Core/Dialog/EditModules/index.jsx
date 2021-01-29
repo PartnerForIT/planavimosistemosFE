@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import * as _ from "lodash";
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Dialog from '../index';
 import { useTranslation } from 'react-i18next';
+import Dialog from '../index';
 import { getModules, patchModules } from '../../../../store/organizationList/actions';
-import { modulesSelector } from '../../../../store/organizationList/selectors'
-import Checkbox from '../../Checkbox/Checkbox2.jsx'
+import { modulesSelector } from '../../../../store/organizationList/selectors';
+import Checkbox from '../../Checkbox/Checkbox2';
 import Button from '../../Button/Button';
 import style from '../Dialog.module.scss';
 
-
 export default function EditModules({
-  open, handleClose, title, checkedItem, companies
+  open, handleClose, title, checkedItem, companies,
 }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const storeModules = useSelector(modulesSelector);
+
+  const [costDisabled, setCostDisabled] = useState(false);
 
   const [modules, setModules] = useState({
     logbook: false,
@@ -28,56 +28,79 @@ export default function EditModules({
     create_groups: false,
     use_manager_mobile: false,
     use_approval_flow: false,
+    cost_earning: false,
+    profitability: false,
+    comments_photo: false,
+    kiosk: false,
   });
 
-  const [company, setCompany] = useState([])
-
-  useEffect(() => {
-    if (open && checkedItem) {
-      setCompany(companyById(checkedItem))
-    }
-  }, [open])
+  const [company, setCompany] = useState([]);
 
   useEffect(() => {
     if (company[0] && company[0].status === 1) {
-      dispatch(getModules(checkedItem))
-    };
-  }, [company])
+      dispatch(getModules(checkedItem));
+    }
+  }, [checkedItem, company, dispatch]);
 
   useEffect(() => {
     if (Object.keys(storeModules).length > 0) {
       setModules({
-        logbook: storeModules.logbook === 0 ? false : true,
-        events: storeModules.events === 0 ? false : true,
-        reports: storeModules.reports === 0 ? false : true,
-        schedule: storeModules.schedule === 0 ? false : true,
-        activity_log: storeModules.activity_log === 0 ? false : true,
-        create_places: storeModules.create_places === 0 ? false : true,
-        create_jobs: storeModules.create_jobs === 0 ? false : true,
-        create_groups: storeModules.create_groups === 0 ? false : true,
-        use_manager_mobile: storeModules.use_manager_mobile === 0 ? false : true,
-        use_approval_flow: storeModules.use_approval_flow === 0 ? false : true,
-      })
+        logbook: storeModules.logbook !== 0,
+        events: storeModules.events !== 0,
+        reports: storeModules.reports !== 0,
+        schedule: storeModules.schedule !== 0,
+        activity_log: storeModules.activity_log !== 0,
+        create_places: storeModules.create_places !== 0,
+        create_jobs: storeModules.create_jobs !== 0,
+        create_groups: storeModules.create_groups !== 0,
+        use_manager_mobile: storeModules.use_manager_mobile !== 0,
+        use_approval_flow: storeModules.use_approval_flow !== 0,
+        cost_earning: storeModules.cost_earning !== 0,
+        profitability: storeModules.profitability !== 0,
+        comments_photo: storeModules.comments_photo !== 0,
+        kiosk: storeModules.kiosk !== 0,
+      });
     }
-  }, [storeModules])
+  }, [storeModules]);
+  const companyById = useCallback((id) => companies.filter((item) => item.id === id), [companies]);
 
-  const companyById = (id) => {
-    const company = companies.filter(item => item.id === id);
-    return company
-  }
+  useEffect(() => {
+    if (open && checkedItem) {
+      setCompany(companyById(checkedItem));
+    }
+  }, [checkedItem, companyById, open]);
 
   const handleChange = (event) => {
-    setModules({ ...modules, [event.target.name]: event.target.checked });
+    if (event.target.name === 'profitability') {
+      if (event.target.checked) {
+        setCostDisabled(true);
+        setModules({
+          ...modules,
+          cost_earning: true,
+          [event.target.name]: event.target.checked,
+        });
+      } else {
+        setCostDisabled(false);
+        setModules({
+          ...modules,
+          cost_earning: false,
+          [event.target.name]: event.target.checked,
+        });
+      }
+    } else {
+      setModules({ ...modules, [event.target.name]: event.target.checked });
+    }
   };
 
   const saveChangeModules = () => {
-    dispatch(patchModules(checkedItem, modules))
-    handleClose(false)
-  }
+    dispatch(patchModules(checkedItem, modules));
+    handleClose(false);
+  };
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      {(company[0] && company[0].status === 1) &&
+      {(company[0] && company[0].status === 1)
+      && (
         <div className={style.addOrg}>
           <div className={style.addOrg__inner2}>
             <Checkbox
@@ -110,7 +133,7 @@ export default function EditModules({
               label={t('Activity Log')}
               name='activity_log'
             />
-            <div className={style.buttonBlock}></div>
+            <div className={style.buttonBlock} />
           </div>
           <div className={style.addOrg__inner2}>
             <Checkbox
@@ -143,10 +166,36 @@ export default function EditModules({
               label={t('Can use Approval Flow in Logbook')}
               name='use_approval_flow'
             />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.cost_earning}
+              label={t('Can use Cost and Earnings')}
+              name='cost_earning'
+              disabled={costDisabled || modules.profitability}
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.profitability}
+              label={t('Can use Profitability feature')}
+              name='profitability'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.comments_photo}
+              label={t('Can use Comments and Take Photo')}
+              name='comments_photo'
+            />
+            <Checkbox
+              onChange={handleChange}
+              checked={modules.kiosk}
+              label={t('Can use Kiosk for identification')}
+              name='kiosk'
+            />
+
             <div className={style.buttonBlock}>
-              <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
+              <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
               <Button
-                size="big"
+                size='big'
                 onClick={() => saveChangeModules()}
               >
                 {t('Save')}
@@ -154,17 +203,19 @@ export default function EditModules({
             </div>
           </div>
         </div>
-      }
-      {(company[0] && company[0].status !== 1) &&
+      )}
+      {(company[0] && company[0].status !== 1)
+      && (
         <div className={style.addOrg}>
           <div className={style.warningText}>
-            {t('In order to edit modules of a company, its status must be active. Change the status of the company to active, then edit the availability of its modules')}
+            {t('In order to edit modules of a company, its status must be active. '
+              + 'Change the status of the company to active, then edit the availability of its modules')}
             <div className={style.buttonWarningBlock}>
-              <Button cancel size="big" onClick={handleClose}>{t('Cancel')}</Button>
+              <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
             </div>
           </div>
         </div>
-      }
+      )}
     </Dialog>
-  )
-};
+  );
+}

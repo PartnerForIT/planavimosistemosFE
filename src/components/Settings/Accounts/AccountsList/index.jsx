@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'lodash';
+import { userSelector } from '../../../../store/auth/selectors';
+import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -73,6 +75,7 @@ const columns = [
   { label: 'Group', field: 'groups', checked: true },
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
+  { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
   { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
   { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: 'Created on', field: 'created_at', checked: true },
@@ -111,9 +114,10 @@ export default function AccountsList() {
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
-
+  const modules = useSelector(companyModules);
+  const { role_id: SuperAdmin } = useSelector(userSelector);
   const [usersOptions, setUsersOptions] = useState(3);
-  const [columnsArray, setColumnsArray] = useState(columns);
+  const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [importVisible, setImportVisible] = useState(false);
 
@@ -176,6 +180,23 @@ export default function AccountsList() {
       dispatch(getSecurityCompany(id));
     }
   }, [dispatch, editVisible, id, newVisible]);
+
+  useEffect(() => {
+    const { cost_earning: cost, profitability } = modules;
+    if (!profitability && SuperAdmin !== 1) {
+      if (!cost) {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'cost' && field !== 'charge' && field !== 'salary')),
+        );
+      } else {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'charge' && field !== 'salary')),
+        );
+      }
+    } else {
+      setColumnsArray(columns);
+    }
+  }, [SuperAdmin, modules]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible(employeeId);
@@ -343,6 +364,7 @@ export default function AccountsList() {
             places={places}
             security={security}
             createAccount={createAccount}
+            modules={modules}
           />
           <EditAccount
             open={!!editVisible}
@@ -356,6 +378,7 @@ export default function AccountsList() {
             groups={groups}
             places={places}
             onSubmit={updateEmployee}
+            modules={modules}
           />
           <DeleteEmployee
             open={deleteVisible}

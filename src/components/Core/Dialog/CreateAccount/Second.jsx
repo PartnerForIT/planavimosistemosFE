@@ -1,8 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import { AdminContext } from '../../MainLayout';
 import style from './CreateAccount.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
@@ -30,9 +33,12 @@ const SecondStep = ({
   groups,
   places,
   previousStep,
+  modules: { cost_earning: cost, profitability },
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const SuperAdmin = useContext(AdminContext);
 
   const [skillName, setSkillName] = useState(defaultSkill);
   const [skillOpen, setSkillOpen] = useState(false);
@@ -191,46 +197,52 @@ const SecondStep = ({
               handleInput={handleInput}
             />
           </div>
-
-          <div className={style.formItem}>
-            <Label
-              htmlFor='cost'
-              text={(
-                <>
-                  {t('Cost, Hourly rate')}
-                  {' '}
-                  <CurrencySign />
-                </>
-            )}
-            />
-            <Input
-              name='cost'
-              value={user.cost ?? ''}
-              fullWidth
-              placeholder={t('How much new user cost/h')}
-              onChange={handleInput}
-            />
-          </div>
-
-          <div className={style.formItem}>
-            <Label
-              htmlFor='charge'
-              text={(
-                <>
-                  {t('Charge, Hourly rate')}
-                  {' '}
-                  <CurrencySign />
-                </>
-            )}
-            />
-            <Input
-              name='charge'
-              value={user.charge ?? ''}
-              placeholder={t('How much you charge per h')}
-              fullWidth
-              onChange={handleInput}
-            />
-          </div>
+          {
+            (!!cost || SuperAdmin) && (
+              <div className={style.formItem}>
+                <Label
+                  htmlFor='cost'
+                  text={(
+                    <>
+                      {t('Cost, Hourly rate')}
+                      {' '}
+                      <CurrencySign />
+                    </>
+                  )}
+                />
+                <Input
+                  name='cost'
+                  value={user.cost ?? ''}
+                  fullWidth
+                  placeholder={t('How much new user cost/h')}
+                  onChange={handleInput}
+                />
+              </div>
+            )
+          }
+          {
+            ((!!cost && !!profitability) || SuperAdmin) && (
+              <div className={style.formItem}>
+                <Label
+                  htmlFor='charge'
+                  text={(
+                    <>
+                      {t('Charge, Hourly rate')}
+                      {' '}
+                      <CurrencySign />
+                    </>
+                  )}
+                />
+                <Input
+                  name='charge'
+                  value={user.charge ?? ''}
+                  placeholder={t('How much you charge per h')}
+                  fullWidth
+                  onChange={handleInput}
+                />
+              </div>
+            )
+          }
         </div>
 
         <div className={style.right}>
@@ -294,7 +306,16 @@ const SecondStep = ({
       </div>
 
       <div className={style.buttons}>
-        <Button onClick={() => { previousStep(); setReady(false); }} size='big' cancel>{t('Back')}</Button>
+        <Button
+          onClick={() => {
+            previousStep();
+            setReady(false);
+          }}
+          size='big'
+          cancel
+        >
+          {t('Back')}
+        </Button>
         <NextStepButton onClick={nextWithValidate} />
       </div>
     </>

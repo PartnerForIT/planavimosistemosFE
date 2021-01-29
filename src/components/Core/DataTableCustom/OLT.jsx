@@ -315,7 +315,7 @@ export default function DataTable({
                 {
                   'Overall worktime: '
                 }
-                <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
+                <span className={classNames(styles.totals, styles.blue, styles.bold)}>{totalDuration}</span>
               </p>
             )
           }

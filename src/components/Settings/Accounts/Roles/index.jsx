@@ -26,7 +26,7 @@ import {
   updateRole,
 } from '../../../../store/settings/actions';
 import AddRole from '../../../Core/Dialog/AddRole';
-import { companyModules } from '../../../../store/company/selectors';
+import { companyModules, companyModulesLoading } from '../../../../store/company/selectors';
 import { userSelector } from '../../../../store/auth/selectors';
 
 const useStyles = makeStyles(() => ({
@@ -43,14 +43,15 @@ const useStyles = makeStyles(() => ({
 const initialRoleAccess = {
   // Access by Module
   moduleAccess: {
-
     logbook: {
       enabled: false,
       options: {
         edit_settings: 'Can edit Logbook settings',
         edit_logs: 'Can edit entry logs',
         delete_logs: 'Can delete entry logs',
-        earnings: 'Can see earnings',
+        earnings: 'Can see earnings (APP)',
+        profit: 'Can see earnings and profit', // FIXME: rename on backend changes
+        costs: 'Can see costs', // FIXME: rename on backend changes
         requests: 'Get approval requests',
         requests_in_place: 'Get approval requests in assigned place',
       },
@@ -58,6 +59,9 @@ const initialRoleAccess = {
     reports: {
       enabled: false,
       options: {
+        costs: 'Can see costs', // FIXME: rename on backend changes
+        earnings: 'Can see earnings', // FIXME: rename on backend changes
+        profit: 'Can see profit', // FIXME: rename on backend changes
         generate: 'Can generate reports',
         assigned_place: 'Reports only for assigned place',
       },
@@ -158,8 +162,8 @@ function Roles() {
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
   const modules = useSelector(companyModules);
+  const modulesLoading = useSelector(companyModulesLoading);
   const { role_id: SuperAdmin } = useSelector(userSelector);
-
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -250,7 +254,27 @@ function Roles() {
     setDefaultRoleAccess(() => {
       const temp = {};
       const { moduleAccess } = initialRoleAccess;
-      Object.keys(moduleAccess).map((key) => {
+      const { cost_earning: costEarning, profitability } = modules;
+
+      if (!_.isEmpty(modules)) {
+        if (costEarning && !profitability) {
+          delete moduleAccess.logbook.options.profit;
+
+          delete moduleAccess.reports.options.earnings;
+          delete moduleAccess.reports.options.profit;
+        }
+
+        if (!costEarning && !profitability) {
+          delete moduleAccess.logbook.options.earnings;
+          delete moduleAccess.logbook.options.profit;
+          delete moduleAccess.logbook.options.costs;
+
+          delete moduleAccess.reports.options.costs;
+          delete moduleAccess.reports.options.earnings;
+          delete moduleAccess.reports.options.profit;
+        }
+      }
+      Object.keys({ ...moduleAccess }).map((key) => {
         temp[key] = {
           ...moduleAccess[key],
           enabled: SuperAdmin === 1 ? true : !!modules[key],
@@ -261,7 +285,7 @@ function Roles() {
         ...initialRoleAccess, moduleAccess: temp,
       };
     });
-  }, [SuperAdmin, modules]);
+  }, [SuperAdmin, modules, modulesLoading]);
 
   const removeRole = (roleId) => {
     dispatch(deleteRole(id, roleId));
@@ -303,10 +327,6 @@ function Roles() {
       dispatch(updateRole(id, roleId, { name }));
     }
   };
-
-  useState(() => {
-    console.log(modules);
-  });
 
   return (
     <MaynLayout>

@@ -120,7 +120,14 @@ const Group = ({
                   role='cell'
                 >
                   { column.field === 'duration' && <span className={styles.total}>Total:&nbsp;</span> }
-                  <span className={classNames(styles.blueTotals, styles.medium)}>{group[column.field]}</span>
+                  <span className={classNames(styles.totals,
+                    column.field === 'duration' && styles.blue,
+                    column.field === 'cost' && styles.red,
+                    column.field === 'profit' && styles.green,
+                    styles.medium)}
+                  >
+                    {group[column.field]}
+                  </span>
                 </span>
               );
             })

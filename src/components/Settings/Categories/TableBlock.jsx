@@ -1,14 +1,27 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import DataTable from '../../Core/DataTableCustom/OLT';
+import React, {
+  useState, useCallback, useEffect, useContext,
+} from 'react';
 import { useTranslation } from 'react-i18next';
+import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
+import { AdminContext } from '../../Core/MainLayout';
+import CurrencySign from '../../shared/CurrencySign';
+
+const LabelWithCurrencySign = ({ title, tail }) => (
+  <>
+    {title}
+    {' '}
+    <CurrencySign />
+    {tail}
+  </>
+);
 
 const columns = [
-  { label: "Tille", field: 'name', checked: true },
-  { label: "ID", field: 'id', checked: true },
-  { label: "Cost $/h", field: 'cost', checked: true },
-  { label: "Charge $/h", field: 'earn', checked: true },
-  { label: "actions", field: 'actions', checked: true },
+  { label: 'Tille', field: 'name', checked: true },
+  { label: 'ID', field: 'id', checked: true },
+  { label: <LabelWithCurrencySign title='Cost' tail='/h' />, field: 'cost', checked: true },
+  { label: <LabelWithCurrencySign title='Charge' tail='/h' />, field: 'earn', checked: true },
+  { label: 'actions', field: 'actions', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -16,39 +29,54 @@ const columnsWidthArray = {
   id: 'auto',
   cost: 'auto',
   earn: 'auto',
-  actions: 90
+  actions: 90,
 };
 
 const page = {};
 
-export default function TableBlock({ style, skills }) {
+export default function TableBlock({ style, skills, modules }) {
   const { t } = useTranslation();
-  const [columnsArray, setColumnsArray] = useState(columns);
-  const [loading, setLoading] = useState(null);
+  const [columnsArray, setColumnsArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [totalDuration, setTotalDuration] = useState(null);
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
 
+  const SuperAdmin = useContext(AdminContext);
   useEffect(() => {
-    skills.map(item => {
-      item.actions = "tableActions"
-    })
+    skills.map((item) => {
+      item.actions = 'tableActions';
+    });
     setDataArray(skills);
   }, [skills]);
 
+  useEffect(() => {
+    const { cost_earning: cost, profitability } = modules;
+    if (!profitability && !SuperAdmin) {
+      if (!cost) {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'cost' && field !== 'earn')),
+        );
+      } else {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'earn')),
+        );
+      }
+    } else {
+      setColumnsArray(columns);
+    }
+  }, [SuperAdmin, modules]);
+
   const selectionHandler = (itemId, value) => {
-    skills.map(item => {
+    skills.map((item) => {
       if (item.id === itemId) {
         item.checked = !item.checked;
       }
-    }
-    );
+    });
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {
-      let index = checkedItems.indexOf(itemId);
-      checkedItems.splice(index, 1)
+      const index = checkedItems.indexOf(itemId);
+      checkedItems.splice(index, 1);
       setCheckedItems([...checkedItems]);
     }
   };
@@ -70,7 +98,7 @@ export default function TableBlock({ style, skills }) {
     const sortItems = (array) => {
       const arrayCopy = [...array];
       arrayCopy.sort(sortFunction);
-      return arrayCopy
+      return arrayCopy;
     };
     setDataArray(sortItems);
   }, []);
@@ -81,14 +109,13 @@ export default function TableBlock({ style, skills }) {
 
   return (
     <div className={style.categoryPage__Table}>
-      <Label text={t('Select Category')} htmlFor={""} />
+      <Label text={t('Select Category')} htmlFor='' />
       <DataTable
         data={dataArray || []}
         columns={columnsArray || []}
         columnsWidth={columnsWidthArray || {}}
         onColumnsChange={setColumnsArray}
         sortable
-        loading={loading}
         onSelect={selectionHandler}
         onSort={sortHandler}
         lastPage={page.last_page}
@@ -97,11 +124,10 @@ export default function TableBlock({ style, skills }) {
         totalItemsCount={page.total}
         handlePagination={console.log}
         selectedItem={selectedItem}
-        totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
         verticalOffset='360px'
-        simpleTable={true}
+        simpleTable
       />
     </div>
-  )
+  );
 }

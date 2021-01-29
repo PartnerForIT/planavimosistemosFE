@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
 import MaynLayout from '../Core/MainLayout';
+import CurrencySign from '../shared/CurrencySign';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
 import SearchIcon from '../Icons/SearchIcon';
@@ -41,6 +42,15 @@ import { companyModules } from '../../store/company/selectors';
 import ApproveIcon from '../Icons/ApproveIcon';
 import SuspendIcon from '../Icons/SuspendIcon';
 import { downloadExcel, downloadPdf } from '../../store/reports/actions';
+import { userSelector } from '../../store/auth/selectors';
+
+const TextWithSign = ({ label }) => (
+  <>
+    {label}
+    {', '}
+    <CurrencySign />
+  </>
+);
 
 const columns = [
   { label: 'Status', field: 'status', checked: true },
@@ -51,14 +61,24 @@ const columns = [
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
+  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+  { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 const columnsWidth = {
   status: 250,
+  employee: 'auto',
   skill: 120,
   start: 100,
   end: 100,
-  duration: 140,
+  place: 140,
+  jobType: 140,
+  duration: 180,
+  sallary: 140,
+  cost: 140,
+  profit: 140,
 };
+
 const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -82,27 +102,70 @@ const Logbook = () => {
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const workTime = useSelector(workTimeSelector);
+  const wTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
   const modules = useSelector(companyModules);
   const { id: companyId } = useParams();
+  const user = useSelector(userSelector);
 
   const [approval, setApproval] = useState(false);
+  const [workTime, setWorkTime] = useState([]);
+
+  const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
+
+  useEffect(() => {
+    const { cost_earning: costEarning, profitability: profitAccess } = modules;
+
+    setWorkTime(wTime.map((day) => {
+      const { items } = day;
+      let cost = 0;
+      let sallary = 0;
+      let profit = 0;
+
+      const newDay = {
+        ...day,
+        items: items.map(({ profitability = {}, ...rest }) => {
+          const { cost: itemCost, sallary: itemSalary, profit: itemProfit } = profitability;
+
+          cost += itemCost;
+          sallary += itemSalary;
+          profit += itemProfit;
+
+          setTotal((prevState) => ({
+            profit: prevState.profit + profit,
+            salary: prevState.salary + sallary,
+            cost: prevState.cost + cost,
+          }));
+
+          return {
+            ...rest,
+            ...profitability,
+          };
+        }),
+      };
+
+      return {
+        ...newDay,
+        ...costEarning ? { cost } : {},
+        ...profitAccess ? { profit, sallary } : {},
+      };
+    }));
+  }, [modules, wTime]);
 
   useEffect(() => {
     const { use_approval_flow: approveFlow } = modules;
-    const user = localStorage.getItem('user');
-    const superAdmin = user ? JSON.parse(user)?.role_id : false;
+    const superAdmin = user ? user.role_id : false;
 
-    if (approveFlow === 1 || superAdmin === 1) {
+    // TODO: get approval option from role
+    if (superAdmin === 1 || (approveFlow === 1 && user.roles[0])) {
       setApproval(true);
     } else {
       setApproval(false);
     }
-  }, [modules]);
+  }, [modules, user]);
 
   const [sortStatus, setSortStatus] = useState([]);
 
@@ -164,14 +227,14 @@ const Logbook = () => {
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
-    dispatch(getWorkTime({
+    dispatch(getWorkTime(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
       search,
       employees: checkedEmployees.map((item) => item.id),
       skills: checkedSkills.map((item) => item.id),
       ...props,
-    }, companyId)).then(() => {
+    })).then(() => {
       setCheckedItems([]);
       setSelectedItem(null);
     }).catch();
@@ -194,12 +257,28 @@ const Logbook = () => {
         }
         return { ...item, items };
       }).filter(({ items }) => items.length));
-
-      setColumnsArray(columns);
       setColumnsWidthArray(columnsWidth);
       setTotalDuration(getTotalDuration);
     }
   }, [workTime, getTotalDuration, sortStatus]);
+
+  useEffect(() => {
+    const { cost_earning: costEarning, profitability } = modules;
+
+    if (!profitability) {
+      if (!costEarning) {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit' && field !== 'cost')),
+        );
+      } else {
+        setColumnsArray(
+          columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit')),
+        );
+      }
+    } else {
+      setColumnsArray(columns);
+    }
+  }, [modules]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -326,7 +405,7 @@ const Logbook = () => {
       skills: checkedSk.length ? checkedSk : null,
     };
 
-    dispatch(action(requestObj, companyId)).then(({ data }) => {
+    dispatch(action(companyId, requestObj)).then(({ data }) => {
       // eslint-disable-next-line no-shadow
       const { startDate, endDate } = dateRange;
       // Insert a link that allows the user to download the PDF file
@@ -414,24 +493,24 @@ const Logbook = () => {
               </Scrollbar>
               {
                 approval
-                    && (
-                    <div className={styles.actionButtons}>
-                      <button
-                        className={styles.approve}
-                        onClick={() => changeItemStatus('approve', selectedItem.id)}
-                      >
-                        <span aria-hidden><ApproveIcon aria-hidden /></span>
-                        <span>{t('Approve')}</span>
-                      </button>
-                      <button
-                        className={styles.suspend}
-                        onClick={() => changeItemStatus('suspend', selectedItem.id)}
-                      >
-                        <span aria-hidden><SuspendIcon aria-hidden /></span>
-                        <span>{t('Suspend')}</span>
-                      </button>
-                    </div>
-                    )
+                && (
+                  <div className={styles.actionButtons}>
+                    <button
+                      className={styles.approve}
+                      onClick={() => changeItemStatus('approve', selectedItem.id)}
+                    >
+                      <span aria-hidden><ApproveIcon aria-hidden /></span>
+                      <span>{t('Approve')}</span>
+                    </button>
+                    <button
+                      className={styles.suspend}
+                      onClick={() => changeItemStatus('suspend', selectedItem.id)}
+                    >
+                      <span aria-hidden><SuspendIcon aria-hidden /></span>
+                      <span>{t('Suspend')}</span>
+                    </button>
+                  </div>
+                )
               }
             </>
           )
@@ -470,17 +549,17 @@ const Logbook = () => {
       </div>
       <div className={styles.actions}>
         {
-       approval
-         && (
-         <>
-           <Button onClick={() => changeItemStatus('approve')} green fillWidth>
-             {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
-           </Button>
-           <Button onClick={() => changeItemStatus('suspend')} yellow fillWidth>
-             {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
-           </Button>
-         </>
-         )
+          approval
+          && (
+            <>
+              <Button onClick={() => changeItemStatus('approve')} green fillWidth>
+                {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
+              </Button>
+              <Button onClick={() => changeItemStatus('suspend')} yellow fillWidth>
+                {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
+              </Button>
+            </>
+          )
         }
         <Button onClick={deleteItems} danger fillWidth>
           {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
@@ -562,6 +641,8 @@ const Logbook = () => {
             sortStatus={sortStatus}
             downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
+            modules={modules}
+            amount={total}
           />
         </div>
 
