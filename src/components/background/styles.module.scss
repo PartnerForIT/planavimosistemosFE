@@ -1,0 +1,10 @@
+@import "./../Core/variables";
+
+.root {
+  min-height: 100vh;
+  flex: 1 1;
+  background: linear-gradient(to bottom, ($blue-grownu 0%, $dark-blue-grownu 100%));
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
