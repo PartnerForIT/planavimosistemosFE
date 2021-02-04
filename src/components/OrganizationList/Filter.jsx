@@ -1,23 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import EditModules from '../Core/Dialog/EditModules'
 import NativeSelect from '@material-ui/core/NativeSelect';
-import Button from '../Core/Button/Button';
 import InputBase from '@material-ui/core/InputBase';
-import Input from '../Core/Input/Input';
-import SearchIcon from '../Icons/SearchIcon';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
-import {getCompanies} from '../../store/organizationList/actions';
-import useDebounce from '../Helpers/useDebounce'
 import {
   withStyles,
   makeStyles,
 } from '@material-ui/core/styles';
+import EditModules from '../Core/Dialog/EditModules';
+import Button from '../Core/Button/Button';
+import Input from '../Core/Input/Input';
+import SearchIcon from '../Icons/SearchIcon';
+import { getCompanies } from '../../store/organizationList/actions';
+import useDebounce from '../Helpers/useDebounce';
 
 import styles from './orgList.module.scss';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 600,
     transform: 'translate(0, 1.5px) scale(1)',
-  }
+  },
 }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -59,16 +59,16 @@ const BootstrapInput = withStyles((theme) => ({
       borderColor: '#0087ff',
     },
   },
-}))(InputBase); 
+}))(InputBase);
 
 export default function Filter({
-  organizations, 
-  handleChangeOrganizations, 
-  changeStatusCompany, 
-  checkedItems, 
+  organizations,
+  handleChangeOrganizations,
+  changeStatusCompany,
+  checkedItems,
   enterOrganization,
   companies,
-  clearCheckbox
+  clearCheckbox,
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -76,27 +76,27 @@ export default function Filter({
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
 
-  const debouncedSearchTerm = useDebounce(search, 500)
+  const debouncedSearchTerm = useDebounce(search, 500);
   useEffect(() => {
-    if(debouncedSearchTerm) {
-      dispatch(getCompanies({search}));
+    if (debouncedSearchTerm) {
+      dispatch(getCompanies({ search }));
     }
-    if(search==='') {
-      dispatch(getCompanies())
+    if (search === '') {
+      dispatch(getCompanies());
     }
-  },[debouncedSearchTerm]);
+  }, [debouncedSearchTerm, dispatch, search]);
 
   const handleClose = () => {
-    clearCheckbox()
+    clearCheckbox();
     setOpen(false);
-  }
+  };
 
-  return(
+  return (
     <div className={styles.filterBlock}>
       <div>
         <FormControl className={classes.margin}>
           <NativeSelect
-            id="organizations-select"
+            id='organizations-select'
             value={organizations}
             onChange={handleChangeOrganizations}
             inputProps={{
@@ -111,47 +111,48 @@ export default function Filter({
           </NativeSelect>
         </FormControl>
         <FormControl className={classes.margin}>
-        <Input
+          <Input
             icon={<SearchIcon />}
             placeholder={`${t('Search')}...`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            />
+          />
         </FormControl>
       </div>
       <div className={styles.filterBlock__inner}>
-        <Button navyBlue 
-          onClick={()=> setOpen(true)} 
-          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        <Button
+          navyBlue
+          onClick={() => setOpen(true)}
+          disabled={!checkedItems.length > 0 || checkedItems.length > 1}
         >
-           {t('Edit Modules')}
+          {t('Edit Modules')}
         </Button>
-        <Button 
-          onClick={()=> {enterOrganization()}} 
-          disabled={!checkedItems.length>0 || checkedItems.length>1}
+        <Button
+          onClick={() => { enterOrganization(); }}
+          disabled={!checkedItems.length > 0 || checkedItems.length > 1}
         >
-           {t('Enter Organization')}
+          {t('Enter Organization')}
         </Button>
-        <Button green onClick={()=> changeStatusCompany('activate')} disabled={!checkedItems.length>0}>
+        <Button green onClick={() => changeStatusCompany('activate')} disabled={!checkedItems.length > 0}>
           {t('Active')}
         </Button>
-        <Button yellow onClick={()=> changeStatusCompany('suspend')} disabled={!checkedItems.length>0}>
-           {t('Suspend')}
+        <Button yellow onClick={() => changeStatusCompany('suspend')} disabled={!checkedItems.length > 0}>
+          {t('Suspend')}
         </Button>
-        <Button danger onClick={()=> changeStatusCompany('delete')} disabled={!checkedItems.length>0}>
-           {t('Tetminate')}
+        <Button danger onClick={() => changeStatusCompany('delete')} disabled={!checkedItems.length > 0}>
+          {t('Tetminate')}
         </Button>
-        <Button black onClick={()=> changeStatusCompany('destroy')} disabled={!checkedItems.length>0}>
-           {t('Delete')}
+        <Button black onClick={() => changeStatusCompany('destroy')} disabled={!checkedItems.length > 0}>
+          {t('Delete')}
         </Button>
       </div>
       <EditModules
-          open={open} 
-          handleClose={handleClose} 
-          companies={companies}
-          checkedItem = {checkedItems.length>0 ? checkedItems[0] : null}
-          title={t('Have access to these modules')}
-       />
+        open={open}
+        handleClose={handleClose}
+        companies={companies}
+        checkedItem={checkedItems.length > 0 ? checkedItems[0] : null}
+        title={t('Have access to these modules')}
+      />
     </div>
-  )
+  );
 }
