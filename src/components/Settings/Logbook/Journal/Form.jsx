@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+import classnames from 'classnames';
 import React, { useContext } from 'react';
 import Switch from 'react-switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -44,7 +46,7 @@ export default function Form({
   handleChangeAutomaticApprove,
   handleChangeAutomaticBreak,
   submit,
-  modules: { cost_earning: cost, profitability },
+  modules: { cost_earning: cost, profitability, comments_photo },
 }) {
   const SuperAdmin = useContext(AdminContext);
   return (
@@ -83,7 +85,6 @@ export default function Form({
               name='hourly_cost'
               onChange={handleInputChange}
             />
-            <div className={style.labelText2}>$</div>
             <Tooltip
               title='Charge hourly rate, entry field, and currency symbol based on general settings currency settings'
             />
@@ -105,6 +106,40 @@ export default function Form({
       {/*    /> */}
       {/*  </div> */}
       {/* </div> */}
+      {
+        !!comments_photo && (
+          <>
+            <div className={style.generalBlock2}>
+              <Checkbox
+                onChange={handleInputChange}
+                checked={journalData.comments_required}
+                label={t('On each work end, comment is required.')}
+                name='comments_required'
+              />
+              <div className={style.tooltipBlock}>
+                <Tooltip
+                  title={t('On each work end, comment is required.')}
+                />
+              </div>
+            </div>
+
+            <div className={classnames(style.generalBlock2, style.subCheckbox)}>
+              <Checkbox
+                disabled={!journalData.comments_required}
+                onChange={handleInputChange}
+                checked={journalData.photo_required}
+                label={t('On each work end, photo is required.')}
+                name='photo_required'
+              />
+              <div className={style.tooltipBlock}>
+                <Tooltip
+                  title={t('On each work end, photo is required.')}
+                />
+              </div>
+            </div>
+          </>
+        )
+      }
 
       <div className={style.generalBlock2}>
         <Checkbox
