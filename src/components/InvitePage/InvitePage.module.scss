@@ -34,6 +34,7 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 .formItem {
   margin-top: 10px;
 }
@@ -52,4 +53,10 @@ form {
     margin: 0;
     font-size: 12px;
   }
+}
+
+.error {
+  color: $red;
+  margin-top: 15px;
+  font-size: $small-font-size;
 }

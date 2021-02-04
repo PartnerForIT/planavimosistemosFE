@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isEmpty } from 'lodash';
 import styles from '../Auth/Login.module.scss';
 import BackgroundWrapper from '../background';
 import Card from '../Card';
 import Button from '../Core/Button/Button';
 import Input from '../Core/Input/Input';
+import passwordValidator from '../Helpers/passwordValidator';
 import LockLoginIcon from '../Icons/LockLoginIcon';
 import Logo from '../Logo';
 import classes from './InvitePage.module.scss';
@@ -12,14 +14,20 @@ import classes from './InvitePage.module.scss';
 const InvitePage = () => {
   const { t } = useTranslation();
 
+  // FIXME: change to get from server
+  const security = {};
   const companyName = 'companyName';
   const email = 'employee@hisemail.com';
+
+  const {
+    minLength = 8, numbers = true, specialChars = true, uppercase = true,
+  } = security;
 
   const [values, setValues] = useState({
     password: '',
     repeatPassword: '',
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
   const [matchError, setMatchError] = useState(false);
 
@@ -44,6 +52,19 @@ const InvitePage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (values.password) {
+      const { password: err } = passwordValidator({
+        password: values.password, minLength, numbers, specialChars, uppercase,
+      });
+      if (!isEmpty(err)) {
+        setError(err);
+      } else {
+        setError(null);
+      }
+    }
+  }, [minLength, numbers, specialChars, uppercase, values.password]);
 
   return (
     <BackgroundWrapper className={classes.root}>
@@ -103,7 +124,9 @@ const InvitePage = () => {
             </Button>
           </div>
           {
-
+            error && (
+              <p className={classes.error}>{error.message}</p>
+            )
           }
 
         </form>
