@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES,
+  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, RESET_PASSWORD,
 } from './types';
 
 export const getCompanyInfo = (token) => ({
@@ -32,4 +32,18 @@ export const confirmPassword = ({
 
 export const clearServices = () => ({
   type: CLEAR_SERVICES,
+});
+
+export const resetPassword = (email) => ({
+  type: RESET_PASSWORD,
+  request: {
+    method: 'POST',
+    url: '/password/reset',
+    data: {
+      email,
+    },
+  },
+  meta: {
+    thunk: true,
+  },
 });

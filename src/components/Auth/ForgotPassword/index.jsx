@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { resetPassword } from '../../../store/services/actions';
+import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
 import BackgroundWrapper from '../BackgroundWrapper';
 import Card from '../../Card';
@@ -20,6 +23,9 @@ const ForgotPassword = () => {
 
   const { t } = useTranslation();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector(companyServicesInfoSelector);
 
   const changeInputHandler = (e) => {
     setError(false);
@@ -32,6 +38,12 @@ const ForgotPassword = () => {
 
   const onBlur = () => {
     setError(!validateEmail(email));
+  };
+
+  const onSubmit = () => {
+    dispatch(resetPassword(email))
+      .then(() => setSent(true))
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -73,25 +85,25 @@ const ForgotPassword = () => {
         }
         <div className={classes.buttonBlock}>
           {
-             !sent
-               ? (
-                 <Button
-                   disabled={error || !email}
-                   onClick={() => setSent(true)}
-                 >
-                   {t('Generate password')}
-                 </Button>
-               )
-               : (
-                 <Button
-                   green
-                   aria-label='home'
-                   onClick={() => history.replace('/')}
-                 >
-                   <SuccessIcon aria-hidden />
-                 </Button>
-               )
-            }
+            !sent
+              ? (
+                <Button
+                  disabled={error || !email || loading}
+                  onClick={onSubmit}
+                >
+                  {t('Generate password')}
+                </Button>
+              )
+              : (
+                <Button
+                  green
+                  aria-label='home'
+                  onClick={() => history.replace('/')}
+                >
+                  <SuccessIcon aria-hidden />
+                </Button>
+              )
+          }
         </div>
       </Card>
     </BackgroundWrapper>
