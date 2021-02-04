@@ -18,6 +18,8 @@ const InvitePage = () => {
   const security = {};
   const companyName = 'companyName';
   const email = 'employee@hisemail.com';
+  const admin = true;
+  const employee = false;
 
   const {
     minLength = 8, numbers = true, specialChars = true, uppercase = true,
@@ -73,7 +75,12 @@ const InvitePage = () => {
         <Logo />
         <div className={classes.description}>
           <p>
-            {t(`You have been invited to the ${companyName} organization account as a company employee.`)}
+            {
+              employee && t(`You have been invited to the ${companyName} organization account as a company employee.`)
+            }
+            {
+              admin && t(`You are the main admin user of the ${companyName} organization account.`)
+            }
           </p>
           <p>
             {t('Your registered e-mail')}
@@ -128,7 +135,6 @@ const InvitePage = () => {
               <p className={classes.error}>{error.message}</p>
             )
           }
-
         </form>
       </Card>
     </BackgroundWrapper>
