@@ -16,7 +16,7 @@ const Page404 = () => {
         <h3>404</h3>
         <p>Page not found!</p>
         <p>Don’t worry, we have our best man working on fixing the persistent issue</p>
-        <Button transparent size='medium' onClick={() => null}>
+        <Button transparent size='medium' onClick={() => window.location.reload()}>
           <span className={classes.refresh}>
             {t('Refresh')}
             &nbsp;
