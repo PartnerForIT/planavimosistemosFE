@@ -38,7 +38,7 @@ const App = () => (
         <Route path='/404' component={Page404} />
         <Route exact path='/logout' component={Logout} />
         <Route exact path='/forgot-password' component={ForgotPassword} />
-        <Route exact path='/invite' component={InvitePage} />
+        <Route exact path='/invite/:token' component={InvitePage} />
         <Route exact path='/locked' component={LockedAccount} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/logbook/:id' component={Logbook} />

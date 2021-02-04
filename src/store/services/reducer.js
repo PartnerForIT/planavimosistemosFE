@@ -1,11 +1,12 @@
 /* eslint-disable camelcase */
 import { success, error } from 'redux-saga-requests';
-import { GET_INFO } from './types';
+import { GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES } from './types';
 
 const initialState = {
   email: '',
   security: {},
   company: {},
+  loading: false,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -26,6 +27,25 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state, loading: false, error: action.error,
       };
+
+    case (CONFIRM_PASSWORD):
+      return {
+        ...state,
+        loading: true,
+      };
+    case success(CONFIRM_PASSWORD):
+      return {
+        ...state,
+        loading: false,
+      };
+    case error(CONFIRM_PASSWORD):
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case CLEAR_SERVICES:
+      return initialState;
 
     default:
       return state;

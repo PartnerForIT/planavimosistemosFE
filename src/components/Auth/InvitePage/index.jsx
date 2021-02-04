@@ -2,8 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import getCompanyInfo from '../../../store/services/actions';
+import { Redirect, useParams } from 'react-router-dom';
+import { clearServices, confirmPassword, getCompanyInfo } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
 import BackgroundWrapper from '../BackgroundWrapper';
@@ -20,7 +20,11 @@ const InvitePage = () => {
   const { token } = useParams();
   const dispatch = useDispatch();
 
-  const { email, security, company: { companyName = '' } } = useSelector(companyServicesInfoSelector);
+  const [redirect, setRedirect] = useState(false);
+
+  const {
+    email, security, company: { companyName = '' }, loading,
+  } = useSelector(companyServicesInfoSelector);
 
   useLayoutEffect(() => {
     dispatch(getCompanyInfo(token));
@@ -75,6 +79,28 @@ const InvitePage = () => {
       }
     }
   }, [minLength, numbers, specialChars, uppercase, values.password]);
+
+  const onSubmitHandler = () => {
+    if (!error && !matchError && values.password && values.repeatPassword) {
+      dispatch(confirmPassword({
+        token,
+        password: values.password,
+        password_confirmation: values.repeatPassword,
+        email,
+      }))
+        .then(() => {
+          dispatch(clearServices());
+          setRedirect(true);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
+
+  if (redirect) {
+    return (
+      <Redirect to='/' />
+    );
+  }
 
   return (
     <BackgroundWrapper className={classes.root}>
@@ -132,8 +158,9 @@ const InvitePage = () => {
           </div>
           <div className={classes.buttonBlock}>
             <Button
+              onClick={onSubmitHandler}
               size='large'
-              disabled={matchError || !values.password || !values.repeatPassword || error}
+              disabled={matchError || !values.password || !values.repeatPassword || error || loading}
             >
               {t('Login')}
             </Button>

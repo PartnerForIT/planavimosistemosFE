@@ -1,1 +1,3 @@
 export const GET_INFO = 'GET_INFO';
+export const CONFIRM_PASSWORD = 'CONFIRM_PASSWORD';
+export const CLEAR_SERVICES = 'CLEAR_SERVICES';

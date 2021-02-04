@@ -1,8 +1,9 @@
+/* eslint-disable camelcase */
 import {
-  GET_INFO,
+  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES,
 } from './types';
 
-const getCompanyInfo = (token) => ({
+export const getCompanyInfo = (token) => ({
   type: GET_INFO,
   request: {
     method: 'GET',
@@ -13,4 +14,22 @@ const getCompanyInfo = (token) => ({
   },
 });
 
-export default getCompanyInfo;
+export const confirmPassword = ({
+  token, password, email, password_confirmation,
+}) => ({
+  type: CONFIRM_PASSWORD,
+  request: {
+    method: 'POST',
+    url: `/password_confirmation/${token}`,
+  },
+  data: {
+    email, password, password_confirmation,
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
+export const clearServices = () => ({
+  type: CLEAR_SERVICES,
+});
