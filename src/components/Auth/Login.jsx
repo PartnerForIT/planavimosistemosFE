@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import BackgroundWrapper from '../background';
+import Card from '../Card';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import LockLoginIcon from '../Icons/LockLoginIcon';
 import LoginIcon from '../Icons/LoginIcon';
@@ -45,7 +46,7 @@ const LoginContainer = () => {
 
   return (
     <BackgroundWrapper className={styles.container}>
-      <div className={styles.wrapper}>
+      <Card className={styles.wrapper}>
         <div className={styles.content}>
           <p className={styles.title}>Sign In</p>
           <Input
@@ -83,7 +84,7 @@ const LoginContainer = () => {
             )
           }
         </div>
-      </div>
+      </Card>
     </BackgroundWrapper>
   );
 };
