@@ -1,3 +1,5 @@
+@import "../../Core/variables";
+
 $border-style: 1px solid #d0dfef;
 $icon-width: 33px;
 
@@ -82,4 +84,9 @@ $icon-width: 33px;
   border-radius: unset;
 
   @include placeholder();
+}
+
+.error {
+  border-color: $red;
+  color: red;
 }
