@@ -9,8 +9,13 @@
   position: fixed;
   top: $background-wrapper-padding;
   left: $background-wrapper-padding;
+  text-decoration: none;
 
   svg {
     margin-right: 22px;
+  }
+
+  &:hover {
+    text-decoration: underline;
   }
 }
