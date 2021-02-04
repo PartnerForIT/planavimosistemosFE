@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import BackgroundWrapper from '../background';
@@ -13,6 +14,7 @@ import Button from '../Core/Button/Button';
 import { login } from '../../store/auth/actions';
 import routes from '../../config/routes';
 import { authErrorSelector } from '../../store/auth/selectors';
+import LogoOnWhite from '../../assets/Grownu logo on white.png';
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -36,7 +38,9 @@ const LoginContainer = () => {
     dispatch(login(email, password)).then((data) => {
       const roleId = data.data.user.role_id;
       const company_id = data.data.user.id;
-      roleId === 1 ? history.push(routes.ORG_LIST) : history.push(`${routes.LOGBOOK}/${company_id}`);
+      roleId === 1
+        ? history.push(routes.ORG_LIST)
+        : history.push(`${routes.LOGBOOK}/${company_id}`);
     }).catch((error) => {
       console.log('Login error', error);
     });
@@ -48,7 +52,12 @@ const LoginContainer = () => {
     <BackgroundWrapper className={styles.container}>
       <Card className={styles.wrapper}>
         <div className={styles.content}>
-          <p className={styles.title}>Sign In</p>
+          <img
+            src={LogoOnWhite}
+            alt={t('Grownu logo')}
+            className={styles.logo}
+            loading='lazy'
+          />
           <Input
             placeholder='Email'
             underline
@@ -85,6 +94,11 @@ const LoginContainer = () => {
           }
         </div>
       </Card>
+
+      <footer>
+        <Link to='/forgot-password' className={styles.forgotLink}>{t('Forgot your password?')}</Link>
+      </footer>
+
     </BackgroundWrapper>
   );
 };
