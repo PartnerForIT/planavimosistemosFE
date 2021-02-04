@@ -7,6 +7,7 @@ import {
 import Page404 from './components/404';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import InvitePage from './components/Auth/InvitePage';
+import LockedAccount from './components/Auth/LockedAccount';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import OrganizationList from './components/OrganizationList';
@@ -38,6 +39,7 @@ const App = () => (
         <Route exact path='/logout' component={Logout} />
         <Route exact path='/forgot-password' component={ForgotPassword} />
         <Route exact path='/invite' component={InvitePage} />
+        <Route exact path='/locked' component={LockedAccount} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/logbook/:id' component={Logbook} />
         <AuthRoute exact path='/overview' component={Overview} />
