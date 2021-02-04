@@ -66,6 +66,7 @@ const LoginContainer = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             icon={<LoginIcon />}
+            error={authError}
           />
           <Delimiter />
           <Input
@@ -78,20 +79,21 @@ const LoginContainer = () => {
             onChange={(e) => setPassword(e.target.value)}
             autoComplete='current-password'
             icon={<LockLoginIcon />}
+            error={authError}
           />
+          <div className={styles.errorBlock}>
+            {
+             authError?.response?.data?.error && (
+             <p>{t('Wrong password or email')}</p>
+             )
+            }
+          </div>
           <Delimiter />
           <Delimiter />
           <div className={styles.buttons}>
             <StyledCheckbox label={t('Remember me')} onChange={() => null} />
             <Button onClick={handleLogin} size='medium'>{t('Login')}</Button>
           </div>
-        </div>
-        <div className={styles.errorBlock}>
-          {
-            authError && authError.response && authError.response.data && authError.response.data.error && (
-              <p style={{ color: '#f44336' }}>{authError.response.data.error}</p>
-            )
-          }
         </div>
       </Card>
 

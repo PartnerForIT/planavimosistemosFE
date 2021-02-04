@@ -50,6 +50,13 @@
 
 .errorBlock {
   height: 20px;
+  color: $red;
+  text-align: right;
+
+  p {
+    margin: 0;
+    font-size: 12px;
+  }
 }
 
 .porgressBlock {
