@@ -1,5 +1,6 @@
 $normal-font-size: 16px;
 $small-font-size: 13px;
+$background-wrapper-padding: 50px;
 
 $light-green-row-background: #e6fae3;
 
@@ -85,6 +86,8 @@ $red-700: #de4747;
 $red-800: #bd4040;
 $red-900: #9c3939;
 
+$font-family: Helvetica Neue, sans-serif;
+
 /* CalendarPicker Variables */
 $base-cell-width: 14.2857142857%;
 $picker-max-width: 430px;
@@ -102,7 +105,7 @@ $expanded-picker-max-width: 570px;
   cursor: pointer;
   padding: 0;
   margin: 0;
-  font-family: Helvetica Neue, sans-serif;
+  font-family: $font-family;
 
   &:focus:not(:focus-visible) {
     outline: none;

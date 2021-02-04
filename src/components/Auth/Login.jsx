@@ -60,7 +60,7 @@ const LoginContainer = () => {
           />
           <Input
             placeholder='Email'
-            underline
+            underlined
             iconLeft
             fullWidth
             value={email}
@@ -70,7 +70,7 @@ const LoginContainer = () => {
           <Delimiter />
           <Input
             placeholder='Password'
-            underline
+            underlined
             iconLeft
             fullWidth
             type='password'

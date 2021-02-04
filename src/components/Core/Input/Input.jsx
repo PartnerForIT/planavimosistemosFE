@@ -3,16 +3,19 @@ import classNames from 'classnames';
 import styles from './Input.module.scss';
 
 const Input = ({
-  disabled, placeholder, icon, type, width, height, min, max, fullWidth, ...props
+  disabled, placeholder, icon, type, width, height,
+  min, max, fullWidth, underlined, iconLeft, ...props
 }) => {
   const classes = classNames(
     styles.input,
     { [styles.withIcon]: !!icon },
+    { [styles.underlined]: underlined },
   );
 
   const wrapperClasses = classNames(
     styles.inputWrapper,
     { [styles.inputWrapperFullWidth]: fullWidth },
+    { [styles.iconLeft]: iconLeft },
   );
 
   return (
