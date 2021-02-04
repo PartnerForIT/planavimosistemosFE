@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Page404 from './components/404';
 import ForgotPassword from './components/ForgotPassword';
+import InvitePage from './components/InvitePage';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import OrganizationList from './components/OrganizationList';
@@ -36,6 +37,7 @@ const App = () => (
         <Route path='/404' component={Page404} />
         <Route exact path='/logout' component={Logout} />
         <Route exact path='/forgot-password' component={ForgotPassword} />
+        <Route exact path='/invite' component={InvitePage} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/logbook/:id' component={Logbook} />
         <AuthRoute exact path='/overview' component={Overview} />
