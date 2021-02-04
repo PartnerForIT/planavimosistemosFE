@@ -1,0 +1,62 @@
+@import "../../Core/variables";
+
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $gray;
+  font-family: $font-family;
+}
+
+.card {
+  display: flex;
+  min-height: 400px;
+  max-width: 550px;
+  flex-direction: column;
+  padding: 50px 100px;
+  align-items: center;
+}
+
+.description {
+  text-align: center;
+
+  p {
+    font-size: $normal-font-size;
+  }
+}
+
+.black {
+  color: black;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.formItem {
+  margin-top: 10px;
+}
+
+.buttonBlock {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.errorBlock {
+  height: 20px;
+  color: $red;
+  text-align: right;
+
+  p {
+    margin: 0;
+    font-size: 12px;
+  }
+}
+
+.error {
+  color: $red;
+  margin-top: 15px;
+  font-size: $small-font-size;
+}

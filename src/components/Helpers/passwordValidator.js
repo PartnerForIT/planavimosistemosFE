@@ -11,7 +11,7 @@ const passwordValidator = ({
         password: { message: 'Your password must contain at least one number digit.' },
       };
       // eslint-disable-next-line no-useless-escape
-    } if (specialChars && !password.match(/(?=.*[!@#$%^&*()_+~`|}{\[\]:;?><,.\/-=])/g)) {
+    } if (specialChars && !password.match(/[-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]/g)) {
       return {
         password: { message: 'Your password must contain at least one special character.' },
       };

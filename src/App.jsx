@@ -2,8 +2,12 @@ import React, { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
+  Route, Redirect,
 } from 'react-router-dom';
+import Page404 from './components/404';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import InvitePage from './components/Auth/InvitePage';
+import LockedAccount from './components/Auth/LockedAccount';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import OrganizationList from './components/OrganizationList';
@@ -31,7 +35,11 @@ const App = () => (
     <Router>
       <Switch>
         <Route exact path='/' component={Login} />
+        <Route path='/404' component={Page404} />
         <Route exact path='/logout' component={Logout} />
+        <Route exact path='/forgot-password' component={ForgotPassword} />
+        <Route exact path='/invite/:token' component={InvitePage} />
+        <Route exact path='/locked' component={LockedAccount} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/logbook/:id' component={Logbook} />
         <AuthRoute exact path='/overview' component={Overview} />
@@ -51,6 +59,7 @@ const App = () => (
         <AuthRoute exact path='/settings/delete/:id' component={SettingDelete} />
         <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
         <AuthRoute exact path='/reports/:id' component={Reports} />
+        <Redirect from='*' to='/404' />
       </Switch>
     </Router>
   </Suspense>

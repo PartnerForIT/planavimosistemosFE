@@ -2,7 +2,6 @@ import React from 'react';
 import DasboardMenu from './DashboardMenu';
 import styles from './dasboard.module.scss';
 
-
 export default function Dashboard({ children }) {
   return (
     <div className={styles.dashboard}>
@@ -13,5 +12,5 @@ export default function Dashboard({ children }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

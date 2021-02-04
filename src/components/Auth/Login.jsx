@@ -1,7 +1,14 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import BackgroundWrapper from './BackgroundWrapper';
+import Card from '../Card';
+import StyledCheckbox from '../Core/Checkbox/Checkbox';
+import LockLoginIcon from '../Icons/LockLoginIcon';
+import LoginIcon from '../Icons/LoginIcon';
+import Logo from '../Logo';
 import styles from './Login.module.scss';
 import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
@@ -31,7 +38,9 @@ const LoginContainer = () => {
     dispatch(login(email, password)).then((data) => {
       const roleId = data.data.user.role_id;
       const company_id = data.data.user.id;
-      roleId === 1 ? history.push(routes.ORG_LIST) : history.push(`${routes.LOGBOOK}/${company_id}`);
+      roleId === 1
+        ? history.push(routes.ORG_LIST)
+        : history.push(`${routes.LOGBOOK}/${company_id}`);
     }).catch((error) => {
       console.log('Login error', error);
     });
@@ -40,35 +49,54 @@ const LoginContainer = () => {
   const Delimiter = () => (<div className={styles.delimiter} />);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
+    <BackgroundWrapper className={styles.container}>
+      <Card className={styles.wrapper}>
         <div className={styles.content}>
-          <p className={styles.title}>Sign In</p>
+          <Logo />
           <Input
             placeholder='Email'
+            underlined
+            iconLeft
+            fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            icon={<LoginIcon />}
+            error={authError}
           />
           <Delimiter />
           <Input
             placeholder='Password'
+            underlined
+            iconLeft
+            fullWidth
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete='current-password'
+            icon={<LockLoginIcon />}
+            error={authError}
           />
+          <div className={styles.errorBlock}>
+            {
+              authError?.response?.data?.error && (
+                <p>{t('Wrong password or email')}</p>
+              )
+            }
+          </div>
           <Delimiter />
-          <Button onClick={handleLogin}>{t('Sign in')}</Button>
+          <Delimiter />
+          <div className={styles.buttons}>
+            <StyledCheckbox label={t('Remember me')} onChange={() => null} />
+            <Button onClick={handleLogin} size='medium'>{t('Login')}</Button>
+          </div>
         </div>
-        <div className={styles.errorBlock}>
-          {
-            authError && authError.response && authError.response.data && authError.response.data.error && (
-              <p style={{ color: '#f44336' }}>{authError.response.data.error}</p>
-            )
-          }
-        </div>
-      </div>
-    </div>
+      </Card>
+
+      <footer>
+        <Link to='/forgot-password' className={styles.forgotLink}>{t('Forgot your password?')}</Link>
+      </footer>
+
+    </BackgroundWrapper>
   );
 };
 
