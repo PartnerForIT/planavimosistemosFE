@@ -8,13 +8,13 @@ import Card from '../Card';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import LockLoginIcon from '../Icons/LockLoginIcon';
 import LoginIcon from '../Icons/LoginIcon';
+import Logo from '../Logo';
 import styles from './Login.module.scss';
 import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
 import { login } from '../../store/auth/actions';
 import routes from '../../config/routes';
 import { authErrorSelector } from '../../store/auth/selectors';
-import LogoOnWhite from '../../assets/Grownu logo on white.png';
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -52,12 +52,7 @@ const LoginContainer = () => {
     <BackgroundWrapper className={styles.container}>
       <Card className={styles.wrapper}>
         <div className={styles.content}>
-          <img
-            src={LogoOnWhite}
-            alt={t('Grownu logo')}
-            className={styles.logo}
-            loading='lazy'
-          />
+          <Logo />
           <Input
             placeholder='Email'
             underlined
@@ -83,9 +78,9 @@ const LoginContainer = () => {
           />
           <div className={styles.errorBlock}>
             {
-             authError?.response?.data?.error && (
-             <p>{t('Wrong password or email')}</p>
-             )
+              authError?.response?.data?.error && (
+                <p>{t('Wrong password or email')}</p>
+              )
             }
           </div>
           <Delimiter />
