@@ -17,6 +17,7 @@ import overview from './overview/reducer';
 import organizationList from './organizationList/reducer';
 import settings from './settings/reducer';
 import company from './company/reducer';
+import services from './services/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   organizationList,
   settings,
   company,
+  services,
 });
 
 const middlewares = [

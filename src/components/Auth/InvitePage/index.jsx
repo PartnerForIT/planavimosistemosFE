@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import getCompanyInfo from '../../../store/services/actions';
+import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
 import BackgroundWrapper from '../BackgroundWrapper';
 import Card from '../../Card';
@@ -13,11 +17,15 @@ import classes from './InvitePage.module.scss';
 
 const InvitePage = () => {
   const { t } = useTranslation();
+  const { token } = useParams();
+  const dispatch = useDispatch();
 
-  // FIXME: change to get from server
-  const security = {};
-  const companyName = 'companyName';
-  const email = 'employee@hisemail.com';
+  const { email, security, company: { companyName = '' } } = useSelector(companyServicesInfoSelector);
+
+  useLayoutEffect(() => {
+    dispatch(getCompanyInfo(token));
+  }, [dispatch, token]);
+
   const admin = true;
   const employee = false;
 
