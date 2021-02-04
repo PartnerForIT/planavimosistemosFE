@@ -55,6 +55,8 @@ export default function Journal() {
     automatic_break: false,
     workday_exceed: '4',
     break_duration: '30',
+    comments_required: false,
+    photo_required: false,
   });
 
   useEffect(() => {
