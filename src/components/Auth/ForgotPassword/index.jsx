@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import styles from '../Auth/Login.module.scss';
-import BackgroundWrapper from '../background';
-import Card from '../Card';
-import Button from '../Core/Button/Button';
-import Input from '../Core/Input/Input';
-import GoBackLink from '../GoBack';
-import { validateEmail } from '../Helpers/emailValidation';
-import EmailIcon from '../Icons/EmailIcon';
-import SuccessIcon from '../Icons/SuccessIcon';
-import Logo from '../Logo';
+import styles from '../Login.module.scss';
+import BackgroundWrapper from '../BackgroundWrapper';
+import Card from '../../Card';
+import Button from '../../Core/Button/Button';
+import Input from '../../Core/Input/Input';
+import GoBackLink from '../../GoBack';
+import { validateEmail } from '../../Helpers/emailValidation';
+import EmailIcon from '../../Icons/EmailIcon';
+import SuccessIcon from '../../Icons/SuccessIcon';
+import Logo from '../../Logo';
 import classes from './ForgotPassword.module.scss';
 
 const ForgotPassword = () => {

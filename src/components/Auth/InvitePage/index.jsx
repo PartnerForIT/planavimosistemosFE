@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import styles from '../Auth/Login.module.scss';
-import BackgroundWrapper from '../background';
-import Card from '../Card';
-import Button from '../Core/Button/Button';
-import Input from '../Core/Input/Input';
-import passwordValidator from '../Helpers/passwordValidator';
-import LockLoginIcon from '../Icons/LockLoginIcon';
-import Logo from '../Logo';
+import styles from '../Login.module.scss';
+import BackgroundWrapper from '../BackgroundWrapper';
+import Card from '../../Card';
+import Button from '../../Core/Button/Button';
+import Input from '../../Core/Input/Input';
+import passwordValidator from '../../Helpers/passwordValidator';
+import LockLoginIcon from '../../Icons/LockLoginIcon';
+import Logo from '../../Logo';
 import classes from './InvitePage.module.scss';
 
 const InvitePage = () => {

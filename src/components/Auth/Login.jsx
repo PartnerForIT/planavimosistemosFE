@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import BackgroundWrapper from '../background';
+import BackgroundWrapper from './BackgroundWrapper';
 import Card from '../Card';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import LockLoginIcon from '../Icons/LockLoginIcon';

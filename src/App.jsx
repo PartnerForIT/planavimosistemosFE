@@ -5,8 +5,8 @@ import {
   Route, Redirect,
 } from 'react-router-dom';
 import Page404 from './components/404';
-import ForgotPassword from './components/ForgotPassword';
-import InvitePage from './components/InvitePage';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import InvitePage from './components/Auth/InvitePage';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import OrganizationList from './components/OrganizationList';

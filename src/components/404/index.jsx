@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import BackgroundWrapper from '../background';
+import BackgroundWrapper from '../Auth/BackgroundWrapper';
 import Button from '../Core/Button/Button';
 import GoBackLink from '../GoBack';
 import RefreshArrow from '../Icons/RefreshArrow';
