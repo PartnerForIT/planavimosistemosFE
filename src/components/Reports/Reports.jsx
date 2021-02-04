@@ -8,6 +8,8 @@ import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
 import { companyModules } from '../../store/company/selectors';
+import { loadLogbookJournal } from '../../store/settings/actions';
+import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import MainLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
@@ -117,8 +119,9 @@ const Reports = () => {
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
-
+  const { comments_required: comments = false } = useSelector(JournalDataSelector);
   const modules = useSelector(companyModules);
+
   const { cost_earning: costs, profitability } = modules;
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
@@ -129,6 +132,7 @@ const Reports = () => {
     dispatch(getReportsEmployees({ companyId })).then().catch();
     dispatch(getReportsJobTypes({ companyId })).then().catch();
     dispatch(getReportsSkills({ companyId })).then().catch();
+    dispatch(loadLogbookJournal(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -230,6 +234,8 @@ const Reports = () => {
                         return false;
                       } if (!costState.show_costs && field === 'cost') {
                         return false;
+                      } if (!comments && field === 'comment') {
+                        return false;
                       }
                       return !(!costState.show_profit && field === 'profit');
                     }),
@@ -265,7 +271,7 @@ const Reports = () => {
       setActiveReport(generatedReport.id);
     }
     // setTotalDuration(getTotalDuration);
-  }, [costState.show_costs, costState.show_earnings, costState.show_profit, costs, generatedReport, profitability]);
+  }, [comments, costState.show_costs, costState.show_earnings, costState.show_profit, costs, generatedReport, profitability]);
 
   useEffect(() => {
     setColumnsArray([...columns,
