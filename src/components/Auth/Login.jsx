@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import BackgroundWrapper from '../background';
+import StyledCheckbox from '../Core/Checkbox/Checkbox';
+import LockLoginIcon from '../Icons/LockLoginIcon';
+import LoginIcon from '../Icons/LoginIcon';
 import styles from './Login.module.scss';
 import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
@@ -40,25 +44,37 @@ const LoginContainer = () => {
   const Delimiter = () => (<div className={styles.delimiter} />);
 
   return (
-    <div className={styles.container}>
+    <BackgroundWrapper className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.content}>
           <p className={styles.title}>Sign In</p>
           <Input
             placeholder='Email'
+            underline
+            iconLeft
+            fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            icon={<LoginIcon />}
           />
           <Delimiter />
           <Input
             placeholder='Password'
+            underline
+            iconLeft
+            fullWidth
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete='current-password'
+            icon={<LockLoginIcon />}
           />
           <Delimiter />
-          <Button onClick={handleLogin}>{t('Sign in')}</Button>
+          <Delimiter />
+          <div className={styles.buttons}>
+            <StyledCheckbox label={t('Remember me')} onChange={() => null} />
+            <Button onClick={handleLogin}>{t('Sign in')}</Button>
+          </div>
         </div>
         <div className={styles.errorBlock}>
           {
@@ -68,7 +84,7 @@ const LoginContainer = () => {
           }
         </div>
       </div>
-    </div>
+    </BackgroundWrapper>
   );
 };
 
