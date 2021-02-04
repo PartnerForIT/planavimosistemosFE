@@ -8,21 +8,6 @@
   font-family: $font-family;
 }
 
-.link {
-  display: inline-flex;
-  align-items: center;
-  color: inherit;
-  font-family: $font-family;
-  font-size: 14px;
-  position: fixed;
-  top: $background-wrapper-padding;
-  left: $background-wrapper-padding;
-
-  svg {
-    margin-right: 22px;
-  }
-}
-
 .wrapper {
   max-width: 250px;
   display: flex;
