@@ -20,7 +20,7 @@ export default function WorkingTime({
           <Tooltip title='Working Time' />
         </div>
         {Object.keys(days).map((item, index) => (
-          <div key={item + index} className={styles.workigTime__inner}>
+          <div key={item + index.toString()} className={styles.workigTime__inner}>
             <Checkbox
               onChange={handleChangeDays}
               checked={days[item]}
