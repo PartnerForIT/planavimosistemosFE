@@ -252,9 +252,11 @@ export default function Form({
           </div>
         </div>
       </div>
-      <Button inverse onClick={() => submit()}>
-        {t('Save Overtime')}
-      </Button>
+      <div className={style.buttonBlock}>
+        <Button inverse onClick={() => submit()}>
+          {t('Save Overtime')}
+        </Button>
+      </div>
     </form>
   );
 }

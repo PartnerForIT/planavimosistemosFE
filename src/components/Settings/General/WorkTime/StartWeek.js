@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import SimpleSelect from '../../../Core/SimpleSelect';
-import timeArr from '../../../Helpers/time'
 
-export default function StartWork({ styles, days, inputValues, handleInputChange }) {
+export default function StartWork({
+  styles, days, inputValues, handleInputChange,
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.startWeek_block}>
@@ -13,11 +14,11 @@ export default function StartWork({ styles, days, inputValues, handleInputChange
         <div className={styles.startWeek__inner}>
           <div className={styles.labelBlock}>
             <Label text={t('Week Start')} />
-            <Tooltip title={'Day of the beginning of the week'} />
+            <Tooltip title='Day of the beginning of the week' />
           </div>
           <SimpleSelect
             handleInputChange={handleInputChange}
-            name="week_start"
+            name='week_start'
             fullWidth
             value={inputValues.week_start}
             options={days}
@@ -37,8 +38,8 @@ export default function StartWork({ styles, days, inputValues, handleInputChange
           /> */}
         </div>
       </div>
-      <div className={styles.formLine}></div>
+      <div className={styles.formLine} />
     </div>
 
-  )
+  );
 }

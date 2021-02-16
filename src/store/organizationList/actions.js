@@ -8,7 +8,6 @@ import {
   DISMISS_SNACKBAR,
   GET_COMPANIES,
   GET_COMPANIES_SUCCESS,
-  GET_COMPANIES_ERROR,
   POST_CHANGE_OF_STATUS,
   GET_MODULES,
   GET_MODULES_SUCCESS,
@@ -35,7 +34,7 @@ export const addOrganization = (data) => ({
 export const addOrganizationSuccess = (data) => ({
   type: POST_ORGANIZATION_SUCCESS,
   data,
-})
+});
 
 export const addSnackbar = (data, snackbarType) => ({
   type: ADD_SNACKBAR,
@@ -46,33 +45,34 @@ export const dismissSnackbar = () => ({ type: DISMISS_SNACKBAR });
 
 export const getCompanies = (params) => ({
   type: GET_COMPANIES,
-  params
-})
+  params,
+});
 export const getCompaniesSuccess = (data) => ({
   type: GET_COMPANIES_SUCCESS,
-  data
-})
+  data,
+});
 
 export const postChangeOfStatus = (data) => ({
   type: POST_CHANGE_OF_STATUS,
-  data
-})
+  data,
+});
 
 export const getModules = (params) => ({
   type: GET_MODULES,
   params,
-})
+});
+
 export const getModulesSuccess = (data) => ({
   type: GET_MODULES_SUCCESS,
   data,
-})
+});
 
 export const patchModules = (id, data) => ({
   type: PATCH_MODULES,
   id,
   data,
-})
+});
 export const patchModulesSuccess = (data) => ({
   type: PATCH_MODULES_SUCCESS,
   data,
-})
+});

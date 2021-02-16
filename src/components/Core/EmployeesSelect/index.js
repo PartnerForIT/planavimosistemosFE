@@ -1,15 +1,10 @@
-
-import React from "react";
+import React from 'react';
 import {
   withStyles,
-  makeStyles,
 } from '@material-ui/core/styles';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import InputBase from '@material-ui/core/InputBase';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
-
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -39,22 +34,27 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 
-
-export default function EmployeesSelect({ handleInputChange, name, value, options, fullWidth }) {
+export default function EmployeesSelect({
+  handleInputChange, name, value, options, fullWidth = true,
+}) {
   return (
     <NativeSelect
-      id="country-select"
+      id='country-select'
       value={value}
-      fullWidth
+      fullWidth={fullWidth}
       onChange={handleInputChange}
       inputProps={{
         name: `${name}`,
       }}
-      input={<BootstrapInput name="country" />}
+      input={<BootstrapInput name='country' />}
     >
       {_.map(options, (item) => (
-        <option key={item.id} value={item.user_id}>{item.name} {item.surname}</option>
+        <option key={item.id} value={item.user_id}>
+          {item.name}
+          {' '}
+          {item.surname}
+        </option>
       ))}
     </NativeSelect>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Timeline.module.scss';
 import { datetimeToSeconds } from '../../Helpers';
@@ -10,19 +10,19 @@ const Timeline = ({
   const [workTimespans, setWorkTimespans] = useState([]);
   const [breakTimespans, setBreakTimespans] = useState([]);
 
-  const calculateTimespans = (arr) => {
+  const calculateTimespans = useCallback((arr) => {
     const arrayCopy = [...arr];
     return arrayCopy.map((span) => ({
       ...span,
       width: `${Math.ceil(((((span.duration_sec * 100) / total) + Number.EPSILON) * 100) / 100)}%`,
       left: `${((datetimeToSeconds(span.started_at) - datetimeToSeconds(startMinute)) * 100) / total}%`,
     }));
-  };
+  }, [startMinute, total]);
 
   useEffect(() => {
     setWorkTimespans(calculateTimespans(works));
     setBreakTimespans(calculateTimespans(breaks));
-  }, [works, breaks, startMinute, total]);
+  }, [works, breaks, startMinute, total, calculateTimespans]);
 
   return (
     <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
