@@ -1,32 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
 import TitleBlock from '../../Core/TitleBlock';
-import Dashboard from '../../Core/Dashboard'
+import Dashboard from '../../Core/Dashboard';
 import JournalIcon from '../../Icons/JournalIcon';
 
 export default function Events() {
   const params = useParams();
-  const [companyId, setCompanyId] = useState(null)
+  const [companyId, setCompanyId] = useState(null);
 
   useEffect(() => {
-    setCompanyId(params.id)
+    setCompanyId(params.id);
   }, [params]);
 
   return (
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Events"}
+          title='Events'
         >
           <JournalIcon />
         </TitleBlock>
         <PageLayout>
-          Events id = {companyId}
+          Events id =
+          {' '}
+          {companyId}
         </PageLayout>
       </Dashboard>
     </MaynLayout>
-
-  )
+  );
 }

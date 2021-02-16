@@ -9,11 +9,11 @@ export default function HelpPage() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Settings"}
+          title='Settings'
         >
           <SettingsBig />
         </TitleBlock>
       </Dashboard>
     </MaynLayout>
-  )
+  );
 }

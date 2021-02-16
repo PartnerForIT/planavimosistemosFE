@@ -146,10 +146,6 @@ const Reports = () => {
     }));
   };
 
-  useEffect(() => {
-    console.log(itemsArray);
-  }, [itemsArray]);
-
   const showCostsInReport = () => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
@@ -271,7 +267,8 @@ const Reports = () => {
       setActiveReport(generatedReport.id);
     }
     // setTotalDuration(getTotalDuration);
-  }, [comments, costState.show_costs, costState.show_earnings, costState.show_profit, costs, generatedReport, profitability]);
+  }, [comments, costState.show_costs, costState.show_earnings,
+    costState.show_profit, costs, generatedReport, profitability]);
 
   useEffect(() => {
     setColumnsArray([...columns,

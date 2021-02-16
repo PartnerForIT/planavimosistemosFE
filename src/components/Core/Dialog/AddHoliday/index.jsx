@@ -1,29 +1,30 @@
-import React from "react";
-import Dialog from '../index';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '../../Button/Button';
-import Input from '../../Input/Input';
-import Label from '../../InputLabel';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import Dialog from '../index';
+import Button from '../../Button/Button';
+import Input from '../../Input/Input';
+import Label from '../../InputLabel';
 
 import style from '../Dialog.module.scss';
 
-
-export default function AddHolidays({ handleClose, title, open,
-  saveAddHoliday, handleDateChange, selectedDate, name, setName }) {
+export default function AddHolidays({
+  handleClose, title, open,
+  saveAddHoliday, handleDateChange, selectedDate, name, setName,
+}) {
   const { t } = useTranslation();
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      <Label text={t('Name')} htmlFor={"name"} />
+      <Label text={t('Name')} htmlFor='name' />
       <Input
         placeholder={`${t('Enter holiday name')}`}
         value={name}
-        name="name"
+        name='name'
         fullWidth
         onChange={(e) => setName(e.target.value)}
       />
@@ -31,11 +32,11 @@ export default function AddHolidays({ handleClose, title, open,
         <KeyboardDatePicker
           disableToolbar
           fullWidth
-          variant="inline"
-          format="yyyy-MM-dd"
-          margin="normal"
-          id="date-picker-inline"
-          label="Date"
+          variant='inline'
+          format='yyyy-MM-dd'
+          margin='normal'
+          id='date-picker-inline'
+          label='Date'
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
@@ -45,7 +46,7 @@ export default function AddHolidays({ handleClose, title, open,
       </MuiPickersUtilsProvider>
       <div className={style.buttonSaveBlock}>
         <Button
-          size="big"
+          size='big'
           onClick={() => saveAddHoliday()}
           disabled={name === ''}
         >
@@ -53,5 +54,5 @@ export default function AddHolidays({ handleClose, title, open,
         </Button>
       </div>
     </Dialog>
-  )
+  );
 }

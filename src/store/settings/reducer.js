@@ -121,6 +121,10 @@ const initialState = {
   import: {},
 };
 
+function filterdeleteHoliday(array, id) {
+  return array.filter((item) => item.id !== id);
+}
+
 export const reducerOrganizationList = (state = initialState, action) => {
   switch (action.type) {
     case GET_SETTINGS_COMPANY:
@@ -596,8 +600,3 @@ export const reducerOrganizationList = (state = initialState, action) => {
 };
 
 export default reducerOrganizationList;
-
-function filterdeleteHoliday(array, id) {
-  const arr = array.filter((item) => item.id !== id);
-  return arr;
-}

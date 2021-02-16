@@ -7,10 +7,10 @@ export default function HelpPage() {
   return (
     <MaynLayout>
       <TitleBlock
-        title={"Help"}
+        title='Help'
       >
         <PeopleIcon />
       </TitleBlock>
     </MaynLayout>
-  )
+  );
 }

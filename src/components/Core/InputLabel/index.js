@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   label: {
     color: '#808F94',
     position: 'relative',
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 500,
     transform: 'translate(0, 1.5px) scale(1)',
-  }
+  },
 }));
 
 export default function Label({ text, htmlFor }) {
@@ -21,5 +21,5 @@ export default function Label({ text, htmlFor }) {
     <InputLabel shrink htmlFor={htmlFor} className={classes.label}>
       {text}
     </InputLabel>
-  )
+  );
 }

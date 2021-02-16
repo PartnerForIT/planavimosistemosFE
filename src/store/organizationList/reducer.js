@@ -1,4 +1,3 @@
-
 import {
   GET_COUNTRIES,
   GET_COUNTRIES_SUCCESS,
@@ -50,7 +49,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: true,
         error: null,
-      }
+      };
 
     case GET_COMPANIES_SUCCESS:
       return {
@@ -59,7 +58,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         stats: action.data.stats,
         loading: false,
         error: null,
-      }
+      };
 
     case POST_ORGANIZATION_SUCCESS:
       return {
@@ -70,23 +69,26 @@ export const reducerOrganizationList = (state = initialState, action) => {
           active: state.stats.suspended + 1,
           suspended: state.stats.suspended,
           terminated: state.stats.terminated,
-        }
-      }
+        },
+      };
+
     case GET_MODULES_SUCCESS:
       return {
         ...state,
-        companyModules: action.data
-      }
+        companyModules: action.data,
+      };
 
     case ADD_SNACKBAR:
       return {
         ...state,
         snackbarText: action.snackbarType === 'error' ? action.data.response.data.message : action.data,
         snackbarType: action.snackbarType,
-        snackbarShow: true
+        snackbarShow: true,
       };
     case DISMISS_SNACKBAR:
-      return { ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '' };
+      return {
+        ...state, snackbarText: action.data, snackbarShow: false, snackbarType: '',
+      };
 
     default: return state;
   }

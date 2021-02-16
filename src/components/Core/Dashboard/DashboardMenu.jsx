@@ -1,9 +1,8 @@
 import React from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import { useTranslation } from 'react-i18next';
-import { useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, useLocation, Link } from 'react-router-dom';
+
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -51,7 +50,8 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     fill: '#69767A',
-  }
+  },
+
 }));
 
 export default function DashboardMenu() {
@@ -65,12 +65,12 @@ export default function DashboardMenu() {
     <div className={styles.dashboardMenu}>
       <div className={styles.dashboardScroll}>
         {/* General */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'general' ? true : false}>
+        <Accordion className={classes.accordion} defaultExpanded={section === 'general'}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
             className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
-            aria-controls="panel1-content"
-            id="panel1-header"
+            aria-controls='panel1-content'
+            id='panel1-header'
           >
             <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
             <span className={styles.menuText}>{t('General')}</span>
@@ -80,7 +80,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/company/${params.id}`}
-                  className={innerSection === `company` ? styles.activelink : styles.link}
+                  className={innerSection === 'company' ? styles.activelink : styles.link}
                 >
                   {t('Company')}
                 </Link>
@@ -88,7 +88,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/work-time/${params.id}`}
-                  className={innerSection === `work-time` ? styles.activelink : styles.link}
+                  className={innerSection === 'work-time' ? styles.activelink : styles.link}
                 >
                   {t('Work Time')}
                 </Link>
@@ -96,7 +96,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/security/${params.id}`}
-                  className={innerSection === `security` ? styles.activelink : styles.link}
+                  className={innerSection === 'security' ? styles.activelink : styles.link}
                 >
                   {t('Security')}
                 </Link>
@@ -106,12 +106,12 @@ export default function DashboardMenu() {
         </Accordion>
 
         {/* Accounts */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'accounts' ? true : false}>
+        <Accordion className={classes.accordion} defaultExpanded={section === 'accounts'}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
             className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
-            aria-controls="panel2-content"
-            id="panel2-header"
+            aria-controls='panel2-content'
+            id='panel2-header'
           >
             <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
             <span className={styles.menuText}>{t('Accounts')}</span>
@@ -121,7 +121,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/accounts-list/${params.id}`}
-                  className={innerSection === `accounts-list` ? styles.activelink : styles.link}
+                  className={innerSection === 'accounts-list' ? styles.activelink : styles.link}
                 >
                   {t('Accounts list')}
                 </Link>
@@ -129,7 +129,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/roles/${params.id}`}
-                  className={innerSection === `roles` ? styles.activelink : styles.link}
+                  className={innerSection === 'roles' ? styles.activelink : styles.link}
                 >
                   {t('Roles')}
                 </Link>
@@ -137,7 +137,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/grouping/${params.id}`}
-                  className={innerSection === `grouping` ? styles.activelink : styles.link}
+                  className={innerSection === 'grouping' ? styles.activelink : styles.link}
                 >
                   {t('Grouping')}
                 </Link>
@@ -146,12 +146,12 @@ export default function DashboardMenu() {
           </AccordionDetails>
         </Accordion>
         {/* Logbook */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'logbook' ? true : false}>
+        <Accordion className={classes.accordion} defaultExpanded={section === 'logbook'}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
             className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
-            aria-controls="panel3-content"
-            id="panel3-header"
+            aria-controls='panel3-content'
+            id='panel3-header'
           >
             <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
             <span className={styles.menuText}>{t('Logbook')}</span>
@@ -161,7 +161,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/logbook/journal/${params.id}`}
-                  className={innerSection === `journal` ? styles.activelink : styles.link}
+                  className={innerSection === 'journal' ? styles.activelink : styles.link}
                 >
                   {t('Journal')}
                 </Link>
@@ -169,7 +169,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/logbook/overtime/${params.id}`}
-                  className={innerSection === `overtime` ? styles.activelink : styles.link}
+                  className={innerSection === 'overtime' ? styles.activelink : styles.link}
                 >
                   {t('Overtime')}
                 </Link>
@@ -179,33 +179,33 @@ export default function DashboardMenu() {
         </Accordion>
         <Link
           to={`/settings/events/${params.id}`}
-          className={section === `events` ? styles.activeOnelink : styles.Onelink}
+          className={section === 'events' ? styles.activeOnelink : styles.Onelink}
         >
           <EventsIcon />
           <span className={styles.textLink}>{t('Events')}</span>
         </Link>
         <Link
           to={`/settings/categories/${params.id}`}
-          className={section === `categories` ? styles.activeOnelink : styles.Onelink}
+          className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
         >
           <CategoriesIcon />
           <span className={styles.textLink}>{t('Categories')}</span>
         </Link>
         <Link
           to={`/settings/activity-log/${params.id}`}
-          className={section === `activity-log` ? styles.activeOnelink : styles.Onelink}
+          className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}
         >
           <ActivityLogIcon />
           <span className={styles.textLink}>{t('Activity Log')}</span>
         </Link>
         <Link
           to={`/settings/delete/${params.id}`}
-          className={section === `delete` ? styles.activeOnelink : styles.Onelink}
+          className={section === 'delete' ? styles.activeOnelink : styles.Onelink}
         >
           <DeleteIcon />
           <span className={styles.textLink}>{t('Data Delete')}</span>
         </Link>
       </div>
     </div>
-  )
+  );
 }

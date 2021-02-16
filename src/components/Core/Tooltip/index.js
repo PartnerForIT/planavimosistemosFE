@@ -27,12 +27,12 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-  }
+  },
 }));
 
 function BootstrapTooltip(props) {
   const classes = useStylesBootstrap();
-  return <Tooltip placement="right" arrow classes={classes} {...props} />;
+  return <Tooltip placement='right' arrow classes={classes} {...props} />;
 }
 
 export default function TooltipStyled({ title }) {
@@ -43,5 +43,5 @@ export default function TooltipStyled({ title }) {
         <span>?</span>
       </div>
     </BootstrapTooltip>
-  )
+  );
 }
