@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import DataTable from '../../Core/DataTableCustom/OLT';
+import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
+import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
 
 const columns = [
-  { label: "Timestamp", field: 'created_at', checked: true },
-  { label: "User", field: 'user_id', checked: true },
-  { label: "IP", field: 'ip_address', checked: true },
-  { label: "Information", field: 'information', checked: true },
+  { label: 'Timestamp', field: 'created_at', checked: true },
+  { label: 'User', field: 'user_id', checked: true },
+  { label: 'IP', field: 'ip_address', checked: true },
+  { label: 'Information', field: 'information', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -19,49 +19,50 @@ const columnsWidthArray = {
 
 const page = {};
 
-export default function DeleteDataTable({ style, deleteData, employees, t, isLoading }) {
+export default function DeleteDataTable({
+  style, deleteData = [], employees, t, isLoading,
+}) {
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
-  const [loading, setLoading] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [totalDuration, setTotalDuration] = useState(null);
+  const [totalDuration] = useState(null);
 
-  //filter function
-  const userName = (row) => {
-    let name = employees.filter(item => item.user_id === row.user_id)
+  // filter function
+  const userName = useCallback((row) => {
+    const name = employees.filter((item) => item.user_id === row.user_id);
     if (row.user_id === 1) {
-      return 'Admin'
+      return 'Admin';
     }
     return name[0] ? `${name[0].name} ${name[0].surname}` : '';
-  }
+  }, [employees]);
 
   useEffect(() => {
-    if (deleteData.length > 0) {
-      deleteData.map(item => {
-        item.created_at = item.created_at ? moment(item.created_at).format('lll') : ''
-        item.user_id = userName(item)
-      })
-    }
-    setDataArray(deleteData);
-  }, [deleteData]);
-
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
+    setDataArray(deleteData.length
+      ? deleteData.map((item) => ({
+        ...item,
+        created_at: item.created_at ? moment(item.created_at).format('lll') : '',
+        user_id: userName(item),
+      }))
+      : deleteData);
+  }, [deleteData, userName]);
 
   const selectionHandler = (itemId, value) => {
-    deleteData.map(item => {
+    setDataArray((prevState) => prevState.map((item) => {
       if (item.id === itemId) {
-        item.checked = !item.checked;
+        return {
+          ...item,
+          checked: !item.checked,
+        };
       }
-    }
-    );
+      return item;
+    }));
+
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {
-      let index = checkedItems.indexOf(itemId);
-      checkedItems.splice(index, 1)
+      const index = checkedItems.indexOf(itemId);
+      checkedItems.splice(index, 1);
       setCheckedItems([...checkedItems]);
     }
   };
@@ -83,7 +84,7 @@ export default function DeleteDataTable({ style, deleteData, employees, t, isLoa
     const sortItems = (array) => {
       const arrayCopy = [...array];
       arrayCopy.sort(sortFunction);
-      return arrayCopy
+      return arrayCopy;
     };
     setDataArray(sortItems);
   }, []);
@@ -94,14 +95,14 @@ export default function DeleteDataTable({ style, deleteData, employees, t, isLoa
 
   return (
     <div className={style.table}>
-      <Label text={t('Log')} htmlFor={""} />
+      <Label text={t('Log')} htmlFor='' />
       <DataTable
         data={dataArray || []}
         columns={columnsArray || []}
         columnsWidth={columnsWidthArray || {}}
         onColumnsChange={setColumnsArray}
         sortable
-        loading={loading}
+        loading={isLoading}
         onSelect={selectionHandler}
         onSort={sortHandler}
         lastPage={page.last_page}
@@ -113,9 +114,9 @@ export default function DeleteDataTable({ style, deleteData, employees, t, isLoa
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
         verticalOffset='380px'
-        simpleTable={true}
+        simpleTable
       />
     </div>
 
-  )
+  );
 }

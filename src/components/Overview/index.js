@@ -9,35 +9,36 @@ import { overviewSelector, isLoadingSelector } from '../../store/overview/select
 import Progress from '../Core/Progress';
 import styles from './Overview.module.scss';
 
-
 export default function Overview() {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(getOverview())
-  }, [])
+    dispatch(getOverview());
+  }, [dispatch]);
+
   const users = useSelector(overviewSelector);
   const isLoading = useSelector(isLoadingSelector);
   return (
     <MaynLayout>
       <TitleBlock
-        title={"Overview"}
+        title='Overview'
       >
         <PeopleIcon />
       </TitleBlock>
 
       <div className={styles.overview}>
-        {users &&
+        {users
+          && (
           <div className={styles.overview__inner}>
-            <OverviewInfoBlock text={"Total users"} number={users.total_users} />
-            <OverviewInfoBlock text={"Users logged in"} number={users.online_users} />
-            <OverviewInfoBlock text={"Total active users"} number={users.active_users} />
-            <OverviewInfoBlock text={"Users clocked in"} number={users.clocked_in_users} />
+            <OverviewInfoBlock text='Total users' number={users.total_users} />
+            <OverviewInfoBlock text='Users logged in' number={users.online_users} />
+            <OverviewInfoBlock text='Total active users' number={users.active_users} />
+            <OverviewInfoBlock text='Users clocked in' number={users.clocked_in_users} />
           </div>
-        }
+          )}
         {isLoading && <Progress />}
       </div>
 
-
     </MaynLayout>
-  )
+  );
 }

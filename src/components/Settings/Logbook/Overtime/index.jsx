@@ -54,7 +54,7 @@ export default function Overtime() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const Overtime = useSelector(OvertimeDataSelector);
+  const overtime = useSelector(OvertimeDataSelector);
 
   useEffect(() => {
     if (id) {
@@ -63,11 +63,11 @@ export default function Overtime() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (Object.keys(Overtime).length) {
-      setOvertimeData({ ...Overtime });
+    if (Object.keys(overtime).length) {
+      setOvertimeData({ ...overtime });
     }
-    console.log(Overtime);
-  }, [Overtime]);
+  }, [overtime]);
+
   const handleInputChange = (event) => {
     const {
       name,
@@ -95,11 +95,10 @@ export default function Overtime() {
   };
 
   const submit = () => {
+    const value = document.querySelector('[name=\'overtime_rate\']:not(:disabled)').value ?? '';
     const data = {
       ...overtimeData,
-      overtime_rate: document.querySelector(
-        `[name='overtime_rate']:not(:disabled)`,
-      )?.value,
+      overtime_rate: value,
     };
     dispatch(editLogbookOvertime(id, data));
   };
@@ -110,11 +109,11 @@ export default function Overtime() {
         <TitleBlock
           title='Overtime'
         >
-          <OvertimeIcon/>
+          <OvertimeIcon />
         </TitleBlock>
         <PageLayout>
           {
-            isLoadind ? <Progress/>
+            isLoadind ? <Progress />
               : (
                 <Form
                   t={t}

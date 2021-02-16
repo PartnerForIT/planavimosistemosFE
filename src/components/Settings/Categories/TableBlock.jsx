@@ -43,10 +43,10 @@ export default function TableBlock({ style, skills, modules }) {
 
   const SuperAdmin = useContext(AdminContext);
   useEffect(() => {
-    skills.map((item) => {
-      item.actions = 'tableActions';
-    });
-    setDataArray(skills);
+    setDataArray(skills.map((item) => ({
+      ...item,
+      actions: 'tableActions',
+    })));
   }, [skills]);
 
   useEffect(() => {
@@ -67,11 +67,16 @@ export default function TableBlock({ style, skills, modules }) {
   }, [SuperAdmin, modules]);
 
   const selectionHandler = (itemId, value) => {
-    skills.map((item) => {
+    setDataArray((prevState) => prevState.map((item) => {
       if (item.id === itemId) {
-        item.checked = !item.checked;
+        return {
+          ...item,
+          checked: !item.checked,
+        };
       }
-    });
+      return item;
+    }));
+
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {

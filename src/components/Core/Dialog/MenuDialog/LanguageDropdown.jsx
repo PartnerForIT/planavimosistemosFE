@@ -12,7 +12,6 @@ import classes from './MenuDialog.module.scss';
 import CheckedLanguage from '../../../Icons/CheckedLanguage';
 import EngLang from '../../../Icons/EngLang';
 import LtLang from '../../../Icons/LtLang';
-import { onKeyDown } from '../../../Helpers';
 
 const useStyles = makeStyles({
   root: {

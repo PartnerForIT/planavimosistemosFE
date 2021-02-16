@@ -109,10 +109,9 @@ import { makeQueryString } from '../../components/Helpers';
 axios.defaults.timeout = 10000;
 
 function token() {
-  const token = {
+  return {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
-  return token;
 }
 
 function* loadSettingsCompany(action) {
@@ -179,11 +178,12 @@ function* editSettingsWorkTime(action) {
 
 function* addCompanyHoliday(action) {
   try {
-    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/work-time/holidays/create`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const { data } = yield call(axios.post,
+      `${config.api.url}/company/${action.id}/work-time/holidays/create`, action.data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
     yield put(addHolidaySuccess(data));
     yield put(addSnackbar('Holiday added successfully', 'success'));
     yield delay(4000);
@@ -197,7 +197,9 @@ function* addCompanyHoliday(action) {
 
 function* deleteCompanyHoliday(action) {
   try {
-    const { data } = yield call(axios.delete, `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
+    // eslint-disable-next-line no-unused-vars
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.companyId}/work-time/holidays/delete/${action.id}`, token());
     yield put(addSnackbar('Holiday deleted successfully', 'success'));
     yield put(deleteHolidaySuccess(action.id));
     yield delay(4000);
@@ -265,6 +267,7 @@ function* createSettingSkill(action) {
 
 function* creacteJob(action) {
   try {
+    // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/job-types/create`, action.data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -282,6 +285,7 @@ function* creacteJob(action) {
 
 function* createPlace(action) {
   try {
+    // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}}/places/create`, action.data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -413,11 +417,12 @@ function* loadJournalData(action) {
 
 function* patchLogbookJournal(action) {
   try {
-    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/logbook/journal/store`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/logbook/journal/store`, action.data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
     yield put(editLogbookJournalSuccess(data));
     yield put(addSnackbar('Edit Journal successfully', 'success'));
     yield delay(4000);

@@ -1,14 +1,14 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
 
 const columns = [
-  { label: "Timestamp", field: 'created_at', checked: true },
-  { label: "User", field: 'user_id', checked: true },
-  { label: "Place", field: 'place_id', checked: true },
-  { label: "Action", field: 'action', checked: true },
-  { label: "Device", field: 'device', checked: true },
+  { label: 'Timestamp', field: 'created_at', checked: true },
+  { label: 'User', field: 'user_id', checked: true },
+  { label: 'Place', field: 'place_id', checked: true },
+  { label: 'Action', field: 'action', checked: true },
+  { label: 'Device', field: 'device', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -21,52 +21,52 @@ const columnsWidthArray = {
 
 const page = {};
 
-export default function ActivityTable({ style, activityLog, employees, places, t, isLoading }) {
+export default function ActivityTable({
+  style, activityLog = [], employees, places, t, isLoading,
+}) {
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
-  const [loading, setLoading] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [totalDuration, setTotalDuration] = useState(null);
+  const [totalDuration] = useState(null);
 
-  //filter function
-  const userName = (row) => {
-    let name = employees.filter(item => item.user_id === row.user_id)
+  // filter function
+  const userName = useCallback((row) => {
+    const name = employees.filter((item) => item.user_id === row.user_id);
     return name[0] ? `${name[0].name} ${name[0].surname}` : '';
-  }
+  }, [employees]);
 
-  const paceName = (row) => {
-    let place = places.filter(item => item.id === row.place_id)
+  const paceName = useCallback((row) => {
+    const place = places.filter((item) => item.id === row.place_id);
     return place[0] ? place[0].label : '';
-  }
+  }, [places]);
 
   useEffect(() => {
-    if (activityLog.length > 0) {
-      activityLog.map(item => {
-        item.created_at = item.created_at ? moment(item.created_at).format('lll') : ''
-        item.user_id = userName(item)
-        item.place_id = paceName(item)
-      })
-    }
-    setDataArray(activityLog);
-  }, [activityLog]);
-
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
+    setDataArray(activityLog.length
+      ? activityLog.map((item) => ({
+        ...item,
+        created_at: item.created_at ? moment(item.created_at).format('lll') : '',
+        user_id: userName(item),
+        place_id: paceName(item),
+      }))
+      : activityLog);
+  }, [activityLog, paceName, userName]);
 
   const selectionHandler = (itemId, value) => {
-    activityLog.map(item => {
+    setDataArray((prevState) => prevState.map((item) => {
       if (item.id === itemId) {
-        item.checked = !item.checked;
+        return {
+          ...item,
+          checked: !item.checked,
+        };
       }
-    }
-    );
+      return item;
+    }));
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {
-      let index = checkedItems.indexOf(itemId);
-      checkedItems.splice(index, 1)
+      const index = checkedItems.indexOf(itemId);
+      checkedItems.splice(index, 1);
       setCheckedItems([...checkedItems]);
     }
   };
@@ -88,7 +88,7 @@ export default function ActivityTable({ style, activityLog, employees, places, t
     const sortItems = (array) => {
       const arrayCopy = [...array];
       arrayCopy.sort(sortFunction);
-      return arrayCopy
+      return arrayCopy;
     };
     setDataArray(sortItems);
   }, []);
@@ -99,14 +99,14 @@ export default function ActivityTable({ style, activityLog, employees, places, t
 
   return (
     <div className={style.table}>
-      <Label text={t('Log')} htmlFor={""} />
+      <Label text={t('Log')} htmlFor='' />
       <DataTable
         data={dataArray || []}
         columns={columnsArray || []}
         columnsWidth={columnsWidthArray || {}}
         onColumnsChange={setColumnsArray}
         sortable
-        loading={loading}
+        loading={isLoading}
         onSelect={selectionHandler}
         onSort={sortHandler}
         lastPage={page.last_page}
@@ -118,9 +118,9 @@ export default function ActivityTable({ style, activityLog, employees, places, t
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
         verticalOffset='360px'
-        simpleTable={true}
+        simpleTable
       />
     </div>
 
-  )
+  );
 }
