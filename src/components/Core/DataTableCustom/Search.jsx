@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 
-
 const BootstrapInput = withStyles((theme) => ({
   root: {
     'label + &': {
@@ -23,7 +22,7 @@ const BootstrapInput = withStyles((theme) => ({
     fontSize: 14,
     lineHeight: '15px',
     padding: '6px',
-    color: "#222",
+    color: '#222',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     '&:focus': {
       boxShadow: 'none',
@@ -32,13 +31,13 @@ const BootstrapInput = withStyles((theme) => ({
       borderColor: '#0087ff',
     },
   },
-}))(InputBase); 
+}))(InputBase);
 
-export default function RowSearch({handleInputChange, inputValues}) {
+export default function RowSearch({ handleInputChange, inputValues }) {
   return (
-    <BootstrapInput 
-      name="name" 
-      onChange={handleInputChange} 
+    <BootstrapInput
+      name='name'
+      onChange={handleInputChange}
       value={inputValues}
       inputProps={{
         autoComplete: 'new-password',
@@ -46,8 +45,8 @@ export default function RowSearch({handleInputChange, inputValues}) {
           autoComplete: 'off',
         },
       }}
-      placeholder="Search" 
-      id="name" />
-  )
+      placeholder='Search'
+      id='name'
+    />
+  );
 }
-

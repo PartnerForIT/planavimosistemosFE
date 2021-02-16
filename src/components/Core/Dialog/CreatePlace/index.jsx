@@ -1,23 +1,25 @@
-import React from "react";
-import Dialog from '../index';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 
-export default function CreatePlace({ handleClose, title, open,
-  buttonTitle, createPlace, place, setPlace }) {
+export default function CreatePlace({
+  handleClose, title, open,
+  buttonTitle, createPlace, place, setPlace,
+}) {
   const { t } = useTranslation();
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.formControl}>
-        <Label text={t('Place name')} htmlFor={"place"} />
+        <Label text={t('Place name')} htmlFor='place' />
         <Input
           placeholder={`${t('Enter Place name')}`}
           value={place}
-          name="palce"
+          name='palce'
           fullWidth
           onChange={(e) => setPlace(e.target.value)}
         />
@@ -28,5 +30,5 @@ export default function CreatePlace({ handleClose, title, open,
         </Button>
       </div>
     </Dialog>
-  )
+  );
 }

@@ -19,7 +19,7 @@
     margin: 0 10px 0 15px;
   }
 
-  &:before {
+  &::before {
     content: "";
     position: absolute;
     left: 90px;
@@ -47,7 +47,7 @@
       padding-left: 7px;
       padding-right: 7px;
 
-      &:after {
+      &::after {
         content: ".";
         position: absolute;
         left: -5px;
@@ -57,7 +57,7 @@
       }
 
       &:first-child {
-        &:after {
+        &::after {
           display: none;
         }
       }

@@ -1,6 +1,8 @@
-import { call, put, takeLatest, delay } from "redux-saga/effects";
+import {
+  call, put, takeLatest, delay,
+} from 'redux-saga/effects';
 import config from 'config';
-import axios from "axios";
+import axios from 'axios';
 import {
   GET_COUNTRIES,
   POST_ORGANIZATION,
@@ -8,18 +10,17 @@ import {
   POST_CHANGE_OF_STATUS,
   GET_MODULES,
   PATCH_MODULES,
-} from "./types";
+} from './types';
 import {
   getCountriesSuccess, getCountriesError,
   addSnackbar, dismissSnackbar, getCompaniesSuccess,
-  addOrganizationSuccess, getModulesSuccess, patchModulesSuccess
-} from "./actions"
+  addOrganizationSuccess, getModulesSuccess, patchModulesSuccess,
+} from './actions';
 
 function token() {
-  const token = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  return {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
-  return token;
 }
 
 function* loadCountries() {
@@ -34,11 +35,10 @@ function* loadCountries() {
 function* addNewOrganization(actions) {
   try {
     const { data } = yield call(axios.post, `${config.api.url}/company/store`, actions.data, token());
-    yield put(addOrganizationSuccess(data))
+    yield put(addOrganizationSuccess(data));
     yield put(addSnackbar('New organization added successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
-
   } catch (e) {
     yield put(addSnackbar(e, 'error'));
     yield delay(4000);
@@ -51,11 +51,11 @@ function* loadCompanies({ params }) {
     const { data } = yield call(axios.get, `${config.api.url}/companies`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        params: params ? params : null
+        params: params || null,
       });
-    yield put(getCompaniesSuccess(data))
+    yield put(getCompaniesSuccess(data));
   } catch (error) {
-    console.log('error', error)
+    console.log('error', error);
   }
 }
 
@@ -65,9 +65,9 @@ function* changeStatusOrganizations(actions) {
     const { data } = yield call(axios.get, `${config.api.url}/companies`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        params: null
+        params: null,
       });
-    yield put(getCompaniesSuccess(data))
+    yield put(getCompaniesSuccess(data));
     yield put(addSnackbar('Organization status changed', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -83,7 +83,7 @@ function* loadOrganizationsModules(action) {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.params}/modules`, token());
     yield put(getModulesSuccess(data));
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -107,5 +107,5 @@ export default function* OrganizationListWatcher() {
   yield takeLatest(GET_COMPANIES, loadCompanies);
   yield takeLatest(POST_CHANGE_OF_STATUS, changeStatusOrganizations);
   yield takeLatest(GET_MODULES, loadOrganizationsModules);
-  yield takeLatest(PATCH_MODULES, changeOrganizationModules)
+  yield takeLatest(PATCH_MODULES, changeOrganizationModules);
 }

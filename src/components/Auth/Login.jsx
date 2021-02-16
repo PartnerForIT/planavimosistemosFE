@@ -38,6 +38,7 @@ const LoginContainer = () => {
     dispatch(login(email, password)).then((data) => {
       const roleId = data.data.user.role_id;
       const company_id = data.data.user.id;
+      // eslint-disable-next-line no-unused-expressions
       roleId === 1
         ? history.push(routes.ORG_LIST)
         : history.push(`${routes.LOGBOOK}/${company_id}`);

@@ -1,4 +1,3 @@
-
 import {
   GET_OVERVIEW,
   GET_OVERVIEW_SUCCESS,
@@ -8,7 +7,7 @@ import {
 const initialState = {
   users: null,
   loading: false,
-  error: null
+  error: null,
 };
 
 export const reducerOverview = (state = initialState, action) => {
@@ -22,13 +21,12 @@ export const reducerOverview = (state = initialState, action) => {
         users: action.data,
         loading: false,
       };
-      case GET_OVERVIEW_ERROR:
-        return {
-          ...state,
-          loading: false,
-          error: true,
-        };
-    
+    case GET_OVERVIEW_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
 
     default: return state;
   }

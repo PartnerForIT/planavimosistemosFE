@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SvgIcon from '@material-ui/core/SvgIcon';
