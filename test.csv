@@ -1,0 +1,4 @@
+active;John;Doe;;example1@email.com;;testgroup;testsubgroupname;TestPlace
+active;John2;Doe2;manager;manager2@test.com;;testgroup;testsubgroup 2;NY
+active;John;Doe;manager;example2@email.com;test skill;testgroup;testsubgroupname;TestPlace
+active;John;Doe;manager;example4@email.com;test skill;testgroup;;TestPlace

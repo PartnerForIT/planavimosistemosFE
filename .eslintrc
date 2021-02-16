@@ -8,11 +8,13 @@
     "react-app",
     "airbnb"
   ],
+  "parser": "babel-eslint",
   "rules": {
     "max-len": [2, 120],
     "react/jsx-props-no-spreading": 0,
     "react/prop-types": 0,
     "react/button-has-type": 0,
+    "linebreak-style": "off",
     "jsx-quotes": [
       "error",
       "prefer-single"

@@ -1,30 +1,42 @@
+@import "../../Core/variables";
+
+$border-style: 1px solid #d0dfef;
+$icon-width: 33px;
+
+@mixin placeholder($color: 'white') {
+  &::-webkit-input-placeholder {
+    /* Edge */
+    color: $color;
+  }
+
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: $color;
+  }
+
+  &::placeholder {
+    color: $color;
+  }
+}
+
 .inputWrapper {
   position: relative;
   width: fit-content;
   min-width: 70px;
 }
 
-.input {
-  border: 1px solid #d0dfef;
+.input,
+%input {
+  border: $border-style;
   border-radius: 4px;
   box-sizing: border-box;
   color: #333945;
   font-family: Helvetica Neue, sans-serif;
-  font-size: 16px;
-  padding: 8px;
+  font-size: 14px;
+  padding: 11px;
   outline: none;
 
-  &::-webkit-input-placeholder { /* Edge */
-    color: #cbd1d8;
-  }
-
-  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #cbd1d8;
-  }
-
-  &::placeholder {
-    color: #cbd1d8;
-  }
+  @include placeholder(#cbd1d8);
 }
 
 .inputWrapperFullWidth {
@@ -39,7 +51,7 @@
   display: flex;
   position: absolute;
   justify-content: center;
-  width: 33px;
+  width: $icon-width;
   height: 100%;
   top: 0;
   left: 0;
@@ -53,5 +65,28 @@
 }
 
 .withIcon {
-  padding: 8px 8px 8px 30px;
+  padding: 11px 11px 11px 30px;
+}
+
+.iconLeft {
+  .iconWrapper {
+    left: -13px - $icon-width;
+  }
+
+  .withIcon {
+    padding: 11px;
+  }
+}
+
+.underlined {
+  border: unset;
+  border-bottom: $border-style;
+  border-radius: unset;
+
+  @include placeholder();
+}
+
+.error {
+  border-color: $red;
+  color: red;
 }

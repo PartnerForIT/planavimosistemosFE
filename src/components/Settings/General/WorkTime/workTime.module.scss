@@ -1,0 +1,166 @@
+@import "../../../Core/variables";
+@import "../../../Core/Input/Input.module";
+
+%icon-size {
+  height: 30px;
+  width: 30px;
+}
+
+.holidays {
+  width: 100%;
+  max-width: 430px;
+}
+
+.labelBlock {
+  display: flex;
+
+  label {
+    margin-right: 20px;
+  }
+}
+
+.labelButtonBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  label {
+    margin-right: 20px;
+  }
+
+  .year {
+    display: flex;
+    padding-left: 24px;
+    align-items: center;
+    line-height: 1;
+    justify-content: left;
+    width: 100%;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    input {
+      @extend %input;
+
+      padding: 6px 20px;
+      width: calc(4ch + 42px);
+    }
+
+    button {
+      @extend %btn_unset;
+
+      box-sizing: border-box;
+      margin-left: 8px;
+      margin-right: 8px;
+      line-height: 1;
+
+      @extend %icon-size;
+      @extend %button-hover;
+    }
+
+    .icon {
+      @extend %icon-size;
+    }
+  }
+}
+
+.holidays__block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $light-blue2;
+
+  .holidays__innerBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .holidays_data {
+    font-size: 14px;
+    font-weight: 500;
+    color: $blue;
+    margin-right: 20px;
+  }
+
+  .holidays_name {
+    font-size: 14px;
+    color: $dark-gray;
+    margin-left: 20px;
+  }
+
+  .deleteHoliday {
+    @extend %btn_unset;
+
+    opacity: 1;
+    transition: all 0.8s ease-in-out;
+
+    @extend %button-hover;
+  }
+}
+
+.startWeek_block {
+  width: 100%;
+  max-width: 430px;
+
+  .startWeek {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+
+    &__inner {
+      flex: 1;
+      margin-left: 7px;
+
+      &:first-child {
+        margin-left: 0;
+        margin-right: 7px;
+      }
+    }
+  }
+}
+
+.formLine {
+  width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #e8eff6;
+}
+
+.workigTime {
+  width: 100%;
+  max-width: 430px;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    label {
+      color: #69767a !important;
+      font-size: 14px !important;
+      text-transform: capitalize;
+      display: inline-block;
+      width: 130px;
+    }
+
+    label + div {
+      margin-top: 0 !important;
+    }
+  }
+
+  &__to {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 10px;
+    font-size: 13px;
+    color: #aeb2b7;
+  }
+}

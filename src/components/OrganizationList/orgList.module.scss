@@ -1,0 +1,18 @@
+.filterBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    button {
+      margin: 5px 0 5px 5px;
+      &:nth-child(2) {
+        margin-right: 25px;
+      }
+    }
+  }
+}

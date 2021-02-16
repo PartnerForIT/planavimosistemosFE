@@ -1,3 +1,5 @@
+@import "./../Core/variables";
+
 .container {
   background-color: #edf4fa;
   box-sizing: border-box;
@@ -10,14 +12,9 @@
 }
 
 .wrapper {
-  background-color: #fff;
-  box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);
   display: flex;
   flex-direction: column;
-  //margin: 2em auto;
   width: 600px;
-  border: 1px solid rgba(226, 235, 244, 0.85);
-  border-radius: 12px;
   padding-top: 10px;
   position: relative;
   justify-content: center;
@@ -29,11 +26,12 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+  min-width: 300px;
 }
 
 .title {
   color: #333945;
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   font-size: 25px;
   margin-top: 0;
 }
@@ -45,4 +43,34 @@
 
 .errorBlock {
   height: 20px;
+  color: $red;
+  text-align: right;
+
+  p {
+    margin: 0;
+    font-size: 12px;
+  }
+}
+
+.porgressBlock {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer {
+  position: fixed;
+  bottom: $background-wrapper-padding;
+
+  .forgotLink {
+    color: white;
+  }
 }

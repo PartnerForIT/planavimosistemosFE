@@ -70,6 +70,25 @@ export const getInfoCardColors = (type) => {
 };
 
 export const makeQueryString = (queryObj, withoutEmpty = true) => (withoutEmpty ? Object.keys(queryObj)
-  .filter((item) => typeof queryObj[item] !== 'undefined' && queryObj[item].toString().length)
+  .filter((item) => (queryObj[item] !== undefined && queryObj[item] !== null) && queryObj[item].toString().length)
   .map((key) => `${key}=${queryObj[key]}`).join('&') : Object.keys(queryObj)
   .map((key) => `${key}=${queryObj[key]}`).join('&'));
+
+export const convertBase64 = (file) => new Promise((resolve, reject) => {
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(file);
+
+  fileReader.onload = () => {
+    resolve(fileReader.result);
+  };
+
+  fileReader.onerror = (error) => {
+    reject(error);
+  };
+});
+
+export const onKeyDown = (e, func) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    func();
+  }
+};

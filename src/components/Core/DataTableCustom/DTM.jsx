@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -5,6 +6,7 @@ import Pagination from 'react-js-pagination';
 import Scrollbar from 'react-scrollbars-custom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import CurrencySign from '../../shared/CurrencySign';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -20,10 +22,28 @@ const useStyles = makeStyles({
   },
 });
 
+const TextWithSign = ({ label }) => (
+  <>
+    <CurrencySign />
+    {label}
+  </>
+);
+
+const FooterTitle = ({
+  wrapperClassNames = '', title = '', amountColorClassName = '', amount,
+}) => (
+  <p className={wrapperClassNames}>
+    {title}
+    <span className={classNames(styles.totals, amountColorClassName, styles.bold)}>{amount}</span>
+  </p>
+);
+
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth,
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
+  modules: { cost_earning, profitability } = {},
+  amount: { salary = 0, cost = 0, profit = 0 } = {},
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -59,7 +79,7 @@ export default function DataTable({
       }
       return total;
     }, 0));
-  }, [columns]);
+  }, [columns, columnsWidth]);
 
   useEffect(() => {
     const initData = { checked: 0, total: 0 };
@@ -100,6 +120,10 @@ export default function DataTable({
 
   const footerTitleClasses = classNames(
     styles.footerTitle, styles.footerTitleReports,
+  );
+
+  const footerTitleCosts = classNames(
+    styles.footerTitle, styles.footerCost,
   );
 
   const tableHeaderCell = classNames(
@@ -219,7 +243,26 @@ export default function DataTable({
                         <div className={classNames(styles.flexCenter)}>{column.label}</div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
-                          && fieldIcons[column.field].map((icon) => icon.icon)
+                          && fieldIcons[column.field].map((icon) => (
+                            <React.Fragment key={icon.value}>
+                              {
+                               statusClickable
+                                 ? (
+                                   <button
+                                     className={classNames(styles.iconButton,
+                                       sortStatus.some((i) => i === icon.value) ? styles.deselect : '')}
+                                     onClick={(e) => {
+                                       e.stopPropagation();
+                                       icon.onClick(icon.value);
+                                     }}
+                                   >
+                                     {icon.icon}
+                                   </button>
+                                 )
+                                 : icon.icon
+                              }
+                            </React.Fragment>
+                          ))
                         }
                         { sortable && (
                           <div className={classNames(styles.flexCenter, styles.sortIcon)}>
@@ -269,7 +312,7 @@ export default function DataTable({
         { typeof downloadExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
+            className={classNames(styles.pointer, styles.mr10)}
             onClick={downloadExcel}
           >
             <ExcelIcon />
@@ -284,14 +327,47 @@ export default function DataTable({
             <PdfIcon />
           </div>
         ) }
+
         {
           totalDuration && (
-            <p className={footerTitleClasses}>
-              {
-                'Overall worktime: '
-              }
-              <span className={classNames(styles.blueTotals, styles.bold)}>{totalDuration}</span>
-            </p>
+          <FooterTitle
+            title='Overall worktime: '
+            wrapperClassNames={footerTitleClasses}
+            amountColorClassName={styles.blue}
+            amount={totalDuration}
+          />
+          )
+        }
+        {
+          !!cost_earning && !!profitability && !!salary && (
+            <>
+              <FooterTitle
+                wrapperClassNames={footerTitleCosts}
+                amount={<TextWithSign label={salary} />}
+              />
+            </>
+          )
+        }
+        {
+          !!cost_earning && !!cost && (
+            <>
+              <FooterTitle
+                wrapperClassNames={footerTitleCosts}
+                amountColorClassName={styles.red}
+                amount={<TextWithSign label={cost} />}
+              />
+            </>
+          )
+        }
+        {
+          !!cost_earning && !!profitability && !!profit && (
+            <>
+              <FooterTitle
+                wrapperClassNames={footerTitleCosts}
+                amountColorClassName={styles.green}
+                amount={<TextWithSign label={profit} />}
+              />
+            </>
           )
         }
         {

@@ -1,0 +1,71 @@
+@import "../../../Core/variables";
+
+.securityPage {
+  width: 100%;
+  max-width: 430px;
+}
+.labelBlock {
+  display: flex;
+  label {
+    margin-right: 20px;
+  }
+  .label {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #000;
+  }
+}
+
+.formLine {
+  width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #e8eff6;
+}
+
+.passwordSettings {
+  display: block;
+  width: 100%;
+}
+.settingsBlock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -8px;
+  label {
+    padding-right: 10px;
+  }
+  .tooltipBlock {
+    display: inline-block;
+    padding-left: 15px;
+  }
+}
+.settingsBlock2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+  label {
+    padding-right: 10px;
+    padding-bottom: 2px;
+  }
+  .tooltipBlock {
+    display: inline-block;
+    padding-left: 15px;
+  }
+  .innerText {
+    font-size: 14px;
+    padding-right: 10px;
+    &:last-child {
+      padding-left: 10px;
+    }
+  }
+}
+.buttonBlock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 20px;
+}

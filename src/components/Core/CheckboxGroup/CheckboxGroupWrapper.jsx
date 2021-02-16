@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
+import _ from 'lodash';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from './CheckboxGroup';
 import styles from '../Select/Select.module.scss';
 
-const CheckboxGroupWrapper = ({ items, onChange }) => {
+const CheckboxGroupWrapper = ({
+  items = [], onChange = () => ({}), height, maxHeight, wrapperMarginBottom,
+  defaultChecked = [], sorted = false,
+}) => {
   const [itemsArray, setItemsArray] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([...defaultChecked]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
+  const [itemsCopy, setItemsCopy] = useState([...items]);
+  const [forceUpdate, setForceUpdate] = useState(false);
+  const def = useMemo(() => _.cloneDeep(defaultChecked), [defaultChecked]);
 
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
-    const setCheckedToAll = () => {
-      const arrayCopy = [...items];
+    const setCheckedToAll = (array) => {
+      const arrayCopy = array.length ? [...array] : [...itemsCopy];
       if (!arrayCopy.length) return arrayCopy;
 
       return arrayCopy.map((item) => {
@@ -35,11 +44,27 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
         return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setItemsStat(stat);
-      setCheckedItems(checkedItemsArray);
-    });
+
+    if (forceUpdate) {
+      setForceUpdate(false);
+    }
+    setItemsArray(setCheckedToAll(itemsCopy));
+    setCheckedItems([...checkedItemsArray]);
+
+    setItemsStat({ ...stat });
+  }, [forceUpdate, items, itemsCopy]);
+
+  useEffect(() => {
+    if (items) {
+      setItemsCopy((prevState) => {
+        if (!_.isEqual(prevState, items)) {
+          setForceUpdate(true);
+          return [...items];
+        }
+        setForceUpdate(false);
+        return prevState;
+      });
+    }
   }, [items]);
 
   useEffect(() => {
@@ -48,9 +73,10 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       checked: checkedItems.length,
       unchecked: itemsStat.total - checkedItems.length,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
 
-  const selectAll = (check) => {
+  const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array) => {
       const arrayCopy = [...array];
@@ -73,14 +99,18 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
       });
     };
 
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  };
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    //   setCheckedItems(checkedItemsArray);
+    //   onChange(checkedItemsArray);
+    // });
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(!sorted ? checkedItemsArray
+      : [...def.filter((i) => checkedItems.some(({ id }) => id !== i.id)), ...checkedItemsArray]);
+  }, [checkedItems, def, itemsArray, itemsStat, onChange, sorted]);
 
-  const handleCheckboxChange = (item) => {
+  const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
@@ -101,15 +131,25 @@ const CheckboxGroupWrapper = ({ items, onChange }) => {
         return newObj;
       });
     };
-    Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
-      setItemsArray(resultedItems);
-      setCheckedItems(checkedItemsArray);
-      onChange(checkedItemsArray);
-    });
-  };
+    // Promise.all(setCheckedToAll(itemsArray)).then((resultedItems) => {
+    //   setItemsArray(resultedItems);
+    //   setCheckedItems(checkedItemsArray);
+    //   onChange(checkedItemsArray);
+    // });
+    setItemsArray(setCheckedToAll(itemsArray));
+    setCheckedItems(checkedItemsArray);
+    onChange(!sorted ? checkedItemsArray
+      : [...def.filter(({ id }) => id !== item.id), ...checkedItemsArray]);
+  }, [def, itemsArray, onChange, sorted]);
 
   return (
-    <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
+    <CheckboxGroup
+      selectAll={selectAll}
+      itemsStat={itemsStat}
+      height={height}
+      maxHeight={maxHeight}
+      wrapperMarginBottom={wrapperMarginBottom}
+    >
       <Scrollbar
         className={styles.scrollableContent}
         removeTracksWhenNotUsed

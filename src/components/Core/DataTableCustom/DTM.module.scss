@@ -1,7 +1,12 @@
+@import "../variables";
+
 $table-header: #1976d2;
 $table-header-border: #1565c0;
 $table-border: #d9d9d9;
 $row-bg: #f4f2f1;
+$row-warn-bg: #fffbea;
+$row-error-bg: #ffebec;
+$icon-transform-default: translateY(0);
 
 header {
   box-sizing: border-box;
@@ -13,13 +18,56 @@ header {
   box-shadow: 0 5px 20px rgba(62, 69, 82, 0.06);
   padding-top: 9px;
   padding-bottom: 9px;
+  margin-bottom: 5px;
   overflow: hidden;
   position: sticky;
   top: 0;
-  background: #fff;
+  background: #e5f0fa;
   z-index: 1;
 }
 
+// search-table
+.headerWrapperSearch {
+  @extend .headerWrapper;
+
+  padding-bottom: 60px;
+  box-shadow: none;
+  background: linear-gradient(to bottom, #e5f0fa 43%, #fff 43%);
+
+  .flexRowGlobal {
+    position: relative;
+  }
+
+  .headerSearch {
+    position: absolute;
+    bottom: -49px;
+    left: 10px;
+    right: 10px;
+    width: 100%;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    bottom: 1px;
+    left: 17px;
+    right: 0;
+    height: 1px;
+    width: auto;
+    background: $table-border;
+  }
+}
+
+.simpleTable {
+  @extend .headerWrapper;
+
+  background: #fff;
+  box-shadow: none;
+  border-bottom: 1px solid $row-bg;
+}
+
+// search-table END
 .cell {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
@@ -30,14 +78,15 @@ header {
   svg {
     padding-right: 5px;
     width: 18px;
+    height: 18px;
   }
 }
 
 .columnName {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #808f94;
+  color: #4d7499;
 }
 
 .column {
@@ -69,6 +118,7 @@ header {
   padding: 0 10px;
   width: fit-content;
   min-width: 100%;
+  position: relative;
 
   &.header {
     padding-left: 15px;
@@ -194,14 +244,13 @@ header {
     user-select: none;
     color: #4d7499;
     text-transform: uppercase;
-    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-family: "Helvetica Neue Medium", sans-serif;
     font-weight: 500;
   }
 }
 
 .groupContainer {
-  padding: 0 15px;
-  padding-right: 30px;
+  padding: 0 30px 0 15px;
   min-width: 100%;
 
   &:first-of-type {
@@ -264,15 +313,19 @@ header {
   cursor: pointer;
 }
 
+.mr10 {
+  margin-right: 10px;
+}
+
 .nowrap {
   white-space: nowrap;
 }
 
 .collapsIcon {
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transform: rotate(-90deg);
+  transform: $icon-transform-default rotate(-90deg);
   width: 8.315px !important;
-  height: 10px !important;
+  height: 100% !important;
   margin-right: 5px;
   padding-right: 0 !important;
 
@@ -288,7 +341,7 @@ header {
 }
 
 .collapsIconRotated {
-  transform: rotate(0deg);
+  transform: $icon-transform-default rotate(0deg);
 }
 
 .rowWrapper {
@@ -300,18 +353,35 @@ header {
   cursor: pointer;
 }
 
-.rowSelected {
-  background-color: #319cff;
+.contentVisibility {
+  content-visibility: auto;
+  contain-intrinsic-size: 32px 1000px;
 }
 
-.reportsRowSelected {
-  background-color: #fff;
+.rowSelected {
+  background-color: rgba(0, 133, 255, 0.07);
 }
+
+.rowWarning {
+  background-color: $row-warn-bg;
+}
+
+.rowError {
+  background-color: $row-error-bg;
+}
+
+.rowSuccess {
+  background-color: $light-green-row-background;
+}
+
+// .reportsRowSelected {
+//   background-color: #fff;
+// }
 
 .flexRowGlobal {
   display: flex;
   min-width: 140px;
-  text-align: left;
+  justify-content: flex-start;
   padding: 0 1px;
 
   &:last-of-type {
@@ -334,19 +404,70 @@ header {
 }
 
 .flexRowGroup {
+  position: relative;
   color: #333945;
   min-width: 140px;
-  text-align: left;
+  display: flex;
+  justify-content: flex-start;
   padding: 8px;
 
   &:last-of-type {
-    display: flex;
     justify-content: flex-end;
   }
 }
 
+.IconStatus {
+  display: block;
+  position: absolute;
+  top: 6px;
+  left: 3px;
+}
+
+.ActionsTable {
+  display: flex;
+  align-items: center;
+
+  button {
+    border: unset;
+    background: unset;
+    padding: unset;
+    margin: unset;
+    display: inline-block;
+    cursor: pointer;
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+}
+
+.actions {
+  &Visible {
+    display: initial;
+  }
+
+  &Hidden {
+    display: none !important;
+  }
+}
+
+.absoluteActions {
+  position: absolute;
+  padding: 2px 20px;
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  z-index: 1;
+  left: var(--hover-actions-left);
+  background: linear-gradient(to right, #d0dfef04 0%, #d0dfef 50%, #d0dfef 100%);
+}
+
+.opacityText {
+  opacity: 0;
+}
+
 .flexRowGroupReports {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 
   &:last-of-type {
@@ -357,7 +478,7 @@ header {
 
 .groupLabelReports {
   color: #4d7499;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
@@ -369,13 +490,13 @@ header {
   padding: 0.5em 0 !important;
 }
 
-.flexRowSelected {
-  color: #fff !important;
-}
+// .flexRowSelected {
+//   color: #fff !important;
+// }
 
 .reportsFlexRowSelected {
   color: #0085ff;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
 }
@@ -434,9 +555,13 @@ header {
 
 .footerTitle {
   color: #3e4552;
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   font-size: 14px;
   //font-weight: 600;
+}
+
+.footerCost {
+  min-width: 6ex;
 }
 
 .footerTitleReports {
@@ -444,25 +569,36 @@ header {
   padding-right: 35px;
 }
 
-.blueTotals {
-  color: #0085ff;
+.totals {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
+
+  &.blue {
+    color: #0085ff;
+  }
+
+  &.red {
+    color: $red;
+  }
+
+  &.green {
+    color: $green;
+  }
 }
 
 .bold {
-  font-family: 'Helvetica Neue Bold', sans-serif;
+  font-family: "Helvetica Neue Bold", sans-serif;
   //font-weight: 600;
 }
 
 .medium {
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 }
 
 .total {
   color: #3e4552;
-  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-family: "Helvetica Neue Medium", sans-serif;
   font-weight: 500;
 }
 
@@ -568,7 +704,7 @@ div {
 
   .columnName {
     color: #4d7499;
-    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-family: "Helvetica Neue Medium", sans-serif;
     font-weight: 500;
   }
 
@@ -675,4 +811,19 @@ div {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   z-index: 1;
+}
+
+.scrollingSimplePanel {
+  @extend .scrollingPanel;
+
+  box-shadow: none;
+}
+
+.iconButton {
+  @extend %btn_unset;
+  @extend %button-hover;
+
+  &.deselect {
+    filter: grayscale(1);
+  }
 }

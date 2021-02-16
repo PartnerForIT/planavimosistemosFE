@@ -3,22 +3,22 @@ import {
 } from './types';
 import { makeQueryString } from '../../components/Helpers';
 
-export const getSkills = () => ({
+export const getSkills = (companyId) => ({
   type: GET_SKILLS,
   request: {
     method: 'GET',
-    url: '/skills',
+    url: `/company/${companyId}/skills`,
   },
   meta: {
     thunk: true,
   },
 });
 
-export const getReportsSkills = (queryObj) => ({
+export const getReportsSkills = ({ companyId, ...rest }) => ({
   type: GET_SKILLS,
   request: {
     method: 'GET',
-    url: `/reports/skills?${makeQueryString(queryObj)}`,
+    url: `/company/${companyId}/reports/skills?${makeQueryString(rest)}`,
   },
   meta: {
     thunk: true,

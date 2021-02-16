@@ -1,0 +1,251 @@
+@import "../../variables";
+
+$padding-size: 25px;
+$info-text-color: #707070;
+$form-inner-width: 900px;
+
+.progress {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  &_inner {
+    width: 110px;
+    height: 4px;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    background-color: $light-blue;
+
+    & span {
+      display: inline-block;
+      background-color: $light-blue;
+    }
+
+    & .active {
+      background-color: $blue;
+      border-radius: 2px;
+    }
+  }
+}
+
+.newAccount {
+  margin-top: 50px;
+  width: 100%;
+  max-width: $form-inner-width;
+
+  .info {
+    padding-right: $padding-size;
+  }
+
+  .form {
+    padding-left: $padding-size;
+  }
+}
+
+.firstForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  min-width: $form-inner-width;
+}
+
+.formItem {
+  margin-bottom: $padding-size;
+  position: relative;
+
+  & label + div {
+    margin-top: unset;
+  }
+
+  &:last-child {
+    margin-bottom: unset;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+
+  & span {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & svg {
+    margin-left: 1ex;
+  }
+
+  & button {
+    margin: 0 10px;
+  }
+}
+
+.avatar {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 16px;
+
+  &_block {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    &_inner {
+      width: 85px;
+    }
+  }
+}
+
+small.error {
+  color: $red-600;
+}
+
+#border {
+  border-color: $light-blue;
+  border-style: solid;
+  border-width: 0;
+}
+
+.border {
+  &Left {
+    @extend #border;
+
+    border-left-width: 1px;
+  }
+
+  &Right {
+    @extend #border;
+
+    border-right-width: 1px;
+  }
+}
+
+.secondForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .info {
+    padding-right: $padding-size;
+  }
+
+  .center {
+    padding-left: $padding-size;
+    padding-right: $padding-size;
+  }
+
+  .right {
+    padding-left: $padding-size;
+  }
+}
+
+.card {
+  background-color: #e2e9ed;
+  border-radius: 13px;
+  padding: 20px;
+  width: 100%;
+  max-width: 295px;
+  min-width: 255px;
+  color: $info-text-color;
+
+  &_head {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-column-gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  &_name {
+    display: flex;
+    flex-direction: column;
+
+    & p {
+      margin: 0;
+      color: black;
+    }
+
+    & small {
+      color: inherit;
+    }
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    margin-bottom: unset;
+  }
+
+  &_body {
+    padding-left: $padding-size - 20px;
+    padding-right: $padding-size - 20px;
+
+    & p {
+      margin-top: unset;
+      margin-bottom: 20px;
+      line-height: 1;
+
+      &:last-child {
+        margin-bottom: unset;
+      }
+    }
+  }
+}
+
+.skill {
+  position: relative;
+
+  & button {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+  }
+
+  & label + div {
+    margin-top: unset;
+  }
+}
+
+.thirdForm {
+  min-width: $form-inner-width;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .info {
+    display: flex;
+    padding-right: $padding-size;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .form {
+    padding-left: $padding-size;
+  }
+
+  .radio {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 255px auto;
+    grid-column-gap: 20px;
+    align-items: center;
+  }
+
+  .start {
+    align-items: flex-start;
+  }
+}

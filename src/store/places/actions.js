@@ -14,11 +14,11 @@ export const getPlaces = () => ({
   },
 });
 
-export const getReportsPlaces = (queryObj) => ({
+export const getReportsPlaces = ({ companyId, ...rest }) => ({
   type: GET_PLACES,
   request: {
     method: 'GET',
-    url: `/reports/places?${makeQueryString(queryObj)}`,
+    url: `/company/${companyId}/reports/places?${makeQueryString(rest)}`,
   },
   meta: {
     thunk: true,

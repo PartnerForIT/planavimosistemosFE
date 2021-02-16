@@ -1,17 +1,16 @@
-import { makeQueryString } from '../../components/Helpers';
 import {
   GET_REPORT,
   EXCEL,
   PDF,
 } from './types';
 
-export const getReport = (startDate, endDate, jobTypes, employees, places, skills) => ({
+export const getReport = (companyId, data) => ({
   type: GET_REPORT,
   request: {
     method: 'POST',
-    url: '/reports/generate',
+    url: `/company/${companyId}/reports/generate`,
     data: {
-      startDate, endDate, jobTypes, employees, places, skills,
+      ...data,
     },
   },
   meta: {
@@ -19,24 +18,30 @@ export const getReport = (startDate, endDate, jobTypes, employees, places, skill
   },
 });
 
-export const downloadExcel = (queryObj) => ({
+export const downloadExcel = (companyId, queryObj) => ({
   type: EXCEL,
   request: {
     method: 'GET',
-    url: `/reports/export/excel?${makeQueryString(queryObj, false)}`,
-    responseType: 'blob',
+    url: `/company/${companyId}/reports/export/excel`,
+    params: {
+      ...queryObj,
+    },
+    responseType: 'application/json',
   },
   meta: {
     thunk: true,
   },
 });
 
-export const downloadPdf = (queryObj) => ({
+export const downloadPdf = (companyId, queryObj) => ({
   type: PDF,
   request: {
     method: 'GET',
-    url: `/reports/export/pdf?${makeQueryString(queryObj, false)}`,
-    responseType: 'blob',
+    url: `/company/${companyId}/reports/export/pdf`,
+    params: {
+      ...queryObj,
+    },
+    responseType: 'application/json',
   },
   meta: {
     thunk: true,

@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { createRequestInstance, watchRequests } from 'redux-saga-requests';
+import { all } from 'redux-saga/effects';
 import { createDriver } from 'redux-saga-requests-axios';
 import config from 'config';
 import routes from 'config/routes';
+
+import OverviewWatcher from './overview/saga';
+import OrganizationListWatcher from './organizationList/saga';
+import SettingsWatcher from './settings/saga';
 
 function onRequest(request) {
   // intercept a request here
@@ -25,10 +30,15 @@ function onError(error, action) {
 }
 
 export default function* rootSaga() {
-  yield createRequestInstance({
-    onRequest,
-    onError,
-    driver: createDriver(axios),
-  });
-  yield watchRequests();
+  yield all([
+    OverviewWatcher(),
+    OrganizationListWatcher(),
+    SettingsWatcher(),
+    createRequestInstance({
+      onRequest,
+      onError,
+      driver: createDriver(axios),
+    }),
+    watchRequests(),
+  ]);
 }

@@ -5,7 +5,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroup.module.scss';
 
 export default function CheckboxGroup({
-  items, children, selectAll, itemsStat,
+  items, children, selectAll, itemsStat, height, maxHeight, wrapperMarginBottom: marginBottom,
 }) {
   const { t } = useTranslation();
 
@@ -64,7 +64,7 @@ export default function CheckboxGroup({
   // }, [itemsStat]);
 
   return (
-    <div className={classNames(styles.checkboxGroup)}>
+    <div className={classNames(styles.checkboxGroup)} style={{ marginBottom }}>
       <div className={classNames(styles.headerRow)}>
         <button
           className={classNames(styles.button)}
@@ -81,7 +81,7 @@ export default function CheckboxGroup({
           {t('Select None')}
         </button>
       </div>
-      <div className={classNames(styles.contentBox)}>
+      <div className={classNames(styles.contentBox)} style={{ height, maxHeight }}>
         {
           children || items.map((item, idx) => (
             <StyledCheckbox

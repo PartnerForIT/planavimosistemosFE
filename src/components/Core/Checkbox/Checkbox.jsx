@@ -93,7 +93,7 @@ const useStyles = makeStyles({
 });
 
 export default function StyledCheckbox({
-  item, label, id, onChange, ...props
+  item, label = '', id, onChange = () => ({}), ...props
 }) {
   const classes = useStyles();
 
@@ -111,7 +111,7 @@ export default function StyledCheckbox({
           checkedIcon={<span className={classNames(classes.icon, classes.checkedIcon)} />}
           icon={<span className={classes.icon} />}
           inputProps={{ 'aria-label': '' }}
-          onChange={(e) => onChange(item || id, e.target.checked)}
+          onChange={(e) => onChange(item || id, e.target.checked, e)}
           {...props}
         />
       )}

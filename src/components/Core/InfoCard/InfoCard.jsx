@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
 import PendingIcon from '../../Icons/PendingIcon';
-import EditIcon from '../../Icons/EditIcon';
+import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 import {
   getInfoCardColors, timeToMinutes, minutesToString, dateToUCT,
 } from '../../Helpers';
@@ -176,7 +176,7 @@ const InfoCard = ({
                 <>
                   {`${start} - ${end}`}
                   {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                  { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIcon /></div> }
+                  { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIconFixedFill /></div> }
                 </>
               )
           }

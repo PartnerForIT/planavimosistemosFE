@@ -1,0 +1,220 @@
+@import "../variables";
+
+.dialogBlock {
+  width: 100%;
+  min-width: 360px;
+  padding: 25px 30px;
+  position: relative;
+
+  .closeButton {
+    position: absolute;
+    right: 11px;
+    top: 12px;
+  }
+}
+
+.dialogTitle {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.buttonSaveBlock {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    width: 100%;
+  }
+}
+
+.buttonsBlock {
+  @extend .buttonSaveBlock;
+
+  button {
+    margin: 0 10px;
+  }
+}
+
+.addOrg {
+  display: flex;
+  justify-content: stretch;
+  width: 100%;
+  max-width: 670px;
+
+  &__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+    padding: 12px 20px;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 1px;
+      height: auto;
+      top: 10px;
+      bottom: 10px;
+      right: -9px;
+      background: $light-blue;
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  &__inner2 {
+    @extend .addOrg__inner;
+
+    padding: 12px 0 12px 20px;
+    justify-content: flex-start;
+  }
+
+  .buttonBlock {
+    display: flex;
+    margin-top: 70px;
+
+    button {
+      margin: 0 2px;
+    }
+  }
+
+  .warningText {
+    width: 100%;
+    min-height: 105px;
+    text-align: center;
+    color: $red;
+
+    .buttonWarningBlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 40px;
+    }
+  }
+}
+
+// Create Skill modal
+.ratesBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $light-blue2;
+  border-bottom: 1px solid $light-blue2;
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+
+.formControl {
+  margin-bottom: 20px;
+}
+
+.daleteData {
+  margin: 35px 15px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5em;
+  color: $gray;
+  font-weight: 500;
+}
+
+.edit {
+  .avatarBlock {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+
+    & img {
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .left {
+    padding-right: 20px;
+  }
+
+  .center {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: auto;
+  }
+
+  .right {
+    padding-left: 20px;
+
+    &.bordered {
+      border-left: 1px solid $light-blue;
+    }
+  }
+
+  .left,
+  .center {
+    &.bordered {
+      border-right: 1px solid $light-blue;
+    }
+  }
+
+  .left,
+  .right,
+  .center {
+    height: fit-content;
+  }
+
+  .skill {
+    position: relative;
+    margin-bottom: 25px;
+
+    & button {
+      position: absolute;
+      right: 0;
+      z-index: 2;
+    }
+  }
+
+  .select {
+    margin-top: unset;
+  }
+
+  .buttonBlock {
+    display: flex;
+    justify-content: flex-end;
+
+    & button {
+      margin-left: 20px;
+    }
+  }
+}
+
+.subtitle {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5em;
+  color: $gray;
+  font-weight: 500;
+}
+
+.border {
+  height: 1px;
+  width: 100%;
+  background-color: #cbd1d8;
+  display: block;
+}

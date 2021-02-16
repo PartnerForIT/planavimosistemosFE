@@ -1,0 +1,132 @@
+@import "../../Core/variables";
+
+.logbookBlock {
+  width: 100%;
+  max-width: 430px;
+}
+
+.generalBlock {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.generalBlock2 {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  margin-left: -8px;
+}
+
+.generalBlock3 {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+  margin-bottom: 15px;
+
+  label {
+    margin-right: 12px;
+  }
+}
+
+.subCheckbox {
+  padding-left: 30px;
+
+  span {
+    font-size: $small-font-size;
+  }
+}
+
+.generalBlock4 {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+
+  label {
+    span {
+      &:last-child {
+        font-size: 14px;
+        color: #333945;
+      }
+    }
+  }
+}
+
+.generalBlock5 {
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 15px;
+}
+
+.labelText {
+  color: #333945;
+  font-size: 14px;
+  word-wrap: break-word;
+  box-shadow: none !important;
+  text-align: left;
+  font-family: Helvetica Neue, sans-serif;
+  margin-left: 0;
+  margin-right: 20px;
+}
+
+.labelText2 {
+  @extend .labelText;
+
+  margin-left: 5px;
+}
+
+.tooltipBlock {
+  margin-left: 20px;
+}
+
+.formLine {
+  width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #e8eff6;
+}
+
+.disabledBlock {
+  opacity: 0.4;
+  pointer-events: none;
+
+  .disabledBlock {
+    opacity: 1;
+  }
+}
+
+.selectBlock {
+  width: 100%;
+  max-width: 250px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+
+  & > div {
+    margin-top: 10px !important;
+  }
+}
+
+.value {
+  position: absolute;
+  right: -2ch;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.radioBlock {
+  display: flex;
+  flex-direction: column;
+  max-width: 280px;
+
+  &Item {
+    display: grid;
+    position: relative;
+    align-items: center;
+    grid-auto-columns: 1fr auto;
+    grid-auto-flow: column;
+  }
+}
