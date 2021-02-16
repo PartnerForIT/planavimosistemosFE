@@ -26,6 +26,18 @@ header {
   z-index: 1;
 }
 
+.flexRowGlobal {
+  display: flex;
+  min-width: 140px;
+  justify-content: flex-start;
+  padding: 0 1px;
+
+  &:last-of-type {
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+}
+
 // search-table
 .headerWrapperSearch {
   @extend .headerWrapper;
@@ -377,18 +389,6 @@ header {
 // .reportsRowSelected {
 //   background-color: #fff;
 // }
-
-.flexRowGlobal {
-  display: flex;
-  min-width: 140px;
-  justify-content: flex-start;
-  padding: 0 1px;
-
-  &:last-of-type {
-    justify-content: flex-end;
-    padding-right: 10px;
-  }
-}
 
 .flexRowGlobalReports {
   padding: 0 8px;

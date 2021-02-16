@@ -8,6 +8,21 @@
   display: flex;
 }
 
+.activelink {
+  @extend .link;
+
+  background: $blue-100;
+  color: $blue-2;
+
+  path {
+    fill: $blue-2 !important;
+  }
+
+  &::before {
+    opacity: 1;
+  }
+}
+
 .link {
   display: flex;
   flex-direction: column;
@@ -33,7 +48,7 @@
   &::before {
     content: "";
     position: absolute;
-    display: 0;
+    //display: 0;
     left: 0;
     right: 0;
     top: auto;
@@ -56,20 +71,6 @@
     &::before {
       opacity: 1;
     }
-  }
-}
-
-.activelink {
-  @extend .link;
-  background: $blue-100;
-  color: $blue-2;
-
-  path {
-    fill: $blue-2 !important;
-  }
-
-  &::before {
-    opacity: 1;
   }
 }
 

@@ -199,21 +199,6 @@ $sidebar-border-radius: 12px;
   }
 }
 
-.actions {
-  min-height: $actions-min-height;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
-
-  button {
-    margin-top: 9px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-}
-
 .actionButtons {
   position: absolute;
   height: 84px;
@@ -227,7 +212,6 @@ $sidebar-border-radius: 12px;
   border-bottom-right-radius: $sidebar-border-radius;
   border-bottom-left-radius: $sidebar-border-radius;
 
-  //noinspection Stylelint
   button {
     @extend %btn_unset;
 
@@ -255,6 +239,21 @@ $sidebar-border-radius: 12px;
 
   .suspend {
     color: $red-text;
+  }
+}
+
+.actions {
+  min-height: $actions-min-height;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+
+  button {
+    margin-top: 9px;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 
