@@ -90,6 +90,21 @@ $sidebar-border-radius: 12px;
   }
 }
 
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 55px) !important;
+  top: 45px !important;
+  right: -9px !important;
+  z-index: 2;
+
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
+  }
+}
+
 .multipleEntries {
   width: 100%;
   padding: 0 10px;
@@ -254,21 +269,5 @@ $sidebar-border-radius: 12px;
     &:first-child {
       margin-top: 0;
     }
-  }
-}
-
-.scrollbarTrackY {
-  background-color: transparent !important;
-  border-radius: 10px !important;
-  width: 7px !important;
-  height: calc(100% - 55px) !important;
-  top: 45px !important;
-  right: -9px !important;
-  z-index: 2;
-
-  //noinspection Stylelint
-  div {
-    background-color: #d5dde1 !important;
-    border-radius: 10px !important;
   }
 }
