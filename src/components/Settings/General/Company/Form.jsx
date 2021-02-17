@@ -5,14 +5,13 @@ import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import Input from '../../../Core/Input/Input';
 import langArray from '../../../Helpers/lang';
-import timezoneArr from '../../../Helpers/timezone';
 import formatArr from '../../../Helpers/dateFormat';
 import currencyArr from '../../../Helpers/currency';
 import SimpleSelect from '../../../Core/SimpleSelect';
 
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
-  inputValues, countries, editCompany, file, company,
+  inputValues, countries = [], editCompany, file, company, timeZones = [],
 }) {
   const { t } = useTranslation();
 
@@ -98,7 +97,7 @@ export default function CompaneForm({
           name='timezone'
           fullWidth
           value={inputValues.timezone}
-          options={timezoneArr}
+          options={timeZones}
         />
       </div>
       <div className={styles.formControl}>

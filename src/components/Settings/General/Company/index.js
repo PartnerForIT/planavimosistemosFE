@@ -67,6 +67,8 @@ export default function Company() {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
 
+  const [timeZones, setTimeZones] = useState([]);
+
   useEffect(() => {
     setInputValues((prevState) => ({
       ...prevState,
@@ -107,6 +109,14 @@ export default function Company() {
     dispatch(editSettingCompany(data, companyId));
   };
 
+  useEffect(() => {
+    if (inputValues.country && countries.length) {
+      setTimeZones(countries
+        .find(({ code }) => code === inputValues.country)?.timezones
+        ?.map((code) => ({ code, name: code })) ?? []);
+    }
+  }, [countries, inputValues]);
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -127,6 +137,7 @@ export default function Company() {
                 editCompany={editCompany}
                 file={file}
                 company={company}
+                timeZones={timeZones}
               />
             )}
           <DropzoneDialog
