@@ -68,8 +68,8 @@ export default function Company() {
   const textSnackbar = useSelector(snackbarText);
 
   useEffect(() => {
-    setInputValues({
-      ...inputValues,
+    setInputValues((prevState) => ({
+      ...prevState,
       name: company.name || '',
       contact_person_name: company.contact_person_name || '',
       contact_person_email: company.contact_person_email || '',
@@ -78,11 +78,11 @@ export default function Company() {
       timezone: company.timezone || 'UTC±00:00',
       date_format: company.date_format || 'DD MM YY',
       currency: company.currency || 'USD',
-    });
+    }));
     if (company.logo) {
       setFile(company.logo);
     }
-  }, [company, inputValues]);
+  }, [company]);
 
   const handleOpen = () => {
     SetOpen(true);

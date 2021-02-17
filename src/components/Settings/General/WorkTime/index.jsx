@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,19 +67,25 @@ export default function WorkTime() {
   const workTime = useSelector(settingWorkTime);
 
   const filterWorksDay = useCallback((idDay) => workTime.work_time?.work_days
-    ?.days.filter((item) => item.day === idDay) ?? [],
+    ?.days?.filter((item) => item.day === idDay) ?? [],
   [workTime]);
 
   const [nationalHolidays, setNationalHolidays] = useState([]);
   const [companyHolidays, setCompanyHolidays] = useState([]);
 
   useEffect(() => {
-    setCompanyHolidays(workTime.work_time?.holidays?.filter((item) => new Date(item.date).getFullYear() === year));
-  }, [workTime.work_time.holidays, year]);
+    const { holidays = [] } = workTime.work_time;
+    if (holidays.length) {
+      setCompanyHolidays(holidays.filter((item) => new Date(item.date).getFullYear() === year));
+    }
+  }, [workTime.work_time, year]);
 
   useEffect(() => {
-    setNationalHolidays(workTime.national_holidays?.filter((item) => new Date(item.date).getFullYear() === year));
-  }, [workTime.national_holidays, year]);
+    const { national_holidays = [] } = workTime;
+    if (national_holidays.length) {
+      setNationalHolidays(national_holidays.filter((item) => new Date(item.date).getFullYear() === year));
+    }
+  }, [workTime, year]);
 
   useEffect(() => {
     setInputValues({
