@@ -41,7 +41,7 @@ const columns = [
 ];
 
 const columnsWidthArray = {
-  status: 80,
+  status: 90,
   name: 200,
   contact_person_email: 200,
   contact_person_name: 200,

@@ -140,7 +140,7 @@ export default function Filter({
           {t('Suspend')}
         </Button>
         <Button danger onClick={() => changeStatusCompany('delete')} disabled={!checkedItems.length > 0}>
-          {t('Tetminate')}
+          {t('Terminate')}
         </Button>
         <Button black onClick={() => changeStatusCompany('destroy')} disabled={!checkedItems.length > 0}>
           {t('Delete')}

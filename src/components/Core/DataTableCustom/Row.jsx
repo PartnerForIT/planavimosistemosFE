@@ -167,17 +167,17 @@ const Row = ({
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {
                 minWidth = selectable && column.field === 'status'
-                  ? columnsWidth[column.field] - 35
+                  ? columnsWidth[column.field] - 5
                   : columnsWidth[column.field];
                 width = minWidth;
               } else {
                 width = selectable
-                  ? `calc((100% - ${totalCustomWidthColumns + 35}px) / ${columns.length - totalCustomColumns})`
+                  ? `calc((100% - ${totalCustomWidthColumns + 5}px) / ${columns.length - totalCustomColumns})`
                   : `calc((100% - ${totalCustomWidthColumns}px) / ${columns.length - totalCustomColumns})`;
               }
             } else {
               width = selectable
-                ? `calc((100% - 35px) / ${columns.length})`
+                ? `calc((100% - 5px) / ${columns.length})`
                 : `calc((100%) / ${columns.length})`;
             }
 

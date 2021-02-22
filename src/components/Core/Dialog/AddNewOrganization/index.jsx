@@ -76,7 +76,7 @@ export default function AddNewOrganization({
               name='name'
               onChange={handleInputChange}
               value={inputValues.name}
-              placeholder='Enter yuor company name'
+              placeholder='Enter your company name'
               id='name'
             />
           </FormControl>
