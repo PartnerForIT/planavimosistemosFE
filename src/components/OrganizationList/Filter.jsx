@@ -66,6 +66,7 @@ export default function Filter({
   handleChangeOrganizations,
   changeStatusCompany,
   checkedItems,
+  selectedItem,
   enterOrganization,
   companies,
   clearCheckbox,
@@ -123,26 +124,42 @@ export default function Filter({
         <Button
           navyBlue
           onClick={() => setOpen(true)}
-          disabled={!checkedItems.length > 0 || checkedItems.length > 1}
+          disabled={(!checkedItems.length > 0 && !selectedItem) || checkedItems.length > 1}
         >
           {t('Edit Modules')}
         </Button>
         <Button
           onClick={() => { enterOrganization(); }}
-          disabled={!checkedItems.length > 0 || checkedItems.length > 1}
+          disabled={(!checkedItems.length > 0 && !selectedItem) || checkedItems.length > 1}
         >
           {t('Enter Organization')}
         </Button>
-        <Button green onClick={() => changeStatusCompany('activate')} disabled={!checkedItems.length > 0}>
+        <Button
+          green
+          onClick={() => changeStatusCompany('activate')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
           {t('Active')}
         </Button>
-        <Button yellow onClick={() => changeStatusCompany('suspend')} disabled={!checkedItems.length > 0}>
+        <Button
+          yellow
+          onClick={() => changeStatusCompany('suspend')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
           {t('Suspend')}
         </Button>
-        <Button danger onClick={() => changeStatusCompany('delete')} disabled={!checkedItems.length > 0}>
+        <Button
+          danger
+          onClick={() => changeStatusCompany('delete')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
           {t('Terminate')}
         </Button>
-        <Button black onClick={() => changeStatusCompany('destroy')} disabled={!checkedItems.length > 0}>
+        <Button
+          black
+          onClick={() => changeStatusCompany('destroy')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
           {t('Delete')}
         </Button>
       </div>
@@ -150,7 +167,7 @@ export default function Filter({
         open={open}
         handleClose={handleClose}
         companies={companies}
-        checkedItem={checkedItems.length > 0 ? checkedItems[0] : null}
+        checkedItem={checkedItems[0] || selectedItem?.id}
         title={t('Have access to these modules')}
       />
     </div>

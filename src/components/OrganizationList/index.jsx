@@ -221,7 +221,7 @@ export default function OrganizationList() {
   const changeStatusCompany = (status) => {
     const data = {
       action: status,
-      company: (checkedItems.join()),
+      company: (checkedItems.join()) || `${selectedItem}`,
     };
     clearCheckbox();
     dispatch(postChangeOfStatus(data));
@@ -235,7 +235,7 @@ export default function OrganizationList() {
     })));
     setCheckedItems([]);
     // history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
-    const win = window.open(`${routes.COMPANY}/${checkedItems[0]}`, '_blank');
+    const win = window.open(`${routes.COMPANY}/${checkedItems[0] || selectedItem?.id}`, '_blank');
     win.focus();
   };
 
@@ -258,6 +258,7 @@ export default function OrganizationList() {
           enterOrganization={enterOrganization}
           companies={companies}
           clearCheckbox={clearCheckbox}
+          selectedItem={selectedItem}
         />
         <AddNewOrganization
           open={open}
