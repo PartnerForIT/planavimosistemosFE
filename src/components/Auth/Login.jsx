@@ -14,7 +14,7 @@ import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
 import { login } from '../../store/auth/actions';
 import routes from '../../config/routes';
-import { authErrorSelector } from '../../store/auth/selectors';
+import { authErrorSelector, isLoadingSelector } from '../../store/auth/selectors';
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +23,7 @@ const LoginContainer = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const authError = useSelector(authErrorSelector);
+  const isLoading = useSelector(isLoadingSelector);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,6 +47,11 @@ const LoginContainer = () => {
       console.log('Login error', error);
     });
   };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  };
 
   const Delimiter = () => (<div className={styles.delimiter} />);
 
@@ -63,6 +69,7 @@ const LoginContainer = () => {
             onChange={(e) => setEmail(e.target.value)}
             icon={<LoginIcon />}
             error={authError}
+            onKeyDown={handleKeyDown}
           />
           <Delimiter />
           <Input
@@ -76,6 +83,7 @@ const LoginContainer = () => {
             autoComplete='current-password'
             icon={<LockLoginIcon />}
             error={authError}
+            onKeyDown={handleKeyDown}
           />
           <div className={styles.errorBlock}>
             {
@@ -88,7 +96,9 @@ const LoginContainer = () => {
           <Delimiter />
           <div className={styles.buttons}>
             <StyledCheckbox label={t('Remember me')} onChange={() => null} />
-            <Button onClick={handleLogin} size='medium'>{t('Login')}</Button>
+            <Button onClick={handleLogin} size='medium' loading={isLoading}>
+              {t('Login')}
+            </Button>
           </div>
         </div>
       </Card>
