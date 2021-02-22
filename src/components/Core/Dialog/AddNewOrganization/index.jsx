@@ -1,6 +1,5 @@
-import React from "react";
-import * as _ from "lodash";
-import Dialog from '../index';
+import React from 'react';
+import * as _ from 'lodash';
 import {
   withStyles,
   makeStyles,
@@ -9,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import Dialog from '../index';
 import langArray from '../../../Helpers/lang';
 import Button from '../../Button/Button';
 
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 600,
     transform: 'translate(0, 1.5px) scale(1)',
-  }
+  },
 }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -60,7 +60,7 @@ const BootstrapInput = withStyles((theme) => ({
 }))(InputBase);
 
 export default function AddNewOrganization({
-  open, handleClose, countries, title, inputValues, handleInputChange, saveOrg
+  open, handleClose, countries, title, inputValues, handleInputChange, saveOrg,
 }) {
   const classes = useStyles();
 
@@ -69,28 +69,29 @@ export default function AddNewOrganization({
       <div className={style.addOrg}>
         <div className={style.addOrg__inner}>
           <FormControl className={classes.margin}>
-            <InputLabel shrink htmlFor="name" className={classes.label}>
+            <InputLabel shrink htmlFor='name' className={classes.label}>
               Company Name
-              </InputLabel>
+            </InputLabel>
             <BootstrapInput
-              name="name"
+              name='name'
               onChange={handleInputChange}
               value={inputValues.name}
-              placeholder="Enter yuor company name"
-              id="name" />
+              placeholder='Enter yuor company name'
+              id='name'
+            />
           </FormControl>
           <FormControl className={classes.margin}>
-            <InputLabel shrink htmlFor="country-select" className={classes.label}>
+            <InputLabel shrink htmlFor='country-select' className={classes.label}>
               Country
-              </InputLabel>
+            </InputLabel>
             <NativeSelect
-              id="country-select"
+              id='country-select'
               value={inputValues.country}
               onChange={handleInputChange}
               inputProps={{
                 name: 'country',
               }}
-              input={<BootstrapInput name="country" />}
+              input={<BootstrapInput name='country' />}
             >
               {_.map(countries, (item) => (
                 <option key={item.code} value={item.code}>{item.name}</option>
@@ -98,13 +99,13 @@ export default function AddNewOrganization({
             </NativeSelect>
           </FormControl>
           <FormControl className={classes.margin}>
-            <InputLabel shrink htmlFor="country-select" className={classes.label}>
+            <InputLabel shrink htmlFor='country-select' className={classes.label}>
               Language
-              </InputLabel>
+            </InputLabel>
             <NativeSelect
-              id="country-select"
+              id='country-select'
               value={inputValues.lang}
-              placeholder="Select your Language"
+              placeholder='Select your Language'
               onChange={handleInputChange}
               inputProps={{
                 name: 'lang',
@@ -117,57 +118,58 @@ export default function AddNewOrganization({
             </NativeSelect>
           </FormControl>
           <FormControl className={classes.margin}>
-            <InputLabel shrink htmlFor="external-id" className={classes.label}>
+            <InputLabel shrink htmlFor='external-id' className={classes.label}>
               External ID
-              </InputLabel>
+            </InputLabel>
             <BootstrapInput
-              name="external_id"
+              name='external_id'
               onChange={handleInputChange}
               value={inputValues.admin_id}
-              placeholder="Company external id"
-              id="external-id" />
+              placeholder='Company external id'
+              id='external-id'
+            />
           </FormControl>
         </div>
         <div className={style.addOrg__inner}>
           <div>
-            <FormControl className={classes.margin} >
-              <InputLabel shrink htmlFor="person" className={classes.label}>
+            <FormControl className={classes.margin}>
+              <InputLabel shrink htmlFor='person' className={classes.label}>
                 Contact persons
-                </InputLabel>
+              </InputLabel>
               <BootstrapInput
-                placeholder="Contact persons name"
-                id="person"
-                name="contact_person_name"
+                placeholder='Contact persons name'
+                id='person'
+                name='contact_person_name'
                 value={inputValues.contact_person_name}
                 onChange={handleInputChange}
               />
             </FormControl>
 
             <FormControl className={classes.margin}>
-              <InputLabel shrink htmlFor="email" className={classes.label}>
+              <InputLabel shrink htmlFor='email' className={classes.label}>
                 Contact persons email
-                </InputLabel>
+              </InputLabel>
               <BootstrapInput
-                placeholder="Contact persons email"
-                id="email"
-                name="contact_person_email"
+                placeholder='Contact persons email'
+                id='email'
+                name='contact_person_email'
                 value={inputValues.contact_person_email}
                 onChange={handleInputChange}
               />
             </FormControl>
           </div>
           <div className={style.buttonBlock}>
-            <Button cancel size="big" onClick={handleClose}>Cancel</Button>
+            <Button cancel size='big' onClick={handleClose}>Cancel</Button>
             <Button
-              size="big"
+              size='big'
               onClick={() => saveOrg()}
               disabled={!inputValues.contact_person_email || !inputValues.name}
             >
               Save and Invite
-              </Button>
+            </Button>
           </div>
         </div>
       </div>
     </Dialog>
-  )
+  );
 }

@@ -18,6 +18,11 @@
   cursor: pointer;
   outline: transparent;
   white-space: nowrap;
+  position: relative;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 
 .inverse,
@@ -180,4 +185,32 @@
 
   background-color: transparent;
   border-color: white;
+}
+
+.loading {
+  @extend %button;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: -1px;
+    bottom: -1px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.progress {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  max-width: 20px;
+  max-height: 20px;
+
+  circle {
+    color: $black;
+  }
 }

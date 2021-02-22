@@ -50,7 +50,12 @@ const Users = React.memo(({
   }, [employees, search, stringMatch]);
 
   const checkedByDefault = useMemo(() => activeRole?.account_user_roles
-    .map(({ employee }) => employToCheck(employee)) ?? [],
+    .map((worker) => {
+      const { employee } = worker;
+      if (employee) {
+        return employToCheck(employee);
+      } return null;
+    }).filter((item) => !!item) ?? [],
   [activeRole.account_user_roles, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
@@ -66,10 +71,12 @@ const Users = React.memo(({
   }, [checkedItems, ready, roleEmployeesEdit]);
 
   const employeesWithoutGroups = useMemo(() => empList
+    .filter(({ employee }) => !!employee) // REMOVE
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i)), [empList, employToCheck]);
 
   const employeesWithGroupsSubGroups = useMemo(() => empList
+    .filter(({ employee }) => !!employee) // REMOVE
     .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
 
   const mapEmployeesGroups = useCallback((employeeArray) => {

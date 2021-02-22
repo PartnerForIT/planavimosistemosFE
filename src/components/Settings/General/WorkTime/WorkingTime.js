@@ -4,21 +4,23 @@ import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import SimpleSelect from '../../../Core/SimpleSelect';
 import timeArr from '../../../Helpers/time';
-import Checkbox from '../../../Core/Checkbox/Checkbox2.jsx';
+import Checkbox from '../../../Core/Checkbox/Checkbox2';
 import Button from '../../../Core/Button/Button';
 
-export default function WorkingTime({ styles, days,
-  handleChangeDays, startTime, handleChangeStartTime, saveTime }) {
+export default function WorkingTime({
+  styles, days,
+  handleChangeDays, startTime, handleChangeStartTime, saveTime,
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.workigTime}>
       <div className={styles.startWeek}>
         <div className={styles.labelBlock}>
           <Label text={t('Working Time')} />
-          <Tooltip title={'Working Time'} />
+          <Tooltip title='Working Time' />
         </div>
-        {Object.keys(days).map((item, index) =>
-          <div key={item + index} className={styles.workigTime__inner}>
+        {Object.keys(days).map((item, index) => (
+          <div key={item + index.toString()} className={styles.workigTime__inner}>
             <Checkbox
               onChange={handleChangeDays}
               checked={days[item]}
@@ -41,13 +43,12 @@ export default function WorkingTime({ styles, days,
               options={timeArr}
             />
           </div>
-        )}
-        <Button inverse onClick={() => saveTime()} >
+        ))}
+        <Button inverse onClick={() => saveTime()}>
           {t('Save')}
         </Button>
-        <div className={styles.formLine}></div>
+        <div className={styles.formLine} />
       </div>
     </div>
-  )
+  );
 }
-

@@ -90,6 +90,21 @@ $sidebar-border-radius: 12px;
   }
 }
 
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 55px) !important;
+  top: 45px !important;
+  right: -9px !important;
+  z-index: 2;
+
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
+  }
+}
+
 .multipleEntries {
   width: 100%;
   padding: 0 10px;
@@ -199,21 +214,6 @@ $sidebar-border-radius: 12px;
   }
 }
 
-.actions {
-  min-height: $actions-min-height;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
-
-  button {
-    margin-top: 9px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-}
-
 .actionButtons {
   position: absolute;
   height: 84px;
@@ -227,7 +227,6 @@ $sidebar-border-radius: 12px;
   border-bottom-right-radius: $sidebar-border-radius;
   border-bottom-left-radius: $sidebar-border-radius;
 
-  //noinspection Stylelint
   button {
     @extend %btn_unset;
 
@@ -258,18 +257,17 @@ $sidebar-border-radius: 12px;
   }
 }
 
-.scrollbarTrackY {
-  background-color: transparent !important;
-  border-radius: 10px !important;
-  width: 7px !important;
-  height: calc(100% - 55px) !important;
-  top: 45px !important;
-  right: -9px !important;
-  z-index: 2;
+.actions {
+  min-height: $actions-min-height;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
 
-  //noinspection Stylelint
-  div {
-    background-color: #d5dde1 !important;
-    border-radius: 10px !important;
+  button {
+    margin-top: 9px;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }

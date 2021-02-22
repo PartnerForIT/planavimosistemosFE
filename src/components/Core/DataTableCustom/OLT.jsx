@@ -9,7 +9,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
 import styles from './DTM.module.scss';
-// import StyledCheckbox from '../Checkbox/Checkbox';
 import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
@@ -26,13 +25,13 @@ const useStyles = makeStyles({
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, onSerach, simpleTable, editRow = () => ({}),
+  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
   removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
 }) {
   const [tableData, setTableData] = useState(data);
-  const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
+  const [, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);

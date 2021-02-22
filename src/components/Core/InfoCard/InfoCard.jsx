@@ -175,8 +175,15 @@ const InfoCard = ({
               : showRange && (
                 <>
                   {`${start} - ${end}`}
-                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                  { editable && <div className={classes.editIcon} onClick={() => setEditing(true)}><EditIconFixedFill /></div> }
+                  { editable && (
+                  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+                  <div
+                    className={classes.editIcon}
+                    onClick={() => setEditing(true)}
+                  >
+                    <EditIconFixedFill />
+                  </div>
+                  ) }
                 </>
               )
           }

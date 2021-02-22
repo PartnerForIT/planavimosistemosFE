@@ -1,4 +1,3 @@
-
 const currencyArr = [
   { code: 'Euro', name: '€' },
   { code: 'USD', name: '$' },

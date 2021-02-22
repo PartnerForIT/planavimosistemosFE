@@ -130,3 +130,9 @@
     grid-auto-flow: column;
   }
 }
+
+.buttonBlock {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}

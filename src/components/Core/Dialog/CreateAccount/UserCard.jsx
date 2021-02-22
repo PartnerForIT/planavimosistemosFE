@@ -23,6 +23,7 @@ function UserCard({
   const placesOpt = useMemo(() => places.map(({ id, label }) => ({ id, name: label })), [places]);
   const subgroupOpt = useMemo(() => {
     if (group) {
+      // eslint-disable-next-line eqeqeq
       const subgroups = groups.find((grp) => grp.id == group)?.subgroups ?? [];
       return subgroups.map(({ id, name }) => ({ id, name }));
     }
@@ -67,6 +68,7 @@ const SimpleRow = ({
       {
         name && (
         <p>
+          {/* eslint-disable-next-line eqeqeq */}
           {`${t(text)}: ${!parent.length ? name : parent.find((item) => item.id == name)?.name}`}
           {currency}
         </p>

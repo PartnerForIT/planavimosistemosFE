@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
+import { DropzoneDialog } from 'material-ui-dropzone';
+import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
-import Dashboard from '../../../Core/Dashboard'
+import Dashboard from '../../../Core/Dashboard';
 import CompanyIcon from '../../../Icons/Company';
-import { DropzoneDialog } from 'material-ui-dropzone';
 import { convertBase64 } from '../../../Helpers';
 import Form from './Form';
 import Progress from '../../../Core/Progress';
 import { getSettingCompany, editSettingCompany } from '../../../../store/settings/actions';
 import { getCountries } from '../../../../store/organizationList/actions';
-import { settingCompanySelector, isLoadingSelector, isShowSnackbar, snackbarType, snackbarText } from '../../../../store/settings/selectors';
+import {
+  settingCompanySelector, isLoadingSelector, isShowSnackbar, snackbarType, snackbarText,
+} from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
-import Snackbar from '@material-ui/core/Snackbar';
 import styles from './company.module.scss';
 
 const useStyles = makeStyles(() => ({
   error: {
     background: '#de4343',
-    color: "#fff",
+    color: '#fff',
   },
   success: {
     background: '#3bc39e',
-    color: "#fff",
-  }
+    color: '#fff',
+  },
 }));
 
 export default function Company() {
   const params = useParams();
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -53,11 +53,11 @@ export default function Company() {
   useEffect(() => {
     dispatch(getCountries());
     if (params.id) {
-      dispatch(getSettingCompany(params.id))
+      dispatch(getSettingCompany(params.id));
     }
-  }, []);
+  }, [dispatch, params.id]);
   useEffect(() => {
-    setCompanyId(params.id)
+    setCompanyId(params.id);
   }, [params]);
 
   const company = useSelector(settingCompanySelector);
@@ -77,61 +77,63 @@ export default function Company() {
       lang: company.lang || 'EN',
       timezone: company.timezone || 'UTC±00:00',
       date_format: company.date_format || 'DD MM YY',
-      currency: company.currency || 'USD'
+      currency: company.currency || 'USD',
     });
     if (company.logo) {
-      setFile(company.logo)
+      setFile(company.logo);
     }
-  }, [company]);
+  }, [company, inputValues]);
 
   const handleOpen = () => {
-    SetOpen(true)
-  }
+    SetOpen(true);
+  };
   const handleClose = () => {
-    SetOpen(false)
-  }
+    SetOpen(false);
+  };
+  // eslint-disable-next-line no-shadow
   const handleSave = async (file) => {
     const base64 = await convertBase64(file[0]);
     setFile(base64);
-    SetOpen(false)
-  }
+    SetOpen(false);
+  };
 
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
   };
 
   const editCompany = () => {
-    const data = { ...inputValues, logo: file }
-    dispatch(editSettingCompany(data, companyId))
-  }
+    const data = { ...inputValues, logo: file };
+    dispatch(editSettingCompany(data, companyId));
+  };
 
   return (
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={"Company"}
+          title='Company'
         >
           <CompanyIcon />
         </TitleBlock>
         <PageLayout>
-          {isLoadind ? <Progress /> :
-            <Form
-              styles={styles}
-              handleOpen={handleOpen}
-              handleInputChange={handleInputChange}
-              inputValues={inputValues}
-              countries={countries}
-              editCompany={editCompany}
-              file={file}
-              company={company}
-            />
-          }
+          {isLoadind ? <Progress />
+            : (
+              <Form
+                styles={styles}
+                handleOpen={handleOpen}
+                handleInputChange={handleInputChange}
+                inputValues={inputValues}
+                countries={countries}
+                editCompany={editCompany}
+                file={file}
+                company={company}
+              />
+            )}
           <DropzoneDialog
             open={open}
             onSave={handleSave}
             acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-            showPreviews={true}
+            showPreviews
             maxFileSize={500000}
             onClose={handleClose}
             filesLimit={1}
@@ -140,16 +142,16 @@ export default function Company() {
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             ContentProps={{
               classes: {
-                root: typeSnackbar === 'error' ? classes.error : classes.success
-              }
+                root: typeSnackbar === 'error' ? classes.error : classes.success,
+              },
             }}
-            severity="error"
+            severity='error'
             open={isSnackbar}
             message={textSnackbar}
-            key={"rigth"}
+            key='rigth'
           />
         </PageLayout>
       </Dashboard>
     </MaynLayout>
-  )
+  );
 }

@@ -4,12 +4,14 @@
   width: 100%;
   min-height: 100vh;
 }
+
 .mainBody {
   padding: 90px 20px 20px 20px;
   background: $main-bg;
   position: relative;
   min-height: calc(100vh - 111px);
 }
+
 .mainBlock {
   background: #fff;
   border-radius: 16px;

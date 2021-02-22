@@ -10,66 +10,66 @@ import formatArr from '../../../Helpers/dateFormat';
 import currencyArr from '../../../Helpers/currency';
 import SimpleSelect from '../../../Core/SimpleSelect';
 
-
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
-  inputValues, countries, editCompany, file, company }) {
+  inputValues, countries, editCompany, file, company,
+}) {
   const { t } = useTranslation();
 
   return (
     <div className={styles.company}>
       <div className={styles.companyLogo}>
-        <img src={file ? file : company.logo} alt="" />
+        <img src={file || company.logo} alt='' />
       </div>
       <div className={styles.labelBlock}>
-        <Label text={t('Company logo')} htmlFor={"logo"} />
-        <Tooltip title={'Add Company Logo'} />
+        <Label text={t('Company logo')} htmlFor='logo' />
+        <Tooltip title='Add Company Logo' />
       </div>
       <Button inverse onClick={() => handleOpen()}>{t('Upload Logo')}</Button>
       <div className={styles.formControl}>
-        <Label text={t('Company name')} htmlFor={"name"} />
+        <Label text={t('Company name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter your company name')}...`}
           value={inputValues.name}
-          name="name"
+          name='name'
           fullWidth
           onChange={handleInputChange}
         />
       </div>
-      <div className={styles.formLine}></div>
+      <div className={styles.formLine} />
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Contact persons')} htmlFor={"contact_person_name"} />
-          <Tooltip title={'Contact persons'} />
+          <Label text={t('Contact persons')} htmlFor='contact_person_name' />
+          <Tooltip title='Contact persons' />
         </div>
         <Input
           placeholder={`${t('Enter your company name')}...`}
           value={inputValues.contact_person_name}
-          name="contact_person_name"
+          name='contact_person_name'
           fullWidth
           onChange={handleInputChange}
         />
       </div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Contact persons email')} htmlFor={"contact_person_email"} />
+          <Label text={t('Contact persons email')} htmlFor='contact_person_email' />
         </div>
         <Input
           placeholder={`${t('Contact persons email')}...`}
           value={inputValues.contact_person_email}
-          name="contact_person_email"
+          name='contact_person_email'
           fullWidth
           onChange={handleInputChange}
         />
       </div>
-      <div className={styles.formLine}></div>
+      <div className={styles.formLine} />
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Country')} htmlFor={"country"} />
+          <Label text={t('Country')} htmlFor='country' />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}
-          name="country"
+          name='country'
           fullWidth
           value={inputValues.country}
           options={countries}
@@ -77,12 +77,12 @@ export default function CompaneForm({
       </div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Language')} htmlFor={"language"} />
+          <Label text={t('Language')} htmlFor='language' />
           <Tooltip title={t('Language')} />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}
-          name="lang"
+          name='lang'
           fullWidth
           value={inputValues.lang}
           options={langArray}
@@ -90,12 +90,12 @@ export default function CompaneForm({
       </div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Timezone')} htmlFor={"timezone"} />
+          <Label text={t('Timezone')} htmlFor='timezone' />
           <Tooltip title={t('Indicate in what time zone you work')} />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}
-          name="timezone"
+          name='timezone'
           fullWidth
           value={inputValues.timezone}
           options={timezoneArr}
@@ -103,12 +103,12 @@ export default function CompaneForm({
       </div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Date format')} htmlFor={"date_format"} />
+          <Label text={t('Date format')} htmlFor='date_format' />
           <Tooltip title={t('Date format')} />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}
-          name="date_format"
+          name='date_format'
           fullWidth
           value={inputValues.date_format}
           options={formatArr}
@@ -116,20 +116,20 @@ export default function CompaneForm({
       </div>
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
-          <Label text={t('Currency')} htmlFor={"currency"} />
+          <Label text={t('Currency')} htmlFor='currency' />
           <Tooltip title={t('Date format')} />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}
-          name="currency"
+          name='currency'
           fullWidth
           value={inputValues.currency}
           options={currencyArr}
         />
       </div>
       <div className={styles.buttonBlock}>
-        <Button size="big" onClick={() => editCompany()}>{t('Save')}</Button>
+        <Button size='big' onClick={() => editCompany()}>{t('Save')}</Button>
       </div>
     </div>
-  )
+  );
 }

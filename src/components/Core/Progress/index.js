@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -14,9 +13,8 @@ const useStyles = makeStyles((theme) => ({
   },
   progress: {
     color: '#4080ff',
-  }
+  },
 }));
-
 
 export default function Progress() {
   const classes = useStyles();

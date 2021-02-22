@@ -1,7 +1,7 @@
 import {
   GET_OVERVIEW,
   GET_OVERVIEW_SUCCESS,
-  GET_OVERVIEW_ERROR
+  GET_OVERVIEW_ERROR,
 } from './types';
 
 export const getOverview = () => ({

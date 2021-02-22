@@ -62,6 +62,7 @@ const ForgotPassword = () => {
                   name='email'
                   type='email'
                   value={email}
+                  placeholder='Enter your E-mail address'
                   fullWidth
                   iconLeft
                   underlined

@@ -1,42 +1,43 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
+import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../Core/MainLayout';
 import PageLayout from '../Core/PageLayout';
 import TitleBlock from '../Core/TitleBlock';
-import moment from 'moment';
-import Filter from "./Filter";
-import AddNewOrganization from '../Core/Dialog/AddNewOrganization'
+import Filter from './Filter';
+import AddNewOrganization from '../Core/Dialog/AddNewOrganization';
 import PeopleIcon from '../Icons/2Peple';
-import { getCountries, addOrganization, getCompanies, postChangeOfStatus } from '../../store/organizationList/actions';
+import {
+  getCountries, addOrganization, getCompanies, postChangeOfStatus,
+} from '../../store/organizationList/actions';
 import {
   countriesSelector, isShowSnackbar, snackbarType, snackbarText,
-  companiesSelector, statsSelector, isLoadingSelector
+  companiesSelector, statsSelector, isLoadingSelector,
 } from '../../store/organizationList/selectors';
-import Snackbar from '@material-ui/core/Snackbar';
 import DataTable from '../Core/DataTableCustom/OLT';
 import routes from '../../config/routes';
 
 const useStyles = makeStyles(() => ({
   error: {
     background: '#de4343',
-    color: "#fff",
+    color: '#fff',
   },
   success: {
     background: '#3bc39e',
-    color: "#fff",
-  }
+    color: '#fff',
+  },
 }));
 
 const columns = [
-  { label: "status", field: 'status', checked: true },
-  { label: "Organizations", field: 'name', checked: true },
-  { label: "Email", field: 'contact_person_email', checked: true },
-  { label: "Contact person", field: 'contact_person_name', checked: true },
-  { label: "Closed Data", field: 'deleted_at', checked: true },
-  { label: "Country", field: 'country', checked: true },
-  { label: "Timezone", field: 'timezone', checked: true },
+  { label: 'status', field: 'status', checked: true },
+  { label: 'Organizations', field: 'name', checked: true },
+  { label: 'Email', field: 'contact_person_email', checked: true },
+  { label: 'Contact person', field: 'contact_person_name', checked: true },
+  { label: 'Closed Data', field: 'deleted_at', checked: true },
+  { label: 'Country', field: 'country', checked: true },
+  { label: 'Timezone', field: 'timezone', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -53,7 +54,6 @@ const page = {};
 
 export default function OrganizationList() {
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -67,13 +67,13 @@ export default function OrganizationList() {
     timezone: 'UTC+00:00',
   });
   const [organizations, SetOrganizations] = useState(3);
-  //table 
+  // table
   const [columnsArray, setColumnsArray] = useState(columns);
   const [loading, setLoading] = useState(null);
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [totalDuration, setTotalDuration] = useState(null);
+  const [totalDuration] = useState(null);
 
   const countries = useSelector(countriesSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -86,7 +86,7 @@ export default function OrganizationList() {
   useEffect(() => {
     dispatch(getCountries());
     dispatch(getCompanies());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (organizations === 3) {
@@ -94,22 +94,22 @@ export default function OrganizationList() {
     } else {
       dispatch(getCompanies({ status: organizations }));
     }
-  }, [organizations])
+  }, [dispatch, organizations]);
 
-  const nameCountry = (row) => {
-    let name = countries.filter(item => item.code === row.country)
+  const nameCountry = useCallback((row) => {
+    const name = countries.filter((item) => item.code === row.country);
     return name[0] ? name[0].name : '';
-  }
+  }, [countries]);
 
   useEffect(() => {
-    companies.map(item => {
-      item.checked = false
-      item.updated_at = item.updated_at ? moment(item.updated_at).format('lll') : '';
-      item.deleted_at = item.deleted_at ? moment(item.deleted_at).format('lll') : '';
-      item.country = nameCountry(item)
-    })
-    setItemsArray(companies);
-  }, [companies]);
+    setItemsArray(companies.map((item) => ({
+      ...item,
+      checked: false,
+      updated_at: item.updated_at ? moment(item.updated_at).format('lll') : '',
+      deleted_at: item.deleted_at ? moment(item.deleted_at).format('lll') : '',
+      country: nameCountry(item),
+    })));
+  }, [companies, nameCountry]);
 
   useEffect(() => {
     setLoading(isLoading);
@@ -120,17 +120,20 @@ export default function OrganizationList() {
   };
 
   const selectionHandler = (itemId, value) => {
-    companies.map(item => {
+    setItemsArray((prevState) => prevState.map((item) => {
       if (item.id === itemId) {
-        item.checked = !item.checked;
+        return {
+          ...item,
+          checked: !item.checked,
+        };
       }
-    }
-    );
+      return item;
+    }));
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {
-      let index = checkedItems.indexOf(itemId);
-      checkedItems.splice(index, 1)
+      const index = checkedItems.indexOf(itemId);
+      checkedItems.splice(index, 1);
       setCheckedItems([...checkedItems]);
     }
   };
@@ -152,16 +155,16 @@ export default function OrganizationList() {
     const sortItems = (array) => {
       const arrayCopy = [...array];
       arrayCopy.sort(sortFunction);
-      return arrayCopy
+      return arrayCopy;
     };
     setItemsArray(sortItems);
   }, []);
-  //--table--
+  // --table--
 
-  const handleChangeOrganizations = e => {
+  const handleChangeOrganizations = (e) => {
     const { value } = e.target;
-    SetOrganizations(parseInt(value));
-  }
+    SetOrganizations(parseInt(value, 10));
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -179,16 +182,16 @@ export default function OrganizationList() {
   };
 
   // Add new organization
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
     if (name === 'country') {
-      const selectCounry = countries.filter(item => item.code === value);
+      const selectCounry = countries.filter((item) => item.code === value);
       setInputValues({
         ...inputValues,
         timezone: selectCounry[0].timezones[0],
         country: selectCounry[0].code,
-      })
+      });
     }
   };
 
@@ -204,43 +207,44 @@ export default function OrganizationList() {
       timezone: 'UTC+00:00',
     });
     setOpen(false);
-  }
+  };
+
+  const clearCheckbox = () => {
+    setItemsArray((prevState) => prevState.map((item) => ({
+      ...item,
+      checked: false,
+    })));
+    setCheckedItems([]);
+  };
+
   // Change Status Organizations
   const changeStatusCompany = (status) => {
     const data = {
       action: status,
       company: (checkedItems.join()),
-    }
-    clearCheckbox()
-    dispatch(postChangeOfStatus(data))
-  }
-
-  const clearCheckbox = () => {
-    companies.map(item => {
-      item.checked = false;
-    }
-    );
-    setCheckedItems([])
-  }
+    };
+    clearCheckbox();
+    dispatch(postChangeOfStatus(data));
+  };
 
   // Push to Company
   const enterOrganization = () => {
-    companies.map(item => {
-      item.checked = false;
-    }
-    );
-    setCheckedItems([])
-    //history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
-    const win = window.open(`${routes.COMPANY}/${checkedItems[0]}`, "_blank");
+    setItemsArray((prevState) => prevState.map((item) => ({
+      ...item,
+      checked: false,
+    })));
+    setCheckedItems([]);
+    // history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
+    const win = window.open(`${routes.COMPANY}/${checkedItems[0]}`, '_blank');
     win.focus();
-  }
+  };
 
   return (
     <MaynLayout>
       <TitleBlock
-        title={"Organization list"}
+        title='Organization list'
         info={stats}
-        TitleButtonNew={"New Organisation"}
+        TitleButtonNew='New Organisation'
         handleButtonNew={handleClickOpen}
       >
         <PeopleIcon />
@@ -258,7 +262,7 @@ export default function OrganizationList() {
         <AddNewOrganization
           open={open}
           handleClose={handleClose}
-          title={"Add new organization"}
+          title='Add new organization'
           inputValues={inputValues}
           countries={countries}
           handleInputChange={handleInputChange}
@@ -292,14 +296,14 @@ export default function OrganizationList() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         ContentProps={{
           classes: {
-            root: typeSnackbar === 'error' ? classes.error : classes.success
-          }
+            root: typeSnackbar === 'error' ? classes.error : classes.success,
+          },
         }}
-        severity="error"
+        severity='error'
         open={isSnackbar}
         message={textSnackbar}
-        key={"rigth"}
+        key='rigth'
       />
     </MaynLayout>
-  )
+  );
 }
