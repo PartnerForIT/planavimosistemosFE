@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const columns = [
-  { label: 'status', field: 'status', checked: true },
+  { label: 'Status', field: 'status', checked: true },
   { label: 'Organizations', field: 'name', checked: true },
   { label: 'Email', field: 'contact_person_email', checked: true },
   { label: 'Contact person', field: 'contact_person_name', checked: true },
