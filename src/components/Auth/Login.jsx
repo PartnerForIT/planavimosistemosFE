@@ -26,12 +26,13 @@ const LoginContainer = () => {
   const isLoading = useSelector(isLoadingSelector);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const isAuthorized = await localStorage.getItem('token');
-      if (isAuthorized && isAuthorized.length) history.goBack();
-    };
+    if (localStorage.getItem('token')) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const roleId = user.role_id;
+      const company_id = user.id;
 
-    checkAuth();
+      history.push(roleId === 1 ? routes.ORG_LIST : `${routes.LOGBOOK}/${company_id}`);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
