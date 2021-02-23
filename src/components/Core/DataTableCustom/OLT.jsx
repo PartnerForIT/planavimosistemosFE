@@ -136,6 +136,7 @@ export default function DataTable({
     styles.flexTable,
     styles.header,
     { [styles.flexTableHeaderReports]: reports },
+    { [styles.flexTableHeaderWithSelectable]: selectable },
     // { [styles.flexTableHeaderReports]: reports, [styles.flexTableHeaderNotSelectable]: !reports && !selectable },
   );
 

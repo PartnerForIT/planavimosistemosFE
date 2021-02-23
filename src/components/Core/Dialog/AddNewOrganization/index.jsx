@@ -76,7 +76,7 @@ export default function AddNewOrganization({
               name='name'
               onChange={handleInputChange}
               value={inputValues.name}
-              placeholder='Enter yuor company name'
+              placeholder='Enter your company name'
               id='name'
             />
           </FormControl>
@@ -93,6 +93,7 @@ export default function AddNewOrganization({
               }}
               input={<BootstrapInput name='country' />}
             >
+              <option value='' disabled>Select a country</option>
               {_.map(countries, (item) => (
                 <option key={item.code} value={item.code}>{item.name}</option>
               ))}
