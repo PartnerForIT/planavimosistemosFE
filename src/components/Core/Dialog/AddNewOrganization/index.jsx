@@ -93,6 +93,7 @@ export default function AddNewOrganization({
               }}
               input={<BootstrapInput name='country' />}
             >
+              <option value='' disabled>Select a country</option>
               {_.map(countries, (item) => (
                 <option key={item.code} value={item.code}>{item.name}</option>
               ))}

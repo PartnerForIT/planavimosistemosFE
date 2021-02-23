@@ -67,7 +67,7 @@ export default function OrganizationList() {
   const [open, setOpen] = useState(false);
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [inputValues, setInputValues] = useState({
-    country: 'PL',
+    country: '',
     lang: 'EN',
     name: '',
     external_id: '',
