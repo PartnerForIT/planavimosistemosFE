@@ -15,7 +15,7 @@ export default function CreateAccount({
   places,
   security,
   createAccount,
-  modules,
+  modules = {},
 }) {
   const initialUser = {
     photo: '',
@@ -31,7 +31,6 @@ export default function CreateAccount({
     place: null,
     password: '',
   };
-
   const [step, setStep] = useState(1);
 
   const [user, setUser] = useState(initialUser);

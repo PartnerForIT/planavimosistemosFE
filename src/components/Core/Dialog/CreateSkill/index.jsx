@@ -11,7 +11,7 @@ import style from '../Dialog.module.scss';
 export default function CreateSkill({
   handleClose, title, open,
   skillName, handleSkillChange, handleChangeRates, buttonTitle, createSkill,
-  modules: { cost_earning: cost, profitability },
+  modules: { cost_earning: cost, profitability } = {},
 
 }) {
   const { t } = useTranslation();
