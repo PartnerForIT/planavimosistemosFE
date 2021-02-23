@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 import classnames from 'classnames';
 import style from './CreateAccount.module.scss';
-import avatar from '../../../Icons/avatar.png';
+import PlaceholderAvatar from '../../../Icons/PlaceholderAvatar';
 import Button from '../../Button/Button';
 import { convertBase64 } from '../../../Helpers';
 import Label from '../../InputLabel';
@@ -119,7 +119,13 @@ const FirstStep = ({
         <div className={classnames(style.info, style.borderRight)}>
           <div className={style.avatar_block}>
             <div className={style.avatar_block_inner}>
-              <img className={style.avatar} src={user.photo || avatar} alt={t('avatar')} />
+              {
+                user.photo ? (
+                  <img className={style.avatar} src={user.photo} alt={t('avatar')} />
+                ) : (
+                  <PlaceholderAvatar className={style.avatar} />
+                )
+              }
               <Button inverse fillWidth onClick={() => setUploadVisible(true)}>Upload</Button>
             </div>
             <DropzoneDialog
