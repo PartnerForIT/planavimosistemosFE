@@ -32,6 +32,7 @@ export default function Filter({
   changeUserStatus = () => ({}),
   checkedItems,
   stats,
+  selectedItem,
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -78,18 +79,30 @@ export default function Filter({
       <div className={styles.filterBlock__inner}>
 
         <p>
-          {checkedItems.length}
+          {checkedItems.length || (selectedItem.id ? '1' : '0')}
           {' '}
           USERS SELECTED
         </p>
 
-        <Button green onClick={() => changeUserStatus('activate')} disabled={!checkedItems.length > 0}>
+        <Button
+          green
+          onClick={() => changeUserStatus('activate')}
+          disabled={!checkedItems.length > 0 && !selectedItem.id}
+        >
           {t('Active')}
         </Button>
-        <Button yellow onClick={() => changeUserStatus('suspend')} disabled={!checkedItems.length > 0}>
+        <Button
+          yellow
+          onClick={() => changeUserStatus('suspend')}
+          disabled={!checkedItems.length > 0 && !selectedItem.id}
+        >
           {t('Suspend')}
         </Button>
-        <Button danger onClick={() => changeUserStatus('delete')} disabled={!checkedItems.length > 0}>
+        <Button
+          danger
+          onClick={() => changeUserStatus('delete')}
+          disabled={!checkedItems.length > 0 && !selectedItem.id}
+        >
           {t('Delete')}
         </Button>
       </div>

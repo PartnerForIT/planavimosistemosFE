@@ -14,8 +14,8 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 
 const Row = ({
-  index, row, columns, fieldIcons, selectable, onSelect, selectedItem, setSelectedItem, reports, columnsWidth,
-  totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
+  index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
+  columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   tableRef = null,
 }) => {
@@ -164,20 +164,22 @@ const Row = ({
             }
             let width = '';
             let minWidth = null;
+            const offsetSelectable = selectable && !selectAll ? 5 : 35;
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {
                 minWidth = selectable && column.field === 'status'
-                  ? columnsWidth[column.field] - 5
+                  ? columnsWidth[column.field] - offsetSelectable
                   : columnsWidth[column.field];
                 width = minWidth;
               } else {
                 width = selectable
-                  ? `calc((100% - ${totalCustomWidthColumns + 5}px) / ${columns.length - totalCustomColumns})`
+                  ? `calc((100% - ${totalCustomWidthColumns
+                    + offsetSelectable}px) / ${columns.length - totalCustomColumns})`
                   : `calc((100% - ${totalCustomWidthColumns}px) / ${columns.length - totalCustomColumns})`;
               }
             } else {
               width = selectable
-                ? `calc((100% - 5px) / ${columns.length})`
+                ? `calc((100% - ${offsetSelectable}px) / ${columns.length})`
                 : `calc((100%) / ${columns.length})`;
             }
 
@@ -244,10 +246,10 @@ const RowActions = ({
       visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
   >
     <button onClick={() => editRow(id)}>
-      <EditIconFixedFill />
+      <EditIconFixedFill className={styles.iconButtonRow} />
     </button>
     <button onClick={() => removeRow(id)}>
-      <DeleteIcon fill='#fd0d1b' viewBox='0 0 20 20' />
+      <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
     </button>
   </div>
 );

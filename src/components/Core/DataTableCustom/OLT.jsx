@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState,
+  useEffect, useLayoutEffect, useRef, useState, useMemo,
 } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -97,6 +97,10 @@ export default function DataTable({
     setTableData(data);
   }, [data]);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty('--scroll-left', '0px');
+  }, []);
+
   const sort = (field, asc) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
     onSort(field, !asc);
@@ -136,7 +140,7 @@ export default function DataTable({
     styles.flexTable,
     styles.header,
     { [styles.flexTableHeaderReports]: reports },
-    { [styles.flexTableHeaderWithSelectable]: selectable },
+    { [styles.flexTableHeaderWithSelectable]: selectable && !selectAll },
     // { [styles.flexTableHeaderReports]: reports, [styles.flexTableHeaderNotSelectable]: !reports && !selectable },
   );
 
@@ -144,6 +148,16 @@ export default function DataTable({
     styles.tableContent,
     { [styles.tableContentNotSortable]: !sortable },
   );
+
+  const onScroll = useMemo(() => {
+    if (hoverActions) {
+      return (e) => {
+        document.documentElement.style.setProperty('--scroll-left', `${e.scrollLeft}px`);
+      };
+    }
+
+    return undefined;
+  }, [hoverActions]);
 
   return (
     <div
@@ -181,6 +195,7 @@ export default function DataTable({
             );
           },
         }}
+        onScroll={onScroll}
       >
         <div className={tableContentClasses}>
           {/* <div className={onSerach ? styles.headerWrapperSearch : styles.headerWrapper}> */}
@@ -216,7 +231,7 @@ export default function DataTable({
                        selectAll && column.field === 'status'
                         && (
                         <StyledCheckbox
-                          style={{ padding: '0 9px 0 2px' }}
+                          style={{ padding: '0 9px 0 3px' }}
                           checked={all}
                           onChange={() => {
                             setAll((prevState) => {
@@ -269,6 +284,7 @@ export default function DataTable({
                 setSelectedItem={setSelectedItem}
                 columns={visibleColumns}
                 selectable={selectable}
+                selectAll={selectAll}
                 statysIcon={statusIcon}
                 onSelect={onSelect}
                 fieldIcons={fieldIcons}

@@ -2,9 +2,9 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-export default function CategoriesIcon({ fill, viewBox }) {
+export default function CategoriesIcon({ fill, viewBox, className }) {
   return (
-    <SvgIcon viewBox={viewBox || '0 0 18.008 20.654'}>
+    <SvgIcon viewBox={viewBox || '0 0 18.008 20.654'} className={className}>
       <path
         id='Контур_13486'
         data-name='Контур 13486'

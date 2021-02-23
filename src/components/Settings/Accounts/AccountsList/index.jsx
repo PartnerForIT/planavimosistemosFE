@@ -125,7 +125,7 @@ export default function AccountsList() {
   const [newVisible, setNewVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
 
-  const [deleteVisible, setDeleteVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(null);
 
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
   const [employeesAll, setEmployeesAll] = useState([]);
@@ -199,7 +199,16 @@ export default function AccountsList() {
   }, [SuperAdmin, modules]);
 
   const deleteEmployee = (employeeId) => {
-    setDeleteVisible(employeeId);
+    setDeleteVisible([employeeId]);
+  };
+  const handleRemoveEmployees = () => {
+    dispatch(setEmployeesActions(
+      id,
+      deleteVisible,
+      'delete',
+    ));
+    setDeleteVisible(null);
+    setCheckedItems([]);
   };
 
   const handleChangeUsers = (e) => {
@@ -210,8 +219,15 @@ export default function AccountsList() {
   };
 
   const handleChangingStatus = (status) => {
-    dispatch(setEmployeesActions(id, checkedItems, status));
+    dispatch(setEmployeesActions(id, checkedItems.length ? checkedItems : [selected.id], status));
     setCheckedItems([]);
+  };
+  const handleChangeStatus = (status) => {
+    if (status === 'delete') {
+      setDeleteVisible(checkedItems.length ? checkedItems : [selected.id]);
+    } else {
+      setChangeStatusOpen(status);
+    }
   };
 
   const employees = useMemo(() => employeesAll.map((empl) => {
@@ -311,10 +327,11 @@ export default function AccountsList() {
                   <Filter
                     handleChangeUser={handleChangeUsers}
                     users={usersOptions}
-                    changeUserStatus={(status) => setChangeStatusOpen(status)}
+                    changeUserStatus={handleChangeStatus}
                     checkedItems={checkedItems ?? []}
                     clearCheckbox={() => ({})}
                     stats={userStats}
+                    selectedItem={selected}
                   />
                   <DataTable
                     data={employees ?? []}
@@ -332,7 +349,7 @@ export default function AccountsList() {
                     onSort={(field, asc) => sorting(employees, { field, asc })}
                     selectedItem={selected}
                     setSelectedItem={setSelected}
-                    verticalOffset='300px'
+                    verticalOffset='350px'
                     selectAllItems={selectAllHandler}
                     all={all}
                     setAll={setAll}
@@ -383,9 +400,9 @@ export default function AccountsList() {
           <DeleteEmployee
             open={deleteVisible}
             handleClose={() => setDeleteVisible(false)}
-            title={t('Delete Employee?')}
+            title={deleteVisible?.length > 1 ? t('Delete Employees?') : t('Delete Employee?')}
             employees={employees}
-            remove={() => dispatch(removeEmployee(id, deleteVisible))}
+            remove={handleRemoveEmployees}
           />
           <ChangeEmplStatus
             open={changeStatusOpen}

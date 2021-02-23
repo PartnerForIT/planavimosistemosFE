@@ -430,6 +430,7 @@ header {
 .ActionsTable {
   display: flex;
   align-items: center;
+  height: 100%;
 
   button {
     border: unset;
@@ -456,13 +457,15 @@ header {
 }
 
 .absoluteActions {
+  display: flex;
   position: absolute;
-  padding: 2px 20px;
-  display: inline-block;
+  padding: 4px 10px 2px 20px;
+  justify-content: flex-end;
+  align-items: center;
   width: 120px;
   text-align: right;
   z-index: 1;
-  left: var(--hover-actions-left);
+  left: calc(var(--hover-actions-left) + var(--scroll-left));
   background: linear-gradient(to right, #d0dfef04 0%, #d0dfef 50%, #d0dfef 100%);
 }
 
@@ -829,5 +832,16 @@ div {
 
   &.deselect {
     filter: grayscale(1);
+  }
+}
+
+.iconButtonRow {
+  //width: 15px;
+  //height: 15px;
+  max-width: 18px;
+  max-height: 18px;
+
+  &:last-child {
+    margin-left: 5px;
   }
 }
