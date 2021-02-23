@@ -1,8 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import Snackbar from '@material-ui/core/Snackbar';
+import { useTranslation } from 'react-i18next';
 import MaynLayout from '../Core/MainLayout';
 import PageLayout from '../Core/PageLayout';
 import TitleBlock from '../Core/TitleBlock';
@@ -16,6 +22,7 @@ import {
   countriesSelector, isShowSnackbar, snackbarType, snackbarText,
   companiesSelector, statsSelector, isLoadingSelector,
 } from '../../store/organizationList/selectors';
+import DeleteConfirmation from '../Core/Dialog/DeleteConfirmation';
 import DataTable from '../Core/DataTableCustom/OLT';
 import routes from '../../config/routes';
 
@@ -55,8 +62,10 @@ const page = {};
 export default function OrganizationList() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [inputValues, setInputValues] = useState({
     country: 'PL',
     lang: 'EN',
@@ -67,6 +76,7 @@ export default function OrganizationList() {
     timezone: 'UTC+00:00',
   });
   const [organizations, SetOrganizations] = useState(3);
+  const nameItems = useRef(null);
   // table
   const [columnsArray, setColumnsArray] = useState(columns);
   const [loading, setLoading] = useState(null);
@@ -180,6 +190,9 @@ export default function OrganizationList() {
       timezone: 'UTC+00:00',
     });
   };
+  const handleCloseDeleteConfirm = () => {
+    setOpenDeleteConfirm(false);
+  };
 
   // Add new organization
   const handleInputChange = (event) => {
@@ -221,10 +234,34 @@ export default function OrganizationList() {
   const changeStatusCompany = (status) => {
     const data = {
       action: status,
-      company: (checkedItems.join()) || `${selectedItem}`,
+      company: (checkedItems.join()) || `${selectedItem.id}`,
+    };
+
+    if (status === 'destroy') {
+      setOpenDeleteConfirm(true);
+
+      const names = checkedItems.reduce((acc, item) => {
+        const foundItem = itemsArray.find((itemJ) => (itemJ.id === item));
+        if (acc) {
+          return `${acc}, ${foundItem.name}`;
+        }
+
+        return `${foundItem.name}`;
+      }, '');
+      nameItems.current = names || selectedItem?.name;
+    } else {
+      clearCheckbox();
+      dispatch(postChangeOfStatus(data));
+    }
+  };
+  const handleDeleteConfirm = () => {
+    const data = {
+      action: 'destroy',
+      company: (checkedItems.join()) || `${selectedItem.id}`,
     };
     clearCheckbox();
     dispatch(postChangeOfStatus(data));
+    setOpenDeleteConfirm(false);
   };
 
   // Push to Company
@@ -268,6 +305,13 @@ export default function OrganizationList() {
           countries={countries}
           handleInputChange={handleInputChange}
           saveOrg={saveOrg}
+        />
+        <DeleteConfirmation
+          open={openDeleteConfirm}
+          handleClose={handleCloseDeleteConfirm}
+          onDelete={handleDeleteConfirm}
+          description={t('confirmation_delete', { name: nameItems.current })}
+          title={t('Delete confirmation')}
         />
 
         <DataTable
