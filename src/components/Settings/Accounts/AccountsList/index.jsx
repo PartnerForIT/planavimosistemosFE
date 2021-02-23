@@ -36,7 +36,7 @@ import {
   loadPlace,
   loadSkills,
   patchEmployee,
-  removeEmployee, sendImportedEmployeesSuccess,
+  sendImportedEmployeesSuccess,
   setEmployeesActions,
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
@@ -349,7 +349,7 @@ export default function AccountsList() {
                     onSort={(field, asc) => sorting(employees, { field, asc })}
                     selectedItem={selected}
                     setSelectedItem={setSelected}
-                    verticalOffset='350px'
+                    verticalOffset='360px'
                     selectAllItems={selectAllHandler}
                     all={all}
                     setAll={setAll}

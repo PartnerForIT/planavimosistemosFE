@@ -8,7 +8,7 @@ import styles from './Button.module.scss';
  * Simple Button encapsulating all design variations
  */
 const Button = ({
-  children, cancel, yellow, green, inverse, white, loading,
+  children, cancel, yellow, green, inverse, white, loading, className,
   onClick, fillWidth, type = 'button', size = 'normal',
   disabled = false, danger, black, navyBlue, inline, transparent,
 }) => {
@@ -29,6 +29,7 @@ const Button = ({
       [styles.inline]: inline,
       [styles.transparent]: transparent,
       [styles.loading]: loading,
+      [className]: className,
     },
   );
 

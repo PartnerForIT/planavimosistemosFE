@@ -77,7 +77,6 @@ export default function Filter({
       </div>
 
       <div className={styles.filterBlock__inner}>
-
         <p>
           {checkedItems.length || (selectedItem.id ? '1' : '0')}
           {' '}

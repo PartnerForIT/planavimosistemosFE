@@ -3,19 +3,17 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../Button/Button';
 import ArrowRightOutlined from '../../../Icons/ArrowRightOutlined';
 
-const NextStepButton = ({ onClick }) => {
+const NextStepButton = ({ onClick, className }) => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <Button inverse size='big' onClick={onClick}>
-        <span>
-          {t('Next')}
-          {' '}
-          <ArrowRightOutlined aria-hidden />
-        </span>
-      </Button>
-    </>
+    <Button className={className} inverse size='big' onClick={onClick}>
+      <span>
+        {t('Next')}
+        {' '}
+        <ArrowRightOutlined aria-hidden />
+      </span>
+    </Button>
   );
 };
 

@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 20px 30px;
+  padding: 20px 20px 20px 30px;
 
   .leftBlock {
     display: flex;
@@ -27,7 +27,7 @@
     bottom: 0;
     right: 0;
     width: auto;
-    height: 2px;
+    height: 1px;
     background: $main-bg;
   }
 

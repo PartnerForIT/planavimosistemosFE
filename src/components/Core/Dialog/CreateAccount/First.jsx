@@ -126,14 +126,14 @@ const FirstStep = ({
                   <PlaceholderAvatar className={style.avatar} />
                 )
               }
-              <Button inverse fillWidth onClick={() => setUploadVisible(true)}>Upload</Button>
+              <Button inverse fillWidth size='medium' onClick={() => setUploadVisible(true)}>Upload</Button>
             </div>
             <DropzoneDialog
               open={uploadVisible}
               onSave={handleSave}
               acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
               showPreviews
-              maxFileSize={500000}
+              maxFileSize={5000000}
               onClose={() => setUploadVisible(false)}
               filesLimit={1}
             />
@@ -201,7 +201,7 @@ const FirstStep = ({
         </div>
       </div>
       <div className={style.buttons}>
-        <NextStepButton onClick={nextWithValidate} />
+        <NextStepButton className={style.nextButton} onClick={nextWithValidate} />
       </div>
     </>
   );

@@ -37,7 +37,7 @@ export default function EditModules({
   const [company, setCompany] = useState([]);
 
   useEffect(() => {
-    if (company[0] && company[0].status === 1) {
+    if (company[0]) {
       dispatch(getModules(checkedItem));
     }
   }, [checkedItem, company, dispatch]);
@@ -99,123 +99,108 @@ export default function EditModules({
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      {(company[0] && company[0].status === 1)
-      && (
-        <div className={style.addOrg}>
-          <div className={style.addOrg__inner2}>
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.logbook}
-              label={t('Logbook')}
-              name='logbook'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.events}
-              label={t('Events')}
-              name='events'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.reports}
-              label={t('Reports')}
-              name='reports'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.schedule}
-              label={t('Schedule')}
-              name='schedule'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.activity_log}
-              label={t('Activity Log')}
-              name='activity_log'
-            />
-            <div className={style.buttonBlock} />
-          </div>
-          <div className={style.addOrg__inner2}>
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.create_places}
-              label={t('Can create Places')}
-              name='create_places'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.create_jobs}
-              label={t('Can create Jobs')}
-              name='create_jobs'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.create_groups}
-              label={t('Can create Groups')}
-              name='create_groups'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.use_manager_mobile}
-              label={t('Can use Manager Mobile View')}
-              name='use_manager_mobile'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.use_approval_flow}
-              label={t('Can use Approval Flow in Logbook')}
-              name='use_approval_flow'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.cost_earning}
-              label={t('Can use Cost and Earnings')}
-              name='cost_earning'
-              disabled={costDisabled || modules.profitability}
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.profitability}
-              label={t('Can use Profitability feature')}
-              name='profitability'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.comments_photo}
-              label={t('Can use Comments and Take Photo')}
-              name='comments_photo'
-            />
-            <Checkbox
-              onChange={handleChange}
-              checked={modules.kiosk}
-              label={t('Can use Kiosk for identification')}
-              name='kiosk'
-            />
+      <div className={style.addOrg}>
+        <div className={style.addOrg__inner2}>
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.logbook}
+            label={t('Logbook')}
+            name='logbook'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.events}
+            label={t('Events')}
+            name='events'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.reports}
+            label={t('Reports')}
+            name='reports'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.schedule}
+            label={t('Schedule')}
+            name='schedule'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.activity_log}
+            label={t('Activity Log')}
+            name='activity_log'
+          />
+          <div className={style.buttonBlock} />
+        </div>
+        <div className={style.addOrg__inner2}>
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.create_places}
+            label={t('Can create Places')}
+            name='create_places'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.create_jobs}
+            label={t('Can create Jobs')}
+            name='create_jobs'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.create_groups}
+            label={t('Can create Groups')}
+            name='create_groups'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.use_manager_mobile}
+            label={t('Can use Manager Mobile View')}
+            name='use_manager_mobile'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.use_approval_flow}
+            label={t('Can use Approval Flow in Logbook')}
+            name='use_approval_flow'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.cost_earning}
+            label={t('Can use Cost and Earnings')}
+            name='cost_earning'
+            disabled={costDisabled || modules.profitability}
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.profitability}
+            label={t('Can use Profitability feature')}
+            name='profitability'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.comments_photo}
+            label={t('Can use Comments and Take Photo')}
+            name='comments_photo'
+          />
+          <Checkbox
+            onChange={handleChange}
+            checked={modules.kiosk}
+            label={t('Can use Kiosk for identification')}
+            name='kiosk'
+          />
 
-            <div className={style.buttonBlock}>
-              <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
-              <Button
-                size='big'
-                onClick={() => saveChangeModules()}
-              >
-                {t('Save')}
-              </Button>
-            </div>
+          <div className={style.buttonBlock}>
+            <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
+            <Button
+              size='big'
+              onClick={() => saveChangeModules()}
+            >
+              {t('Save')}
+            </Button>
           </div>
         </div>
-      )}
-      {(company[0] && company[0].status !== 1)
-      && (
-        <div className={style.addOrg}>
-          <div className={style.warningText}>
-            {t('In order to edit modules of a company, its status must be active. '
-              + 'Change the status of the company to active, then edit the availability of its modules')}
-            <div className={style.buttonWarningBlock}>
-              <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </Dialog>
   );
 }

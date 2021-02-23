@@ -10,11 +10,16 @@
     justify-content: flex-end;
     flex-wrap: wrap;
 
-    button {
-      margin: 5px 0 5px 5px;
+    p {
+      font-weight: bold;
+    }
 
-      &:nth-child(2) {
-        margin-right: 25px;
+    button {
+      margin: 5px 0 5px 8px;
+      width: 96px;
+
+      &:nth-of-type(1) {
+        margin-left: 14px;
       }
     }
   }

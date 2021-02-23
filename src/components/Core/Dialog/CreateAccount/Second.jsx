@@ -316,7 +316,7 @@ const SecondStep = ({
         >
           {t('Back')}
         </Button>
-        <NextStepButton onClick={nextWithValidate} />
+        <NextStepButton className={style.nextButton} onClick={nextWithValidate} />
       </div>
     </>
   );
