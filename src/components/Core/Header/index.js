@@ -115,21 +115,21 @@ export default function ButtonAppBar({ logOut }) {
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
-                <PalceIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Place')}</span>
-              </Link>
+              {/*<Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>*/}
+              {/*  <PalceIcon className={styles.icon} />*/}
+              {/*  <span className={styles.link__text}>{t('Place')}</span>*/}
+              {/*</Link>*/}
               <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
                 <LogbookIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Logbook')}</span>
               </Link>
-              <Link
-                to={`/analytics/${id}`}
-                className={pageName === 'analytics' ? styles.activelink : styles.link}
-              >
-                <AnalyticsIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Analytics')}</span>
-              </Link>
+              {/*<Link*/}
+              {/*  to={`/analytics/${id}`}*/}
+              {/*  className={pageName === 'analytics' ? styles.activelink : styles.link}*/}
+              {/*>*/}
+              {/*  <AnalyticsIcon className={styles.icon} />*/}
+              {/*  <span className={styles.link__text}>{t('Analytics')}</span>*/}
+              {/*</Link>*/}
               <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
                 <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
                 <span className={styles.link__text}>{t('Events')}</span>
@@ -138,10 +138,10 @@ export default function ButtonAppBar({ logOut }) {
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Reports')}</span>
               </Link>
-              <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
-                <VacationIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Vacation')}</span>
-              </Link>
+              {/*<Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>*/}
+              {/*  <VacationIcon className={styles.icon} />*/}
+              {/*  <span className={styles.link__text}>{t('Vacation')}</span>*/}
+              {/*</Link>*/}
             </div>
             )
           }
