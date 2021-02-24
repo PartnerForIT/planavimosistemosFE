@@ -130,7 +130,7 @@ const Row = ({
           <RowActions
             editRow={editRow}
             removeRow={removeRow}
-            visible={actionsVisible}
+            visible={actionsVisible || (selected && selected.id === row.id && !reports)}
             absolute
             id={row.id}
           />
@@ -195,13 +195,13 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                <span className={(statysIcon && width === 80) ? styles.opacityText : ''}>
+                <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                   <>
                     {row[column.field] !== 'tableActions' && row[column.field] }
                   </>
                 </span>
                 {/* icon statys */}
-                {(statysIcon && (width === 80 || 80 - 35))
+                {(statysIcon && column.field === 'status' && (width === 80 || 80 - 35))
                   && (
                   <span className={styles.IconStatus}>
                     {row[column.field] === 1 && <CheckStatus />}
