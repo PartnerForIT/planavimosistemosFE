@@ -71,7 +71,7 @@ const Users = React.memo(({
   }, [checkedItems, ready, roleEmployeesEdit]);
 
   const employeesWithoutGroups = useMemo(() => empList
-    .filter(({ employee }) => !!employee) // REMOVE
+    // .filter(({ employee }) => !!employee) // REMOVE
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i)), [empList, employToCheck]);
 
