@@ -17,6 +17,12 @@ const columns = [
   { label: '', field: 'actions', checked: true },
 ];
 
+const columnsWidthArray = {
+  name: 120,
+  id: 40,
+  actions: 80,
+};
+
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
@@ -29,6 +35,28 @@ export default function GroupsBlock({
   const [groupName, setGroupName] = useState('');
   const [removeVisible, setRemoveVisible] = useState(false);
   const [columnsArray, setColumnsArray] = useState(columns);
+
+  // const handleEditRow = (rowId) => {
+  //   setEditVisible(rowId);
+  // };
+  // const handleRemoveRow = (rowId) => {
+  //   setRemoveVisible(rowId);
+  // };
+  const handleEditRow = () => {
+    setEditVisible(true);
+  };
+  const handleRemoveRow = () => {
+    setRemoveVisible(true);
+  };
+
+  // const selectedRow = useMemo(() => {
+  //   if (groups.length) {
+  //     const groupId = removeVisible || editVisible;
+  //     return groups.find((group) => (group.id === groupId));
+  //   }
+  //
+  //   return null;
+  // }, [groups, removeVisible, editVisible]);
 
   return (
     <>
@@ -45,6 +73,7 @@ export default function GroupsBlock({
         <div className={style.table}>
           <DataTable
             data={groups}
+            // data={[...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups]}
             columns={columnsArray ?? []}
             onColumnsChange={setColumnsArray}
             sortable
@@ -52,6 +81,8 @@ export default function GroupsBlock({
             onSelect={setSelected}
             selectedItem={selected}
             onSort={(field, asc) => sort({ field, asc })}
+            columnsWidth={columnsWidthArray}
+            withoutFilterColumns
             // columnsWidth={columnsWidthArray}
             // lastPage={page.last_page}
             // activePage={page.current_page}
@@ -62,8 +93,8 @@ export default function GroupsBlock({
             setSelectedItem={setSelected}
             verticalOffset='360px'
             simpleTable
-            editRow={() => setEditVisible(true)}
-            removeRow={() => setRemoveVisible(true)}
+            editRow={handleEditRow}
+            removeRow={handleRemoveRow}
             statusIcon={false}
           />
         </div>
@@ -90,16 +121,20 @@ export default function GroupsBlock({
         }}
         title={t('Edit group name')}
         buttonTitle={t('Save & Close')}
-        groupName={groupName || selected.name}
+        // groupName={groupName || selectedRow?.name}
         setGroupName={setGroupName}
         handleOk={edit}
-        oldGroupName={selected.name}
+        // oldGroupName={selectedRow?.name}
+        groupName={groupName || selected?.name}
+        oldGroupName={selected?.name}
       />
       <RemoveGroup
         title={t('Delete Group?')}
         open={removeVisible}
         handleClose={() => setRemoveVisible(false)}
         buttonTitle='Delete'
+        // name={selectedRow?.name}
+        // remove={() => removeGroup(selectedRow?.id)}
         name={selected.name}
         remove={() => removeGroup(selected.id)}
       />
