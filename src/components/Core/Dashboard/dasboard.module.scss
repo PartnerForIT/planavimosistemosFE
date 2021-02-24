@@ -38,7 +38,8 @@
     width: 100%;
   }
 
-  .link {
+  .link,
+  %link {
     display: inline-block;
     width: calc(100% - 20px);
     padding: 7px 11px;
@@ -54,8 +55,8 @@
     }
   }
 
-  .activelink {
-    @extend .link;
+  .activeLink {
+    @extend %link;
 
     background: #e7f5ffe5;
     color: $blue-2;
@@ -64,7 +65,7 @@
 }
 
 .activeOnelink {
-  @extend .Onelink;
+  @extend %Onelink;
 
   color: $blue-2;
 
@@ -73,7 +74,8 @@
   }
 }
 
-.Onelink {
+.Onelink,
+%Onelink {
   display: flex;
   align-items: center;
   font-size: 16px;

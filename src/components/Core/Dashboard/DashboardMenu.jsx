@@ -65,7 +65,18 @@ export default function DashboardMenu() {
     <div className={styles.dashboardMenu}>
       <div className={styles.dashboardScroll}>
         {/* General */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'general'}>
+        <Accordion
+          className={classes.accordion}
+          defaultExpanded={section === 'general'}
+          classes={{
+            root: {
+
+            },
+            expanded: {
+              margin: 0,
+            },
+          }}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
             className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
@@ -80,7 +91,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/company/${params.id}`}
-                  className={innerSection === 'company' ? styles.activelink : styles.link}
+                  className={innerSection === 'company' ? styles.activeLink : styles.link}
                 >
                   {t('Company')}
                 </Link>
@@ -88,7 +99,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/work-time/${params.id}`}
-                  className={innerSection === 'work-time' ? styles.activelink : styles.link}
+                  className={innerSection === 'work-time' ? styles.activeLink : styles.link}
                 >
                   {t('Work Time')}
                 </Link>
@@ -96,7 +107,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/general/security/${params.id}`}
-                  className={innerSection === 'security' ? styles.activelink : styles.link}
+                  className={innerSection === 'security' ? styles.activeLink : styles.link}
                 >
                   {t('Security')}
                 </Link>
@@ -121,7 +132,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/accounts-list/${params.id}`}
-                  className={innerSection === 'accounts-list' ? styles.activelink : styles.link}
+                  className={innerSection === 'accounts-list' ? styles.activeLink : styles.link}
                 >
                   {t('Accounts list')}
                 </Link>
@@ -129,7 +140,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/roles/${params.id}`}
-                  className={innerSection === 'roles' ? styles.activelink : styles.link}
+                  className={innerSection === 'roles' ? styles.activeLink : styles.link}
                 >
                   {t('Roles')}
                 </Link>
@@ -137,7 +148,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/accounts/grouping/${params.id}`}
-                  className={innerSection === 'grouping' ? styles.activelink : styles.link}
+                  className={innerSection === 'grouping' ? styles.activeLink : styles.link}
                 >
                   {t('Grouping')}
                 </Link>
@@ -161,7 +172,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/logbook/journal/${params.id}`}
-                  className={innerSection === 'journal' ? styles.activelink : styles.link}
+                  className={innerSection === 'journal' ? styles.activeLink : styles.link}
                 >
                   {t('Journal')}
                 </Link>
@@ -169,7 +180,7 @@ export default function DashboardMenu() {
               <li>
                 <Link
                   to={`/settings/logbook/overtime/${params.id}`}
-                  className={innerSection === 'overtime' ? styles.activelink : styles.link}
+                  className={innerSection === 'overtime' ? styles.activeLink : styles.link}
                 >
                   {t('Overtime')}
                 </Link>
