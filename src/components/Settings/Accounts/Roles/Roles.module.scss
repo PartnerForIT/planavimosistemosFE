@@ -8,7 +8,7 @@ $arrow-size: 21px;
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 14px;
   grid-auto-flow: dense;
 }
@@ -30,7 +30,16 @@ $arrow-size: 21px;
     &_title {
       margin-bottom: 7px;
 
-      & span {
+      & > span {
+        font-family: "Helvetica Neue Bold", sans-serif;
+        color: $gray;
+        margin-right: 15px;
+        font-size: 14px;
+        display: inline-block;
+      }
+
+      & > span > span {
+        margin-left: 15px;
         display: inline-block;
       }
     }
@@ -53,13 +62,15 @@ $arrow-size: 21px;
   line-height: 1;
   cursor: pointer;
   font-family: inherit;
+  outline: none;
 
   @include focusVisible();
 
   &_title {
     font-weight: bold;
     padding: 0 calc(1em + 5px) 0 0;
-    margin: 0;
+    margin: 0 0 4px 0;
+    font-size: 16px;
     word-break: break-word;
   }
 
@@ -144,6 +155,7 @@ $arrow-size: 21px;
 
   &.active {
     background-color: $blue-2;
+    border-color: $blue-4;
     color: white;
 
     & .card_icon,
@@ -217,4 +229,34 @@ $arrow-size: 21px;
   background-color: rgba(0, 0, 0, 0.05);
   z-index: 9;
   border-radius: inherit;
+}
+
+//.scrollbarTrackX {
+//  background-color: transparent !important;
+//  border-radius: 10px !important;
+//  height: 7px !important;
+//  bottom: 7px !important;
+//  left: 15px !important;
+//  width: calc(100% - 35px) !important;
+//  z-index: 1 !important;
+//
+//  div {
+//    background-color: #d5dde1 !important;
+//    border-radius: 10px !important;
+//  }
+//}
+
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 4px !important;
+  height: calc(100% - 21px) !important;
+  top: 11px !important;
+  right: -9px !important;
+  z-index: 2;
+
+  div {
+    background-color: #b9b9b9 !important;
+    border-radius: 12px !important;
+  }
 }

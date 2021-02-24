@@ -8,7 +8,7 @@ import RemoveRoleIcon from '../../../../Icons/RemoveRoleIcon';
 import RemoveRole from '../../../../Core/Dialog/RemoveRole';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
-import EditIcon from '../../../../Icons/EditIcon';
+// import EditIcon from '../../../../Icons/EditIcon';
 import { onKeyDown } from '../../../../Helpers';
 
 function RolesBlock({
@@ -19,7 +19,7 @@ function RolesBlock({
   remove = () => ({}),
   updateRole = () => ({}),
   loading = false,
-  setEditVisible = () => ({}),
+  // setEditVisible = () => ({}),
   availableDetails = [],
   employees = [],
   groups = [],
@@ -93,28 +93,40 @@ function RolesBlock({
                       <p className={classes.card_title}>{role.name}</p>
                       <small>{`${role.account_user_roles?.length} ${t('users have this role')}`}</small>
                       {
-                        (!!role.default || activeRole.id === role.id)
-                        && (
-                          <div className={classes.card_check}>
-                            <StyledCheckbox
-                              id={role.id}
-                              label={t('Make default')}
-                              checked={!!role.default}
-                              onChange={(id, checked) => updateRole(id, { checked })}
-                            />
-                          </div>
-                        )
+                        // (!!role.default || activeRole.id === role.id)
+                        // && (
+                        //   <div className={classes.card_check}>
+                        //     <StyledCheckbox
+                        //       id={role.id}
+                        //       label={t('Make default')}
+                        //       checked={!!role.default}
+                        //       onChange={(id, checked) => updateRole(id, { checked })}
+                        //     />
+                        //   </div>
+                        // )
                       }
+                      <div className={classes.card_check}>
+                        <StyledCheckbox
+                          id={role.id}
+                          label={t('Make default')}
+                          checked={!!role.default}
+                          onChange={(id, checked) => updateRole(id, { checked })}
+                        />
+                      </div>
 
                       <div className={classes.card_actions}>
                         {/* edit button */}
-                        <button
-                          className={classes.card_edit}
-                          aria-label='edit role button'
-                          onClick={() => setEditVisible(true)}
-                        >
-                          <EditIcon aria-hidden />
-                        </button>
+                        {
+                          /*
+                            <button
+                              className={classes.card_edit}
+                              aria-label='edit role button'
+                              onClick={() => setEditVisible(true)}
+                            >
+                              <EditIcon aria-hidden />
+                            </button>
+                           */
+                        }
                         {/* delete button */}
                         {
                           !!role.can_delete

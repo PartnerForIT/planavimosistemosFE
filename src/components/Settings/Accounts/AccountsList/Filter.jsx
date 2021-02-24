@@ -47,30 +47,28 @@ export default function Filter({
 
   return (
     <div className={styles.filterBlock}>
-      <div className={styles.filterBlock__leftContainer}>
-        <FormControl className={classes.margin}>
-          <InputSelect
-            id='users'
-            name='users'
-            onChange={handleChangeUser}
-            value={users}
-            options={[
-              {
-                value: 3,
-                label: `All Users ${stats.accounts ?? ''}`,
-              },
-              {
-                value: 1,
-                label: `Active ${stats.active ?? ''}`,
-              },
-              {
-                value: 0,
-                label: `Suspended ${stats.suspended ?? ''}`,
-              },
-            ]}
-          />
-        </FormControl>
-      </div>
+      <FormControl className={styles.filterBlock__leftContainer}>
+        <InputSelect
+          id='users'
+          name='users'
+          onChange={handleChangeUser}
+          value={users}
+          options={[
+            {
+              value: 3,
+              label: `All Users ${stats.accounts ?? ''}`,
+            },
+            {
+              value: 1,
+              label: `Active ${stats.active ?? ''}`,
+            },
+            {
+              value: 0,
+              label: `Suspended ${stats.suspended ?? ''}`,
+            },
+          ]}
+        />
+      </FormControl>
 
       <div className={styles.filterBlock__inner}>
         <p>

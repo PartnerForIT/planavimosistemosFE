@@ -52,7 +52,7 @@ function Content({
                         <span
                           {...restProps}
                           ref={elementRef}
-                          className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                          className={classNames(classes.scrollbarTrackY, { trackY: true })}
                         />
                       );
                     },
