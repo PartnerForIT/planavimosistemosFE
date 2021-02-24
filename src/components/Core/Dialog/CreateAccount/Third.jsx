@@ -38,7 +38,7 @@ function Third({
 }) {
   const { t } = useTranslation();
 
-  const [simpleInvitation, setSimpleInvitation] = useState(security.invitation ?? true);
+  const [simpleInvitation, setSimpleInvitation] = useState(!!security.invitation);
   const {
     min_password_length, numbers, special_chars, uppercase,
   } = security;
@@ -141,7 +141,7 @@ function Third({
       removeError({ name: 'email' });
     }
 
-    if (!simpleInvitation) {
+    if (simpleInvitation) {
       requireError({
         name: 'password',
         message: t('Password is required'),
@@ -171,7 +171,7 @@ function Third({
                 value='invitation'
                 control={(
                   <BlueRadio
-                    checked={!!simpleInvitation}
+                    checked={simpleInvitation}
                     onChange={checkboxHandler}
                     value='simple'
                     name='invitation'
@@ -198,7 +198,7 @@ function Third({
             </div>
           </div>
           {
-            simpleInvitation
+            !simpleInvitation
               ? <><Email user={user} handleInput={handleInput} errors={errors} /></>
               : (
                 <>
