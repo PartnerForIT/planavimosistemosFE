@@ -56,11 +56,13 @@ const useStyles = makeStyles(() => ({
   },
   rounded: { margin: 0 },
   expandIcon: {
-    transform: 'rotate(180deg)',
+    transform: 'rotate(270deg)',
+    transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+
   },
   summaryExpanded: {
     '&:last-child': {
-      transform: 'rotate(270deg)',
+      transform: 'rotate(360deg)',
     },
   },
 }));
