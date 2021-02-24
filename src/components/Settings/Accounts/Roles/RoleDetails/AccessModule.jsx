@@ -11,6 +11,7 @@ const AccessModule = React.memo(({
   onChangeHandler,
   permissionsIds,
   setDisableReady,
+  readOnly,
 }) => {
   const { moduleAccess } = roleAccess;
   return (
@@ -22,6 +23,7 @@ const AccessModule = React.memo(({
             name={key}
             active={moduleAccess[key].enabled ? moduleAccess[key].checked ?? true : false}
             enabled={moduleAccess[key].enabled}
+            readOnly={readOnly}
             details={moduleAccess[key].options}
             categoriesNames={categoriesNames}
             roleAccess={roleAccess}

@@ -340,27 +340,25 @@ function Roles() {
           {
             isLoading ? <Progress />
               : (
-                <>
-                  <RolesBlock
-                    roles={roles}
-                    activeRole={activeRole}
-                    setActiveRole={setActiveRole}
-                    createNewRole={() => setNewRoleOpen(true)}
-                    remove={removeRole}
-                    updateRole={patchRole}
-                    loading={loading}
-                    setEditVisible={setEditVisible}
-                    availableDetails={availableDetails}
-                    employees={employees}
-                    groups={groups}
-                    roleEmployeesEdit={roleEmployeesEdit}
-                    rolesPermissionsEdit={rolesPermissionsEdit}
-                    permissions={permissions}
-                    permissionsIds={permissionsIds}
-                    removeRolesPermissions={removeRolesPermissions}
-                    defaultRoleAccess={defaultRoleAccess}
-                  />
-                </>
+                <RolesBlock
+                  roles={roles}
+                  activeRole={activeRole}
+                  setActiveRole={setActiveRole}
+                  createNewRole={() => setNewRoleOpen(true)}
+                  remove={removeRole}
+                  updateRole={patchRole}
+                  loading={loading}
+                  setEditVisible={setEditVisible}
+                  availableDetails={availableDetails}
+                  employees={employees}
+                  groups={groups}
+                  roleEmployeesEdit={roleEmployeesEdit}
+                  rolesPermissionsEdit={rolesPermissionsEdit}
+                  permissions={permissions}
+                  permissionsIds={permissionsIds}
+                  removeRolesPermissions={removeRolesPermissions}
+                  defaultRoleAccess={defaultRoleAccess}
+                />
               )
           }
           <Snackbar

@@ -14,6 +14,7 @@ const OptionsCheckBoxGroup = ({
   activePermissions,
   setDisableReady,
   enabled = false,
+  readOnly = false,
 }) => {
   const { t } = useTranslation();
   return (
@@ -39,7 +40,7 @@ const OptionsCheckBoxGroup = ({
         }}
         id={name}
         checked={active}
-        disabled={!enabled}
+        disabled={!enabled || readOnly}
       />
       <ul className={classes.checklist}>
         <li>
@@ -54,7 +55,7 @@ const OptionsCheckBoxGroup = ({
                     label={t(details[x])}
                     style={{ lineHeight: 0.5 }}
                     onChange={onChangeHandler}
-                    disabled={!active}
+                    disabled={!active || readOnly}
                     checked={activePermissions.some((i) => i === id)}
                   />
                 );

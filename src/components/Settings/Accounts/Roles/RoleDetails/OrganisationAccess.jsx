@@ -8,6 +8,7 @@ const OrganisationAccess = React.memo(({
   activePermissions = [],
   permissionsIds,
   onChangeHandler,
+  readOnly,
 }) => {
   const { t } = useTranslation();
   const { organisation } = roleAccess;
@@ -27,7 +28,7 @@ const OrganisationAccess = React.memo(({
                       label={t(organisation[key].options[name])}
                       id={id}
                       onChange={onChangeHandler}
-                      disabled={!organisation[key].enabled}
+                      disabled={!organisation[key].enabled || readOnly}
                       checked={activePermissions.some((it) => it === id)}
                     />
                   );

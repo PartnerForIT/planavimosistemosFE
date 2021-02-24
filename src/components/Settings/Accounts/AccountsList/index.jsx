@@ -136,7 +136,9 @@ export default function AccountsList() {
       setEditVisible(false);
     }
   };
-  const createAccount = (userData) => dispatch(createEmployee(id, userData));
+  const createAccount = (userData) => {
+    dispatch(createEmployee(id, userData));
+  };
 
   const userStats = useMemo(() => {
     if (stats) {

@@ -24,6 +24,7 @@ function RoleDetails({
   loading,
   availableDetails,
   roleAccess,
+  roleAdmin,
   employees,
   groups,
   setRoleAccess,
@@ -88,6 +89,7 @@ function RoleDetails({
         activeRole={activeRole}
         availableDetails={availableDetails}
         roleAccess={roleAccess}
+        readOnly={roleAdmin}
         categoriesNames={categoriesNames}
         setRoleAccess={setRoleAccess}
         rolesPermissionsEdit={rolesPermissionsEdit}
@@ -101,6 +103,7 @@ function RoleDetails({
         activeRole={activeRole}
         availableDetails={availableDetails}
         roleAccess={roleAccess}
+        readOnly={roleAdmin}
         categoriesNames={categoriesNames}
         setRoleAccess={setRoleAccess}
         rolesPermissionsEdit={rolesPermissionsEdit}

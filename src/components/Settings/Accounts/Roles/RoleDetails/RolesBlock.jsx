@@ -163,6 +163,7 @@ function RolesBlock({
                           setDisableReady={setDisableReady}
                           disable={disable}
                           setDisable={setDisable}
+                          roleAdmin={role.name === 'Administrator'}
                         />
                       )
                     }
