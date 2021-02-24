@@ -38,7 +38,7 @@ function Third({
 }) {
   const { t } = useTranslation();
 
-  const [simpleInvitation, setSimpleInvitation] = useState(!!security.invitation);
+  const [simpleInvitation, setSimpleInvitation] = useState(!security.invitation);
   const {
     min_password_length, numbers, special_chars, uppercase,
   } = security;
@@ -248,7 +248,7 @@ function Third({
           size='big'
           green
           inverse
-          disabled={!simpleInvitation ? !(user.password && _.isEmpty(errors.password)) : false}
+          disabled={simpleInvitation ? !(user.password && _.isEmpty(errors.password)) : false}
         >
           {t('Create and Invite')}
         </Button>
