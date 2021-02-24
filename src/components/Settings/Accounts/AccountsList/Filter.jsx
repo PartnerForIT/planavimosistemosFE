@@ -1,5 +1,4 @@
 import React from 'react';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,7 +7,7 @@ import {
 
 import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
-import BootstrapInput from '../../../shared/SelectBootstrapInput';
+import InputSelect from '../../../Core/InputSelect';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -17,6 +16,8 @@ const useStyles = makeStyles(() => ({
   },
   margin: {
     margin: '5px 5px 5px 0',
+    flex: 1,
+    display: 'flex',
   },
   label: {
     color: '#808F94',
@@ -46,33 +47,28 @@ export default function Filter({
 
   return (
     <div className={styles.filterBlock}>
-      <div>
+      <div className={styles.filterBlock__leftContainer}>
         <FormControl className={classes.margin}>
-          <NativeSelect
+          <InputSelect
             id='users'
-            value={users}
+            name='users'
             onChange={handleChangeUser}
-            inputProps={{
-              name: 'users',
-            }}
-            input={<BootstrapInput />}
-          >
-            <option value={3}>
-              All Users
-              {' '}
-              {stats.accounts ?? ''}
-            </option>
-            <option value={1}>
-              Active
-              {' '}
-              {stats.active}
-            </option>
-            <option value={0}>
-              Suspended
-              {' '}
-              {stats.suspended ?? '' }
-            </option>
-          </NativeSelect>
+            value={users}
+            options={[
+              {
+                value: 3,
+                label: `All Users ${stats.accounts ?? ''}`,
+              },
+              {
+                value: 1,
+                label: `Active ${stats.active ?? ''}`,
+              },
+              {
+                value: 0,
+                label: `Suspended ${stats.suspended ?? ''}`,
+              },
+            ]}
+          />
         </FormControl>
       </div>
 

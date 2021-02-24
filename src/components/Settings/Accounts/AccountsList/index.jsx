@@ -66,16 +66,15 @@ const LabelWithCurrencySign = ({ text }) => (
 );
 
 const columns = [
-
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'name', checked: true },
-  { label: 'Role', field: 'role', checked: true },
   { label: 'Email', field: 'email', checked: true },
+  { label: 'Role', field: 'role', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
   { label: 'Group', field: 'groups', checked: true },
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
-  { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
+  // { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
   { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
   { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
   { label: 'Created on', field: 'created_at', checked: true },
@@ -84,13 +83,13 @@ const columns = [
 
 const columnsWidthArray = {
   status: 120,
-  name: 200,
+  name: 170,
   created_at: 220,
   updated_at: 220,
   place: 150,
   skills: 200,
   role: 150,
-  email: 250,
+  email: 200,
   groups: 150,
   subgroup: 150,
 };
