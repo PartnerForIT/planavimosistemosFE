@@ -26,7 +26,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
+  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
 }) {
@@ -133,6 +133,7 @@ export default function DataTable({
 
   const scrollableContentClasses = classNames(
     styles.scrollableContent,
+    { [styles.scrollableContentWithoutRightPanel]: withoutFilterColumns },
     { [styles.scrollableContentReports]: reports },
   );
 
@@ -178,7 +179,7 @@ export default function DataTable({
               <span
                 {...restProps}
                 ref={elementRef}
-                className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                className={classNames(styles.scrollableContent__scrollbarTrackX, { trackX: true })}
               />
             );
           },
@@ -190,7 +191,7 @@ export default function DataTable({
               <span
                 {...restProps}
                 ref={elementRef}
-                className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                className={classNames(styles.scrollableContent__scrollbarTrackY, { trackY: true })}
               />
             );
           },
@@ -277,6 +278,7 @@ export default function DataTable({
           {
             tableData.map((row, idx) => (
               <Row
+                withoutRightPanel={withoutFilterColumns}
                 index={idx}
                 key={idx.toString()}
                 row={row}
@@ -356,30 +358,34 @@ export default function DataTable({
         </div>
         )}
 
-      <div className={classNames(simpleTable ? styles.scrollingSimplePanel : styles.scrollingPanel)}>
-        {
-          !reports && tableData.length > 0 && (
-            <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
-              <aside
-                className={classNames(styles.columnName, styles.settingsCell)}
-                role='columnheader'
-              >
-                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
-                  <CogwheelIcon />
-                </div>
-                {
-                  showSettingsPopup && (
-                    <div className={styles.settingsPopup}>
-                      <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+      {
+        !withoutFilterColumns && (
+          <div className={classNames(simpleTable ? styles.scrollingSimplePanel : styles.scrollingPanel)}>
+            {
+              !reports && tableData.length > 0 && (
+                <ClickAwayListener onClickAway={() => setShowSettingsPopup(false)}>
+                  <aside
+                    className={classNames(styles.columnName, styles.settingsCell)}
+                    role='columnheader'
+                  >
+                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                    <div onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
+                      <CogwheelIcon />
                     </div>
-                  )
-                }
-              </aside>
-            </ClickAwayListener>
-          )
-        }
-      </div>
+                    {
+                      showSettingsPopup && (
+                        <div className={styles.settingsPopup}>
+                          <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+                        </div>
+                      )
+                    }
+                  </aside>
+                </ClickAwayListener>
+              )
+            }
+          </div>
+        )
+      }
       <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })}>
         <CircularProgress classes={{ colorPrimary: classes.colorPrimary }} />
       </div>

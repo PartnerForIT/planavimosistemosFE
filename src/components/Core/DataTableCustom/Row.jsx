@@ -17,7 +17,7 @@ const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  tableRef = null,
+  withoutRightPanel = false, tableRef = null,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -102,9 +102,12 @@ const Row = ({
         const { left: rowLeft } = rowRef.current.getBoundingClientRect();
         const { right: tableRight } = tableRef.current.getBoundingClientRect();
         // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
+        console.log('rowLeft', rowLeft);
+        console.log('tableRight', tableRight);
+        console.log(' === ');
         document.documentElement.style.setProperty('--hover-actions-left',
           `${windowWidth - (rowLeft + windowWidth - tableRight)
-          /* actions width */ - 120 /* scroll width */ - 32}px`);
+          /* actions width */ - (withoutRightPanel ? 90 : 120) /* scroll width */ - (withoutRightPanel ? 10 : 32)}px`);
       }
     }
   }, [index, tableRef, windowWidth]);
@@ -240,16 +243,23 @@ export default Row;
 
 const RowActions = ({
   id, editRow, removeRow, absolute = false, visible = true,
-}) => (
-  <div
-    className={classNames([styles.ActionsTable,
-      visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
-  >
-    <button onClick={() => editRow(id)}>
-      <EditIconFixedFill className={styles.iconButtonRow} />
-    </button>
-    <button onClick={() => removeRow(id)}>
-      <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
-    </button>
-  </div>
-);
+}) => {
+  const actionsClasses = classNames(
+    styles.ActionsTable,
+    (visible ? styles.actionsVisible : styles.actionsHidden),
+    {
+      [styles.absoluteActions]: absolute,
+    },
+  );
+
+  return (
+    <div className={actionsClasses}>
+      <button onClick={() => editRow(id)}>
+        <EditIconFixedFill className={styles.iconButtonRow} />
+      </button>
+      <button onClick={() => removeRow(id)}>
+        <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
+      </button>
+    </div>
+  );
+};
