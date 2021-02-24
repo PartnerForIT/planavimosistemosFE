@@ -51,7 +51,18 @@ const useStyles = makeStyles(() => ({
   icon: {
     fill: '#69767A',
   },
-
+  expanded: {
+    marginTop: '0 !important',
+  },
+  rounded: { margin: 0 },
+  expandIcon: {
+    transform: 'rotate(180deg)',
+  },
+  summaryExpanded: {
+    '&:last-child': {
+      transform: 'rotate(270deg)',
+    },
+  },
 }));
 
 export default function DashboardMenu() {
@@ -69,17 +80,16 @@ export default function DashboardMenu() {
           className={classes.accordion}
           defaultExpanded={section === 'general'}
           classes={{
-            root: {
-
-            },
-            expanded: {
-              margin: 0,
-            },
+            expanded: classes.expanded,
           }}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
             className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
+            classes={{
+              expandIcon: classes.expandIcon,
+              expanded: classes.summaryExpanded,
+            }}
             aria-controls='panel1-content'
             id='panel1-header'
           >
@@ -117,10 +127,20 @@ export default function DashboardMenu() {
         </Accordion>
 
         {/* Accounts */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'accounts'}>
+        <Accordion
+          className={classes.accordion}
+          defaultExpanded={section === 'accounts'}
+          classes={{
+            expanded: classes.expanded,
+          }}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
             className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
+            classes={{
+              expandIcon: classes.expandIcon,
+              expanded: classes.summaryExpanded,
+            }}
             aria-controls='panel2-content'
             id='panel2-header'
           >
@@ -157,10 +177,20 @@ export default function DashboardMenu() {
           </AccordionDetails>
         </Accordion>
         {/* Logbook */}
-        <Accordion className={classes.accordion} defaultExpanded={section === 'logbook'}>
+        <Accordion
+          className={classes.accordion}
+          defaultExpanded={section === 'logbook'}
+          classes={{
+            expanded: classes.expanded,
+          }}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
             className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
+            classes={{
+              expandIcon: classes.expandIcon,
+              expanded: classes.summaryExpanded,
+            }}
             aria-controls='panel3-content'
             id='panel3-header'
           >
