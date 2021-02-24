@@ -167,34 +167,44 @@ function Third({
           <div className={style.formItem}>
             <div className={style.radio}>
               <Label text={t('User invitation mode')} htmlFor='invitation' />
-              <FormControlLabel
-                value='invitation'
-                control={(
-                  <BlueRadio
-                    checked={simpleInvitation}
-                    onChange={checkboxHandler}
-                    value='simple'
-                    name='invitation'
+              {
+                simpleInvitation
+                && (
+                  <FormControlLabel
+                    value='invitation'
+                    control={(
+                      <BlueRadio
+                        checked={simpleInvitation}
+                        onChange={checkboxHandler}
+                        value='simple'
+                        name='invitation'
+                        label={t('Simple')}
+                        inputProps={{ 'aria-label': t('Simple') }}
+                      />
+                    )}
                     label={t('Simple')}
-                    inputProps={{ 'aria-label': t('Simple') }}
                   />
-                )}
-                label={t('Simple')}
-              />
-              <FormControlLabel
-                value='invitation'
-                control={(
-                  <BlueRadio
-                    checked={!simpleInvitation}
-                    onChange={checkboxHandler}
-                    value='email'
-                    name='invitation'
+                )
+              }
+              {
+                !simpleInvitation
+                && (
+                  <FormControlLabel
+                    value='invitation'
+                    control={(
+                      <BlueRadio
+                        checked={!simpleInvitation}
+                        onChange={checkboxHandler}
+                        value='email'
+                        name='invitation'
+                        label={t('Invitation link via e-mail')}
+                        inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
+                      />
+                    )}
                     label={t('Invitation link via e-mail')}
-                    inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
                   />
-                )}
-                label={t('Invitation link via e-mail')}
-              />
+                )
+              }
             </div>
           </div>
           {
