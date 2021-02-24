@@ -38,7 +38,7 @@ function Third({
 }) {
   const { t } = useTranslation();
 
-  const [simpleInvitation, setSimpleInvitation] = useState(security.invitation ?? true);
+  const [simpleInvitation, setSimpleInvitation] = useState(!!security.invitation);
   const {
     min_password_length, numbers, special_chars, uppercase,
   } = security;
@@ -141,7 +141,7 @@ function Third({
       removeError({ name: 'email' });
     }
 
-    if (!simpleInvitation) {
+    if (simpleInvitation) {
       requireError({
         name: 'password',
         message: t('Password is required'),
@@ -167,38 +167,48 @@ function Third({
           <div className={style.formItem}>
             <div className={style.radio}>
               <Label text={t('User invitation mode')} htmlFor='invitation' />
-              <FormControlLabel
-                value='invitation'
-                control={(
-                  <BlueRadio
-                    checked={!!simpleInvitation}
-                    onChange={checkboxHandler}
-                    value='simple'
-                    name='invitation'
+              {
+                simpleInvitation
+                && (
+                  <FormControlLabel
+                    value='invitation'
+                    control={(
+                      <BlueRadio
+                        checked={simpleInvitation}
+                        onChange={checkboxHandler}
+                        value='simple'
+                        name='invitation'
+                        label={t('Simple')}
+                        inputProps={{ 'aria-label': t('Simple') }}
+                      />
+                    )}
                     label={t('Simple')}
-                    inputProps={{ 'aria-label': t('Simple') }}
                   />
-                )}
-                label={t('Simple')}
-              />
-              <FormControlLabel
-                value='invitation'
-                control={(
-                  <BlueRadio
-                    checked={!simpleInvitation}
-                    onChange={checkboxHandler}
-                    value='email'
-                    name='invitation'
+                )
+              }
+              {
+                !simpleInvitation
+                && (
+                  <FormControlLabel
+                    value='invitation'
+                    control={(
+                      <BlueRadio
+                        checked={!simpleInvitation}
+                        onChange={checkboxHandler}
+                        value='email'
+                        name='invitation'
+                        label={t('Invitation link via e-mail')}
+                        inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
+                      />
+                    )}
                     label={t('Invitation link via e-mail')}
-                    inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
                   />
-                )}
-                label={t('Invitation link via e-mail')}
-              />
+                )
+              }
             </div>
           </div>
           {
-            simpleInvitation
+            !simpleInvitation
               ? <><Email user={user} handleInput={handleInput} errors={errors} /></>
               : (
                 <>
