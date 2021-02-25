@@ -1,4 +1,5 @@
 import { getMinutes, getHours, getSeconds } from 'date-fns';
+import Resizer from 'react-image-file-resizer';
 
 // export const dateToUCT = (date) => (new Date(`${date}Z`.replace(' ', 'T')));
 export const dateToUCT = (date) => (new Date(date.replace(/-/g, '/').replace('T', ' ').replace(/\..*|\+.*/, '')));
@@ -85,6 +86,19 @@ export const convertBase64 = (file) => new Promise((resolve, reject) => {
   fileReader.onerror = (error) => {
     reject(error);
   };
+});
+
+export const imageResize = (file) => new Promise((resolve) => {
+  Resizer.imageFileResizer(
+    file,
+    120,
+    120,
+    'JPEG',
+    100,
+    0,
+    resolve,
+    'base64',
+  );
 });
 
 export const onKeyDown = (e, func) => {

@@ -3,10 +3,11 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 import classnames from 'classnames';
+
 import style from './CreateAccount.module.scss';
 import PlaceholderAvatar from '../../../Icons/PlaceholderAvatar';
 import Button from '../../Button/Button';
-import { convertBase64 } from '../../../Helpers';
+import { imageResize } from '../../../Helpers';
 import Label from '../../InputLabel';
 import Input from '../../Input/Input';
 import NextStepButton from './NextStepButton';
@@ -21,10 +22,9 @@ const FirstStep = ({
   const [file, setFile] = useState(null);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [ready, setReady] = useState(false);
-  // eslint-disable-next-line no-shadow
-  const handleSave = async (file) => {
-    const base64 = await convertBase64(file[0]);
-    setFile(base64);
+  const handleSave = async (images) => {
+    const image = await imageResize(images[0]);
+    setFile(image);
     setUploadVisible(false);
   };
 
@@ -133,7 +133,7 @@ const FirstStep = ({
               onSave={handleSave}
               acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
               showPreviews
-              maxFileSize={5000000}
+              maxFileSize={9000000}
               onClose={() => setUploadVisible(false)}
               filesLimit={1}
             />
