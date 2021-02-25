@@ -79,6 +79,13 @@ export default function DashboardMenu() {
   const { pathname } = useLocation();
   const section = pathname.split('/')[2];
   const innerSection = pathname.split('/')[3];
+
+  const IconWrapper = ({ children }) => (
+    <div className={styles.iconWrapper}>
+      {children}
+    </div>
+  );
+
   return (
     <div className={styles.dashboardMenu}>
       <div className={styles.dashboardScroll}>
@@ -100,7 +107,9 @@ export default function DashboardMenu() {
             aria-controls='panel1-content'
             id='panel1-header'
           >
-            <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
+            <IconWrapper>
+              <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
+            </IconWrapper>
             <span className={styles.menuText}>{t('General')}</span>
           </AccordionSummary>
           <AccordionDetails className={classes.accordionContent}>
@@ -151,7 +160,10 @@ export default function DashboardMenu() {
             aria-controls='panel2-content'
             id='panel2-header'
           >
-            <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
+            <IconWrapper>
+              <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
+            </IconWrapper>
+
             <span className={styles.menuText}>{t('Accounts')}</span>
           </AccordionSummary>
           <AccordionDetails className={classes.accordionContent}>
@@ -201,7 +213,9 @@ export default function DashboardMenu() {
             aria-controls='panel3-content'
             id='panel3-header'
           >
-            <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
+            <IconWrapper>
+              <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
+            </IconWrapper>
             <span className={styles.menuText}>{t('Logbook')}</span>
           </AccordionSummary>
           <AccordionDetails className={classes.accordionContent}>
@@ -229,28 +243,36 @@ export default function DashboardMenu() {
           to={`/settings/events/${params.id}`}
           className={section === 'events' ? styles.activeOnelink : styles.Onelink}
         >
-          <EventsIcon />
+          <IconWrapper>
+            <EventsIcon />
+          </IconWrapper>
           <span className={styles.textLink}>{t('Events')}</span>
         </Link>
         <Link
           to={`/settings/categories/${params.id}`}
           className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
         >
-          <CategoriesIcon />
+          <IconWrapper>
+            <CategoriesIcon />
+          </IconWrapper>
           <span className={styles.textLink}>{t('Categories')}</span>
         </Link>
         <Link
           to={`/settings/activity-log/${params.id}`}
           className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}
         >
-          <ActivityLogIcon />
+          <IconWrapper>
+            <ActivityLogIcon />
+          </IconWrapper>
           <span className={styles.textLink}>{t('Activity Log')}</span>
         </Link>
         <Link
           to={`/settings/delete/${params.id}`}
           className={section === 'delete' ? styles.activeOnelink : styles.Onelink}
         >
-          <DeleteIcon />
+          <IconWrapper>
+            <DeleteIcon />
+          </IconWrapper>
           <span className={styles.textLink}>{t('Data Delete')}</span>
         </Link>
       </div>

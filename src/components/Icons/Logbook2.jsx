@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function LogbookIcon2({ fill }) {
   return (
-    <SvgIcon viewBox='0 0 24 17'>
+    <SvgIcon viewBox='0 0 18.77 13.662'>
       <path
         id='Контур_13753'
         data-name='Контур 13753'
