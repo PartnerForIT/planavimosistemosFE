@@ -4,13 +4,14 @@ import styles from './Input.module.scss';
 
 const Input = ({
   disabled, placeholder, icon, type, width, height,
-  min, max, fullWidth, underlined, iconLeft, error, ...props
+  min, max, fullWidth, underlined, iconLeft, error, light, ...props
 }) => {
   const classes = classNames(
     styles.input,
     { [styles.withIcon]: !!icon },
     { [styles.underlined]: underlined },
     { [styles.error]: error },
+    { [styles.light]: light },
   );
 
   const wrapperClasses = classNames(

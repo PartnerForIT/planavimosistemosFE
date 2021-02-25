@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function GenaralIcon({ fill }) {
   return (
-    <SvgIcon viewBox='0 0 23 23'>
+    <SvgIcon viewBox='0 0 18.936 18.936'>
       <path
         id='Контур_13459'
         data-name='Контур 13459'
