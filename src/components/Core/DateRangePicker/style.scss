@@ -1,0 +1,58 @@
+@import "../variables";
+
+.date-range-picker {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  width: 239px;
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    margin-right: 21px;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__left,
+  &__right {
+    &__label {
+      font-size: 14px;
+      color: $gray;
+      font-family: "Helvetica Neue Bold", sans-serif;
+      margin-bottom: 12px;
+    }
+
+    &__input {
+      border: 1px solid #d0dfef;
+      border-radius: 4px;
+      color: #333945;
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 16px;
+      max-width: 126px;
+      padding: 8px 12px;
+      background-color: $input-background-color;
+
+      &:focus {
+        outline: none;
+      }
+
+      &_active {
+        color: $blue-grownu;
+        border: 1px solid $blue-grownu;
+        outline: none;
+      }
+    }
+  }
+
+  &__modal {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    z-index: 99;
+  }
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import Label from '../../Core/InputLabel';
 import Tooltip from '../../Core/Tooltip';
 import EmployeesSelect from '../../Core/EmployeesSelect';
-import DRP from '../../Core/DRP/DRP';
+import DateRangePicker from '../../Core/DateRangePicker';
 import Button from '../../Core/Button/Button';
 import DialogCreateJob from '../../Core/Dialog/DeleteData';
 
@@ -14,9 +14,8 @@ export default function FilterDelete({
     <div className={style.filterBlock}>
       <div className={style.filterBlock__inner}>
         <div className={style.formControl}>
-          <Label text={t('From')} />
           <div className={style.filterBlock__date}>
-            <DRP initRange={inputValues.from} name='from' onChange={handleInputChange} />
+            <DateRangePicker initRange={inputValues.from} name='from' onChange={handleInputChange} right />
           </div>
         </div>
         <div className={style.formControl}>
