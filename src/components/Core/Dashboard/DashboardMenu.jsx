@@ -58,7 +58,12 @@ const useStyles = makeStyles(() => ({
   expandIcon: {
     transform: 'rotate(270deg)',
     transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& svg': {
+      fontSize: '1em',
+    },
   },
   summaryExpanded: {
     '&:last-child': {
