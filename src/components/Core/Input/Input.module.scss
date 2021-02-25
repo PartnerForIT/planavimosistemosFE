@@ -36,7 +36,7 @@ $icon-width: 33px;
   padding: 11px;
   outline: none;
 
-  @include placeholder(#cbd1d8);
+  @include placeholder($input-placeholder-color);
 }
 
 .inputWrapperFullWidth {
