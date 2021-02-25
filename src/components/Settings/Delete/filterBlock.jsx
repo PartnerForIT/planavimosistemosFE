@@ -15,7 +15,7 @@ export default function FilterDelete({
       <div className={style.filterBlock__inner}>
         <div className={style.formControl}>
           <div className={style.filterBlock__date}>
-            <DateRangePicker initRange={inputValues.from} name='from' onChange={handleInputChange} right />
+            <DateRangePicker initRange={inputValues.from} onChange={handleInputChange} />
           </div>
         </div>
         <div className={style.formControl}>

@@ -24,6 +24,10 @@
   min-width: 200px;
   margin: 0 10px;
 
+  &:first-child {
+    margin-left: 0;
+  }
+
   .selectBlock {
     & select {
       height: 36px;

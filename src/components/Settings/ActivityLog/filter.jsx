@@ -2,7 +2,7 @@ import React from 'react';
 import Label from '../../Core/InputLabel';
 import SimpleSelect from '../../Core/SimpleSelect';
 import EmployeesSelect from '../../Core/EmployeesSelect';
-import DRP from '../../Core/DRP/DRP';
+import DateRangePicker from '../../Core/DateRangePicker';
 
 export default function filterActivity({
   style, inputValues,
@@ -11,9 +11,8 @@ export default function filterActivity({
   return (
     <div className={style.filterBlock}>
       <div className={style.formControl}>
-        <Label text={t('From')} />
         <div className={style.filterBlock__date}>
-          <DRP initRange={inputValues.from} name='from' onChange={handleInputChange} />
+          <DateRangePicker initRange={inputValues.from} onChange={handleInputChange} />
         </div>
       </div>
       <div className={style.formControl}>

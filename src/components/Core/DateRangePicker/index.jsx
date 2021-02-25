@@ -31,7 +31,6 @@ export default ({
     }
     setOpen(true);
   };
-
   const handleClickAway = () => {
     if (Object.keys(dateRange).length === 0 && dateRange.constructor === Object
     && Object.keys(lastDateRange).length !== 0 && lastDateRange.constructor === Object) {
@@ -48,9 +47,10 @@ export default ({
   useEffect(() => {
     setDateRange(initRange);
   }, [initRange]);
-
   useEffect(() => {
-    if (dateRange.startDate && dateRange.endDate) setOpen(false);
+    if (dateRange.startDate && dateRange.endDate) {
+      setOpen(false);
+    }
   }, [dateRange]);
 
   return (
