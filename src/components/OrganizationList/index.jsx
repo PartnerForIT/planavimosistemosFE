@@ -40,8 +40,11 @@ const useStyles = makeStyles(() => ({
 const columns = [
   { label: 'Status', field: 'status', checked: true },
   { label: 'Organizations', field: 'name', checked: true },
+  { label: 'Users Amount', field: 'employee_count', checked: true },
   { label: 'Email', field: 'contact_person_email', checked: true },
   { label: 'Contact person', field: 'contact_person_name', checked: true },
+  { label: 'Active Since', field: 'created_at', checked: true },
+  { label: 'Suspended Date', field: 'suspended_at', checked: true },
   { label: 'Closed Data', field: 'deleted_at', checked: true },
   { label: 'Country', field: 'country', checked: true },
   { label: 'Timezone', field: 'timezone', checked: true },
@@ -50,9 +53,12 @@ const columns = [
 const columnsWidthArray = {
   status: 90,
   name: 200,
+  employee_count: 150,
   contact_person_email: 200,
   contact_person_name: 200,
   deleted_at: 200,
+  suspended_at: 200,
+  created_at: 200,
   country: 150,
   timezones: 120,
 };
@@ -116,6 +122,8 @@ export default function OrganizationList() {
       ...item,
       checked: false,
       updated_at: item.updated_at ? moment(item.updated_at).format('lll') : '',
+      created_at: item.created_at ? moment(item.created_at).format('lll') : '',
+      suspended_at: item.suspended_at ? moment(item.suspended_at).format('lll') : '',
       deleted_at: item.deleted_at ? moment(item.deleted_at).format('lll') : '',
       country: nameCountry(item),
     })));
