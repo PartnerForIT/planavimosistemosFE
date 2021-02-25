@@ -11,9 +11,9 @@ const columns = [
 ];
 
 const columnsWidthArray = {
-  created_at: 250,
-  user_id: 250,
-  ip_address: 250,
+  created_at: 230,
+  user_id: 230,
+  ip_address: 230,
   information: 280,
 };
 

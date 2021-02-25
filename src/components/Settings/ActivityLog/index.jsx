@@ -66,19 +66,19 @@ export default function ActivityLog() {
     const data = {
       date_from: inputValues.from.startDate ? moment(inputValues.from.startDate).format('YYYY-MM-DD') : null,
       date_to: inputValues.from.endDate ? moment(inputValues.from.endDate).format('YYYY-MM-DD') : null,
-      user_id: inputValues.employee !== 'Select employees' ? inputValues.employee : null,
+      user_id: inputValues.employee !== 'Select employee' ? inputValues.employee : null,
       place_id: inputValues.place !== 'select' ? inputValues.place : null,
     };
     dispatch(filterActivityLog(id, data));
   }, [dispatch, id, inputValues]);
 
   useEffect(() => {
-    employeesArr.unshift({ id: 'select', name: 'Select employees' });
+    employeesArr.unshift({ id: 'select', name: 'Select employee' });
     setEmployees(employeesArr);
   }, [employeesArr]);
 
   useEffect(() => {
-    placesArr.unshift({ id: 'select', label: 'Select places' });
+    placesArr.unshift({ id: 'select', label: 'Select place' });
     setPlaces(placesArr);
   }, [placesArr]);
 

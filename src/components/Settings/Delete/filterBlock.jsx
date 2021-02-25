@@ -39,7 +39,7 @@ export default function FilterDelete({
         onClick={() => setOpenDialog(true)}
         disabled={inputValues.employee === ''
           || Object.keys(inputValues.from).length === 0
-          || inputValues.employee === 'Select employees'}
+          || inputValues.employee === 'Select employee'}
       >
         {t('Delete data')}
       </Button>

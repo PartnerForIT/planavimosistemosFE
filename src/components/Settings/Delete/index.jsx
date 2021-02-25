@@ -59,7 +59,7 @@ export default function AccountsList() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    employeesArr.unshift({ id: 'Select employees', name: 'Select employees' });
+    employeesArr.unshift({ id: 'Select employee', name: 'Select employee' });
     setEmployees(employeesArr);
   }, [employeesArr]);
 
