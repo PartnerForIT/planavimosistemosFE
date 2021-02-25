@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function AccountIcon({ fill }) {
   return (
-    <SvgIcon viewBox='0 0 23 23'>
+    <SvgIcon viewBox='0 0 16.182 17.158'>
       <path
         id='13460'
         data-name='13460'

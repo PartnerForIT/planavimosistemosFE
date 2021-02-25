@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function EventsIcon({ fill }) {
   return (
-    <SvgIcon viewBox='0 0 24 20'>
+    <SvgIcon viewBox='0 0 20.635 18.701'>
       <path
         id='13751'
         data-name='13751'
