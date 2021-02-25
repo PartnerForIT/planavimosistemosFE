@@ -74,7 +74,7 @@ export default function WorkTime() {
   const [companyHolidays, setCompanyHolidays] = useState([]);
 
   useEffect(() => {
-    const { holidays = [] } = workTime.work_time;
+    const holidays = workTime.work_time?.holidays ?? [];
     if (holidays.length) {
       setCompanyHolidays(holidays.filter((item) => new Date(item.date).getFullYear() === year));
     }
@@ -93,7 +93,7 @@ export default function WorkTime() {
       week_start: workTime.work_time?.week_start ?? '1',
       week_start_time: workTime.work_time?.week_start_time ?? '08:00',
     });
-    if (Object.keys(workTime.work_time).length > 0) {
+    if (workTime.work_time && Object.keys(workTime.work_time).length > 0) {
       setDays({
         monday: filterWorksDay(1).length > 0,
         tuesday: filterWorksDay(2).length > 0,

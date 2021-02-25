@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -28,7 +28,7 @@ export default function AddHolidays({
         fullWidth
         onChange={(e) => setName(e.target.value)}
       />
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
         <KeyboardDatePicker
           disableToolbar
           fullWidth
