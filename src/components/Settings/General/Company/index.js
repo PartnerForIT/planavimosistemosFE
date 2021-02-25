@@ -12,10 +12,11 @@ import CompanyIcon from '../../../Icons/Company';
 import { convertBase64 } from '../../../Helpers';
 import Form from './Form';
 import Progress from '../../../Core/Progress';
-import { getSettingCompany, editSettingCompany } from '../../../../store/settings/actions';
+import { getSettingCompany, editSettingCompany, getCurrencies } from '../../../../store/settings/actions';
 import { getCountries } from '../../../../store/organizationList/actions';
 import {
   settingCompanySelector, isLoadingSelector, isShowSnackbar, snackbarType, snackbarText,
+  currencySelector,
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
 import styles from './company.module.scss';
@@ -52,6 +53,9 @@ export default function Company() {
 
   useEffect(() => {
     dispatch(getCountries());
+    dispatch(getCurrencies());
+  }, [dispatch]);
+  useEffect(() => {
     if (params.id) {
       dispatch(getSettingCompany(params.id));
     }
@@ -66,6 +70,7 @@ export default function Company() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const currencies = useSelector(currencySelector);
 
   const [timeZones, setTimeZones] = useState([]);
 
@@ -134,6 +139,7 @@ export default function Company() {
                 handleInputChange={handleInputChange}
                 inputValues={inputValues}
                 countries={countries}
+                currencies={currencies}
                 editCompany={editCompany}
                 file={file}
                 company={company}

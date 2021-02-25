@@ -6,12 +6,12 @@ import Button from '../../../Core/Button/Button';
 import Input from '../../../Core/Input/Input';
 import langArray from '../../../Helpers/lang';
 import formatArr from '../../../Helpers/dateFormat';
-import currencyArr from '../../../Helpers/currency';
 import SimpleSelect from '../../../Core/SimpleSelect';
 
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
-  inputValues, countries = [], editCompany, file, company, timeZones = [],
+  inputValues, countries = [], currencies = [],
+  editCompany, file, company, timeZones = [],
 }) {
   const { t } = useTranslation();
 
@@ -123,7 +123,7 @@ export default function CompaneForm({
           name='currency'
           fullWidth
           value={inputValues.currency}
-          options={currencyArr}
+          options={currencies}
         />
       </div>
       <div className={styles.buttonBlock}>
