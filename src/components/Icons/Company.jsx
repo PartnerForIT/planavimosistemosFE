@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '1.5em',
-    height: '1.5em',
+    width: '35px',
+    height: '30px',
   },
 }));
 

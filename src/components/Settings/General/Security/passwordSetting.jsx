@@ -15,7 +15,6 @@ export default function passwordSetting({
 }) {
   return (
     <div className={style.passwordSettings}>
-
       <Label text={t('Password settings')} />
       <div className={style.settingsBlock}>
         <Checkbox
@@ -91,6 +90,7 @@ export default function passwordSetting({
           value={login_attempts}
           name='min'
           type='number'
+          placeholder='0'
           min='1'
           max='12'
           onChange={(e) => setLogin_attempts(e.target.value)}
