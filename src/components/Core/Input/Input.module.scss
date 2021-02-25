@@ -30,7 +30,7 @@ $icon-width: 33px;
   border: $border-style;
   border-radius: 4px;
   box-sizing: border-box;
-  color: #333945;
+  color: $input-text-color;
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;
   padding: 11px;
@@ -44,6 +44,11 @@ $icon-width: 33px;
 
   .input {
     width: 100% !important;
+    background-color: $input-background-color;
+  }
+
+  .light {
+    background-color: unset;
   }
 }
 
