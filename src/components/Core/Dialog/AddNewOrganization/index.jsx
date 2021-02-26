@@ -11,8 +11,10 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '../index';
 import langArray from '../../../Helpers/lang';
 import Button from '../../Button/Button';
+import InputSelect from '../../InputSelect';
 
 import style from '../Dialog.module.scss';
+import {FormLabel} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,42 +83,33 @@ export default function AddNewOrganization({
             />
           </FormControl>
           <FormControl className={classes.margin}>
-            <InputLabel shrink htmlFor='country-select' className={classes.label}>
+            <InputLabel root htmlFor='country-select' labelId='country-select' className={classes.label}>
               Country
             </InputLabel>
-            <NativeSelect
+            <InputSelect
               id='country-select'
+              labelId='country-select'
+              name='country'
               value={inputValues.country}
               onChange={handleInputChange}
-              inputProps={{
-                name: 'country',
-              }}
-              input={<BootstrapInput name='country' />}
-            >
-              <option value='' disabled>Select a country</option>
-              {_.map(countries, (item) => (
-                <option key={item.code} value={item.code}>{item.name}</option>
-              ))}
-            </NativeSelect>
+              options={countries}
+              valueKey='code'
+              labelKey='name'
+            />
           </FormControl>
           <FormControl className={classes.margin}>
             <InputLabel shrink htmlFor='country-select' className={classes.label}>
               Language
             </InputLabel>
-            <NativeSelect
+            <InputSelect
               id='country-select'
+              name='lang'
               value={inputValues.lang}
-              placeholder='Select your Language'
               onChange={handleInputChange}
-              inputProps={{
-                name: 'lang',
-              }}
-              input={<BootstrapInput />}
-            >
-              {_.map(langArray, (item) => (
-                <option key={item.code} value={item.code}>{item.name}</option>
-              ))}
-            </NativeSelect>
+              options={langArray}
+              valueKey='code'
+              labelKey='name'
+            />
           </FormControl>
           <FormControl className={classes.margin}>
             <InputLabel shrink htmlFor='external-id' className={classes.label}>

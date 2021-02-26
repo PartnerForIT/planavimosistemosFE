@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,11 @@ const useStyles = makeStyles(() => ({
   },
   margin: {
     margin: '5px 5px 5px 0',
+    width: 189,
+
+    '& > input': {
+      height: 36,
+    },
   },
   label: {
     color: '#808F94',
@@ -60,6 +65,25 @@ export default function Filter({
     setOpen(false);
   };
 
+  const options = useMemo(() => [
+    {
+      value: 3,
+      label: 'All organizations',
+    },
+    {
+      value: 1,
+      label: 'Active',
+    },
+    {
+      value: 0,
+      label: 'Suspended',
+    },
+    {
+      value: 2,
+      label: 'Terminated',
+    },
+  ], []);
+
   return (
     <div className={styles.filterBlock}>
       <div>
@@ -69,24 +93,7 @@ export default function Filter({
             name='organizations'
             value={organizations}
             onChange={handleChangeOrganizations}
-            options={[
-              {
-                value: 3,
-                label: 'All organizations',
-              },
-              {
-                value: 1,
-                label: 'Active',
-              },
-              {
-                value: 0,
-                label: 'Suspended',
-              },
-              {
-                value: 2,
-                label: 'Terminated',
-              },
-            ]}
+            options={options}
           />
         </FormControl>
         <FormControl className={classes.margin}>
@@ -119,27 +126,27 @@ export default function Filter({
         >
           {t('Active')}
         </Button>
-        <Button
-          yellow
-          onClick={() => changeStatusCompany('suspend')}
-          disabled={!checkedItems.length > 0 && !selectedItem}
-        >
-          {t('Suspend')}
-        </Button>
-        <Button
-          danger
-          onClick={() => changeStatusCompany('delete')}
-          disabled={!checkedItems.length > 0 && !selectedItem}
-        >
-          {t('Terminate')}
-        </Button>
-        <Button
-          black
-          onClick={() => changeStatusCompany('destroy')}
-          disabled={!checkedItems.length > 0 && !selectedItem}
-        >
-          {t('Delete')}
-        </Button>
+        {/*<Button*/}
+        {/*  yellow*/}
+        {/*  onClick={() => changeStatusCompany('suspend')}*/}
+        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
+        {/*>*/}
+        {/*  {t('Suspend')}*/}
+        {/*</Button>*/}
+        {/*<Button*/}
+        {/*  danger*/}
+        {/*  onClick={() => changeStatusCompany('delete')}*/}
+        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
+        {/*>*/}
+        {/*  {t('Terminate')}*/}
+        {/*</Button>*/}
+        {/*<Button*/}
+        {/*  black*/}
+        {/*  onClick={() => changeStatusCompany('destroy')}*/}
+        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
+        {/*>*/}
+        {/*  {t('Delete')}*/}
+        {/*</Button>*/}
       </div>
       <EditModules
         open={open}

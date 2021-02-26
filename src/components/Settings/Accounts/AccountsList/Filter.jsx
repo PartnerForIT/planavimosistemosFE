@@ -1,31 +1,32 @@
 import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
-import {
-  makeStyles,
-} from '@material-ui/core/styles';
+// import {
+//   makeStyles,
+// } from '@material-ui/core/styles';
 
 import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
 import InputSelect from '../../../Core/InputSelect';
+import CustomSelect from "../../../Core/Select/Select";
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  margin: {
-    margin: '5px 5px 5px 0',
-    flex: 1,
-    display: 'flex',
-  },
-  label: {
-    color: '#808F94',
-    fontSize: 14,
-    fontWeight: 600,
-    transform: 'translate(0, 1.5px) scale(1)',
-  },
-}));
+// const useStyles = makeStyles(() => ({
+//   root: {
+//     display: 'flex',
+//     flexWrap: 'wrap',
+//   },
+//   margin: {
+//     margin: '5px 5px 5px 0',
+//     flex: 1,
+//     display: 'flex',
+//   },
+//   label: {
+//     color: '#808F94',
+//     fontSize: 14,
+//     fontWeight: 600,
+//     transform: 'translate(0, 1.5px) scale(1)',
+//   },
+// }));
 
 export default function Filter({
   users,
@@ -35,7 +36,7 @@ export default function Filter({
   stats,
   selectedItem,
 }) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { t } = useTranslation();
   // const [search, setSearch] = useState('');
   // const [open, setOpen] = useState(false);

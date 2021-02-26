@@ -1,0 +1,64 @@
+@import "../variables";
+
+.input-select {
+  width: 100%;
+
+  &__control {
+    height: 36px;
+    min-height: 36px;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 12.077px;
+      height: 7.039px;
+      top: 15px;
+      right: 10px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12.077' height='7.039' viewBox='0 0 12.077 7.039'%3E%3Cpath id='Path_1161' data-name='Path 1161' d='M2360.908,1120.023l4.625,4.624,4.624-4.624' transform='translate(-2359.494 -1118.609)' fill='none' stroke='%230085ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/svg%3E%0A") right center no-repeat;
+      transition: transform 0.4s ease-in-out;
+      transform: rotate(0deg);
+      z-index: 2;
+    }
+
+    & > div {
+      width: 100%;
+    }
+  }
+
+  &__content-box {
+    background-color: #fff;
+    border: 1px solid $blue-grownu;
+    border-radius: 4px;
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: 20px;
+    z-index: 3;
+    max-height: 315px;
+    min-height: 150px;
+
+    &__scrollbar {
+      position: static !important;
+      width: calc(100% - 20px) !important;
+      height: calc(100% - 20px) !important;
+    }
+  }
+
+  &_open {
+    & .input-select__control {
+      //border: 1px solid $blue-grownu;
+
+      &::before {
+        transform: rotate(-180deg);
+      }
+    }
+  }
+}
+
+label + .input-select {
+  margin-top: 24px;
+}

@@ -23,6 +23,7 @@ $icon-width: 33px;
   position: relative;
   width: fit-content;
   min-width: 70px;
+  max-height: 36px;
 }
 
 .input,
@@ -35,6 +36,7 @@ $icon-width: 33px;
   font-size: 14px;
   padding: 11px;
   outline: none;
+  max-height: 36px;
 
   @include placeholder($input-placeholder-color);
 }
