@@ -45,7 +45,6 @@ const defaultSkill = {
 };
 
 export default function EditAccount({
-  handleClose,
   title,
   open,
   employee = {},
@@ -55,6 +54,7 @@ export default function EditAccount({
   groups = [],
   places = [],
   onSubmit = () => ({}),
+  handleClose: externalHandleClose,
   modules: { cost_earning: cost, profitability },
 }) {
   const { t } = useTranslation();
@@ -72,6 +72,11 @@ export default function EditAccount({
   const [errors, setErrors] = useState({});
 
   const [skillName, setSkillName] = useState(defaultSkill);
+
+  const handleClose = (payload) => {
+    externalHandleClose(payload);
+    setTimeout(() => setUser({}), 500);
+  };
 
   const handleSkillChange = (event) => {
     const {
@@ -258,7 +263,7 @@ export default function EditAccount({
       <div className={style.edit}>
 
         {
-          loading
+          (loading || !user.name)
             ? <Progress />
             : (
               <>

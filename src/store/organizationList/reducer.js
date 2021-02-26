@@ -7,7 +7,9 @@ import {
   GET_COMPANIES,
   GET_COMPANIES_SUCCESS,
   POST_ORGANIZATION_SUCCESS,
+  GET_MODULES,
   GET_MODULES_SUCCESS,
+  GET_MODULES_ERROR,
 } from './types';
 
 const initialState = {
@@ -72,11 +74,25 @@ export const reducerOrganizationList = (state = initialState, action) => {
         },
       };
 
+    case GET_MODULES:
+      return {
+        ...state,
+        loadingCompanyModules: true,
+      };
+
     case GET_MODULES_SUCCESS:
       return {
         ...state,
+        loadingCompanyModules: false,
         companyModules: action.data,
       };
+
+    case GET_MODULES_ERROR: {
+      return {
+        ...state,
+        loadingCompanyModules: false,
+      };
+    }
 
     case ADD_SNACKBAR:
       return {
