@@ -18,8 +18,9 @@ const columns = [
 
 const columnsWidthArray = {
   name: 120,
-  id: 40,
+  // id: 40,
   actions: 80,
+  subgroups: 120,
 };
 
 export default function GroupsBlock({
@@ -72,7 +73,6 @@ export default function GroupsBlock({
         <div className={style.table}>
           <DataTable
             data={groups}
-            // data={[...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups, ...groups]}
             columns={columnsArray ?? []}
             onColumnsChange={setColumnsArray}
             hoverActions

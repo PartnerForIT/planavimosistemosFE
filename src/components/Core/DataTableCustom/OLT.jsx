@@ -26,7 +26,8 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first', withoutFilterColumns = false,
+  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first',
+  withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
 }) {
@@ -171,7 +172,7 @@ export default function DataTable({
     >
       <Scrollbar
         className={scrollableContentClasses}
-        style={{ height: `calc(100vh - ${verticalOffset} - 47px)` }}
+        style={{ height: `calc(100vh - ${verticalOffset} - ${simpleTable ? 0 : 47}px)` }}
         removeTracksWhenNotUsed
         trackXProps={{
           renderer: (props) => {

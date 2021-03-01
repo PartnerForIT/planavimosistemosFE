@@ -49,6 +49,7 @@ export default function SubgroupsBlock({
             onColumnsChange={setColumnsArray}
             hoverActions
             loading={loading}
+            withoutFilterColumns
             // onSelect={setSelectedSubgroup}
             onSort={(field, asc) => sort({ field, asc })}
             // lastPage={page.last_page}

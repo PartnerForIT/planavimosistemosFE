@@ -52,12 +52,16 @@ const Row = ({
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
     { [styles.rowWarning]: (colored.warning && row.warning) },
     { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
     { [styles.contentVisibility]: !hoverActions },
     { [styles.rowSuccess]: row.success },
+  );
+
+  const containerClasses = classNames(
+    styles.flexTable, styles.row,
+    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
   );
 
   const Components = {
@@ -102,12 +106,9 @@ const Row = ({
         const { left: rowLeft } = rowRef.current.getBoundingClientRect();
         const { right: tableRight } = tableRef.current.getBoundingClientRect();
         // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
-        console.log('rowLeft', rowLeft);
-        console.log('tableRight', tableRight);
-        console.log(' === ');
         document.documentElement.style.setProperty('--hover-actions-left',
           `${windowWidth - (rowLeft + windowWidth - tableRight)
-          /* actions width */ - (withoutRightPanel ? 90 : 120) /* scroll width */ - (withoutRightPanel ? 10 : 32)}px`);
+          /* actions width */ - (withoutRightPanel ? 70 : 120) /* scroll width */ - (withoutRightPanel ? 17 : 32)}px`);
       }
     }
   }, [index, tableRef, windowWidth]);
@@ -122,7 +123,7 @@ const Row = ({
 
   return (
     <div
-      className={classNames(styles.flexTable, styles.row)}
+      className={containerClasses}
       role='rowgroup'
       onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
       onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
