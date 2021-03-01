@@ -46,6 +46,7 @@ import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import TimeFormat from '../../../shared/TimeFormat';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
+import styles from './accounts.module.scss';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -65,9 +66,29 @@ const LabelWithCurrencySign = ({ text }) => (
   </>
 );
 
+const NameWithAvatar = (row) => (
+  <div className={styles.cellNameWithAvatar}>
+    {
+      row.photo && (
+        <img
+          alt=''
+          className={styles.cellNameWithAvatar__image}
+          src={row.photo}
+        />
+      )
+    }
+    {row.name}
+  </div>
+);
+
 const columns = [
   { label: 'Status', field: 'status', checked: true },
-  { label: 'Employee', field: 'name', checked: true },
+  {
+    label: 'Employee',
+    field: 'name',
+    checked: true,
+    cellRenderer: NameWithAvatar,
+  },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Role', field: 'role', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
@@ -335,7 +356,7 @@ export default function AccountsList() {
                     selectedItem={selected}
                   />
                   <DataTable
-                    data={[...employees, ...employees, ...employees] ?? []}
+                    data={employees ?? []}
                     columns={columnsArray ?? []}
                     columnsWidth={columnsWidthArray ?? {}}
                     onColumnsChange={setColumnsArray}

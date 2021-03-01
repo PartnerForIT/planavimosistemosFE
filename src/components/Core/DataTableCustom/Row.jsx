@@ -200,9 +200,10 @@ const Row = ({
                   : null}
                 {IconComponent}
                 <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
-                  <>
-                    {row[column.field] !== 'tableActions' && row[column.field] }
-                  </>
+                  {
+                    row[column.field] !== 'tableActions'
+                      && (column.cellRenderer ? column.cellRenderer(row) : row[column.field])
+                  }
                 </span>
                 {/* icon statys */}
                 {(statysIcon && column.field === 'status' && (width === 80 || 80 - 35))
