@@ -26,7 +26,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false,
+  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first',
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
 }) {
@@ -98,8 +98,8 @@ export default function DataTable({
   }, [data]);
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--scroll-left', '0px');
-  }, []);
+    document.documentElement.style.setProperty(`--scroll-left-${id}`, '0px');
+  }, [id]);
 
   const sort = (field, asc) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
@@ -152,12 +152,12 @@ export default function DataTable({
   const onScroll = useMemo(() => {
     if (hoverActions) {
       return (e) => {
-        document.documentElement.style.setProperty('--scroll-left', `${e.scrollLeft}px`);
+        document.documentElement.style.setProperty(`--scroll-left-${id}`, `${e.scrollLeft}px`);
       };
     }
 
     return undefined;
-  }, [hoverActions]);
+  }, [hoverActions, id]);
 
   return (
     <div
@@ -165,6 +165,7 @@ export default function DataTable({
       style={{ height: `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'
+      data-id={id}
       ref={tableRef}
     >
       <Scrollbar

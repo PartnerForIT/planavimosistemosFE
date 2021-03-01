@@ -642,6 +642,18 @@ div {
   border-radius: 12px;
   //padding-top: 10px;
   position: relative;
+
+  &[data-id='first'] {
+    .absoluteActions {
+      left: calc(var(--hover-actions-left) + var(--scroll-left-first));
+    }
+  }
+
+  &[data-id='second'] {
+    .absoluteActions {
+      left: calc(var(--hover-actions-left) + var(--scroll-left-second));
+    }
+  }
 }
 
 .scrollableContent {

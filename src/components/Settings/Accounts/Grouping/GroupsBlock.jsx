@@ -14,7 +14,6 @@ const columns = [
   { label: 'Amount', field: 'users', checked: true },
   { label: 'Sub-groups', field: 'subgroups', checked: true },
   { label: 'ID', field: 'id', checked: true },
-  { label: '', field: 'actions', checked: true },
 ];
 
 export default function GroupsBlock({
@@ -47,7 +46,7 @@ export default function GroupsBlock({
             data={groups}
             columns={columnsArray ?? []}
             onColumnsChange={setColumnsArray}
-            sortable
+            hoverActions
             loading={loading}
             onSelect={setSelected}
             selectedItem={selected}

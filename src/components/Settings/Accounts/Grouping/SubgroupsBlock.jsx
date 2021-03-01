@@ -14,7 +14,6 @@ const columns = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'Amount', field: 'users', checked: true },
   { label: 'ID', field: 'id', checked: true },
-  { label: '', field: 'actions', checked: true },
 ];
 
 export default function SubgroupsBlock({
@@ -48,7 +47,7 @@ export default function SubgroupsBlock({
             columns={columnsArray ?? []}
             columnsWidth={{}}
             onColumnsChange={setColumnsArray}
-            sortable
+            hoverActions
             loading={loading}
             // onSelect={setSelectedSubgroup}
             onSort={(field, asc) => sort({ field, asc })}
@@ -64,6 +63,7 @@ export default function SubgroupsBlock({
             simpleTable
             removeRow={() => setRemoveVisible(true)}
             editRow={() => setEditVisible(true)}
+            id='second'
           />
           {
             _.isEmpty(selectedGroup)
