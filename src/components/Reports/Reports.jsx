@@ -507,7 +507,7 @@ const Reports = () => {
           )}
           <div
             className={mainContainerClasses}
-            style={{ height: itemsArray.length > 0 ? 'calc(100vh - 125px)' : 'calc(100vh - 125px)' }}
+            style={{ height: itemsArray.length > 0 ? 'calc(100vh - 210px)' : 'calc(100vh - 125px)' }}
           >
             {
               itemsArray.length > 0 && activeReport
@@ -525,7 +525,7 @@ const Reports = () => {
                     reports
                     downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
                     downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
-                    verticalOffset='127px'
+                    verticalOffset='212px'
                     amount={totalStat}
                     modules={modules}
                   />
