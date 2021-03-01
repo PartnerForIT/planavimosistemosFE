@@ -55,6 +55,7 @@ export default function CreateSkill({
               name='cost'
               fullWidth
               onChange={handleSkillChange}
+              disabled={!skillName.rates}
             />
           </div>
         )
@@ -66,6 +67,7 @@ export default function CreateSkill({
             <Input
               placeholder={`${t('How much you charge per h')}`}
               value={skillName.earn}
+              disabled={!skillName.rates}
               name='earn'
               fullWidth
               onChange={handleSkillChange}
