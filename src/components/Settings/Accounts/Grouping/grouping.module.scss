@@ -30,9 +30,17 @@
   grid-template-columns: auto 20px 1fr;
   grid-column-gap: 25px;
   line-height: 1;
+
+  & label {
+    font-family: "Helvetica Neue Bold", sans-serif;
+  }
 }
 
 .right {
   text-align: right;
   padding-bottom: 9px;
+
+  & button {
+    font-family: "Helvetica Neue Bold", sans-serif;
+  }
 }

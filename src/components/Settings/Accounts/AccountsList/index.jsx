@@ -335,7 +335,7 @@ export default function AccountsList() {
                     selectedItem={selected}
                   />
                   <DataTable
-                    data={employees ?? []}
+                    data={[...employees, ...employees, ...employees] ?? []}
                     columns={columnsArray ?? []}
                     columnsWidth={columnsWidthArray ?? {}}
                     onColumnsChange={setColumnsArray}

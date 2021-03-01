@@ -260,3 +260,18 @@ $arrow-size: 21px;
     border-radius: 12px !important;
   }
 }
+
+.scrollbarTrackX {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  height: 4px !important;
+  bottom: 7px !important;
+  left: 15px !important;
+  width: calc(100% - 35px) !important;
+  z-index: 1 !important;
+
+  div {
+    background-color: #b9b9b9 !important;
+    border-radius: 10px !important;
+  }
+}
