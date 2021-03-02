@@ -62,7 +62,7 @@ const columns = [
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
-  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
@@ -75,7 +75,7 @@ const columnsWidth = {
   place: 140,
   jobType: 140,
   duration: 180,
-  sallary: 140,
+  charge: 140,
   cost: 140,
   profit: 140,
 };
@@ -124,21 +124,21 @@ const Logbook = () => {
     setWorkTime(wTime.map((day) => {
       const { items } = day;
       let cost = 0;
-      let sallary = 0;
+      let charge = 0;
       let profit = 0;
 
       const newDay = {
         ...day,
         items: items.map(({ profitability = {}, ...rest }) => {
-          const { cost: itemCost, sallary: itemSalary, profit: itemProfit } = profitability;
+          const { cost: itemCost, charge: itemSalary, profit: itemProfit } = profitability;
 
           cost += itemCost;
-          sallary += itemSalary;
+          charge += itemSalary;
           profit += itemProfit;
 
           setTotal((prevState) => ({
             profit: prevState.profit + profit,
-            salary: prevState.salary + sallary,
+            salary: prevState.salary + charge,
             cost: prevState.cost + cost,
           }));
 
@@ -152,7 +152,7 @@ const Logbook = () => {
       return {
         ...newDay,
         ...costEarning ? { cost } : {},
-        ...profitAccess ? { profit, sallary } : {},
+        ...profitAccess ? { profit, charge } : {},
       };
     }));
   }, [modules, wTime]);
