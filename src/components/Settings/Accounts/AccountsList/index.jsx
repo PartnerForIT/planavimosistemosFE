@@ -96,8 +96,18 @@ const columns = [
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
   // { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
-  { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
-  { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
+  {
+    label: <LabelWithCurrencySign text='Cost/h/' />,
+    field: 'cost',
+    cellRenderer: ({ profitability }) => profitability.cost,
+    checked: true,
+  },
+  {
+    label: <LabelWithCurrencySign text='Charge/h/' />,
+    field: 'sallary',
+    cellRenderer: ({ profitability }) => profitability.sallary,
+    checked: true,
+  },
   { label: 'Created on', field: 'created_at', checked: true },
   { label: 'Status change', field: 'updated_at', checked: true },
 ];
@@ -300,6 +310,9 @@ export default function AccountsList() {
   const sorting = useCallback((employees, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
+      if (field === 'cost' || field === 'sallary') {
+        return sortNumFunction(a.profitability, b.profitability);
+      }
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
