@@ -2,6 +2,7 @@ import React from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -14,6 +15,7 @@ import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
+import { companyModules } from '../../../store/company/selectors';
 import styles from './dasboard.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -79,6 +81,7 @@ export default function DashboardMenu() {
   const { pathname } = useLocation();
   const section = pathname.split('/')[2];
   const innerSection = pathname.split('/')[3];
+  const modules = useSelector(companyModules);
 
   const IconWrapper = ({ children }) => (
     <div className={styles.iconWrapper}>
@@ -196,58 +199,66 @@ export default function DashboardMenu() {
           </AccordionDetails>
         </Accordion>
         {/* Logbook */}
-        <Accordion
-          className={classes.accordion}
-          defaultExpanded={section === 'logbook'}
-          classes={{
-            expanded: classes.expanded,
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
-            className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
-            classes={{
-              expandIcon: classes.expandIcon,
-              expanded: classes.summaryExpanded,
-            }}
-            aria-controls='panel3-content'
-            id='panel3-header'
-          >
-            <IconWrapper>
-              <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
-            </IconWrapper>
-            <span className={styles.menuText}>{t('Logbook')}</span>
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionContent}>
-            <ul className={styles.dashboardLinkBlock}>
-              <li>
-                <Link
-                  to={`/settings/logbook/journal/${params.id}`}
-                  className={innerSection === 'journal' ? styles.activeLink : styles.link}
-                >
-                  {t('Journal')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/settings/logbook/overtime/${params.id}`}
-                  className={innerSection === 'overtime' ? styles.activeLink : styles.link}
-                >
-                  {t('Overtime')}
-                </Link>
-              </li>
-            </ul>
-          </AccordionDetails>
-        </Accordion>
-        <Link
-          to={`/settings/events/${params.id}`}
-          className={section === 'events' ? styles.activeOnelink : styles.Onelink}
-        >
-          <IconWrapper>
-            <EventsIcon />
-          </IconWrapper>
-          <span className={styles.textLink}>{t('Events')}</span>
-        </Link>
+        {
+          !!modules.logbook && (
+            <Accordion
+              className={classes.accordion}
+              defaultExpanded={section === 'logbook'}
+              classes={{
+                expanded: classes.expanded,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
+                className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
+                classes={{
+                  expandIcon: classes.expandIcon,
+                  expanded: classes.summaryExpanded,
+                }}
+                aria-controls='panel3-content'
+                id='panel3-header'
+              >
+                <IconWrapper>
+                  <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
+                </IconWrapper>
+                <span className={styles.menuText}>{t('Logbook')}</span>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionContent}>
+                <ul className={styles.dashboardLinkBlock}>
+                  <li>
+                    <Link
+                      to={`/settings/logbook/journal/${params.id}`}
+                      className={innerSection === 'journal' ? styles.activeLink : styles.link}
+                    >
+                      {t('Journal')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={`/settings/logbook/overtime/${params.id}`}
+                      className={innerSection === 'overtime' ? styles.activeLink : styles.link}
+                    >
+                      {t('Overtime')}
+                    </Link>
+                  </li>
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          )
+        }
+        {
+          !!modules.events && (
+            <Link
+              to={`/settings/events/${params.id}`}
+              className={section === 'events' ? styles.activeOnelink : styles.Onelink}
+            >
+              <IconWrapper>
+                <EventsIcon />
+              </IconWrapper>
+              <span className={styles.textLink}>{t('Events')}</span>
+            </Link>
+          )
+        }
         <Link
           to={`/settings/categories/${params.id}`}
           className={section === 'categories' ? styles.activeOnelink : styles.Onelink}

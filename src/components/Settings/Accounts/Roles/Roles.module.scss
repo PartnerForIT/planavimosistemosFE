@@ -23,8 +23,12 @@ $arrow-size: 21px;
   border-radius: $card-padding;
   border: $edit-border;
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
   grid-column-gap: $card-padding;
+  grid-template-columns: 1.3fr 1fr;
+
+  &_withModules {
+    grid-template-columns: 1.3fr 1fr 1fr;
+  }
 
   &_inner {
     &_title {

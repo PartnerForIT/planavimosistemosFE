@@ -20,6 +20,7 @@ import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
+import { companyModules } from '../../../store/company/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -55,6 +56,7 @@ export default function ButtonAppBar({ logOut }) {
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
+  const modules = useSelector(companyModules);
 
   useEffect(() => {
     if (id) {
@@ -121,10 +123,14 @@ export default function ButtonAppBar({ logOut }) {
                 //   <span className={styles.link__text}>{t('Place')}</span>
                 // </Link>
               }
-              <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
-                <LogbookIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Logbook')}</span>
-              </Link>
+              {
+                !!modules.logbook && (
+                  <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
+                    <LogbookIcon className={styles.icon} />
+                    <span className={styles.link__text}>{t('Logbook')}</span>
+                  </Link>
+                )
+              }
               {
                 // <Link
                 //     to={`/analytics/${id}`}
@@ -134,14 +140,22 @@ export default function ButtonAppBar({ logOut }) {
                 //   <span className={styles.link__text}>{t('Analytics')}</span>
                 // </Link>
               }
-              <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
-                <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
-                <span className={styles.link__text}>{t('Events')}</span>
-              </Link>
-              <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
-                <OverviewIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Reports')}</span>
-              </Link>
+              {
+                !!modules.events && (
+                  <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
+                    <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
+                    <span className={styles.link__text}>{t('Events')}</span>
+                  </Link>
+                )
+              }
+              {
+                !!modules.reports && (
+                  <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
+                    <OverviewIcon className={styles.icon} />
+                    <span className={styles.link__text}>{t('Reports')}</span>
+                  </Link>
+                )
+              }
               {
                 // <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
                 //   <VacationIcon className={styles.icon} />
