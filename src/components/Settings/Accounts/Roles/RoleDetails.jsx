@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -9,6 +9,7 @@ import AccessModule from './RoleDetails/AccessModule';
 import OrganisationAccess from './RoleDetails/OrganisationAccess';
 import Progress from '../../../Core/Progress';
 import { companyModules } from '../../../../store/company/selectors';
+import { AdminContext } from '../../../Core/MainLayout';
 
 const categoriesNames = {
   logbook: 'Logbook',
@@ -48,6 +49,7 @@ function RoleDetails({
   );
   const [ready, setReady] = useState(false);
   const modules = useSelector(companyModules);
+  const isSuperAdmin = useContext(AdminContext);
 
   useEffect(() => {
     if (ready) {
@@ -97,7 +99,7 @@ function RoleDetails({
         roleEmployeesEdit={roleEmployeesEdit}
       />
       {
-        !!(modules.reports || modules.events || modules.logbook) && (
+        (isSuperAdmin || !!(modules.reports || modules.events || modules.logbook)) && (
           <AccessModule
             activeRole={activeRole}
             availableDetails={availableDetails}
@@ -112,6 +114,7 @@ function RoleDetails({
             onChangeHandler={onChangeHandler}
             setDisableReady={setDisableReady}
             modules={modules}
+            isSuperAdmin={isSuperAdmin}
           />
         )
       }
@@ -127,6 +130,8 @@ function RoleDetails({
         permissions={permissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
+        modules={modules}
+        isSuperAdmin={isSuperAdmin}
       />
       <div />
     </div>

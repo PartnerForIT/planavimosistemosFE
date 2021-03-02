@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useRef, useState,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import { companyModules } from '../../store/company/selectors';
 import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
-import MainLayout from '../Core/MainLayout';
+import MainLayout, { AdminContext } from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -121,6 +121,7 @@ const Reports = () => {
   const getAllSkills = useSelector(skillsSelector);
   const { comments_required: comments = false } = useSelector(JournalDataSelector);
   const modules = useSelector(companyModules);
+  const isSuperAdmin = useContext(AdminContext);
 
   const { cost_earning: costs, profitability } = modules;
   const mainContainerClasses = classNames(styles.mainContainer, {
@@ -277,10 +278,11 @@ const Reports = () => {
     ].filter(({ field }) => {
       if (!costState.show_earnings && field === 'sallary') return false;
       if (!costState.show_profit && field === 'profit') return false;
+      if (!modules.create_jobs && field === 'jobType' && !isSuperAdmin) return false;
       return !(!costState.show_costs && field === 'cost');
     }));
-  }, [activeReport, columns, costState.show_costs,
-    costState.show_earnings, costState.show_profit, costs, profitability]);
+  }, [activeReport, columns, costState.show_costs, isSuperAdmin,
+    costState.show_earnings, costState.show_profit, costs, profitability, modules]);
 
   useEffect(() => {
     setLoading(reportLoading);
@@ -587,18 +589,20 @@ const Reports = () => {
                 </>
               )}
               {
-                <>
-                  <div className={styles.sidebarTitle}>Places</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by places'
-                    onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper items={filteredPlaces ?? []} onChange={(c) => filterChecked(c, 'places')} />
-                  </div>
-                </>
+                !!modules.create_places && (
+                  <>
+                    <div className={styles.sidebarTitle}>Places</div>
+                    <Input
+                      icon={<SearchIcon />}
+                      placeholder='Search by places'
+                      onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                      fullWidth
+                    />
+                    <div className={styles.checkboxGroupWrapper}>
+                      <CheckboxGroupWrapper items={filteredPlaces ?? []} onChange={(c) => filterChecked(c, 'places')} />
+                    </div>
+                  </>
+                )
               }
               {
                 <>
@@ -618,21 +622,23 @@ const Reports = () => {
                 </>
               }
               {
-                <>
-                  <div className={styles.sidebarTitle}>Job types</div>
-                  <Input
-                    icon={<SearchIcon />}
-                    placeholder='Search by job types'
-                    onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
-                    fullWidth
-                  />
-                  <div className={styles.checkboxGroupWrapper}>
-                    <CheckboxGroupWrapper
-                      items={filteredJobTypes ?? []}
-                      onChange={(c) => filterChecked(c, 'jobTypes')}
+                !!modules.create_jobs && (
+                  <>
+                    <div className={styles.sidebarTitle}>Job types</div>
+                    <Input
+                      icon={<SearchIcon />}
+                      placeholder='Search by job types'
+                      onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
+                      fullWidth
                     />
-                  </div>
-                </>
+                    <div className={styles.checkboxGroupWrapper}>
+                      <CheckboxGroupWrapper
+                        items={filteredJobTypes ?? []}
+                        onChange={(c) => filterChecked(c, 'jobTypes')}
+                      />
+                    </div>
+                  </>
+                )
               }
               {
                 <>

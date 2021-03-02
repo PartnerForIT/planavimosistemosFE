@@ -33,12 +33,12 @@ const SecondStep = ({
   groups,
   places,
   previousStep,
-  modules: { cost_earning: cost, profitability },
+  modules: { cost_earning: cost, profitability, ...modules },
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const SuperAdmin = useContext(AdminContext);
+  const isSuperAdmin = useContext(AdminContext);
 
   const [skillName, setSkillName] = useState(defaultSkill);
   const [skillOpen, setSkillOpen] = useState(false);
@@ -175,15 +175,22 @@ const SecondStep = ({
     }
   };
 
+  const containerClasses = classnames(style.secondForm, {
+    [style.secondForm_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+  });
+  const rowTwoClasses = classnames(style.center, {
+    [style.borderRight]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+  });
+
   return (
     <>
-      <div className={style.secondForm}>
+      <div className={containerClasses}>
 
         <div className={classnames(style.info, style.border, style.borderRight)}>
           <UserCard user={user} groups={groups} places={places} skills={skills} />
         </div>
 
-        <div className={classnames(style.center, style.borderRight)}>
+        <div className={rowTwoClasses}>
           <div className={classnames(style.skill, style.formItem)}>
             <Button inline inverse onClick={() => setSkillOpen(true)}>
               {`+${t('new skill')}`}
@@ -198,7 +205,7 @@ const SecondStep = ({
             />
           </div>
           {
-            (!!cost || SuperAdmin) && (
+            (!!cost || isSuperAdmin) && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='cost'
@@ -221,7 +228,7 @@ const SecondStep = ({
             )
           }
           {
-            ((!!cost && !!profitability) || SuperAdmin) && (
+            ((!!cost && !!profitability) || isSuperAdmin) && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='charge'
@@ -245,50 +252,62 @@ const SecondStep = ({
           }
         </div>
 
-        <div className={style.right}>
+        {
+          (!!modules.create_groups || !!modules.create_places || isSuperAdmin) && (
+            <div className={style.right}>
+              {
+                (!!modules.create_groups || isSuperAdmin) && (
+                  <>
+                    <div className={style.formItem}>
+                      <Label htmlFor='group' text={t('Assign to Group')} />
+                      <AddEditSelectOptions
+                        id='group'
+                        options={groupsOpt}
+                        user={user}
+                        name='group'
+                        fullWidth
+                        handleInput={handleInput}
+                        placeholder={t('Select a group')}
+                      />
+                    </div>
+                    <div className={style.formItem}>
+                      <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
+                      <AddEditSelectOptions
+                        id='subgroup'
+                        options={subGroupsOpt}
+                        user={user}
+                        disabled={subGroupsOpt.length <= 1}
+                        name='subgroup'
+                        placeholder={t('Select a subgroup')}
+                        handleInput={handleInput}
+                      />
+                      {
+                        errors.subgroup
+                        && <small className={style.error}>{errors.subgroup}</small>
+                      }
+                    </div>
+                  </>
+                )
+              }
 
-          <div className={style.formItem}>
-            <Label htmlFor='group' text={t('Assign to Group')} />
-            <AddEditSelectOptions
-              id='group'
-              options={groupsOpt}
-              user={user}
-              name='group'
-              fullWidth
-              handleInput={handleInput}
-              placeholder={t('Select a group')}
-            />
-          </div>
-
-          <div className={style.formItem}>
-            <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-            <AddEditSelectOptions
-              id='subgroup'
-              options={subGroupsOpt}
-              user={user}
-              disabled={subGroupsOpt.length <= 1}
-              name='subgroup'
-              placeholder={t('Select a subgroup')}
-              handleInput={handleInput}
-            />
-            {
-              errors.subgroup
-              && <small className={style.error}>{errors.subgroup}</small>
-            }
-          </div>
-
-          <div className={style.formItem}>
-            <Label htmlFor='place' text={t('Assign to place')} />
-            <AddEditSelectOptions
-              id='place'
-              options={placeOpt}
-              user={user}
-              placeholder={t('Select a place')}
-              name='place'
-              handleInput={handleInput}
-            />
-          </div>
-        </div>
+              {
+                (!!modules.create_places || isSuperAdmin) && (
+                  <div className={style.formItem}>
+                    <Label htmlFor='place' text={t('Assign to place')} />
+                    <AddEditSelectOptions
+                      id='place'
+                      options={placeOpt}
+                      user={user}
+                      placeholder={t('Select a place')}
+                      name='place'
+                      handleInput={handleInput}
+                    />
+                  </div>
+                )
+              }
+            </div>
+          )
+        }
 
         <DialogCreateSkill
           open={skillOpen}

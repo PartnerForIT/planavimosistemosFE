@@ -55,13 +55,13 @@ export default function EditAccount({
   places = [],
   onSubmit = () => ({}),
   handleClose: externalHandleClose,
-  modules: { cost_earning: cost, profitability },
+  modules: { cost_earning: cost, profitability, ...modules },
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
 
-  const SuperAdmin = useContext(AdminContext);
+  const isSuperAdmin = useContext(AdminContext);
 
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
@@ -258,6 +258,10 @@ export default function EditAccount({
     }
   }, [errors, onSubmit, ready, user]);
 
+  const formClasses = classnames(style.form, {
+    [style.form_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+  });
+
   return (
     <Dialog handleClose={handleClose} open={!!open} title={title}>
       <div className={style.edit}>
@@ -272,7 +276,7 @@ export default function EditAccount({
                   <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
                 </div>
 
-                <form className={style.form}>
+                <form className={formClasses}>
                   <div className={classnames(style.left, style.bordered)}>
                     <div className={classes.formItem}>
                       <Label htmlFor='email' text={t('Email')} />
@@ -344,7 +348,7 @@ export default function EditAccount({
                       />
                     </div>
                     {
-                     (!!cost || SuperAdmin) && (
+                     (!!cost || isSuperAdmin) && (
                      <div className={classes.formItem}>
                        <Label
                          htmlFor='cost'
@@ -366,7 +370,7 @@ export default function EditAccount({
                      )
                     }
                     {
-                      ((!!cost && !!profitability) || SuperAdmin) && (
+                      ((!!cost && !!profitability) || isSuperAdmin) && (
                       <div className={classes.formItem}>
                         <Label
                           htmlFor='charge'
@@ -389,51 +393,63 @@ export default function EditAccount({
                     }
                   </div>
 
-                  <div
-                    className={classnames(style.right, style.bordered)}
-                  >
-                    <div className={classes.formItem}>
-                      <Label htmlFor='group' text={t('Assign to Group')} />
-                      <AddEditSelectOptions
-                        id='group'
-                        options={groupsOpt}
-                        user={user}
-                        name='group'
-                        handleInput={handleInput}
-                        placeholder={t('Select a group')}
-                      />
-                    </div>
+                  {
+                    (!!modules.create_groups || !!modules.create_places || isSuperAdmin) && (
+                      <div
+                        className={classnames(style.right, style.bordered)}
+                      >
+                        {
+                          (!!modules.create_groups || isSuperAdmin) && (
+                            <>
+                              <div className={classes.formItem}>
+                                <Label htmlFor='group' text={t('Assign to Group')} />
+                                <AddEditSelectOptions
+                                  id='group'
+                                  options={groupsOpt}
+                                  user={user}
+                                  name='group'
+                                  handleInput={handleInput}
+                                  placeholder={t('Select a group')}
+                                />
+                              </div>
+                              <div className={classes.formItem}>
+                                <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
+                                <AddEditSelectOptions
+                                  id='subgroup'
+                                  options={subGroupsOpt}
+                                  user={user}
+                                  disabled={subGroupsOpt.length <= 1}
+                                  name='subgroup'
+                                  placeholder={t('Select a subgroup')}
+                                  handleInput={handleInput}
+                                />
+                                {
+                                  errors.subgroup
+                                  && <small className={classes.error}>{errors.subgroup}</small>
+                                }
+                              </div>
+                            </>
+                          )
+                        }
 
-                    <div className={classes.formItem}>
-                      <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-                      <AddEditSelectOptions
-                        id='subgroup'
-                        options={subGroupsOpt}
-                        user={user}
-                        disabled={subGroupsOpt.length <= 1}
-                        name='subgroup'
-                        placeholder={t('Select a subgroup')}
-                        handleInput={handleInput}
-                      />
-                      {
-                        errors.subgroup
-                        && <small className={classes.error}>{errors.subgroup}</small>
-                      }
-                    </div>
-
-                    <div className={classes.formItem}>
-                      <Label htmlFor='place' text={t('Assign to place')} />
-                      <AddEditSelectOptions
-                        id='place'
-                        options={placeOpt}
-                        user={user}
-                        placeholder={t('Select a place')}
-                        name='place'
-                        handleInput={handleInput}
-                      />
-                    </div>
-
-                  </div>
+                        {
+                          (!!modules.create_places || isSuperAdmin) && (
+                            <div className={classes.formItem}>
+                              <Label htmlFor='place' text={t('Assign to place')} />
+                              <AddEditSelectOptions
+                                id='place'
+                                options={placeOpt}
+                                user={user}
+                                placeholder={t('Select a place')}
+                                name='place'
+                                handleInput={handleInput}
+                              />
+                            </div>
+                          )
+                        }
+                      </div>
+                    )
+                  }
                 </form>
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>

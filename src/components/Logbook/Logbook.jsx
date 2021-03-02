@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useState,
+  useCallback, useContext, useEffect, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
-import MaynLayout from '../Core/MainLayout';
+
+import MaynLayout, { AdminContext } from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -110,6 +111,7 @@ const Logbook = () => {
   const modules = useSelector(companyModules);
   const { id: companyId } = useParams();
   const user = useSelector(userSelector);
+  const isSuperAdmin = useContext(AdminContext);
 
   const [approval, setApproval] = useState(false);
   const [workTime, setWorkTime] = useState([]);
@@ -264,21 +266,28 @@ const Logbook = () => {
 
   useEffect(() => {
     const { cost_earning: costEarning, profitability } = modules;
-
+    let allColumnsArray = columns;
     if (!profitability) {
       if (!costEarning) {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit' && field !== 'cost')),
-        );
+        allColumnsArray = columns
+          .filter(({ field }) => (field !== 'sallary' && field !== 'profit' && field !== 'cost'));
       } else {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit')),
-        );
+        allColumnsArray = columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit'));
       }
-    } else {
-      setColumnsArray(columns);
     }
-  }, [modules]);
+
+    if (!isSuperAdmin) {
+      if (!modules.create_places) {
+        allColumnsArray = allColumnsArray.filter((column) => column.field !== 'place');
+      }
+
+      if (!modules.create_jobs) {
+        allColumnsArray = allColumnsArray.filter((column) => column.field !== 'jobType');
+      }
+    }
+
+    setColumnsArray(allColumnsArray);
+  }, [modules, isSuperAdmin]);
 
   useEffect(() => {
     setLoading(workTimeLoading);

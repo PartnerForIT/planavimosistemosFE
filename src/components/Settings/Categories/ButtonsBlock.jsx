@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+
 import Tooltip from '../../Core/Tooltip';
 import Label from '../../Core/InputLabel';
 import Button from '../../Core/Button/Button';
@@ -8,16 +9,18 @@ import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import { createSkill, actionCreateJob, actuionCreatePlace } from '../../../store/settings/actions';
+import { AdminContext } from '../../Core/MainLayout';
 
 export default function ButtonBlock({ style, companyId, modules }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const isSuperAdmin = useContext(AdminContext);
+
   const [openNewSkill, setOpenNewSkill] = useState(false);
   const [openJob, setOpenJob] = useState(false);
   const [openPlace, setOpenPlace] = useState(false);
   const [job, setJob] = useState('');
   const [place, setPlace] = useState('');
-
   const [skillName, setSkillName] = useState({
     name: '',
     cost: '',
@@ -68,12 +71,20 @@ export default function ButtonBlock({ style, companyId, modules }) {
       <Button onClick={() => setOpenNewSkill(true)} fillWidth size='big'>
         {t('Skill name')}
       </Button>
-      <Button onClick={() => setOpenJob(true)} inverse fillWidth size='big'>
-        {t('Job name')}
-      </Button>
-      <Button onClick={() => setOpenPlace(true)} inverse fillWidth size='big'>
-        {t('Place name')}
-      </Button>
+      {
+        (isSuperAdmin || !!modules.create_jobs) && (
+          <Button onClick={() => setOpenJob(true)} inverse fillWidth size='big'>
+            {t('Job name')}
+          </Button>
+        )
+      }
+      {
+        (isSuperAdmin || !!modules.create_places) && (
+          <Button onClick={() => setOpenPlace(true)} inverse fillWidth size='big'>
+            {t('Place name')}
+          </Button>
+        )
+      }
       <div className={style.newSkillBlock}>
         <Label text={t('New skill')} htmlFor='new_skill' />
         <Button onClick={() => setOpenNewSkill(true)} white fillWidth size='big'>

@@ -148,7 +148,11 @@ small.error {
 
 .secondForm {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+
+  &_three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 
   .info {
     padding-right: $padding-size;

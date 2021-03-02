@@ -46,15 +46,17 @@ export default function Form({
   handleChangeAutomaticApprove,
   handleChangeAutomaticBreak,
   submit,
-  modules: { cost_earning: cost, profitability, comments_photo },
+  modules: {
+    cost_earning: cost, profitability, comments_photo, ...modules
+  },
 }) {
-  const SuperAdmin = useContext(AdminContext);
+  const isSuperAdmin = useContext(AdminContext);
   return (
     <div className={style.logbookBlock}>
       <Label text={`${t('General Journal Settings')} :`} />
 
       {
-        (!!cost || SuperAdmin) && (
+        (!!cost || isSuperAdmin) && (
           <div className={style.generalBlock}>
             <div className={style.labelText}>{t('Cost, Hourly rate')}</div>
             <Input
@@ -74,7 +76,7 @@ export default function Form({
       }
 
       {
-        ((!!cost && !!profitability) || SuperAdmin) && (
+        ((!!cost && !!profitability) || isSuperAdmin) && (
           <div className={style.generalBlock}>
             <div className={style.labelText}>{t('Charge, Hourly rate')}</div>
             <Input
@@ -175,102 +177,109 @@ export default function Form({
       {/*  </div> */}
       {/* </div> */}
 
-      <div className={style.formLine} />
-      <div className={style.generalBlock3}>
-        <Label text={t('Use approve flow')} />
-        <Switch
-          onChange={handleChangeApproveFlow}
-          offColor='#808F94'
-          onColor='#0085FF'
-          uncheckedIcon={false}
-          checkedIcon={false}
-          name='approve_flow'
-          checked={journalData.approve_flow}
-          height={21}
-          width={40}
-        />
-        <div className={style.tooltipBlock}>
-          <Tooltip
-            title='Use approve flow on/off - enable the verification flow of the logbook entries,
-            managers can approve or suspend each logbook entry which comes from the employees.)'
-          />
-        </div>
-      </div>
-      <div className={style.formLine} />
-
-      <div className={!journalData.approve_flow ? style.disabledBlock : ''}>
-        <div className={style.generalBlock3}>
-          <Label text={t('Use automatic approval')} />
-          <Switch
-            onChange={handleChangeAutomaticApprove}
-            offColor='#808F94'
-            onColor='#0085FF'
-            uncheckedIcon={false}
-            checkedIcon={false}
-            name='approve_flow'
-            disabled={!journalData.approve_flow}
-            checked={journalData.automatic_approval}
-            height={21}
-            width={40}
-          />
-          <div className={style.tooltipBlock}>
-            <Tooltip
-              title='Use automatic approve flow, this possibility to turn on/off is possible only then approve flow
-              is turned on. Automatically approve all entries based on the settings at the end of each day, each
-              week, each month. (a week is based by general settings week starts)'
-            />
-          </div>
-        </div>
-        <div className={!journalData.automatic_approval ? style.disabledBlock : ''}>
-          <Label text={`${t('Entries approved automatically at the end of')} :`} />
-          <div className={style.generalBlock4}>
-            <FormControlLabel
-              value='approved_at'
-              control={(
-                <BlueRadio
-                  checked={journalData.approved_at === 'day'}
-                  onChange={handleInputChange}
-                  value='day'
-                  name='approved_at'
-                  label='Each day'
-                  inputProps={{ 'aria-label': 'Each day' }}
+      {
+        (!!modules.use_approval_flow || isSuperAdmin) && (
+          <>
+            <div className={style.formLine} />
+            <div className={style.generalBlock3}>
+              <Label text={t('Use approve flow')} />
+              <Switch
+                onChange={handleChangeApproveFlow}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='approve_flow'
+                checked={journalData.approve_flow}
+                height={21}
+                width={40}
+              />
+              <div className={style.tooltipBlock}>
+                <Tooltip
+                  title='Use approve flow on/off - enable the verification flow of the logbook entries,
+                        managers can approve or suspend each logbook entry which comes from the employees.)'
                 />
-              )}
-              label='Each day'
-            />
+              </div>
+            </div>
+            <div className={style.formLine} />
 
-            <FormControlLabel
-              value='approved_at'
-              control={(
-                <BlueRadio
-                  checked={journalData.approved_at === 'week'}
-                  onChange={handleInputChange}
-                  value='week'
-                  name='approved_at'
-                  label='Each day'
-                  inputProps={{ 'aria-label': 'Each week' }}
+            <div className={!journalData.approve_flow ? style.disabledBlock : ''}>
+              <div className={style.generalBlock3}>
+                <Label text={t('Use automatic approval')} />
+                <Switch
+                  onChange={handleChangeAutomaticApprove}
+                  offColor='#808F94'
+                  onColor='#0085FF'
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  name='approve_flow'
+                  disabled={!journalData.approve_flow}
+                  checked={journalData.automatic_approval}
+                  height={21}
+                  width={40}
                 />
-              )}
-              label='Each week'
-            />
+                <div className={style.tooltipBlock}>
+                  <Tooltip
+                    title='Use automatic approve flow, this possibility to turn on/off is
+                  possible only then approve flow is turned on. Automatically approve
+                  all entries based on the settings at the end of each day, each
+                  week, each month. (a week is based by general settings week starts)'
+                  />
+                </div>
+              </div>
+              <div className={!journalData.automatic_approval ? style.disabledBlock : ''}>
+                <Label text={`${t('Entries approved automatically at the end of')} :`} />
+                <div className={style.generalBlock4}>
+                  <FormControlLabel
+                    value='approved_at'
+                    control={(
+                      <BlueRadio
+                        checked={journalData.approved_at === 'day'}
+                        onChange={handleInputChange}
+                        value='day'
+                        name='approved_at'
+                        label='Each day'
+                        inputProps={{ 'aria-label': 'Each day' }}
+                      />
+                    )}
+                    label='Each day'
+                  />
 
-            <FormControlLabel
-              value='approved_at'
-              control={(
-                <BlueRadio
-                  checked={journalData.approved_at === 'month'}
-                  onChange={handleInputChange}
-                  value='month'
-                  name='approved_at'
-                  inputProps={{ 'aria-label': 'Each month' }}
-                />
-              )}
-              label='Each month'
-            />
-          </div>
-        </div>
-        <div className={style.formLine} />
-      </div>
+                  <FormControlLabel
+                    value='approved_at'
+                    control={(
+                      <BlueRadio
+                        checked={journalData.approved_at === 'week'}
+                        onChange={handleInputChange}
+                        value='week'
+                        name='approved_at'
+                        label='Each day'
+                        inputProps={{ 'aria-label': 'Each week' }}
+                      />
+                    )}
+                    label='Each week'
+                  />
+
+                  <FormControlLabel
+                    value='approved_at'
+                    control={(
+                      <BlueRadio
+                        checked={journalData.approved_at === 'month'}
+                        onChange={handleInputChange}
+                        value='month'
+                        name='approved_at'
+                        inputProps={{ 'aria-label': 'Each month' }}
+                      />
+                    )}
+                    label='Each month'
+                  />
+                </div>
+              </div>
+              <div className={style.formLine} />
+            </div>
+          </>
+        )
+      }
       <div className={style.generalBlock3}>
         <Label text={t('Automatic lunch break')} />
         <Switch

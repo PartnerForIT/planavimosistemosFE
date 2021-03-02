@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 
@@ -13,24 +14,30 @@ const AccessModule = React.memo(({
   setDisableReady,
   readOnly,
   modules,
+  isSuperAdmin,
 }) => {
   const moduleAccess = useMemo(() => {
     const allModuleAccess = {
       ...roleAccess.moduleAccess,
     };
 
-    if (!modules.reports) {
-      delete allModuleAccess.reports;
-    }
-    if (!modules.events) {
-      delete allModuleAccess.events;
-    }
-    if (!modules.logbook) {
-      delete allModuleAccess.logbook;
+    if (!isSuperAdmin) {
+      if (!modules.reports) {
+        delete allModuleAccess.reports;
+      }
+      if (!modules.events) {
+        delete allModuleAccess.events;
+      }
+      if (!modules.logbook) {
+        delete allModuleAccess.logbook;
+      } else if (!modules.use_approval_flow) {
+        delete allModuleAccess.logbook.options.requests;
+        delete allModuleAccess.logbook.options.requests_in_place;
+      }
     }
 
     return allModuleAccess;
-  }, [modules, roleAccess.moduleAccess]);
+  }, [modules, isSuperAdmin, roleAccess.moduleAccess]);
 
   return (
     <Content title='Access by module' tooltip='Tooltip'>

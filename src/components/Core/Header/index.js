@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { useDispatch, useSelector } from 'react-redux';
+
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
@@ -21,6 +21,7 @@ import EditPassword from '../Dialog/EditPassword';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import { companyModules } from '../../../store/company/selectors';
+import { AdminContext } from '../MainLayout';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -57,6 +58,7 @@ export default function ButtonAppBar({ logOut }) {
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
   const modules = useSelector(companyModules);
+  const isSuperAdmin = useContext(AdminContext);
 
   useEffect(() => {
     if (id) {
@@ -124,7 +126,7 @@ export default function ButtonAppBar({ logOut }) {
                 // </Link>
               }
               {
-                !!modules.logbook && (
+                (isSuperAdmin || !!modules.logbook) && (
                   <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
                     <LogbookIcon className={styles.icon} />
                     <span className={styles.link__text}>{t('Logbook')}</span>
@@ -141,7 +143,7 @@ export default function ButtonAppBar({ logOut }) {
                 // </Link>
               }
               {
-                !!modules.events && (
+                (isSuperAdmin || !!modules.events) && (
                   <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
                     <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
                     <span className={styles.link__text}>{t('Events')}</span>
@@ -149,7 +151,7 @@ export default function ButtonAppBar({ logOut }) {
                 )
               }
               {
-                !!modules.reports && (
+                (isSuperAdmin || !!modules.reports) && (
                   <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
                     <OverviewIcon className={styles.icon} />
                     <span className={styles.link__text}>{t('Reports')}</span>
