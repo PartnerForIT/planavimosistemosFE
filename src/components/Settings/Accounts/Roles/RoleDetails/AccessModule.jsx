@@ -21,18 +21,42 @@ const AccessModule = React.memo(({
       ...roleAccess.moduleAccess,
     };
 
+    console.log('allModuleAccess', roleAccess.moduleAccess);
+    console.log('modules', modules);
     if (!isSuperAdmin) {
-      if (!modules.reports) {
-        delete allModuleAccess.reports;
-      }
-      if (!modules.events) {
-        delete allModuleAccess.events;
-      }
       if (!modules.logbook) {
         delete allModuleAccess.logbook;
-      } else if (!modules.use_approval_flow) {
-        delete allModuleAccess.logbook.options.requests;
-        delete allModuleAccess.logbook.options.requests_in_place;
+      } else {
+        if (!modules.use_approval_flow) {
+          delete allModuleAccess.logbook.options.requests;
+          delete allModuleAccess.logbook.options.requests_in_place;
+        }
+
+        if (!modules.cost_earning) {
+          delete allModuleAccess.logbook.options.costs;
+          delete allModuleAccess.logbook.options.earnings;
+        }
+
+        if (!modules.profitability) {
+          delete allModuleAccess.logbook.options.profit;
+        }
+      }
+
+      if (!modules.reports) {
+        delete allModuleAccess.reports;
+      } else {
+        if (!modules.cost_earning) {
+          delete allModuleAccess.reports.options.costs;
+        }
+        if (!modules.profitability) {
+          console.log('allModuleAccess.reports.options.earnings', allModuleAccess.reports.options.earnings);
+          delete allModuleAccess.reports.options.earnings;
+          delete allModuleAccess.reports.options.profit;
+        }
+      }
+
+      if (!modules.events) {
+        delete allModuleAccess.events;
       }
     }
 

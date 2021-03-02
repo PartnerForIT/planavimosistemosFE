@@ -205,22 +205,22 @@ export default function AccountsList() {
   }, [dispatch, editVisible, id, newVisible]);
 
   useEffect(() => {
-    const { cost_earning: cost, profitability } = modules;
     let allColumnsArray = columns;
-    if (!profitability && SuperAdmin !== 1) {
-      if (!cost) {
-        allColumnsArray = columns.filter(({ field }) => (field !== 'cost' && field !== 'charge' && field !== 'salary'));
-      } else {
-        allColumnsArray = columns.filter(({ field }) => (field !== 'charge' && field !== 'salary'));
-      }
-    }
 
-    allColumnsArray = allColumnsArray.filter((column) => {
-      if (!isSuperAdmin && !modules.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
-        return false;
-      }
-      return true;
-    });
+    if (!isSuperAdmin) {
+      allColumnsArray = allColumnsArray.filter((column) => {
+        if (!modules.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
+          return false;
+        }
+        if (!modules.cost_earning && column.field === 'cost') {
+          return false;
+        }
+        if (!modules.profitability && (column.field === 'charge' || column.field === 'salary')) {
+          return false;
+        }
+        return true;
+      });
+    }
 
     setColumnsArray(allColumnsArray);
   }, [isSuperAdmin, SuperAdmin, modules]);

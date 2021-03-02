@@ -254,30 +254,31 @@ function Roles() {
     setDefaultRoleAccess(() => {
       const temp = {};
       const { moduleAccess } = initialRoleAccess;
-      const { cost_earning: costEarning, profitability } = modules;
+      // const { cost_earning: costEarning, profitability } = modules;
 
-      if (!_.isEmpty(modules)) {
-        if (costEarning && !profitability) {
-          delete moduleAccess.logbook.options.profit;
-
-          delete moduleAccess.reports.options.earnings;
-          delete moduleAccess.reports.options.profit;
-        }
-
-        if (!costEarning && !profitability) {
-          delete moduleAccess.logbook.options.earnings;
-          delete moduleAccess.logbook.options.profit;
-          delete moduleAccess.logbook.options.costs;
-
-          delete moduleAccess.reports.options.costs;
-          delete moduleAccess.reports.options.earnings;
-          delete moduleAccess.reports.options.profit;
-        }
-      }
+      // if (!_.isEmpty(modules)) {
+      //   if (costEarning && !profitability) {
+      //     delete moduleAccess.logbook.options.profit;
+      //
+      //     delete moduleAccess.reports.options.earnings;
+      //     delete moduleAccess.reports.options.profit;
+      //   }
+      //
+      //   if (!costEarning && !profitability) {
+      //     delete moduleAccess.logbook.options.earnings;
+      //     delete moduleAccess.logbook.options.profit;
+      //     delete moduleAccess.logbook.options.costs;
+      //
+      //     delete moduleAccess.reports.options.costs;
+      //     delete moduleAccess.reports.options.earnings;
+      //     delete moduleAccess.reports.options.profit;
+      //   }
+      // }
       Object.keys({ ...moduleAccess }).map((key) => {
         temp[key] = {
           ...moduleAccess[key],
-          enabled: SuperAdmin === 1 ? true : !!modules[key],
+          enabled: true,
+          // enabled: SuperAdmin === 1 ? true : !!modules[key],
         };
         return key;
       });

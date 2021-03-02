@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+
 import { AdminContext } from '../../MainLayout';
 import style from './CreateAccount.module.scss';
 import Button from '../../Button/Button';
@@ -33,7 +34,7 @@ const SecondStep = ({
   groups,
   places,
   previousStep,
-  modules: { cost_earning: cost, profitability, ...modules },
+  modules,
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -205,7 +206,7 @@ const SecondStep = ({
             />
           </div>
           {
-            (!!cost || isSuperAdmin) && (
+            (isSuperAdmin || !!modules.cost_earning) && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='cost'
@@ -228,7 +229,7 @@ const SecondStep = ({
             )
           }
           {
-            ((!!cost && !!profitability) || isSuperAdmin) && (
+            (isSuperAdmin || !!modules.profitability) && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='charge'
@@ -253,7 +254,7 @@ const SecondStep = ({
         </div>
 
         {
-          (!!modules.create_groups || !!modules.create_places || isSuperAdmin) && (
+          (isSuperAdmin || !!modules.create_groups || !!modules.create_places) && (
             <div className={style.right}>
               {
                 (!!modules.create_groups || isSuperAdmin) && (

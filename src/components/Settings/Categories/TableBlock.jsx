@@ -36,12 +36,12 @@ const page = {};
 
 export default function TableBlock({ style, skills, modules }) {
   const { t } = useTranslation();
+  const isSuperAdmin = useContext(AdminContext);
   const [columnsArray, setColumnsArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const SuperAdmin = useContext(AdminContext);
   useEffect(() => {
     setDataArray(skills.map((item) => ({
       ...item,
@@ -50,21 +50,22 @@ export default function TableBlock({ style, skills, modules }) {
   }, [skills]);
 
   useEffect(() => {
-    const { cost_earning: cost, profitability } = modules;
-    if (!profitability && !SuperAdmin) {
-      if (!cost) {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'cost' && field !== 'earn')),
-        );
-      } else {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'earn')),
-        );
-      }
-    } else {
-      setColumnsArray(columns);
+    let allColumnsArray = columns;
+
+    if (!isSuperAdmin) {
+      allColumnsArray = allColumnsArray.filter((column) => {
+        if (!modules.cost_earning && column.field === 'cost') {
+          return false;
+        }
+        if (!modules.profitability && column.field === 'earn') {
+          return false;
+        }
+        return true;
+      });
     }
-  }, [SuperAdmin, modules]);
+
+    setColumnsArray(allColumnsArray);
+  }, [isSuperAdmin, modules]);
 
   const selectionHandler = (itemId, value) => {
     setDataArray((prevState) => prevState.map((item) => {

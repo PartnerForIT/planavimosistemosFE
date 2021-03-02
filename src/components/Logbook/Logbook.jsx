@@ -265,25 +265,25 @@ const Logbook = () => {
   }, [workTime, getTotalDuration, sortStatus]);
 
   useEffect(() => {
-    const { cost_earning: costEarning, profitability } = modules;
     let allColumnsArray = columns;
-    if (!profitability) {
-      if (!costEarning) {
-        allColumnsArray = columns
-          .filter(({ field }) => (field !== 'sallary' && field !== 'profit' && field !== 'cost'));
-      } else {
-        allColumnsArray = columns.filter(({ field }) => (field !== 'sallary' && field !== 'profit'));
-      }
-    }
 
     if (!isSuperAdmin) {
-      if (!modules.create_places) {
-        allColumnsArray = allColumnsArray.filter((column) => column.field !== 'place');
-      }
+      allColumnsArray = allColumnsArray.filter((column) => {
+        if (!modules.create_places && column.field === 'place') {
+          return false;
+        }
+        if (!modules.create_jobs && column.field === 'jobType') {
+          return false;
+        }
+        if (!modules.profitability && (column.field === 'sallary' || column.field === 'profit')) {
+          return false;
+        }
+        if (!modules.cost_earning && column.field === 'cost') {
+          return false;
+        }
 
-      if (!modules.create_jobs) {
-        allColumnsArray = allColumnsArray.filter((column) => column.field !== 'jobType');
-      }
+        return true;
+      });
     }
 
     setColumnsArray(allColumnsArray);

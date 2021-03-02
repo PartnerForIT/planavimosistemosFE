@@ -46,9 +46,7 @@ export default function Form({
   handleChangeAutomaticApprove,
   handleChangeAutomaticBreak,
   submit,
-  modules: {
-    cost_earning: cost, profitability, comments_photo, ...modules
-  },
+  modules,
 }) {
   const isSuperAdmin = useContext(AdminContext);
   return (
@@ -56,7 +54,7 @@ export default function Form({
       <Label text={`${t('General Journal Settings')} :`} />
 
       {
-        (!!cost || isSuperAdmin) && (
+        (isSuperAdmin || !!modules.cost_earning) && (
           <div className={style.generalBlock}>
             <div className={style.labelText}>{t('Cost, Hourly rate')}</div>
             <Input
@@ -76,7 +74,7 @@ export default function Form({
       }
 
       {
-        ((!!cost && !!profitability) || isSuperAdmin) && (
+        (isSuperAdmin || !!modules.profitability) && (
           <div className={style.generalBlock}>
             <div className={style.labelText}>{t('Charge, Hourly rate')}</div>
             <Input
@@ -109,7 +107,7 @@ export default function Form({
       {/*  </div> */}
       {/* </div> */}
       {
-        !!comments_photo && (
+        (isSuperAdmin || !!modules.comments_photo) && (
           <>
             <div className={style.generalBlock2}>
               <Checkbox

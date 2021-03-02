@@ -55,7 +55,7 @@ export default function EditAccount({
   places = [],
   onSubmit = () => ({}),
   handleClose: externalHandleClose,
-  modules: { cost_earning: cost, profitability, ...modules },
+  modules,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -348,53 +348,53 @@ export default function EditAccount({
                       />
                     </div>
                     {
-                     (!!cost || isSuperAdmin) && (
-                     <div className={classes.formItem}>
-                       <Label
-                         htmlFor='cost'
-                         text={(
-                           <>
-                             {t('Cost, Hourly rate')}
-                             {' '}
-                             <CurrencySign />
-                           </>
-                        )}
-                       />
-                       <Input
-                         name='cost'
-                         value={user.cost ?? ''}
-                         placeholder={t('How much new user cost/h')}
-                         onChange={handleInput}
-                       />
-                     </div>
+                     (isSuperAdmin || !!modules.cost_earning) && (
+                       <div className={classes.formItem}>
+                         <Label
+                           htmlFor='cost'
+                           text={(
+                             <>
+                               {t('Cost, Hourly rate')}
+                               {' '}
+                               <CurrencySign />
+                             </>
+                          )}
+                         />
+                         <Input
+                           name='cost'
+                           value={user.cost ?? ''}
+                           placeholder={t('How much new user cost/h')}
+                           onChange={handleInput}
+                         />
+                       </div>
                      )
                     }
                     {
-                      ((!!cost && !!profitability) || isSuperAdmin) && (
-                      <div className={classes.formItem}>
-                        <Label
-                          htmlFor='charge'
-                          text={(
-                            <>
-                              {t('Charge, Hourly rate')}
-                              {' '}
-                              <CurrencySign />
-                            </>
-                        )}
-                        />
-                        <Input
-                          name='charge'
-                          value={user.charge ?? ''}
-                          placeholder={t('How much you charge per h')}
-                          onChange={handleInput}
-                        />
-                      </div>
+                      (isSuperAdmin || !!modules.profitability) && (
+                        <div className={classes.formItem}>
+                          <Label
+                            htmlFor='charge'
+                            text={(
+                              <>
+                                {t('Charge, Hourly rate')}
+                                {' '}
+                                <CurrencySign />
+                              </>
+                          )}
+                          />
+                          <Input
+                            name='charge'
+                            value={user.charge ?? ''}
+                            placeholder={t('How much you charge per h')}
+                            onChange={handleInput}
+                          />
+                        </div>
                       )
                     }
                   </div>
 
                   {
-                    (!!modules.create_groups || !!modules.create_places || isSuperAdmin) && (
+                    (isSuperAdmin || !!modules.create_groups || !!modules.create_places) && (
                       <div
                         className={classnames(style.right, style.bordered)}
                       >

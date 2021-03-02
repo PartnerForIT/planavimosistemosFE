@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,6 @@ import EditPassword from '../Dialog/EditPassword';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import { companyModules } from '../../../store/company/selectors';
-import { AdminContext } from '../MainLayout';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -43,7 +42,7 @@ const initialPasswords = {
   repeatPassword: '',
 };
 
-export default function ButtonAppBar({ logOut }) {
+export default function ButtonAppBar({ logOut, isSuperAdmin }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -58,7 +57,6 @@ export default function ButtonAppBar({ logOut }) {
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
   const modules = useSelector(companyModules);
-  const isSuperAdmin = useContext(AdminContext);
 
   useEffect(() => {
     if (id) {
