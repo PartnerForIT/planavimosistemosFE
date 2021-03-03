@@ -17,7 +17,7 @@ const CurrencySign = React.memo(() => {
   const settingsLoading = useSelector(settingsLoadingSelector);
 
   useEffect(() => {
-    if (!currencies.length && !settingsLoading) {
+    if (Array.isArray(currencies) && !currencies.length && !settingsLoading) {
       dispatch(getCurrencies());
     }
   }, [currencies, dispatch, settingsLoading]);
@@ -29,7 +29,14 @@ const CurrencySign = React.memo(() => {
   }, [company, dispatch, id, settingsLoading]);
 
   const currency = useMemo(
-    () => currencies.find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '',
+    () => {
+      if (Array.isArray(currencies)) {
+        return currencies
+          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+      }
+
+      return '';
+    },
     [company.currency, currencies],
   );
 

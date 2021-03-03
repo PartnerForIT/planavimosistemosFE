@@ -29,9 +29,8 @@ const LoginContainer = () => {
     if (localStorage.getItem('token')) {
       const user = JSON.parse(localStorage.getItem('user'));
       const roleId = user.role_id;
-      const company_id = user.id;
 
-      history.push(roleId === 1 ? routes.ORG_LIST : `${routes.LOGBOOK}/${company_id}`);
+      history.push(roleId === 1 ? routes.ORG_LIST : `${routes.LOGBOOK}/${user.company_id}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -39,11 +38,10 @@ const LoginContainer = () => {
   const handleLogin = () => {
     dispatch(login(email, password)).then((data) => {
       const roleId = data.data.user.role_id;
-      const company_id = data.data.user.id;
       // eslint-disable-next-line no-unused-expressions
       roleId === 1
         ? history.push(routes.ORG_LIST)
-        : history.push(`${routes.LOGBOOK}/${company_id}`);
+        : history.push(`${routes.LOGBOOK}/${data.data.user.company_id}`);
     }).catch((error) => {
       console.log('Login error', error);
     });
