@@ -102,6 +102,12 @@ import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_ERROR,
+  PATCH_SKILL,
+  DELETE_SKILL,
+  PATCH_JOB,
+  DELETE_JOB,
+  PATCH_PLACE,
+  DELETE_PLACE,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -204,6 +210,17 @@ export const createSkill = (data, id) => ({
   data,
   id,
 });
+export const patchSkill = (data, companyId, id) => ({
+  type: PATCH_SKILL,
+  data,
+  companyId,
+  id,
+});
+export const deleteSkill = (companyId, id) => ({
+  type: DELETE_SKILL,
+  companyId,
+  id,
+});
 export const createSkillSuccess = (data) => ({
   type: CREATE_SKILL_SUCCESS,
   data,
@@ -214,10 +231,32 @@ export const actionCreateJob = (data, id) => ({
   data,
   id,
 });
+export const patchJob = (data, companyId, id) => ({
+  type: PATCH_JOB,
+  data,
+  companyId,
+  id,
+});
+export const deleteJob = (companyId, id) => ({
+  type: DELETE_JOB,
+  companyId,
+  id,
+});
 
-export const actuionCreatePlace = (data, id) => ({
+export const actionCreatePlace = (data, id) => ({
   type: CREATE_PLACE,
   data,
+  id,
+});
+export const patchPlace = (data, companyId, id) => ({
+  type: PATCH_PLACE,
+  data,
+  companyId,
+  id,
+});
+export const deletePlace = (companyId, id) => ({
+  type: DELETE_PLACE,
+  companyId,
   id,
 });
 

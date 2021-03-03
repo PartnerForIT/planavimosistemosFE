@@ -26,7 +26,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first',
+  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
@@ -148,7 +148,16 @@ export default function DataTable({
 
   const tableContentClasses = classNames(
     styles.tableContent,
-    { [styles.tableContentNotSortable]: !sortable },
+    {
+      [styles.tableContentNotSortable]: !sortable,
+    },
+  );
+
+  const tableContainerClasses = classNames(
+    styles.tableContainer,
+    {
+      [styles.tableContainer_grey]: grey,
+    },
   );
 
   const onScroll = useMemo(() => {
@@ -163,7 +172,7 @@ export default function DataTable({
 
   return (
     <div
-      className={classNames(styles.tableContainer)}
+      className={tableContainerClasses}
       style={{ height: `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'
@@ -260,11 +269,13 @@ export default function DataTable({
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => icon.icon)
                         }
-                        {sortable && (
-                          <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                            <SortIcon />
-                          </div>
-                        )}
+                        {
+                          // sortable && (
+                          //   <div className={classNames(styles.flexCenter, styles.sortIcon)}>
+                          //     <SortIcon />
+                          //   </div>
+                          // )
+                        }
                       </div>
                       {/* { (onSerach && columnsWidth[column.field] !== 80) &&
                         <div className={styles.headerSearch}>

@@ -77,6 +77,7 @@ header {
   background: #fff;
   box-shadow: none;
   border-bottom: 1px solid $row-bg;
+  z-index: 2;
 }
 
 // search-table END
@@ -678,6 +679,19 @@ div {
 
   .row.rowSelected .rowWrapper {
     background-color: #ecf1f9;
+  }
+
+  &_grey {
+    background-color: #fcfdfd;
+
+    .simpleTable {
+      background-color: #fcfdfd;
+      border-bottom-color: #e6e6e6;
+    }
+
+    .sortBlock {
+      color: #808f94;
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Dialog from '../index';
 import Button from '../../Button/Button';
@@ -8,9 +8,16 @@ import style from '../Dialog.module.scss';
 
 export default function CreateJob({
   handleClose, title, open,
-  buttonTitle, createJob, job, setJob,
+  buttonTitle, createJob, initialValue,
 }) {
   const { t } = useTranslation();
+  const [jobName, setJobName] = useState('');
+
+  useEffect(() => {
+    if (initialValue) {
+      setJobName(initialValue);
+    }
+  }, [initialValue]);
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
@@ -18,14 +25,14 @@ export default function CreateJob({
         <Label text={t('Job name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter Job name')}`}
-          value={job}
+          value={jobName}
           name='name'
           fullWidth
-          onChange={(e) => setJob(e.target.value)}
+          onChange={(e) => setJobName(e.target.value)}
         />
       </div>
       <div className={style.buttonSaveBlock}>
-        <Button disabled={job === ''} onClick={() => createJob()} fillWidth size='big'>
+        <Button disabled={jobName === ''} onClick={() => createJob(jobName)} fillWidth size='big'>
           {buttonTitle}
         </Button>
       </div>

@@ -49,6 +49,12 @@ import {
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
+  PATCH_PLACE,
+  DELETE_PLACE,
+  PATCH_JOB,
+  DELETE_JOB,
+  PATCH_SKILL,
+  DELETE_SKILL,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -102,7 +108,10 @@ import {
   loadPermissionsSuccess,
   loadPermissionsError,
   getRoles, sendImportedEmployeesSuccess, changePasswordSuccess, changePasswordError,
+  loadSkills,
 } from './actions';
+import { getJobTypes } from '../jobTypes/actions';
+import { getPlaces } from '../places/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 
@@ -268,11 +277,8 @@ function* createSettingSkill(action) {
 function* creacteJob(action) {
   try {
     // eslint-disable-next-line no-unused-vars
-    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/job-types/create`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    yield call(axios.post, `${config.api.url}/company/${action.id}/job-types/create`, action.data, token());
+    yield put(getJobTypes(action.id));
     yield put(addSnackbar('Job creation successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -282,16 +288,118 @@ function* creacteJob(action) {
     yield put(dismissSnackbar());
   }
 }
+function* patchJob(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/job-types/update/${action.id}`,
+      action.data,
+      token(),
+    );
+    yield put(getJobTypes(action.companyId));
+    yield put(addSnackbar('Updated job successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* deleteJob(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/job-types/delete/${action.id}`,
+      token(),
+    );
+    yield put(getJobTypes(action.companyId));
+    yield put(addSnackbar('Removed job successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
 
 function* createPlace(action) {
   try {
-    // eslint-disable-next-line no-unused-vars
-    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}}/places/create`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    yield call(axios.post, `${config.api.url}/company/${action.id}/places/create`, action.data, token());
+    yield put(getPlaces(action.id));
     yield put(addSnackbar('Place creation successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* patchPlace(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/places/update/${action.id}`,
+      action.data,
+      token(),
+    );
+    yield put(getPlaces(action.companyId));
+    yield put(addSnackbar('Updated place successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* deletePlace(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/places/delete/${action.id}`,
+      token(),
+    );
+    yield put(getPlaces(action.companyId));
+    yield put(addSnackbar('Removed place successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchSkill(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/specialities/update/${action.id}`,
+      action.data,
+      token(),
+    );
+    yield put(loadSkills(action.companyId));
+    yield put(addSnackbar('Updated skill successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* deleteSkill(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/specialities/delete/${action.id}`,
+      token(),
+    );
+    yield put(loadSkills(action.companyId));
+    yield put(addSnackbar('Removed skill successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
@@ -1188,6 +1296,12 @@ function* changePassword(action) {
 }
 
 export default function* SettingsWatcher() {
+  yield takeLeading(PATCH_JOB, patchJob);
+  yield takeLeading(DELETE_JOB, deleteJob);
+  yield takeLeading(PATCH_PLACE, patchPlace);
+  yield takeLeading(DELETE_PLACE, deletePlace);
+  yield takeLeading(PATCH_SKILL, patchSkill);
+  yield takeLeading(DELETE_SKILL, deleteSkill);
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLeading(GET_SETTINGS_WORK_TIME, loadSettingsWorkTime);

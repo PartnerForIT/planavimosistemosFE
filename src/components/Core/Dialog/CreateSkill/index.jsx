@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Switch from 'react-switch';
 import { AdminContext } from '../../MainLayout';
@@ -10,26 +10,49 @@ import style from '../Dialog.module.scss';
 
 export default function CreateSkill({
   handleClose, title, open,
-  skillName, handleSkillChange, handleChangeRates, buttonTitle, createSkill,
-  modules: { cost_earning: cost, profitability } = {},
-
+  buttonTitle, createSkill,
+  modules, initialValues,
 }) {
   const { t } = useTranslation();
-  const SuperAdmin = useContext(AdminContext);
+  const isSuperAdmin = useContext(AdminContext);
+  const [formValues, setFormValues] = useState({
+    name: '',
+    cost: '',
+    earn: '',
+    use_rates: true,
+  });
+
+  const handleSkillChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues((prevState) => ({ ...prevState, [name]: value }));
+  };
+  const handleChangeRates = () => {
+    setFormValues((prevState) => ({ ...prevState, use_rates: !prevState.use_rates }));
+  };
+
+  useEffect(() => {
+    if (initialValues) {
+      setFormValues({
+        ...initialValues,
+        use_rates: Boolean(initialValues.use_rates),
+      });
+    }
+  }, [initialValues]);
+
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.formControl}>
         <Label text={t('Skill Name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter Skill name')}`}
-          value={skillName.name}
+          value={formValues.name}
           name='name'
           fullWidth
           onChange={handleSkillChange}
         />
       </div>
       {
-        (!!cost || SuperAdmin) && (
+        (isSuperAdmin || !!modules.cost_earning) && (
         <div className={style.ratesBlock}>
           <Label text={t('Use Rates')} htmlFor='rates' />
           <Switch
@@ -38,7 +61,7 @@ export default function CreateSkill({
             onColor='#0085FF'
             uncheckedIcon={false}
             checkedIcon={false}
-            checked={skillName.rates}
+            checked={formValues.use_rates}
             height={21}
             width={40}
           />
@@ -46,28 +69,28 @@ export default function CreateSkill({
         )
       }
       {
-        (!!cost || SuperAdmin) && (
+        (isSuperAdmin || !!modules.cost_earning) && (
           <div className={style.formControl}>
             <Label text={t('Cost, Hourly rate, $')} htmlFor='cost' />
             <Input
               placeholder={`${t('How much new user cost/h')}`}
-              value={skillName.cost}
+              value={formValues.cost}
               name='cost'
               fullWidth
               onChange={handleSkillChange}
-              disabled={!skillName.rates}
+              disabled={!formValues.use_rates}
             />
           </div>
         )
       }
       {
-        ((!!cost && !!profitability) || SuperAdmin) && (
+        (isSuperAdmin || !!modules.profitability) && (
           <div className={style.formControl}>
             <Label text={t('Charge, Hourly rate, $')} htmlFor='earn' />
             <Input
               placeholder={`${t('How much you charge per h')}`}
-              value={skillName.earn}
-              disabled={!skillName.rates}
+              value={formValues.earn}
+              disabled={!formValues.use_rates}
               name='earn'
               fullWidth
               onChange={handleSkillChange}
@@ -76,7 +99,12 @@ export default function CreateSkill({
         )
       }
       <div className={style.buttonSaveBlock}>
-        <Button disabled={skillName.name === ''} onClick={() => createSkill()} fillWidth size='big'>
+        <Button
+          disabled={formValues.name === ''}
+          onClick={() => createSkill(formValues)}
+          fillWidth
+          size='big'
+        >
           {buttonTitle}
         </Button>
       </div>
