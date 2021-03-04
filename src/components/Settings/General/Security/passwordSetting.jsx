@@ -5,13 +5,12 @@ import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Input from '../../../Core/Input/Input';
 import style from './security.module.scss';
-import Button from '../../../Core/Button/Button';
 
 export default function passwordSetting({
   t,
   handleChangeSettings, settings,
   min_password_length, changeMinPassword, login_attempts,
-  setLogin_attempts, changeSecuritySettings,
+  setLogin_attempts,
 }) {
   return (
     <div className={style.passwordSettings}>
@@ -104,11 +103,6 @@ export default function passwordSetting({
           label={t('Notify administrators of locked account by e-mail')}
           name='notify_admin'
         />
-      </div>
-      <div className={style.buttonBlock}>
-        <Button inverse onClick={() => changeSecuritySettings()}>
-          {t('Save security settings')}
-        </Button>
       </div>
     </div>
   );

@@ -5,11 +5,10 @@ import Tooltip from '../../../Core/Tooltip';
 import SimpleSelect from '../../../Core/SimpleSelect';
 import timeArr from '../../../Helpers/time';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
-import Button from '../../../Core/Button/Button';
 
 export default function WorkingTime({
   styles, days,
-  handleChangeDays, startTime, handleChangeStartTime, saveTime,
+  handleChangeDays, startTime, handleChangeStartTime,
 }) {
   const { t } = useTranslation();
   return (
@@ -44,9 +43,6 @@ export default function WorkingTime({
             />
           </div>
         ))}
-        <Button inverse onClick={() => saveTime()}>
-          {t('Save')}
-        </Button>
         <div className={styles.formLine} />
       </div>
     </div>

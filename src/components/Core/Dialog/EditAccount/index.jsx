@@ -17,7 +17,7 @@ import avatar from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
-import { convertBase64 } from '../../../Helpers';
+import { imageResize } from '../../../Helpers';
 import CurrencySign from '../../../shared/CurrencySign';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import classes from './EditAccount.module.scss';
@@ -185,7 +185,7 @@ export default function EditAccount({
 
   // eslint-disable-next-line no-shadow
   const handleSave = async (file) => {
-    const base64 = await convertBase64(file[0]);
+    const base64 = await imageResize(file[0]);
     setFile(base64);
     setDownloadOpen(false);
   };

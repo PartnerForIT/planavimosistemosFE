@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { debounce } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+
 import MainLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -122,37 +124,52 @@ export default function WorkTime() {
     }
   }, [filterWorksDay, workTime.work_time]);
 
+  const saveTime = useCallback(debounce((payload) => {
+    const daysData = [];
+    Object.values(payload.days).forEach((item, index) => {
+      if (item) {
+        daysData.push({
+          day: index + 1,
+          start: payload.startTime[`start${index + 1}`],
+          finish: payload.startTime[`finish${index + 1}`],
+        });
+      }
+    });
+    const data = {
+      week_start: payload.inputValues.week_start,
+      week_start_time: payload.inputValues.week_start_time,
+      work_days: [...daysData],
+    };
+    dispatch(patchWorkTime(data, params.id));
+  }, 5000), [dispatch, params.id]);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
+    saveTime({
+      inputValues: { ...inputValues, [name]: value },
+      startTime,
+      days,
+    });
   };
 
   const handleChangeStartTime = (event) => {
     const { name, value } = event.target;
     setStartTime({ ...startTime, [name]: value });
+    saveTime({
+      inputValues,
+      days,
+      startTime: { ...startTime, [name]: value },
+    });
   };
 
   const handleChangeDays = (event) => {
     setDays({ ...days, [event.target.name]: event.target.checked });
-  };
-
-  const saveTime = () => {
-    const daysData = [];
-    Object.values(days).forEach((item, index) => {
-      if (item) {
-        daysData.push({
-          day: index + 1,
-          start: startTime[`start${index + 1}`],
-          finish: startTime[`finish${index + 1}`],
-        });
-      }
+    saveTime({
+      days: { ...days, [event.target.name]: event.target.checked },
+      inputValues,
+      startTime,
     });
-    const data = {
-      week_start: inputValues.week_start,
-      week_start_time: inputValues.week_start_time,
-      work_days: [...daysData],
-    };
-    dispatch(patchWorkTime(data, params.id));
   };
 
   return (
@@ -181,7 +198,6 @@ export default function WorkTime() {
                     handleChangeDays={handleChangeDays}
                     startTime={startTime}
                     handleChangeStartTime={handleChangeStartTime}
-                    saveTime={saveTime}
                   />
                   <Holidays
                     styles={styles}

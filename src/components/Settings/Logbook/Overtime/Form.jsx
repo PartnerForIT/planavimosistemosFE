@@ -8,7 +8,6 @@ import Select from '../../../Core/SimpleSelect';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 import Label from '../../../Core/InputLabel';
 import Input from '../../../Core/Input/Input';
-import Button from '../../../Core/Button/Button';
 
 const daylyWork = [
   {
@@ -74,7 +73,6 @@ export default function Form({
   handleInputChange,
   handleChangeCalculation,
   overtimeData,
-  submit,
 }) {
   return (
     <form className={style.logbookBlock}>
@@ -251,11 +249,6 @@ export default function Form({
             <span className={style.value}>$</span>
           </div>
         </div>
-      </div>
-      <div className={style.buttonBlock}>
-        <Button inverse onClick={() => submit()}>
-          {t('Save Overtime')}
-        </Button>
       </div>
     </form>
   );

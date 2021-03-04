@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
+import { debounce } from 'lodash';
+
 import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -81,41 +83,46 @@ export default function Journal() {
     }
   }, [journal]);
 
+  const submit = useCallback(debounce((payload) => {
+    const data = {
+      hourly_charge: payload.hourly_charge,
+      hourly_cost: payload.hourly_cost,
+      show_earned_salary: payload.show_earned_salary ? 1 : 0,
+      merge_entries: payload.merge_entries ? 1 : 0,
+      profitability: payload.profitability ? 1 : 0,
+      approve_flow: payload.approve_flow ? 1 : 0,
+      automatic_approval: payload.automatic_approval ? 1 : 0,
+      approved_at: payload.approved_at,
+      automatic_break: payload.automatic_break ? 1 : 0,
+      workday_exceed: payload.workday_exceed,
+      break_duration: payload.break_duration,
+    };
+    dispatch(editLogbookJournal(id, data));
+  }, 5000), [dispatch, id]);
+
   const handleInputChange = (event) => {
     const { name, value, type } = event.target;
     if (type === 'checkbox') {
       setJournalData({ ...journalData, [name]: !journalData[name] });
+      submit({ ...journalData, [name]: !journalData[name] });
     } else {
       setJournalData({ ...journalData, [name]: value });
+      submit({ ...journalData, [name]: value });
     }
   };
 
   const handleChangeApproveFlow = () => {
     setJournalData({ ...journalData, approve_flow: !journalData.approve_flow });
+    submit({ ...journalData, approve_flow: !journalData.approve_flow });
   };
 
   const handleChangeAutomaticApprove = () => {
     setJournalData({ ...journalData, automatic_approval: !journalData.automatic_approval });
+    submit({ ...journalData, automatic_approval: !journalData.automatic_approval });
   };
   const handleChangeAutomaticBreak = () => {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
-  };
-
-  const submit = () => {
-    const data = {
-      hourly_charge: journalData.hourly_charge,
-      hourly_cost: journalData.hourly_cost,
-      show_earned_salary: journalData.show_earned_salary ? 1 : 0,
-      merge_entries: journalData.merge_entries ? 1 : 0,
-      profitability: journalData.profitability ? 1 : 0,
-      approve_flow: journalData.approve_flow ? 1 : 0,
-      automatic_approval: journalData.automatic_approval ? 1 : 0,
-      approved_at: journalData.approved_at,
-      automatic_break: journalData.automatic_break ? 1 : 0,
-      workday_exceed: journalData.workday_exceed,
-      break_duration: journalData.break_duration,
-    };
-    dispatch(editLogbookJournal(id, data));
+    submit({ ...journalData, automatic_break: !journalData.automatic_break });
   };
 
   return (
@@ -139,7 +146,6 @@ export default function Journal() {
                     handleChangeApproveFlow={handleChangeApproveFlow}
                     handleChangeAutomaticApprove={handleChangeAutomaticApprove}
                     handleChangeAutomaticBreak={handleChangeAutomaticBreak}
-                    submit={submit}
                     modules={modules}
                   />
                 </>

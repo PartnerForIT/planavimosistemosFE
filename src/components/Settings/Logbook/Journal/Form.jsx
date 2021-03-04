@@ -11,7 +11,6 @@ import Input from '../../../Core/Input/Input';
 import Label from '../../../Core/InputLabel';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 import Select from '../../../Core/SimpleSelect';
-import Button from '../../../Core/Button/Button';
 
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },
@@ -45,7 +44,6 @@ export default function Form({
   handleChangeApproveFlow,
   handleChangeAutomaticApprove,
   handleChangeAutomaticBreak,
-  submit,
   modules,
 }) {
   const isSuperAdmin = useContext(AdminContext);
@@ -315,9 +313,6 @@ export default function Form({
           />
         </div>
       </div>
-      <Button inverse onClick={() => submit()}>
-        {t('Save Journal')}
-      </Button>
     </div>
   );
 }

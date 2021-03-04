@@ -72,9 +72,9 @@ import {
   loadEmployeesSuccess,
   loadDeleteDataSuccess,
   loadLogbookJournalSuccess,
-  editLogbookJournalSuccess,
+  // editLogbookJournalSuccess,
   loadLogbookOvertimeSuccess,
-  editLogbookOvertimeSuccess,
+  // editLogbookOvertimeSuccess,
   getAccountGroupsSuccess,
   createAccountGroupSuccess,
   createAccountGroupError,
@@ -134,12 +134,12 @@ function* loadSettingsCompany(action) {
 
 function* editSettingsCompany(action) {
   try {
-    const { data } = yield call(axios.patch, `${config.api.url}/company/${action.id}/update`, action.data, {
+    yield call(axios.patch, `${config.api.url}/company/${action.id}/update`, action.data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    yield put(getSettingCompanySuccess(data));
+    // yield put(getSettingCompanySuccess(data));
     yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -525,13 +525,13 @@ function* loadJournalData(action) {
 
 function* patchLogbookJournal(action) {
   try {
-    const { data } = yield call(axios.patch,
+    yield call(axios.patch,
       `${config.api.url}/company/${action.id}/logbook/journal/store`, action.data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-    yield put(editLogbookJournalSuccess(data));
+    // yield put(editLogbookJournalSuccess(data));
     yield put(addSnackbar('Edit Journal successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -553,14 +553,14 @@ function* loadOvertimeData(action) {
 
 function* patchLogbookOvertime(action) {
   try {
-    const { data } = yield call(axios.patch,
+    yield call(axios.patch,
       `${config.api.url}/company/${action.id}/logbook/overtime/store`, action.data,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-    yield put(editLogbookOvertimeSuccess(data));
+    // yield put(editLogbookOvertimeSuccess(data));
     yield put(addSnackbar('Edit Overtime successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());

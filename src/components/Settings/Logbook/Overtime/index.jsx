@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { debounce } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../../Core/MainLayout';
@@ -68,6 +69,15 @@ export default function Overtime() {
     }
   }, [overtime]);
 
+  const submit = useCallback(debounce((payload) => {
+    const value = document.querySelector('[name=\'overtime_rate\']:not(:disabled)')?.value ?? '';
+    const data = {
+      ...payload,
+      overtime_rate: value,
+    };
+    dispatch(editLogbookOvertime(id, data));
+  }, 5000), [dispatch, id]);
+
   const handleInputChange = (event) => {
     const {
       name,
@@ -79,8 +89,16 @@ export default function Overtime() {
         ...overtimeData,
         [name]: !overtimeData[name],
       });
+      submit({
+        ...overtimeData,
+        [name]: !overtimeData[name],
+      });
     } else {
       setOvertimeData({
+        ...overtimeData,
+        [name]: value,
+      });
+      submit({
         ...overtimeData,
         [name]: value,
       });
@@ -92,15 +110,10 @@ export default function Overtime() {
       ...overtimeData,
       status: !overtimeData.status,
     });
-  };
-
-  const submit = () => {
-    const value = document.querySelector('[name=\'overtime_rate\']:not(:disabled)').value ?? '';
-    const data = {
+    submit({
       ...overtimeData,
-      overtime_rate: value,
-    };
-    dispatch(editLogbookOvertime(id, data));
+      status: !overtimeData.status,
+    });
   };
 
   return (
@@ -118,7 +131,6 @@ export default function Overtime() {
                 <Form
                   t={t}
                   style={styles}
-                  submit={submit}
                   handleInputChange={handleInputChange}
                   handleChangeCalculation={handleChangeCalculation}
                   overtimeData={overtimeData}

@@ -11,7 +11,7 @@ import SimpleSelect from '../../../Core/SimpleSelect';
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
   inputValues, countries = [], currencies = [],
-  editCompany, file, company, timeZones = [],
+  file, company, timeZones = [],
 }) {
   const { t } = useTranslation();
 
@@ -125,9 +125,6 @@ export default function CompaneForm({
           value={inputValues.currency}
           options={currencies}
         />
-      </div>
-      <div className={styles.buttonBlock}>
-        <Button size='big' onClick={() => editCompany()}>{t('Save')}</Button>
       </div>
     </div>
   );
