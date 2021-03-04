@@ -17,6 +17,7 @@ import AccountsIcon from '../../../Icons/2Peple';
 import Progress from '../../../Core/Progress';
 import {
   isLoadingSelector,
+  employeeLoadingSelector,
   isShowSnackbar,
   snackbarType,
   snackbarText,
@@ -138,6 +139,7 @@ export default function AccountsList() {
   const { users: Allemployees = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
+  const employeeLoading = useSelector(employeeLoadingSelector);
   const skills = useSelector(categoriesSkillsSelector);
   const groups = useSelector(AccountGroupsSelector);
   const places = useSelector(placesSelector);
@@ -207,7 +209,7 @@ export default function AccountsList() {
 
   useEffect(() => {
     if (newVisible || editVisible) {
-      dispatch(loadSkills(id));
+      // dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
@@ -426,11 +428,15 @@ export default function AccountsList() {
           <EditAccount
             open={!!editVisible}
             employee={employee}
-            title={`${t('Edit')} ${employee.name ?? ''} ${employee.surname ?? ''} ${t('Account')}`}
+            title={`
+              ${t('Edit')}
+              ${!employeeLoading ? `${employee.name ?? ''} ${employee.surname ?? ''}` : ''}
+              ${t('Account')}
+            `}
             handleClose={() => setEditVisible(false)}
-            handleOpen={(visible) => setEditVisible(visible)}
+            handleOpen={setEditVisible}
             companyId={id}
-            loading={empLoading}
+            loading={employeeLoading}
             skills={skills}
             groups={groups}
             places={places}

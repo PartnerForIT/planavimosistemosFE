@@ -109,6 +109,7 @@ const initialState = {
   deleteData: [],
   places: [],
   loading: false,
+  employeeLoading: false,
   error: null,
   snackbarText: '',
   snackbarShow: false,
@@ -257,7 +258,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
     }
     case GET_SETTINGS_EMPLOYEES:
     case GET_SETTINGS_EMPLOYEES_QUERY:
-    case GET_SETTINGS_EMPLOYEES_EDIT:
     {
       return {
         ...state,
@@ -302,20 +302,28 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: action.data,
       };
 
+    case GET_SETTINGS_EMPLOYEES_EDIT:
+      return {
+        ...state,
+        error: null,
+        employeeLoading: true,
+      };
     case GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS:
       return {
         ...state,
-        loading: false,
         employee: action.data,
-        employeesLoading: false,
+        employeeLoading: false,
       };
-
-    case GET_SETTINGS_EMPLOYEES_ERROR:
     case GET_SETTINGS_EMPLOYEES_EDIT_ERROR:
       return {
         ...state,
+        employeeLoading: false,
+      };
+
+    case GET_SETTINGS_EMPLOYEES_ERROR:
+      return {
+        ...state,
         loading: false,
-        employeesLoading: false,
       };
 
     case DELETE_EMPLOYEE:

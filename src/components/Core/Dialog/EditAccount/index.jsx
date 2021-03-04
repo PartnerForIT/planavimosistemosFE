@@ -262,8 +262,12 @@ export default function EditAccount({
     [style.form_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
   });
 
+  const handleExited = () => {
+    setUser({});
+  };
+
   return (
-    <Dialog handleClose={handleClose} open={!!open} title={title}>
+    <Dialog handleClose={handleClose} onExited={handleExited} open={!!open} title={title}>
       <div className={style.edit}>
 
         {
@@ -472,6 +476,7 @@ export default function EditAccount({
                   title={t('Create new skill')}
                   buttonTitle={t('Create new skill')}
                   createSkill={createNewSkill}
+                  modules={modules}
                 />
                 <DropzoneDialog
                   open={downloadOpen}
