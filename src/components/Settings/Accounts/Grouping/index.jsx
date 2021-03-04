@@ -26,7 +26,15 @@ import {
   getAccountGroups,
   removeAccountGroup, removeAccountSubgroup,
 } from '../../../../store/settings/actions';
+import usePermissions from '../../../Core/usePermissions';
 
+const permissionsConfig = [
+  {
+    name: 'groups_create',
+    permission: 'groups_create',
+    module: 'create_groups',
+  },
+];
 export default function Grouping() {
   const isLoading = useSelector(isLoadingSelector);
   const groupLoading = useSelector(groupsLoadingSelector);
@@ -35,6 +43,7 @@ export default function Grouping() {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const Groups = useSelector(AccountGroupsSelector);
+  const permissions = usePermissions(permissionsConfig);
 
   const useStyles = makeStyles(() => ({
     error: {
@@ -146,6 +155,7 @@ export default function Grouping() {
                     sort={setSort}
                     removeGroup={removeGroup}
                     edit={editGroupName}
+                    withAddButton={permissions.groups_create}
                   />
                   <SubgroupsBlock
                     style={style}
@@ -156,6 +166,7 @@ export default function Grouping() {
                     loading={subGroupLoading}
                     removeSubgroup={removeSubgroup}
                     edit={editSubgroupName}
+                    withAddButton={permissions.groups_create}
                   />
                 </div>
               )

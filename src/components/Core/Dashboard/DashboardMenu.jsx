@@ -18,6 +18,7 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import { companyModules } from '../../../store/company/selectors';
 import { AdminContext } from '../MainLayout';
 import styles from './dasboard.module.scss';
+import usePermissions from '../usePermissions';
 
 const useStyles = makeStyles(() => ({
   accordion: {
@@ -75,6 +76,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'activity_log',
+    permission: 'activity_log_view',
+    module: 'activity_log',
+  },
+];
 export default function DashboardMenu() {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -84,6 +92,7 @@ export default function DashboardMenu() {
   const innerSection = pathname.split('/')[3];
   const modules = useSelector(companyModules);
   const isSuperAdmin = useContext(AdminContext);
+  const permissions = usePermissions(permissionsConfig);
 
   const IconWrapper = ({ children }) => (
     <div className={styles.iconWrapper}>
@@ -189,18 +198,14 @@ export default function DashboardMenu() {
                   {t('Roles')}
                 </Link>
               </li>
-              {
-                (isSuperAdmin || !!modules.create_groups) && (
-                  <li>
-                    <Link
-                      to={`/settings/accounts/grouping/${params.id}`}
-                      className={innerSection === 'grouping' ? styles.activeLink : styles.link}
-                    >
-                      {t('Grouping')}
-                    </Link>
-                  </li>
-                )
-              }
+              <li>
+                <Link
+                  to={`/settings/accounts/grouping/${params.id}`}
+                  className={innerSection === 'grouping' ? styles.activeLink : styles.link}
+                >
+                  {t('Grouping')}
+                </Link>
+              </li>
             </ul>
           </AccordionDetails>
         </Accordion>
@@ -275,7 +280,7 @@ export default function DashboardMenu() {
           <span className={styles.textLink}>{t('Categories')}</span>
         </Link>
         {
-          (isSuperAdmin || !!modules.activity_log) && (
+          permissions.activity_log && (
             <Link
               to={`/settings/activity-log/${params.id}`}
               className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}

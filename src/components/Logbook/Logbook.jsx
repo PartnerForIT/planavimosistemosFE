@@ -162,7 +162,7 @@ const Logbook = () => {
     const superAdmin = user ? user.role_id : false;
 
     // TODO: get approval option from role
-    if (superAdmin === 1 || (approveFlow === 1 && user.roles[0])) {
+    if (superAdmin === 1 || (approveFlow === 1)) {
       setApproval(true);
     } else {
       setApproval(false);

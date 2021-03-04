@@ -26,7 +26,7 @@ const columnsWidthArray = {
 export default function GroupsBlock({
   style, groups = [],
   loading = false, setSelected, selected,
-  addNewGroup, sort, removeGroup, edit,
+  addNewGroup, sort, removeGroup, edit, withAddButton,
 }) {
   const { t } = useTranslation();
 
@@ -64,11 +64,15 @@ export default function GroupsBlock({
         <div className={style.labelBLock}>
           <Label text={t('Groups')} htmlFor='' />
           <Tooltip title='Select Group' />
-          <div className={style.right}>
-            <Button onClick={() => setVisible(true)} inverse inline size='small'>
-              {`+ ${t('add new group')}`}
-            </Button>
-          </div>
+          {
+            withAddButton && (
+              <div className={style.right}>
+                <Button onClick={() => setVisible(true)} inverse inline size='small'>
+                  {`+ ${t('add new group')}`}
+                </Button>
+              </div>
+            )
+          }
         </div>
         <div className={style.table}>
           <DataTable

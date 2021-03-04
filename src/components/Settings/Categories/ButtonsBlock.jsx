@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
@@ -9,8 +9,24 @@ import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import { createSkill, actionCreateJob, actionCreatePlace } from '../../../store/settings/actions';
-import { AdminContext } from '../../Core/MainLayout';
+import usePermissions from '../../Core/usePermissions';
 
+const permissionsConfig = [
+  {
+    name: 'create_jobs',
+    permission: 'categories_create',
+    module: 'create_jobs',
+  },
+  {
+    name: 'create_places',
+    permission: 'categories_create',
+    module: 'create_jobs',
+  },
+  {
+    name: 'create_skills',
+    permission: 'categories_create',
+  },
+];
 export default function ButtonBlock({
   style, companyId, modules,
   selectedCategory,
@@ -18,48 +34,48 @@ export default function ButtonBlock({
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const isSuperAdmin = useContext(AdminContext);
+  const permissions = usePermissions(permissionsConfig);
 
   const [openNewItem, setOpenNewItem] = useState(false);
 
-  const buttons = useMemo(() => {
-    const data = [
-      {
-        onClick: () => setSelectedCategory('skills'),
-        inverse: selectedCategory !== 'skills',
-        title: 'Skill name',
-      },
-    ];
-
-    if (isSuperAdmin || !!modules.create_jobs) {
-      data.push({
-        onClick: () => setSelectedCategory('jobs'),
-        inverse: selectedCategory !== 'jobs',
-        title: 'Job name',
-      });
-    }
-    if (isSuperAdmin || !!modules.create_places) {
-      data.push({
-        onClick: () => setSelectedCategory('places'),
-        inverse: selectedCategory !== 'places',
-        title: 'Place name',
-      });
-    }
-
-    return data;
-  }, [isSuperAdmin, modules, selectedCategory, setSelectedCategory]);
-  const itemName = useMemo(() => {
+  const buttons = useMemo(() => [
+    {
+      onClick: () => setSelectedCategory('skills'),
+      inverse: selectedCategory !== 'skills',
+      title: 'Skill name',
+    },
+    {
+      onClick: () => setSelectedCategory('jobs'),
+      inverse: selectedCategory !== 'jobs',
+      title: 'Job name',
+    },
+    {
+      onClick: () => setSelectedCategory('places'),
+      inverse: selectedCategory !== 'places',
+      title: 'Place name',
+    },
+  ], [selectedCategory, setSelectedCategory]);
+  const { itemName, withAddButton } = useMemo(() => {
     switch (selectedCategory) {
       case 'skills': {
-        return 'skill';
+        return {
+          itemName: 'skill',
+          withAddButton: permissions.create_skills,
+        };
       }
       case 'jobs': {
-        return 'job';
+        return {
+          itemName: 'job',
+          withAddButton: permissions.create_jobs,
+        };
       }
       case 'places': {
-        return 'place';
+        return {
+          itemName: 'place',
+          withAddButton: permissions.create_places,
+        };
       }
-      default: return '';
+      default: return {};
     }
   }, [selectedCategory]);
 
@@ -101,17 +117,21 @@ export default function ButtonBlock({
           </Button>
         ))
       }
-      <div className={style.newSkillBlock}>
-        <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
-        <Button
-          onClick={setOpenNewItem}
-          white
-          fillWidth
-          size='big'
-        >
-          {t(`Create new ${itemName}`)}
-        </Button>
-      </div>
+      {
+        withAddButton && (
+          <div className={style.newSkillBlock}>
+            <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
+            <Button
+              onClick={setOpenNewItem}
+              white
+              fillWidth
+              size='big'
+            >
+              {t(`Create new ${itemName}`)}
+            </Button>
+          </div>
+        )
+      }
       <DialogCreateSkill
         open={openNewItem && selectedCategory === 'skills'}
         handleClose={handleCloseItem}

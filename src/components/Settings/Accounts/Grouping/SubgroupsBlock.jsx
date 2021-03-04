@@ -18,7 +18,7 @@ const columns = [
 
 export default function SubgroupsBlock({
   style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort, loading,
-  removeSubgroup, edit,
+  removeSubgroup, edit, withAddButton,
 }) {
   const { t } = useTranslation();
 
@@ -35,11 +35,21 @@ export default function SubgroupsBlock({
         <div className={style.labelBLock}>
           <Label text={t('Sub-groups')} htmlFor='' />
           <Tooltip title='Select Sub-group' />
-          <div className={style.right}>
-            <Button onClick={() => setVisible(true)} inverse inline size='small' disabled={_.isEmpty(selectedGroup)}>
-              {`+ ${t('add new sub-group')}`}
-            </Button>
-          </div>
+          {
+            withAddButton && (
+              <div className={style.right}>
+                <Button
+                  onClick={() => setVisible(true)}
+                  inverse
+                  inline
+                  size='small'
+                  disabled={_.isEmpty(selectedGroup)}
+                >
+                  {`+ ${t('add new sub-group')}`}
+                </Button>
+              </div>
+            )
+          }
         </div>
         <div className={style.table}>
           <DataTable

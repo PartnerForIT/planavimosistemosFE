@@ -10,7 +10,14 @@ import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
 import EditIcon from '../../../../Icons/EditIcon';
 import { onKeyDown } from '../../../../Helpers';
+import usePermissions from '../../../../Core/usePermissions';
 
+const permissionsConfig = [
+  {
+    name: 'roles_create',
+    permission: 'roles_create',
+  },
+];
 function RolesBlock({
   roles = [],
   activeRole = {},
@@ -25,7 +32,7 @@ function RolesBlock({
   groups = [],
   roleEmployeesEdit = () => ({}),
   rolesPermissionsEdit = () => ({}),
-  permissions,
+  permissions: allPermissions,
   permissionsIds,
   removeRolesPermissions,
   defaultRoleAccess = {},
@@ -35,6 +42,7 @@ function RolesBlock({
   const [roleAccess, setRoleAccess] = useState(defaultRoleAccess);
   const [disableReady, setDisableReady] = useState(false);
   const [disable, setDisable] = useState([]);
+  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     const { moduleAccess } = roleAccess;
@@ -60,23 +68,25 @@ function RolesBlock({
     <div className={classes.roles}>
       <>
         {/* create new */}
-        <div
-          className={classnames(classes.card, classes.default)}
-          onClick={createNewRole}
-          onKeyDown={(e) => onKeyDown(e, createNewRole)}
-          role='option'
-          aria-selected='true'
-          aria-label='create new role'
-          tabIndex={0}
-        >
-          <p className={classes.card_title}>New role</p>
-          <small>{t('Create a new role')}</small>
-          <span
-            className={classes.card_icon}
-          >
-            <AddRolesIcon aria-hidden />
-          </span>
-        </div>
+        {
+          permissions.roles_create && (
+            <div
+              className={classnames(classes.card, classes.default)}
+              onClick={createNewRole}
+              onKeyDown={(e) => onKeyDown(e, createNewRole)}
+              role='option'
+              aria-selected='true'
+              aria-label='create new role'
+              tabIndex={0}
+            >
+              <p className={classes.card_title}>New role</p>
+              <small>{t('Create a new role')}</small>
+              <span className={classes.card_icon}>
+                <AddRolesIcon aria-hidden />
+              </span>
+            </div>
+          )
+        }
         {/* roles board */}
         {
                 roles.map((role) => (
@@ -146,7 +156,7 @@ function RolesBlock({
                           setRoleAccess={setRoleAccess}
                           roleEmployeesEdit={roleEmployeesEdit}
                           rolesPermissionsEdit={rolesPermissionsEdit}
-                          permissions={permissions}
+                          permissions={allPermissions}
                           permissionsIds={permissionsIds}
                           setDisableReady={setDisableReady}
                           disable={disable}
