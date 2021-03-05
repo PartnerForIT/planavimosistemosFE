@@ -14,16 +14,14 @@ import usePermissions from '../../Core/usePermissions';
 const permissionsConfig = [
   {
     name: 'create_jobs',
-    permission: 'categories_create',
     module: 'create_jobs',
   },
   {
     name: 'create_places',
-    permission: 'categories_create',
-    module: 'create_jobs',
+    module: 'create_places',
   },
   {
-    name: 'create_skills',
+    name: 'categories_create',
     permission: 'categories_create',
   },
 ];
@@ -38,44 +36,44 @@ export default function ButtonBlock({
 
   const [openNewItem, setOpenNewItem] = useState(false);
 
-  const buttons = useMemo(() => [
-    {
-      onClick: () => setSelectedCategory('skills'),
-      inverse: selectedCategory !== 'skills',
-      title: 'Skill name',
-    },
-    {
-      onClick: () => setSelectedCategory('jobs'),
-      inverse: selectedCategory !== 'jobs',
-      title: 'Job name',
-    },
-    {
-      onClick: () => setSelectedCategory('places'),
-      inverse: selectedCategory !== 'places',
-      title: 'Place name',
-    },
-  ], [selectedCategory, setSelectedCategory]);
-  const { itemName, withAddButton } = useMemo(() => {
+  const buttons = useMemo(() => {
+    const data = [
+      {
+        onClick: () => setSelectedCategory('skills'),
+        inverse: selectedCategory !== 'skills',
+        title: 'Skill name',
+      },
+    ];
+
+    if (permissions.create_jobs) {
+      data.push({
+        onClick: () => setSelectedCategory('jobs'),
+        inverse: selectedCategory !== 'jobs',
+        title: 'Job name',
+      });
+    }
+    if (permissions.create_places) {
+      data.push({
+        onClick: () => setSelectedCategory('places'),
+        inverse: selectedCategory !== 'places',
+        title: 'Place name',
+      });
+    }
+
+    return data;
+  }, [permissions, selectedCategory, setSelectedCategory]);
+  const itemName = useMemo(() => {
     switch (selectedCategory) {
       case 'skills': {
-        return {
-          itemName: 'skill',
-          withAddButton: permissions.create_skills,
-        };
+        return 'skill';
       }
       case 'jobs': {
-        return {
-          itemName: 'job',
-          withAddButton: permissions.create_jobs,
-        };
+        return 'job';
       }
       case 'places': {
-        return {
-          itemName: 'place',
-          withAddButton: permissions.create_places,
-        };
+        return 'place';
       }
-      default: return {};
+      default: return '';
     }
   }, [selectedCategory]);
 
@@ -118,7 +116,7 @@ export default function ButtonBlock({
         ))
       }
       {
-        withAddButton && (
+        permissions.categories_create && (
           <div className={style.newSkillBlock}>
             <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
             <Button

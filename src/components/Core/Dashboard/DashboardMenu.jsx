@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -15,8 +14,6 @@ import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
-import { companyModules } from '../../../store/company/selectors';
-import { AdminContext } from '../MainLayout';
 import styles from './dasboard.module.scss';
 import usePermissions from '../usePermissions';
 
@@ -82,6 +79,18 @@ const permissionsConfig = [
     permission: 'activity_log_view',
     module: 'activity_log',
   },
+  {
+    name: 'groups',
+    module: 'create_groups',
+  },
+  {
+    name: 'logbook',
+    module: 'logbook',
+  },
+  {
+    name: 'events',
+    module: 'events',
+  },
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -90,8 +99,6 @@ export default function DashboardMenu() {
   const { pathname } = useLocation();
   const section = pathname.split('/')[2];
   const innerSection = pathname.split('/')[3];
-  const modules = useSelector(companyModules);
-  const isSuperAdmin = useContext(AdminContext);
   const permissions = usePermissions(permissionsConfig);
 
   const IconWrapper = ({ children }) => (
@@ -198,20 +205,24 @@ export default function DashboardMenu() {
                   {t('Roles')}
                 </Link>
               </li>
-              <li>
-                <Link
-                  to={`/settings/accounts/grouping/${params.id}`}
-                  className={innerSection === 'grouping' ? styles.activeLink : styles.link}
-                >
-                  {t('Grouping')}
-                </Link>
-              </li>
+              {
+                permissions.groups && (
+                  <li>
+                    <Link
+                      to={`/settings/accounts/grouping/${params.id}`}
+                      className={innerSection === 'grouping' ? styles.activeLink : styles.link}
+                    >
+                      {t('Grouping')}
+                    </Link>
+                  </li>
+                )
+              }
             </ul>
           </AccordionDetails>
         </Accordion>
         {/* Logbook */}
         {
-          (isSuperAdmin || !!modules.logbook) && (
+          permissions.logbook && (
             <Accordion
               className={classes.accordion}
               defaultExpanded={section === 'logbook'}
@@ -258,7 +269,7 @@ export default function DashboardMenu() {
           )
         }
         {
-          (isSuperAdmin || !!modules.events) && (
+          permissions.events && (
             <Link
               to={`/settings/events/${params.id}`}
               className={section === 'events' ? styles.activeOnelink : styles.Onelink}

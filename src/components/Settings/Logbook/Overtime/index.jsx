@@ -19,6 +19,7 @@ import { editLogbookOvertime, loadLogbookOvertime } from '../../../../store/sett
 import Form from './Form';
 
 import styles from '../logbook.module.scss';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -31,11 +32,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'logbook_settings',
+    permission: 'logbook_edit_settings',
+  },
+];
 export default function Overtime() {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const [overtimeData, setOvertimeData] = useState({
     status: true,
@@ -134,6 +142,7 @@ export default function Overtime() {
                   handleInputChange={handleInputChange}
                   handleChangeCalculation={handleChangeCalculation}
                   overtimeData={overtimeData}
+                  readOnly={!permissions.logbook_settings}
                 />
               )
           }

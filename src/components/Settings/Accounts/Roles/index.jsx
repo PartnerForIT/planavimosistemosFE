@@ -50,8 +50,8 @@ const initialRoleAccess = {
         edit_logs: 'Can edit entry logs',
         delete_logs: 'Can delete entry logs',
         earnings: 'Can see earnings (APP)',
-        profit: 'Can see earnings and profit', // FIXME: rename on backend changes
-        costs: 'Can see costs', // FIXME: rename on backend changes
+        profit: 'Can see earnings and profit',
+        costs: 'Can see costs',
         requests: 'Get approval requests',
         requests_in_place: 'Get approval requests in assigned place',
       },
@@ -59,9 +59,9 @@ const initialRoleAccess = {
     reports: {
       enabled: false,
       options: {
-        costs: 'Can see costs', // FIXME: rename on backend changes
-        earnings: 'Can see earnings', // FIXME: rename on backend changes
-        profit: 'Can see profit', // FIXME: rename on backend changes
+        costs: 'Can see costs',
+        earnings: 'Can see earnings',
+        profit: 'Can see profit',
         generate: 'Can generate reports',
         assigned_place: 'Reports only for assigned place',
       },

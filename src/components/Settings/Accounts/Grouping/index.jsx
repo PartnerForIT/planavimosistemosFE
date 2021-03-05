@@ -32,7 +32,6 @@ const permissionsConfig = [
   {
     name: 'groups_create',
     permission: 'groups_create',
-    module: 'create_groups',
   },
 ];
 export default function Grouping() {

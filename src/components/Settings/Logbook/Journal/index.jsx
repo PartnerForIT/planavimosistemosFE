@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
 import { debounce } from 'lodash';
 
-import { companyModules } from '../../../../store/company/selectors';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -20,6 +19,7 @@ import {
 } from '../../../../store/settings/selectors';
 import { loadLogbookJournal, editLogbookJournal } from '../../../../store/settings/actions';
 import styles from '../logbook.module.scss';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -32,18 +32,40 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'logbook_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
+  {
+    name: 'cost',
+    module: 'cost_earning',
+  },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
+  {
+    name: 'use_approval_flow',
+    module: 'use_approval_flow',
+  },
+];
 export default function Journal() {
   const { id } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const permissions = usePermissions(permissionsConfig);
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const journal = useSelector(JournalDataSelector);
-  const modules = useSelector(companyModules);
 
   const [journalData, setJournalData] = useState({
     hourly_charge: '',
@@ -146,7 +168,8 @@ export default function Journal() {
                     handleChangeApproveFlow={handleChangeApproveFlow}
                     handleChangeAutomaticApprove={handleChangeAutomaticApprove}
                     handleChangeAutomaticBreak={handleChangeAutomaticBreak}
-                    modules={modules}
+                    readOnly={!permissions.logbook_settings}
+                    permissions={permissions}
                   />
                 </>
               )

@@ -25,9 +25,13 @@ import {
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
+import { skillsSelector } from '../../store/skills/selectors';
+import { userSelector } from '../../store/auth/selectors';
+import { companyModules } from '../../store/company/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
+import { getSkills } from '../../store/skills/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -35,15 +39,12 @@ import InfoCard from '../Core/InfoCard/InfoCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
-import { skillsSelector } from '../../store/skills/selectors';
-import { getSkills } from '../../store/skills/actions';
 import ApprovedIcon from '../Icons/ApprovedIcon';
 import SuspendedIcon from '../Icons/SuspendedIcon';
-import { companyModules } from '../../store/company/selectors';
 import ApproveIcon from '../Icons/ApproveIcon';
 import SuspendIcon from '../Icons/SuspendIcon';
 import { downloadExcel, downloadPdf } from '../../store/reports/actions';
-import { userSelector } from '../../store/auth/selectors';
+import usePermissions from '../Core/usePermissions';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -80,6 +81,42 @@ const columnsWidth = {
   profit: 140,
 };
 
+const permissionsConfig = [
+  {
+    name: 'places',
+    module: 'create_places',
+  },
+  {
+    name: 'jobs',
+    module: 'create_jobs',
+  },
+  {
+    name: 'cost',
+    module: 'cost_earning',
+    permission: 'logbook_costs',
+  },
+  {
+    name: 'profit',
+    module: 'profitability',
+    permission: 'logbook_profit',
+  },
+  {
+    name: 'logbook_delete_logs',
+    permission: 'logbook_delete_logs',
+    module: 'use_approval_flow',
+  },
+  {
+    name: 'approval_flow',
+    module: 'use_approval_flow',
+    permission: 'logbook_requests',
+  },
+  {
+    name: 'approval_flow_in_place',
+    module: 'use_approval_flow',
+    permission: 'logbook_requests_in_place',
+  },
+];
+
 const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -109,11 +146,11 @@ const Logbook = () => {
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
   const modules = useSelector(companyModules);
-  const { id: companyId } = useParams();
   const user = useSelector(userSelector);
+  const { id: companyId } = useParams();
   const isSuperAdmin = useContext(AdminContext);
+  const permissions = usePermissions(permissionsConfig);
 
-  const [approval, setApproval] = useState(false);
   const [workTime, setWorkTime] = useState([]);
 
   const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
@@ -156,18 +193,6 @@ const Logbook = () => {
       };
     }));
   }, [modules, wTime]);
-
-  useEffect(() => {
-    const { use_approval_flow: approveFlow } = modules;
-    const superAdmin = user ? user.role_id : false;
-
-    // TODO: get approval option from role
-    if (superAdmin === 1 || (approveFlow === 1)) {
-      setApproval(true);
-    } else {
-      setApproval(false);
-    }
-  }, [modules, user]);
 
   const [sortStatus, setSortStatus] = useState([]);
 
@@ -265,29 +290,25 @@ const Logbook = () => {
   }, [workTime, getTotalDuration, sortStatus]);
 
   useEffect(() => {
-    let allColumnsArray = columns;
+    const allColumnsArray = columns.filter((column) => {
+      if (!permissions.places && column.field === 'place') {
+        return false;
+      }
+      if (!permissions.jobs && column.field === 'jobType') {
+        return false;
+      }
+      if (!permissions.profit && (column.field === 'charge' || column.field === 'profit')) {
+        return false;
+      }
+      if (!permissions.cost && column.field === 'cost') {
+        return false;
+      }
 
-    if (!isSuperAdmin) {
-      allColumnsArray = allColumnsArray.filter((column) => {
-        if (!modules.create_places && column.field === 'place') {
-          return false;
-        }
-        if (!modules.create_jobs && column.field === 'jobType') {
-          return false;
-        }
-        if (!modules.profitability && (column.field === 'sallary' || column.field === 'profit')) {
-          return false;
-        }
-        if (!modules.cost_earning && column.field === 'cost') {
-          return false;
-        }
-
-        return true;
-      });
-    }
+      return true;
+    });
 
     setColumnsArray(allColumnsArray);
-  }, [modules, isSuperAdmin]);
+  }, [permissions, isSuperAdmin, setColumnsArray]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -430,152 +451,171 @@ const Logbook = () => {
     }).catch();
   };
 
-  const EmployeeInfo = () => (
-    <div className={styles.employeeInfo}>
-      <div className={styles.hero}>
-        <img src={avatar} alt={selectedItem.employee} width='71' height='72' />
-        <div className={styles.employeeName}>{selectedItem.employee}</div>
-        <div className={styles.date}>
+  const EmployeeInfo = () => {
+    const isApproval = (
+      permissions.approval_flow
+      || (permissions.approval_flow_in_place && user?.employee?.place?.[0]?.id === selectedItem?.place_id)
+    );
+
+    return (
+      <div className={styles.employeeInfo}>
+        <div className={styles.hero}>
+          <img src={avatar} alt={selectedItem.employee} width='71' height='72' />
+          <div className={styles.employeeName}>{selectedItem.employee}</div>
+          <div className={styles.date}>
+            {
+              format(
+                new Date(
+                  dateToUCT(selectedItem.works[0].started_at).getTime()
+                    + dateToUCT(selectedItem.works[0].started_at)
+                      .getTimezoneOffset() * 60 * 1000,
+                ), 'iii, dd, MMMM, yyyy',
+              )
+            }
+          </div>
+          <Delimiter />
           {
-            format(
-              new Date(
-                dateToUCT(selectedItem.works[0].started_at).getTime()
-                + dateToUCT(selectedItem.works[0].started_at)
-                  .getTimezoneOffset() * 60 * 1000,
-              ), 'iii, dd, MMMM, yyyy',
+            selectedItem && (
+              <>
+                <Scrollbar
+                  style={{ height: `calc(100vh - 218px - ${isApproval ? '64px' : '0px'})` }}
+                  removeTracksWhenNotUsed
+                  trackXProps={{
+                    renderer: (props) => {
+                      const { elementRef, ...restProps } = props;
+                      return (
+                        <span
+                          {...restProps}
+                          ref={elementRef}
+                          className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                        />
+                      );
+                    },
+                  }}
+                  trackYProps={{
+                    renderer: (props) => {
+                      const { elementRef, ...restProps } = props;
+                      return (
+                        <span
+                          {...restProps}
+                          ref={elementRef}
+                          className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                        />
+                      );
+                    },
+                  }}
+                >
+                  <Timeline
+                    works={selectedItem.works}
+                    breaks={selectedItem.breaks}
+                    total={selectedItem.total_work_sec + selectedItem.total_break_sec}
+                    startMinute={selectedItem.started_at}
+                    startTime={selectedItem.start}
+                    endTime={selectedItem.end}
+                    withTimeBreaks
+                  />
+                  <Delimiter />
+                  <InfoCard
+                    type='total'
+                    time={selectedItem}
+                    showRange
+                  />
+                  <Delimiter />
+                  <InfoCard
+                    type='break'
+                    time={selectedItem}
+                    durationSec={selectedItem.total_break_sec}
+                  />
+                </Scrollbar>
+                {
+                  isApproval && (
+                    <div className={styles.actionButtons}>
+                      <button
+                        className={styles.approve}
+                        onClick={() => changeItemStatus('approve', selectedItem.id)}
+                      >
+                        <span aria-hidden><ApproveIcon aria-hidden /></span>
+                        <span>{t('Approve')}</span>
+                      </button>
+                      <button
+                        className={styles.suspend}
+                        onClick={() => changeItemStatus('suspend', selectedItem.id)}
+                      >
+                        <span aria-hidden><SuspendIcon aria-hidden /></span>
+                        <span>{t('Suspend')}</span>
+                      </button>
+                    </div>
+                  )
+                }
+              </>
             )
           }
         </div>
-        <Delimiter />
-        {
-          selectedItem && (
-            <>
-              <Scrollbar
-                style={{ height: `calc(100vh - 218px - ${approval ? '64px' : '0px'})` }}
-                removeTracksWhenNotUsed
-                trackXProps={{
-                  renderer: (props) => {
-                    const { elementRef, ...restProps } = props;
-                    return (
-                      <span
-                        {...restProps}
-                        ref={elementRef}
-                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                      />
-                    );
-                  },
-                }}
-                trackYProps={{
-                  renderer: (props) => {
-                    const { elementRef, ...restProps } = props;
-                    return (
-                      <span
-                        {...restProps}
-                        ref={elementRef}
-                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                      />
-                    );
-                  },
-                }}
-              >
-                <Timeline
-                  works={selectedItem.works}
-                  breaks={selectedItem.breaks}
-                  total={selectedItem.total_work_sec + selectedItem.total_break_sec}
-                  startMinute={selectedItem.started_at}
-                  startTime={selectedItem.start}
-                  endTime={selectedItem.end}
-                  withTimeBreaks
-                />
-                <Delimiter />
-                <InfoCard
-                  type='total'
-                  time={selectedItem}
-                  showRange
-                />
-                <Delimiter />
-                <InfoCard
-                  type='break'
-                  time={selectedItem}
-                  durationSec={selectedItem.total_break_sec}
-                />
-              </Scrollbar>
-              {
-                approval
-                && (
-                  <div className={styles.actionButtons}>
-                    <button
-                      className={styles.approve}
-                      onClick={() => changeItemStatus('approve', selectedItem.id)}
-                    >
-                      <span aria-hidden><ApproveIcon aria-hidden /></span>
-                      <span>{t('Approve')}</span>
-                    </button>
-                    <button
-                      className={styles.suspend}
-                      onClick={() => changeItemStatus('suspend', selectedItem.id)}
-                    >
-                      <span aria-hidden><SuspendIcon aria-hidden /></span>
-                      <span>{t('Suspend')}</span>
-                    </button>
-                  </div>
-                )
-              }
-            </>
-          )
-        }
       </div>
-    </div>
-  );
+    );
+  };
 
-  const MultipleEntries = () => (
-    <div className={styles.multipleEntries}>
-      <div className={styles.header}>
-        <InfoIcon />
-        <Delimiter />
-        Multiple entries selection
-      </div>
-      <div className={styles.content}>
-        <div className={styles.topBlock}>
-          <CheckboxIcon className={styles.checkboxIcon} />
-          <div className={styles.entryTitle}>
-            {`${checkedItems.length} `}
-            {checkedItems.length === 1 ? 'entry' : 'entries'}
+  const MultipleEntries = () => {
+    const isApproval = (
+      permissions.approval_flow
+      || (
+        permissions.approval_flow_in_place
+        && checkedItems.every((item) => user?.employee?.place?.[0]?.id === item.place_id)
+      )
+    );
+
+    return (
+      <div className={styles.multipleEntries}>
+        <div className={styles.header}>
+          <InfoIcon />
+          <Delimiter />
+          Multiple entries selection
+        </div>
+        <div className={styles.content}>
+          <div className={styles.topBlock}>
+            <CheckboxIcon className={styles.checkboxIcon} />
+            <div className={styles.entryTitle}>
+              {`${checkedItems.length} `}
+              {checkedItems.length === 1 ? 'entry' : 'entries'}
+            </div>
+            <div className={styles.entryDescription}>
+              selected
+            </div>
           </div>
-          <div className={styles.entryDescription}>
-            selected
+          <div className={styles.bottomBlock}>
+            <PendingIcon className={styles.clockIcon} />
+            <div className={styles.entryTitle}>
+              {minutesToString(checkedItems.map((item) => item.net_duration).reduce((a, b) => a + b))}
+            </div>
+            <div className={styles.entryDescription}>
+              Total Hours
+            </div>
           </div>
         </div>
-        <div className={styles.bottomBlock}>
-          <PendingIcon className={styles.clockIcon} />
-          <div className={styles.entryTitle}>
-            {minutesToString(checkedItems.map((item) => item.net_duration).reduce((a, b) => a + b))}
-          </div>
-          <div className={styles.entryDescription}>
-            Total Hours
-          </div>
+        <div className={styles.actions}>
+          {
+            isApproval && (
+              <>
+                <Button onClick={() => changeItemStatus('approve')} green fillWidth>
+                  {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
+                </Button>
+                <Button onClick={() => changeItemStatus('suspend')} yellow fillWidth>
+                  {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
+                </Button>
+              </>
+            )
+          }
+          {
+            permissions.logbook_delete_logs && (
+              <Button onClick={deleteItems} danger fillWidth>
+                {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
+              </Button>
+            )
+          }
         </div>
       </div>
-      <div className={styles.actions}>
-        {
-          approval
-          && (
-            <>
-              <Button onClick={() => changeItemStatus('approve')} green fillWidth>
-                {checkedItems.length === 1 ? t('Approve') : t('Approve All')}
-              </Button>
-              <Button onClick={() => changeItemStatus('suspend')} yellow fillWidth>
-                {checkedItems.length === 1 ? t('Suspend') : t('Suspend All')}
-              </Button>
-            </>
-          )
-        }
-        <Button onClick={deleteItems} danger fillWidth>
-          {checkedItems.length === 1 ? t('Delete') : t('Delete All')}
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <MaynLayout>

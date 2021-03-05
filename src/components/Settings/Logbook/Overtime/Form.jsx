@@ -73,6 +73,7 @@ export default function Form({
   handleInputChange,
   handleChangeCalculation,
   overtimeData,
+  readOnly,
 }) {
   return (
     <form className={style.logbookBlock}>
@@ -88,6 +89,7 @@ export default function Form({
           checked={!!overtimeData.status}
           height={21}
           width={40}
+          disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title={
@@ -103,6 +105,7 @@ export default function Form({
             checked={!!overtimeData.daily_overtime_enable}
             label={t('Daily work')}
             name='daily_overtime_enable'
+            disabled={readOnly}
           />
         </div>
         <div className={style.generalBlock5}>
@@ -111,6 +114,7 @@ export default function Form({
             name='daily_overtime'
             value={overtimeData.daily_overtime ?? daylyWork[0].code}
             options={daylyWork}
+            readOnly={readOnly}
           />
         </div>
         <div className={style.generalBlock2}>
@@ -119,6 +123,7 @@ export default function Form({
             checked={!!overtimeData.weekly_overtime_enable}
             label={t('Weekly work')}
             name='weekly_overtime_enable'
+            disabled={readOnly}
           />
         </div>
         <div className={style.generalBlock5}>
@@ -127,6 +132,7 @@ export default function Form({
             name='weekly_overtime'
             value={overtimeData.weekly_overtime ?? weeklyWork[0].code}
             options={weeklyWork}
+            readOnly={readOnly}
           />
         </div>
         <div className={style.generalBlock2}>
@@ -135,6 +141,7 @@ export default function Form({
             checked={!!overtimeData.saturday_overtime_enable}
             label={t('Saturday work')}
             name='saturday_overtime_enable'
+            disabled={readOnly}
           />
         </div>
         <div className={style.generalBlock5}>
@@ -143,6 +150,7 @@ export default function Form({
             name='saturday_overtime'
             value={overtimeData.saturday_overtime ?? saturdayWork[0].code}
             options={saturdayWork}
+            readOnly={readOnly}
           />
         </div>
         <div className={style.generalBlock2}>
@@ -151,6 +159,7 @@ export default function Form({
             checked={!!overtimeData.sunday_overtime_enable}
             label={t('Sunday work')}
             name='sunday_overtime_enable'
+            disabled={readOnly}
           />
         </div>
         <div className={style.generalBlock5}>
@@ -159,10 +168,11 @@ export default function Form({
             name='sunday_overtime'
             value={overtimeData.sunday_overtime ?? saturdayWork[0].code}
             options={saturdayWork}
+            readOnly={readOnly}
           />
         </div>
       </div>
-      <div className={!overtimeData.status ? style.disabledBlock : ''}>
+      <div className={(readOnly || !overtimeData.status) ? style.disabledBlock : ''}>
         <Label text={`${t('Overtime increased default rate')} :`} />
 
         <div className={style.radioBlock}>

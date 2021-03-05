@@ -42,6 +42,7 @@ import Input from '../Core/Input/Input';
 import { dateToUCT } from '../Helpers';
 import { skillsSelector } from '../../store/skills/selectors';
 import { getReportsSkills } from '../../store/skills/actions';
+import usePermissions from '../Core/usePermissions';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -51,16 +52,49 @@ const TextWithSign = ({ label }) => (
   </>
 );
 
-const costColumns = [
-  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
-];
-
 const profitabilityColumns = [
   { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
-  ...costColumns,
+  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 
+const permissionsConfig = [
+  {
+    name: 'reports_generate',
+    permission: 'reports_generate',
+  },
+  {
+    name: 'reports_generate',
+    permission: 'reports_generate',
+  },
+  {
+    name: 'cost',
+    module: 'cost_earning',
+    permission: 'reports_costs',
+  },
+  {
+    name: 'profit',
+    module: 'profitability',
+    permission: 'reports_profit',
+  },
+  {
+    name: 'earnings',
+    module: 'profitability',
+    permission: 'reports_earnings',
+  },
+  {
+    name: 'places',
+    module: 'create_places',
+  },
+  {
+    name: 'jobs',
+    module: 'create_jobs',
+  },
+  {
+    name: 'reports_assigned_place',
+    permission: 'reports_assigned_place',
+  },
+];
 const Reports = () => {
   /* Reports data */
   const reportTabs = useRef(null);
@@ -110,6 +144,8 @@ const Reports = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id: companyId } = useParams();
+  const permissions = usePermissions(permissionsConfig);
+
   const generatedReport = useSelector(reportSelector);
   const reportLoading = useSelector(reportLoadingSelector);
   const columns = useSelector(columnsSelector);
@@ -123,7 +159,6 @@ const Reports = () => {
   const modules = useSelector(companyModules);
   const isSuperAdmin = useContext(AdminContext);
 
-  const { cost_earning: costs, profitability } = modules;
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
@@ -223,9 +258,7 @@ const Reports = () => {
                 ...other,
                 data: {
                   ...data,
-                  columns: [...data.columns,
-                  // eslint-disable-next-line no-nested-ternary
-                    ...profitability ? profitabilityColumns : costs ? costColumns : []]
+                  columns: [...data.columns, ...profitabilityColumns]
                     .filter(({ field }) => {
                       if (!costState.show_earnings && field === 'sallary') {
                         return false;
@@ -269,20 +302,17 @@ const Reports = () => {
     }
     // setTotalDuration(getTotalDuration);
   }, [comments, costState.show_costs, costState.show_earnings,
-    costState.show_profit, costs, generatedReport, profitability]);
+    costState.show_profit, generatedReport]);
 
   useEffect(() => {
-    setColumnsArray([...columns,
-      // eslint-disable-next-line no-nested-ternary
-      ...(profitability ? profitabilityColumns : costs ? costColumns : []),
-    ].filter(({ field }) => {
+    setColumnsArray([...columns, ...profitabilityColumns].filter(({ field }) => {
       if (!costState.show_earnings && field === 'sallary') return false;
       if (!costState.show_profit && field === 'profit') return false;
       if (!modules.create_jobs && field === 'jobType' && !isSuperAdmin) return false;
       return !(!costState.show_costs && field === 'cost');
     }));
   }, [activeReport, columns, costState.show_costs, isSuperAdmin,
-    costState.show_earnings, costState.show_profit, costs, profitability, modules]);
+    costState.show_earnings, costState.show_profit, modules]);
 
   useEffect(() => {
     setLoading(reportLoading);
@@ -445,6 +475,13 @@ const Reports = () => {
     }
   };
 
+  const sidebarContentClasses = classNames(
+    styles.sidebarContent,
+    {
+      [styles.sidebarContent_withButton]: permissions.reports_generate,
+    },
+  );
+
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -557,11 +594,11 @@ const Reports = () => {
               <Delimiter />
               Generate Report
             </div>
-            <div className={styles.sidebarContent}>
+            <div className={sidebarContentClasses}>
               <div className={styles.sidebarTitle}>Report period</div>
               <DRP initRange={dateRange} onChange={setDateRange} small right />
               {
-                !!costs && (
+                permissions.cost && (
                   <StyledCheckbox
                     label={t('Show Costs')}
                     id='show_costs'
@@ -571,25 +608,28 @@ const Reports = () => {
                   />
                 )
               }
-              {!!costs && !!profitability
-              && (
-                <>
+              {
+                permissions.earnings && (
                   <StyledCheckbox
                     label={t('Show Earnings')}
                     id='show_earnings'
                     onChange={costsCheckboxesHandler}
                     checked={costState.show_earnings}
                   />
+                )
+              }
+              {
+                permissions.profit && (
                   <StyledCheckbox
                     label={t('Show Profit')}
                     id='show_profit'
                     onChange={costsCheckboxesHandler}
                     checked={costState.show_profit}
                   />
-                </>
-              )}
+                )
+              }
               {
-                !!modules.create_places && (
+                (permissions.places && !permissions.reports_assigned_place) && (
                   <>
                     <div className={styles.sidebarTitle}>Places</div>
                     <Input
@@ -622,7 +662,7 @@ const Reports = () => {
                 </>
               }
               {
-                !!modules.create_jobs && (
+                permissions.jobs && (
                   <>
                     <div className={styles.sidebarTitle}>Job types</div>
                     <Input
@@ -655,9 +695,13 @@ const Reports = () => {
                 </>
               }
             </div>
-            <div className={styles.actions}>
-              <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
-            </div>
+            {
+              permissions.reports_generate && (
+                <div className={styles.actions}>
+                  <Button onClick={sendRequest} fillWidth>{t('Generate Report')}</Button>
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
