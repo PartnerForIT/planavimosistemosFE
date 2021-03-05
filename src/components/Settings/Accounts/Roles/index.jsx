@@ -131,9 +131,15 @@ const initialRoleAccess = {
       enabled: true,
 
       options: {
-        edit_settings: 'Can edit General Settings',
         edit_entries: 'pto ~> edit_entries',
         requests: 'pto ~> requests',
+      },
+    },
+    company: {
+      enabled: true,
+
+      options: {
+        edit_settings: 'Can edit General Settings',
       },
     },
   },

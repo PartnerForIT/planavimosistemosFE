@@ -259,9 +259,13 @@ const RowActions = ({
       <button onClick={() => editRow(id)}>
         <EditIconFixedFill className={styles.iconButtonRow} />
       </button>
-      <button onClick={() => removeRow(id)}>
-        <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
-      </button>
+      {
+        removeRow && (
+          <button onClick={() => removeRow(id)}>
+            <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
+          </button>
+        )
+      }
     </div>
   );
 };

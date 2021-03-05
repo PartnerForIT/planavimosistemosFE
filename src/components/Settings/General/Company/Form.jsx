@@ -11,7 +11,7 @@ import SimpleSelect from '../../../Core/SimpleSelect';
 export default function CompaneForm({
   styles, handleOpen, handleInputChange,
   inputValues, countries = [], currencies = [],
-  file, company, timeZones = [],
+  file, company, timeZones = [], readOnly,
 }) {
   const { t } = useTranslation();
 
@@ -20,11 +20,19 @@ export default function CompaneForm({
       <div className={styles.companyLogo}>
         <img src={file || company.logo} alt='' />
       </div>
-      <div className={styles.labelBlock}>
-        <Label text={t('Company logo')} htmlFor='logo' />
-        <Tooltip title='Add Company Logo' />
-      </div>
-      <Button inverse onClick={() => handleOpen()}>{t('Upload Logo')}</Button>
+      {
+        !readOnly && (
+          <>
+            <div className={styles.labelBlock}>
+              <Label text={t('Company logo')} htmlFor='logo' />
+              <Tooltip title='Add Company Logo' />
+            </div>
+            <Button inverse onClick={() => handleOpen()}>
+              {t('Upload Logo')}
+            </Button>
+          </>
+        )
+      }
       <div className={styles.formControl}>
         <Label text={t('Company name')} htmlFor='name' />
         <Input
@@ -33,6 +41,7 @@ export default function CompaneForm({
           name='name'
           fullWidth
           onChange={handleInputChange}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formLine} />
@@ -47,6 +56,7 @@ export default function CompaneForm({
           name='contact_person_name'
           fullWidth
           onChange={handleInputChange}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formControl}>
@@ -59,6 +69,7 @@ export default function CompaneForm({
           name='contact_person_email'
           fullWidth
           onChange={handleInputChange}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formLine} />
@@ -72,6 +83,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.country}
           options={countries}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formControl}>
@@ -85,6 +97,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.lang}
           options={langArray}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formControl}>
@@ -98,6 +111,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.timezone}
           options={timeZones}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formControl}>
@@ -111,6 +125,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.date_format}
           options={formatArr}
+          readOnly={readOnly}
         />
       </div>
       <div className={styles.formControl}>
@@ -124,6 +139,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.currency}
           options={currencies}
+          readOnly={readOnly}
         />
       </div>
     </div>

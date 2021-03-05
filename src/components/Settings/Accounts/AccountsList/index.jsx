@@ -47,6 +47,7 @@ import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import TimeFormat from '../../../shared/TimeFormat';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
+import usePermissions from '../../../Core/usePermissions';
 import styles from './accounts.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -126,6 +127,16 @@ const columnsWidthArray = {
   subgroup: 150,
 };
 
+const permissionsConfig = [
+  {
+    name: 'accounts_create',
+    permission: 'accounts_create',
+  },
+  {
+    name: 'accounts_delete',
+    permission: 'accounts_delete',
+  },
+];
 export default function AccountsList() {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -163,6 +174,8 @@ export default function AccountsList() {
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
   const [employeesAll, setEmployeesAll] = useState([]);
   const [all, setAll] = useState(false);
+
+  const permissions = usePermissions(permissionsConfig);
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -353,7 +366,7 @@ export default function AccountsList() {
         <TitleBlock
           title={t('Account list')}
           info={userStats}
-          TitleButtonNew={t('New account')}
+          TitleButtonNew={permissions.accounts_create ? t('New account') : ''}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
           handleButtonImport={() => setImportVisible(true)}
@@ -387,7 +400,7 @@ export default function AccountsList() {
                     editRow={editRowHandler}
                     hoverActions
                     hoverable
-                    removeRow={deleteEmployee}
+                    removeRow={permissions.accounts_delete ? deleteEmployee : undefined}
                     onSort={(field, asc) => sorting(employees, { field, asc })}
                     selectedItem={selected}
                     setSelectedItem={setSelected}

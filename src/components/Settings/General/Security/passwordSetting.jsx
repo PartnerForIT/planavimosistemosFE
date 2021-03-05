@@ -10,7 +10,7 @@ export default function passwordSetting({
   t,
   handleChangeSettings, settings,
   min_password_length, changeMinPassword, login_attempts,
-  setLogin_attempts,
+  setLogin_attempts, readOnly,
 }) {
   return (
     <div className={style.passwordSettings}>
@@ -21,6 +21,7 @@ export default function passwordSetting({
           checked={settings.send_password}
           label={t('Do not send password via email')}
           name='send_password'
+          disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title='Do not send password via email' />
@@ -32,6 +33,7 @@ export default function passwordSetting({
           checked={settings.min_length}
           label={t('Minimum password lenght')}
           name='min_length'
+          disabled={readOnly}
         />
         <Input
           value={min_password_length}
@@ -40,6 +42,7 @@ export default function passwordSetting({
           min='1'
           max='12'
           onChange={changeMinPassword}
+          readOnly={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title='Minimum password lenght' />
@@ -51,6 +54,7 @@ export default function passwordSetting({
           checked={settings.numbers}
           label={t('Require Numbers')}
           name='numbers'
+          disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title='Require Numbers' />
@@ -62,6 +66,7 @@ export default function passwordSetting({
           checked={settings.special_chars}
           label={t('Require special characters')}
           name='special_chars'
+          disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title='Require special characters' />
@@ -73,6 +78,7 @@ export default function passwordSetting({
           checked={settings.uppercase}
           label={t('Require uppercase letters')}
           name='uppercase'
+          disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
           <Tooltip title='Require uppercase letters' />
@@ -93,6 +99,7 @@ export default function passwordSetting({
           min='1'
           max='12'
           onChange={(e) => setLogin_attempts(e.target.value)}
+          readOnly={readOnly}
         />
         <div className={style.innerText}>failed attempts</div>
       </div>
@@ -102,6 +109,7 @@ export default function passwordSetting({
           checked={settings.notify_admin}
           label={t('Notify administrators of locked account by e-mail')}
           name='notify_admin'
+          disabled={readOnly}
         />
       </div>
     </div>

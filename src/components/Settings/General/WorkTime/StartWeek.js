@@ -6,6 +6,7 @@ import SimpleSelect from '../../../Core/SimpleSelect';
 
 export default function StartWork({
   styles, days, inputValues, handleInputChange,
+  readOnly,
 }) {
   const { t } = useTranslation();
   return (
@@ -22,6 +23,7 @@ export default function StartWork({
             fullWidth
             value={inputValues.week_start}
             options={days}
+            readOnly={readOnly}
           />
         </div>
         <div className={styles.startWeek__inner}>

@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
 import styles from './DTM.module.scss';
-import SortIcon from '../../Icons/SortIcon';
+// import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
@@ -26,7 +26,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow = () => ({}), multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey,
+  removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,

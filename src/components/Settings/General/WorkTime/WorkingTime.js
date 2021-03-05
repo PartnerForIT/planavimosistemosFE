@@ -9,6 +9,7 @@ import Checkbox from '../../../Core/Checkbox/Checkbox2';
 export default function WorkingTime({
   styles, days,
   handleChangeDays, startTime, handleChangeStartTime,
+  readOnly,
 }) {
   const { t } = useTranslation();
   return (
@@ -25,6 +26,7 @@ export default function WorkingTime({
               checked={days[item]}
               label={t(`${item}`)}
               name={item}
+              disabled={readOnly}
             />
             <SimpleSelect
               handleInputChange={handleChangeStartTime}
@@ -32,6 +34,7 @@ export default function WorkingTime({
               fullWidth
               value={startTime[`start${index + 1}`]}
               options={timeArr}
+              readOnly={readOnly}
             />
             <div className={styles.workigTime__to}>To</div>
             <SimpleSelect
@@ -40,6 +43,7 @@ export default function WorkingTime({
               fullWidth
               value={startTime[`finish${index + 1}`]}
               options={timeArr}
+              readOnly={readOnly}
             />
           </div>
         ))}

@@ -22,6 +22,7 @@ import Progress from '../../../Core/Progress';
 import Tooltip from '../../../Core/Tooltip';
 import PasswordSetting from './passwordSetting';
 import styles from './security.module.scss';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -34,11 +35,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+];
 export default function Sesurity() {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -179,6 +187,7 @@ export default function Sesurity() {
                       checked={invitation}
                       height={21}
                       width={40}
+                      disabled={!permissions.company_edit_settings}
                     />
                     <div className={styles.label}>{t('Invitation link via e-mail')}</div>
                     <Tooltip title='Invitation link via e-mail' />
@@ -187,6 +196,7 @@ export default function Sesurity() {
                   <PasswordSetting
                     settings={settings}
                     handleChangeSettings={handleChangeSettings}
+                    readOnly={!permissions.company_edit_settings}
                     t={t}
                     min_password_length={min_password_length}
                     changeMinPassword={changeMinPassword}

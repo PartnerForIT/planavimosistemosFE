@@ -20,6 +20,7 @@ import {
   currencySelector,
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
+import usePermissions from '../../../Core/usePermissions';
 import styles from './company.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -33,6 +34,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+];
 export default function Company() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -51,6 +58,7 @@ export default function Company() {
     timezone: '',
     date_format: '',
   });
+  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     dispatch(getCountries());
@@ -148,6 +156,7 @@ export default function Company() {
                 file={file}
                 company={company}
                 timeZones={timeZones}
+                readOnly={!permissions.company_edit_settings}
               />
             )}
           <DropzoneDialog

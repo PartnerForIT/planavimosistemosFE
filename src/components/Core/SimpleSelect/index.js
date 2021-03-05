@@ -36,6 +36,7 @@ const BootstrapInput = withStyles((theme) => ({
 
 export default function SimpleSelect({
   handleInputChange, name, value, options,
+  readOnly,
 }) {
   return (
     <NativeSelect
@@ -43,6 +44,7 @@ export default function SimpleSelect({
       value={value}
       fullWidth
       onChange={handleInputChange}
+      disabled={readOnly}
       inputProps={{
         name: `${name}`,
       }}
