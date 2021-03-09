@@ -12,6 +12,7 @@ import styles from './Select.module.scss';
 import './style.scss';
 
 export default ({
+  disabled,
   options = [], placeholder, onChange = () => ({}),
   name, value, valueKey = 'value', labelKey = 'label', id, labelId,
 }) => {
@@ -35,20 +36,25 @@ export default ({
     'input-select',
     {
       'input-select_open': open,
+      'input-select_disabled': disabled,
     },
   );
 
+  // console.log('value', value);
+  // console.log('options', options);
   const label = useMemo(() => {
     if (open) {
       return searchValue;
     }
 
-    return options.find((option) => option[valueKey] === value)?.[labelKey] || placeholder;
+    // eslint-disable-next-line eqeqeq
+    return options.find((option) => option[valueKey] == value)?.[labelKey] || placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [placeholder, open, searchValue]);
+  }, [placeholder, open, options, value, searchValue]);
+  // console.log('label', label);
   const optionsDisplayed = useMemo(() => {
     if (searchValue) {
-      return options.filter((option) => option[labelKey]?.includes?.(searchValue));
+      return options.filter((option) => (option[labelKey]?.toLowerCase()).includes?.(searchValue.toLowerCase()));
     }
 
     return options;

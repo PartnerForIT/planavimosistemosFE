@@ -98,6 +98,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.timezone}
           options={timeZones}
+          placeholder='UTC±00:00'
         />
       </div>
       <div className={styles.formControl}>

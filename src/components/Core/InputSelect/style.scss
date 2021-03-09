@@ -2,13 +2,13 @@
 
 .input-select {
   width: 100%;
+  position: relative;
 
   &__control {
     height: 36px;
     min-height: 36px;
     width: 100%;
     cursor: pointer;
-    position: relative;
 
     &::before {
       content: "";
@@ -56,6 +56,12 @@
         transform: rotate(-180deg);
       }
     }
+  }
+
+  &_disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.8;
   }
 }
 

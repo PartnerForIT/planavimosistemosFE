@@ -4,6 +4,14 @@ $padding-size: 25px;
 
 .formItem {
   margin-bottom: $padding-size;
+  position: relative;
+
+  & > button {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    z-index: 2;
+  }
 
   & label + div {
     margin-top: unset;

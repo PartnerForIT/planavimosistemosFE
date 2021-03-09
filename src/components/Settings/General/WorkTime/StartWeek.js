@@ -22,6 +22,7 @@ export default function StartWork({
             fullWidth
             value={inputValues.week_start}
             options={days}
+            valueKey='id'
           />
         </div>
         <div className={styles.startWeek__inner}>

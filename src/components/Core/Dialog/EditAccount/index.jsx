@@ -126,19 +126,19 @@ export default function EditAccount({
 
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
-    return [{ id: '0', name: t('Select a group') }, ...grps];
+    return grps;
   }, [groups, t]);
 
   const skillsOptions = useMemo(() => {
     const sks = skills?.map(({ id, name }) => ({ id, name })) ?? [];
-    return [{ id: '', name: t('Select a skill') }, ...sks];
+    return sks;
   }, [skills, t]);
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
     const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
-    return [{ id: '0', name: t('Select a sub-group') }, ...sub];
+    return sub;
   }, [groups, t, user.group]);
 
   const handleInput = (e) => {
@@ -161,7 +161,7 @@ export default function EditAccount({
 
   const placeOpt = useMemo(() => {
     const pls = places.map(({ id, label }) => ({ id, name: label }) ?? []);
-    return [{ id: '', name: t('Select a place') }, ...pls];
+    return pls;
   }, [places, t]);
 
   useEffect(() => {
@@ -325,7 +325,7 @@ export default function EditAccount({
                   </div>
 
                   <div className={style.center}>
-                    <div className={style.skill}>
+                    <div className={classes.formItem}>
                       <Button inline inverse onClick={() => setSkillOpen(true)}>
                         {`+${t('new skill')}`}
                       </Button>
@@ -336,6 +336,7 @@ export default function EditAccount({
                         user={user}
                         name='skill'
                         handleInput={handleInput}
+                        placeholder={t('Select a skill')}
                       />
                     </div>
                     {

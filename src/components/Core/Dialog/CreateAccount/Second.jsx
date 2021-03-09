@@ -60,10 +60,7 @@ const SecondStep = ({
       id,
       name,
     })) ?? [];
-    return [{
-      id: '',
-      name: t('Select a group'),
-    }, ...grps];
+    return grps;
   }, [groups, t]);
 
   const handleChangeRates = () => {
@@ -84,10 +81,7 @@ const SecondStep = ({
       name,
     }))
       .slice() ?? [];
-    return [{
-      id: '',
-      name: t('Select a sub-group'),
-    }, ...sub];
+    return sub;
   }, [groups, t, user.group]);
 
   const handleSkillChange = (event) => {
@@ -114,10 +108,7 @@ const SecondStep = ({
       id,
       name,
     })) ?? [];
-    return [{
-      id: '',
-      name: t('Select a skill'),
-    }, ...sks];
+    return sks;
   }, [skills, t]);
 
   const placeOpt = useMemo(() => {
@@ -128,10 +119,7 @@ const SecondStep = ({
       id,
       name: label,
     }) ?? []);
-    return [{
-      id: '',
-      name: t('Select a place'),
-    }, ...pls];
+    return pls;
   }, [places, t]);
 
   const nextWithValidate = () => {
