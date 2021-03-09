@@ -1,10 +1,10 @@
 import React from 'react';
 import Label from '../../Core/InputLabel';
 import Tooltip from '../../Core/Tooltip';
-import EmployeesSelect from '../../Core/EmployeesSelect';
 import DateRangePicker from '../../Core/DateRangePicker';
 import Button from '../../Core/Button/Button';
 import DialogCreateJob from '../../Core/Dialog/DeleteData';
+import SimpleSelect from '../../Core/SimpleSelect';
 
 export default function FilterDelete({
   style, inputValues, withDeleteButton = false,
@@ -21,12 +21,14 @@ export default function FilterDelete({
         <div className={style.formControl}>
           <Label text={t('Employee')} />
           <div className={style.selectBlock}>
-            <EmployeesSelect
+            <SimpleSelect
               handleInputChange={handleInputChange}
               name='employee'
-              placeholder='Employee'
+              placeholder='Select employee'
               value={inputValues.employee}
               options={employees}
+              valueKey='id'
+              labelKey='fullName'
             />
             <Tooltip title='Select Employee' />
           </div>

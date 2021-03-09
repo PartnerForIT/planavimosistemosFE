@@ -67,8 +67,7 @@ export default function AccountsList() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    employeesArr.unshift({ id: 'Select employee', name: 'Select employee' });
-    setEmployees(employeesArr);
+    setEmployees(employeesArr.map((item) => ({ fullName: `${item.name} ${item.surname}`, ...item })));
   }, [employeesArr]);
 
   const handleInputChange = (event) => {

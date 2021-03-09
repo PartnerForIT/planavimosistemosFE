@@ -73,12 +73,10 @@ export default function ActivityLog() {
   }, [dispatch, id, inputValues]);
 
   useEffect(() => {
-    employeesArr.unshift({ id: 'select', name: 'Select employee' });
-    setEmployees(employeesArr);
+    setEmployees(employeesArr.map((item) => ({ fullName: `${item.name} ${item.surname}`, ...item })));
   }, [employeesArr]);
 
   useEffect(() => {
-    placesArr.unshift({ id: 'select', label: 'Select place' });
     setPlaces(placesArr);
   }, [placesArr]);
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import Label from '../../Core/InputLabel';
 import SimpleSelect from '../../Core/SimpleSelect';
-import EmployeesSelect from '../../Core/EmployeesSelect';
 import DateRangePicker from '../../Core/DateRangePicker';
 
 export default function filterActivity({
@@ -18,12 +17,14 @@ export default function filterActivity({
       <div className={style.formControl}>
         <Label text={t('Employee')} />
         <div className={style.selectBlock}>
-          <EmployeesSelect
+          <SimpleSelect
             handleInputChange={handleInputChange}
             name='employee'
-            placeholder='Employee'
+            placeholder='Select employee'
             value={inputValues.employee}
             options={employees}
+            valueKey='id'
+            labelKey='fullName'
           />
         </div>
 
@@ -37,6 +38,8 @@ export default function filterActivity({
             placeholder='Select Place'
             value={inputValues.place}
             options={places}
+            valueKey='id'
+            labelKey='label'
           />
         </div>
       </div>

@@ -40,7 +40,7 @@
     padding: 8px 11px;
   }
 
-  div {
+  & > div {
     &:last-child {
       margin-left: 20px;
       width: 22px;
