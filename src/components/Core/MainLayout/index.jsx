@@ -51,7 +51,7 @@ export default function MainLayout({ children }) {
       : (
         <AdminContext.Provider value={admin}>
           <div className={styles.mainLayout}>
-            <Header logOut={logOut} isSuperAdmin={admin} />
+            <Header logOut={logOut} />
             <main className={styles.mainBody}>
               <div className={styles.mainBlock}>
                 {children}

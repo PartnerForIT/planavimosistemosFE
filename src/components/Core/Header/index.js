@@ -20,7 +20,8 @@ import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
-import { companyModules } from '../../../store/company/selectors';
+import usePermissions from '../usePermissions';
+import { userSelector } from '../../../store/auth/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -42,27 +43,42 @@ const initialPasswords = {
   repeatPassword: '',
 };
 
-export default function ButtonAppBar({ logOut, isSuperAdmin }) {
+const permissionsConfig = [
+  {
+    name: 'logbook',
+    module: 'logbook',
+  },
+  {
+    name: 'events',
+    module: 'events',
+  },
+  {
+    name: 'reports',
+    module: 'reports',
+  },
+];
+
+export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1];
-  const { id } = useParams();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { id: companyId } = useParams();
+  const user = useSelector(userSelector);
   const dispatch = useDispatch();
+  const permissions = usePermissions(permissionsConfig);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
-  const modules = useSelector(companyModules);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getSecurityCompany(id));
+    if (companyId) {
+      dispatch(getSecurityCompany(companyId));
     }
-  }, [dispatch, id]);
+  }, [dispatch, companyId]);
 
   const editHandleClose = () => {
     setEditPasswordVisible(false);
@@ -73,22 +89,22 @@ export default function ButtonAppBar({ logOut, isSuperAdmin }) {
     const employeeId = JSON.parse(localStorage.getItem('user'))?.employee?.id;
 
     if (employeeId) {
-      dispatch(changePassword(id, employeeId, password));
+      dispatch(changePassword(companyId, employeeId, password));
     }
     editHandleClose();
   };
 
   const changeLanguage = (data) => {
-    dispatch(editSettingCompany({ lang: data.toUpperCase() }, id));
+    dispatch(editSettingCompany({ lang: data.toUpperCase() }, companyId));
   };
 
   return (
     <div className={classes.root}>
       <AppBar position='fixed' className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          {/* SuperAdmin Link */}
+          {/* SuperAdmin Links */}
           {
-            (!id && user && user.role_id === 1)
+            (!companyId && user?.user?.role_id === 1)
             && (
             <div className={styles.linkBlock}>
               <Link to='/overview' className={pageName === 'overview' ? styles.activelink : styles.link}>
@@ -108,86 +124,94 @@ export default function ButtonAppBar({ logOut, isSuperAdmin }) {
             </div>
             )
           }
-          {/* Admin Link */}
+          {/* Company Links */}
           {
-            ((id && user) || user.role_id !== 1)
-            && (
-            <div className={styles.linkBlock}>
-              <Link to={`/overview/${id}`} className={pageName === 'overview' ? styles.activelink : styles.link}>
-                <OverviewIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Overview')}</span>
-              </Link>
-              {
-                // <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
-                //   <PalceIcon className={styles.icon} />
-                //   <span className={styles.link__text}>{t('Place')}</span>
-                // </Link>
-              }
-              {
-                (isSuperAdmin || !!modules.logbook) && (
-                  <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
-                    <LogbookIcon className={styles.icon} />
-                    <span className={styles.link__text}>{t('Logbook')}</span>
-                  </Link>
-                )
-              }
-              {
-                // <Link
-                //     to={`/analytics/${id}`}
-                //     className={pageName === 'analytics' ? styles.activelink : styles.link}
-                // >
-                //   <AnalyticsIcon className={styles.icon} />
-                //   <span className={styles.link__text}>{t('Analytics')}</span>
-                // </Link>
-              }
-              {
-                (isSuperAdmin || !!modules.events) && (
-                  <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
-                    <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
-                    <span className={styles.link__text}>{t('Events')}</span>
-                  </Link>
-                )
-              }
-              {
-                (isSuperAdmin || !!modules.reports) && (
-                  <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
-                    <OverviewIcon className={styles.icon} />
-                    <span className={styles.link__text}>{t('Reports')}</span>
-                  </Link>
-                )
-              }
-              {
-                // <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
-                //   <VacationIcon className={styles.icon} />
-                //   <span className={styles.link__text}>{t('Vacation')}</span>
-                // </Link>
-              }
-            </div>
-            )
-          }
-          {/* Admin Link */}
-          <div className={styles.rightLinkBlock}>
-            {/* Admin Link */}
-            {((id && user) || user.role_id !== 1)
-              && (
+            companyId && (
               <div className={styles.linkBlock}>
                 <Link
-                  to={`/settings/${id}`}
+                  to={`/overview/${companyId}`}
+                  className={pageName === 'overview' ? styles.activelink : styles.link}
+                >
+                  <OverviewIcon className={styles.icon} />
+                  <span className={styles.link__text}>{t('Overview')}</span>
+                </Link>
+                {
+                  // <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
+                  //   <PalceIcon className={styles.icon} />
+                  //   <span className={styles.link__text}>{t('Place')}</span>
+                  // </Link>
+                }
+                {
+                  permissions.logbook && (
+                    <Link
+                      to={`/logbook/${companyId}`}
+                      className={pageName === 'logbook' ? styles.activelink : styles.link}
+                    >
+                      <LogbookIcon className={styles.icon} />
+                      <span className={styles.link__text}>{t('Logbook')}</span>
+                    </Link>
+                  )
+                }
+                {
+                  // <Link
+                  //     to={`/analytics/${id}`}
+                  //     className={pageName === 'analytics' ? styles.activelink : styles.link}
+                  // >
+                  //   <AnalyticsIcon className={styles.icon} />
+                  //   <span className={styles.link__text}>{t('Analytics')}</span>
+                  // </Link>
+                }
+                {
+                  permissions.events && (
+                    <Link
+                      to={`/events/${companyId}`}
+                      className={pageName === 'events' ? styles.activelink : styles.link}
+                    >
+                      <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
+                      <span className={styles.link__text}>{t('Events')}</span>
+                    </Link>
+                  )
+                }
+                {
+                  permissions.reports && (
+                    <Link
+                      to={`/reports/${companyId}`}
+                      className={pageName === 'reports' ? styles.activelink : styles.link}
+                    >
+                      <OverviewIcon className={styles.icon} />
+                      <span className={styles.link__text}>{t('Reports')}</span>
+                    </Link>
+                  )
+                }
+                {
+                  // <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
+                  //   <VacationIcon className={styles.icon} />
+                  //   <span className={styles.link__text}>{t('Vacation')}</span>
+                  // </Link>
+                }
+              </div>
+            )
+          }
+          <div className={styles.rightLinkBlock}>
+            {/* Company Links */}
+            {companyId && (
+              <div className={styles.linkBlock}>
+                <Link
+                  to={`/settings/${companyId}`}
                   className={pageName === 'settings' ? styles.activelink : styles.link}
                 >
                   <SettingsIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Settings')}</span>
                 </Link>
                 <Link
-                  to={`/help/${id}`}
+                  to={`/help/${companyId}`}
                   className={pageName === 'help' ? styles.activelink : styles.link}
                 >
                   <HelpIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Help')}</span>
                 </Link>
               </div>
-              )}
-            {/* Admin Link */}
+            )}
             <AvatarComponent
               setAnchorEl={setAnchorEl}
               setMenuOpen={setMenuOpen}
