@@ -108,6 +108,10 @@ const permissionsConfig = [
     module: 'use_approval_flow',
   },
   {
+    name: 'use_approval_flow',
+    module: 'use_approval_flow',
+  },
+  {
     name: 'approval_flow',
     module: 'use_approval_flow',
     permission: 'logbook_requests',
@@ -253,8 +257,6 @@ const Logbook = () => {
     dispatch(loadLogbookJournal(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log('approve_flow', journal.approve_flow);
-  console.log('journal', journal);
 
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
@@ -308,7 +310,7 @@ const Logbook = () => {
       if (!permissions.cost && column.field === 'cost') {
         return false;
       }
-      if (!journal.approve_flow && column.field === 'status') {
+      if (!permissions.use_approval_flow && !journal.approve_flow && column.field === 'status') {
         return false;
       }
 

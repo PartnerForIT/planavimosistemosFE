@@ -16,7 +16,9 @@ import {
   snackbarType, snackbarText, placesSelector, employeesSelector, activityLogSelector,
 } from '../../../store/settings/selectors';
 import {
-  loadPlace, loadEmployees, loadActivityLog, filterActivityLog,
+  loadPlace, loadEmployees,
+  // loadActivityLog,
+  filterActivityLog,
 } from '../../../store/settings/actions';
 import Filter from './filter';
 import Table from './table';
@@ -59,7 +61,7 @@ export default function ActivityLog() {
   useEffect(() => {
     dispatch(loadPlace(id));
     dispatch(loadEmployees(id));
-    dispatch(loadActivityLog(id));
+    // dispatch(loadActivityLog(id));
   }, [dispatch, id]);
 
   useEffect(() => {

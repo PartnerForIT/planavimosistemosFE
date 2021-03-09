@@ -10,7 +10,7 @@ export default (permissionsConfig) => {
 
   const permissions = useMemo(() => {
     // super admin
-    if (user.role_id === 1) {
+    if (user?.user?.role_id === 1) {
       return permissionsConfig.reduce((acc, item) => {
         acc[item.name] = true;
         return acc;
