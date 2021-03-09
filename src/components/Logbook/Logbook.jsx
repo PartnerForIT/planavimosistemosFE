@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useState,
+  useCallback, useEffect, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
 
-import MaynLayout, { AdminContext } from '../Core/MainLayout';
+import MaynLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
 import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -28,10 +28,12 @@ import { employeesSelector } from '../../store/employees/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
 import { companyModules } from '../../store/company/selectors';
+import { JournalDataSelector } from '../../store/settings/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
+import { loadLogbookJournal } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -147,8 +149,8 @@ const Logbook = () => {
   const selectSkills = useSelector(skillsSelector);
   const modules = useSelector(companyModules);
   const user = useSelector(userSelector);
+  const journal = useSelector(JournalDataSelector);
   const { id: companyId } = useParams();
-  const isSuperAdmin = useContext(AdminContext);
   const permissions = usePermissions(permissionsConfig);
 
   const [workTime, setWorkTime] = useState([]);
@@ -174,9 +176,9 @@ const Logbook = () => {
           profit += itemProfit;
 
           setTotal((prevState) => ({
-            profit: prevState.profit + profit,
             salary: prevState.salary + charge,
             cost: prevState.cost + cost,
+            profit: prevState.profit + profit,
           }));
 
           return {
@@ -245,11 +247,14 @@ const Logbook = () => {
   };
 
   useEffect(() => {
-    dispatch(getJobTypes(companyId)).then().catch();
-    dispatch(getEmployees(companyId)).then().catch();
-    dispatch(getSkills(companyId)).then().catch();
+    dispatch(getJobTypes(companyId));
+    dispatch(getEmployees(companyId));
+    dispatch(getSkills(companyId));
+    dispatch(loadLogbookJournal(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log('approve_flow', journal.approve_flow);
+  console.log('journal', journal);
 
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
@@ -303,12 +308,15 @@ const Logbook = () => {
       if (!permissions.cost && column.field === 'cost') {
         return false;
       }
+      if (!journal.approve_flow && column.field === 'status') {
+        return false;
+      }
 
       return true;
     });
 
     setColumnsArray(allColumnsArray);
-  }, [permissions, isSuperAdmin, setColumnsArray]);
+  }, [permissions, setColumnsArray, journal.approve_flow]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
@@ -453,8 +461,9 @@ const Logbook = () => {
 
   const EmployeeInfo = () => {
     const isApproval = (
-      permissions.approval_flow
-      || (permissions.approval_flow_in_place && user?.employee?.place?.[0]?.id === selectedItem?.place_id)
+      (permissions.approval_flow
+        || (permissions.approval_flow_in_place && user?.employee?.place?.[0]?.id === selectedItem?.place_id)
+      ) && !!journal.approve_flow
     );
 
     return (
@@ -557,11 +566,11 @@ const Logbook = () => {
 
   const MultipleEntries = () => {
     const isApproval = (
-      permissions.approval_flow
+      (permissions.approval_flow
       || (
         permissions.approval_flow_in_place
         && checkedItems.every((item) => user?.employee?.place?.[0]?.id === item.place_id)
-      )
+      )) && !!journal.approve_flow
     );
 
     return (
