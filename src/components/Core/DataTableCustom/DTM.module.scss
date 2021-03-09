@@ -77,6 +77,7 @@ header {
   background: #fff;
   box-shadow: none;
   border-bottom: 1px solid $row-bg;
+  z-index: 2;
 }
 
 // search-table END
@@ -374,10 +375,6 @@ header {
   contain-intrinsic-size: 32px 1000px;
 }
 
-.rowSelected {
-  background-color: rgba(0, 133, 255, 0.07);
-}
-
 .rowWarning {
   background-color: $row-warn-bg;
 }
@@ -642,20 +639,63 @@ div {
   border-radius: 12px;
   //padding-top: 10px;
   position: relative;
+
+  &[data-id='first'] .absoluteActions {
+    left: calc(var(--hover-actions-left) + var(--scroll-left-first));
+  }
+
+  &[data-id='second'] .absoluteActions {
+    left: calc(var(--hover-actions-left) + var(--scroll-left-second));
+  }
+
+  .scrollableContentWithoutRightPanel {
+    width: 100% !important;
+
+    & .scrollableContent__scrollbarTrackY {
+      right: 10px !important;
+    }
+
+    & .absoluteActions {
+      background: white;
+      width: 70px;
+    }
+
+    .rowSelected .absoluteActions {
+      background-color: #ecf1f9;
+    }
+
+    .flexRowGroup {
+      &:last-of-type {
+        padding-right: 80px;
+      }
+    }
+
+    .flexRowGlobal {
+      &:last-of-type {
+        padding-right: 62px;
+      }
+    }
+  }
+
+  .row.rowSelected .rowWrapper {
+    background-color: #ecf1f9;
+  }
+
+  &_grey {
+    background-color: #fcfdfd;
+
+    .simpleTable {
+      background-color: #fcfdfd;
+      border-bottom-color: #e6e6e6;
+    }
+
+    .sortBlock {
+      color: #808f94;
+    }
+  }
 }
 
-.scrollableContent {
-  //overflow: scroll;
-  //height: calc(100vh - 180px) !important;
-  min-height: 265px;
-  width: calc(100% - 22px) !important;
-}
-
-.scrollableContentReports {
-  padding: 0 3px;
-  width: 100%;
-}
-
+// style scrollbar other screen
 .scrollbarTrackX {
   background-color: transparent !important;
   border-radius: 10px !important;
@@ -684,6 +724,11 @@ div {
     background-color: #d5dde1 !important;
     border-radius: 10px !important;
   }
+}
+
+.scrollableContentReports {
+  padding: 0 3px;
+  width: 100%;
 }
 
 .leftPannel {
@@ -843,5 +888,44 @@ div {
 
   &:last-child {
     margin-left: 5px;
+  }
+}
+
+// global style table
+.scrollableContent {
+  // overflow: scroll;
+  // height: calc(100vh - 180px) !important;
+  min-height: 265px;
+  width: calc(100% - 22px) !important;
+
+  &__scrollbarTrackX {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    height: 7px !important;
+    bottom: 7px !important;
+    left: 15px !important;
+    width: calc(100% - 35px) !important;
+    z-index: 1 !important;
+
+    div {
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
+    }
+  }
+
+  /* stylelint-disable */
+  &__scrollbarTrackY {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    width: 7px !important;
+    height: calc(100% - 55px) !important;
+    top: 45px !important;
+    right: -9px !important;
+    z-index: 2;
+
+    div {
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
+    }
   }
 }

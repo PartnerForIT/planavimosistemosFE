@@ -50,8 +50,8 @@ const initialRoleAccess = {
         edit_logs: 'Can edit entry logs',
         delete_logs: 'Can delete entry logs',
         earnings: 'Can see earnings (APP)',
-        profit: 'Can see earnings and profit', // FIXME: rename on backend changes
-        costs: 'Can see costs', // FIXME: rename on backend changes
+        profit: 'Can see earnings and profit',
+        costs: 'Can see costs',
         requests: 'Get approval requests',
         requests_in_place: 'Get approval requests in assigned place',
       },
@@ -59,9 +59,9 @@ const initialRoleAccess = {
     reports: {
       enabled: false,
       options: {
-        costs: 'Can see costs', // FIXME: rename on backend changes
-        earnings: 'Can see earnings', // FIXME: rename on backend changes
-        profit: 'Can see profit', // FIXME: rename on backend changes
+        costs: 'Can see costs',
+        earnings: 'Can see earnings',
+        profit: 'Can see profit',
         generate: 'Can generate reports',
         assigned_place: 'Reports only for assigned place',
       },
@@ -131,9 +131,15 @@ const initialRoleAccess = {
       enabled: true,
 
       options: {
-        edit_settings: 'Can edit General Settings',
         edit_entries: 'pto ~> edit_entries',
         requests: 'pto ~> requests',
+      },
+    },
+    company: {
+      enabled: true,
+
+      options: {
+        edit_settings: 'Can edit General Settings',
       },
     },
   },
@@ -254,30 +260,31 @@ function Roles() {
     setDefaultRoleAccess(() => {
       const temp = {};
       const { moduleAccess } = initialRoleAccess;
-      const { cost_earning: costEarning, profitability } = modules;
+      // const { cost_earning: costEarning, profitability } = modules;
 
-      if (!_.isEmpty(modules)) {
-        if (costEarning && !profitability) {
-          delete moduleAccess.logbook.options.profit;
-
-          delete moduleAccess.reports.options.earnings;
-          delete moduleAccess.reports.options.profit;
-        }
-
-        if (!costEarning && !profitability) {
-          delete moduleAccess.logbook.options.earnings;
-          delete moduleAccess.logbook.options.profit;
-          delete moduleAccess.logbook.options.costs;
-
-          delete moduleAccess.reports.options.costs;
-          delete moduleAccess.reports.options.earnings;
-          delete moduleAccess.reports.options.profit;
-        }
-      }
+      // if (!_.isEmpty(modules)) {
+      //   if (costEarning && !profitability) {
+      //     delete moduleAccess.logbook.options.profit;
+      //
+      //     delete moduleAccess.reports.options.earnings;
+      //     delete moduleAccess.reports.options.profit;
+      //   }
+      //
+      //   if (!costEarning && !profitability) {
+      //     delete moduleAccess.logbook.options.earnings;
+      //     delete moduleAccess.logbook.options.profit;
+      //     delete moduleAccess.logbook.options.costs;
+      //
+      //     delete moduleAccess.reports.options.costs;
+      //     delete moduleAccess.reports.options.earnings;
+      //     delete moduleAccess.reports.options.profit;
+      //   }
+      // }
       Object.keys({ ...moduleAccess }).map((key) => {
         temp[key] = {
           ...moduleAccess[key],
-          enabled: SuperAdmin === 1 ? true : !!modules[key],
+          enabled: true,
+          // enabled: SuperAdmin === 1 ? true : !!modules[key],
         };
         return key;
       });

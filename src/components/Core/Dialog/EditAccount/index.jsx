@@ -17,7 +17,7 @@ import avatar from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
-import { convertBase64 } from '../../../Helpers';
+import { imageResize } from '../../../Helpers';
 import CurrencySign from '../../../shared/CurrencySign';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import classes from './EditAccount.module.scss';
@@ -45,7 +45,6 @@ const defaultSkill = {
 };
 
 export default function EditAccount({
-  handleClose,
   title,
   open,
   employee = {},
@@ -55,13 +54,14 @@ export default function EditAccount({
   groups = [],
   places = [],
   onSubmit = () => ({}),
-  modules: { cost_earning: cost, profitability },
+  handleClose: externalHandleClose,
+  modules,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
 
-  const SuperAdmin = useContext(AdminContext);
+  const isSuperAdmin = useContext(AdminContext);
 
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
@@ -72,6 +72,11 @@ export default function EditAccount({
   const [errors, setErrors] = useState({});
 
   const [skillName, setSkillName] = useState(defaultSkill);
+
+  const handleClose = (payload) => {
+    externalHandleClose(payload);
+    setTimeout(() => setUser({}), 500);
+  };
 
   const handleSkillChange = (event) => {
     const {
@@ -180,7 +185,7 @@ export default function EditAccount({
 
   // eslint-disable-next-line no-shadow
   const handleSave = async (file) => {
-    const base64 = await convertBase64(file[0]);
+    const base64 = await imageResize(file[0]);
     setFile(base64);
     setDownloadOpen(false);
   };
@@ -253,12 +258,20 @@ export default function EditAccount({
     }
   }, [errors, onSubmit, ready, user]);
 
+  const formClasses = classnames(style.form, {
+    [style.form_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+  });
+
+  const handleExited = () => {
+    setUser({});
+  };
+
   return (
-    <Dialog handleClose={handleClose} open={!!open} title={title}>
+    <Dialog handleClose={handleClose} onExited={handleExited} open={!!open} title={title}>
       <div className={style.edit}>
 
         {
-          loading
+          (loading || !user.name)
             ? <Progress />
             : (
               <>
@@ -267,7 +280,7 @@ export default function EditAccount({
                   <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
                 </div>
 
-                <form className={style.form}>
+                <form className={formClasses}>
                   <div className={classnames(style.left, style.bordered)}>
                     <div className={classes.formItem}>
                       <Label htmlFor='email' text={t('Email')} />
@@ -340,96 +353,108 @@ export default function EditAccount({
                       />
                     </div>
                     {
-                     (!!cost || SuperAdmin) && (
-                     <div className={classes.formItem}>
-                       <Label
-                         htmlFor='cost'
-                         text={(
-                           <>
-                             {t('Cost, Hourly rate')}
-                             {' '}
-                             <CurrencySign />
-                           </>
-                        )}
-                       />
-                       <Input
-                         name='cost'
-                         value={user.cost ?? ''}
-                         placeholder={t('How much new user cost/h')}
-                         onChange={handleInput}
-                       />
-                     </div>
+                     (isSuperAdmin || !!modules.cost_earning) && (
+                       <div className={classes.formItem}>
+                         <Label
+                           htmlFor='cost'
+                           text={(
+                             <>
+                               {t('Cost, Hourly rate')}
+                               {' '}
+                               <CurrencySign />
+                             </>
+                          )}
+                         />
+                         <Input
+                           name='cost'
+                           value={user.cost ?? ''}
+                           placeholder={t('How much new user cost/h')}
+                           onChange={handleInput}
+                         />
+                       </div>
                      )
                     }
                     {
-                      ((!!cost && !!profitability) || SuperAdmin) && (
-                      <div className={classes.formItem}>
-                        <Label
-                          htmlFor='charge'
-                          text={(
-                            <>
-                              {t('Charge, Hourly rate')}
-                              {' '}
-                              <CurrencySign />
-                            </>
-                        )}
-                        />
-                        <Input
-                          name='charge'
-                          value={user.charge ?? ''}
-                          placeholder={t('How much you charge per h')}
-                          onChange={handleInput}
-                        />
-                      </div>
+                      (isSuperAdmin || !!modules.profitability) && (
+                        <div className={classes.formItem}>
+                          <Label
+                            htmlFor='charge'
+                            text={(
+                              <>
+                                {t('Charge, Hourly rate')}
+                                {' '}
+                                <CurrencySign />
+                              </>
+                          )}
+                          />
+                          <Input
+                            name='charge'
+                            value={user.charge ?? ''}
+                            placeholder={t('How much you charge per h')}
+                            onChange={handleInput}
+                          />
+                        </div>
                       )
                     }
                   </div>
 
-                  <div
-                    className={classnames(style.right, style.bordered)}
-                  >
-                    <div className={classes.formItem}>
-                      <Label htmlFor='group' text={t('Assign to Group')} />
-                      <AddEditSelectOptions
-                        id='group'
-                        options={groupsOpt}
-                        user={user}
-                        name='group'
-                        handleInput={handleInput}
-                        placeholder={t('Select a group')}
-                      />
-                    </div>
+                  {
+                    (isSuperAdmin || !!modules.create_groups || !!modules.create_places) && (
+                      <div
+                        className={classnames(style.right, style.bordered)}
+                      >
+                        {
+                          (!!modules.create_groups || isSuperAdmin) && (
+                            <>
+                              <div className={classes.formItem}>
+                                <Label htmlFor='group' text={t('Assign to Group')} />
+                                <AddEditSelectOptions
+                                  id='group'
+                                  options={groupsOpt}
+                                  user={user}
+                                  name='group'
+                                  handleInput={handleInput}
+                                  placeholder={t('Select a group')}
+                                />
+                              </div>
+                              <div className={classes.formItem}>
+                                <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
+                                <AddEditSelectOptions
+                                  id='subgroup'
+                                  options={subGroupsOpt}
+                                  user={user}
+                                  disabled={subGroupsOpt.length <= 1}
+                                  name='subgroup'
+                                  placeholder={t('Select a subgroup')}
+                                  handleInput={handleInput}
+                                />
+                                {
+                                  errors.subgroup
+                                  && <small className={classes.error}>{errors.subgroup}</small>
+                                }
+                              </div>
+                            </>
+                          )
+                        }
 
-                    <div className={classes.formItem}>
-                      <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-                      <AddEditSelectOptions
-                        id='subgroup'
-                        options={subGroupsOpt}
-                        user={user}
-                        disabled={subGroupsOpt.length <= 1}
-                        name='subgroup'
-                        placeholder={t('Select a subgroup')}
-                        handleInput={handleInput}
-                      />
-                      {
-                        errors.subgroup
-                        && <small className={classes.error}>{errors.subgroup}</small>
-                      }
-                    </div>
-
-                    <div className={classes.formItem}>
-                      <Label htmlFor='place' text={t('Assign to place')} />
-                      <AddEditSelectOptions
-                        id='place'
-                        options={placeOpt}
-                        user={user}
-                        placeholder={t('Select a place')}
-                        name='place'
-                        handleInput={handleInput}
-                      />
-                    </div>
-
-                  </div>
+                        {
+                          (!!modules.create_places || isSuperAdmin) && (
+                            <div className={classes.formItem}>
+                              <Label htmlFor='place' text={t('Assign to place')} />
+                              <AddEditSelectOptions
+                                id='place'
+                                options={placeOpt}
+                                user={user}
+                                placeholder={t('Select a place')}
+                                name='place'
+                                handleInput={handleInput}
+                              />
+                            </div>
+                          )
+                        }
+                      </div>
+                    )
+                  }
                 </form>
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
@@ -452,6 +477,7 @@ export default function EditAccount({
                   title={t('Create new skill')}
                   buttonTitle={t('Create new skill')}
                   createSkill={createNewSkill}
+                  modules={modules}
                 />
                 <DropzoneDialog
                   open={downloadOpen}

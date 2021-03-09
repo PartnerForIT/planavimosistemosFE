@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useMemo, useCallback,
+  useState, useEffect, useMemo, useCallback, useContext,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'lodash';
 import { userSelector } from '../../../../store/auth/selectors';
 import { companyModules } from '../../../../store/company/selectors';
-import MaynLayout from '../../../Core/MainLayout';
+import MaynLayout, { AdminContext } from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
@@ -17,6 +17,7 @@ import AccountsIcon from '../../../Icons/2Peple';
 import Progress from '../../../Core/Progress';
 import {
   isLoadingSelector,
+  employeeLoadingSelector,
   isShowSnackbar,
   snackbarType,
   snackbarText,
@@ -46,6 +47,8 @@ import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import TimeFormat from '../../../shared/TimeFormat';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
+import usePermissions from '../../../Core/usePermissions';
+import styles from './accounts.module.scss';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -65,9 +68,29 @@ const LabelWithCurrencySign = ({ text }) => (
   </>
 );
 
+const NameWithAvatar = (row) => (
+  <div className={styles.cellNameWithAvatar}>
+    {
+      row.photo && (
+        <img
+          alt=''
+          className={styles.cellNameWithAvatar__image}
+          src={row.photo}
+        />
+      )
+    }
+    {row.name}
+  </div>
+);
+
 const columns = [
   { label: 'Status', field: 'status', checked: true },
-  { label: 'Employee', field: 'name', checked: true },
+  {
+    label: 'Employee',
+    field: 'name',
+    checked: true,
+    cellRenderer: NameWithAvatar,
+  },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Role', field: 'role', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
@@ -75,8 +98,18 @@ const columns = [
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
   // { label: <LabelWithCurrencySign text='Earning/h/' />, field: 'salary', checked: true },
-  { label: <LabelWithCurrencySign text='Cost/h/' />, field: 'cost', checked: true },
-  { label: <LabelWithCurrencySign text='Charge/h/' />, field: 'charge', checked: true },
+  {
+    label: <LabelWithCurrencySign text='Cost/h/' />,
+    field: 'cost',
+    cellRenderer: ({ profitability }) => profitability.cost,
+    checked: true,
+  },
+  {
+    label: <LabelWithCurrencySign text='Charge/h/' />,
+    field: 'sallary',
+    cellRenderer: ({ profitability }) => profitability.sallary,
+    checked: true,
+  },
   { label: 'Created on', field: 'created_at', checked: true },
   { label: 'Status change', field: 'updated_at', checked: true },
 ];
@@ -94,6 +127,16 @@ const columnsWidthArray = {
   subgroup: 150,
 };
 
+const permissionsConfig = [
+  {
+    name: 'accounts_create',
+    permission: 'accounts_create',
+  },
+  {
+    name: 'accounts_delete',
+    permission: 'accounts_delete',
+  },
+];
 export default function AccountsList() {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -107,6 +150,7 @@ export default function AccountsList() {
   const { users: Allemployees = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);
+  const employeeLoading = useSelector(employeeLoadingSelector);
   const skills = useSelector(categoriesSkillsSelector);
   const groups = useSelector(AccountGroupsSelector);
   const places = useSelector(placesSelector);
@@ -115,6 +159,7 @@ export default function AccountsList() {
   const importLoading = useSelector(importLoadingSelector);
   const modules = useSelector(companyModules);
   const { role_id: SuperAdmin } = useSelector(userSelector);
+  const isSuperAdmin = useContext(AdminContext);
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -129,6 +174,8 @@ export default function AccountsList() {
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
   const [employeesAll, setEmployeesAll] = useState([]);
   const [all, setAll] = useState(false);
+
+  const permissions = usePermissions(permissionsConfig);
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -175,7 +222,7 @@ export default function AccountsList() {
 
   useEffect(() => {
     if (newVisible || editVisible) {
-      dispatch(loadSkills(id));
+      // dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
       dispatch(getSecurityCompany(id));
@@ -183,21 +230,25 @@ export default function AccountsList() {
   }, [dispatch, editVisible, id, newVisible]);
 
   useEffect(() => {
-    const { cost_earning: cost, profitability } = modules;
-    if (!profitability && SuperAdmin !== 1) {
-      if (!cost) {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'cost' && field !== 'charge' && field !== 'salary')),
-        );
-      } else {
-        setColumnsArray(
-          columns.filter(({ field }) => (field !== 'charge' && field !== 'salary')),
-        );
-      }
-    } else {
-      setColumnsArray(columns);
+    let allColumnsArray = columns;
+
+    if (!isSuperAdmin) {
+      allColumnsArray = allColumnsArray.filter((column) => {
+        if (!modules.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
+          return false;
+        }
+        if (!modules.cost_earning && column.field === 'cost') {
+          return false;
+        }
+        if (!modules.profitability && (column.field === 'charge' || column.field === 'salary')) {
+          return false;
+        }
+        return true;
+      });
     }
-  }, [SuperAdmin, modules]);
+
+    setColumnsArray(allColumnsArray);
+  }, [isSuperAdmin, SuperAdmin, modules]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible([employeeId]);
@@ -274,6 +325,9 @@ export default function AccountsList() {
   const sorting = useCallback((employees, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
+      if (field === 'cost' || field === 'sallary') {
+        return sortNumFunction(a.profitability, b.profitability);
+      }
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
@@ -312,7 +366,7 @@ export default function AccountsList() {
         <TitleBlock
           title={t('Account list')}
           info={userStats}
-          TitleButtonNew={t('New account')}
+          TitleButtonNew={permissions.accounts_create ? t('New account') : ''}
           TitleButtonImport={t('Import Accounts')}
           tooltip={t('Accounts List')}
           handleButtonImport={() => setImportVisible(true)}
@@ -346,7 +400,7 @@ export default function AccountsList() {
                     editRow={editRowHandler}
                     hoverActions
                     hoverable
-                    removeRow={deleteEmployee}
+                    removeRow={permissions.accounts_delete ? deleteEmployee : undefined}
                     onSort={(field, asc) => sorting(employees, { field, asc })}
                     selectedItem={selected}
                     setSelectedItem={setSelected}
@@ -387,11 +441,15 @@ export default function AccountsList() {
           <EditAccount
             open={!!editVisible}
             employee={employee}
-            title={`${t('Edit')} ${employee.name ?? ''} ${employee.surname ?? ''} ${t('Account')}`}
+            title={`
+              ${t('Edit')}
+              ${!employeeLoading ? `${employee.name ?? ''} ${employee.surname ?? ''}` : ''}
+              ${t('Account')}
+            `}
             handleClose={() => setEditVisible(false)}
-            handleOpen={(visible) => setEditVisible(visible)}
+            handleOpen={setEditVisible}
             companyId={id}
-            loading={empLoading}
+            loading={employeeLoading}
             skills={skills}
             groups={groups}
             places={places}

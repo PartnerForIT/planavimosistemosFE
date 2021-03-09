@@ -69,6 +69,7 @@ export default ({
   labelKey = 'name',
   placeholder,
   name,
+  readOnly,
 }) => (
   <InputSelect
     name={name}
@@ -78,5 +79,6 @@ export default ({
     options={options}
     valueKey={valueKey}
     labelKey={labelKey}
+    disabled={readOnly}
   />
 );

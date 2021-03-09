@@ -2,11 +2,11 @@ import React from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, Link } from 'react-router-dom';
-
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
+
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
 import LogbookIcon from '../../Icons/Logbook2';
@@ -15,6 +15,7 @@ import CategoriesIcon from '../../Icons/Categories';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import styles from './dasboard.module.scss';
+import usePermissions from '../usePermissions';
 
 const useStyles = makeStyles(() => ({
   accordion: {
@@ -72,6 +73,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'activity_log',
+    permission: 'activity_log_view',
+    module: 'activity_log',
+  },
+  {
+    name: 'groups',
+    module: 'create_groups',
+  },
+  {
+    name: 'logbook',
+    module: 'logbook',
+  },
+  {
+    name: 'events',
+    module: 'events',
+  },
+];
 export default function DashboardMenu() {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -79,6 +99,7 @@ export default function DashboardMenu() {
   const { pathname } = useLocation();
   const section = pathname.split('/')[2];
   const innerSection = pathname.split('/')[3];
+  const permissions = usePermissions(permissionsConfig);
 
   const IconWrapper = ({ children }) => (
     <div className={styles.iconWrapper}>
@@ -184,70 +205,82 @@ export default function DashboardMenu() {
                   {t('Roles')}
                 </Link>
               </li>
-              <li>
-                <Link
-                  to={`/settings/accounts/grouping/${params.id}`}
-                  className={innerSection === 'grouping' ? styles.activeLink : styles.link}
-                >
-                  {t('Grouping')}
-                </Link>
-              </li>
+              {
+                permissions.groups && (
+                  <li>
+                    <Link
+                      to={`/settings/accounts/grouping/${params.id}`}
+                      className={innerSection === 'grouping' ? styles.activeLink : styles.link}
+                    >
+                      {t('Grouping')}
+                    </Link>
+                  </li>
+                )
+              }
             </ul>
           </AccordionDetails>
         </Accordion>
         {/* Logbook */}
-        <Accordion
-          className={classes.accordion}
-          defaultExpanded={section === 'logbook'}
-          classes={{
-            expanded: classes.expanded,
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
-            className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
-            classes={{
-              expandIcon: classes.expandIcon,
-              expanded: classes.summaryExpanded,
-            }}
-            aria-controls='panel3-content'
-            id='panel3-header'
-          >
-            <IconWrapper>
-              <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
-            </IconWrapper>
-            <span className={styles.menuText}>{t('Logbook')}</span>
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionContent}>
-            <ul className={styles.dashboardLinkBlock}>
-              <li>
-                <Link
-                  to={`/settings/logbook/journal/${params.id}`}
-                  className={innerSection === 'journal' ? styles.activeLink : styles.link}
-                >
-                  {t('Journal')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/settings/logbook/overtime/${params.id}`}
-                  className={innerSection === 'overtime' ? styles.activeLink : styles.link}
-                >
-                  {t('Overtime')}
-                </Link>
-              </li>
-            </ul>
-          </AccordionDetails>
-        </Accordion>
-        <Link
-          to={`/settings/events/${params.id}`}
-          className={section === 'events' ? styles.activeOnelink : styles.Onelink}
-        >
-          <IconWrapper>
-            <EventsIcon />
-          </IconWrapper>
-          <span className={styles.textLink}>{t('Events')}</span>
-        </Link>
+        {
+          permissions.logbook && (
+            <Accordion
+              className={classes.accordion}
+              defaultExpanded={section === 'logbook'}
+              classes={{
+                expanded: classes.expanded,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
+                className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
+                classes={{
+                  expandIcon: classes.expandIcon,
+                  expanded: classes.summaryExpanded,
+                }}
+                aria-controls='panel3-content'
+                id='panel3-header'
+              >
+                <IconWrapper>
+                  <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
+                </IconWrapper>
+                <span className={styles.menuText}>{t('Logbook')}</span>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionContent}>
+                <ul className={styles.dashboardLinkBlock}>
+                  <li>
+                    <Link
+                      to={`/settings/logbook/journal/${params.id}`}
+                      className={innerSection === 'journal' ? styles.activeLink : styles.link}
+                    >
+                      {t('Journal')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={`/settings/logbook/overtime/${params.id}`}
+                      className={innerSection === 'overtime' ? styles.activeLink : styles.link}
+                    >
+                      {t('Overtime')}
+                    </Link>
+                  </li>
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          )
+        }
+        {
+          permissions.events && (
+            <Link
+              to={`/settings/events/${params.id}`}
+              className={section === 'events' ? styles.activeOnelink : styles.Onelink}
+            >
+              <IconWrapper>
+                <EventsIcon />
+              </IconWrapper>
+              <span className={styles.textLink}>{t('Events')}</span>
+            </Link>
+          )
+        }
         <Link
           to={`/settings/categories/${params.id}`}
           className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
@@ -257,15 +290,19 @@ export default function DashboardMenu() {
           </IconWrapper>
           <span className={styles.textLink}>{t('Categories')}</span>
         </Link>
-        <Link
-          to={`/settings/activity-log/${params.id}`}
-          className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}
-        >
-          <IconWrapper>
-            <ActivityLogIcon />
-          </IconWrapper>
-          <span className={styles.textLink}>{t('Activity Log')}</span>
-        </Link>
+        {
+          permissions.activity_log && (
+            <Link
+              to={`/settings/activity-log/${params.id}`}
+              className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}
+            >
+              <IconWrapper>
+                <ActivityLogIcon />
+              </IconWrapper>
+              <span className={styles.textLink}>{t('Activity Log')}</span>
+            </Link>
+          )
+        }
         <Link
           to={`/settings/delete/${params.id}`}
           className={section === 'delete' ? styles.activeOnelink : styles.Onelink}

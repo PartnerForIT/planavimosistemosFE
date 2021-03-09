@@ -1,113 +1,156 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+
 import Tooltip from '../../Core/Tooltip';
 import Label from '../../Core/InputLabel';
 import Button from '../../Core/Button/Button';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
-import { createSkill, actionCreateJob, actuionCreatePlace } from '../../../store/settings/actions';
+import { createSkill, actionCreateJob, actionCreatePlace } from '../../../store/settings/actions';
+import usePermissions from '../../Core/usePermissions';
 
-export default function ButtonBlock({ style, companyId, modules }) {
+const permissionsConfig = [
+  {
+    name: 'create_jobs',
+    module: 'create_jobs',
+  },
+  {
+    name: 'create_places',
+    module: 'create_places',
+  },
+  {
+    name: 'categories_create',
+    permission: 'categories_create',
+  },
+];
+export default function ButtonBlock({
+  style, companyId, modules,
+  selectedCategory,
+  setSelectedCategory,
+}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [openNewSkill, setOpenNewSkill] = useState(false);
-  const [openJob, setOpenJob] = useState(false);
-  const [openPlace, setOpenPlace] = useState(false);
-  const [job, setJob] = useState('');
-  const [place, setPlace] = useState('');
+  const permissions = usePermissions(permissionsConfig);
 
-  const [skillName, setSkillName] = useState({
-    name: '',
-    cost: '',
-    earn: '',
-    rates: true,
-  });
+  const [openNewItem, setOpenNewItem] = useState(false);
 
-  const handleSkillChange = (event) => {
-    const { name, value } = event.target;
-    setSkillName({ ...skillName, [name]: value });
+  const buttons = useMemo(() => {
+    const data = [
+      {
+        onClick: () => setSelectedCategory('skills'),
+        inverse: selectedCategory !== 'skills',
+        title: 'Skill name',
+      },
+    ];
+
+    if (permissions.create_jobs) {
+      data.push({
+        onClick: () => setSelectedCategory('jobs'),
+        inverse: selectedCategory !== 'jobs',
+        title: 'Job name',
+      });
+    }
+    if (permissions.create_places) {
+      data.push({
+        onClick: () => setSelectedCategory('places'),
+        inverse: selectedCategory !== 'places',
+        title: 'Place name',
+      });
+    }
+
+    return data;
+  }, [permissions, selectedCategory, setSelectedCategory]);
+  const itemName = useMemo(() => {
+    switch (selectedCategory) {
+      case 'skills': {
+        return 'skill';
+      }
+      case 'jobs': {
+        return 'job';
+      }
+      case 'places': {
+        return 'place';
+      }
+      default: return '';
+    }
+  }, [selectedCategory]);
+
+  const handleCloseItem = () => {
+    setOpenNewItem(false);
   };
 
-  const handleChangeRates = () => {
-    setSkillName({ ...skillName, rates: !skillName.rates });
+  const createNewSkill = (values) => {
+    dispatch(createSkill({
+      ...values,
+      use_rates: Number(values.use_rates),
+    }, companyId));
+    handleCloseItem();
+  };
+  const createJob = (name) => {
+    dispatch(actionCreateJob({ title: name }, companyId));
+    handleCloseItem();
+  };
+  const createPlace = (name) => {
+    dispatch(actionCreatePlace({ name }, companyId));
+    handleCloseItem();
   };
 
-  const handleCloseSkill = () => {
-    setOpenNewSkill(false);
-  };
-  const handleCloseJob = () => {
-    setOpenJob(false);
-  };
-  const handleClosePlace = () => {
-    setOpenPlace(false);
-  };
-  const createNewSkill = () => {
-    dispatch(createSkill(skillName, companyId));
-    setOpenNewSkill(false);
-  };
-
-  const createJob = () => {
-    dispatch(actionCreateJob({ title: job }, companyId));
-    setOpenJob(false);
-    setJob('');
-  };
-
-  const createPlace = () => {
-    dispatch(actuionCreatePlace({ name: place }, companyId));
-    setOpenPlace(false);
-    setPlace('');
-  };
   return (
     <div className={style.categoryPage__Button}>
       <div className={style.labelBlock}>
         <Label text={t('Select Category')} htmlFor='new_skill' />
         <Tooltip title='Select Category' />
       </div>
-      <Button onClick={() => setOpenNewSkill(true)} fillWidth size='big'>
-        {t('Skill name')}
-      </Button>
-      <Button onClick={() => setOpenJob(true)} inverse fillWidth size='big'>
-        {t('Job name')}
-      </Button>
-      <Button onClick={() => setOpenPlace(true)} inverse fillWidth size='big'>
-        {t('Place name')}
-      </Button>
-      <div className={style.newSkillBlock}>
-        <Label text={t('New skill')} htmlFor='new_skill' />
-        <Button onClick={() => setOpenNewSkill(true)} white fillWidth size='big'>
-          {t('Create new skill')}
-        </Button>
-      </div>
+      {
+        buttons.map((button) => (
+          <Button
+            onClick={button.onClick}
+            inverse={button.inverse}
+            fillWidth
+            size='big'
+          >
+            {t(button.title)}
+          </Button>
+        ))
+      }
+      {
+        permissions.categories_create && (
+          <div className={style.newSkillBlock}>
+            <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
+            <Button
+              onClick={setOpenNewItem}
+              white
+              fillWidth
+              size='big'
+            >
+              {t(`Create new ${itemName}`)}
+            </Button>
+          </div>
+        )
+      }
       <DialogCreateSkill
-        open={openNewSkill}
-        handleClose={handleCloseSkill}
-        handleSkillChange={handleSkillChange}
-        skillName={skillName}
-        handleChangeRates={handleChangeRates}
+        open={openNewItem && selectedCategory === 'skills'}
+        handleClose={handleCloseItem}
         title={t('Create new skill')}
         buttonTitle={t('Create new skill')}
         createSkill={createNewSkill}
         modules={modules}
       />
       <DialogCreateJob
-        open={openJob}
-        handleClose={handleCloseJob}
+        open={openNewItem && selectedCategory === 'jobs'}
+        handleClose={handleCloseItem}
         title={t('Create Job name')}
         buttonTitle={t('Create Job Name')}
-        setJob={setJob}
         createJob={createJob}
-        job={job}
       />
       <DialogCreatePlace
-        open={openPlace}
-        handleClose={handleClosePlace}
+        open={openNewItem && selectedCategory === 'places'}
+        handleClose={handleCloseItem}
         title={t('Create Place name')}
         buttonTitle={t('Create Place Name')}
-        setPlace={setPlace}
         createPlace={createPlace}
-        job={place}
       />
     </div>
   );

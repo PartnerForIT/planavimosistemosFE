@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { companyModules } from '../../../../store/company/selectors';
+import { debounce } from 'lodash';
+
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -18,6 +19,7 @@ import {
 } from '../../../../store/settings/selectors';
 import { loadLogbookJournal, editLogbookJournal } from '../../../../store/settings/actions';
 import styles from '../logbook.module.scss';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -30,18 +32,40 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'logbook_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
+  {
+    name: 'cost',
+    module: 'cost_earning',
+  },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
+  {
+    name: 'use_approval_flow',
+    module: 'use_approval_flow',
+  },
+];
 export default function Journal() {
   const { id } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const permissions = usePermissions(permissionsConfig);
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const journal = useSelector(JournalDataSelector);
-  const modules = useSelector(companyModules);
 
   const [journalData, setJournalData] = useState({
     hourly_charge: '',
@@ -81,41 +105,46 @@ export default function Journal() {
     }
   }, [journal]);
 
+  const submit = useCallback(debounce((payload) => {
+    const data = {
+      hourly_charge: payload.hourly_charge,
+      hourly_cost: payload.hourly_cost,
+      show_earned_salary: payload.show_earned_salary ? 1 : 0,
+      merge_entries: payload.merge_entries ? 1 : 0,
+      profitability: payload.profitability ? 1 : 0,
+      approve_flow: payload.approve_flow ? 1 : 0,
+      automatic_approval: payload.automatic_approval ? 1 : 0,
+      approved_at: payload.approved_at,
+      automatic_break: payload.automatic_break ? 1 : 0,
+      workday_exceed: payload.workday_exceed,
+      break_duration: payload.break_duration,
+    };
+    dispatch(editLogbookJournal(id, data));
+  }, 5000), [dispatch, id]);
+
   const handleInputChange = (event) => {
     const { name, value, type } = event.target;
     if (type === 'checkbox') {
       setJournalData({ ...journalData, [name]: !journalData[name] });
+      submit({ ...journalData, [name]: !journalData[name] });
     } else {
       setJournalData({ ...journalData, [name]: value });
+      submit({ ...journalData, [name]: value });
     }
   };
 
   const handleChangeApproveFlow = () => {
     setJournalData({ ...journalData, approve_flow: !journalData.approve_flow });
+    submit({ ...journalData, approve_flow: !journalData.approve_flow });
   };
 
   const handleChangeAutomaticApprove = () => {
     setJournalData({ ...journalData, automatic_approval: !journalData.automatic_approval });
+    submit({ ...journalData, automatic_approval: !journalData.automatic_approval });
   };
   const handleChangeAutomaticBreak = () => {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
-  };
-
-  const submit = () => {
-    const data = {
-      hourly_charge: journalData.hourly_charge,
-      hourly_cost: journalData.hourly_cost,
-      show_earned_salary: journalData.show_earned_salary ? 1 : 0,
-      merge_entries: journalData.merge_entries ? 1 : 0,
-      profitability: journalData.profitability ? 1 : 0,
-      approve_flow: journalData.approve_flow ? 1 : 0,
-      automatic_approval: journalData.automatic_approval ? 1 : 0,
-      approved_at: journalData.approved_at,
-      automatic_break: journalData.automatic_break ? 1 : 0,
-      workday_exceed: journalData.workday_exceed,
-      break_duration: journalData.break_duration,
-    };
-    dispatch(editLogbookJournal(id, data));
+    submit({ ...journalData, automatic_break: !journalData.automatic_break });
   };
 
   return (
@@ -139,8 +168,8 @@ export default function Journal() {
                     handleChangeApproveFlow={handleChangeApproveFlow}
                     handleChangeAutomaticApprove={handleChangeAutomaticApprove}
                     handleChangeAutomaticBreak={handleChangeAutomaticBreak}
-                    submit={submit}
-                    modules={modules}
+                    readOnly={!permissions.logbook_settings}
+                    permissions={permissions}
                   />
                 </>
               )

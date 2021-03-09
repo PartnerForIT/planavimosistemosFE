@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import classNames from 'classnames';
+
 import classes from './Roles.module.scss';
 import Users from './RoleDetails/Users';
 import AccessModule from './RoleDetails/AccessModule';
 import OrganisationAccess from './RoleDetails/OrganisationAccess';
 import Progress from '../../../Core/Progress';
+import { companyModules } from '../../../../store/company/selectors';
+import { AdminContext } from '../../../Core/MainLayout';
 
 const categoriesNames = {
   logbook: 'Logbook',
@@ -43,6 +48,8 @@ function RoleDetails({
       .filter((item) => !!item) ?? [],
   );
   const [ready, setReady] = useState(false);
+  const modules = useSelector(companyModules);
+  const isSuperAdmin = useContext(AdminContext);
 
   useEffect(() => {
     if (ready) {
@@ -68,8 +75,15 @@ function RoleDetails({
     setReady(true);
   };
 
+  const detailsClasses = classNames(
+    classes.details,
+    {
+      [classes.details_withModules]: !!(modules.reports || modules.events || modules.logbook),
+    },
+  );
+
   return (
-    <div className={classes.details}>
+    <div className={detailsClasses}>
       {
         loading
         && (
@@ -84,21 +98,26 @@ function RoleDetails({
         activeRole={activeRole}
         roleEmployeesEdit={roleEmployeesEdit}
       />
-
-      <AccessModule
-        activeRole={activeRole}
-        availableDetails={availableDetails}
-        roleAccess={roleAccess}
-        readOnly={roleAdmin}
-        categoriesNames={categoriesNames}
-        setRoleAccess={setRoleAccess}
-        rolesPermissionsEdit={rolesPermissionsEdit}
-        activePermissions={activePermissions}
-        permissions={permissions}
-        permissionsIds={permissionsIds}
-        onChangeHandler={onChangeHandler}
-        setDisableReady={setDisableReady}
-      />
+      {
+        (isSuperAdmin || !!(modules.reports || modules.events || modules.logbook)) && (
+          <AccessModule
+            activeRole={activeRole}
+            availableDetails={availableDetails}
+            roleAccess={roleAccess}
+            readOnly={roleAdmin}
+            categoriesNames={categoriesNames}
+            setRoleAccess={setRoleAccess}
+            rolesPermissionsEdit={rolesPermissionsEdit}
+            activePermissions={activePermissions}
+            permissions={permissions}
+            permissionsIds={permissionsIds}
+            onChangeHandler={onChangeHandler}
+            setDisableReady={setDisableReady}
+            modules={modules}
+            isSuperAdmin={isSuperAdmin}
+          />
+        )
+      }
       <OrganisationAccess
         activeRole={activeRole}
         availableDetails={availableDetails}
@@ -111,6 +130,8 @@ function RoleDetails({
         permissions={permissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
+        modules={modules}
+        isSuperAdmin={isSuperAdmin}
       />
       <div />
     </div>

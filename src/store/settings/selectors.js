@@ -17,6 +17,7 @@ export const importedEmployees = (state) => state.settings.import;
 export const importLoadingSelector = (state) => state.settings.importLoading;
 
 export const employeeSelector = (state) => state.settings.employee;
+export const employeeLoadingSelector = (state) => state.settings.employeeLoading;
 export const employeesLoadingSelector = (state) => state.settings.employeesLoading;
 export const activityLogSelector = (state) => state.settings.activity_log;
 export const deleteDataSelector = (state) => state.settings.deleteData;

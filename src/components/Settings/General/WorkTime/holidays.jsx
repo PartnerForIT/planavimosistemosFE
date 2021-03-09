@@ -15,6 +15,7 @@ import ArrowRightButton from '../../../Icons/ArrowRightButton';
 
 export default function Holidays({
   styles, holidays, companyId, companyHolidays, setYear = () => ({}), year = '',
+  readOnly,
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -89,9 +90,13 @@ export default function Holidays({
         </div>
 
         {/* add new */}
-        <Button inverse onClick={() => setOpen(true)}>
-          {t('+ add new')}
-        </Button>
+        {
+          !readOnly && (
+            <Button inverse onClick={() => setOpen(true)}>
+              {t('+ add new')}
+            </Button>
+          )
+        }
         <AddHolidays
           open={open}
           handleClose={handleClose}
@@ -109,14 +114,18 @@ export default function Holidays({
             <div className={styles.holidays_data}>{item.date}</div>
             <div className={styles.holidays_name}>{item.name}</div>
           </div>
-          <button
-            onClick={() => delHoliday(item.id)}
-            onKeyDown={(event) => onKeyDown(event, () => delHoliday(item.id))}
-            className={styles.deleteHoliday}
-            aria-label='delete holiday'
-          >
-            <DeleteIcon fill='#fd0d1b' viewBox='0 0 32 14' aria-hidden />
-          </button>
+          {
+            !readOnly && (
+              <button
+                onClick={() => delHoliday(item.id)}
+                onKeyDown={(event) => onKeyDown(event, () => delHoliday(item.id))}
+                className={styles.deleteHoliday}
+                aria-label='delete holiday'
+              >
+                <DeleteIcon fill='#fd0d1b' viewBox='0 0 32 14' aria-hidden />
+              </button>
+            )
+          }
         </div>
       ))}
       {_.map(holidays, (item) => (

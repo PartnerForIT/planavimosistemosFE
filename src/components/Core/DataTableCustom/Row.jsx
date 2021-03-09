@@ -17,7 +17,7 @@ const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  tableRef = null,
+  withoutRightPanel = false, tableRef = null,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -52,12 +52,16 @@ const Row = ({
 
   const rowWrapperClasses = classNames(
     styles.rowWrapper,
-    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
     { [styles.rowWarning]: (colored.warning && row.warning) },
     { [styles.rowError]: (colored.error && row.error) },
     { [styles.reportsRowSelected]: subTableExpanded && reports },
     { [styles.contentVisibility]: !hoverActions },
     { [styles.rowSuccess]: row.success },
+  );
+
+  const containerClasses = classNames(
+    styles.flexTable, styles.row,
+    { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
   );
 
   const Components = {
@@ -104,7 +108,7 @@ const Row = ({
         // const { width: actionsWidth } = actionsRef.current.getBoundingClientRect();
         document.documentElement.style.setProperty('--hover-actions-left',
           `${windowWidth - (rowLeft + windowWidth - tableRight)
-          /* actions width */ - 120 /* scroll width */ - 32}px`);
+          /* actions width */ - (withoutRightPanel ? 70 : 120) /* scroll width */ - (withoutRightPanel ? 17 : 32)}px`);
       }
     }
   }, [index, tableRef, windowWidth]);
@@ -119,7 +123,7 @@ const Row = ({
 
   return (
     <div
-      className={classNames(styles.flexTable, styles.row)}
+      className={containerClasses}
       role='rowgroup'
       onMouseEnter={hoverActions ? () => setActionsVisible(true) : null}
       onMouseLeave={hoverActions ? () => setActionsVisible(false) : null}
@@ -196,9 +200,10 @@ const Row = ({
                   : null}
                 {IconComponent}
                 <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
-                  <>
-                    {row[column.field] !== 'tableActions' && row[column.field] }
-                  </>
+                  {
+                    row[column.field] !== 'tableActions'
+                      && (column.cellRenderer ? column.cellRenderer(row) : row[column.field])
+                  }
                 </span>
                 {/* icon statys */}
                 {(statysIcon && column.field === 'status' && (width === 80 || 80 - 35))
@@ -240,16 +245,27 @@ export default Row;
 
 const RowActions = ({
   id, editRow, removeRow, absolute = false, visible = true,
-}) => (
-  <div
-    className={classNames([styles.ActionsTable,
-      visible ? styles.actionsVisible : styles.actionsHidden, absolute ? styles.absoluteActions : ''])}
-  >
-    <button onClick={() => editRow(id)}>
-      <EditIconFixedFill className={styles.iconButtonRow} />
-    </button>
-    <button onClick={() => removeRow(id)}>
-      <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
-    </button>
-  </div>
-);
+}) => {
+  const actionsClasses = classNames(
+    styles.ActionsTable,
+    (visible ? styles.actionsVisible : styles.actionsHidden),
+    {
+      [styles.absoluteActions]: absolute,
+    },
+  );
+
+  return (
+    <div className={actionsClasses}>
+      <button onClick={() => editRow(id)}>
+        <EditIconFixedFill className={styles.iconButtonRow} />
+      </button>
+      {
+        removeRow && (
+          <button onClick={() => removeRow(id)}>
+            <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
+          </button>
+        )
+      }
+    </div>
+  );
+};

@@ -3,11 +3,11 @@ import {
 } from './types';
 import { makeQueryString } from '../../components/Helpers';
 
-export const getPlaces = () => ({
+export const getPlaces = (companyId) => ({
   type: GET_PLACES,
   request: {
     method: 'GET',
-    url: '/places',
+    url: `/company/${companyId}/places`,
   },
   meta: {
     thunk: true,

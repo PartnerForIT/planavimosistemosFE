@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { useDispatch, useSelector } from 'react-redux';
+
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/Logbook';
 import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
-import AnalyticsIcon from '../../Icons/Analytics';
+// import AnalyticsIcon from '../../Icons/Analytics';
 import EventsIcon from '../../Icons/Events';
-import VacationIcon from '../../Icons/Vacation';
+// import VacationIcon from '../../Icons/Vacation';
 import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
+import { companyModules } from '../../../store/company/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,7 +42,7 @@ const initialPasswords = {
   repeatPassword: '',
 };
 
-export default function ButtonAppBar({ logOut }) {
+export default function ButtonAppBar({ logOut, isSuperAdmin }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -55,6 +56,7 @@ export default function ButtonAppBar({ logOut }) {
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
+  const modules = useSelector(companyModules);
 
   useEffect(() => {
     if (id) {
@@ -115,33 +117,51 @@ export default function ButtonAppBar({ logOut }) {
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
               </Link>
-              {/*<Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>*/}
-              {/*  <PalceIcon className={styles.icon} />*/}
-              {/*  <span className={styles.link__text}>{t('Place')}</span>*/}
-              {/*</Link>*/}
-              <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
-                <LogbookIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Logbook')}</span>
-              </Link>
-              {/*<Link*/}
-              {/*  to={`/analytics/${id}`}*/}
-              {/*  className={pageName === 'analytics' ? styles.activelink : styles.link}*/}
-              {/*>*/}
-              {/*  <AnalyticsIcon className={styles.icon} />*/}
-              {/*  <span className={styles.link__text}>{t('Analytics')}</span>*/}
-              {/*</Link>*/}
-              <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
-                <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
-                <span className={styles.link__text}>{t('Events')}</span>
-              </Link>
-              <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
-                <OverviewIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Reports')}</span>
-              </Link>
-              {/*<Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>*/}
-              {/*  <VacationIcon className={styles.icon} />*/}
-              {/*  <span className={styles.link__text}>{t('Vacation')}</span>*/}
-              {/*</Link>*/}
+              {
+                // <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
+                //   <PalceIcon className={styles.icon} />
+                //   <span className={styles.link__text}>{t('Place')}</span>
+                // </Link>
+              }
+              {
+                (isSuperAdmin || !!modules.logbook) && (
+                  <Link to={`/logbook/${id}`} className={pageName === 'logbook' ? styles.activelink : styles.link}>
+                    <LogbookIcon className={styles.icon} />
+                    <span className={styles.link__text}>{t('Logbook')}</span>
+                  </Link>
+                )
+              }
+              {
+                // <Link
+                //     to={`/analytics/${id}`}
+                //     className={pageName === 'analytics' ? styles.activelink : styles.link}
+                // >
+                //   <AnalyticsIcon className={styles.icon} />
+                //   <span className={styles.link__text}>{t('Analytics')}</span>
+                // </Link>
+              }
+              {
+                (isSuperAdmin || !!modules.events) && (
+                  <Link to={`/events/${id}`} className={pageName === 'events' ? styles.activelink : styles.link}>
+                    <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
+                    <span className={styles.link__text}>{t('Events')}</span>
+                  </Link>
+                )
+              }
+              {
+                (isSuperAdmin || !!modules.reports) && (
+                  <Link to={`/reports/${id}`} className={pageName === 'reports' ? styles.activelink : styles.link}>
+                    <OverviewIcon className={styles.icon} />
+                    <span className={styles.link__text}>{t('Reports')}</span>
+                  </Link>
+                )
+              }
+              {
+                // <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
+                //   <VacationIcon className={styles.icon} />
+                //   <span className={styles.link__text}>{t('Vacation')}</span>
+                // </Link>
+              }
             </div>
             )
           }

@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
 import Switch from 'react-switch';
-
+import { debounce } from 'lodash';
+import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+
 import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, securityCompanySelector,
@@ -21,6 +22,7 @@ import Progress from '../../../Core/Progress';
 import Tooltip from '../../../Core/Tooltip';
 import PasswordSetting from './passwordSetting';
 import styles from './security.module.scss';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -33,11 +35,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+];
 export default function Sesurity() {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -82,36 +91,77 @@ export default function Sesurity() {
     }
   }, [security]);
 
+  const changeSecuritySettings = useCallback(debounce((payload) => {
+    const data = {
+      send_password: payload.send_password,
+      numbers: payload.numbers,
+      special_chars: payload.special_chars,
+      uppercase: payload.uppercase,
+      notify_admin: payload.notify_admin,
+      invitation: payload.invitation === true ? 1 : 0,
+      min_password_length: payload.min_length ? payload.min_password_length : null,
+      login_attempts: login_attempts !== '' ? login_attempts : null,
+    };
+    dispatch(editSecurityPage(data, id));
+  }, 5000), [dispatch, id]);
+
   const handleChangeInvitation = () => {
     setInvitation(!invitation);
+    changeSecuritySettings({
+      ...settings,
+      invitation: !invitation,
+      min_password_length,
+      login_attempts,
+    });
   };
 
   const handleChangeSettings = (event) => {
     setSettings({ ...settings, [event.target.name]: event.target.checked });
+    changeSecuritySettings({
+      ...settings,
+      [event.target.name]: event.target.checked,
+      invitation,
+      min_password_length,
+      login_attempts,
+    });
+  };
+
+  const handleChangeLoginAttempts = (value) => {
+    setLogin_attempts(value);
+    changeSecuritySettings({
+      ...settings,
+      invitation,
+      min_password_length,
+      login_attempts: value,
+    });
   };
 
   const changeMinPassword = (event) => {
     if (event.target.value < 3) {
       setMin_password_length(3);
+      changeSecuritySettings({
+        ...settings,
+        invitation,
+        min_password_length: 3,
+        login_attempts,
+      });
     } else if (event.target.value > 12) {
       setMin_password_length(12);
+      changeSecuritySettings({
+        ...settings,
+        invitation,
+        min_password_length: 12,
+        login_attempts,
+      });
     } else {
       setMin_password_length(event.target.value);
+      changeSecuritySettings({
+        ...settings,
+        invitation,
+        min_password_length: event.target.value,
+        login_attempts,
+      });
     }
-  };
-
-  const changeSecuritySettings = () => {
-    const data = {
-      send_password: settings.send_password,
-      numbers: settings.numbers,
-      special_chars: settings.special_chars,
-      uppercase: settings.uppercase,
-      notify_admin: settings.notify_admin,
-      invitation: invitation === true ? 1 : 0,
-      min_password_length: settings.min_length ? min_password_length : null,
-      login_attempts: login_attempts !== '' ? login_attempts : null,
-    };
-    dispatch(editSecurityPage(data, id));
   };
 
   return (
@@ -137,6 +187,7 @@ export default function Sesurity() {
                       checked={invitation}
                       height={21}
                       width={40}
+                      disabled={!permissions.company_edit_settings}
                     />
                     <div className={styles.label}>{t('Invitation link via e-mail')}</div>
                     <Tooltip title='Invitation link via e-mail' />
@@ -145,12 +196,12 @@ export default function Sesurity() {
                   <PasswordSetting
                     settings={settings}
                     handleChangeSettings={handleChangeSettings}
+                    readOnly={!permissions.company_edit_settings}
                     t={t}
                     min_password_length={min_password_length}
                     changeMinPassword={changeMinPassword}
                     login_attempts={login_attempts}
-                    setLogin_attempts={setLogin_attempts}
-                    changeSecuritySettings={changeSecuritySettings}
+                    setLogin_attempts={handleChangeLoginAttempts}
                   />
                 </div>
               )

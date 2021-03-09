@@ -14,12 +14,11 @@ const columns = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'Amount', field: 'users', checked: true },
   { label: 'ID', field: 'id', checked: true },
-  { label: '', field: 'actions', checked: true },
 ];
 
 export default function SubgroupsBlock({
   style, selected: selectedGroup, subgroups = [], addNewSubgroup, sort, loading,
-  removeSubgroup, edit,
+  removeSubgroup, edit, withAddButton,
 }) {
   const { t } = useTranslation();
 
@@ -36,11 +35,21 @@ export default function SubgroupsBlock({
         <div className={style.labelBLock}>
           <Label text={t('Sub-groups')} htmlFor='' />
           <Tooltip title='Select Sub-group' />
-          <div className={style.right}>
-            <Button onClick={() => setVisible(true)} inverse inline size='small' disabled={_.isEmpty(selectedGroup)}>
-              {`+ ${t('add new sub-group')}`}
-            </Button>
-          </div>
+          {
+            withAddButton && (
+              <div className={style.right}>
+                <Button
+                  onClick={() => setVisible(true)}
+                  inverse
+                  inline
+                  size='small'
+                  disabled={_.isEmpty(selectedGroup)}
+                >
+                  {`+ ${t('add new sub-group')}`}
+                </Button>
+              </div>
+            )
+          }
         </div>
         <div className={style.table}>
           <DataTable
@@ -48,8 +57,9 @@ export default function SubgroupsBlock({
             columns={columnsArray ?? []}
             columnsWidth={{}}
             onColumnsChange={setColumnsArray}
-            sortable
+            hoverActions
             loading={loading}
+            withoutFilterColumns
             // onSelect={setSelectedSubgroup}
             onSort={(field, asc) => sort({ field, asc })}
             // lastPage={page.last_page}
@@ -64,6 +74,7 @@ export default function SubgroupsBlock({
             simpleTable
             removeRow={() => setRemoveVisible(true)}
             editRow={() => setEditVisible(true)}
+            id='second'
           />
           {
             _.isEmpty(selectedGroup)

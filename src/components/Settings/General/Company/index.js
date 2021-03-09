@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Snackbar from '@material-ui/core/Snackbar';
+import { debounce } from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
 import CompanyIcon from '../../../Icons/Company';
-import { convertBase64 } from '../../../Helpers';
+import { imageResize } from '../../../Helpers';
 import Form from './Form';
 import Progress from '../../../Core/Progress';
 import { getSettingCompany, editSettingCompany, getCurrencies } from '../../../../store/settings/actions';
@@ -19,6 +20,7 @@ import {
   currencySelector,
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
+import usePermissions from '../../../Core/usePermissions';
 import styles from './company.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -32,6 +34,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+];
 export default function Company() {
   const params = useParams();
   const dispatch = useDispatch();
@@ -50,6 +58,7 @@ export default function Company() {
     timezone: '',
     date_format: '',
   });
+  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     dispatch(getCountries());
@@ -97,21 +106,25 @@ export default function Company() {
   const handleClose = () => {
     SetOpen(false);
   };
+
+  const editCompany = useCallback(debounce((data) => {
+    dispatch(editSettingCompany(data, companyId));
+  }, 5000), [dispatch, companyId]);
+
   // eslint-disable-next-line no-shadow
   const handleSave = async (file) => {
-    const base64 = await convertBase64(file[0]);
+    const base64 = await imageResize(file[0]);
     setFile(base64);
     SetOpen(false);
+    // editCompany({ ...inputValues, logo: file });
+    dispatch(editSettingCompany({ ...inputValues, logo: base64 }, companyId));
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setInputValues({ ...inputValues, [name]: value });
-  };
-
-  const editCompany = () => {
-    const data = { ...inputValues, logo: file };
-    dispatch(editSettingCompany(data, companyId));
+    const nextInputValues = { ...inputValues, [name]: value };
+    setInputValues({ ...nextInputValues, logo: file });
+    editCompany(nextInputValues);
   };
 
   useEffect(() => {
@@ -140,10 +153,10 @@ export default function Company() {
                 inputValues={inputValues}
                 countries={countries}
                 currencies={currencies}
-                editCompany={editCompany}
                 file={file}
                 company={company}
                 timeZones={timeZones}
+                readOnly={!permissions.company_edit_settings}
               />
             )}
           <DropzoneDialog

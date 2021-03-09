@@ -1,0 +1,52 @@
+Logbook
+--------
+// Can delete entry logs
+// Can see earnings and profit
+// Can see costs
+// Can edit Logbook settings (?)
+Can edit entry logs (?)
+// Get approval requests (?)
+// Get approval requests in assigned place (?)
+
+Reports
+--------
+// Can see costs
+// Can see earnings
+// Can see profit
+// Can generate reports
+// Reports only for assigned place
+
+Access
+_______
+// Can create Groups
+// Can create Roles
+// Can create Categories
+// Can delete entry data
+// Can create New accounts
+// accounts ~> delete
+// Can see Activity Log
+// Can edit General Settings
+
+====================
+
+Roles:
+--------
+// logbook_delete_logs: 1
+// logbook_earnings: 1
+logbook_edit_logs: 1
+// logbook_edit_settings: 1
+// logbook_requests: 1
+// logbook_requests_in_place: 1
+// reports_assigned_place: 1
+// reports_generate: 1
+
+Modules:
+--------
+comments_photo: 1
+cost_earning: 1
+events: 1
+logbook: 1
+profitability: 1
+reports: 1
+schedule: 1
+use_approval_flow: 1

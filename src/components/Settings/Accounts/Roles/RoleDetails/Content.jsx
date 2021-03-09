@@ -4,7 +4,6 @@ import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
 import classes from '../Roles.module.scss';
 import Tooltip from '../../../../Core/Tooltip';
-import styles from '../../../../Core/DataTableCustom/DTM.module.scss';
 
 function Content({
   children, title = '', tooltip = '', scroll = true,
@@ -37,7 +36,7 @@ function Content({
                         <span
                           {...restProps}
                           ref={elementRef}
-                          className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                          className={classNames(classes.scrollbarTrackX, { trackX: true })}
                         />
                       );
                     },

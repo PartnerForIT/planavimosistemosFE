@@ -15,6 +15,7 @@ $padding-size: 25px;
 
   & label + div {
     margin-top: unset;
+    width: 100%;
   }
 
   &:last-child {

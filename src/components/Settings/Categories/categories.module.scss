@@ -21,6 +21,7 @@
 
     label {
       margin-bottom: 15px;
+      font-family: "Helvetica Neue Bold", sans-serif;
     }
   }
 
@@ -33,10 +34,15 @@
     label {
       padding-right: 20px;
       padding-bottom: 0;
+      font-family: "Helvetica Neue Bold", sans-serif;
     }
   }
-}
 
-.newSkillBlock {
-  margin-top: 15px;
+  .newSkillBlock {
+    margin-top: 15px;
+
+    label {
+      font-family: "Helvetica Neue Bold", sans-serif;
+    }
+  }
 }

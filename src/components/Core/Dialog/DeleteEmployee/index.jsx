@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Dialog from '../index';
 import style from '../Dialog.module.scss';
@@ -59,4 +59,4 @@ export default ({
       </Dialog>
     </>
   );
-}
+};

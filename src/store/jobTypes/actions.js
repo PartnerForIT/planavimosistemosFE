@@ -7,7 +7,7 @@ export const getJobTypes = (companyId) => ({
   type: GET_JOB_TYPES,
   request: {
     method: 'GET',
-    url: `/company/${companyId}/jobtypes`,
+    url: `/company/${companyId}/job-types`,
   },
   meta: {
     thunk: true,
