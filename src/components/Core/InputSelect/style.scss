@@ -45,6 +45,21 @@
       position: static !important;
       width: calc(100% - 20px) !important;
       height: calc(100% - 20px) !important;
+
+      &__track-y {
+        background-color: transparent !important;
+        border-radius: 10px !important;
+        width: 7px !important;
+        height: calc(100% - 5px) !important;
+        top: 5px !important;
+        right: 0 !important;
+        z-index: 1;
+
+        div {
+          background-color: #d5dde1 !important;
+          border-radius: 10px !important;
+        }
+      }
     }
   }
 

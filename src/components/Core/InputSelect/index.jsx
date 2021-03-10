@@ -8,7 +8,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Scrollbar from 'react-scrollbars-custom';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import Input from '../Input/Input';
-import styles from './Select.module.scss';
 import './style.scss';
 
 export default ({
@@ -80,18 +79,7 @@ export default ({
             <Scrollbar
               className='input-select__content-box__scrollbar'
               removeTracksWhenNotUsed
-              trackXProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                    />
-                  );
-                },
-              }}
+              noScrollX
               trackYProps={{
                 renderer: (props) => {
                   const { elementRef, ...restProps } = props;
@@ -99,7 +87,7 @@ export default ({
                     <span
                       {...restProps}
                       ref={elementRef}
-                      className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                      className={classNames('input-select__content-box__scrollbar__track-y', { trackY: true })}
                     />
                   );
                 },
