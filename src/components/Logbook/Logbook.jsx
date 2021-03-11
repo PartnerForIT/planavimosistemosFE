@@ -485,7 +485,7 @@ const Logbook = () => {
   };
 
   const handleClickSaveEntry = (data) => {
-    dispatch(postLogbookEntry(companyId, data));
+    dispatch(postLogbookEntry(companyId, data, sendRequest));
     setIsOpenEditEntry(false);
   };
 

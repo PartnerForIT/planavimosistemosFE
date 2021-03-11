@@ -13,9 +13,9 @@ import {
   addSnackbar,
   dismissSnackbar,
 } from '../organizationList/actions';
-import {
-  postLogbookEntrySuccess,
-} from './actions';
+// import {
+//   postLogbookEntrySuccess,
+// } from './actions';
 
 function token() {
   return {
@@ -31,7 +31,8 @@ function* postLogbookEntry(action) {
       action.data,
       token(),
     );
-    yield put(postLogbookEntrySuccess(data));
+    action.callback();
+    // yield put(postLogbookEntrySuccess(data));
     yield put(addSnackbar('Updated logbook successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
