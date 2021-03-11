@@ -1,26 +1,35 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Switch from 'react-switch';
-import { AdminContext } from '../../MainLayout';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
+import usePermissions from '../../usePermissions';
 import style from '../Dialog.module.scss';
 
+const permissionsConfig = [
+  {
+    name: 'cost_earning',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
+];
 export default function CreateSkill({
   handleClose, title, open,
-  buttonTitle, createSkill,
-  modules, initialValues,
+  buttonTitle, createSkill, initialValues,
 }) {
   const { t } = useTranslation();
-  const isSuperAdmin = useContext(AdminContext);
   const [formValues, setFormValues] = useState({
     name: '',
     cost: '',
     earn: '',
     use_rates: true,
   });
+  const permissions = usePermissions(permissionsConfig);
 
   const handleSkillChange = (event) => {
     const { name, value } = event.target;
@@ -52,39 +61,37 @@ export default function CreateSkill({
         />
       </div>
       {
-        (isSuperAdmin || !!modules.cost_earning) && (
-        <div className={style.ratesBlock}>
-          <Label text={t('Use Rates')} htmlFor='rates' />
-          <Switch
-            onChange={handleChangeRates}
-            offColor='#808F94'
-            onColor='#0085FF'
-            uncheckedIcon={false}
-            checkedIcon={false}
-            checked={formValues.use_rates}
-            height={21}
-            width={40}
-          />
-        </div>
+        permissions.cost_earning && (
+          <>
+            <div className={style.ratesBlock}>
+              <Label text={t('Use Rates')} htmlFor='rates' />
+              <Switch
+                onChange={handleChangeRates}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                checked={formValues.use_rates}
+                height={21}
+                width={40}
+              />
+            </div>
+            <div className={style.formControl}>
+              <Label text={t('Cost, Hourly rate, $')} htmlFor='cost' />
+              <Input
+                placeholder={`${t('How much new user cost/h')}`}
+                value={formValues.cost}
+                name='cost'
+                fullWidth
+                onChange={handleSkillChange}
+                disabled={!formValues.use_rates}
+              />
+            </div>
+          </>
         )
       }
       {
-        (isSuperAdmin || !!modules.cost_earning) && (
-          <div className={style.formControl}>
-            <Label text={t('Cost, Hourly rate, $')} htmlFor='cost' />
-            <Input
-              placeholder={`${t('How much new user cost/h')}`}
-              value={formValues.cost}
-              name='cost'
-              fullWidth
-              onChange={handleSkillChange}
-              disabled={!formValues.use_rates}
-            />
-          </div>
-        )
-      }
-      {
-        (isSuperAdmin || !!modules.profitability) && (
+        permissions.profitability && (
           <div className={style.formControl}>
             <Label text={t('Charge, Hourly rate, $')} htmlFor='earn' />
             <Input

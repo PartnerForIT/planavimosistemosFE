@@ -3,6 +3,9 @@ import {
   DELETE_ITEMS,
   GET_WORK_TIME,
 } from './types';
+import {
+  POST_LOGBOOK_ENTRY_SUCCESS,
+} from '../logbook/types';
 
 const initialState = {
   workTime: [],
@@ -18,6 +21,14 @@ export const reducer = (state = initialState, action) => {
     case DELETE_ITEMS:
       return { ...state, error: null, loading: true };
 
+    case POST_LOGBOOK_ENTRY_SUCCESS: {
+      return {
+        workTime: [
+          ...action.data.work_time,
+        ],
+        ...state,
+      };
+    }
     case success(GET_WORK_TIME):
       return {
         ...state,

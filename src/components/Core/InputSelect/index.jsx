@@ -14,6 +14,7 @@ export default ({
   disabled,
   options = [], placeholder, onChange = () => ({}),
   name, value, valueKey = 'value', labelKey = 'label', id, labelId,
+  className,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
@@ -36,11 +37,10 @@ export default ({
     {
       'input-select_open': open,
       'input-select_disabled': disabled,
+      [className]: className,
     },
   );
 
-  // console.log('value', value);
-  // console.log('options', options);
   const label = useMemo(() => {
     if (open) {
       return searchValue;
@@ -50,7 +50,6 @@ export default ({
     return options.find((option) => option[valueKey] == value)?.[labelKey] || placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placeholder, open, options, value, searchValue]);
-  // console.log('label', label);
   const optionsDisplayed = useMemo(() => {
     if (searchValue) {
       return options.filter((option) => (option[labelKey]?.toLowerCase()).includes?.(searchValue.toLowerCase()));
@@ -60,7 +59,7 @@ export default ({
   }, [options, searchValue, labelKey]);
 
   return (
-    <ClickAwayListener id={id} labelId={labelId} onClickAway={() => setOpen(false)}>
+    <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div id={id} className={containerClasses}>
         {/* eslint-disable-next-line jsx-a11y/aria-role */}
         <div role='input' id={id} className='input-select__control' onClick={() => setOpen(!open)}>
@@ -75,7 +74,10 @@ export default ({
         </div>
 
         {open ? (
-          <div className='input-select__content-box'>
+          <div
+            className='input-select__content-box'
+            style={{ minHeight: optionsDisplayed.length > 4 ? 150 : optionsDisplayed.length * 36 + 2 }}
+          >
             <Scrollbar
               className='input-select__content-box__scrollbar'
               removeTracksWhenNotUsed

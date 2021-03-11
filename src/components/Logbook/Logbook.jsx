@@ -8,6 +8,8 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
+import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/core/styles';
 
 import MaynLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
@@ -29,8 +31,10 @@ import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
 import { companyModules } from '../../store/company/selectors';
 import { JournalDataSelector } from '../../store/settings/selectors';
+import { isShowSnackbar, snackbarText, snackbarType } from '../../store/organizationList/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 import { getEmployees } from '../../store/employees/actions';
+import { postLogbookEntry } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
 import { loadLogbookJournal } from '../../store/settings/actions';
@@ -46,7 +50,9 @@ import SuspendedIcon from '../Icons/SuspendedIcon';
 import ApproveIcon from '../Icons/ApproveIcon';
 import SuspendIcon from '../Icons/SuspendIcon';
 import { downloadExcel, downloadPdf } from '../../store/reports/actions';
+import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
+import EditEntry from './EditEntry';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -123,6 +129,17 @@ const permissionsConfig = [
   },
 ];
 
+const useStyles = makeStyles(() => ({
+  error: {
+    background: '#de4343',
+    color: '#fff',
+  },
+  success: {
+    background: '#3bc39e',
+    color: '#fff',
+  },
+}));
+
 const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -141,10 +158,12 @@ const Logbook = () => {
   const [checkedSkills, setCheckedSkills] = useState([]);
   const [search, setSearch] = useState('');
   const [employees, setEmployees] = useState([]);
+  const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
   const { t } = useTranslation();
+  const classes = useStyles();
   const dispatch = useDispatch();
   const wTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
@@ -154,6 +173,9 @@ const Logbook = () => {
   const modules = useSelector(companyModules);
   const user = useSelector(userSelector);
   const journal = useSelector(JournalDataSelector);
+  const isSnackbar = useSelector(isShowSnackbar);
+  const typeSnackbar = useSelector(snackbarType);
+  const textSnackbar = useSelector(snackbarText);
   const { id: companyId } = useParams();
   const permissions = usePermissions(permissionsConfig);
 
@@ -252,6 +274,7 @@ const Logbook = () => {
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
+    dispatch(getPlaces(companyId));
     dispatch(getEmployees(companyId));
     dispatch(getSkills(companyId));
     dispatch(loadLogbookJournal(companyId));
@@ -461,6 +484,11 @@ const Logbook = () => {
     }).catch();
   };
 
+  const handleClickSaveEntry = (data) => {
+    dispatch(postLogbookEntry(companyId, data));
+    setIsOpenEditEntry(false);
+  };
+
   const EmployeeInfo = () => {
     const isApproval = (
       (permissions.approval_flow
@@ -471,6 +499,9 @@ const Logbook = () => {
     return (
       <div className={styles.employeeInfo}>
         <div className={styles.hero}>
+          <Button onClick={() => setIsOpenEditEntry(true)} inverse inline size='small'>
+            {t('Edit')}
+          </Button>
           <img src={avatar} alt={selectedItem.employee} width='71' height='72' />
           <div className={styles.employeeName}>{selectedItem.employee}</div>
           <div className={styles.date}>
@@ -562,6 +593,12 @@ const Logbook = () => {
             )
           }
         </div>
+        <EditEntry
+          open={isOpenEditEntry}
+          handleClose={() => setIsOpenEditEntry(false)}
+          selectedItem={selectedItem}
+          onClickSave={handleClickSaveEntry}
+        />
       </div>
     );
   };
@@ -726,6 +763,21 @@ const Logbook = () => {
           }
         </div>
       </div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        ContentProps={{
+          classes: {
+            root: typeSnackbar === 'error' ? classes.error : classes.success,
+          },
+        }}
+        severity='error'
+        open={isSnackbar}
+        message={textSnackbar}
+        key='right'
+      />
     </MaynLayout>
   );
 };

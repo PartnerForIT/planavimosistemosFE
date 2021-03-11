@@ -115,7 +115,7 @@ import { getPlaces } from '../places/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 10000 * 10;
 
 function token() {
   return {

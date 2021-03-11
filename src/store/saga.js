@@ -8,6 +8,7 @@ import routes from 'config/routes';
 import OverviewWatcher from './overview/saga';
 import OrganizationListWatcher from './organizationList/saga';
 import SettingsWatcher from './settings/saga';
+import LogbookWatcher from './logbook/saga';
 
 function onRequest(request) {
   // intercept a request here
@@ -34,6 +35,7 @@ export default function* rootSaga() {
     OverviewWatcher(),
     OrganizationListWatcher(),
     SettingsWatcher(),
+    LogbookWatcher(),
     createRequestInstance({
       onRequest,
       onError,
