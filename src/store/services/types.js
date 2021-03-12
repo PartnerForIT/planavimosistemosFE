@@ -2,3 +2,4 @@ export const GET_INFO = 'GET_INFO';
 export const CONFIRM_PASSWORD = 'CONFIRM_PASSWORD';
 export const CLEAR_SERVICES = 'CLEAR_SERVICES';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const SET_NEW_PASSWORD = 'SET_NEW_PASSWORD';

@@ -79,7 +79,9 @@ const ForgotPassword = () => {
               </>
             ) : (
               <>
-                <p className={classes.sentTitle}>{`${t('Temporary password sent to the email')}:`}</p>
+                <p className={classes.sentTitle}>
+                  {t('Password reset link has been sent to your inbox successfully')}
+                </p>
                 <p>{email}</p>
               </>
             )
@@ -92,7 +94,7 @@ const ForgotPassword = () => {
                   disabled={error || !email || loading}
                   onClick={onSubmit}
                 >
-                  {t('Generate password')}
+                  {t('Reset password')}
                 </Button>
               )
               : (

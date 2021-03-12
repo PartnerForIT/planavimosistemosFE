@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import {
   GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, RESET_PASSWORD,
+  SET_NEW_PASSWORD,
 } from './types';
 
 export const getCompanyInfo = (token) => ({
@@ -38,9 +39,24 @@ export const resetPassword = (email) => ({
   type: RESET_PASSWORD,
   request: {
     method: 'POST',
+    url: '/password/create-mobile',
+    data: {
+      email,
+    },
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
+export const setNewPassword = (email, password) => ({
+  type: SET_NEW_PASSWORD,
+  request: {
+    method: 'POST',
     url: '/password/reset',
     data: {
       email,
+      password,
     },
   },
   meta: {
