@@ -1,0 +1,133 @@
+@import "../../Core/variables";
+
+$card-border-color: #cbd1d8;
+$card-padding: 12px;
+$details-padding: 14px 8px 8px;
+$edit-border: 1px solid $blue-border;
+$arrow-size: 21px;
+
+.card {
+  height: 92px;
+  position: relative;
+  color: $gray;
+  border: 1px solid $card-border-color;
+  border-radius: $card-padding;
+  padding: $card-padding;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+
+  @include focusVisible();
+
+  &_title {
+    font-weight: bold;
+    padding: 0 calc(1em + 5px) 0 0;
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    word-break: break-word;
+  }
+
+  & small {
+    font-size: $small-font-size;
+    color: inherit;
+  }
+
+  &_check {
+    position: absolute;
+    bottom: $card-padding;
+    left: $card-padding;
+    transform: translate(-9px, 9px);
+
+    & label * {
+      font-family: inherit !important;
+      color: inherit;
+    }
+  }
+
+  &_actions {
+    position: absolute;
+    top: $card-padding;
+    right: $card-padding;
+    grid-template-rows: $normal-font-size $normal-font-size;
+    grid-row-gap: 0.5em;
+    display: grid;
+    z-index: -1;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    & .card_actions {
+      opacity: 1;
+      z-index: 2;
+    }
+  }
+
+  &_edit {
+    color: $edit-icon-color;
+  }
+
+  &_remove {
+    color: red;
+  }
+
+  &_edit,
+  &_remove {
+    background-color: unset;
+    border: unset;
+    padding: unset;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    & svg {
+      font-size: $normal-font-size;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    @include focusVisible();
+  }
+
+  &.active {
+    background-color: $blue-2;
+    border-color: $blue-4;
+    color: white;
+
+    & .card_edit,
+    & .card_remove,
+    & .card_actions {
+      color: white;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: '';
+      width: $arrow-size;
+      height: $arrow-size;
+      transform: rotate(45deg) translateX(-50%);
+      transform-origin: center center;
+      display: block;
+      bottom: - $arrow-size * 1.5 - 7px;
+      left: 50%;
+      background-color: $beige-color;
+    }
+
+    &::before {
+      z-index: -1;
+      border: $edit-border;
+    }
+
+    &::after {
+      z-index: 1;
+      border-color: $beige-color;
+      border-radius: 17px 0;
+    }
+  }
+}

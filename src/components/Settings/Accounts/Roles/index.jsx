@@ -25,7 +25,7 @@ import {
   loadPermissions,
   updateRole,
 } from '../../../../store/settings/actions';
-import AddRole from '../../../Core/Dialog/AddRole';
+import AddEditItem from '../../../Core/Dialog/AddEditItem';
 import { companyModules, companyModulesLoading } from '../../../../store/company/selectors';
 import { userSelector } from '../../../../store/auth/selectors';
 
@@ -383,30 +383,33 @@ function Roles() {
             message={textSnackbar}
             key='rigth'
           />
-          <AddRole
+          <AddEditItem
             open={editVisible}
             handleClose={() => {
               setEditVisible(false);
               setRoleName('');
             }}
-            roleName={roleName || activeRole?.name}
-            setRoleName={setRoleName}
+            name={roleName || activeRole?.name}
+            setName={setRoleName}
             title={t('Edit role name')}
             buttonTitle={t('Change name')}
-            onsubmit={changeRoleName}
+            label={t('Role name')}
+            placeholder={t('Enter role name')}
+            onSubmit={changeRoleName}
           />
-
-          <AddRole
+          <AddEditItem
             open={newRoleOpen}
             handleClose={() => {
               setNewRoleOpen(false);
               setRoleName('');
             }}
             title={t('Create a new role')}
-            roleName={roleName}
-            setRoleName={setRoleName}
-            onsubmit={createNewRole}
+            name={roleName}
+            setName={setRoleName}
+            onSubmit={createNewRole}
             buttonTitle={t('Create Role')}
+            label={t('Role name')}
+            placeholder={t('Enter role name')}
           />
         </PageLayout>
       </Dashboard>

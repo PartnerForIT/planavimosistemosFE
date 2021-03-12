@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
-import classnames from 'classnames';
 
 import classes from '../Roles.module.scss';
-import RemoveRoleIcon from '../../../../Icons/RemoveRoleIcon';
-import RemoveRole from '../../../../Core/Dialog/RemoveRole';
-import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
+import RemoveRole from '../../../Core/Dialog/RemoveRole';
+import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
+import CardItem from '../../../Core/CardItem/CardItem';
 import RoleDetails from '../RoleDetails';
-import EditIcon from '../../../../Icons/EditIcon';
-import usePermissions from '../../../../Core/usePermissions';
-import CardItem from '../../../../Core/CardItem/CardItem';
-import CardItemAdd from '../../../../Core/CardItemAdd/CardItemAdd';
+import usePermissions from '../../../Core/usePermissions';
 
 const permissionsConfig = [
   {
-    name: 'roles_create',
-    permission: 'roles_create',
+    name: 'events_create',
+    permission: 'events_create',
   },
 ];
 function RolesBlock({
@@ -25,7 +21,6 @@ function RolesBlock({
   setActiveRole = () => ({}),
   createNewRole = () => ({}),
   remove = () => ({}),
-  updateRole = () => ({}),
   loading = false,
   setEditVisible = () => ({}),
   availableDetails = [],
@@ -70,9 +65,9 @@ function RolesBlock({
       <>
         {/* create new */}
         {
-          permissions.roles_create && (
+          permissions.events_create && (
             <CardItemAdd
-              itemName='role'
+              itemName='event'
               onClick={createNewRole}
             />
           )
@@ -87,15 +82,14 @@ function RolesBlock({
                       onClick={setActiveRole}
                       onClickEdit={setEditVisible}
                       onClickRemove={setRemoveVisible}
-                      onChangeCheckbox={updateRole}
                       isDefault={role.default}
                       name={role.name}
                       userCount={role.account_user_roles?.length}
                       selected={role.id === activeRole.id}
                       canDelete={!!role.can_delete}
-                      itemName='role'
-                      ariaLabel='user role'
-                      descriptionCount='users have this role'
+                      itemName='event'
+                      ariaLabel='event'
+                      descriptionCount='users assigned to this event'
                     />
                     {/* Role details */}
                     {

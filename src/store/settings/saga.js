@@ -55,6 +55,7 @@ import {
   DELETE_JOB,
   PATCH_SKILL,
   DELETE_SKILL,
+  GET_EVENTS,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -1295,6 +1296,21 @@ function* changePassword(action) {
   }
 }
 
+function* getEvents(action) {
+  try {
+    yield call(
+      axios.get,
+      `${config.api.url}/company/${action.id}/events`,
+      token(),
+    );
+    // yield put(postLogbookEntrySuccess(data));
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLeading(PATCH_JOB, patchJob);
   yield takeLeading(DELETE_JOB, deleteJob);
@@ -1347,4 +1363,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
   yield takeLeading(CHANGE_PASSWORD, changePassword);
+  yield takeLatest(GET_EVENTS, getEvents);
 }

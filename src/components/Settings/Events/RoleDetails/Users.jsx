@@ -3,9 +3,9 @@ import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 import Content from './Content';
-import SearchIcon from '../../../../Icons/SearchIcon';
-import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
-import Input from '../../../../Core/Input/Input';
+import SearchIcon from '../../../Icons/SearchIcon';
+import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapper';
+import Input from '../../../Core/Input/Input';
 import classes from '../Roles.module.scss';
 
 const Users = React.memo(({
@@ -71,7 +71,6 @@ const Users = React.memo(({
   }, [checkedItems, ready, roleEmployeesEdit]);
 
   const employeesWithoutGroups = useMemo(() => empList
-    // .filter(({ employee }) => !!employee) // REMOVE
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i)), [empList, employToCheck]);
 

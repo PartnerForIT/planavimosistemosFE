@@ -21,8 +21,6 @@ const AccessModule = React.memo(({
       ...roleAccess.moduleAccess,
     };
 
-    console.log('allModuleAccess', roleAccess.moduleAccess);
-    console.log('modules', modules);
     if (!isSuperAdmin) {
       if (!modules.logbook) {
         delete allModuleAccess.logbook;
