@@ -8,7 +8,7 @@ export const getCompanyInfo = (token) => ({
   type: GET_INFO,
   request: {
     method: 'GET',
-    url: `/find/${token}`,
+    url: `/password/find/${token}`,
   },
   meta: {
     thunk: true,
@@ -42,6 +42,7 @@ export const resetPassword = (email) => ({
     url: '/password/create-mobile',
     data: {
       email,
+      reset: 1,
     },
   },
   meta: {
@@ -49,15 +50,12 @@ export const resetPassword = (email) => ({
   },
 });
 
-export const setNewPassword = (email, password) => ({
+export const setNewPassword = (data) => ({
   type: SET_NEW_PASSWORD,
   request: {
     method: 'POST',
     url: '/password/reset',
-    data: {
-      email,
-      password,
-    },
+    data,
   },
   meta: {
     thunk: true,

@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
 import { setNewPassword, getCompanyInfo } from '../../../store/services/actions';
@@ -29,6 +29,7 @@ const ResetPassword = () => {
 
   const { t } = useTranslation();
   const { token } = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const {
@@ -43,14 +44,6 @@ const ResetPassword = () => {
     uppercase = true,
   } = security;
 
-  // const changeInputHandler = (e) => {
-  //   setError(false);
-  //
-  //   const text = e.target.value;
-  //   if (text.trim()) {
-  //     setEmail(text);
-  //   }
-  // };
   const handleInput = (e) => {
     const fieldId = e.target.name;
     const text = e.target.value;
@@ -60,7 +53,6 @@ const ResetPassword = () => {
       [fieldId]: text,
     }));
   };
-
   const validateOnBlur = () => {
     if (values.password && values.repeatPassword) {
       if (values.password !== values.repeatPassword) {
@@ -88,8 +80,13 @@ const ResetPassword = () => {
   }, [minLength, numbers, specialChars, uppercase, values.password]);
 
   const onSubmit = () => {
-    dispatch(setNewPassword(email, values.password))
-      .then(() => {})
+    dispatch(setNewPassword({
+      email,
+      password_confirmation: values.repeatPassword,
+      password: values.password,
+      token,
+    }))
+      .then(() => history.push('/'))
       .catch((e) => console.log(e));
   };
 

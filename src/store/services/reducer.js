@@ -17,9 +17,9 @@ export const reducer = (state = initialState, action) => {
     case success(GET_INFO):
       return {
         ...state,
-        email: action.password?.email,
-        security: action.security,
-        company: action.company,
+        email: action.data?.password?.email,
+        security: action.data?.security,
+        company: action.data?.company,
         loading: false,
       };
 
