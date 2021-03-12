@@ -1,5 +1,4 @@
 import React from 'react';
-import * as _ from 'lodash';
 import {
   withStyles,
   makeStyles,
@@ -7,14 +6,12 @@ import {
 import InputBase from '@material-ui/core/InputBase';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import Dialog from '../index';
 import langArray from '../../../Helpers/lang';
 import Button from '../../Button/Button';
 import InputSelect from '../../InputSelect';
 
 import style from '../Dialog.module.scss';
-import {FormLabel} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -126,27 +126,27 @@ export default function Filter({
         >
           {t('Active')}
         </Button>
-        {/*<Button*/}
-        {/*  yellow*/}
-        {/*  onClick={() => changeStatusCompany('suspend')}*/}
-        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
-        {/*>*/}
-        {/*  {t('Suspend')}*/}
-        {/*</Button>*/}
-        {/*<Button*/}
-        {/*  danger*/}
-        {/*  onClick={() => changeStatusCompany('delete')}*/}
-        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
-        {/*>*/}
-        {/*  {t('Terminate')}*/}
-        {/*</Button>*/}
-        {/*<Button*/}
-        {/*  black*/}
-        {/*  onClick={() => changeStatusCompany('destroy')}*/}
-        {/*  disabled={!checkedItems.length > 0 && !selectedItem}*/}
-        {/*>*/}
-        {/*  {t('Delete')}*/}
-        {/*</Button>*/}
+        <Button
+          yellow
+          onClick={() => changeStatusCompany('suspend')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
+          {t('Suspend')}
+        </Button>
+        <Button
+          danger
+          onClick={() => changeStatusCompany('delete')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
+          {t('Terminate')}
+        </Button>
+        <Button
+          black
+          onClick={() => changeStatusCompany('destroy')}
+          disabled={!checkedItems.length > 0 && !selectedItem}
+        >
+          {t('Delete')}
+        </Button>
       </div>
       <EditModules
         open={open}

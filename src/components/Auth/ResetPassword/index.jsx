@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
 import { setNewPassword, getCompanyInfo } from '../../../store/services/actions';

@@ -25,7 +25,7 @@ function token() {
 
 function* postLogbookEntry(action) {
   try {
-    const { data } = yield call(
+    yield call(
       axios.post,
       `${config.api.url}/company/${action.id}/logbook/edit`,
       action.data,

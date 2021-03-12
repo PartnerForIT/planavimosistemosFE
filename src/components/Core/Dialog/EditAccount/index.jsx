@@ -22,6 +22,7 @@ import CurrencySign from '../../../shared/CurrencySign';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import classes from './EditAccount.module.scss';
 import { validateEmail } from '../../../Helpers/emailValidation';
+import usePermissions from '../../usePermissions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,16 @@ const defaultSkill = {
   rates: true,
 };
 
+const permissionsConfig = [
+  {
+    name: 'groups',
+    module: 'create_groups',
+  },
+  {
+    name: 'places',
+    module: 'create_places',
+  },
+];
 export default function EditAccount({
   title,
   open,
@@ -60,6 +71,7 @@ export default function EditAccount({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const isSuperAdmin = useContext(AdminContext);
 
@@ -141,10 +153,10 @@ export default function EditAccount({
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
-    const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
+    const selectedGroup = groups.find((group) => group.id === user.group) ?? {};
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
     return sub;
-  }, [groups, t, user.group]);
+  }, [groups, user.group]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -399,12 +411,12 @@ export default function EditAccount({
                   </div>
 
                   {
-                    (isSuperAdmin || !!modules.create_groups || !!modules.create_places) && (
+                    (permissions.places || permissions.groups) && (
                       <div
                         className={classnames(style.right, style.bordered)}
                       >
                         {
-                          (!!modules.create_groups || isSuperAdmin) && (
+                          permissions.groups && (
                             <>
                               <div className={classes.formItem}>
                                 <Label htmlFor='group' text={t('Assign to Group')} />
@@ -423,7 +435,7 @@ export default function EditAccount({
                                   id='subgroup'
                                   options={subGroupsOpt}
                                   user={user}
-                                  disabled={subGroupsOpt.length <= 1}
+                                  disabled={!subGroupsOpt.length}
                                   name='subgroup'
                                   placeholder={t('Select a subgroup')}
                                   handleInput={handleInput}
@@ -438,7 +450,7 @@ export default function EditAccount({
                         }
 
                         {
-                          (!!modules.create_places || isSuperAdmin) && (
+                          permissions.places && (
                             <div className={classes.formItem}>
                               <Label htmlFor='place' text={t('Assign to place')} />
                               <AddEditSelectOptions

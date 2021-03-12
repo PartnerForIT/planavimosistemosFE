@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
 import InputSelect from '../../../Core/InputSelect';
-import CustomSelect from "../../../Core/Select/Select";
 
 // const useStyles = makeStyles(() => ({
 //   root: {
