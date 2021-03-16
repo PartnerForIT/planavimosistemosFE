@@ -108,6 +108,11 @@ import {
   DELETE_JOB,
   PATCH_PLACE,
   DELETE_PLACE,
+  GET_EVENTS,
+  GET_EVENTS_SUCCESS,
+  POST_EVENT,
+  PATCH_EVENT,
+  PATCH_EVENT_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -678,4 +683,33 @@ export const changePasswordSuccess = (data) => ({
 export const changePasswordError = (data) => ({
   type: CHANGE_PASSWORD_ERROR,
   data,
+});
+
+/* events */
+export const getEvents = (companyId) => ({
+  type: GET_EVENTS,
+  companyId,
+});
+
+export const getEventsSuccess = (data) => ({
+  type: GET_EVENTS_SUCCESS,
+  data,
+});
+
+export const patchEventSuccess = (data) => ({
+  type: PATCH_EVENT_SUCCESS,
+  data,
+});
+
+export const postEvent = (companyId, data) => ({
+  type: POST_EVENT,
+  data,
+  companyId,
+});
+
+export const patchEvent = (companyId, id, data) => ({
+  type: PATCH_EVENT,
+  data,
+  id,
+  companyId,
 });

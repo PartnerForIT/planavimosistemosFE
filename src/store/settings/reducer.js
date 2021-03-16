@@ -87,6 +87,9 @@ import {
   SEND_IMPORTED_EMPLOYEES,
   SEND_IMPORTED_EMPLOYEES_SUCCESS,
   SEND_IMPORTED_EMPLOYEES_ERROR,
+  GET_EVENTS,
+  GET_EVENTS_SUCCESS,
+  PATCH_EVENT_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -120,6 +123,7 @@ const initialState = {
   roleDetails: {},
   permissions: [],
   import: {},
+  events: [],
 };
 
 function filterdeleteHoliday(array, id) {
@@ -601,6 +605,33 @@ export const reducerOrganizationList = (state = initialState, action) => {
 
     case SEND_IMPORTED_EMPLOYEES_ERROR:
       return { ...state, importLoading: false };
+
+    case GET_EVENTS:
+      return { ...state, eventsLoading: true };
+
+    case GET_EVENTS_SUCCESS:
+      return {
+        ...state,
+        events: action.data.events,
+        eventsTypes: action.data.events_types,
+        eventsLoading: false,
+      };
+
+    case PATCH_EVENT_SUCCESS: {
+      const itemIndex = state.events.findIndex((item) => item.id === action.data.id);
+      return {
+        ...state,
+        events: [
+          ...state.events.slice(0, itemIndex),
+          {
+            ...state.events[itemIndex],
+            ...action.data,
+          },
+          ...state.events.slice(itemIndex + 1),
+        ],
+        eventsLoading: false,
+      };
+    }
 
     default:
       return state;

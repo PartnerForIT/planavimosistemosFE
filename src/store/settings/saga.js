@@ -56,6 +56,8 @@ import {
   PATCH_SKILL,
   DELETE_SKILL,
   GET_EVENTS,
+  POST_EVENT,
+  PATCH_EVENT,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -110,6 +112,8 @@ import {
   loadPermissionsError,
   getRoles, sendImportedEmployeesSuccess, changePasswordSuccess, changePasswordError,
   loadSkills,
+  getEventsSuccess,
+  patchEventSuccess,
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
@@ -125,6 +129,7 @@ function token() {
 }
 
 function* loadSettingsCompany(action) {
+  axios.defaults.timeout = 10000 * 10;
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/edit`, token());
     yield put(getSettingCompanySuccess(data));
@@ -1296,13 +1301,53 @@ function* changePassword(action) {
   }
 }
 
+/* events */
 function* getEvents(action) {
   try {
-    yield call(
+    const { data } = yield call(
       axios.get,
-      `${config.api.url}/company/${action.id}/events`,
+      `${config.api.url}/company/${action.companyId}/events`,
       token(),
     );
+    yield put(getEventsSuccess(data));
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* postEvent(action) {
+  try {
+    yield call(
+      axios.post,
+      `${config.api.url}/company/${action.companyId}/events/store`,
+      action.data,
+      token(),
+    );
+    yield put(addSnackbar('Create event successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+    // yield put(postLogbookEntrySuccess(data));
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchEvent(action) {
+  try {
+    const { data } = yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/events/update/${action.id}`,
+      action.data,
+      token(),
+    );
+    yield put(patchEventSuccess(data));
+    yield put(addSnackbar('Update event successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
     // yield put(postLogbookEntrySuccess(data));
   } catch (e) {
     yield put(addSnackbar(e, 'error'));
@@ -1364,4 +1409,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
   yield takeLeading(CHANGE_PASSWORD, changePassword);
   yield takeLatest(GET_EVENTS, getEvents);
+  yield takeLatest(POST_EVENT, postEvent);
+  yield takeLatest(PATCH_EVENT, patchEvent);
 }

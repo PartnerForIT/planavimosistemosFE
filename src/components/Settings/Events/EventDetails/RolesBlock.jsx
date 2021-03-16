@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 
-import classes from '../Roles.module.scss';
+import classes from '../Events.module.scss';
 import RemoveRole from '../../../Core/Dialog/RemoveRole';
 import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
 import CardItem from '../../../Core/CardItem/CardItem';
-import RoleDetails from '../RoleDetails';
+import EventDetails from '../EventDetails';
 import usePermissions from '../../../Core/usePermissions';
 
 const permissionsConfig = [
@@ -16,14 +16,15 @@ const permissionsConfig = [
   },
 ];
 function RolesBlock({
-  roles = [],
-  activeRole = {},
+  events = [],
+  eventsTypes = [],
+  activeEvent = {},
   setActiveRole = () => ({}),
   createNewRole = () => ({}),
   remove = () => ({}),
   loading = false,
   setEditVisible = () => ({}),
-  availableDetails = [],
+  // availableDetails = [],
   employees = [],
   groups = [],
   roleEmployeesEdit = () => ({}),
@@ -72,50 +73,47 @@ function RolesBlock({
             />
           )
         }
-        {/* roles board */}
+        {/* events board */}
         {
-                roles.map((role) => (
-                  <React.Fragment key={role.id + role.name}>
-                    <CardItem
-                      id={role.id}
-                      item={role}
-                      onClick={setActiveRole}
-                      onClickEdit={setEditVisible}
-                      onClickRemove={setRemoveVisible}
-                      isDefault={role.default}
-                      name={role.name}
-                      userCount={role.account_user_roles?.length}
-                      selected={role.id === activeRole.id}
-                      canDelete={!!role.can_delete}
-                      itemName='event'
-                      ariaLabel='event'
-                      descriptionCount='users assigned to this event'
-                    />
-                    {/* Role details */}
-                    {
-                      activeRole?.id === role.id && (
-                        <RoleDetails
-                          activeRole={activeRole}
-                          loading={loading}
-                          availableDetails={availableDetails}
-                          roleAccess={roleAccess}
-                          employees={employees}
-                          groups={groups}
-                          setRoleAccess={setRoleAccess}
-                          roleEmployeesEdit={roleEmployeesEdit}
-                          rolesPermissionsEdit={rolesPermissionsEdit}
-                          permissions={allPermissions}
-                          permissionsIds={permissionsIds}
-                          setDisableReady={setDisableReady}
-                          disable={disable}
-                          setDisable={setDisable}
-                          roleAdmin={role.name === 'Administrator'}
-                        />
-                      )
-                    }
-                  </React.Fragment>
-                ))
+          events.map((event) => (
+            <React.Fragment key={event.id}>
+              <CardItem
+                id={event.id}
+                item={event}
+                onClick={setActiveRole}
+                onClickEdit={setEditVisible}
+                onClickRemove={setRemoveVisible}
+                name={event.name}
+                userCount={event.assign_employees?.length}
+                selected={event.id === activeEvent.id}
+                itemName='event'
+                ariaLabel='event'
+                descriptionCount='users assigned to this event'
+              />
+              {/* Role details */}
+              {
+                activeEvent?.id === event.id && (
+                  <EventDetails
+                    eventsTypes={eventsTypes}
+                    activeEvent={activeEvent}
+                    loading={loading}
+                    roleAccess={roleAccess}
+                    employees={employees}
+                    groups={groups}
+                    setRoleAccess={setRoleAccess}
+                    roleEmployeesEdit={roleEmployeesEdit}
+                    rolesPermissionsEdit={rolesPermissionsEdit}
+                    permissions={allPermissions}
+                    permissionsIds={permissionsIds}
+                    setDisableReady={setDisableReady}
+                    disable={disable}
+                    setDisable={setDisable}
+                  />
+                )
               }
+            </React.Fragment>
+          ))
+        }
         <RemoveRole
           open={!!removeVisible}
           handleClose={() => setRemoveVisible(false)}

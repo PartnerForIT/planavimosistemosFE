@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
-import classes from '../Roles.module.scss';
+import classes from '../Events.module.scss';
 import Tooltip from '../../../Core/Tooltip';
 
 function Content({

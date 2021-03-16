@@ -12,20 +12,23 @@ import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
 import {
   AccountGroupsSelector, employeesSelector,
-  isLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
+  eventsLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
+  eventsSelector, eventsTypesSelector,
 } from '../../../store/settings/selectors';
 import RolesIcon from '../../Icons/RolesIcon';
-import RolesBlock from './RoleDetails/RolesBlock';
+import RolesBlock from './EventDetails/RolesBlock';
 import {
-  createRole,
+  // createRole,
   deleteRole,
   getAccountGroups,
   getRoles,
   loadEmployeesAll,
   loadPermissions,
   updateRole,
+  postEvent,
+  getEvents,
+  patchEvent,
 } from '../../../store/settings/actions';
-import { getEvents } from '../../../store/events/actions';
 import AddEditItem from '../../Core/Dialog/AddEditItem';
 
 const useStyles = makeStyles(() => ({
@@ -39,26 +42,28 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function Roles() {
+function Events() {
   const { id: companyId } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const isLoading = useSelector(isLoadingSelector);
+  const isLoading = useSelector(eventsLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const events = useSelector(eventsSelector);
+  const eventsTypes = useSelector(eventsTypesSelector);
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
   const permissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
-  const [activeRole, setActiveRole] = useState({});
-  const [newRoleOpen, setNewRoleOpen] = useState(false);
+  const [activeEvent, setActiveEvent] = useState({});
+  const [newEventOpen, setNewEventOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-  const [roleName, setRoleName] = useState('');
   const [defaultRoleAccess] = useState({});
+  // console.log('activeRole', activeRole);
 
   const permissionsIds = useMemo(() => {
     // eslint-disable-next-line no-underscore-dangle
@@ -83,17 +88,17 @@ function Roles() {
   }, [permissions]);
 
   const roleEmployeesEdit = (data) => {
-    dispatch(updateRole(companyId, activeRole.id, { users: data.length ? data.toString() : '' }));
+    dispatch(updateRole(companyId, activeEvent.id, { users: data.length ? data.toString() : '' }));
   };
 
   const removeRolesPermissions = (data = []) => {
     // eslint-disable-next-line no-shadow
-    dispatch(updateRole(companyId, activeRole.id, { permissions: data.map((id) => ({ id, access: 0 })) }));
+    dispatch(updateRole(companyId, activeEvent.id, { permissions: data.map((id) => ({ id, access: 0 })) }));
   };
 
   const rolesPermissionsEdit = (data) => {
     // eslint-disable-next-line no-shadow
-    const oldRolePermissions = roles.find(({ id }) => id === activeRole.id)
+    const oldRolePermissions = roles.find(({ id }) => id === activeEvent.id)
       ?.account_roles_permissions
       // eslint-disable-next-line no-shadow
       ?.map(({ permission_id: id, access }) => ({ id, access }));
@@ -114,18 +119,10 @@ function Roles() {
     // eslint-disable-next-line no-shadow
     const permissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
 
-    dispatch(updateRole(companyId, activeRole.id, {
+    dispatch(updateRole(companyId, activeEvent.id, {
       permissions,
     }));
   };
-
-  const availableDetails = useMemo(() => {
-    if (!_.isEmpty(activeRole) && permissions.length) {
-      // eslint-disable-next-line no-shadow
-      return permissions.filter((perm) => activeRole.account_roles_permissions.some(({ id }) => id === perm.id));
-    }
-    return [];
-  }, [activeRole, permissions]);
 
   useEffect(() => {
     dispatch(getRoles(companyId));
@@ -148,27 +145,10 @@ function Roles() {
     dispatch(deleteRole(companyId, roleId));
   };
 
-  useEffect(() => {
-    if (roles.length && !_.isEmpty(activeRole)) {
-      // eslint-disable-next-line no-shadow
-      const role = roles.find(({ id }) => id === activeRole.id);
-      setActiveRole(role);
-    }
-  }, [activeRole, roles, roles.length]);
-
-  const createNewRole = () => {
-    if (roleName.trim()) {
-      dispatch(createRole(companyId, roleName.trim()));
-      setNewRoleOpen(false);
-      setRoleName('');
-    }
-  };
-
-  const changeRoleName = () => {
-    if (roleName.trim()) {
-      dispatch(updateRole(companyId, activeRole.id, { name: roleName.trim() }));
+  const changeEventName = (eventName) => {
+    if (eventName.trim()) {
+      dispatch(patchEvent(companyId, activeEvent.id, { name: eventName.trim() }));
       setEditVisible(false);
-      setRoleName('');
     }
   };
 
@@ -185,6 +165,13 @@ function Roles() {
     }
   };
 
+  const createNewEvent = (eventName) => {
+    if (eventName.trim()) {
+      dispatch(postEvent(companyId, { name: eventName.trim() }));
+      setNewEventOpen(false);
+    }
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -198,15 +185,15 @@ function Roles() {
             isLoading ? <Progress />
               : (
                 <RolesBlock
-                  roles={roles}
-                  activeRole={activeRole}
-                  setActiveRole={setActiveRole}
-                  createNewRole={() => setNewRoleOpen(true)}
+                  events={events}
+                  eventsTypes={eventsTypes}
+                  activeEvent={activeEvent}
+                  setActiveRole={setActiveEvent}
+                  createNewRole={() => setNewEventOpen(true)}
                   remove={removeRole}
                   updateRole={patchRole}
                   loading={loading}
                   setEditVisible={setEditVisible}
-                  availableDetails={availableDetails}
                   employees={employees}
                   groups={groups}
                   roleEmployeesEdit={roleEmployeesEdit}
@@ -235,29 +222,24 @@ function Roles() {
           />
           <AddEditItem
             open={editVisible}
+            initialValue={activeEvent?.name}
             handleClose={() => {
               setEditVisible(false);
-              setRoleName('');
             }}
-            name={roleName || activeRole?.name}
-            setName={setRoleName}
             title={t('Edit event name')}
             buttonTitle={t('Change name')}
             label={t('Event name')}
             placeholder={t('Enter event name')}
-            onSubmit={changeRoleName}
+            onSubmit={changeEventName}
           />
           <AddEditItem
-            open={newRoleOpen}
+            open={newEventOpen}
             handleClose={() => {
-              setNewRoleOpen(false);
-              setRoleName('');
+              setNewEventOpen(false);
             }}
             title={t('Create a new event')}
-            name={roleName}
-            setName={setRoleName}
-            onSubmit={createNewRole}
-            buttonTitle={t('Create Role')}
+            onSubmit={createNewEvent}
+            buttonTitle={t('Create event')}
             label={t('Event name')}
             placeholder={t('Enter event name')}
           />
@@ -267,4 +249,4 @@ function Roles() {
   );
 }
 
-export default Roles;
+export default Events;

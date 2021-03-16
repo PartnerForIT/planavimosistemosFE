@@ -13,8 +13,11 @@ import './style.scss';
 export default ({
   disabled,
   options = [], placeholder, onChange = () => ({}),
-  name, value, valueKey = 'value', labelKey = 'label', id, labelId,
+  name, value, valueKey = 'value', labelKey = 'label',
+  id = 'select',
+  labelId,
   className,
+  small,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
@@ -37,6 +40,7 @@ export default ({
     {
       'input-select_open': open,
       'input-select_disabled': disabled,
+      'input-select_small': small,
       [className]: className,
     },
   );

@@ -173,7 +173,6 @@ function Roles() {
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-  const [roleName, setRoleName] = useState('');
   const [defaultRoleAccess, setDefaultRoleAccess] = useState({});
 
   const permissionsIds = useMemo(() => {
@@ -306,19 +305,17 @@ function Roles() {
     }
   }, [activeRole, roles, roles.length]);
 
-  const createNewRole = () => {
+  const createNewRole = (roleName) => {
     if (roleName.trim()) {
       dispatch(createRole(id, roleName.trim()));
       setNewRoleOpen(false);
-      setRoleName('');
     }
   };
 
-  const changeRoleName = () => {
+  const changeRoleName = (roleName) => {
     if (roleName.trim()) {
       dispatch(updateRole(id, activeRole.id, { name: roleName.trim() }));
       setEditVisible(false);
-      setRoleName('');
     }
   };
 
@@ -387,10 +384,8 @@ function Roles() {
             open={editVisible}
             handleClose={() => {
               setEditVisible(false);
-              setRoleName('');
             }}
-            name={roleName || activeRole?.name}
-            setName={setRoleName}
+            initialValue={activeRole?.name}
             title={t('Edit role name')}
             buttonTitle={t('Change name')}
             label={t('Role name')}
@@ -401,11 +396,8 @@ function Roles() {
             open={newRoleOpen}
             handleClose={() => {
               setNewRoleOpen(false);
-              setRoleName('');
             }}
             title={t('Create a new role')}
-            name={roleName}
-            setName={setRoleName}
             onSubmit={createNewRole}
             buttonTitle={t('Create Role')}
             label={t('Role name')}

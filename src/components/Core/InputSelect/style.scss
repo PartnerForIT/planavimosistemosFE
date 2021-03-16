@@ -77,6 +77,23 @@
     cursor: default;
     opacity: 0.8;
   }
+
+  &_small {
+    & .input-select__control {
+      height: 18px;
+      min-height: 18px;
+
+      input {
+        height: 18px;
+        padding: 0 11px;
+      }
+
+      &::before {
+        top: 6px;
+        right: 10px;
+      }
+    }
+  }
 }
 
 label + .input-select {

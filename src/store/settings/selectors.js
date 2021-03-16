@@ -30,3 +30,7 @@ export const currencySelector = (state) => state.settings.currency;
 export const rolesSelector = (state) => state.settings.roles;
 export const rolesLoading = (state) => state.settings.rolesLoading;
 export const permissionsSelector = (state) => state.settings.permissions;
+
+export const eventsSelector = (state) => state.settings.events;
+export const eventsTypesSelector = (state) => state.settings.eventsTypes;
+export const eventsLoadingSelector = (state) => state.settings.eventsLoading;

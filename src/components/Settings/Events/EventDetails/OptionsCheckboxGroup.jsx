@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
-import classes from '../Roles.module.scss';
+import classes from '../Events.module.scss';
 
 const OptionsCheckBoxGroup = ({
   name = '',

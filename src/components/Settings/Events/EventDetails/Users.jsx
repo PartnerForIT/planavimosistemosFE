@@ -6,11 +6,11 @@ import Content from './Content';
 import SearchIcon from '../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapper';
 import Input from '../../../Core/Input/Input';
-import classes from '../Roles.module.scss';
+import classes from '../Events.module.scss';
 
 const Users = React.memo(({
   employees = [],
-  activeRole,
+  activeEvent,
   roleEmployeesEdit,
 }) => {
   const employToCheck = useCallback(({
@@ -20,8 +20,8 @@ const Users = React.memo(({
   }) => ({
     id,
     label: `${name} ${surname}`,
-    checked: activeRole?.account_user_roles.some(({ employee_id }) => employee_id === id),
-  }), [activeRole.account_user_roles]);
+    checked: activeEvent?.assign_employees.some(({ id: employee_id }) => employee_id === id),
+  }), [activeEvent.assign_employees]);
 
   const [search, setSearch] = useState('');
   const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
@@ -49,14 +49,14 @@ const Users = React.memo(({
     }
   }, [employees, search, stringMatch]);
 
-  const checkedByDefault = useMemo(() => activeRole?.account_user_roles
+  const checkedByDefault = useMemo(() => activeEvent?.assign_employees
     .map((worker) => {
       const { employee } = worker;
       if (employee) {
         return employToCheck(employee);
       } return null;
     }).filter((item) => !!item) ?? [],
-  [activeRole.account_user_roles, employToCheck]);
+  [activeEvent.assign_employees, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);

@@ -121,3 +121,17 @@ $arrow-size: 21px;
     border-radius: 10px !important;
   }
 }
+
+.eventRule {
+  &__content {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    //flex-wrap: wrap;
+
+    &__input {
+      display: inline-block;
+      max-width: 71px;
+    }
+  }
+}

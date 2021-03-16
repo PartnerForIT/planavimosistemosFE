@@ -23,24 +23,24 @@ function token() {
   };
 }
 
-function* getEvents(action) {
-  try {
-    yield call(
-      axios.get,
-      `${config.api.url}/company/${action.id}/events`,
-      token(),
-    );
-    // yield put(postLogbookEntrySuccess(data));
-    yield put(addSnackbar('Updated logbook successfully', 'success'));
-    yield delay(4000);
-    yield put(dismissSnackbar());
-  } catch (e) {
-    yield put(addSnackbar(e, 'error'));
-    yield delay(4000);
-    yield put(dismissSnackbar());
-  }
-}
+// function* getEvents(action) {
+//   try {
+//     yield call(
+//       axios.get,
+//       `${config.api.url}/company/${action.id}/events`,
+//       token(),
+//     );
+//     // yield put(postLogbookEntrySuccess(data));
+//     yield put(addSnackbar('Updated logbook successfully', 'success'));
+//     yield delay(4000);
+//     yield put(dismissSnackbar());
+//   } catch (e) {
+//     yield put(addSnackbar(e, 'error'));
+//     yield delay(4000);
+//     yield put(dismissSnackbar());
+//   }
+// }
 
 export default function* EventsWatcher() {
-  yield takeLatest(GET_EVENTS, getEvents);
+  // yield takeLatest(GET_EVENTS, getEvents);
 }
