@@ -58,6 +58,7 @@ import {
   GET_EVENTS,
   POST_EVENT,
   PATCH_EVENT,
+  DELETE_EVENT,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -114,6 +115,7 @@ import {
   loadSkills,
   getEventsSuccess,
   patchEventSuccess,
+  deleteEventSuccess,
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
@@ -1344,11 +1346,29 @@ function* patchEvent(action) {
       action.data,
       token(),
     );
-    yield put(patchEventSuccess(data));
+    yield put(patchEventSuccess(data, action.data.employees));
     yield put(addSnackbar('Update event successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
     // yield put(postLogbookEntrySuccess(data));
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteEvent(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/events/delete/${action.id}`,
+      token(),
+    );
+    yield put(deleteEventSuccess(action.id));
+    yield put(addSnackbar('Update event successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar(e, 'error'));
     yield delay(4000);
@@ -1411,4 +1431,5 @@ export default function* SettingsWatcher() {
   yield takeLatest(GET_EVENTS, getEvents);
   yield takeLatest(POST_EVENT, postEvent);
   yield takeLatest(PATCH_EVENT, patchEvent);
+  yield takeLatest(DELETE_EVENT, deleteEvent);
 }

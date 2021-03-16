@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import _ from 'lodash';
 
 import classes from '../Events.module.scss';
 import RemoveRole from '../../../Core/Dialog/RemoveRole';
@@ -15,51 +14,23 @@ const permissionsConfig = [
     permission: 'events_create',
   },
 ];
-function RolesBlock({
+function EventsBlock({
   events = [],
   eventsTypes = [],
   activeEvent = {},
-  setActiveRole = () => ({}),
-  createNewRole = () => ({}),
-  remove = () => ({}),
+  setActiveEvent = Function.prototype,
+  createNewEvent = Function.prototype,
+  remove = Function.prototype,
   loading = false,
-  setEditVisible = () => ({}),
-  // availableDetails = [],
+  setEditVisible = Function.prototype,
   employees = [],
   groups = [],
-  roleEmployeesEdit = () => ({}),
-  rolesPermissionsEdit = () => ({}),
-  permissions: allPermissions,
-  permissionsIds,
-  removeRolesPermissions,
-  defaultRoleAccess = {},
+  onUpdateEvent = Function.prototype,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
-  const [roleAccess, setRoleAccess] = useState(defaultRoleAccess);
-  const [disableReady, setDisableReady] = useState(false);
   const [disable, setDisable] = useState([]);
   const permissions = usePermissions(permissionsConfig);
-
-  useEffect(() => {
-    const { moduleAccess } = roleAccess;
-    if (moduleAccess && permissionsIds) {
-      const disabled = Object.keys(moduleAccess)?.map((key) => {
-      // eslint-disable-next-line no-underscore-dangle
-        const _inner = moduleAccess[key];
-        if (!_inner.enabled) {
-          return Object.keys(_inner.options)?.map((opt) => permissionsIds?.[key]?.[opt]);
-        }
-        return null;
-      }).filter((item) => !!item);
-      if (disableReady) {
-        const dis = _.flatten(disabled);
-        setDisable(dis);
-        setDisableReady(false);
-        removeRolesPermissions(dis);
-      }
-    }
-  }, [disableReady, permissionsIds, removeRolesPermissions, removeVisible, roleAccess]);
 
   return (
     <div className={classes.roles}>
@@ -69,7 +40,7 @@ function RolesBlock({
           permissions.events_create && (
             <CardItemAdd
               itemName='event'
-              onClick={createNewRole}
+              onClick={createNewEvent}
             />
           )
         }
@@ -80,7 +51,7 @@ function RolesBlock({
               <CardItem
                 id={event.id}
                 item={event}
-                onClick={setActiveRole}
+                onClick={setActiveEvent}
                 onClickEdit={setEditVisible}
                 onClickRemove={setRemoveVisible}
                 name={event.name}
@@ -97,17 +68,11 @@ function RolesBlock({
                     eventsTypes={eventsTypes}
                     activeEvent={activeEvent}
                     loading={loading}
-                    roleAccess={roleAccess}
                     employees={employees}
                     groups={groups}
-                    setRoleAccess={setRoleAccess}
-                    roleEmployeesEdit={roleEmployeesEdit}
-                    rolesPermissionsEdit={rolesPermissionsEdit}
-                    permissions={allPermissions}
-                    permissionsIds={permissionsIds}
-                    setDisableReady={setDisableReady}
                     disable={disable}
                     setDisable={setDisable}
+                    onUpdateEvent={onUpdateEvent}
                   />
                 )
               }
@@ -117,7 +82,7 @@ function RolesBlock({
         <RemoveRole
           open={!!removeVisible}
           handleClose={() => setRemoveVisible(false)}
-          title={t('Delete role')}
+          title={t('Delete event')}
           name={removeVisible.name}
           buttonTitle={t('Delete')}
           remove={() => remove(removeVisible.id)}
@@ -127,4 +92,4 @@ function RolesBlock({
   );
 }
 
-export default RolesBlock;
+export default EventsBlock;

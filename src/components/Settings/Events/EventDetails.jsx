@@ -6,6 +6,7 @@ import classes from './Events.module.scss';
 import Users from './EventDetails/Users';
 import EventRule from './EventDetails/EventRule';
 import EventAction from './EventDetails/EventAction';
+import { EVENT_TYPE } from '../../../const';
 import Progress from '../../Core/Progress';
 import { companyModules } from '../../../store/company/selectors';
 
@@ -15,19 +16,31 @@ function EventDetails({
   loading,
   employees,
   groups,
-  roleEmployeesEdit = () => ({}),
-  rolesPermissionsEdit = () => ({}),
   disable,
   setDisable,
+  onUpdateEvent,
 }) {
   const [ready, setReady] = useState(false);
+  const [values, setValues] = useState(() => {
+    let time;
+    if (activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_OUT
+        || activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_IN) {
+      time = activeEvent.time / 60 / 60;
+    } else {
+      time = activeEvent.time / 60;
+    }
+    return {
+      ...activeEvent,
+      time: time || 0,
+    };
+  });
   const modules = useSelector(companyModules);
 
   useEffect(() => {
     if (ready) {
       setReady(false);
     }
-  }, [ready, rolesPermissionsEdit]);
+  }, [ready]);
 
   useEffect(() => {
     if (disable.length) {
@@ -43,35 +56,54 @@ function EventDetails({
   );
 
   const onChangeHandler = (id) => {
-    // setActivePermissions((prevState) => {
-    //   if (prevState.some((i) => i === id)) {
-    //     return prevState.filter((i) => i !== id);
-    //   }
-    //   return [...prevState, id];
-    // });
-    // setReady(true);
+    setValues((prevState) => {
+      onUpdateEvent({
+        [id]: Number(!prevState[id]),
+      });
+      return {
+        ...prevState,
+        [id]: !prevState[id],
+      };
+    });
+  };
+  const handleChangeValue = (nextValues) => {
+    setValues((prevState) => {
+      onUpdateEvent(nextValues);
+      return {
+        ...prevState,
+        ...nextValues,
+      };
+    });
+  };
+  const handleEmployeesEdit = (data) => {
+    onUpdateEvent({
+      employees: data.length ? data.toString() : '',
+    });
   };
 
   return (
     <div className={detailsClasses}>
       {
-        loading
-        && (
-        <div className={classes.loader}>
-          <Progress />
-        </div>
+        loading && (
+          <div className={classes.loader}>
+            <Progress />
+          </div>
         )
       }
       <Users
         employees={employees}
         groups={groups}
         activeEvent={activeEvent}
-        roleEmployeesEdit={roleEmployeesEdit}
+        roleEmployeesEdit={handleEmployeesEdit}
       />
       <EventRule
         eventsTypes={eventsTypes}
+        handleChangeCheckbox={onChangeHandler}
+        handleChangeValue={handleChangeValue}
+        values={values}
       />
       <EventAction
+        values={values}
         onChangeHandler={onChangeHandler}
       />
       <div />

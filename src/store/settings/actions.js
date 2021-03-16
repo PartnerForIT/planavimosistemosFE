@@ -113,6 +113,8 @@ import {
   POST_EVENT,
   PATCH_EVENT,
   PATCH_EVENT_SUCCESS,
+  DELETE_EVENT,
+  DELETE_EVENT_SUCCESS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -696,9 +698,10 @@ export const getEventsSuccess = (data) => ({
   data,
 });
 
-export const patchEventSuccess = (data) => ({
+export const patchEventSuccess = (data, employees) => ({
   type: PATCH_EVENT_SUCCESS,
   data,
+  employees,
 });
 
 export const postEvent = (companyId, data) => ({
@@ -712,4 +715,15 @@ export const patchEvent = (companyId, id, data) => ({
   data,
   id,
   companyId,
+});
+
+export const deleteEvent = (companyId, id) => ({
+  type: DELETE_EVENT,
+  id,
+  companyId,
+});
+
+export const deleteEventSuccess = (id) => ({
+  type: DELETE_EVENT_SUCCESS,
+  id,
 });

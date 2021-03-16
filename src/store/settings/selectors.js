@@ -34,3 +34,4 @@ export const permissionsSelector = (state) => state.settings.permissions;
 export const eventsSelector = (state) => state.settings.events;
 export const eventsTypesSelector = (state) => state.settings.eventsTypes;
 export const eventsLoadingSelector = (state) => state.settings.eventsLoading;
+export const eventUpdateLoadingSelector = (state) => state.settings.eventUpdateLoading;

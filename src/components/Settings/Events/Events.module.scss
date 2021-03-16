@@ -122,6 +122,36 @@ $arrow-size: 21px;
   }
 }
 
+.reminderTo {
+  display: inline-block;
+  font-size: 15px;
+  color: #333945;
+
+  &__delimiter {
+    width: 100%;
+    margin: 10px 0;
+    height: 1px;
+    background-color: #ecf3f9;
+  }
+
+  &__select {
+    display: inline-block;
+    max-width: 71px;
+  }
+
+  //&__inline-block {
+  //  display: inline-block;
+  //  margin-top: 10px;
+  //  margin-bottom: 3px;
+  //  //flex-wrap: wrap;
+  //
+  //  &__input {
+  //    display: inline-block;
+  //    max-width: 71px;
+  //  }
+  //}
+}
+
 .eventRule {
   &__content {
     display: inline-block;

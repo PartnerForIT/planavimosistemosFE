@@ -6,6 +6,7 @@ import Content from './Content';
 
 export default React.memo(({
   onChangeHandler,
+  values,
 }) => {
   const { t } = useTranslation();
 
@@ -13,16 +14,16 @@ export default React.memo(({
     <Content tooltip='Tooltip' title='Event Action'>
       <StyledCheckbox
         label={t('Notify in Application')}
-        id='show_costs'
+        id='notification_app'
         onChange={onChangeHandler}
-        checked={true}
+        checked={values.notification_app}
       />
 
       <StyledCheckbox
         label={t('Notify by e-mail')}
-        id='show_costs'
+        id='notification_email'
         onChange={onChangeHandler}
-        checked={true}
+        checked={values.notification_email}
       />
     </Content>
   );

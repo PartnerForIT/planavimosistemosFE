@@ -7,6 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 const useStyles = makeStyles({
   root: {
     boxShadow: 'none !important',
+    padding: (props) => props.paddingRoot,
 
     '&:hover': {
       backgroundColor: 'transparent !important',
@@ -14,7 +15,7 @@ const useStyles = makeStyles({
   },
 
   icon: {
-    borderRadius: 2,
+    borderRadius: (props) => props.borderRadius,
     border: '1px solid #A2C2E3',
     width: 16,
     height: 16,
@@ -93,9 +94,10 @@ const useStyles = makeStyles({
 });
 
 export default function StyledCheckbox({
+  borderRadius = 2, paddingRoot,
   item, label = '', id, onChange = () => ({}), ...props
 }) {
-  const classes = useStyles();
+  const classes = useStyles({ borderRadius, paddingRoot });
 
   return (
     <FormControlLabel

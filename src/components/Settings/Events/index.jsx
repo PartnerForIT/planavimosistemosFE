@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import _ from 'lodash';
 import MaynLayout from '../../Core/MainLayout';
 import Dashboard from '../../Core/Dashboard';
 import TitleBlock from '../../Core/TitleBlock';
@@ -12,22 +11,22 @@ import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
 import {
   AccountGroupsSelector, employeesSelector,
-  eventsLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
+  eventsLoadingSelector, isShowSnackbar, permissionsSelector,
+  eventUpdateLoadingSelector, snackbarText, snackbarType,
   eventsSelector, eventsTypesSelector,
 } from '../../../store/settings/selectors';
 import RolesIcon from '../../Icons/RolesIcon';
-import RolesBlock from './EventDetails/RolesBlock';
+import EventsBlock from './EventDetails/EventsBlock';
 import {
-  // createRole,
   deleteRole,
   getAccountGroups,
   getRoles,
   loadEmployeesAll,
   loadPermissions,
-  updateRole,
   postEvent,
   getEvents,
   patchEvent,
+  deleteEvent,
 } from '../../../store/settings/actions';
 import AddEditItem from '../../Core/Dialog/AddEditItem';
 
@@ -54,74 +53,17 @@ function Events() {
   const textSnackbar = useSelector(snackbarText);
   const events = useSelector(eventsSelector);
   const eventsTypes = useSelector(eventsTypesSelector);
-  const roles = useSelector(rolesSelector);
-  const loading = useSelector(rolesLoading);
+  const isLoadingEventUpdate = useSelector(eventUpdateLoadingSelector);
   const permissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
   const [activeEvent, setActiveEvent] = useState({});
   const [newEventOpen, setNewEventOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-  const [defaultRoleAccess] = useState({});
-  // console.log('activeRole', activeRole);
 
-  const permissionsIds = useMemo(() => {
-    // eslint-disable-next-line no-underscore-dangle
-    const _temp = {};
-
-    permissions.forEach((perm) => {
-      // eslint-disable-next-line no-shadow
-      const { name, action, id } = perm;
-
-      // eslint-disable-next-line no-nested-ternary
-      _temp[name] = _temp[name]
-        ? _temp[name][action]
-          ? { ..._temp[name], [action]: id }
-          : {
-            ..._temp[name],
-            [action]: id,
-          }
-        : { [action]: id };
-    });
-
-    return _temp;
-  }, [permissions]);
-
-  const roleEmployeesEdit = (data) => {
-    dispatch(updateRole(companyId, activeEvent.id, { users: data.length ? data.toString() : '' }));
-  };
-
-  const removeRolesPermissions = (data = []) => {
-    // eslint-disable-next-line no-shadow
-    dispatch(updateRole(companyId, activeEvent.id, { permissions: data.map((id) => ({ id, access: 0 })) }));
-  };
-
-  const rolesPermissionsEdit = (data) => {
-    // eslint-disable-next-line no-shadow
-    const oldRolePermissions = roles.find(({ id }) => id === activeEvent.id)
-      ?.account_roles_permissions
-      // eslint-disable-next-line no-shadow
-      ?.map(({ permission_id: id, access }) => ({ id, access }));
-
-    const newPermissions = data.length ? data.map((item) => ({
-      id: item, access: 1,
-    })) : [];
-
-    // console.log(_.unionWith(oldRolePermissions, newPermissions, _.isEqual));
-    // eslint-disable-next-line no-nested-ternary,no-shadow
-    const oldFiltered = oldRolePermissions.map(({ id, access }) => (newPermissions.some((i) => id === i.id)
-      ? access
-        ? ({ id, access })
-        : ({ id, access: newPermissions.find((item) => item.id).access })
-      : ({ id, access: 0 })
-    ));
-
-    // eslint-disable-next-line no-shadow
-    const permissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
-
-    dispatch(updateRole(companyId, activeEvent.id, {
-      permissions,
-    }));
+  const handleUpdateEvent = (data) => {
+    // const data = values;
+    dispatch(patchEvent(companyId, activeEvent.id, data));
   };
 
   useEffect(() => {
@@ -141,27 +83,14 @@ function Events() {
     }
   }, [dispatch, companyId, permissions.length]);
 
-  const removeRole = (roleId) => {
-    dispatch(deleteRole(companyId, roleId));
+  const removeRole = (eventId) => {
+    dispatch(deleteEvent(companyId, eventId));
   };
 
   const changeEventName = (eventName) => {
     if (eventName.trim()) {
       dispatch(patchEvent(companyId, activeEvent.id, { name: eventName.trim() }));
       setEditVisible(false);
-    }
-  };
-
-  const patchRole = (roleId, data) => {
-    const {
-      name,
-      checked,
-    } = data;
-    if (checked) {
-      dispatch(updateRole(companyId, roleId, { default: checked ? 1 : 0 }));
-    }
-    if (name) {
-      dispatch(updateRole(companyId, roleId, { name }));
     }
   };
 
@@ -184,24 +113,19 @@ function Events() {
           {
             isLoading ? <Progress />
               : (
-                <RolesBlock
+                <EventsBlock
                   events={events}
                   eventsTypes={eventsTypes}
                   activeEvent={activeEvent}
-                  setActiveRole={setActiveEvent}
-                  createNewRole={() => setNewEventOpen(true)}
-                  remove={removeRole}
-                  updateRole={patchRole}
-                  loading={loading}
+                  setActiveEvent={setActiveEvent}
+                  createNewEvent={() => setNewEventOpen(true)}
+                  loading={isLoadingEventUpdate}
                   setEditVisible={setEditVisible}
                   employees={employees}
                   groups={groups}
-                  roleEmployeesEdit={roleEmployeesEdit}
-                  rolesPermissionsEdit={rolesPermissionsEdit}
-                  permissions={permissions}
-                  permissionsIds={permissionsIds}
-                  removeRolesPermissions={removeRolesPermissions}
-                  defaultRoleAccess={defaultRoleAccess}
+                  // dd
+                  remove={removeRole}
+                  onUpdateEvent={handleUpdateEvent}
                 />
               )
           }

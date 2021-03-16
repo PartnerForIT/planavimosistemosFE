@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InputSelect from '../../../Core/InputSelect';
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
+import { EVENT_TYPE } from '../../../../const';
 import classes from '../Events.module.scss';
 import Content from './Content';
 
@@ -22,183 +23,127 @@ import Content from './Content';
 // company working hours
 // scheduled working hours
 
-const hoursOptions = [
-  {
-    value: '1',
-    label: '1',
-  },
-  {
-    value: '2',
-    label: '2',
-  },
-  {
-    value: '3',
-    label: '3',
-  },
-  {
-    value: '4',
-    label: '4',
-  },
-  {
-    value: '5',
-    label: '5',
-  },
-  {
-    value: '6',
-    label: '6',
-  },
-];
-const timeMinutesWithZeroOptions = [
-  {
-    value: '0',
-    label: '0',
-  },
-  {
-    value: '5',
-    label: '5',
-  },
-  {
-    value: '10',
-    label: '10',
-  },
-  {
-    value: '15',
-    label: '15',
-  },
-  {
-    value: '20',
-    label: '20',
-  },
-  {
-    value: '25',
-    label: '25',
-  },
-  {
-    value: '30',
-    label: '30',
-  },
-];
 const timeMinutesOptions = [
   {
-    value: '5',
+    value: 300,
     label: '5',
   },
   {
-    value: '10',
+    value: 600,
     label: '10',
   },
   {
-    value: '15',
+    value: 900,
     label: '15',
   },
   {
-    value: '20',
+    value: 1200,
     label: '20',
   },
   {
-    value: '25',
+    value: 1500,
     label: '25',
   },
   {
-    value: '30',
+    value: 1800,
     label: '30',
   },
 ];
-const time6Options = [
+const timeHoursOptions = [
   {
-    value: '1',
+    value: 3600,
     label: '1',
   },
   {
-    value: '2',
+    value: 7200,
     label: '2',
   },
   {
-    value: '3',
+    value: 10800,
     label: '3',
   },
   {
-    value: '4',
+    value: 14400,
     label: '4',
   },
   {
-    value: '5',
+    value: 18000,
     label: '5',
   },
   {
-    value: '6',
+    value: 21600,
     label: '6',
   },
 ];
-const time5Options = [
+const timeHours5Options = [
   {
-    value: 'immediately',
+    value: 0,
     label: 'immediately',
   },
   {
-    value: '1',
+    value: 3600,
     label: '1',
   },
   {
-    value: '2',
+    value: 7200,
     label: '2',
   },
   {
-    value: '3',
+    value: 10800,
     label: '3',
   },
   {
-    value: '4',
+    value: 14400,
     label: '4',
   },
   {
-    value: '5',
+    value: 18000,
     label: '5',
   },
 ];
-const time10Options = [
+const timeHours10Options = [
   {
-    value: 'immediately',
+    value: 0,
     label: 'immediately',
   },
   {
-    value: '1',
+    value: 3600,
     label: '1',
   },
   {
-    value: '2',
+    value: 7200,
     label: '2',
   },
   {
-    value: '3',
+    value: 10800,
     label: '3',
   },
   {
-    value: '4',
+    value: 14400,
     label: '4',
   },
   {
-    value: '5',
+    value: 18000,
     label: '5',
   },
   {
-    value: '6',
+    value: 21600,
     label: '6',
   },
   {
-    value: '7',
+    value: 25200,
     label: '7',
   },
   {
-    value: '8',
+    value: 28800,
     label: '8',
   },
   {
-    value: '9',
+    value: 32400,
     label: '9',
   },
   {
-    value: '10',
+    value: 21600,
     label: '10',
   },
 ];
@@ -588,68 +533,334 @@ const timeWithMinutesOptions = [
     label: '23:45',
   },
 ];
+const afterWorkOptions = [
+  {
+    value: 0,
+    label: 'company working hours',
+  },
+  {
+    value: 1,
+    label: 'scheduled working hours',
+  },
+];
 
 export default React.memo(({
+  values,
   eventsTypes,
+  handleChangeCheckbox,
+  handleChangeValue,
 }) => {
   const { t } = useTranslation();
+  const handleChangeSelect = ({ target }) => {
+    handleChangeValue({
+      [target.name]: target.value,
+    });
+  };
+  // console.log('values', values.time);
 
   return (
     <Content title='Event Rule' tooltip='Tooltip'>
       <InputSelect
-        id='country-select'
-        name='lang'
-        // value={inputValues.lang}
-        // onChange={handleInputChange}
+        name='event_type_id'
+        value={values.event_type_id}
+        onChange={handleChangeSelect}
         options={eventsTypes}
         valueKey='id'
         labelKey='name'
       />
-      <div className={classes.eventRule__content}>
-        {t('Notify if a user has finished work earlier than')}
-        {' '}
-        <InputSelect
-          name='minutes'
-          className={classes.eventRule__content__input}
-          small
-          // value={inputValues.lang}
-          // onChange={handleInputChange}
-          // options={minutesOptions}
-        />
-        {' '}
-        {t('minutes before work ends based on a')}
-      </div>
-      <div className={classes.eventRule__wrapperSelect}>
-        <InputSelect
-          id='country-select'
-          name='lang'
-          // value={inputValues.lang}
-          // onChange={handleInputChange}
-          options={[]}
-          valueKey='code'
-          labelKey='name'
-          small
-        />
-      </div>
-
-      {/* case 2 */}
-      <div className={classes.eventRule__content}>
-        {t('Then daily overtime starts, notify after ')}
-        <InputSelect
-          name='notify_after'
-          small
-          className={classes.eventRule__content__input}
-          // value={inputValues.lang}
-          // onChange={handleInputChange}
-          // options={notifyAfterOptions}
-        />
-      </div>
-      <StyledCheckbox
-        label={t('Automatically stop work')}
-        id='show_costs'
-        // onChange={onChangeHandler}
-        // checked={true}
-      />
+      {
+        (values.event_type_id === EVENT_TYPE.MISSING_CLOCK_OUT) && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if a user has not clocked out after')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeHoursOptions}
+              />
+              {' '}
+              {t('hours from the time then work finishes based on a')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        (values.event_type_id === EVENT_TYPE.MISSING_CLOCK_IN) && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if a user has not clocked in after')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeHoursOptions}
+              />
+              {' '}
+              {t('hours from the time then work starts')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.EARLY_CLOCK_IN && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if a user has started work earlier than')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeMinutesOptions}
+              />
+              {' '}
+              {t('minutes before work starts based on a')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.LATE_CLOCK_IN && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if user has started work later than')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeMinutesOptions}
+              />
+              {' '}
+              {t('minutes after work ends based on a')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.EARLY_CLOCK_OUT && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if user has finished work earlier than')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeMinutesOptions}
+              />
+              {' '}
+              {t('minutes before work ends based on a')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.LATE_CLOCK_OUT && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Notify if user has finished work later than')}
+              {' '}
+              <InputSelect
+                name='time'
+                className={classes.eventRule__content__input}
+                small
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeMinutesOptions}
+              />
+              {' '}
+              {t('minutes after work ends based on a')}
+            </div>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.WEEKLY_OVERTIME_START && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Then weekly overtime starts, notify after')}
+              {' '}
+              <InputSelect
+                name='time'
+                small
+                className={classes.eventRule__content__input}
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeHours10Options}
+              />
+            </div>
+            <StyledCheckbox
+              label={t('Automatically stop work')}
+              id='stop_work'
+              onChange={handleChangeCheckbox}
+              checked={values.stop_work}
+            />
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.DAILY_OVERTIME_START && (
+          <>
+            <div className={classes.eventRule__content}>
+              {t('Then daily overtime starts, notify after')}
+              {' '}
+              <InputSelect
+                name='time'
+                small
+                className={classes.eventRule__content__input}
+                value={values.time}
+                onChange={handleChangeSelect}
+                options={timeHours5Options}
+              />
+            </div>
+            <StyledCheckbox
+              label={t('Automatically stop work')}
+              id='stop_work'
+              onChange={handleChangeCheckbox}
+              checked={values.stop_work}
+            />
+          </>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_IN && (
+          <div className={classes.reminderTo}>
+            <StyledCheckbox
+              label={t('Reminder on specific time')}
+              id='stop_work'
+              onChange={handleChangeCheckbox}
+              checked={values.stop_work}
+              borderRadius={50}
+            />
+            {t('Clock In reminder at')}
+            {' '}
+            <span />
+            <InputSelect
+              name='time'
+              small
+              className={classes.reminderTo__select}
+              value={values.time}
+              onChange={handleChangeSelect}
+              options={timeWithMinutesOptions}
+            />
+            <div className={classes.reminderTo__delimiter} />
+            <StyledCheckbox
+              label={t('Reminder based on settings')}
+              id='stop_work'
+              onChange={handleChangeCheckbox}
+              checked={values.stop_work}
+              borderRadius={50}
+            />
+            {t('Clock in reminder in')}
+            {' '}
+            <span />
+            <InputSelect
+              name='time'
+              small
+              className={classes.reminderTo__select}
+              value={values.time}
+              onChange={handleChangeSelect}
+              options={timeMinutesOptions}
+            />
+            {' '}
+            {t('minutes before')}
+            <div className={classes.reminderTo__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+            {t('starts.')}
+          </div>
+        )
+      }
+      {
+        values.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_OUT && (
+          <>
+            <div className={classes.eventRule__wrapperSelect}>
+              <InputSelect
+                name='day_time'
+                value={values.day_time}
+                onChange={handleChangeSelect}
+                options={afterWorkOptions}
+                small
+              />
+            </div>
+            {t('finishes.')}
+          </>
+        )
+      }
     </Content>
   );
 });

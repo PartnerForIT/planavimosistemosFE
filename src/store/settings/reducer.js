@@ -89,7 +89,10 @@ import {
   SEND_IMPORTED_EMPLOYEES_ERROR,
   GET_EVENTS,
   GET_EVENTS_SUCCESS,
+  PATCH_EVENT,
   PATCH_EVENT_SUCCESS,
+  DELETE_EVENT,
+  DELETE_EVENT_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -606,6 +609,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case SEND_IMPORTED_EMPLOYEES_ERROR:
       return { ...state, importLoading: false };
 
+    /* events */
     case GET_EVENTS:
       return { ...state, eventsLoading: true };
 
@@ -617,6 +621,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
         eventsLoading: false,
       };
 
+    case PATCH_EVENT:
+      return {
+        ...state,
+        eventUpdateLoading: true,
+      };
+
     case PATCH_EVENT_SUCCESS: {
       const itemIndex = state.events.findIndex((item) => item.id === action.data.id);
       return {
@@ -625,11 +635,32 @@ export const reducerOrganizationList = (state = initialState, action) => {
           ...state.events.slice(0, itemIndex),
           {
             ...state.events[itemIndex],
+            assign_employees: action.employees === undefined
+              ? state.events[itemIndex].assign_employees
+              : state.employees.users.filter((item) => action.employees.includes(item.id)),
             ...action.data,
           },
           ...state.events.slice(itemIndex + 1),
         ],
-        eventsLoading: false,
+        eventUpdateLoading: false,
+      };
+    }
+
+    case DELETE_EVENT:
+      return {
+        ...state,
+        eventUpdateLoading: true,
+      };
+
+    case DELETE_EVENT_SUCCESS: {
+      const itemIndex = state.events.findIndex((item) => item.id === action.id);
+      return {
+        ...state,
+        events: [
+          ...state.events.slice(0, itemIndex),
+          ...state.events.slice(itemIndex + 1),
+        ],
+        eventUpdateLoading: false,
       };
     }
 
