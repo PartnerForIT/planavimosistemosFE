@@ -40,6 +40,16 @@
     z-index: 3;
     max-height: 315px;
 
+    &__item {
+      padding: 9px;
+      height: 36px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba($blue-grownu, 0.05);
+      }
+    }
+
     &__scrollbar {
       position: static !important;
       width: calc(100% - 20px) !important;

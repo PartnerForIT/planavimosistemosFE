@@ -18,6 +18,7 @@ export default ({
   labelId,
   className,
   small,
+  withoutCheckbox = false,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
@@ -101,15 +102,33 @@ export default ({
             >
               {
                 optionsDisplayed.map((data) => (
-                  <StyledCheckbox
-                    key={data[valueKey]}
-                    label={data[labelKey]}
-                    item={data}
-                    id={data.id}
-                    checked={data[valueKey] === value}
-                    disabled={data.disabled}
-                    onChange={handleCheckboxChange}
-                  />
+                  !withoutCheckbox ? (
+                    <StyledCheckbox
+                      key={data[valueKey]}
+                      label={data[labelKey]}
+                      item={data}
+                      id={data.id}
+                      checked={data[valueKey] === value}
+                      disabled={data.disabled}
+                      onChange={handleCheckboxChange}
+                    />
+                  ) : (
+                    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+                    <div
+                      className='input-select__content-box__item'
+                      onClick={() => {
+                        onChange({
+                          target: {
+                            name,
+                            value: data[valueKey],
+                          },
+                        });
+                        setOpen(false);
+                      }}
+                    >
+                      {data[labelKey]}
+                    </div>
+                  )
                 ))
               }
             </Scrollbar>

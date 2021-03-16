@@ -18,7 +18,6 @@ import {
 import RolesIcon from '../../Icons/RolesIcon';
 import EventsBlock from './EventDetails/EventsBlock';
 import {
-  deleteRole,
   getAccountGroups,
   getRoles,
   loadEmployeesAll,

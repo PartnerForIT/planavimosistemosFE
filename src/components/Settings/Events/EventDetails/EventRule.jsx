@@ -799,6 +799,7 @@ export default React.memo(({
               onChange={handleChangeCheckbox}
               checked={values.stop_work}
               borderRadius={50}
+              paddingRoot='5px 5px 5px 0px'
             />
             {t('Clock In reminder at')}
             {' '}
@@ -810,6 +811,7 @@ export default React.memo(({
               value={values.time}
               onChange={handleChangeSelect}
               options={timeWithMinutesOptions}
+              withoutCheckbox
             />
             <div className={classes.reminderTo__delimiter} />
             <StyledCheckbox
@@ -818,6 +820,7 @@ export default React.memo(({
               onChange={handleChangeCheckbox}
               checked={values.stop_work}
               borderRadius={50}
+              paddingRoot='5px 5px 5px 0px'
             />
             {t('Clock in reminder in')}
             {' '}

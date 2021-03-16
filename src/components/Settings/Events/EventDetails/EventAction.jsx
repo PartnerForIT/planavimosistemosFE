@@ -1,14 +1,38 @@
-import React, { } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import CloseIcon from '@material-ui/icons/Close';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
+import { validateEmail } from '../../../Helpers/emailValidation';
 import Content from './Content';
+import classes from '../Events.module.scss';
 
 export default React.memo(({
   onChangeHandler,
+  handleChangeValue,
   values,
 }) => {
   const { t } = useTranslation();
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (validateEmail(e.target.value)) {
+        handleChangeValue({
+          email: [
+            ...(values.email || []),
+            e.target.value,
+          ],
+        });
+        e.target.value = '';
+      }
+    }
+  };
+  const handleDeleteEmail = (email) => {
+    handleChangeValue({
+      email: (values.email || []).filter((item) => item !== email),
+    });
+  };
 
   return (
     <Content tooltip='Tooltip' title='Event Action'>
@@ -17,6 +41,7 @@ export default React.memo(({
         id='notification_app'
         onChange={onChangeHandler}
         checked={values.notification_app}
+        paddingRoot='5px 5px 5px 0px'
       />
 
       <StyledCheckbox
@@ -24,7 +49,49 @@ export default React.memo(({
         id='notification_email'
         onChange={onChangeHandler}
         checked={values.notification_email}
+        paddingRoot='5px 5px 5px 0px'
       />
+      {
+        !!values.notification_email && (
+          <div className={classes.recipients}>
+            <div className={classes.recipients__title}>
+              {t('Recipients')}
+            </div>
+            <div className={classes.recipients__block}>
+              {
+                (values.email || ['dsdsv@mail.ru']).map((item) => (
+                  <Tooltip
+                    classes={{
+                      tooltip: classes.recipients__block__popper,
+                      arrow: classes.recipients__block__arrow,
+                    }}
+                    title={item}
+                    placement='left'
+                    arrow
+                    key={item}
+                    // leaveDelay={50000}
+                  >
+                    <div className={classes.recipients__block__email}>
+                      <button
+                        className={classes.recipients__block__email__delete}
+                        onClick={() => {
+                          handleDeleteEmail(item);
+                        }}
+                      >
+                        <CloseIcon />
+                      </button>
+                      <span className={classes.recipients__block__email__text}>
+                        {item}
+                      </span>
+                    </div>
+                  </Tooltip>
+                ))
+              }
+              <input className={classes.recipients__block__input} onKeyDown={handleKeyDown} />
+            </div>
+          </div>
+        )
+      }
     </Content>
   );
 });

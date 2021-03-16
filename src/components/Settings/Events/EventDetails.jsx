@@ -76,6 +76,20 @@ function EventDetails({
     });
   };
   const handleEmployeesEdit = (data) => {
+    // const addEmployees = [];
+    // const removeEmployees = [];
+    //
+    // activeEvent.assign_employees.forEach((item) => {
+    //   if (!data.includes(item.id)) {
+    //     removeEmployees.push(item.id);
+    //   }
+    // });
+    // data.forEach((id) => {
+    //   if (activeEvent.assign_employees.every((item) => item.id !== id)) {
+    //     addEmployees.push(id);
+    //   }
+    // });
+
     onUpdateEvent({
       employees: data.length ? data.toString() : '',
     });
@@ -105,6 +119,7 @@ function EventDetails({
       <EventAction
         values={values}
         onChangeHandler={onChangeHandler}
+        handleChangeValue={handleChangeValue}
       />
       <div />
     </div>
