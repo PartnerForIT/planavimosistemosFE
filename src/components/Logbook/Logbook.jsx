@@ -42,6 +42,7 @@ import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
+import CommentCard from '../Core/CommentCard/CommentCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
@@ -568,6 +569,15 @@ const Logbook = () => {
                     time={selectedItem}
                     durationSec={selectedItem.total_break_sec}
                   />
+                  <Delimiter />
+                  {
+                    (journal.end_day_comment && !!selectedItem.comments?.length) && (
+                      <CommentCard
+                        photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
+                        comment={selectedItem.comments[0].comment}
+                      />
+                    )
+                  }
                 </Scrollbar>
                 {
                   isApproval && (

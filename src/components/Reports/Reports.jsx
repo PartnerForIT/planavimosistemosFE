@@ -155,7 +155,7 @@ const Reports = () => {
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
-  const { comments_required: comments = false } = useSelector(JournalDataSelector);
+  const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
   const modules = useSelector(companyModules);
   const isSuperAdmin = useContext(AdminContext);
 

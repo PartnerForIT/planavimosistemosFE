@@ -111,9 +111,9 @@ export default ({
           <div className={style.generalBlock2}>
             <Checkbox
               onChange={handleInputChange}
-              checked={journalData.comments_required}
+              checked={journalData.end_day_comment}
               label={t('On each work end, comment is required.')}
-              name='comments_required'
+              name='end_day_comment'
               disabled={readOnly}
             />
             <div className={style.tooltipBlock}>
@@ -122,14 +122,13 @@ export default ({
               />
             </div>
           </div>
-
           <div className={classnames(style.generalBlock2, style.subCheckbox)}>
             <Checkbox
-              disabled={readOnly || !journalData.comments_required}
+              disabled={readOnly || !journalData.end_day_comment}
               onChange={handleInputChange}
-              checked={journalData.photo_required}
+              checked={journalData.end_day_photo}
               label={t('On each work end, photo is required.')}
-              name='photo_required'
+              name='end_day_photo'
             />
             <div className={style.tooltipBlock}>
               <Tooltip

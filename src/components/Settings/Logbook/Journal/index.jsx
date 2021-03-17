@@ -79,8 +79,8 @@ export default function Journal() {
     automatic_break: false,
     workday_exceed: '4',
     break_duration: '30',
-    comments_required: false,
-    photo_required: false,
+    end_day_comment: false,
+    end_day_photo: false,
   });
 
   useEffect(() => {
@@ -99,6 +99,8 @@ export default function Journal() {
         automatic_approval: journal.automatic_approval !== 0,
         approved_at: journal.approved_at ? journal.approved_at : 'day',
         automatic_break: journal.automatic_break !== 0,
+        end_day_comment: journal.end_day_comment !== 0,
+        end_day_photo: journal.end_day_photo !== 0,
         workday_exceed: journal.workday_exceed ? journal.workday_exceed : '4',
         break_duration: journal.break_duration ? journal.break_duration : '30',
       });
@@ -114,6 +116,8 @@ export default function Journal() {
       profitability: payload.profitability ? 1 : 0,
       approve_flow: payload.approve_flow ? 1 : 0,
       automatic_approval: payload.automatic_approval ? 1 : 0,
+      end_day_comment: payload.end_day_comment ? 1 : 0,
+      end_day_photo: payload.end_day_photo ? 1 : 0,
       approved_at: payload.approved_at,
       automatic_break: payload.automatic_break ? 1 : 0,
       workday_exceed: payload.workday_exceed,
