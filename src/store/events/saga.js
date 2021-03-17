@@ -1,27 +1,27 @@
-import {
-  call,
-  put,
-  takeLatest,
-  delay,
-} from 'redux-saga/effects';
-import config from 'config';
-import axios from 'axios';
-import {
-  GET_EVENTS,
-} from './types';
-import {
-  addSnackbar,
-  dismissSnackbar,
-} from '../organizationList/actions';
+// import {
+//   call,
+//   put,
+//   takeLatest,
+//   delay,
+// } from 'redux-saga/effects';
+// import config from 'config';
+// import axios from 'axios';
+// import {
+//   GET_EVENTS,
+// } from './types';
+// import {
+//   addSnackbar,
+//   dismissSnackbar,
+// } from '../organizationList/actions';
 // import {
 //   postLogbookEntrySuccess,
 // } from './actions';
 
-function token() {
-  return {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  };
-}
+// function token() {
+//   return {
+//     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+//   };
+// }
 
 // function* getEvents(action) {
 //   try {

@@ -1,5 +1,4 @@
 import {
-  GET_EVENTS,
   POST_LOGBOOK_ENTRY_SUCCESS,
 } from './types';
 
@@ -9,6 +8,7 @@ import {
 //   data,
 // });
 
+// eslint-disable-next-line import/prefer-default-export
 export const postLogbookEntrySuccess = (data) => ({
   type: POST_LOGBOOK_ENTRY_SUCCESS,
   data,

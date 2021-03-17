@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
-import classnames from 'classnames';
 
 import classes from '../Roles.module.scss';
-import RemoveRoleIcon from '../../../../Icons/RemoveRoleIcon';
 import RemoveRole from '../../../../Core/Dialog/RemoveRole';
-import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 import RoleDetails from '../RoleDetails';
-import EditIcon from '../../../../Icons/EditIcon';
 import usePermissions from '../../../../Core/usePermissions';
 import CardItem from '../../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../../Core/CardItemAdd/CardItemAdd';

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/prefer-default-export
 export const EVENT_TYPE = {
   EARLY_CLOCK_IN: 1,
   LATE_CLOCK_IN: 2,
