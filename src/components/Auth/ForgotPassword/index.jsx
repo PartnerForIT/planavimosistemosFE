@@ -58,6 +58,9 @@ const ForgotPassword = () => {
           !sent
             ? (
               <>
+                <div className={classes.description}>
+                  {t('Enter your email and we will send you a password reset link to your inbox')}
+                </div>
                 <Input
                   name='email'
                   type='email'
@@ -79,10 +82,10 @@ const ForgotPassword = () => {
               </>
             ) : (
               <>
-                <p className={classes.sentTitle}>
+                <p className={classes.description}>
                   {t('Password reset link has been sent to your inbox successfully')}
                 </p>
-                <p>{email}</p>
+                <p className={classes.description__email}>{email}</p>
               </>
             )
         }

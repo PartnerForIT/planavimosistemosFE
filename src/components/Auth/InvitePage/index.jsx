@@ -121,7 +121,7 @@ const InvitePage = () => {
             :
           </p>
           <p className={classes.black}>{email}</p>
-          <p>{t('Please create your password and login')}</p>
+          <p>{t('Please create your password')}</p>
         </div>
         <form>
 
