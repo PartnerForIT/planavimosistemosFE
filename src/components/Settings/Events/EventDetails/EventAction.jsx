@@ -9,7 +9,7 @@ import Content from './Content';
 import classes from '../Events.module.scss';
 
 export default React.memo(({
-  onChangeHandler,
+  handleChangeCheckbox,
   handleChangeValue,
   values,
 }) => {
@@ -19,8 +19,8 @@ export default React.memo(({
     if (e.key === 'Enter' || e.key === ' ') {
       if (validateEmail(e.target.value)) {
         handleChangeValue({
-          email: [
-            ...(values.email || []),
+          manager_email: [
+            ...(values.manager_email || []),
             e.target.value,
           ],
         });
@@ -30,7 +30,7 @@ export default React.memo(({
   };
   const handleDeleteEmail = (email) => {
     handleChangeValue({
-      email: (values.email || []).filter((item) => item !== email),
+      manager_email: values.manager_email.filter((item) => item !== email),
     });
   };
 
@@ -39,7 +39,7 @@ export default React.memo(({
       <StyledCheckbox
         label={t('Notify in Application')}
         id='notification_app'
-        onChange={onChangeHandler}
+        onChange={handleChangeCheckbox}
         checked={values.notification_app}
         paddingRoot='5px 5px 5px 0px'
       />
@@ -47,7 +47,7 @@ export default React.memo(({
       <StyledCheckbox
         label={t('Notify by e-mail')}
         id='notification_email'
-        onChange={onChangeHandler}
+        onChange={handleChangeCheckbox}
         checked={values.notification_email}
         paddingRoot='5px 5px 5px 0px'
       />
@@ -59,7 +59,7 @@ export default React.memo(({
             </div>
             <div className={classes.recipients__block}>
               {
-                (values.email || ['dsdsv@mail.ru']).map((item) => (
+                values.manager_email?.map((item) => (
                   <Tooltip
                     classes={{
                       tooltip: classes.recipients__block__popper,

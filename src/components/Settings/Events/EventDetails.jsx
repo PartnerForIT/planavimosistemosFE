@@ -22,17 +22,31 @@ function EventDetails({
 }) {
   const [ready, setReady] = useState(false);
   const [values, setValues] = useState(() => {
-    let time;
+    const initialValues = {
+      ...activeEvent,
+      reminder_time: false,
+      reminder_settings: false,
+    };
+
     if (activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_OUT
         || activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_IN) {
-      time = activeEvent.time / 60 / 60;
+      initialValues.time = (activeEvent.time / 60 / 60) || 0;
     } else {
-      time = activeEvent.time / 60;
+      initialValues.time = (activeEvent.time / 60) || 0;
     }
-    return {
-      ...activeEvent,
-      time: time || 0,
-    };
+
+    if (activeEvent.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_IN
+        || activeEvent.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_OUT) {
+      if (activeEvent.type === 0) {
+        initialValues.reminder_time = true;
+        initialValues.reminder_settings = false;
+      } else if (activeEvent.type === 1) {
+        initialValues.reminder_time = false;
+        initialValues.reminder_settings = true;
+      }
+    }
+
+    return initialValues;
   });
   const modules = useSelector(companyModules);
 
@@ -55,7 +69,7 @@ function EventDetails({
     },
   );
 
-  const onChangeHandler = (id) => {
+  const handleChangeCheckbox = (id) => {
     setValues((prevState) => {
       onUpdateEvent({
         [id]: Number(!prevState[id]),
@@ -65,6 +79,33 @@ function EventDetails({
         [id]: !prevState[id],
       };
     });
+  };
+  const handleChangeRadioButton = (id) => {
+    switch (id) {
+      case 'reminder_time': {
+        setValues((prevState) => {
+          onUpdateEvent({ type: 0 });
+          return {
+            ...prevState,
+            reminder_time: !prevState.reminder_time,
+            reminder_settings: false,
+          };
+        });
+        break;
+      }
+      case 'reminder_settings': {
+        setValues((prevState) => {
+          onUpdateEvent({ type: 1 });
+          return {
+            ...prevState,
+            reminder_settings: !prevState.reminder_settings,
+            reminder_time: false,
+          };
+        });
+        break;
+      }
+      default: break;
+    }
   };
   const handleChangeValue = (nextValues) => {
     setValues((prevState) => {
@@ -76,22 +117,8 @@ function EventDetails({
     });
   };
   const handleEmployeesEdit = (data) => {
-    // const addEmployees = [];
-    // const removeEmployees = [];
-    //
-    // activeEvent.assign_employees.forEach((item) => {
-    //   if (!data.includes(item.id)) {
-    //     removeEmployees.push(item.id);
-    //   }
-    // });
-    // data.forEach((id) => {
-    //   if (activeEvent.assign_employees.every((item) => item.id !== id)) {
-    //     addEmployees.push(id);
-    //   }
-    // });
-
     onUpdateEvent({
-      employees: data.length ? data.toString() : '',
+      employees: JSON.stringify(data),
     });
   };
 
@@ -112,13 +139,14 @@ function EventDetails({
       />
       <EventRule
         eventsTypes={eventsTypes}
-        handleChangeCheckbox={onChangeHandler}
+        handleChangeCheckbox={handleChangeCheckbox}
         handleChangeValue={handleChangeValue}
+        handleChangeRadioButton={handleChangeRadioButton}
         values={values}
       />
       <EventAction
         values={values}
-        onChangeHandler={onChangeHandler}
+        handleChangeCheckbox={handleChangeCheckbox}
         handleChangeValue={handleChangeValue}
       />
       <div />

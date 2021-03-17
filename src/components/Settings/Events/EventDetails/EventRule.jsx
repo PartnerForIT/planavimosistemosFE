@@ -7,22 +7,6 @@ import { EVENT_TYPE } from '../../../../const';
 import classes from '../Events.module.scss';
 import Content from './Content';
 
-// 1 Early Clock in
-// 2 Late Clock in
-// 3 Missing Clock in
-// 4 Early Clock out
-// 5 Late Clock out
-// 6 Missing Clock out
-
-// 7 Daily overtime start
-// 8 Weekly overtime start
-
-// 9 Reminder to Clock in
-// 10 Reminder to Clock out
-
-// company working hours
-// scheduled working hours
-
 const timeMinutesOptions = [
   {
     value: 300,
@@ -102,30 +86,7 @@ const timeHours5Options = [
   },
 ];
 const timeHours10Options = [
-  {
-    value: 0,
-    label: 'immediately',
-  },
-  {
-    value: 3600,
-    label: '1',
-  },
-  {
-    value: 7200,
-    label: '2',
-  },
-  {
-    value: 10800,
-    label: '3',
-  },
-  {
-    value: 14400,
-    label: '4',
-  },
-  {
-    value: 18000,
-    label: '5',
-  },
+  ...timeHours5Options,
   {
     value: 21600,
     label: '6',
@@ -549,6 +510,7 @@ export default React.memo(({
   eventsTypes,
   handleChangeCheckbox,
   handleChangeValue,
+  handleChangeRadioButton,
 }) => {
   const { t } = useTranslation();
   const handleChangeSelect = ({ target }) => {
@@ -556,7 +518,6 @@ export default React.memo(({
       [target.name]: target.value,
     });
   };
-  // console.log('values', values.time);
 
   return (
     <Content title='Event Rule' tooltip='Tooltip'>
@@ -587,8 +548,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -616,8 +577,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -645,8 +606,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -674,8 +635,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -703,8 +664,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -732,8 +693,8 @@ export default React.memo(({
             </div>
             <div className={classes.eventRule__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
                 small
@@ -751,7 +712,7 @@ export default React.memo(({
               <InputSelect
                 name='time'
                 small
-                className={classes.eventRule__content__input}
+                className={classes.eventRule__content__inputBig}
                 value={values.time}
                 onChange={handleChangeSelect}
                 options={timeHours10Options}
@@ -775,7 +736,7 @@ export default React.memo(({
               <InputSelect
                 name='time'
                 small
-                className={classes.eventRule__content__input}
+                className={classes.eventRule__content__inputBig}
                 value={values.time}
                 onChange={handleChangeSelect}
                 options={timeHours5Options}
@@ -795,9 +756,9 @@ export default React.memo(({
           <div className={classes.reminderTo}>
             <StyledCheckbox
               label={t('Reminder on specific time')}
-              id='stop_work'
-              onChange={handleChangeCheckbox}
-              checked={values.stop_work}
+              id='reminder_time'
+              onChange={handleChangeRadioButton}
+              checked={values.reminder_time}
               borderRadius={50}
               paddingRoot='5px 5px 5px 0px'
             />
@@ -805,20 +766,21 @@ export default React.memo(({
             {' '}
             <span />
             <InputSelect
-              name='time'
+              name='clock_out_time'
               small
               className={classes.reminderTo__select}
-              value={values.time}
+              value={values.clock_out_time}
               onChange={handleChangeSelect}
               options={timeWithMinutesOptions}
               withoutCheckbox
+              disabled={!values.reminder_time}
             />
             <div className={classes.reminderTo__delimiter} />
             <StyledCheckbox
               label={t('Reminder based on settings')}
-              id='stop_work'
-              onChange={handleChangeCheckbox}
-              checked={values.stop_work}
+              id='reminder_settings'
+              onChange={handleChangeRadioButton}
+              checked={values.reminder_settings}
               borderRadius={50}
               paddingRoot='5px 5px 5px 0px'
             />
@@ -832,15 +794,17 @@ export default React.memo(({
               value={values.time}
               onChange={handleChangeSelect}
               options={timeMinutesOptions}
+              disabled={!values.reminder_settings}
             />
             {' '}
             {t('minutes before')}
             <div className={classes.reminderTo__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
+                disabled={!values.reminder_settings}
                 small
               />
             </div>
@@ -850,18 +814,63 @@ export default React.memo(({
       }
       {
         values.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_OUT && (
-          <>
-            <div className={classes.eventRule__wrapperSelect}>
+          <div className={classes.reminderTo}>
+            <StyledCheckbox
+              label={t('Reminder on specific time')}
+              id='reminder_time'
+              onChange={handleChangeRadioButton}
+              checked={values.reminder_time}
+              borderRadius={50}
+              paddingRoot='5px 5px 5px 0px'
+            />
+            {t('Clock out reminder at')}
+            {' '}
+            <span />
+            <InputSelect
+              name='clock_out_time'
+              small
+              className={classes.reminderTo__select}
+              value={values.clock_out_time}
+              onChange={handleChangeSelect}
+              options={timeWithMinutesOptions}
+              withoutCheckbox
+              disabled={!values.reminder_time}
+            />
+            <div className={classes.reminderTo__delimiter} />
+            <StyledCheckbox
+              label={t('Reminder based on settings')}
+              id='reminder_settings'
+              onChange={handleChangeRadioButton}
+              checked={values.reminder_settings}
+              borderRadius={50}
+              paddingRoot='5px 5px 5px 0px'
+            />
+            {t('Clock out reminder in')}
+            {' '}
+            <span />
+            <InputSelect
+              name='time'
+              small
+              className={classes.reminderTo__select}
+              value={values.time}
+              onChange={handleChangeSelect}
+              options={timeMinutesOptions}
+              disabled={!values.reminder_settings}
+            />
+            {' '}
+            {t('minutes after')}
+            <div className={classes.reminderTo__wrapperSelect}>
               <InputSelect
-                name='day_time'
-                value={values.day_time}
+                name='based_at'
+                value={values.based_at}
                 onChange={handleChangeSelect}
                 options={afterWorkOptions}
+                disabled={!values.reminder_settings}
                 small
               />
             </div>
             {t('finishes.')}
-          </>
+          </div>
         )
       }
     </Content>

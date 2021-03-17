@@ -157,11 +157,17 @@ $arrow-size: 21px;
     display: inline-block;
     margin-top: 10px;
     margin-bottom: 3px;
-    //flex-wrap: wrap;
+    font-size: 15px;
+    color: #333945;
 
     &__input {
       display: inline-block;
       max-width: 71px;
+    }
+
+    &__inputBig {
+      display: inline-block;
+      max-width: 153px;
     }
   }
 }
