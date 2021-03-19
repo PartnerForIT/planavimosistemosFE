@@ -1,46 +1,62 @@
-// import {
-//   call,
-//   put,
-//   takeLatest,
-//   delay,
-// } from 'redux-saga/effects';
-// import config from 'config';
-// import axios from 'axios';
-// import {
-//   GET_EVENTS,
-// } from './types';
-// import {
-//   addSnackbar,
-//   dismissSnackbar,
-// } from '../organizationList/actions';
-// import {
-//   postLogbookEntrySuccess,
-// } from './actions';
+import {
+  call,
+  put,
+  takeLatest,
+  delay,
+} from 'redux-saga/effects';
+import config from 'config';
+import axios from 'axios';
+import {
+  GET_EVENTS_LIST,
+  GET_EVENT_VIEW,
+} from './types';
+import {
+  addSnackbar,
+  dismissSnackbar,
+} from '../organizationList/actions';
+import {
+  getEventsListSuccess,
+  getEventsListError,
+} from './actions';
 
-// function token() {
-//   return {
-//     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-//   };
-// }
+function token() {
+  return {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+  };
+}
 
-// function* getEvents(action) {
-//   try {
-//     yield call(
-//       axios.get,
-//       `${config.api.url}/company/${action.id}/events`,
-//       token(),
-//     );
-//     // yield put(postLogbookEntrySuccess(data));
-//     yield put(addSnackbar('Updated logbook successfully', 'success'));
-//     yield delay(4000);
-//     yield put(dismissSnackbar());
-//   } catch (e) {
-//     yield put(addSnackbar(e, 'error'));
-//     yield delay(4000);
-//     yield put(dismissSnackbar());
-//   }
-// }
+function* getEventsList(action) {
+  try {
+    const { data } = yield call(
+      axios.get,
+      `${config.api.url}/company/${action.id}/events/list`,
+      token(),
+    );
+    yield put(getEventsListSuccess(data));
+  } catch (e) {
+    yield put(getEventsListError());
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* getEventView(action) {
+  try {
+    yield call(
+      axios.get,
+      `${config.api.url}/company/${action.companyId}/events/view/${action.id}`,
+      token(),
+    );
+  } catch (e) {
+    yield put(getEventsListError());
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
 
 export default function* EventsWatcher() {
-  // yield takeLatest(GET_EVENTS, getEvents);
+  yield takeLatest(GET_EVENTS_LIST, getEventsList);
+  yield takeLatest(GET_EVENT_VIEW, getEventView);
 }

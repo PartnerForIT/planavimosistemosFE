@@ -220,7 +220,7 @@ export default function DashboardMenu() {
             </ul>
           </AccordionDetails>
         </Accordion>
-        {/* Logbook */}
+        {/* Events */}
         {
           permissions.logbook && (
             <Accordion

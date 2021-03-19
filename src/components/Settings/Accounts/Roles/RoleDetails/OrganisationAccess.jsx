@@ -61,7 +61,7 @@ const OrganisationAccess = React.memo(({
       {/* Can delete Accounts list */}
       {/* ??? */}
 
-      {/* Can edit Logbook settings */}
+      {/* Can edit Events settings */}
       {/* ??? */}
 
     </Content>

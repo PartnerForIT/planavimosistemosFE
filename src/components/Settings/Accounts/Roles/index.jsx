@@ -46,7 +46,7 @@ const initialRoleAccess = {
     logbook: {
       enabled: false,
       options: {
-        edit_settings: 'Can edit Logbook settings',
+        edit_settings: 'Can edit Events settings',
         edit_logs: 'Can edit entry logs',
         delete_logs: 'Can delete entry logs',
         earnings: 'Can see earnings (APP)',
@@ -150,7 +150,7 @@ const initialRoleAccess = {
 // Use Managers Mobile View
 // Can see & edit Accounts List
 // Can delete Accounts list
-// Can edit Logbook settings
+// Can edit Events settings
 
 function Roles() {
   const { id } = useParams();

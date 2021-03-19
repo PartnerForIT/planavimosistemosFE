@@ -40,7 +40,8 @@ const FooterTitle = ({
 
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
-  lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
+  lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination = Function.prototype,
+  selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
   modules: { cost_earning, profitability } = {},
   amount: { salary = 0, cost = 0, profit = 0 } = {},

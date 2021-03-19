@@ -187,7 +187,7 @@ export default function EditModules({
               <Checkbox
                 onChange={handleChange}
                 checked={modules.use_approval_flow}
-                label={t('Can use Approval Flow in Logbook')}
+                label={t('Can use Approval Flow in Events')}
                 name='use_approval_flow'
               />
               <Checkbox

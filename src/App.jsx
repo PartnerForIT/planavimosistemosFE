@@ -12,6 +12,7 @@ import LockedAccount from './components/Auth/LockedAccount';
 import Logbook from './components/Logbook/Logbook';
 import Reports from './components/Reports/Reports';
 import OrganizationList from './components/OrganizationList';
+import Events from './components/Events/Events';
 import Overview from './components/Overview';
 import Help from './components/HelpPage';
 import Settings from './components/Settings';
@@ -44,6 +45,7 @@ const App = () => (
         <Route exact path='/locked' component={LockedAccount} />
         <AuthRoute exact path='/organization-list' component={OrganizationList} />
         <AuthRoute exact path='/logbook/:id' component={Logbook} />
+        <AuthRoute exact path='/events/:id' component={Events} />
         <AuthRoute exact path='/overview' component={Overview} />
         <AuthRoute exact path='/overview/:id' component={Overview} />
         <AuthRoute exact path='/help/:id' component={Help} />
