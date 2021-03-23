@@ -38,7 +38,7 @@ export default function ActivityTable({
 
   const paceName = useCallback((row) => {
     const place = places.filter((item) => item.id === row.place_id);
-    return place[0] ? place[0].label : '';
+    return place[0] ? place[0].name : '';
   }, [places]);
 
   useEffect(() => {

@@ -19,13 +19,13 @@ import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
 import { employeesSelector } from '../../store/employees/selectors';
-import { skillsSelector } from '../../store/skills/selectors';
+import { AccountGroupsSelector } from '../../store/settings/selectors';
 import { eventsSelector, eventsLoadingSelector } from '../../store/events/selectors';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../store/organizationList/selectors';
+import { getAccountGroups } from '../../store/settings/actions';
 import { getEventsList, enterViewed, getEventView } from '../../store/events/actions';
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
-import { getSkills } from '../../store/skills/actions';
 import { getPlaces } from '../../store/places/actions';
 // import usePermissions from '../Core/usePermissions';
 import EventCard from './EventCard';
@@ -109,8 +109,8 @@ const Events = () => {
     endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
   });
 
-  const [skills, setSkills] = useState([]);
-  const [checkedSkills, setCheckedSkills] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [checkedGroups, setCheckedGroups] = useState([]);
   const [search, setSearch] = useState('');
   const [employees, setEmployees] = useState([]);
 
@@ -122,7 +122,7 @@ const Events = () => {
   const eventsLoading = useSelector(eventsLoadingSelector);
   const events = useSelector(eventsSelector);
   const getAllEmployees = useSelector(employeesSelector);
-  const selectSkills = useSelector(skillsSelector);
+  const selectGroups = useSelector(AccountGroupsSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
@@ -136,17 +136,17 @@ const Events = () => {
     dispatch(getEventsList(companyId, {
       date_from: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       date_to: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
-      search,
-      employees: checkedEmployees.map((item) => item.id),
-      skills: checkedSkills.map((item) => item.id),
+      // search,
+      employees: checkedEmployees.length ? `[${checkedEmployees.map((item) => item.id).toString()}]` : '',
+      groups: checkedGroups.length ? `[${checkedGroups.map((item) => item.id).toString()}]` : '',
     }));
-  }, [checkedEmployees, checkedSkills, companyId, dateRange, dispatch, search]);
+  }, [checkedEmployees, checkedGroups, companyId, dateRange, dispatch, search]);
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
     dispatch(getEmployees(companyId));
-    dispatch(getSkills(companyId));
+    dispatch(getAccountGroups(companyId));
     sendRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -187,31 +187,21 @@ const Events = () => {
       }),
       items: eventsParse[label],
     })));
-
-    // if (Array.isArray(workTime)) {
-    //   setItemsArray(workTime.map((item) => {
-    //     return {
-    //       ...item,
-    //       items: item.items.map((subItem) => ({
-    //         group: subItem.group.name,
-    //         place: subItem.place.name,
-    //         employee: subItem.employee.name,
-    //       })),
-    //     };
-    //   }));
-    //   // setColumnsWidthArray(columnsWidth);
-    // }
   }, [events]);
 
-  // useEffect(() => {
-  //   setLoading(workTimeLoading);
-  // }, [eventsLoading]);
-
   useEffect(() => {
-    if (Array.isArray(selectSkills)) {
-      setSkills(selectSkills);
+    if (Array.isArray(selectGroups)) {
+      setGroups(selectGroups.map((item) => ({
+        ...item,
+        label: item.name,
+        type: item?.subgroups?.length ? 'group' : '',
+        items: item?.subgroups.map((itemJ) => ({
+          ...itemJ,
+          label: itemJ.name,
+        })),
+      }), []));
     }
-  }, [selectSkills]);
+  }, [selectGroups]);
 
   useEffect(() => {
     if (Array.isArray(getAllEmployees)) {
@@ -273,11 +263,11 @@ const Events = () => {
     setSelectedItem(selectedRow);
   };
 
-  const onSkillsSelectChange = (selectedSkills) => {
-    setCheckedSkills(selectedSkills);
+  const onGroupsSelectChange = (selectedGroups) => {
+    setCheckedGroups(selectedGroups);
   };
-  const onSkillsSelectFilter = () => {
-    sendRequest({ skills: checkedSkills.map((item) => item.id) });
+  const onGroupsSelectFilter = () => {
+    sendRequest({ groups: checkedGroups.map((item) => item.id) });
   };
 
   const onEmployeesSelectChange = (selectedEmployees) => {
@@ -313,13 +303,13 @@ const Events = () => {
             <div className={styles.hideOn750}>
               <Delimiter />
               <CustomSelect
-                placeholder={t('All skills')}
+                placeholder={t('All Groups')}
                 buttonLabel={t('Filter')}
-                items={skills ?? []}
-                onFilter={onSkillsSelectFilter}
-                onChange={onSkillsSelectChange}
+                items={groups ?? []}
+                onFilter={onGroupsSelectFilter}
+                onChange={onGroupsSelectChange}
                 width='auto'
-                type='skills'
+                type='groups'
               />
             </div>
 

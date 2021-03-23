@@ -43,7 +43,7 @@ const columnsJobs = [
 ];
 
 const columnsPlaces = [
-  { label: 'Title', field: 'label', checked: true },
+  { label: 'Title', field: 'name', checked: true },
   { label: 'ID', field: 'id', checked: true },
 ];
 
@@ -111,7 +111,7 @@ export default function TableBlock({
           const foundPlace = allPlaces.find((item) => item.id === selectedItem);
           return {
             ...foundPlace,
-            title: foundPlace.label,
+            title: foundPlace.name,
           };
         }
         default: return '';

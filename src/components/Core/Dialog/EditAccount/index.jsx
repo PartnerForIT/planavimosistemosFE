@@ -176,11 +176,6 @@ export default function EditAccount({
     });
   };
 
-  const placeOpt = useMemo(() => {
-    const pls = places.map(({ id, label }) => ({ id, name: label }) ?? []);
-    return pls;
-  }, [places, t]);
-
   useEffect(() => {
     if (file) {
       setUser((prevState) => ({ ...prevState, photo: file }));
@@ -455,7 +450,7 @@ export default function EditAccount({
                               <Label htmlFor='place' text={t('Assign to place')} />
                               <AddEditSelectOptions
                                 id='place'
-                                options={placeOpt}
+                                options={places}
                                 user={user}
                                 placeholder={t('Select a place')}
                                 name='place'

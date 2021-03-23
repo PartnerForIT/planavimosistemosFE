@@ -390,7 +390,7 @@ export default ({
                   fullWidth
                   value={formValues.place_id}
                   valueKey='id'
-                  labelKey='label'
+                  labelKey='name'
                   options={allPlaces}
                 />
               </div>

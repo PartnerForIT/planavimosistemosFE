@@ -112,17 +112,6 @@ const SecondStep = ({
     return sks;
   }, [skills, t]);
 
-  const placeOpt = useMemo(() => {
-    const pls = places.map(({
-      id,
-      label,
-    }) => ({
-      id,
-      name: label,
-    }) ?? []);
-    return pls;
-  }, [places, t]);
-
   const nextWithValidate = () => {
     const setError = ({
       name,
@@ -285,7 +274,7 @@ const SecondStep = ({
                     <Label htmlFor='place' text={t('Assign to place')} />
                     <AddEditSelectOptions
                       id='place'
-                      options={placeOpt}
+                      options={places}
                       user={user}
                       placeholder={t('Select a place')}
                       name='place'

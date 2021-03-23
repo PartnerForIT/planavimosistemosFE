@@ -20,7 +20,7 @@ function UserCard({
 
   const skillOpt = useMemo(() => skills.map(({ id, name }) => ({ id, name })), [skills]);
   const groupOpt = useMemo(() => groups.map(({ id, name }) => ({ id, name })), [groups]);
-  const placesOpt = useMemo(() => places.map(({ id, label }) => ({ id, name: label })), [places]);
+  const placesOpt = useMemo(() => places.map(({ id, name }) => ({ id, name })), [places]);
   const subgroupOpt = useMemo(() => {
     if (group) {
       // eslint-disable-next-line eqeqeq

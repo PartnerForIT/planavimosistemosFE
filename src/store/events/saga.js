@@ -28,8 +28,9 @@ function token() {
 function* getEventsList(action) {
   try {
     const { data } = yield call(
-      axios.get,
+      axios.post,
       `${config.api.url}/company/${action.id}/events/list`,
+      action.data,
       token(),
     );
     yield put(getEventsListSuccess(data));

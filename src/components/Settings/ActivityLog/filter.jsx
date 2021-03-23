@@ -39,7 +39,7 @@ export default function filterActivity({
             value={inputValues.place}
             options={places}
             valueKey='id'
-            labelKey='label'
+            labelKey='name'
           />
         </div>
       </div>
