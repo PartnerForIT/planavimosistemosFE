@@ -84,16 +84,6 @@
   }
 }
 
-.activeOnelink {
-  @extend %Onelink;
-
-  color: $blue-2;
-
-  path {
-    fill: $blue-2;
-  }
-}
-
 .Onelink,
 %Onelink {
   display: flex;
@@ -116,5 +106,15 @@
     path {
       fill: $blue-2;
     }
+  }
+}
+
+.activeOnelink {
+  @extend %Onelink;
+
+  color: $blue-2;
+
+  path {
+    fill: $blue-2;
   }
 }

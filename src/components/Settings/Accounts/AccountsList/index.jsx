@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useMemo, useCallback, useContext,
+  useState, useEffect, useMemo, useCallback,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,9 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'lodash';
-import { userSelector } from '../../../../store/auth/selectors';
-import { companyModules } from '../../../../store/company/selectors';
-import MaynLayout, { AdminContext } from '../../../Core/MainLayout';
+import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
@@ -136,6 +134,18 @@ const permissionsConfig = [
     name: 'accounts_delete',
     permission: 'accounts_delete',
   },
+  {
+    name: 'create_groups',
+    module: 'create_groups',
+  },
+  {
+    name: 'cost_earning',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
 ];
 export default function AccountsList() {
   const { id } = useParams();
@@ -157,9 +167,6 @@ export default function AccountsList() {
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
-  const modules = useSelector(companyModules);
-  const { role_id: SuperAdmin } = useSelector(userSelector);
-  const isSuperAdmin = useContext(AdminContext);
   const [usersOptions, setUsersOptions] = useState(3);
   const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -232,23 +239,21 @@ export default function AccountsList() {
   useEffect(() => {
     let allColumnsArray = columns;
 
-    if (!isSuperAdmin) {
-      allColumnsArray = allColumnsArray.filter((column) => {
-        if (!modules.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
-          return false;
-        }
-        if (!modules.cost_earning && column.field === 'cost') {
-          return false;
-        }
-        if (!modules.profitability && (column.field === 'charge' || column.field === 'salary')) {
-          return false;
-        }
-        return true;
-      });
-    }
+    allColumnsArray = allColumnsArray.filter((column) => {
+      if (!permissions.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
+        return false;
+      }
+      if (!permissions.cost_earning && column.field === 'cost') {
+        return false;
+      }
+      if (!permissions.profitability && (column.field === 'charge' || column.field === 'salary')) {
+        return false;
+      }
+      return true;
+    });
 
     setColumnsArray(allColumnsArray);
-  }, [isSuperAdmin, SuperAdmin, modules]);
+  }, [permissions]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible([employeeId]);
@@ -436,7 +441,6 @@ export default function AccountsList() {
             places={places}
             security={security}
             createAccount={createAccount}
-            modules={modules}
           />
           <EditAccount
             open={!!editVisible}
@@ -454,7 +458,6 @@ export default function AccountsList() {
             groups={groups}
             places={places}
             onSubmit={updateEmployee}
-            modules={modules}
           />
           <DeleteEmployee
             open={deleteVisible}

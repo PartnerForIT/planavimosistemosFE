@@ -1,12 +1,11 @@
 import React, {
-  useContext, useEffect, useMemo, useState,
+  useEffect, useMemo, useState,
 } from 'react';
 import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 
-import { AdminContext } from '../../MainLayout';
 import style from './CreateAccount.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
@@ -17,6 +16,7 @@ import CurrencySign from '../../../shared/CurrencySign';
 import Input from '../../Input/Input';
 import NextStepButton from './NextStepButton';
 import UserCard from './UserCard';
+import usePermissions from '../../usePermissions';
 
 const defaultSkill = {
   name: '',
@@ -25,6 +25,24 @@ const defaultSkill = {
   rates: true,
 };
 
+const permissionsConfig = [
+  {
+    name: 'create_groups',
+    module: 'create_groups',
+  },
+  {
+    name: 'create_places',
+    module: 'create_places',
+  },
+  {
+    name: 'cost_earning',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
+];
 const SecondStep = ({
   user,
   handleInput,
@@ -34,12 +52,12 @@ const SecondStep = ({
   groups,
   places,
   previousStep,
-  modules,
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const permissions = usePermissions(permissionsConfig);
 
-  const isSuperAdmin = useContext(AdminContext);
+  // const isSuperAdmin = useContext(AdminContext);
 
   const [skillName, setSkillName] = useState(defaultSkill);
   const [skillOpen, setSkillOpen] = useState(false);
@@ -154,10 +172,10 @@ const SecondStep = ({
   };
 
   const containerClasses = classnames(style.secondForm, {
-    [style.secondForm_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+    [style.secondForm_three]: (permissions.create_groups || permissions.create_places),
   });
   const rowTwoClasses = classnames(style.center, {
-    [style.borderRight]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+    [style.borderRight]: (permissions.create_groups || permissions.create_places),
   });
 
   return (
@@ -183,7 +201,7 @@ const SecondStep = ({
             />
           </div>
           {
-            (isSuperAdmin || !!modules.cost_earning) && (
+            permissions.cost_earning && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='cost'
@@ -206,7 +224,7 @@ const SecondStep = ({
             )
           }
           {
-            (isSuperAdmin || !!modules.profitability) && (
+            permissions.profitability && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='charge'
@@ -231,10 +249,10 @@ const SecondStep = ({
         </div>
 
         {
-          (isSuperAdmin || !!modules.create_groups || !!modules.create_places) && (
+          (permissions.create_groups || permissions.create_places) && (
             <div className={style.right}>
               {
-                (!!modules.create_groups || isSuperAdmin) && (
+                permissions.create_groups && (
                   <>
                     <div className={style.formItem}>
                       <Label htmlFor='group' text={t('Assign to Group')} />
@@ -269,7 +287,7 @@ const SecondStep = ({
               }
 
               {
-                (!!modules.create_places || isSuperAdmin) && (
+                permissions.create_places && (
                   <div className={style.formItem}>
                     <Label htmlFor='place' text={t('Assign to place')} />
                     <AddEditSelectOptions

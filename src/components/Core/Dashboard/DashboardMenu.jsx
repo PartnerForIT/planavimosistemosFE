@@ -71,6 +71,9 @@ const useStyles = makeStyles(() => ({
       transform: 'rotate(360deg)',
     },
   },
+  content: {
+    alignItems: 'center',
+  },
 }));
 
 const permissionsConfig = [
@@ -124,6 +127,7 @@ export default function DashboardMenu() {
             classes={{
               expandIcon: classes.expandIcon,
               expanded: classes.summaryExpanded,
+              content: classes.content,
             }}
             aria-controls='panel1-content'
             id='panel1-header'
@@ -177,6 +181,7 @@ export default function DashboardMenu() {
             classes={{
               expandIcon: classes.expandIcon,
               expanded: classes.summaryExpanded,
+              content: classes.content,
             }}
             aria-controls='panel2-content'
             id='panel2-header'
@@ -236,6 +241,7 @@ export default function DashboardMenu() {
                 classes={{
                   expandIcon: classes.expandIcon,
                   expanded: classes.summaryExpanded,
+                  content: classes.content,
                 }}
                 aria-controls='panel3-content'
                 id='panel3-header'

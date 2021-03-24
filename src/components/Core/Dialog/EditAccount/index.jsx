@@ -1,13 +1,12 @@
 import classnames from 'classnames';
 import React, {
-  useContext, useEffect, useMemo, useState,
+  useEffect, useMemo, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { AdminContext } from '../../MainLayout';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -54,6 +53,14 @@ const permissionsConfig = [
     name: 'places',
     module: 'create_places',
   },
+  {
+    name: 'cost_earning',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
 ];
 export default function EditAccount({
   title,
@@ -66,14 +73,11 @@ export default function EditAccount({
   places = [],
   onSubmit = () => ({}),
   handleClose: externalHandleClose,
-  modules,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const styles = useStyles();
   const permissions = usePermissions(permissionsConfig);
-
-  const isSuperAdmin = useContext(AdminContext);
 
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
@@ -266,7 +270,7 @@ export default function EditAccount({
   }, [errors, onSubmit, ready, user]);
 
   const formClasses = classnames(style.form, {
-    [style.form_three]: (!!modules.create_groups || !!modules.create_places || isSuperAdmin),
+    [style.form_three]: (permissions.groups || permissions.places),
   });
 
   const handleExited = () => {
@@ -360,7 +364,7 @@ export default function EditAccount({
                       />
                     </div>
                     {
-                     (isSuperAdmin || !!modules.cost_earning) && (
+                     permissions.cost_earnin && (
                        <div className={classes.formItem}>
                          <Label
                            htmlFor='cost'
@@ -382,7 +386,7 @@ export default function EditAccount({
                      )
                     }
                     {
-                      (isSuperAdmin || !!modules.profitability) && (
+                      permissions.profitability && (
                         <div className={classes.formItem}>
                           <Label
                             htmlFor='charge'
@@ -484,7 +488,6 @@ export default function EditAccount({
                   title={t('Create new skill')}
                   buttonTitle={t('Create new skill')}
                   createSkill={createNewSkill}
-                  modules={modules}
                 />
                 <DropzoneDialog
                   open={downloadOpen}

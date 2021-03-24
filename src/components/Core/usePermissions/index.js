@@ -9,20 +9,14 @@ export default (permissionsConfig) => {
   const modules = useSelector(companyModules);
 
   const permissions = useMemo(() => {
-    // super admin
-    if (user?.user?.role_id === 1) {
-      return permissionsConfig.reduce((acc, item) => {
-        acc[item.name] = true;
-        return acc;
-      }, {});
-    }
+    const isSuperAdmin = user?.user?.role_id === 1;
 
     if (user.user_permissions) {
       return permissionsConfig.reduce((acc, item) => {
         if (item.permission && item.module) {
-          acc[item.name] = Boolean(user.user_permissions[item.permission] && modules[item.module]);
+          acc[item.name] = Boolean((isSuperAdmin || user.user_permissions[item.permission]) && modules[item.module]);
         } else if (item.permission) {
-          acc[item.name] = Boolean(user.user_permissions[item.permission]);
+          acc[item.name] = Boolean(isSuperAdmin || user.user_permissions[item.permission]);
         } else if (item.module) {
           acc[item.name] = Boolean(modules[item.module]);
         }
