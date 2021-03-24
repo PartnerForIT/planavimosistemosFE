@@ -656,23 +656,6 @@ div {
     background-color: #ecf1f9;
   }
 
-  &_grey {
-    background-color: #fcfdfd;
-
-    .simpleTable {
-      background-color: #fcfdfd;
-      border-bottom-color: #e6e6e6;
-    }
-
-    .sortBlock {
-      color: #808f94;
-    }
-
-    .scrollableContent .absoluteActions {
-      background: #fcfdfd !important;
-    }
-  }
-
   .scrollableContentWithoutRightPanel {
     width: 100% !important;
 
@@ -698,6 +681,29 @@ div {
     .flexRowGlobal {
       &:last-of-type {
         padding-right: 62px;
+      }
+    }
+  }
+
+  &_grey {
+    background-color: #fcfdfd;
+
+    .simpleTable {
+      background-color: #fcfdfd;
+      border-bottom-color: #e6e6e6;
+    }
+
+    .sortBlock {
+      color: #808f94;
+    }
+
+    .tableContent {
+      .row .absoluteActions {
+        background: #fcfdfd !important;
+      }
+
+      .rowSelected .absoluteActions {
+        background-color: #ecf1f9 !important;
       }
     }
   }

@@ -19,8 +19,12 @@ export default function CreateJob({
     }
   }, [initialValue]);
 
+  const handleExited = () => {
+    setJobName('');
+  };
+
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
       <div className={style.formControl}>
         <Label text={t('Job name')} htmlFor='name' />
         <Input

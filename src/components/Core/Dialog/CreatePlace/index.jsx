@@ -19,8 +19,12 @@ export default function CreatePlace({
     }
   }, [initialValue]);
 
+  const handleExited = () => {
+    setPlaceName('');
+  };
+
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
       <div className={style.formControl}>
         <Label text={t('Place name')} htmlFor='place' />
         <Input

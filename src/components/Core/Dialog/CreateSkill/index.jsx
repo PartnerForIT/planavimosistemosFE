@@ -38,6 +38,9 @@ export default function CreateSkill({
   const handleChangeRates = () => {
     setFormValues((prevState) => ({ ...prevState, use_rates: !prevState.use_rates }));
   };
+  const handleExited = () => {
+    setFormValues({});
+  };
 
   useEffect(() => {
     if (initialValues) {
@@ -49,7 +52,7 @@ export default function CreateSkill({
   }, [initialValues]);
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
       <div className={style.formControl}>
         <Label text={t('Skill Name')} htmlFor='name' />
         <Input
