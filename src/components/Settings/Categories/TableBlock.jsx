@@ -125,7 +125,13 @@ export default function TableBlock({
   useEffect(() => {
     switch (selectedCategory) {
       case 'skills': {
-        setDataArray(skills);
+        setDataArray(skills.map((item) => ({
+          ...item,
+          ...(item.use_rates ? {} : {
+            cost: '',
+            earn: '',
+          }),
+        })));
         break;
       }
       case 'jobs': {
