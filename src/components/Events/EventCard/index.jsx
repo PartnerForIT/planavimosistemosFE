@@ -62,7 +62,6 @@ const EventInformation = ({
   t,
   type,
   time,
-  stopped,
 }) => {
   const { items, isOvertime } = useMemo(() => {
     const getTimeString = (seconds) => {
@@ -184,7 +183,7 @@ const EventInformation = ({
               value: time[1],
               range: true,
             },
-            ...(stopped ? [
+            ...(time[2] === null ? [
               {
                 label: t('Work status'),
                 value: 'Stopped',
@@ -216,7 +215,7 @@ const EventInformation = ({
               value: time[1],
               range: true,
             },
-            ...(stopped ? [
+            ...(time[2] === null ? [
               {
                 label: t('Work status'),
                 value: 'Stopped',
@@ -237,7 +236,7 @@ const EventInformation = ({
       }
       default: return { items: [] };
     }
-  }, [type, time, stopped]);
+  }, [type, time]);
 
   return (
     <div className={classes.eventInformation}>
