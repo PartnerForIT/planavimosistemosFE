@@ -136,7 +136,7 @@ const Events = () => {
     dispatch(getEventsList(companyId, {
       date_from: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       date_to: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
-      // search,
+      search,
       employees: checkedEmployees.length ? `[${checkedEmployees.map((item) => item.id).toString()}]` : '',
       groups: checkedGroups.length ? `[${checkedGroups.map((item) => item.id).toString()}]` : '',
     }));
