@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import classes from './Events.module.scss';
@@ -8,7 +7,6 @@ import EventRule from './EventDetails/EventRule';
 import EventAction from './EventDetails/EventAction';
 import { EVENT_TYPE } from '../../../const';
 import Progress from '../../Core/Progress';
-import { companyModules } from '../../../store/company/selectors';
 
 function EventDetails({
   activeEvent,
@@ -48,7 +46,6 @@ function EventDetails({
 
     return initialValues;
   });
-  const modules = useSelector(companyModules);
 
   useEffect(() => {
     if (ready) {
@@ -64,9 +61,6 @@ function EventDetails({
 
   const detailsClasses = classNames(
     classes.details,
-    {
-      [classes.details_withModules]: !!(modules.reports || modules.events || modules.logbook),
-    },
   );
 
   const handleChangeCheckbox = (id) => {

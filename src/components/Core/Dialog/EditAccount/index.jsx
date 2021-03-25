@@ -54,11 +54,11 @@ const permissionsConfig = [
     module: 'create_places',
   },
   {
-    name: 'cost_earning',
+    name: 'cost',
     module: 'cost_earning',
   },
   {
-    name: 'profitability',
+    name: 'profit',
     module: 'profitability',
   },
 ];
@@ -364,7 +364,7 @@ export default function EditAccount({
                       />
                     </div>
                     {
-                     permissions.cost_earnin && (
+                     permissions.cost && (
                        <div className={classes.formItem}>
                          <Label
                            htmlFor='cost'
@@ -386,7 +386,7 @@ export default function EditAccount({
                      )
                     }
                     {
-                      permissions.profitability && (
+                      permissions.profit && (
                         <div className={classes.formItem}>
                           <Label
                             htmlFor='charge'
@@ -488,6 +488,7 @@ export default function EditAccount({
                   title={t('Create new skill')}
                   buttonTitle={t('Create new skill')}
                   createSkill={createNewSkill}
+                  permissions={permissions}
                 />
                 <DropzoneDialog
                   open={downloadOpen}

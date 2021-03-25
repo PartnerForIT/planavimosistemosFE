@@ -139,11 +139,15 @@ const permissionsConfig = [
     module: 'create_groups',
   },
   {
-    name: 'cost_earning',
+    name: 'places',
+    module: 'create_places',
+  },
+  {
+    name: 'cost',
     module: 'cost_earning',
   },
   {
-    name: 'profitability',
+    name: 'profit',
     module: 'profitability',
   },
 ];
@@ -240,13 +244,16 @@ export default function AccountsList() {
     let allColumnsArray = columns;
 
     allColumnsArray = allColumnsArray.filter((column) => {
+      if (!permissions.places && column.field === 'place') {
+        return false;
+      }
       if (!permissions.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
         return false;
       }
-      if (!permissions.cost_earning && column.field === 'cost') {
+      if (!permissions.cost && column.field === 'cost') {
         return false;
       }
-      if (!permissions.profitability && (column.field === 'charge' || column.field === 'salary')) {
+      if (!permissions.profit && (column.field === 'charge' || column.field === 'sallary')) {
         return false;
       }
       return true;

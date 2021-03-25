@@ -1,12 +1,11 @@
 import React, {
-  useState, useCallback, useEffect, useContext, useMemo,
+  useState, useCallback, useEffect, useMemo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
-import { AdminContext } from '../../Core/MainLayout';
 import CurrencySign from '../../shared/CurrencySign';
 import DeleteItem from '../../Core/Dialog/DeleteItem';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
@@ -61,14 +60,13 @@ export default function TableBlock({
   skills,
   allJobTypes,
   allPlaces,
-  modules,
+  permissions,
   selectedCategory,
   loading,
   companyId,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const isSuperAdmin = useContext(AdminContext);
   const [columnsArray, setColumnsArray] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -151,19 +149,15 @@ export default function TableBlock({
 
     switch (selectedCategory) {
       case 'skills': {
-        allColumnsArray = columns;
-
-        if (!isSuperAdmin) {
-          allColumnsArray = allColumnsArray.filter((column) => {
-            if (!modules.cost_earning && column.field === 'cost') {
-              return false;
-            }
-            if (!modules.profitability && column.field === 'earn') {
-              return false;
-            }
-            return true;
-          });
-        }
+        allColumnsArray = columns.filter((column) => {
+          if (!permissions.cost && column.field === 'cost') {
+            return false;
+          }
+          if (!permissions.profit && column.field === 'earn') {
+            return false;
+          }
+          return true;
+        });
         break;
       }
       case 'jobs': {
@@ -178,7 +172,7 @@ export default function TableBlock({
     }
 
     setColumnsArray(allColumnsArray);
-  }, [isSuperAdmin, modules, selectedCategory]);
+  }, [permissions, selectedCategory]);
 
   const selectionHandler = (itemId, value) => {
     setDataArray((prevState) => prevState.map((item) => {
@@ -308,8 +302,8 @@ export default function TableBlock({
         title={t('Update skill')}
         buttonTitle={t('Update skill')}
         initialValues={selectedItemData}
-        modules={modules}
         createSkill={updateSkill}
+        permissions={permissions}
       />
       <DialogCreateJob
         open={isEditItem && selectedCategory === 'jobs'}

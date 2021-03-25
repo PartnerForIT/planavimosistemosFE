@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import { companyModules } from '../../../store/company/selectors';
 import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
 import TitleBlock from '../../Core/TitleBlock';
@@ -21,6 +20,7 @@ import { getJobTypes } from '../../../store/jobTypes/actions';
 import { getPlaces } from '../../../store/places/actions';
 import ButtonBlock from './ButtonsBlock';
 import TableBlock from './TableBlock';
+import usePermissions from '../../Core/usePermissions';
 
 import styles from './categories.module.scss';
 
@@ -35,10 +35,33 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'cost',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profit',
+    module: 'profitability',
+  },
+  {
+    name: 'create_jobs',
+    module: 'create_jobs',
+  },
+  {
+    name: 'create_places',
+    module: 'create_places',
+  },
+  {
+    name: 'categories_create',
+    permission: 'categories_create',
+  },
+];
 export default function Categories() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const [selectedCategory, setSelectedCategory] = useState('skills');
 
@@ -57,7 +80,6 @@ export default function Categories() {
   const allPlaces = useSelector(placesSelector);
   const isLoadingJobTypes = useSelector(loadingJobTypeSelector);
   const isLoadingPlaces = useSelector(loadingPlaceSelector);
-  const modules = useSelector(companyModules);
 
   return (
     <MaynLayout>
@@ -75,16 +97,16 @@ export default function Categories() {
                   <ButtonBlock
                     style={styles}
                     companyId={id}
-                    modules={modules}
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
+                    permissions={permissions}
                   />
                   <TableBlock
                     style={styles}
                     skills={skills}
                     allJobTypes={allJobTypes}
                     allPlaces={allPlaces}
-                    modules={modules}
+                    permissions={permissions}
                     selectedCategory={selectedCategory}
                     loading={isLoadingJobTypes || isLoadingPlaces}
                     companyId={id}

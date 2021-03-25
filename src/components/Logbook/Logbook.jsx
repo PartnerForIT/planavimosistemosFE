@@ -29,7 +29,6 @@ import {
 import { employeesSelector } from '../../store/employees/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
-import { companyModules } from '../../store/company/selectors';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../store/organizationList/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
@@ -128,6 +127,10 @@ const permissionsConfig = [
     module: 'use_approval_flow',
     permission: 'logbook_requests_in_place',
   },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
 ];
 
 const useStyles = makeStyles(() => ({
@@ -171,7 +174,6 @@ const Logbook = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
-  const modules = useSelector(companyModules);
   const user = useSelector(userSelector);
   const journal = useSelector(JournalDataSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -185,7 +187,7 @@ const Logbook = () => {
   const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
 
   useEffect(() => {
-    const { cost_earning: costEarning, profitability: profitAccess } = modules;
+    const { cost: costEarning, profit: profitAccess } = permissions;
 
     setWorkTime(wTime.map((day) => {
       const { items } = day;
@@ -221,7 +223,7 @@ const Logbook = () => {
         ...profitAccess ? { profit, charge } : {},
       };
     }));
-  }, [modules, wTime]);
+  }, [permissions, wTime]);
 
   const [sortStatus, setSortStatus] = useState([]);
 
@@ -571,7 +573,7 @@ const Logbook = () => {
                   />
                   <Delimiter />
                   {
-                    (journal.end_day_comment && !!selectedItem.comments?.length) && (
+                    (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) && (
                       <CommentCard
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
                         comment={selectedItem.comments[0].comment}
@@ -748,7 +750,7 @@ const Logbook = () => {
             sortStatus={sortStatus}
             downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
-            modules={modules}
+            permissions={permissions}
             amount={total}
           />
         </div>

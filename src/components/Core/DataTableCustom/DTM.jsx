@@ -43,7 +43,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination = Function.prototype,
   selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
-  modules: { cost_earning, profitability } = {},
+  permissions = {},
   amount: { salary = 0, cost = 0, profit = 0 } = {},
 }) {
   const [tableData, setTableData] = useState(data);
@@ -340,7 +340,7 @@ export default function DataTable({
           )
         }
         {
-          !!cost_earning && !!profitability && !!salary && (
+          permissions.cost && permissions.profit && !!salary && (
             <>
               <FooterTitle
                 wrapperClassNames={footerTitleCosts}
@@ -350,7 +350,7 @@ export default function DataTable({
           )
         }
         {
-          !!cost_earning && !!cost && (
+          permissions.cost && !!cost && (
             <>
               <FooterTitle
                 wrapperClassNames={footerTitleCosts}
@@ -361,7 +361,7 @@ export default function DataTable({
           )
         }
         {
-          !!cost_earning && !!profitability && !!profit && (
+          permissions.cost && permissions.profit && !!profit && (
             <>
               <FooterTitle
                 wrapperClassNames={footerTitleCosts}

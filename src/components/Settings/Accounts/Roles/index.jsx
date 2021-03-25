@@ -169,6 +169,14 @@ const permissionsConfig = [
     name: 'profitability',
     module: 'profitability',
   },
+  {
+    name: 'activity_log',
+    module: 'activity_log',
+  },
+  {
+    name: 'roles_create',
+    permission: 'roles_create',
+  },
 ];
 function Roles() {
   const { id } = useParams();
@@ -275,13 +283,16 @@ function Roles() {
     setDefaultRoleAccess(() => {
       const { moduleAccess } = initialRoleAccess;
 
-      const nextModuleAccess = Object.keys({ ...moduleAccess }).reduce((acc, key) => {
+      const nextModuleAccess = Object.keys(moduleAccess).reduce((acc, key) => {
         acc[key] = {
           ...moduleAccess[key],
           enabled: true,
         };
         return acc;
       }, {});
+      const nextOrganisation = {
+        ...initialRoleAccess.organisation,
+      };
 
       /* permissions */
       if (!permissions.logbook) {
@@ -315,9 +326,12 @@ function Roles() {
       if (!permissions.events) {
         delete nextModuleAccess.events;
       }
+      if (!permissions.activity_log) {
+        delete nextOrganisation.activity_log;
+      }
 
       return {
-        organisation: initialRoleAccess.organisation,
+        organisation: nextOrganisation,
         moduleAccess: nextModuleAccess,
       };
     });

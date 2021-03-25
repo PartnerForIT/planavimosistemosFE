@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef, useState,
+  useCallback, useEffect, useRef, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,11 +7,10 @@ import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
-import { companyModules } from '../../store/company/selectors';
 import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
-import MainLayout, { AdminContext } from '../Core/MainLayout';
+import MainLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
@@ -156,8 +155,6 @@ const Reports = () => {
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
   const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
-  const modules = useSelector(companyModules);
-  const isSuperAdmin = useContext(AdminContext);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
@@ -308,11 +305,11 @@ const Reports = () => {
     setColumnsArray([...columns, ...profitabilityColumns].filter(({ field }) => {
       if (!costState.show_earnings && field === 'sallary') return false;
       if (!costState.show_profit && field === 'profit') return false;
-      if (!modules.create_jobs && field === 'jobType' && !isSuperAdmin) return false;
+      if (!permissions.jobs && field === 'jobType') return false;
       return !(!costState.show_costs && field === 'cost');
     }));
-  }, [activeReport, columns, costState.show_costs, isSuperAdmin,
-    costState.show_earnings, costState.show_profit, modules]);
+  }, [activeReport, columns, costState.show_costs,
+    costState.show_earnings, costState.show_profit, permissions]);
 
   useEffect(() => {
     setLoading(reportLoading);
@@ -566,7 +563,7 @@ const Reports = () => {
                     downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                     verticalOffset='212px'
                     amount={totalStat}
-                    modules={modules}
+                    permissions={permissions}
                   />
                 ))
                 : (

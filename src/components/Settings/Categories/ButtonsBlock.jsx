@@ -9,30 +9,15 @@ import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import { createSkill, actionCreateJob, actionCreatePlace } from '../../../store/settings/actions';
-import usePermissions from '../../Core/usePermissions';
 
-const permissionsConfig = [
-  {
-    name: 'create_jobs',
-    module: 'create_jobs',
-  },
-  {
-    name: 'create_places',
-    module: 'create_places',
-  },
-  {
-    name: 'categories_create',
-    permission: 'categories_create',
-  },
-];
 export default function ButtonBlock({
-  style, companyId, modules,
+  style, companyId,
   selectedCategory,
   setSelectedCategory,
+  permissions,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const permissions = usePermissions(permissionsConfig);
 
   const [openNewItem, setOpenNewItem] = useState(false);
 
@@ -136,7 +121,7 @@ export default function ButtonBlock({
         title={t('Create new skill')}
         buttonTitle={t('Create new skill')}
         createSkill={createNewSkill}
-        modules={modules}
+        permissions={permissions}
       />
       <DialogCreateJob
         open={openNewItem && selectedCategory === 'jobs'}

@@ -35,11 +35,11 @@ const permissionsConfig = [
     module: 'create_places',
   },
   {
-    name: 'cost_earning',
+    name: 'cost',
     module: 'cost_earning',
   },
   {
-    name: 'profitability',
+    name: 'profit',
     module: 'profitability',
   },
 ];
@@ -56,8 +56,6 @@ const SecondStep = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
-
-  // const isSuperAdmin = useContext(AdminContext);
 
   const [skillName, setSkillName] = useState(defaultSkill);
   const [skillOpen, setSkillOpen] = useState(false);
@@ -201,7 +199,7 @@ const SecondStep = ({
             />
           </div>
           {
-            permissions.cost_earning && (
+            permissions.cost && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='cost'
@@ -224,7 +222,7 @@ const SecondStep = ({
             )
           }
           {
-            permissions.profitability && (
+            permissions.profit && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='charge'
@@ -317,6 +315,7 @@ const SecondStep = ({
           title={t('Create new skill')}
           buttonTitle={t('Create new skill')}
           createSkill={createNewSkill}
+          permissions={permissions}
         />
       </div>
 

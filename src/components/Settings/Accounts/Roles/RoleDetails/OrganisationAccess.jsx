@@ -1,31 +1,19 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Content from './Content';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 
 const OrganisationAccess = React.memo(({
-  roleAccess = {},
+  roleAccess: {
+    organisation,
+  } = {},
   activePermissions = [],
   permissionsIds,
   onChangeHandler,
   readOnly,
-  modules,
-  isSuperAdmin,
 }) => {
   const { t } = useTranslation();
-
-  const organisation = useMemo(() => {
-    const allOrganisation = {
-      ...roleAccess.organisation,
-    };
-
-    if (!isSuperAdmin && !modules.activity_log) {
-      delete allOrganisation.activity_log;
-    }
-
-    return allOrganisation;
-  }, [isSuperAdmin, modules, roleAccess.organisation]);
 
   return (
     <Content tooltip='Tooltip' title='Organisation access'>

@@ -5,16 +5,9 @@ import _ from 'lodash';
 import classes from '../Roles.module.scss';
 import RemoveRole from '../../../../Core/Dialog/RemoveRole';
 import RoleDetails from '../RoleDetails';
-import usePermissions from '../../../../Core/usePermissions';
 import CardItem from '../../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../../Core/CardItemAdd/CardItemAdd';
 
-const permissionsConfig = [
-  {
-    name: 'roles_create',
-    permission: 'roles_create',
-  },
-];
 function RolesBlock({
   roles = [],
   activeRole = {},
@@ -32,13 +25,13 @@ function RolesBlock({
   permissionsIds,
   removeRolesPermissions,
   defaultRoleAccess = {},
+  permissions,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
   const [roleAccess, setRoleAccess] = useState(defaultRoleAccess);
   const [disableReady, setDisableReady] = useState(false);
   const [disable, setDisable] = useState([]);
-  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     const { moduleAccess } = roleAccess;
@@ -46,7 +39,7 @@ function RolesBlock({
       const disabled = Object.keys(moduleAccess)?.map((key) => {
       // eslint-disable-next-line no-underscore-dangle
         const _inner = moduleAccess[key];
-        if (!_inner.enabled) {
+        if (_inner.enabled) {
           return Object.keys(_inner.options)?.map((opt) => permissionsIds?.[key]?.[opt]);
         }
         return null;
@@ -106,6 +99,7 @@ function RolesBlock({
                           roleEmployeesEdit={roleEmployeesEdit}
                           rolesPermissionsEdit={rolesPermissionsEdit}
                           permissionsIds={permissionsIds}
+                          permissions={permissions}
                           setDisableReady={setDisableReady}
                           disable={disable}
                           setDisable={setDisable}

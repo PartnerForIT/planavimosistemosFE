@@ -1,21 +1,18 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
-import _ from 'lodash';
-import { userSelector } from '../../../store/auth/selectors';
+import { companyModulesLoading } from '../../../store/company/selectors';
 import Header from '../Header';
 import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
 import getOrganisationModules from '../../../store/company/actions';
-
-export const AdminContext = React.createContext(false);
+import Progress from '../Progress';
 
 export default function MainLayout({ children }) {
   const dispatch = useDispatch();
   const { id: companyId } = useParams();
 
-  const user = useSelector(userSelector);
-  const [admin, setAdmin] = useState(false);
+  const isLoading = useSelector(companyModulesLoading);
 
   useEffect(() => {
     const expires = localStorage.getItem('expires_in');
@@ -25,7 +22,7 @@ export default function MainLayout({ children }) {
   });
 
   useLayoutEffect(() => {
-    if (companyId) dispatch(getOrganisationModules(companyId));
+    dispatch(getOrganisationModules(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,29 +33,27 @@ export default function MainLayout({ children }) {
     setRedirect(true);
   };
 
-  useEffect(() => {
-    if (!_.isEmpty(user)) {
-      setAdmin(user.role_id === 1);
-    }
-  }, [user]);
-
   useEffect(() => () => setRedirect(false), []);
 
-  return (
+  if (redirect) {
+    return <Redirect to='/' />;
+  }
+  if (isLoading) {
+    return (
+      <div className={styles.progressBlock}>
+        <Progress />
+      </div>
+    );
+  }
 
-    redirect
-      ? <Redirect to='/' />
-      : (
-        <AdminContext.Provider value={admin}>
-          <div className={styles.mainLayout}>
-            <Header logOut={logOut} />
-            <main className={styles.mainBody}>
-              <div className={styles.mainBlock}>
-                {children}
-              </div>
-            </main>
-          </div>
-        </AdminContext.Provider>
-      )
+  return (
+    <div className={styles.mainLayout}>
+      <Header logOut={logOut} />
+      <main className={styles.mainBody}>
+        <div className={styles.mainBlock}>
+          {children}
+        </div>
+      </main>
+    </div>
   );
 }

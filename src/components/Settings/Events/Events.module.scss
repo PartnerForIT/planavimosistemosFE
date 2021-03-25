@@ -24,11 +24,7 @@ $arrow-size: 21px;
   border: $edit-border;
   display: grid;
   grid-column-gap: $card-padding;
-  grid-template-columns: 1.3fr 1fr;
-
-  &_withModules {
-    grid-template-columns: 1.3fr 1fr 1fr;
-  }
+  grid-template-columns: 1.3fr 1fr 1fr;
 
   &_inner {
     &_title {
@@ -138,18 +134,6 @@ $arrow-size: 21px;
     display: inline-block;
     max-width: 71px;
   }
-
-  //&__inline-block {
-  //  display: inline-block;
-  //  margin-top: 10px;
-  //  margin-bottom: 3px;
-  //  //flex-wrap: wrap;
-  //
-  //  &__input {
-  //    display: inline-block;
-  //    max-width: 71px;
-  //  }
-  //}
 }
 
 .eventRule {

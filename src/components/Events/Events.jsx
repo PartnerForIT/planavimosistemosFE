@@ -99,10 +99,8 @@ const useStyles = makeStyles(() => ({
 const Events = () => {
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState(columns);
-  // const [columnsWidthArray, setColumnsWidthArray] = useState({});
 
   const [selectedItem, setSelectedItem] = useState(null);
-  // const [loading, setLoading] = useState(null);
 
   const [dateRange, setDateRange] = useState({
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -128,8 +126,6 @@ const Events = () => {
   const textSnackbar = useSelector(snackbarText);
   const { id: companyId } = useParams();
   // const permissions = usePermissions(permissionsConfig);
-
-  // const [workTime, setWorkTime] = useState([]);
 
   const sendRequest = useCallback(() => {
     const { startDate, endDate } = dateRange;

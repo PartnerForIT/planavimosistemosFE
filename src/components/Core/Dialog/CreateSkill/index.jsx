@@ -5,22 +5,11 @@ import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
-import usePermissions from '../../usePermissions';
 import style from '../Dialog.module.scss';
 
-const permissionsConfig = [
-  {
-    name: 'cost_earning',
-    module: 'cost_earning',
-  },
-  {
-    name: 'profitability',
-    module: 'profitability',
-  },
-];
 export default function CreateSkill({
   handleClose, title, open,
-  buttonTitle, createSkill, initialValues,
+  buttonTitle, createSkill, initialValues, permissions,
 }) {
   const { t } = useTranslation();
   const [formValues, setFormValues] = useState({
@@ -29,7 +18,6 @@ export default function CreateSkill({
     earn: '',
     use_rates: true,
   });
-  const permissions = usePermissions(permissionsConfig);
 
   const handleSkillChange = (event) => {
     const { name, value } = event.target;
@@ -64,7 +52,7 @@ export default function CreateSkill({
         />
       </div>
       {
-        permissions.cost_earning && (
+        permissions.cost && (
           <>
             <div className={style.ratesBlock}>
               <Label text={t('Use Rates')} htmlFor='rates' />
@@ -94,7 +82,7 @@ export default function CreateSkill({
         )
       }
       {
-        permissions.profitability && (
+        permissions.profit && (
           <div className={style.formControl}>
             <Label text={t('Charge, Hourly rate, $')} htmlFor='earn' />
             <Input

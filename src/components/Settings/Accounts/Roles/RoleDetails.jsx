@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import classes from './Roles.module.scss';
@@ -8,8 +7,6 @@ import Users from './RoleDetails/Users';
 import AccessModule from './RoleDetails/AccessModule';
 import OrganisationAccess from './RoleDetails/OrganisationAccess';
 import Progress from '../../../Core/Progress';
-import { companyModules } from '../../../../store/company/selectors';
-import { AdminContext } from '../../../Core/MainLayout';
 
 const categoriesNames = {
   logbook: 'Logbook',
@@ -39,7 +36,7 @@ function RoleDetails({
   disable,
   setDisable,
   setDisableReady,
-  // permissions,
+  permissions,
 }) {
   const [activePermissions, setActivePermissions] = useState(
     activeRole?.account_roles_permissions
@@ -48,8 +45,6 @@ function RoleDetails({
       .filter((item) => !!item) ?? [],
   );
   const [ready, setReady] = useState(false);
-  const modules = useSelector(companyModules);
-  const isSuperAdmin = useContext(AdminContext);
 
   useEffect(() => {
     if (ready) {
@@ -78,7 +73,7 @@ function RoleDetails({
   const detailsClasses = classNames(
     classes.details,
     {
-      [classes.details_withModules]: !!(modules.reports || modules.events || modules.logbook),
+      [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
     },
   );
 
@@ -99,7 +94,7 @@ function RoleDetails({
         roleEmployeesEdit={roleEmployeesEdit}
       />
       {
-        (modules.reports || modules.events || modules.logbook) && (
+        (permissions.reports || permissions.events || permissions.logbook) && (
           <AccessModule
             activeRole={activeRole}
             availableDetails={availableDetails}
@@ -126,8 +121,6 @@ function RoleDetails({
         activePermissions={activePermissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
-        modules={modules}
-        isSuperAdmin={isSuperAdmin}
       />
       <div />
     </div>
