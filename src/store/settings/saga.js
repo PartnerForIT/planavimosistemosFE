@@ -116,6 +116,7 @@ import {
   getEventsSuccess,
   patchEventSuccess,
   deleteEventSuccess,
+  postEventSuccess,
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
@@ -1321,16 +1322,16 @@ function* getEvents(action) {
 
 function* postEvent(action) {
   try {
-    yield call(
+    const { data } = yield call(
       axios.post,
       `${config.api.url}/company/${action.companyId}/events/store`,
       action.data,
       token(),
     );
+    yield put(postEventSuccess(data));
     yield put(addSnackbar('Create event successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
-    // yield put(postLogbookEntrySuccess(data));
   } catch (e) {
     yield put(addSnackbar(e, 'error'));
     yield delay(4000);

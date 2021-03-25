@@ -12,7 +12,6 @@ const useStyles = makeStyles({
   root: {
     minHeight: '30px',
     boxShadow: 'none',
-    borderBottom: '1px solid rgba(112, 112, 112, 0.24)',
   },
 
   rootExpanded: {
@@ -22,24 +21,40 @@ const useStyles = makeStyles({
   details: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '0 0 0 20px',
+    padding: '0 0 0 26px',
   },
 
   summary: {
-    height: '30px',
-    minHeight: '30px',
+    height: '35px',
+    minHeight: '35px',
     paddingLeft: '3px',
     paddingRight: 12,
+
+    '&::after': {
+      content: "''",
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      height: 1,
+      backgroundColor: 'rgba(112, 112, 112, 0.24)',
+      display: 'block',
+      bottom: 0,
+    },
   },
 
-  expanded: {
-    height: '30px',
-    minHeight: '30px !important',
+  summaryExpanded: {
+    height: '35px',
+    minHeight: '35px !important',
+
+    '&::after': {
+      left: 27,
+    },
   },
 });
 
 export default function Dropdown({
   currentItem, label, items, checked, onChange,
+  isSubDropdown,
 }) {
   const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
@@ -123,7 +138,11 @@ export default function Dropdown({
   // );
 
   const renderCheckboxGroup = (arr) => (
-    <CheckboxGroup items={arr ?? itemsArray} onChange={onChange} />
+    <CheckboxGroup
+      className={styles.checkboxGroupItem}
+      items={arr ?? itemsArray}
+      onChange={onChange}
+    />
   );
 
   const renderDropdown = () => (
@@ -139,7 +158,7 @@ export default function Dropdown({
       <AccordionSummary
         classes={{
           root: classes.summary,
-          expanded: classes.expanded,
+          expanded: classes.summaryExpanded,
         }}
         expandIcon={(
           <ExpandMoreIcon
@@ -175,13 +194,12 @@ export default function Dropdown({
                   checked={item.checked}
                   items={item.items}
                   onChange={onChange}
+                  isSubDropdown
                 />
               )
               : (
                 <React.Fragment key={item.label + idx.toString()}>
-                  {
-                    renderCheckboxGroup([item])
-                  }
+                  {renderCheckboxGroup([item])}
                 </React.Fragment>
               )
           ))

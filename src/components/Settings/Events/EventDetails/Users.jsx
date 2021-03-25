@@ -175,30 +175,27 @@ const Users = React.memo(({
 
   return (
     <Content tooltip='Tooltip' title='Users within this role'>
-      <>
-        <div className={classes.sidebarTitle}>Employees</div>
-        <Input
-          icon={<SearchIcon />}
-          placeholder='Search by employees'
-          onChange={(e) => handleInputChange(e.target.value)}
-          fullWidth
-          value={search}
+      <Input
+        icon={<SearchIcon />}
+        placeholder='Search by employees'
+        onChange={(e) => handleInputChange(e.target.value)}
+        fullWidth
+        value={search}
+      />
+      <div className={classes.checkboxGroupWrapper}>
+        <CheckboxGroupWrapper
+          height={342}
+          maxHeight={342}
+          wrapperMarginBottom={0}
+          items={allSortedEmployees ?? []}
+          onChange={(checked) => {
+            setCheckedItems(checked);
+            setReady(true);
+          }}
+          sorted={sorted}
+          defaultChecked={checkedByDefault}
         />
-        <div className={classes.checkboxGroupWrapper}>
-          <CheckboxGroupWrapper
-            height={342}
-            maxHeight={342}
-            wrapperMarginBottom={0}
-            items={allSortedEmployees ?? []}
-            onChange={(checked) => {
-              setCheckedItems(checked);
-              setReady(true);
-            }}
-            sorted={sorted}
-            defaultChecked={checkedByDefault}
-          />
-        </div>
-      </>
+      </div>
     </Content>
   );
 });

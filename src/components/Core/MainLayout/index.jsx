@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
-import { companyModulesLoading } from '../../../store/company/selectors';
+import { companyModulesLoading, companyModulesRequestWasSent } from '../../../store/company/selectors';
 import Header from '../Header';
 import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
@@ -13,6 +13,7 @@ export default function MainLayout({ children }) {
   const { id: companyId } = useParams();
 
   const isLoading = useSelector(companyModulesLoading);
+  const requestWasSent = useSelector(companyModulesRequestWasSent);
 
   useEffect(() => {
     const expires = localStorage.getItem('expires_in');
@@ -22,7 +23,9 @@ export default function MainLayout({ children }) {
   });
 
   useLayoutEffect(() => {
-    dispatch(getOrganisationModules(companyId));
+    if (!requestWasSent) {
+      dispatch(getOrganisationModules(companyId));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -122,7 +122,6 @@ function Events() {
                   setEditVisible={setEditVisible}
                   employees={employees}
                   groups={groups}
-                  // dd
                   remove={removeRole}
                   onUpdateEvent={handleUpdateEvent}
                 />

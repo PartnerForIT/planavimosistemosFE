@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroupRaw.module.scss';
 
-export default function CheckboxGroup({ items, onChange }) {
+export default function CheckboxGroup({ className, items, onChange }) {
   const [itemsArray, setItemsArray] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function CheckboxGroup({ items, onChange }) {
   }, [items]);
 
   return (
-    <div className={classNames(styles.checkboxGroup)}>
+    <div className={classNames(styles.checkboxGroup, className)}>
       <div className={classNames(styles.contentBox)}>
         {
           itemsArray.map((item, idx) => (

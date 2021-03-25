@@ -7,12 +7,15 @@ import {
 const initialState = {
   modules: {},
   loading: false,
+  requestWasSent: false,
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ORGANISATION_MODULES:
-      return { ...state, error: null, loading: true };
+      return {
+        ...state, error: null, loading: true, requestWasSent: true,
+      };
     case success(GET_ORGANISATION_MODULES): {
       return { ...state, modules: action.data, loading: false };
     }

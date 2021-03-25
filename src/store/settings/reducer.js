@@ -93,6 +93,7 @@ import {
   PATCH_EVENT_SUCCESS,
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
+  POST_EVENT_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -619,6 +620,18 @@ export const reducerOrganizationList = (state = initialState, action) => {
         events: action.data.events,
         eventsTypes: action.data.events_types,
         eventsLoading: false,
+      };
+
+    case POST_EVENT_SUCCESS:
+      return {
+        ...state,
+        events: [
+          ...state.events,
+          {
+            ...action.data,
+            assign_employees: [],
+          },
+        ],
       };
 
     case PATCH_EVENT:

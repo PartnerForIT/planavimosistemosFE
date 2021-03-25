@@ -111,6 +111,7 @@ import {
   GET_EVENTS,
   GET_EVENTS_SUCCESS,
   POST_EVENT,
+  POST_EVENT_SUCCESS,
   PATCH_EVENT,
   PATCH_EVENT_SUCCESS,
   DELETE_EVENT,
@@ -708,6 +709,11 @@ export const postEvent = (companyId, data) => ({
   type: POST_EVENT,
   data,
   companyId,
+});
+
+export const postEventSuccess = (data) => ({
+  type: POST_EVENT_SUCCESS,
+  data,
 });
 
 export const patchEvent = (companyId, id, data) => ({

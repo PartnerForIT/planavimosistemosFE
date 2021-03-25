@@ -31,6 +31,7 @@ $arrow-size: 21px;
   & small {
     font-size: $small-font-size;
     color: inherit;
+    margin-right: 30px;
   }
 
   &_check {
@@ -79,6 +80,7 @@ $arrow-size: 21px;
     padding: unset;
     cursor: pointer;
     transition: opacity 0.2s;
+    margin: 0;
 
     & svg {
       font-size: $normal-font-size;
