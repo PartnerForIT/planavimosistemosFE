@@ -1,6 +1,6 @@
 @import "../../Core/variables";
 
-$border-style: 1px solid #d0dfef;
+$border-style: 1px solid rgba(0, 133, 255, 0.1);
 $icon-width: 33px;
 
 @mixin placeholder($color: 'white') {
