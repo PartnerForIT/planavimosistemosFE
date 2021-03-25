@@ -26,8 +26,7 @@ import {
   updateRole,
 } from '../../../../store/settings/actions';
 import AddEditItem from '../../../Core/Dialog/AddEditItem';
-import { companyModules, companyModulesLoading } from '../../../../store/company/selectors';
-import { userSelector } from '../../../../store/auth/selectors';
+import usePermissions from '../../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -145,18 +144,38 @@ const initialRoleAccess = {
   },
 };
 
-// Organization access
-
-// Use Managers Mobile View
-// Can see & edit Accounts List
-// Can delete Accounts list
-// Can edit Events settings
-
+const permissionsConfig = [
+  {
+    name: 'reports',
+    module: 'reports',
+  },
+  {
+    name: 'events',
+    module: 'events',
+  },
+  {
+    name: 'logbook',
+    module: 'logbook',
+  },
+  {
+    name: 'use_approval_flow',
+    module: 'use_approval_flow',
+  },
+  {
+    name: 'cost_earning',
+    module: 'cost_earning',
+  },
+  {
+    name: 'profitability',
+    module: 'profitability',
+  },
+];
 function Roles() {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const permissions = usePermissions(permissionsConfig);
 
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -164,12 +183,9 @@ function Roles() {
   const textSnackbar = useSelector(snackbarText);
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
-  const permissions = useSelector(permissionsSelector);
+  const allPermissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
-  const modules = useSelector(companyModules);
-  const modulesLoading = useSelector(companyModulesLoading);
-  const { role_id: SuperAdmin } = useSelector(userSelector);
   const [activeRole, setActiveRole] = useState({});
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -179,7 +195,7 @@ function Roles() {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
 
-    permissions.forEach((perm) => {
+    allPermissions.forEach((perm) => {
       // eslint-disable-next-line no-shadow
       const { name, action, id } = perm;
 
@@ -195,7 +211,7 @@ function Roles() {
     });
 
     return _temp;
-  }, [permissions]);
+  }, [allPermissions]);
 
   const roleEmployeesEdit = (data) => {
     dispatch(updateRole(id, activeRole.id, { users: data.length ? data.toString() : '' }));
@@ -227,20 +243,20 @@ function Roles() {
     ));
 
     // eslint-disable-next-line no-shadow
-    const permissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
+    const nextPermissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
 
     dispatch(updateRole(id, activeRole.id, {
-      permissions,
+      permissions: nextPermissions,
     }));
   };
 
   const availableDetails = useMemo(() => {
-    if (!_.isEmpty(activeRole) && permissions.length) {
+    if (!_.isEmpty(activeRole) && allPermissions.length) {
       // eslint-disable-next-line no-shadow
-      return permissions.filter((perm) => activeRole.account_roles_permissions.some(({ id }) => id === perm.id));
+      return allPermissions.filter((perm) => activeRole.account_roles_permissions.some(({ id }) => id === perm.id));
     }
     return [];
-  }, [activeRole, permissions]);
+  }, [activeRole, allPermissions]);
 
   useEffect(() => {
     dispatch(getRoles(id));
@@ -250,52 +266,62 @@ function Roles() {
   }, []);
 
   useEffect(() => {
-    if (!permissions.length) {
+    if (!allPermissions.length) {
       dispatch(loadPermissions(id));
     }
-  }, [dispatch, id, permissions.length]);
+  }, [dispatch, id, allPermissions.length]);
 
   useEffect(() => {
     setDefaultRoleAccess(() => {
-      const temp = {};
       const { moduleAccess } = initialRoleAccess;
-      // const { cost_earning: costEarning, profitability } = modules;
 
-      // if (!_.isEmpty(modules)) {
-      //   if (costEarning && !profitability) {
-      //     delete moduleAccess.logbook.options.profit;
-      //
-      //     delete moduleAccess.reports.options.earnings;
-      //     delete moduleAccess.reports.options.profit;
-      //   }
-      //
-      //   if (!costEarning && !profitability) {
-      //     delete moduleAccess.logbook.options.earnings;
-      //     delete moduleAccess.logbook.options.profit;
-      //     delete moduleAccess.logbook.options.costs;
-      //
-      //     delete moduleAccess.reports.options.costs;
-      //     delete moduleAccess.reports.options.earnings;
-      //     delete moduleAccess.reports.options.profit;
-      //   }
-      // }
-      Object.keys({ ...moduleAccess }).map((key) => {
-        temp[key] = {
+      const nextModuleAccess = Object.keys({ ...moduleAccess }).reduce((acc, key) => {
+        acc[key] = {
           ...moduleAccess[key],
           enabled: true,
-          // enabled: SuperAdmin === 1 ? true : !!modules[key],
         };
-        return key;
-      });
+        return acc;
+      }, {});
+
+      /* permissions */
+      if (!permissions.logbook) {
+        delete nextModuleAccess.logbook;
+      } else {
+        if (!permissions.use_approval_flow) {
+          delete nextModuleAccess.logbook.options.requests;
+          delete nextModuleAccess.logbook.options.requests_in_place;
+        }
+
+        if (!permissions.cost_earning) {
+          delete nextModuleAccess.logbook.options.costs;
+          delete nextModuleAccess.logbook.options.earnings;
+        }
+
+        if (!permissions.profitability) {
+          delete nextModuleAccess.logbook.options.profit;
+        }
+      }
+      if (!permissions.reports) {
+        delete nextModuleAccess.reports;
+      } else {
+        if (!permissions.cost_earning) {
+          delete nextModuleAccess.reports.options.costs;
+        }
+        if (!permissions.profitability) {
+          delete nextModuleAccess.reports.options.earnings;
+          delete nextModuleAccess.reports.options.profit;
+        }
+      }
+      if (!permissions.events) {
+        delete nextModuleAccess.events;
+      }
+
       return {
-        ...initialRoleAccess, moduleAccess: temp,
+        organisation: initialRoleAccess.organisation,
+        moduleAccess: nextModuleAccess,
       };
     });
-  }, [SuperAdmin, modules, modulesLoading]);
-
-  const removeRole = (roleId) => {
-    dispatch(deleteRole(id, roleId));
-  };
+  }, [permissions]);
 
   useEffect(() => {
     if (roles.length && !_.isEmpty(activeRole)) {
@@ -332,6 +358,10 @@ function Roles() {
     }
   };
 
+  const removeRole = (roleId) => {
+    dispatch(deleteRole(id, roleId));
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -358,10 +388,10 @@ function Roles() {
                   groups={groups}
                   roleEmployeesEdit={roleEmployeesEdit}
                   rolesPermissionsEdit={rolesPermissionsEdit}
-                  permissions={permissions}
                   permissionsIds={permissionsIds}
                   removeRolesPermissions={removeRolesPermissions}
                   defaultRoleAccess={defaultRoleAccess}
+                  permissions={permissions}
                 />
               )
           }

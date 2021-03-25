@@ -29,7 +29,6 @@ function RolesBlock({
   groups = [],
   roleEmployeesEdit = () => ({}),
   rolesPermissionsEdit = () => ({}),
-  permissions: allPermissions,
   permissionsIds,
   removeRolesPermissions,
   defaultRoleAccess = {},
@@ -106,7 +105,6 @@ function RolesBlock({
                           setRoleAccess={setRoleAccess}
                           roleEmployeesEdit={roleEmployeesEdit}
                           rolesPermissionsEdit={rolesPermissionsEdit}
-                          permissions={allPermissions}
                           permissionsIds={permissionsIds}
                           setDisableReady={setDisableReady}
                           disable={disable}

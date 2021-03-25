@@ -87,7 +87,7 @@ $icon-width: 33px;
 
 .underlined {
   border: unset;
-  border-bottom: $border-style;
+  border-bottom: 0.5px solid #cbd1d8;
   border-radius: unset;
 
   @include placeholder();

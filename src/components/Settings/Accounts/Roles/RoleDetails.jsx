@@ -35,11 +35,11 @@ function RoleDetails({
   setRoleAccess,
   roleEmployeesEdit = () => ({}),
   rolesPermissionsEdit = () => ({}),
-  permissions = [],
   permissionsIds,
   disable,
   setDisable,
   setDisableReady,
+  // permissions,
 }) {
   const [activePermissions, setActivePermissions] = useState(
     activeRole?.account_roles_permissions
@@ -99,7 +99,7 @@ function RoleDetails({
         roleEmployeesEdit={roleEmployeesEdit}
       />
       {
-        (isSuperAdmin || !!(modules.reports || modules.events || modules.logbook)) && (
+        (modules.reports || modules.events || modules.logbook) && (
           <AccessModule
             activeRole={activeRole}
             availableDetails={availableDetails}
@@ -109,12 +109,9 @@ function RoleDetails({
             setRoleAccess={setRoleAccess}
             rolesPermissionsEdit={rolesPermissionsEdit}
             activePermissions={activePermissions}
-            permissions={permissions}
             permissionsIds={permissionsIds}
             onChangeHandler={onChangeHandler}
             setDisableReady={setDisableReady}
-            modules={modules}
-            isSuperAdmin={isSuperAdmin}
           />
         )
       }
@@ -127,7 +124,6 @@ function RoleDetails({
         setRoleAccess={setRoleAccess}
         rolesPermissionsEdit={rolesPermissionsEdit}
         activePermissions={activePermissions}
-        permissions={permissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
         modules={modules}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
@@ -13,78 +13,29 @@ const AccessModule = React.memo(({
   permissionsIds,
   setDisableReady,
   readOnly,
-  modules,
-  isSuperAdmin,
-}) => {
-  const moduleAccess = useMemo(() => {
-    const allModuleAccess = {
-      ...roleAccess.moduleAccess,
-    };
-
-    if (!isSuperAdmin) {
-      if (!modules.logbook) {
-        delete allModuleAccess.logbook;
-      } else {
-        if (!modules.use_approval_flow) {
-          delete allModuleAccess.logbook.options.requests;
-          delete allModuleAccess.logbook.options.requests_in_place;
-        }
-
-        if (!modules.cost_earning) {
-          delete allModuleAccess.logbook.options.costs;
-          delete allModuleAccess.logbook.options.earnings;
-        }
-
-        if (!modules.profitability) {
-          delete allModuleAccess.logbook.options.profit;
-        }
-      }
-
-      if (!modules.reports) {
-        delete allModuleAccess.reports;
-      } else {
-        if (!modules.cost_earning) {
-          delete allModuleAccess.reports.options.costs;
-        }
-        if (!modules.profitability) {
-          console.log('allModuleAccess.reports.options.earnings', allModuleAccess.reports.options.earnings);
-          delete allModuleAccess.reports.options.earnings;
-          delete allModuleAccess.reports.options.profit;
-        }
-      }
-
-      if (!modules.events) {
-        delete allModuleAccess.events;
-      }
+}) => (
+  <Content title='Access by module' tooltip='Tooltip'>
+    {
+      Object.keys(roleAccess.moduleAccess).map((key) => (
+        <OptionsCheckBoxGroup
+          key={key}
+          name={key}
+          active={roleAccess.moduleAccess[key].enabled ? roleAccess.moduleAccess[key].checked ?? true : false}
+          enabled={roleAccess.moduleAccess[key].enabled}
+          readOnly={readOnly}
+          details={roleAccess.moduleAccess[key].options}
+          categoriesNames={categoriesNames}
+          roleAccess={roleAccess}
+          setRoleAccess={setRoleAccess}
+          activeRole={activeRole}
+          onChangeHandler={onChangeHandler}
+          permissionsIds={permissionsIds}
+          activePermissions={activePermissions}
+          setDisableReady={setDisableReady}
+        />
+      ))
     }
-
-    return allModuleAccess;
-  }, [modules, isSuperAdmin, roleAccess.moduleAccess]);
-
-  return (
-    <Content title='Access by module' tooltip='Tooltip'>
-      {
-        Object.keys(moduleAccess).map((key) => (
-          <OptionsCheckBoxGroup
-            key={key}
-            name={key}
-            active={moduleAccess[key].enabled ? moduleAccess[key].checked ?? true : false}
-            enabled={moduleAccess[key].enabled}
-            readOnly={readOnly}
-            details={moduleAccess[key].options}
-            categoriesNames={categoriesNames}
-            roleAccess={roleAccess}
-            setRoleAccess={setRoleAccess}
-            activeRole={activeRole}
-            onChangeHandler={onChangeHandler}
-            permissionsIds={permissionsIds}
-            activePermissions={activePermissions}
-            setDisableReady={setDisableReady}
-          />
-        ))
-      }
-    </Content>
-  );
-});
+  </Content>
+));
 
 export default AccessModule;
