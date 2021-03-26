@@ -478,9 +478,9 @@ export const removeAccountGroupError = (data) => ({
   data,
 });
 
-export const editAccountGroup = (id, data) => ({
+export const editAccountGroup = (companyId, data) => ({
   type: PATCH_ACCOUNTS_GROUP,
-  id,
+  companyId,
   ...data,
 });
 
@@ -493,11 +493,10 @@ export const editAccountGroupError = () => ({
   type: PATCH_ACCOUNTS_GROUP_ERROR,
 });
 
-export const createAccountSubgroup = (id, data) => ({
+export const createAccountSubgroup = (companyId, data) => ({
   type: CREATE_ACCOUNTS_SUBGROUP,
   data,
-  id,
-// parent_group_id
+  companyId,
 });
 
 export const createAccountSubgroupSuccess = (data) => ({
@@ -509,12 +508,12 @@ export const createAccountSubgroupError = (data) => ({
   data,
 });
 
-export const editAccountSubgroup = (id, data) => ({
+export const editAccountSubgroup = (companyId, data) => ({
   type: PATCH_ACCOUNTS_SUBGROUP,
-  id,
+  companyId,
   subgroup: true,
   name: data.name,
-  groupId: data.parentGroupId,
+  id: data.id,
 });
 
 export const editAccountSubgroupSuccess = () => ({
@@ -525,11 +524,11 @@ export const editAccountSubgroupError = () => ({
   type: PATCH_ACCOUNTS_SUBGROUP_ERROR,
 });
 
-export const removeAccountSubgroup = (id, groupId) => ({
+export const removeAccountSubgroup = (id, groupId, subgroup) => ({
   type: DELETE_ACCOUNTS_SUBGROUP,
   id,
   groupId,
-  subgroup: true,
+  subgroup,
 });
 
 export const removeAccountSubgroupSuccess = () => ({

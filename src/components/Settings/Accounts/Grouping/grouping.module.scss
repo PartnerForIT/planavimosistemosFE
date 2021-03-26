@@ -27,20 +27,22 @@
 
 .labelBLock {
   display: grid;
+  align-items: center;
   grid-template-columns: auto 20px 1fr;
   grid-column-gap: 25px;
   line-height: 1;
+  padding-bottom: 9px;
 
   & label {
     font-family: "Helvetica Neue Bold", sans-serif;
+    padding-bottom: 0;
   }
-}
 
-.right {
-  text-align: right;
-  padding-bottom: 9px;
+  .right {
+    text-align: right;
 
-  & button {
-    font-family: "Helvetica Neue Bold", sans-serif;
+    & button {
+      font-family: "Helvetica Neue Bold", sans-serif;
+    }
   }
 }

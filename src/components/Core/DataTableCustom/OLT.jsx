@@ -9,7 +9,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
 import styles from './DTM.module.scss';
-// import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
@@ -22,11 +21,13 @@ const useStyles = makeStyles({
   },
 });
 
+const columnsWidthInitial = {};
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, simpleTable, editRow = () => ({}),
-  removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey,
+  downloadExcel, downloadPdf, verticalOffset = '0px',
+  columnsWidth = columnsWidthInitial, simpleTable, editRow = () => ({}),
+  removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
@@ -157,6 +158,7 @@ export default function DataTable({
     styles.tableContainer,
     {
       [styles.tableContainer_grey]: grey,
+      [styles.tableContainer_greyTitle]: greyTitle,
     },
   );
 
@@ -216,7 +218,7 @@ export default function DataTable({
               {
                 visibleColumns.length > 0 && visibleColumns.map((column, idx) => {
                   let width = '';
-                  let minWidth = null;
+                  let minWidth = column.minWidth || null;
                   if (totalCustomWidthColumns > 0) {
                     if (columnsWidth[column.field]) {
                       width = columnsWidth[column.field];
@@ -232,6 +234,7 @@ export default function DataTable({
                       ? `calc((100% - 40px) / ${visibleColumns.length})`
                       : `calc((100%) / ${visibleColumns.length})`;
                   }
+                  console.log('minWidth', minWidth);
                   return (
                     <div
                       key={idx.toString()}
@@ -268,13 +271,6 @@ export default function DataTable({
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => icon.icon)
-                        }
-                        {
-                          // sortable && (
-                          //   <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                          //     <SortIcon />
-                          //   </div>
-                          // )
                         }
                       </div>
                       {/* { (onSerach && columnsWidth[column.field] !== 80) &&

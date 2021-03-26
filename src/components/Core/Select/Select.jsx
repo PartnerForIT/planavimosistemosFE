@@ -10,14 +10,18 @@ import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
+const initialItems = [];
 export default function CustomSelect({
-  items = [], placeholder, buttonLabel, onChange = () => ({}), onFilter, width = '100%', type = 'items',
+  items = initialItems, placeholder, buttonLabel, onChange = () => ({}), onFilter, width = '100%', type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [open, setOpen] = useState(false);
 
+  // useEffect(() => {
+  //   console.count('items');
+  // }, [items]);
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
@@ -35,7 +39,7 @@ export default function CustomSelect({
           }
           stat.total += 1;
         }
-        if (item.items) {
+        if (item.items?.length) {
           setCheckedToAll(item.items);
         }
         return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
@@ -45,7 +49,7 @@ export default function CustomSelect({
     setCheckedItems(checkedItemsArray);
     setItemsStat({ ...stat });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, setCheckedItems]);
+  }, [items]);
 
   useEffect(() => {
     setItemsStat({

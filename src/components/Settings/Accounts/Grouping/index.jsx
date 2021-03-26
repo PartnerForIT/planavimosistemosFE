@@ -55,27 +55,29 @@ export default function Grouping() {
     },
   }));
   const classes = useStyles();
-  const { id } = useParams();
+  const { id: companyId } = useParams();
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-  const addNewGroup = (data) => dispatch(createAccountGroup(id, { name: data }));
   const [selected, setSelected] = useState({});
   const [sort, setSort] = useState({});
   const [subSort, setSubSort] = useState({});
-  const addNewSubgroup = ({ name }) => dispatch(createAccountSubgroup(id, {
+  const addNewGroup = (name) => dispatch(createAccountGroup(companyId, { name }));
+  const addNewSubgroup = (name) => dispatch(createAccountSubgroup(companyId, {
     name,
-    parent_group_id: selected?.id,
+    parentGroupId: selected?.id,
   }));
-  const removeGroup = (groupId) => dispatch(removeAccountGroup(id, groupId));
-  const removeSubgroup = (subgroupId) => dispatch(removeAccountSubgroup(id, subgroupId));
+  const removeGroup = (groupId) => dispatch(removeAccountGroup(companyId, groupId));
+  const removeSubgroup = (subgroupId) => {
+    dispatch(removeAccountSubgroup(companyId, selected.id, subgroupId));
+  };
 
-  const editGroupName = (name) => dispatch(editAccountGroup(id, { groupId: selected.id, name }));
-  const editSubgroupName = (data) => dispatch(editAccountSubgroup(id, data));
+  const editGroupName = (data) => dispatch(editAccountGroup(companyId, data));
+  const editSubgroupName = (data) => dispatch(editAccountSubgroup(companyId, data));
 
   useEffect(() => {
-    dispatch(getAccountGroups(id));
-  }, [dispatch, id]);
+    dispatch(getAccountGroups(companyId));
+  }, [dispatch, companyId]);
 
   const sorting = useCallback((groups, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
@@ -103,7 +105,8 @@ export default function Grouping() {
     if (Groups) {
       groups = Groups.map((group) => ({
         ...group,
-        users: group.users?.length ?? 0,
+        users: (group?.subgroups?.reduce((acc, item) => acc + (item.users?.length ?? 0), 0) ?? 0)
+          + (group.users?.length ?? 0),
         subgroups: group.subgroups?.length ?? 0,
         actions: 'tableActions',
       })) ?? [];
@@ -150,21 +153,21 @@ export default function Grouping() {
                     loading={groupLoading}
                     setSelected={setSelected}
                     selected={selected}
-                    addNewGroup={addNewGroup}
+                    onAddGroup={addNewGroup}
                     sort={setSort}
                     removeGroup={removeGroup}
-                    edit={editGroupName}
+                    onEditGroup={editGroupName}
                     withAddButton={permissions.groups_create}
                   />
                   <SubgroupsBlock
                     style={style}
                     selected={selected}
                     subgroups={subgroups}
-                    addNewSubgroup={addNewSubgroup}
+                    onAddSubgroup={addNewSubgroup}
                     sort={setSubSort}
                     loading={subGroupLoading}
                     removeSubgroup={removeSubgroup}
-                    edit={editSubgroupName}
+                    onEditSubgroup={editSubgroupName}
                     withAddButton={permissions.groups_create}
                   />
                 </div>

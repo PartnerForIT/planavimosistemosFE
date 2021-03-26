@@ -167,7 +167,7 @@ const Row = ({
               IconComponent = Components[fieldIcon];
             }
             let width = '';
-            let minWidth = null;
+            let minWidth = column.minWidth || null;
             const offsetSelectable = selectable && !selectAll ? 5 : 35;
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {

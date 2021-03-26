@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   root: {
     minHeight: '30px',
     boxShadow: 'none',
+    '&::before': {
+      display: 'none',
+    },
   },
 
   rootExpanded: {
@@ -54,7 +57,6 @@ const useStyles = makeStyles({
 
 export default function Dropdown({
   currentItem, label, items, checked, onChange,
-  isSubDropdown,
 }) {
   const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
@@ -194,7 +196,6 @@ export default function Dropdown({
                   checked={item.checked}
                   items={item.items}
                   onChange={onChange}
-                  isSubDropdown
                 />
               )
               : (

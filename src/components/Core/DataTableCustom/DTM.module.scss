@@ -685,6 +685,12 @@ div {
     }
   }
 
+  &_greyTitle {
+    .flexTable.header .columnName {
+      color: #808f94;
+    }
+  }
+
   &_grey {
     background-color: #fcfdfd;
 

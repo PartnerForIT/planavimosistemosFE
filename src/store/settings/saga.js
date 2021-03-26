@@ -618,15 +618,14 @@ function* createAccountSubgroup(action) {
     // eslint-disable-next-line camelcase
     const {
       data: {
-        id: company_id,
-        parent_group_id,
+        parentGroupId,
         name,
       },
     } = action;
     const { data } = yield call(
-      axios.post, `${config.api.url}/company/${action.id}/groups/create`, {
-        company_id,
-        parent_group_id,
+      axios.post, `${config.api.url}/company/${action.companyId}/groups/create`, {
+        companyId: action.companyId,
+        parent_group_id: parentGroupId,
         name,
       }, token(),
     );
@@ -634,7 +633,7 @@ function* createAccountSubgroup(action) {
     const Groups = yield select((state) => state.settings.groups);
 
     const groups = Groups.map((grp) => {
-      if (grp.id === parent_group_id) {
+      if (grp.id === parentGroupId) {
         if (grp.subgroups) {
           grp.subgroups.push(data);
         } else {
@@ -673,7 +672,7 @@ function* deleteAccountGroup(action) {
 
       if (subgroup) {
         groups = stateGroups.map((group) => {
-          const subgroups = group.subgroups.filter((sbgrp) => sbgrp.id !== action.groupId);
+          const subgroups = group.subgroups.filter((sbgrp) => sbgrp.id !== subgroup);
           return {
             ...group,
             subgroups,
@@ -707,7 +706,7 @@ function* patchAccountGroup(action) {
   } = action;
   try {
     const { data } = yield call(axios.patch,
-      `${config.api.url}/company/${action.id}/groups/update/${action.groupId}`,
+      `${config.api.url}/company/${action.companyId}/groups/update/${action.id}`,
       { subgroup, ...rest }, token());
     const Groups = yield select((state) => state.settings.groups);
     let groups = [];
@@ -715,7 +714,7 @@ function* patchAccountGroup(action) {
     if (subgroup) {
       groups = Groups.map((group) => {
         const subgroups = group.subgroups?.map((sbgrp) => {
-          if (sbgrp.id === action.groupId) {
+          if (sbgrp.id === action.id) {
             return { ...data };
           }
           return sbgrp;
@@ -727,8 +726,11 @@ function* patchAccountGroup(action) {
       });
     } else {
       groups = Groups.map((group) => {
-        if (group.id === action.groupId) {
-          return { ...data };
+        if (group.id === action.id) {
+          return {
+            ...group,
+            ...data,
+          };
         }
         return group;
       });

@@ -26,17 +26,19 @@ import {
   totalDurationSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
-import { employeesSelector } from '../../store/employees/selectors';
+import {
+  employeesSelector,
+  JournalDataSelector,
+} from '../../store/settings/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
-import { JournalDataSelector } from '../../store/settings/selectors';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../store/organizationList/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
-import { getEmployees } from '../../store/employees/actions';
+// import { getEmployees } from '../../store/employees/actions';
 import { postLogbookEntry } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
-import { loadLogbookJournal } from '../../store/settings/actions';
+import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { dateToUCT, minutesToString } from '../Helpers';
@@ -52,6 +54,7 @@ import SuspendIcon from '../Icons/SuspendIcon';
 import { downloadExcel, downloadPdf } from '../../store/reports/actions';
 import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 import EditEntry from './EditEntry';
 
 const TextWithSign = ({ label }) => (
@@ -161,17 +164,18 @@ const Logbook = () => {
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
   const [search, setSearch] = useState('');
-  const [employees, setEmployees] = useState([]);
+  // const [employees, setEmployees] = useState([]);
   const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
+  console.log('checkedEmployees', checkedEmployees);
 
   const { t } = useTranslation();
   const classes = useStyles();
   const dispatch = useDispatch();
   const wTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
-  const getAllEmployees = useSelector(employeesSelector);
+  const { users: employees } = useSelector(employeesSelector);
   const getTotalDuration = useSelector(totalDurationSelector);
   const selectSkills = useSelector(skillsSelector);
   const user = useSelector(userSelector);
@@ -278,9 +282,10 @@ const Logbook = () => {
   useEffect(() => {
     dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
-    dispatch(getEmployees(companyId));
+    // dispatch(getEmployees(companyId));
     dispatch(getSkills(companyId));
     dispatch(loadLogbookJournal(companyId));
+    dispatch(loadEmployeesAll(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -356,12 +361,6 @@ const Logbook = () => {
     }
   }, [selectSkills]);
 
-  useEffect(() => {
-    if (Array.isArray(getAllEmployees)) {
-      setEmployees(getAllEmployees);
-    }
-  }, [getAllEmployees]);
-
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
     const setCheckedToAll = (state) => {
@@ -428,7 +427,11 @@ const Logbook = () => {
     setCheckedEmployees(selectedEmployees);
   };
   const onEmployeesSelectFilter = () => {
-    sendRequest({ employees: checkedEmployees.map((item) => item.id) });
+    sendRequest({
+      employees: checkedEmployees
+        .map((item) => item.id)
+        .filter((item) => typeof item !== 'string'),
+    });
   };
 
   const searchHandler = (term) => {
@@ -677,6 +680,17 @@ const Logbook = () => {
     );
   };
 
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
+
   return (
     <MaynLayout>
       <div className={styles.container}>
@@ -713,7 +727,7 @@ const Logbook = () => {
               <CustomSelect
                 placeholder={t('All employees')}
                 buttonLabel={t('Filter')}
-                items={employees ?? []}
+                items={allSortedEmployees ?? []}
                 onFilter={onEmployeesSelectFilter}
                 onChange={onEmployeesSelectChange}
                 width='auto'
