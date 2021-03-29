@@ -14,21 +14,26 @@
   right: 21px;
   left: 21px;
   z-index: 1101;
+  height: calc(100vh - 119px);
 }
 
 .dashboardMenu {
   width: 240px;
-  height: calc(100vh - 119px);
   background: $dashboard-bg;
   border-right: 1px solid $light-blue;
   padding: 25px 15px;
   overflow: scroll;
+  height: 100%;
 }
 
 .dashboardBody {
   width: calc(100% - 240px);
-  height: calc(100vh - 143px);
+  height: 100%;
   overflow: scroll;
+
+  &_withoutScroll {
+    overflow: hidden;
+  }
 }
 
 .menuText {

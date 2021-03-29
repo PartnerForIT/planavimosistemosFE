@@ -60,7 +60,7 @@ export default function Filter({
             },
             {
               value: 1,
-              label: `Active ${stats.active ?? ''}`,
+              label: `Activate ${stats.active ?? ''}`,
             },
             {
               value: 0,

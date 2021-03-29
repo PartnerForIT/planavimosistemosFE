@@ -165,7 +165,9 @@ export default function DataTable({
   const onScroll = useMemo(() => {
     if (hoverActions) {
       return (e) => {
-        document.documentElement.style.setProperty(`--scroll-left-${id}`, `${e.scrollLeft}px`);
+        if (e.scrollLeft <= e.contentScrollWidth - e.clientWidth) {
+          document.documentElement.style.setProperty(`--scroll-left-${id}`, `${e.scrollLeft}px`);
+        }
       };
     }
 

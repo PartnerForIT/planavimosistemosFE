@@ -374,7 +374,7 @@ export default function AccountsList() {
 
   return (
     <MaynLayout>
-      <Dashboard>
+      <Dashboard withoutScroll>
         <TitleBlock
           title={t('Account list')}
           info={userStats}
@@ -416,7 +416,7 @@ export default function AccountsList() {
                     onSort={(field, asc) => sorting(employees, { field, asc })}
                     selectedItem={selected}
                     setSelectedItem={setSelected}
-                    verticalOffset='360px'
+                    verticalOffset='329px'
                     selectAllItems={selectAllHandler}
                     all={all}
                     setAll={setAll}
