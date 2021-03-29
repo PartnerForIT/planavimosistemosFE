@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const columns = [
+  { label: 'ID', field: 'id', checked: true },
   { label: 'Status', field: 'status', checked: true },
   { label: 'Organizations', field: 'name', checked: true },
   { label: 'Users Amount', field: 'employee_count', checked: true },
@@ -51,6 +52,7 @@ const columns = [
 ];
 
 const columnsWidthArray = {
+  id: 90,
   status: 90,
   name: 200,
   employee_count: 150,
@@ -60,7 +62,7 @@ const columnsWidthArray = {
   suspended_at: 200,
   created_at: 200,
   country: 150,
-  timezones: 120,
+  timezone: 120,
 };
 
 const page = {};

@@ -124,7 +124,7 @@ export default function Filter({
           onClick={() => changeStatusCompany('activate')}
           disabled={!checkedItems.length > 0 && !selectedItem}
         >
-          {t('Active')}
+          {t('Activate')}
         </Button>
         <Button
           yellow
