@@ -2,6 +2,8 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
+import classNames from 'classnames';
+
 import Content from './Content';
 import SearchIcon from '../../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -13,6 +15,7 @@ const Users = React.memo(({
   employees = [],
   activeRole,
   roleEmployeesEdit,
+  readOnly,
 }) => {
   const employToCheck = useCallback(({
     id,
@@ -28,6 +31,13 @@ const Users = React.memo(({
   const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
   const [sorted, setSorted] = useState(false);
   const [empList, setEmpList] = useState(employees);
+
+  const checkboxGroupWrapperClasses = classNames(
+    classes.checkboxGroupWrapper,
+    {
+      [classes.checkboxGroupWrapper_readOnly]: readOnly,
+    },
+  );
 
   useEffect(() => {
     if (search.trim()) {
@@ -88,7 +98,7 @@ const Users = React.memo(({
           fullWidth
           value={search}
         />
-        <div className={classes.checkboxGroupWrapper}>
+        <div className={checkboxGroupWrapperClasses}>
           <CheckboxGroupWrapper
             height={342}
             maxHeight={342}

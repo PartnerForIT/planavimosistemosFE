@@ -26,7 +26,7 @@ function RoleDetails({
   loading,
   availableDetails,
   roleAccess,
-  roleAdmin,
+  readOnly,
   employees,
   groups,
   setRoleAccess,
@@ -92,6 +92,7 @@ function RoleDetails({
         groups={groups}
         activeRole={activeRole}
         roleEmployeesEdit={roleEmployeesEdit}
+        readOnly={readOnly}
       />
       {
         (permissions.reports || permissions.events || permissions.logbook) && (
@@ -99,7 +100,7 @@ function RoleDetails({
             activeRole={activeRole}
             availableDetails={availableDetails}
             roleAccess={roleAccess}
-            readOnly={roleAdmin}
+            readOnly={readOnly}
             categoriesNames={categoriesNames}
             setRoleAccess={setRoleAccess}
             rolesPermissionsEdit={rolesPermissionsEdit}
@@ -114,7 +115,7 @@ function RoleDetails({
         activeRole={activeRole}
         availableDetails={availableDetails}
         roleAccess={roleAccess}
-        readOnly={roleAdmin}
+        readOnly={readOnly}
         categoriesNames={categoriesNames}
         setRoleAccess={setRoleAccess}
         rolesPermissionsEdit={rolesPermissionsEdit}

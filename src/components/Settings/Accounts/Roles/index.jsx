@@ -14,6 +14,7 @@ import {
   AccountGroupsSelector, employeesSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
 } from '../../../../store/settings/selectors';
+import { userSelector } from '../../../../store/auth/selectors';
 import RolesIcon from '../../../Icons/RolesIcon';
 import RolesBlock from './RoleDetails/RolesBlock';
 import {
@@ -69,8 +70,6 @@ const initialRoleAccess = {
       enabled: false,
       options: {
         receive_app: 'Receive notifications',
-        receive_email: 'events ~> receive_email',
-        create: 'Can create Events',
       },
     },
   },
@@ -101,6 +100,14 @@ const initialRoleAccess = {
       },
 
     },
+    events: {
+      enabled: true,
+
+      options: {
+        create: 'Can create Events',
+      },
+
+    },
     data: {
       enabled: true,
 
@@ -125,14 +132,6 @@ const initialRoleAccess = {
         view: 'Can see Activity Log',
       },
 
-    },
-    pto: {
-      enabled: true,
-
-      options: {
-        edit_entries: 'pto ~> edit_entries',
-        requests: 'pto ~> requests',
-      },
     },
     company: {
       enabled: true,
@@ -189,6 +188,7 @@ function Roles() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const user = useSelector(userSelector);
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
   const allPermissions = useSelector(permissionsSelector);
@@ -406,6 +406,7 @@ function Roles() {
                   removeRolesPermissions={removeRolesPermissions}
                   defaultRoleAccess={defaultRoleAccess}
                   permissions={permissions}
+                  user={user}
                 />
               )
           }

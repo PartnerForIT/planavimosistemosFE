@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 
@@ -26,6 +26,7 @@ function RolesBlock({
   removeRolesPermissions,
   defaultRoleAccess = {},
   permissions,
+  user,
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -52,6 +53,14 @@ function RolesBlock({
       }
     }
   }, [disableReady, permissionsIds, removeRolesPermissions, removeVisible, roleAccess]);
+
+  const isCompanyAdmin = useMemo(() => {
+    if (roles?.length) {
+      return roles[0].account_user_roles.some((item) => item.employee.user_id === user.user.id);
+    }
+
+    return false;
+  }, [user, roles]);
 
   return (
     <div className={classes.roles}>
@@ -103,7 +112,7 @@ function RolesBlock({
                           setDisableReady={setDisableReady}
                           disable={disable}
                           setDisable={setDisable}
-                          roleAdmin={role.name === 'Administrator'}
+                          readOnly={!role.can_delete && !isCompanyAdmin}
                         />
                       )
                     }

@@ -234,7 +234,6 @@ export default function DataTable({
                       ? `calc((100% - 40px) / ${visibleColumns.length})`
                       : `calc((100%) / ${visibleColumns.length})`;
                   }
-                  console.log('minWidth', minWidth);
                   return (
                     <div
                       key={idx.toString()}

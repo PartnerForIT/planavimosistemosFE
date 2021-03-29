@@ -163,19 +163,17 @@ export default function Journal() {
           {
             isLoadind ? <Progress />
               : (
-                <>
-                  <Form
-                    t={t}
-                    style={styles}
-                    handleInputChange={handleInputChange}
-                    journalData={journalData}
-                    handleChangeApproveFlow={handleChangeApproveFlow}
-                    handleChangeAutomaticApprove={handleChangeAutomaticApprove}
-                    handleChangeAutomaticBreak={handleChangeAutomaticBreak}
-                    readOnly={!permissions.logbook_settings}
-                    permissions={permissions}
-                  />
-                </>
+                <Form
+                  t={t}
+                  style={styles}
+                  handleInputChange={handleInputChange}
+                  journalData={journalData}
+                  handleChangeApproveFlow={handleChangeApproveFlow}
+                  handleChangeAutomaticApprove={handleChangeAutomaticApprove}
+                  handleChangeAutomaticBreak={handleChangeAutomaticBreak}
+                  readOnly={!permissions.logbook_settings}
+                  permissions={permissions}
+                />
               )
           }
         </PageLayout>

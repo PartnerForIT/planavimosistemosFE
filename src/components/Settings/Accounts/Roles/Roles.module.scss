@@ -78,6 +78,11 @@ $arrow-size: 21px;
 .checkboxGroupWrapper {
   height: 100%;
   margin-top: 10px;
+
+  &_readOnly {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 }
 
 .loader {

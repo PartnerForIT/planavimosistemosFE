@@ -128,13 +128,15 @@ export default function ButtonAppBar({ logOut }) {
           {
             companyId && (
               <div className={styles.linkBlock}>
-                <Link
-                  to={`/overview/${companyId}`}
-                  className={pageName === 'overview' ? styles.activelink : styles.link}
-                >
-                  <OverviewIcon className={styles.icon} />
-                  <span className={styles.link__text}>{t('Overview')}</span>
-                </Link>
+                {
+                  // <Link
+                  //   to={`/overview/${companyId}`}
+                  //   className={pageName === 'overview' ? styles.activelink : styles.link}
+                  // >
+                  //   <OverviewIcon className={styles.icon}/>
+                  //   <span className={styles.link__text}>{t('Overview')}</span>
+                  // </Link>
+                }
                 {
                   // <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
                   //   <PalceIcon className={styles.icon} />
