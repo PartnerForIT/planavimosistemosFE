@@ -709,6 +709,16 @@ div {
       }
     }
   }
+
+  &_white {
+    .headerWrapper {
+      background-color: white;
+
+      .flexTable.header .columnName {
+        color: #808f94;
+      }
+    }
+  }
 }
 
 // style scrollbar other screen

@@ -44,6 +44,7 @@ export default function DataTable({
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
   permissions = {},
   amount: { salary = 0, cost = 0, profit = 0 } = {},
+  white = false,
 }) {
   const [tableData, setTableData] = useState(data);
   const [allSelected, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -153,9 +154,16 @@ export default function DataTable({
     { [styles.tableContentNotSortable]: !sortable },
   );
 
+  const tableContainerClasses = classNames(
+    styles.tableContainer,
+    {
+      [styles.tableContainer_white]: white,
+    },
+  );
+
   return (
     <div
-      className={classNames(styles.tableContainer)}
+      className={tableContainerClasses}
       style={{ height: `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'

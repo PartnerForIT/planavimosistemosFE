@@ -765,6 +765,7 @@ const Logbook = () => {
             downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
             permissions={permissions}
             amount={total}
+            white
           />
         </div>
 
