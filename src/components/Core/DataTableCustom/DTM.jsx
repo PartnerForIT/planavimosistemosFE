@@ -10,7 +10,6 @@ import CurrencySign from '../../shared/CurrencySign';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
-import SortIcon from '../../Icons/SortIcon';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
@@ -265,11 +264,6 @@ export default function DataTable({
                             </React.Fragment>
                           ))
                         }
-                        { sortable && (
-                          <div className={classNames(styles.flexCenter, styles.sortIcon)}>
-                            <SortIcon />
-                          </div>
-                        ) }
                       </div>
                     </div>
                   );

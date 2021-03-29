@@ -168,7 +168,6 @@ const Logbook = () => {
   const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
-  console.log('checkedEmployees', checkedEmployees);
 
   const { t } = useTranslation();
   const classes = useStyles();
@@ -341,7 +340,7 @@ const Logbook = () => {
       if (!permissions.cost && column.field === 'cost') {
         return false;
       }
-      if (!permissions.use_approval_flow && !journal.approve_flow && column.field === 'status') {
+      if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         return false;
       }
 
@@ -758,7 +757,7 @@ const Logbook = () => {
             selectedItem={selectedItem}
             totalDuration={totalDuration}
             setSelectedItem={rowSelectionHandler}
-            verticalOffset='123px'
+            verticalOffset='200px'
             fieldIcons={icons}
             statusClickable
             sortStatus={sortStatus}

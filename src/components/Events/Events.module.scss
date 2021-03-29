@@ -7,12 +7,10 @@ $sidebar-border-radius: 12px;
   background-color: #edf4fa;
   box-sizing: border-box;
   display: flex;
-  //justify-content: center;
-  height: 100vh;
+  height: 100%;
+  max-height: calc(100vh - 120px);
   min-height: 435px;
-  //padding: 0 25px 0 0;
-  //width: calc(100vw - 20px * 2);
-  //min-width: fit-content;
+  padding: 0 6px;
 }
 
 .appHeader {
@@ -32,13 +30,11 @@ $sidebar-border-radius: 12px;
 }
 
 .leftContent {
-  padding: 15px 15px 25px 25px;
   overflow: hidden;
   width: calc(100% - 287px);
 }
 
 .rightSidebar {
-  //align-items: center;
   position: relative;
   background-color: #fff;
   border-radius: $sidebar-border-radius;
@@ -49,9 +45,8 @@ $sidebar-border-radius: 12px;
   text-align: center;
   min-width: 287px;
   max-width: 287px;
-  margin-top: 15px;
+  margin-left: 16px;
   min-height: 400px;
-  height: calc(100vh - 40px);
 }
 
 .emptyWrapper {
