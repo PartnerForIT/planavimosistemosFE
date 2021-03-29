@@ -344,6 +344,7 @@ export default function OrganizationList() {
           totalDuration={totalDuration}
           setSelectedItem={rowSelectionHandler}
           verticalOffset='300px'
+          accountList
         />
       </PageLayout>
 

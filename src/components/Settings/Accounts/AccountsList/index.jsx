@@ -420,6 +420,7 @@ export default function AccountsList() {
                     selectAllItems={selectAllHandler}
                     all={all}
                     setAll={setAll}
+                    accountList
                   />
                 </>
               )

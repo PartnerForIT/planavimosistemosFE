@@ -28,7 +28,7 @@ input[type='file'] {
   @extend %input !optional;
 
   width: 100%;
-  resize: none;
+  max-height: none;
 
   p {
     margin: 0;

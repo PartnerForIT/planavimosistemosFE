@@ -629,98 +629,6 @@ div {
   //}
 }
 
-.tableContainer {
-  background-color: #fff;
-  display: block;
-  //margin: 2em auto;
-  width: 100%;
-  min-height: 313px;
-  border: 1px solid rgba(226, 235, 244, 0.85);
-  border-radius: 12px;
-  //padding-top: 10px;
-  position: relative;
-
-  &[data-id='first'] .absoluteActions {
-    left: calc(var(--hover-actions-left) + var(--scroll-left-first));
-  }
-
-  &[data-id='second'] .absoluteActions {
-    left: calc(var(--hover-actions-left) + var(--scroll-left-second));
-  }
-
-  .row.rowSelected .rowWrapper {
-    background-color: #ecf1f9;
-  }
-
-  .scrollableContentWithoutRightPanel {
-    width: 100% !important;
-
-    & .scrollableContent__scrollbarTrackY {
-      right: 10px !important;
-    }
-
-    & .absoluteActions {
-      background: white;
-      width: 70px;
-    }
-
-    .rowSelected .absoluteActions {
-      background-color: #ecf1f9;
-    }
-
-    .flexRowGroup {
-      &:last-of-type {
-        padding-right: 80px;
-      }
-    }
-
-    .flexRowGlobal {
-      &:last-of-type {
-        padding-right: 62px;
-      }
-    }
-  }
-
-  &_greyTitle {
-    .flexTable.header .columnName {
-      color: #808f94;
-    }
-  }
-
-  &_grey {
-    background-color: #fcfdfd;
-
-    .simpleTable {
-      background-color: #fcfdfd;
-      border-bottom-color: #e6e6e6;
-    }
-
-    .sortBlock {
-      color: #808f94;
-    }
-
-    .tableContent {
-      .row .absoluteActions {
-        background: #fcfdfd !important;
-      }
-
-      .rowSelected .absoluteActions {
-        background-color: #ecf1f9 !important;
-      }
-    }
-  }
-
-  &_white {
-    .headerWrapper {
-      background-color: white;
-
-      .flexTable.header .columnName {
-        color: #808f94;
-      }
-    }
-  }
-}
-
 // style scrollbar other screen
 .scrollbarTrackX {
   background-color: transparent !important;
@@ -922,7 +830,7 @@ div {
   // overflow: scroll;
   // height: calc(100vh - 180px) !important;
   min-height: 265px;
-  width: calc(100% - 22px) !important;
+  width: calc(100% - 21px) !important;
 
   &__scrollbarTrackX {
     background-color: transparent !important;
@@ -952,6 +860,143 @@ div {
     div {
       background-color: #d5dde1 !important;
       border-radius: 10px !important;
+    }
+  }
+}
+
+.tableContainer {
+  background-color: #fff;
+  display: block;
+  //margin: 2em auto;
+  width: 100%;
+  min-height: 313px;
+  border: 1px solid rgba(226, 235, 244, 0.85);
+  border-radius: 12px;
+  //padding-top: 10px;
+  position: relative;
+
+  &[data-id='first'] .absoluteActions {
+    left: calc(var(--hover-actions-left) + var(--scroll-left-first));
+  }
+
+  &[data-id='second'] .absoluteActions {
+    left: calc(var(--hover-actions-left) + var(--scroll-left-second));
+  }
+
+  .row.rowSelected .rowWrapper {
+    background-color: #ecf1f9;
+  }
+
+  .scrollableContentWithoutRightPanel {
+    width: 100% !important;
+
+    & .scrollableContent__scrollbarTrackY {
+      right: 10px !important;
+    }
+
+    & .absoluteActions {
+      background: white;
+      width: 70px;
+    }
+
+    .rowSelected .absoluteActions {
+      background-color: #ecf1f9;
+    }
+
+    .flexRowGroup {
+      &:last-of-type {
+        padding-right: 80px;
+      }
+    }
+
+    .flexRowGlobal {
+      &:last-of-type {
+        padding-right: 62px;
+      }
+    }
+  }
+
+  &_greyTitle {
+    .flexTable.header .columnName {
+      color: #808f94;
+    }
+  }
+
+  &_grey {
+    background-color: #fcfdfd;
+
+    .simpleTable {
+      background-color: #fcfdfd;
+      border-bottom-color: #e6e6e6;
+    }
+
+    .sortBlock {
+      color: #808f94;
+    }
+
+    .tableContent {
+      .row .absoluteActions {
+        background: #fcfdfd !important;
+      }
+
+      .rowSelected .absoluteActions {
+        background-color: #ecf1f9 !important;
+      }
+    }
+  }
+
+  &_white {
+    .headerWrapper {
+      background-color: white;
+
+      .flexTable.header .columnName {
+        color: #808f94;
+      }
+    }
+  }
+
+  &_accountList {
+    .scrollingPanel {
+      box-shadow: none;
+      border: 1px solid rgba(226, 235, 244, 0.85);
+      right: -1px;
+      top: -1px;
+      bottom: -1px;
+      position: absolute;
+      height: auto;
+    }
+
+    .scrollableContent {
+      &__scrollbarTrackX {
+        display: flex !important;
+        align-items: center;
+        width: auto !important;
+        height: 32px !important;
+        padding: 0 17px !important;
+        background: #fff !important;
+        left: -1px !important;
+        right: -22px !important;
+        bottom: 1px !important;
+        border-radius: 0 0 12px 12px !important;
+        border: 1px solid rgba(226, 235, 244, 0.85);
+        z-index: 2 !important;
+
+        div {
+          height: 7px !important;
+        }
+      }
+
+      &__scrollbarTrackY {
+        bottom: 45px !important;
+      }
+    }
+
+    .tableFooter:empty {
+      display: none;
+    }
+
+    :global .ScrollbarsCustom-Scroller {
+      margin-bottom: 5px !important;
     }
   }
 }

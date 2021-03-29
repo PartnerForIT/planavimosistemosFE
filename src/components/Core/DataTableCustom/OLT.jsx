@@ -31,6 +31,7 @@ export default function DataTable({
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
+  accountList = false,
 }) {
   const [tableData, setTableData] = useState(data);
   const [, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -159,6 +160,7 @@ export default function DataTable({
     {
       [styles.tableContainer_grey]: grey,
       [styles.tableContainer_greyTitle]: greyTitle,
+      [styles.tableContainer_accountList]: accountList,
     },
   );
 
@@ -185,7 +187,9 @@ export default function DataTable({
     >
       <Scrollbar
         className={scrollableContentClasses}
-        style={{ height: `calc(100vh - ${verticalOffset} - ${simpleTable ? 0 : 47}px)` }}
+        style={{
+          height: `calc(100vh - ${verticalOffset} - ${simpleTable ? 0 : 47}px + ${accountList ? 47 : 0}px)`,
+        }}
         removeTracksWhenNotUsed
         trackXProps={{
           renderer: (props) => {
