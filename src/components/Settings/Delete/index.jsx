@@ -112,7 +112,7 @@ export default function AccountsList() {
 
   return (
     <MaynLayout>
-      <Dashboard>
+      <Dashboard withoutScroll>
         <TitleBlock
           title='Delete Data'
         >

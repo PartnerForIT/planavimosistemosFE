@@ -113,7 +113,7 @@ export default function DeleteDataTable({
         selectedItem={selectedItem}
         totalDuration={totalDuration}
         setSelectedItem={rowSelectionHandler}
-        verticalOffset='380px'
+        verticalOffset='430px'
         simpleTable
       />
     </div>
