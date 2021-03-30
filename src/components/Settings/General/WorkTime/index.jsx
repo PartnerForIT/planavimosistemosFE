@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { debounce } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -132,7 +131,7 @@ export default function WorkTime() {
     }
   }, [filterWorksDay, workTime.work_time]);
 
-  const saveTime = useCallback(debounce((payload) => {
+  const saveTime = useCallback((payload) => {
     const daysData = [];
     Object.values(payload.days).forEach((item, index) => {
       if (item) {
@@ -149,7 +148,7 @@ export default function WorkTime() {
       work_days: [...daysData],
     };
     dispatch(patchWorkTime(data, params.id));
-  }, 5000), [dispatch, params.id]);
+  }, [dispatch, params.id]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

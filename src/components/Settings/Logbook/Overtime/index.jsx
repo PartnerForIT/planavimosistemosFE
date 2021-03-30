@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { debounce } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../../Core/MainLayout';
@@ -77,14 +76,14 @@ export default function Overtime() {
     }
   }, [overtime]);
 
-  const submit = useCallback(debounce((payload) => {
+  const submit = useCallback((payload) => {
     const value = document.querySelector('[name=\'overtime_rate\']:not(:disabled)')?.value ?? '';
     const data = {
       ...payload,
       overtime_rate: value,
     };
     dispatch(editLogbookOvertime(id, data));
-  }, 5000), [dispatch, id]);
+  }, [dispatch, id]);
 
   const handleInputChange = (event) => {
     const {

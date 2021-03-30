@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Switch from 'react-switch';
-import { debounce } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -91,7 +90,7 @@ export default function Sesurity() {
     }
   }, [security]);
 
-  const changeSecuritySettings = useCallback(debounce((payload) => {
+  const changeSecuritySettings = useCallback((payload) => {
     const data = {
       send_password: payload.send_password,
       numbers: payload.numbers,
@@ -103,7 +102,7 @@ export default function Sesurity() {
       login_attempts: login_attempts !== '' ? login_attempts : null,
     };
     dispatch(editSecurityPage(data, id));
-  }, 5000), [dispatch, id]);
+  }, [dispatch, id]);
 
   const handleChangeInvitation = () => {
     setInvitation(!invitation);

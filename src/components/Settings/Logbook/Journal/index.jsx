@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { debounce } from 'lodash';
 
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -107,7 +106,7 @@ export default function Journal() {
     }
   }, [journal]);
 
-  const submit = useCallback(debounce((payload) => {
+  const submit = useCallback((payload) => {
     const data = {
       hourly_charge: payload.hourly_charge,
       hourly_cost: payload.hourly_cost,
@@ -124,7 +123,7 @@ export default function Journal() {
       break_duration: payload.break_duration,
     };
     dispatch(editLogbookJournal(id, data));
-  }, 5000), [dispatch, id]);
+  }, [dispatch, id]);
 
   const handleInputChange = (event) => {
     const { name, value, type } = event.target;

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Snackbar from '@material-ui/core/Snackbar';
-import { debounce } from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -107,9 +106,9 @@ export default function Company() {
     SetOpen(false);
   };
 
-  const editCompany = useCallback(debounce((data) => {
+  const editCompany = useCallback((data) => {
     dispatch(editSettingCompany(data, companyId));
-  }, 5000), [dispatch, companyId]);
+  }, [dispatch, companyId]);
 
   // eslint-disable-next-line no-shadow
   const handleSave = async (file) => {
@@ -129,11 +128,13 @@ export default function Company() {
 
   useEffect(() => {
     if (inputValues.country && countries.length) {
-      setTimeZones(countries
-        .find(({ code }) => code === inputValues.country)?.timezones
-        ?.map((code) => ({ code, name: code })) ?? []);
+      const foundCountry = countries.find(({ code }) => code === inputValues.country)?.timezones;
+      setTimeZones(foundCountry?.map((code) => ({ code, name: code })) ?? []);
+      if (foundCountry?.[0]) {
+        setInputValues((prevState) => ({ ...prevState, timezone: foundCountry[0] }));
+      }
     }
-  }, [countries, inputValues]);
+  }, [countries, inputValues.country]);
 
   return (
     <MaynLayout>
