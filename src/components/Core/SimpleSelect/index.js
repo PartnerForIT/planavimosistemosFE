@@ -71,6 +71,7 @@ export default ({
   name,
   readOnly,
   className,
+  withoutSearch,
 }) => (
   <InputSelect
     name={name}
@@ -82,5 +83,6 @@ export default ({
     labelKey={labelKey}
     disabled={readOnly}
     className={className}
+    withoutSearch={withoutSearch}
   />
 );

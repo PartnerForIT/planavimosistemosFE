@@ -6,6 +6,7 @@ import SimpleSelect from '../../../Core/SimpleSelect';
 import timeArr from '../../../Helpers/time';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 
+
 export default function WorkingTime({
   styles, days,
   handleChangeDays, startTime, handleChangeStartTime,
@@ -35,6 +36,7 @@ export default function WorkingTime({
               value={startTime[`start${index + 1}`]}
               options={timeArr}
               readOnly={readOnly}
+              withoutSearch
             />
             <div className={styles.workigTime__to}>To</div>
             <SimpleSelect
@@ -44,6 +46,7 @@ export default function WorkingTime({
               value={startTime[`finish${index + 1}`]}
               options={timeArr}
               readOnly={readOnly}
+              withoutSearch
             />
           </div>
         ))}

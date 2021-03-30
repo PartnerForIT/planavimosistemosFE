@@ -19,6 +19,7 @@ export default ({
   className,
   small,
   withoutCheckbox = false,
+  withoutSearch = false,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
@@ -47,14 +48,14 @@ export default ({
   );
 
   const label = useMemo(() => {
-    if (open) {
+    if (open && !withoutSearch) {
       return searchValue;
     }
 
     // eslint-disable-next-line eqeqeq
     return options.find((option) => option[valueKey] == value)?.[labelKey] || placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [placeholder, open, options, value, searchValue]);
+  }, [placeholder, open, options, value, searchValue, withoutSearch]);
   const optionsDisplayed = useMemo(() => {
     if (searchValue) {
       return options.filter((option) => (option[labelKey]?.toLowerCase()).includes?.(searchValue.toLowerCase()));
@@ -72,7 +73,7 @@ export default ({
             placeholder={placeholder}
             value={label}
             onChange={handleSearchChange}
-            readOnly={!open}
+            readOnly={!open || withoutSearch}
             id={id}
             labelId={labelId}
           />
