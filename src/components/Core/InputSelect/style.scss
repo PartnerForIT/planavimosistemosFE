@@ -37,8 +37,14 @@
     left: 0;
     right: 0;
     margin-top: 20px;
-    z-index: 3;
+    z-index: 1101;
     max-height: 315px;
+
+    &_top {
+      margin-top: 0;
+      margin-bottom: 20px;
+      bottom: 36px;
+    }
 
     &__item {
       padding: 9px;
@@ -89,18 +95,28 @@
   }
 
   &_small {
-    & .input-select__control {
-      height: 18px;
-      min-height: 18px;
-
-      input {
+    & .input-select {
+      &__control {
         height: 18px;
-        padding: 0 11px;
+        min-height: 18px;
+
+        input {
+          height: 18px;
+          padding: 0 11px;
+        }
+
+        &::before {
+          top: 6px;
+          right: 10px;
+        }
       }
 
-      &::before {
-        top: 6px;
-        right: 10px;
+      &__content-box {
+        &_top {
+          margin-top: 0;
+          margin-bottom: 20px;
+          bottom: 18px;
+        }
       }
     }
   }

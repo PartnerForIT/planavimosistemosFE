@@ -2,6 +2,8 @@ import React, {
   useCallback,
   useState,
   useMemo,
+  useRef,
+  useEffect,
 } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -9,6 +11,22 @@ import Scrollbar from 'react-scrollbars-custom';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import Input from '../Input/Input';
 import './style.scss';
+
+function getOverflowParent(node) {
+  if (!node) {
+    return null;
+  }
+
+  const isElement = node instanceof HTMLElement;
+  const overflowY = isElement && (window.getComputedStyle(node).overflowY || window.getComputedStyle(node).overflow);
+  const isOverflow = overflowY !== 'visible';
+
+  if (isOverflow && node.scrollHeight >= node.clientHeight) {
+    return node;
+  }
+
+  return getOverflowParent(node.parentNode) || document.body;
+}
 
 export default ({
   disabled,
@@ -23,6 +41,8 @@ export default ({
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef(null);
+  const contentBox = useRef(null);
 
   const handleCheckboxChange = useCallback((item) => {
     onChange({
@@ -64,11 +84,43 @@ export default ({
     return options;
   }, [options, searchValue, labelKey]);
 
+  useEffect(() => {
+    if (open) {
+      try {
+        const buttonBounding = buttonRef.current.getBoundingClientRect();
+        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
+        const offsetTop = buttonBounding.top - parentBounding.top;
+        const offsetBottom = parentBounding.height - buttonBounding.top - buttonBounding.height - 30;
+
+        const menuPlacement = offsetTop < offsetBottom ? 'bottom' : 'top';
+        const menuPlacementHeight = (menuPlacement === 'bottom' ? offsetBottom : (offsetTop - 36)) - 20;
+
+        const fullHeight = options.length * 36;
+        const minHeight = menuPlacementHeight > fullHeight
+          ? (fullHeight + 2)
+          : (Math.trunc(menuPlacementHeight / 36) * 36);
+        contentBox.current.style.minHeight = `${minHeight}px`;
+
+        if (menuPlacement === 'top') {
+          contentBox.current.classList.add('input-select__content-box_top');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [options, open]);
+
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div id={id} className={containerClasses}>
         {/* eslint-disable-next-line jsx-a11y/aria-role */}
-        <div role='input' id={id} className='input-select__control' onClick={() => setOpen(!open)}>
+        <div
+          role='input'
+          id={id}
+          className='input-select__control'
+          onClick={() => setOpen((prevValue) => !prevValue)}
+          ref={buttonRef}
+        >
           <Input
             placeholder={placeholder}
             value={label}
@@ -82,7 +134,8 @@ export default ({
         {open ? (
           <div
             className='input-select__content-box'
-            style={{ minHeight: optionsDisplayed.length > 4 ? 150 : optionsDisplayed.length * 36 + 2 }}
+            // style={{ minHeight: optionsDisplayed.length > 4 ? 150 : optionsDisplayed.length * 36 + 2 }}
+            ref={contentBox}
           >
             <Scrollbar
               className='input-select__content-box__scrollbar'
