@@ -149,7 +149,7 @@ const FirstStep = ({
                 type='email'
                 required
                 autoComplete='email'
-                placeholder={t('New user email/user name')}
+                placeholder={t('New user email')}
                 value={user.email ?? ''}
                 onChange={handleInput}
               />

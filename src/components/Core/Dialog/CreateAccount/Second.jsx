@@ -18,13 +18,6 @@ import NextStepButton from './NextStepButton';
 import UserCard from './UserCard';
 import usePermissions from '../../usePermissions';
 
-const defaultSkill = {
-  name: '',
-  cost: '',
-  earn: '',
-  rates: true,
-};
-
 const permissionsConfig = [
   {
     name: 'create_groups',
@@ -57,7 +50,6 @@ const SecondStep = ({
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
 
-  const [skillName, setSkillName] = useState(defaultSkill);
   const [skillOpen, setSkillOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(false);
@@ -79,14 +71,6 @@ const SecondStep = ({
     })) ?? [];
     return grps;
   }, [groups, t]);
-
-  const handleChangeRates = () => {
-    setSkillName({
-      ...skillName,
-      rates: !skillName.rates,
-    });
-  };
-
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
     const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
@@ -101,19 +85,8 @@ const SecondStep = ({
     return sub;
   }, [groups, t, user.group]);
 
-  const handleSkillChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
-    setSkillName({
-      ...skillName,
-      [name]: value,
-    });
-  };
-
-  const createNewSkill = () => {
-    dispatch(createSkill(skillName, companyId));
+  const createNewSkill = (data) => {
+    dispatch(createSkill(data, companyId));
     setSkillOpen(false);
   };
 
@@ -307,11 +280,7 @@ const SecondStep = ({
           open={skillOpen}
           handleClose={() => {
             setSkillOpen(false);
-            setSkillName(defaultSkill);
           }}
-          handleSkillChange={handleSkillChange}
-          skillName={skillName}
-          handleChangeRates={handleChangeRates}
           title={t('Create new skill')}
           buttonTitle={t('Create new skill')}
           createSkill={createNewSkill}
