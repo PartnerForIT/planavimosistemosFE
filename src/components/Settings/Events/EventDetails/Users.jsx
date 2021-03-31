@@ -6,6 +6,7 @@ import Content from './Content';
 import SearchIcon from '../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapper';
 import Input from '../../../Core/Input/Input';
+import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 import classes from '../Events.module.scss';
 
 const Users = React.memo(({
@@ -70,104 +71,7 @@ const Users = React.memo(({
     }
   }, [checkedItems, ready, roleEmployeesEdit]);
 
-  const employeesWithoutGroups = useMemo(() => empList
-    .filter((empl) => !empl.groups.length && !empl.subgroups.length)
-    .map((i) => employToCheck(i)), [empList, employToCheck]);
-
-  const employeesWithGroupsSubGroups = useMemo(() => empList
-    .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
-
-  const mapEmployeesGroups = useCallback((employeeArray) => {
-    // eslint-disable-next-line no-underscore-dangle
-    const _temp = {};
-
-    [...employeeArray].map((item) => {
-      const {
-        // eslint-disable-next-line no-shadow
-        groups,
-        subgroups,
-      } = item;
-
-      const groupId = groups[0]?.id ?? subgroups[0]?.parent_group_id ?? '';
-      const subGroupId = subgroups[0]?.id ?? '';
-      const groupname = groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '';
-      const subGroupName = subgroups[0]?.name ?? '';
-      const type = 'group';
-      // eslint-disable-next-line no-nested-ternary
-      _temp[groupId] = _temp[groupId]
-        // eslint-disable-next-line no-nested-ternary
-        ? _temp[groupId][subGroupId]
-          ? {
-            ..._temp[groupId],
-            label: groupname,
-            type,
-            [subGroupId]: {
-              label: subGroupName,
-              type,
-              items: [..._temp[groupId][subGroupId].items, employToCheck(item)],
-            },
-          }
-          : subGroupId ? {
-            [subGroupId]: {
-              label: subGroupName,
-              type,
-              items: [employToCheck(item)],
-            },
-          } : {
-            items: [employToCheck(item)],
-            label: groupname,
-            type,
-          }
-        : subGroupId ? {
-          label: groupname,
-          type,
-          [subGroupId]: {
-            label: subGroupName,
-            type,
-            items: [employToCheck(item)],
-          },
-        } : {
-          items: [employToCheck(item)],
-          label: groupname,
-          type,
-        };
-      return item;
-    });
-    return { ..._temp };
-  }, [employToCheck]);
-
-  const merged = useMemo(() => mapEmployeesGroups(employeesWithGroupsSubGroups),
-    [employeesWithGroupsSubGroups, mapEmployeesGroups]);
-
-  const mappedMerged = useMemo(() => Object.keys(merged)
-    .map((key) => {
-      const item = merged[key];
-      const mapObjToNamedGroup = (obj) => Object.keys(obj)
-        .map((k) => ({
-          id: k.toString(),
-          ...obj[k],
-        }))[0];
-      if (item.type && Array.isArray(item.items)) {
-        const {
-          type, label, items, ...rest
-        } = item;
-
-        return {
-          id: `gr_${key.toString()}`, type, label, items: [...items, mapObjToNamedGroup(rest)],
-        };
-      }
-      if (item.type && !Array.isArray(item.items)) {
-        const { type, label, ...rest } = item;
-        return {
-          id: `sg_${key.toString()}`, type, label, items: [mapObjToNamedGroup(rest)],
-        };
-      }
-
-      return employToCheck(item);
-    }), [employToCheck, merged]);
-
-  const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
-    [employeesWithoutGroups, mappedMerged]);
+  const allSortedEmployees = useGroupingEmployees(empList, employToCheck);
 
   const handleInputChange = (term) => {
     setSearch(term);
