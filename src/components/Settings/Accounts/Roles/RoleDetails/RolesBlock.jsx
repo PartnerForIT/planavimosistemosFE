@@ -56,7 +56,7 @@ function RolesBlock({
 
   const isCompanyAdmin = useMemo(() => {
     if (roles?.length) {
-      return roles[0].account_user_roles.some((item) => item.employee.user_id === user.user.id);
+      return roles[0].account_user_roles.some((item) => item.employee?.user_id === user.user.id);
     }
 
     return false;
