@@ -7,7 +7,7 @@ import DialogCreateJob from '../../Core/Dialog/DeleteData';
 import SimpleSelect from '../../Core/SimpleSelect';
 
 export default function FilterDelete({
-  style, inputValues, withDeleteButton = false,
+  style, inputValues,
   handleInputChange, t, employees, submitDeleteData, handleDialog, cancelDelete, openDialog, setOpenDialog,
 }) {
   return (
@@ -34,20 +34,16 @@ export default function FilterDelete({
           </div>
         </div>
       </div>
-      {
-        withDeleteButton && (
-          <Button
-            size='big'
-            danger
-            onClick={() => setOpenDialog(true)}
-            disabled={inputValues.employee === ''
-            || Object.keys(inputValues.from).length === 0
-            || inputValues.employee === 'Select employee'}
-          >
-            {t('Delete data')}
-          </Button>
-        )
-      }
+      <Button
+        size='big'
+        danger
+        onClick={() => setOpenDialog(true)}
+        disabled={inputValues.employee === ''
+        || Object.keys(inputValues.from).length === 0
+        || inputValues.employee === 'Select employee'}
+      >
+        {t('Delete data')}
+      </Button>
       <DialogCreateJob
         open={openDialog}
         handleClose={handleDialog}

@@ -66,14 +66,10 @@ function RolesBlock({
     <div className={classes.roles}>
       <>
         {/* create new */}
-        {
-          permissions.roles_create && (
-            <CardItemAdd
-              itemName='role'
-              onClick={createNewRole}
-            />
-          )
-        }
+        <CardItemAdd
+          itemName='role'
+          onClick={createNewRole}
+        />
         {/* roles board */}
         {
                 roles.map((role) => (

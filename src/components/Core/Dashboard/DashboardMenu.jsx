@@ -85,6 +85,7 @@ const permissionsConfig = [
   {
     name: 'groups',
     module: 'create_groups',
+    permission: 'groups_create',
   },
   {
     name: 'logbook',
@@ -93,6 +94,27 @@ const permissionsConfig = [
   {
     name: 'events',
     module: 'events',
+    permission: 'events_create',
+  },
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+  {
+    name: 'roles_create',
+    permission: 'roles_create',
+  },
+  {
+    name: 'data_delete',
+    permission: 'data_delete',
+  },
+  {
+    name: 'categories_create',
+    permission: 'categories_create',
+  },
+  {
+    name: 'accounts_see_and_edit',
+    permission: 'accounts_see_and_edit',
   },
 ];
 export default function DashboardMenu() {
@@ -114,117 +136,133 @@ export default function DashboardMenu() {
     <div className={styles.dashboardMenu}>
       <div className={styles.dashboardScroll}>
         {/* General */}
-        <Accordion
-          className={classes.accordion}
-          defaultExpanded={section === 'general'}
-          classes={{
-            expanded: classes.expanded,
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
-            className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
-            classes={{
-              expandIcon: classes.expandIcon,
-              expanded: classes.summaryExpanded,
-              content: classes.content,
-            }}
-            aria-controls='panel1-content'
-            id='panel1-header'
-          >
-            <IconWrapper>
-              <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
-            </IconWrapper>
-            <span className={styles.menuText}>{t('General')}</span>
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionContent}>
-            <ul className={styles.dashboardLinkBlock}>
-              <li>
-                <Link
-                  to={`/settings/general/company/${params.id}`}
-                  className={innerSection === 'company' ? styles.activeLink : styles.link}
-                >
-                  {t('Company')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/settings/general/work-time/${params.id}`}
-                  className={innerSection === 'work-time' ? styles.activeLink : styles.link}
-                >
-                  {t('Work Time')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/settings/general/security/${params.id}`}
-                  className={innerSection === 'security' ? styles.activeLink : styles.link}
-                >
-                  {t('Security')}
-                </Link>
-              </li>
-            </ul>
-          </AccordionDetails>
-        </Accordion>
-
-        {/* Accounts */}
-        <Accordion
-          className={classes.accordion}
-          defaultExpanded={section === 'accounts'}
-          classes={{
-            expanded: classes.expanded,
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
-            className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
-            classes={{
-              expandIcon: classes.expandIcon,
-              expanded: classes.summaryExpanded,
-              content: classes.content,
-            }}
-            aria-controls='panel2-content'
-            id='panel2-header'
-          >
-            <IconWrapper>
-              <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
-            </IconWrapper>
-
-            <span className={styles.menuText}>{t('Accounts')}</span>
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionContent}>
-            <ul className={styles.dashboardLinkBlock}>
-              <li>
-                <Link
-                  to={`/settings/accounts/accounts-list/${params.id}`}
-                  className={innerSection === 'accounts-list' ? styles.activeLink : styles.link}
-                >
-                  {t('Accounts list')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/settings/accounts/roles/${params.id}`}
-                  className={innerSection === 'roles' ? styles.activeLink : styles.link}
-                >
-                  {t('Roles')}
-                </Link>
-              </li>
-              {
-                permissions.groups && (
+        {
+          permissions.company_edit_settings && (
+            <Accordion
+              className={classes.accordion}
+              defaultExpanded={section === 'general'}
+              classes={{
+                expanded: classes.expanded,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
+                className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
+                classes={{
+                  expandIcon: classes.expandIcon,
+                  expanded: classes.summaryExpanded,
+                  content: classes.content,
+                }}
+                aria-controls='panel1-content'
+                id='panel1-header'
+              >
+                <IconWrapper>
+                  <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
+                </IconWrapper>
+                <span className={styles.menuText}>{t('General')}</span>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionContent}>
+                <ul className={styles.dashboardLinkBlock}>
                   <li>
                     <Link
-                      to={`/settings/accounts/grouping/${params.id}`}
-                      className={innerSection === 'grouping' ? styles.activeLink : styles.link}
+                      to={`/settings/general/company/${params.id}`}
+                      className={innerSection === 'company' ? styles.activeLink : styles.link}
                     >
-                      {t('Grouping')}
+                      {t('Company')}
                     </Link>
                   </li>
-                )
-              }
-            </ul>
-          </AccordionDetails>
-        </Accordion>
+                  <li>
+                    <Link
+                      to={`/settings/general/work-time/${params.id}`}
+                      className={innerSection === 'work-time' ? styles.activeLink : styles.link}
+                    >
+                      {t('Work Time')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={`/settings/general/security/${params.id}`}
+                      className={innerSection === 'security' ? styles.activeLink : styles.link}
+                    >
+                      {t('Security')}
+                    </Link>
+                  </li>
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          )
+        }
+
+        {/* Accounts */}
+        {
+          (permissions.accounts_see_and_edit || permissions.roles_create || permissions.groups) && (
+            <Accordion
+              className={classes.accordion}
+              defaultExpanded={section === 'accounts'}
+              classes={{
+                expanded: classes.expanded,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
+                className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
+                classes={{
+                  expandIcon: classes.expandIcon,
+                  expanded: classes.summaryExpanded,
+                  content: classes.content,
+                }}
+                aria-controls='panel2-content'
+                id='panel2-header'
+              >
+                <IconWrapper>
+                  <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
+                </IconWrapper>
+
+                <span className={styles.menuText}>{t('Accounts')}</span>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionContent}>
+                <ul className={styles.dashboardLinkBlock}>
+                  {
+                    permissions.accounts_see_and_edit && (
+                      <li>
+                        <Link
+                          to={`/settings/accounts/accounts-list/${params.id}`}
+                          className={innerSection === 'accounts-list' ? styles.activeLink : styles.link}
+                        >
+                          {t('Accounts list')}
+                        </Link>
+                      </li>
+                    )
+                  }
+                  {
+                    permissions.roles_create && (
+                      <li>
+                        <Link
+                          to={`/settings/accounts/roles/${params.id}`}
+                          className={innerSection === 'roles' ? styles.activeLink : styles.link}
+                        >
+                          {t('Roles')}
+                        </Link>
+                      </li>
+                    )
+                  }
+                  {
+                    permissions.groups && (
+                      <li>
+                        <Link
+                          to={`/settings/accounts/grouping/${params.id}`}
+                          className={innerSection === 'grouping' ? styles.activeLink : styles.link}
+                        >
+                          {t('Grouping')}
+                        </Link>
+                      </li>
+                    )
+                  }
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          )
+        }
         {/* Events */}
         {
           permissions.logbook && (
@@ -287,15 +325,19 @@ export default function DashboardMenu() {
             </Link>
           )
         }
-        <Link
-          to={`/settings/categories/${params.id}`}
-          className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
-        >
-          <IconWrapper>
-            <CategoriesIcon />
-          </IconWrapper>
-          <span className={styles.textLink}>{t('Categories')}</span>
-        </Link>
+        {
+          permissions.categories_create && (
+            <Link
+              to={`/settings/categories/${params.id}`}
+              className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
+            >
+              <IconWrapper>
+                <CategoriesIcon />
+              </IconWrapper>
+              <span className={styles.textLink}>{t('Categories')}</span>
+            </Link>
+          )
+        }
         {
           permissions.activity_log && (
             <Link
@@ -309,15 +351,19 @@ export default function DashboardMenu() {
             </Link>
           )
         }
-        <Link
-          to={`/settings/delete/${params.id}`}
-          className={section === 'delete' ? styles.activeOnelink : styles.Onelink}
-        >
-          <IconWrapper>
-            <DeleteIcon />
-          </IconWrapper>
-          <span className={styles.textLink}>{t('Data Delete')}</span>
-        </Link>
+        {
+          permissions.data_delete && (
+            <Link
+              to={`/settings/delete/${params.id}`}
+              className={section === 'delete' ? styles.activeOnelink : styles.Onelink}
+            >
+              <IconWrapper>
+                <DeleteIcon />
+              </IconWrapper>
+              <span className={styles.textLink}>{t('Data Delete')}</span>
+            </Link>
+          )
+        }
       </div>
     </div>
   );

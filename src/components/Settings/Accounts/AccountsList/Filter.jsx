@@ -34,6 +34,7 @@ export default function Filter({
   checkedItems,
   stats,
   selectedItem,
+  withDeleteButton,
 }) {
   // const classes = useStyles();
   const { t } = useTranslation();
@@ -91,13 +92,17 @@ export default function Filter({
         >
           {t('Suspend')}
         </Button>
-        <Button
-          danger
-          onClick={() => changeUserStatus('delete')}
-          disabled={!checkedItems.length > 0 && !selectedItem.id}
-        >
-          {t('Delete')}
-        </Button>
+        {
+          withDeleteButton && (
+            <Button
+              danger
+              onClick={() => changeUserStatus('delete')}
+              disabled={!checkedItems.length > 0 && !selectedItem.id}
+            >
+              {t('Delete')}
+            </Button>
+          )
+        }
       </div>
     </div>
   );

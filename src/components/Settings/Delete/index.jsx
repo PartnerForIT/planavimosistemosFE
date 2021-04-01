@@ -20,7 +20,6 @@ import FilterDelete from './filterBlock';
 import Table from './TableBlock';
 
 import styles from './delete.module.scss';
-import usePermissions from '../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -33,12 +32,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const permissionsConfig = [
-  {
-    name: 'data_delete',
-    permission: 'data_delete',
-  },
-];
 export default function AccountsList() {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -59,7 +52,6 @@ export default function AccountsList() {
   const textSnackbar = useSelector(snackbarText);
   const { users: employeesArr } = useSelector(employeesSelector);
   const deleteData = useSelector(deleteDataSelector);
-  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     dispatch(loadEmployees(id));
@@ -134,7 +126,6 @@ export default function AccountsList() {
                     cancelDelete={cancelDelete}
                     openDialog={openDialog}
                     setOpenDialog={setOpenDialog}
-                    withDeleteButton={permissions.data_delete}
                     t={t}
                   />
                   <Table

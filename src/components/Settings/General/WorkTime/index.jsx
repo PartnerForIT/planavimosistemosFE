@@ -19,7 +19,6 @@ import Progress from '../../../Core/Progress';
 import Holidays from './holidays';
 import StartWeek from './StartWeek';
 import WorkingTime from './WorkingTime';
-import usePermissions from '../../../Core/usePermissions';
 import styles from './workTime.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -33,17 +32,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const permissionsConfig = [
-  {
-    name: 'company_edit_settings',
-    permission: 'company_edit_settings',
-  },
-];
 export default function WorkTime() {
   const params = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const permissions = usePermissions(permissionsConfig);
 
   const [inputValues, setInputValues] = useState({
     week_start: '',
@@ -198,7 +190,6 @@ export default function WorkTime() {
                     workTime={workTime.work_time}
                     handleInputChange={handleInputChange}
                     inputValues={inputValues}
-                    readOnly={!permissions.company_edit_settings}
                   />
                   <WorkingTime
                     styles={styles}
@@ -206,7 +197,6 @@ export default function WorkTime() {
                     handleChangeDays={handleChangeDays}
                     startTime={startTime}
                     handleChangeStartTime={handleChangeStartTime}
-                    readOnly={!permissions.company_edit_settings}
                   />
                   <Holidays
                     styles={styles}
@@ -215,7 +205,6 @@ export default function WorkTime() {
                     companyId={params.id}
                     year={year}
                     setYear={setYear}
-                    readOnly={!permissions.company_edit_settings}
                   />
                 </>
               )

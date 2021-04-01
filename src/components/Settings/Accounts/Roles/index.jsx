@@ -121,7 +121,8 @@ const initialRoleAccess = {
 
       options: {
         create: 'Can create New accounts',
-        delete: 'accounts ~> delete',
+        delete: 'Can delete Accounts list',
+        see_and_edit: 'Can see & edit Accounts List',
       },
 
     },
@@ -138,6 +139,13 @@ const initialRoleAccess = {
 
       options: {
         edit_settings: 'Can edit General Settings',
+      },
+    },
+    manager: {
+      enabled: true,
+
+      options: {
+        mobile: 'Use Managers Mobile View',
       },
     },
   },
@@ -171,10 +179,6 @@ const permissionsConfig = [
   {
     name: 'activity_log',
     module: 'activity_log',
-  },
-  {
-    name: 'roles_create',
-    permission: 'roles_create',
   },
 ];
 function Roles() {

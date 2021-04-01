@@ -379,7 +379,7 @@ export default function AccountsList() {
           title={t('Account list')}
           info={userStats}
           TitleButtonNew={permissions.accounts_create ? t('New account') : ''}
-          TitleButtonImport={t('Import Accounts')}
+          TitleButtonImport={permissions.accounts_create ? t('Import Accounts') : ''}
           tooltip={t('Accounts List')}
           handleButtonImport={() => setImportVisible(true)}
           handleButtonNew={() => setNewVisible(true)}
@@ -399,6 +399,7 @@ export default function AccountsList() {
                     clearCheckbox={() => ({})}
                     stats={userStats}
                     selectedItem={selected}
+                    withDeleteButton={permissions.accounts_delete}
                   />
                   <DataTable
                     data={employees ?? []}

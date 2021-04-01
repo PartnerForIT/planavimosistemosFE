@@ -100,21 +100,17 @@ export default function ButtonBlock({
           </Button>
         ))
       }
-      {
-        permissions.categories_create && (
-          <div className={style.newSkillBlock}>
-            <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
-            <Button
-              onClick={setOpenNewItem}
-              white
-              fillWidth
-              size='big'
-            >
-              {t(`Create new ${itemName}`)}
-            </Button>
-          </div>
-        )
-      }
+      <div className={style.newSkillBlock}>
+        <Label text={t(`New ${itemName}`)} htmlFor={`new_${itemName}`} />
+        <Button
+          onClick={setOpenNewItem}
+          white
+          fillWidth
+          size='big'
+        >
+          {t(`Create new ${itemName}`)}
+        </Button>
+      </div>
       <DialogCreateSkill
         open={openNewItem && selectedCategory === 'skills'}
         handleClose={handleCloseItem}
