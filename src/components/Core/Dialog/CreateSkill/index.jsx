@@ -7,17 +7,18 @@ import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 
+const initialFormValues = {
+  name: '',
+  cost: '',
+  earn: '',
+  use_rates: false,
+};
 export default function CreateSkill({
   handleClose, title, open,
   buttonTitle, createSkill, initialValues, permissions,
 }) {
   const { t } = useTranslation();
-  const [formValues, setFormValues] = useState({
-    name: '',
-    cost: '',
-    earn: '',
-    use_rates: true,
-  });
+  const [formValues, setFormValues] = useState(initialFormValues);
 
   const handleSkillChange = (event) => {
     const { name, value } = event.target;
@@ -27,7 +28,7 @@ export default function CreateSkill({
     setFormValues((prevState) => ({ ...prevState, use_rates: !prevState.use_rates }));
   };
   const handleExited = () => {
-    setFormValues({});
+    setFormValues(initialFormValues);
   };
 
   useEffect(() => {

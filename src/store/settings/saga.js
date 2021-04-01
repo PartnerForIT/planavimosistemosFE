@@ -267,11 +267,24 @@ function* loadSettingsSkills(action) {
 
 function* createSettingSkill(action) {
   try {
-    const { data } = yield call(axios.post, `${config.api.url}/company/${action.id}/specialities/create`, action.data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    const { data, status } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.id}/specialities/create`,
+      action.data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       },
-    });
+    );
+
+    if (status === 200) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(createSkillSuccess(data));
     yield put(addSnackbar('Skill creation successfully', 'success'));
     yield delay(4000);
@@ -286,7 +299,20 @@ function* createSettingSkill(action) {
 function* creacteJob(action) {
   try {
     // eslint-disable-next-line no-unused-vars
-    yield call(axios.post, `${config.api.url}/company/${action.id}/job-types/create`, action.data, token());
+    const { data, status } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.id}/job-types/create`,
+      action.data,
+      token(),
+    );
+
+    if (status === 200) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(getJobTypes(action.id));
     yield put(addSnackbar('Job creation successfully', 'success'));
     yield delay(4000);
@@ -299,12 +325,20 @@ function* creacteJob(action) {
 }
 function* patchJob(action) {
   try {
-    yield call(
+    const { data } = yield call(
       axios.patch,
       `${config.api.url}/company/${action.companyId}/job-types/update/${action.id}`,
       action.data,
       token(),
     );
+
+    if (data.name?.[0]?.length > 1) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(getJobTypes(action.companyId));
     yield put(addSnackbar('Updated job successfully', 'success'));
     yield delay(4000);
@@ -335,7 +369,20 @@ function* deleteJob(action) {
 
 function* createPlace(action) {
   try {
-    yield call(axios.post, `${config.api.url}/company/${action.id}/places/create`, action.data, token());
+    const { data, status } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.id}/places/create`,
+      action.data,
+      token(),
+    );
+
+    if (status === 200) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(getPlaces(action.id));
     yield put(addSnackbar('Place creation successfully', 'success'));
     yield delay(4000);
@@ -348,12 +395,20 @@ function* createPlace(action) {
 }
 function* patchPlace(action) {
   try {
-    yield call(
+    const { data } = yield call(
       axios.patch,
       `${config.api.url}/company/${action.companyId}/places/update/${action.id}`,
       action.data,
       token(),
     );
+
+    if (data.name?.[0]?.length > 1) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(getPlaces(action.companyId));
     yield put(addSnackbar('Updated place successfully', 'success'));
     yield delay(4000);
@@ -384,12 +439,20 @@ function* deletePlace(action) {
 
 function* patchSkill(action) {
   try {
-    yield call(
+    const { data } = yield call(
       axios.patch,
       `${config.api.url}/company/${action.companyId}/specialities/update/${action.id}`,
       action.data,
       token(),
     );
+
+    if (data.name?.[0]?.length > 1) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     yield put(loadSkills(action.companyId));
     yield put(addSnackbar('Updated skill successfully', 'success'));
     yield delay(4000);
