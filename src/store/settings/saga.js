@@ -307,7 +307,7 @@ function* creacteJob(action) {
     );
 
     if (status === 200) {
-      yield put(addSnackbar(data.name[0], 'error'));
+      yield put(addSnackbar(data.title[0], 'error'));
       yield delay(4000);
       yield put(dismissSnackbar());
       return;
@@ -332,8 +332,8 @@ function* patchJob(action) {
       token(),
     );
 
-    if (data.name?.[0]?.length > 1) {
-      yield put(addSnackbar(data.name[0], 'error'));
+    if (data.title?.[0]?.length > 1) {
+      yield put(addSnackbar(data.title[0], 'error'));
       yield delay(4000);
       yield put(dismissSnackbar());
       return;
