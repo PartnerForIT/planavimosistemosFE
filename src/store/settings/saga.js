@@ -1059,6 +1059,13 @@ function* createEmployee(action) {
         company_id: companyId,
       }, token());
 
+    if (data.email[0].length > 2) {
+      yield put(addSnackbar(data.email[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
     const { id } = data;
 
     if (id) {
