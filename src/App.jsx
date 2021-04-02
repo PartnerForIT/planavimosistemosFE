@@ -4,6 +4,7 @@ import {
   Switch,
   Route, Redirect,
 } from 'react-router-dom';
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
 import Page404 from './components/404';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
@@ -32,41 +33,47 @@ import ActivityLog from './components/Settings/ActivityLog';
 import Grouping from './components/Settings/Accounts/Grouping';
 import Roles from './components/Settings/Accounts/Roles';
 
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'grouwn',
+});
+
 const App = () => (
-  <Suspense fallback={<div>loading</div>}>
-    <Router>
-      <Switch>
-        <Route exact path='/' component={Login} />
-        <Route path='/404' component={Page404} />
-        <Route exact path='/logout' component={Logout} />
-        <Route exact path='/forgot-password' component={ForgotPassword} />
-        <Route exact path='/invite/:token' component={InvitePage} />
-        <Route exact path='/reset/:token' component={ResetPassword} />
-        <Route exact path='/locked' component={LockedAccount} />
-        <AuthRoute exact path='/organization-list' component={OrganizationList} />
-        <AuthRoute exact path='/logbook/:id' component={Logbook} />
-        <AuthRoute exact path='/events/:id' component={Events} />
-        <AuthRoute exact path='/overview' component={Overview} />
-        <AuthRoute exact path='/overview/:id' component={Overview} />
-        <AuthRoute exact path='/help/:id' component={Help} />
-        <AuthRoute exact path='/settings/:id' component={Settings} />
-        <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
-        <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
-        <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
-        <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
-        <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
-        <AuthRoute exact path='/settings/accounts/roles/:id' component={Roles} />
-        <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
-        <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
-        <AuthRoute exact path='/settings/logbook/overtime/:id' component={Overtime} />
-        <AuthRoute exact path='/settings/activity-log/:id' component={ActivityLog} />
-        <AuthRoute exact path='/settings/delete/:id' component={SettingDelete} />
-        <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
-        <AuthRoute exact path='/reports/:id' component={Reports} />
-        <Redirect from='*' to='/404' />
-      </Switch>
-    </Router>
-  </Suspense>
+  <StylesProvider generateClassName={generateClassName}>
+    <Suspense fallback={<div>loading</div>}>
+      <Router>
+        <Switch>
+          <Route exact path='/' component={Login} />
+          <Route path='/404' component={Page404} />
+          <Route exact path='/logout' component={Logout} />
+          <Route exact path='/forgot-password' component={ForgotPassword} />
+          <Route exact path='/invite/:token' component={InvitePage} />
+          <Route exact path='/reset/:token' component={ResetPassword} />
+          <Route exact path='/locked' component={LockedAccount} />
+          <AuthRoute exact path='/organization-list' component={OrganizationList} />
+          <AuthRoute exact path='/logbook/:id' component={Logbook} />
+          <AuthRoute exact path='/events/:id' component={Events} />
+          <AuthRoute exact path='/overview' component={Overview} />
+          <AuthRoute exact path='/overview/:id' component={Overview} />
+          <AuthRoute exact path='/help/:id' component={Help} />
+          <AuthRoute exact path='/settings/:id' component={Settings} />
+          <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
+          <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
+          <AuthRoute exact path='/settings/general/security/:id' component={SettingSecurity} />
+          <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
+          <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
+          <AuthRoute exact path='/settings/accounts/roles/:id' component={Roles} />
+          <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
+          <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
+          <AuthRoute exact path='/settings/logbook/overtime/:id' component={Overtime} />
+          <AuthRoute exact path='/settings/activity-log/:id' component={ActivityLog} />
+          <AuthRoute exact path='/settings/delete/:id' component={SettingDelete} />
+          <AuthRoute exact path='/settings/events/:id' component={SettingEvents} />
+          <AuthRoute exact path='/reports/:id' component={Reports} />
+          <Redirect from='*' to='/404' />
+        </Switch>
+      </Router>
+    </Suspense>
+  </StylesProvider>
 );
 
 export default App;
