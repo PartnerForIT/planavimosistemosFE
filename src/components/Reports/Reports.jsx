@@ -23,9 +23,9 @@ import {
 } from '../../store/reports/selectors';
 import { employeesSelector } from '../../store/employees/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
-import { getReportsEmployees } from '../../store/employees/actions';
-import { getReportsJobTypes } from '../../store/jobTypes/actions';
-import { getReportsPlaces } from '../../store/places/actions';
+import { getEmployees } from '../../store/employees/actions';
+import { getJobTypes } from '../../store/jobTypes/actions';
+import { getPlaces } from '../../store/places/actions';
 import { placesSelector } from '../../store/places/selectors';
 
 import InfoIcon from '../Icons/InfoIcon';
@@ -40,7 +40,7 @@ import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
 import { dateToUCT } from '../Helpers';
 import { skillsSelector } from '../../store/skills/selectors';
-import { getReportsSkills } from '../../store/skills/actions';
+import { getSkills } from '../../store/skills/actions';
 import usePermissions from '../Core/usePermissions';
 
 const TextWithSign = ({ label }) => (
@@ -161,10 +161,14 @@ const Reports = () => {
   });
 
   useEffect(() => {
-    dispatch(getReportsPlaces({ companyId })).then().catch();
-    dispatch(getReportsEmployees({ companyId })).then().catch();
-    dispatch(getReportsJobTypes({ companyId })).then().catch();
-    dispatch(getReportsSkills({ companyId })).then().catch();
+    dispatch(getJobTypes(companyId));
+    dispatch(getPlaces(companyId));
+    dispatch(getEmployees(companyId));
+    dispatch(getSkills(companyId));
+    // dispatch(getReportsPlaces({ companyId })).then().catch();
+    // dispatch(getReportsEmployees({ companyId })).then().catch();
+    // dispatch(getReportsJobTypes({ companyId })).then().catch();
+    // dispatch(getReportsSkills({ companyId })).then().catch();
     dispatch(loadLogbookJournal(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -211,8 +215,8 @@ const Reports = () => {
 
   useEffect(() => {
     if (Array.isArray(getAllPlaces)) {
-      setPlaces(getAllPlaces);
-      setFilteredPlaces(getAllPlaces);
+      setPlaces(getAllPlaces.map(({ id, name }) => ({ label: name, id })));
+      setFilteredPlaces(getAllPlaces.map(({ id, name }) => ({ label: name, id })));
     }
   }, [getAllPlaces]);
 
@@ -225,8 +229,8 @@ const Reports = () => {
 
   useEffect(() => {
     if (Array.isArray(getAllJobTypes)) {
-      setJobTypes(getAllJobTypes);
-      setFilteredJobTypes(getAllJobTypes);
+      setJobTypes(getAllJobTypes.map(({ id, title }) => ({ label: title, id })));
+      setFilteredJobTypes(getAllJobTypes.map(({ id, title }) => ({ label: title, id })));
     }
   }, [getAllJobTypes]);
 
@@ -405,67 +409,67 @@ const Reports = () => {
   };
 
   const filterChecked = (checkedArray, type) => {
-    let requestObj = {};
+    // let requestObj = {};
     switch (type) {
       case 'places':
         setCheckedPlaces(checkedArray);
 
-        requestObj = {
-          companyId,
-          places: checkedArray.map((place) => place.id),
-          employees: checkedEmployees.map((emp) => emp.id),
-          jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-          skills: checkedSkills.map((skill) => skill.id),
-        };
+        // requestObj = {
+        //   companyId,
+        //   places: checkedArray.map((place) => place.id),
+        //   employees: checkedEmployees.map((emp) => emp.id),
+        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
+        //   skills: checkedSkills.map((skill) => skill.id),
+        // };
 
-        if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
+        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
+        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
+        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
         break;
       case 'employees':
         setCheckedEmployees(checkedArray);
 
-        requestObj = {
-          companyId,
-          places: checkedPlaces.map((place) => place.id),
-          employees: checkedArray.map((emp) => emp.id),
-          jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-          skills: checkedSkills.map((skill) => skill.id),
-        };
+        // requestObj = {
+        //   companyId,
+        //   places: checkedPlaces.map((place) => place.id),
+        //   employees: checkedArray.map((emp) => emp.id),
+        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
+        //   skills: checkedSkills.map((skill) => skill.id),
+        // };
 
-        if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
+        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
+        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
+        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
         break;
       case 'jobTypes':
         setCheckedJobTypes(checkedArray);
 
-        requestObj = {
-          companyId,
-          places: checkedPlaces.map((place) => place.id),
-          employees: checkedEmployees.map((emp) => emp.id),
-          jobTypes: checkedArray.map((jobType) => jobType.id),
-          skills: checkedSkills.map((skill) => skill.id),
-        };
+        // requestObj = {
+        //   companyId,
+        //   places: checkedPlaces.map((place) => place.id),
+        //   employees: checkedEmployees.map((emp) => emp.id),
+        //   jobTypes: checkedArray.map((jobType) => jobType.id),
+        //   skills: checkedSkills.map((skill) => skill.id),
+        // };
 
-        if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
-        if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
+        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
+        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
+        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
         break;
       case 'skills':
         setCheckedSkills(checkedArray);
 
-        requestObj = {
-          companyId,
-          places: checkedPlaces.map((place) => place.id),
-          employees: checkedEmployees.map((emp) => emp.id),
-          jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-          skills: checkedArray.map((skill) => skill.id),
-        };
+        // requestObj = {
+        //   companyId,
+        //   places: checkedPlaces.map((place) => place.id),
+        //   employees: checkedEmployees.map((emp) => emp.id),
+        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
+        //   skills: checkedArray.map((skill) => skill.id),
+        // };
 
-        if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
-        if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
+        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
+        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
+        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
         break;
       default:
         break;

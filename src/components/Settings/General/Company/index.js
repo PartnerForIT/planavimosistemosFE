@@ -12,11 +12,10 @@ import CompanyIcon from '../../../Icons/Company';
 import { imageResize } from '../../../Helpers';
 import Form from './Form';
 import Progress from '../../../Core/Progress';
-import { getSettingCompany, editSettingCompany, getCurrencies } from '../../../../store/settings/actions';
+import { getSettingCompany, editSettingCompany } from '../../../../store/settings/actions';
 import { getCountries } from '../../../../store/organizationList/actions';
 import {
   settingCompanySelector, isLoadingSelector, isShowSnackbar, snackbarType, snackbarText,
-  currencySelector,
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
 import styles from './company.module.scss';
@@ -33,11 +32,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Company() {
-  const params = useParams();
+  const { id: companyId } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [companyId, setCompanyId] = useState(null);
   const [open, SetOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [inputValues, setInputValues] = useState({
@@ -53,16 +51,12 @@ export default function Company() {
 
   useEffect(() => {
     dispatch(getCountries());
-    dispatch(getCurrencies());
   }, [dispatch]);
   useEffect(() => {
-    if (params.id) {
-      dispatch(getSettingCompany(params.id));
+    if (companyId) {
+      dispatch(getSettingCompany(companyId));
     }
-  }, [dispatch, params.id]);
-  useEffect(() => {
-    setCompanyId(params.id);
-  }, [params]);
+  }, [dispatch, companyId]);
 
   const company = useSelector(settingCompanySelector);
   const countries = useSelector(countriesSelector);
@@ -70,9 +64,10 @@ export default function Company() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const currencies = useSelector(currencySelector);
+  // const currencies = useSelector(currencySelector);
 
   const [timeZones, setTimeZones] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
 
   useEffect(() => {
     setInputValues((prevState) => ({
@@ -120,10 +115,15 @@ export default function Company() {
 
   useEffect(() => {
     if (inputValues.country && countries.length) {
-      const foundCountry = countries.find(({ code }) => code === inputValues.country)?.timezones;
-      setTimeZones(foundCountry?.map((code) => ({ code, name: code })) ?? []);
-      if (foundCountry?.[0]) {
-        setInputValues((prevState) => ({ ...prevState, timezone: foundCountry[0] }));
+      const foundCountry = countries.find(({ code }) => code === inputValues.country);
+      setTimeZones(foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? []);
+      setCurrencies(foundCountry.currencies);
+      if (foundCountry?.timezones?.[0] || foundCountry?.currencies?.[0]) {
+        setInputValues((prevState) => ({
+          ...prevState,
+          timezone: foundCountry?.timezones?.[0] || '',
+          currency: foundCountry?.currencies?.[0]?.code || '',
+        }));
       }
     }
   }, [countries, inputValues.country]);
