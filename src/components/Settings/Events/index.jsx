@@ -11,7 +11,7 @@ import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
 import {
   AccountGroupsSelector, employeesSelector,
-  eventsLoadingSelector, isShowSnackbar, permissionsSelector,
+  eventsLoadingSelector, isShowSnackbar,
   eventUpdateLoadingSelector, snackbarText, snackbarType,
   eventsSelector, eventsTypesSelector,
 } from '../../../store/settings/selectors';
@@ -19,9 +19,7 @@ import RolesIcon from '../../Icons/RolesIcon';
 import EventsBlock from './EventDetails/EventsBlock';
 import {
   getAccountGroups,
-  getRoles,
   loadEmployeesAll,
-  loadPermissions,
   postEvent,
   getEvents,
   patchEvent,
@@ -53,7 +51,6 @@ function Events() {
   const events = useSelector(eventsSelector);
   const eventsTypes = useSelector(eventsTypesSelector);
   const isLoadingEventUpdate = useSelector(eventUpdateLoadingSelector);
-  const permissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
   const [activeEvent, setActiveEvent] = useState({});
@@ -66,7 +63,6 @@ function Events() {
   };
 
   useEffect(() => {
-    dispatch(getRoles(companyId));
     dispatch(loadEmployeesAll(companyId));
     dispatch(getAccountGroups(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,12 +71,6 @@ function Events() {
   useEffect(() => {
     dispatch(getEvents(companyId));
   }, [companyId]);
-
-  useEffect(() => {
-    if (!permissions.length) {
-      dispatch(loadPermissions(companyId));
-    }
-  }, [dispatch, companyId, permissions.length]);
 
   const removeRole = (eventId) => {
     dispatch(deleteEvent(companyId, eventId));
