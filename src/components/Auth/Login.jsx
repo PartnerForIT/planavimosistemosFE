@@ -92,7 +92,6 @@ const LoginContainer = () => {
             }
           </div>
           <Delimiter />
-          <Delimiter />
           <div className={styles.buttons}>
             <StyledCheckbox label={t('Remember me')} onChange={() => null} />
             <Button onClick={handleLogin} size='medium' loading={isLoading}>

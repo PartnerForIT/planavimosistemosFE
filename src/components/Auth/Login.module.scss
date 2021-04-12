@@ -64,6 +64,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: -3px;
 }
 
 footer {
@@ -72,5 +73,33 @@ footer {
 
   .forgotLink {
     color: white;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .container {
+    background-color: red;
+  }
+
+  .wrapper {
+    padding: 10px 20px !important;
+  }
+
+  .content {
+    min-width: 250px;
+  }
+
+  .buttons {
+    display: flex;
+    //flex-direction: column;
+    //justify-content: space-between;
+    //align-items: unset;
+    button {
+      min-width: 100px;
+    }
+
+    & > label {
+      margin-bottom: 5px;
+    }
   }
 }

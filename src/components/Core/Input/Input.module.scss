@@ -85,6 +85,14 @@ $icon-width: 33px;
   }
 }
 
+@media only screen and (max-width: 768px) {
+  .iconLeft {
+    .iconWrapper {
+      left: -$icon-width;
+    }
+  }
+}
+
 .underlined {
   border: unset;
   border-bottom: 0.5px solid #cbd1d8;
