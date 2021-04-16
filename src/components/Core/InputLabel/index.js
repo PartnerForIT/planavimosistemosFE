@@ -15,10 +15,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Label({ text, htmlFor }) {
+export default function Label({ text, htmlFor, className }) {
   const classes = useStyles();
   return (
-    <InputLabel shrink htmlFor={htmlFor} className={classes.label}>
+    <InputLabel shrink htmlFor={htmlFor} className={`${classes.label} ${className || ''}`}>
       {text}
     </InputLabel>
   );

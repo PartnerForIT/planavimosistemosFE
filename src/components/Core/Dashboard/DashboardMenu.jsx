@@ -14,6 +14,7 @@ import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
+import KioskIcon from '../../Icons/Kiosk';
 import styles from './dasboard.module.scss';
 import usePermissions from '../usePermissions';
 
@@ -305,6 +306,56 @@ export default function DashboardMenu() {
                       className={innerSection === 'overtime' ? styles.activeLink : styles.link}
                     >
                       {t('Overtime')}
+                    </Link>
+                  </li>
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          )
+        }
+        {/* Kiosk */}
+        {
+          (permissions) && (
+            <Accordion
+              className={classes.accordion}
+              defaultExpanded={section === 'kiosk'}
+              classes={{
+                expanded: classes.expanded,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className={section === 'kiosk' ? classes.activeIcon : classes.icon} />}
+                className={section === 'kiosk' ? classes.accordionActiveDiv : classes.accordionDiv}
+                classes={{
+                  expandIcon: classes.expandIcon,
+                  expanded: classes.summaryExpanded,
+                  content: classes.content,
+                }}
+                aria-controls='panel4-content'
+                id='panel4-header'
+              >
+                <IconWrapper>
+                  <KioskIcon fill={section === 'kiosk' ? '#4080fc' : '#808f94'} />
+                </IconWrapper>
+
+                <span className={styles.menuText}>{t('Kiosk')}</span>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionContent}>
+                <ul className={styles.dashboardLinkBlock}>
+                  <li>
+                    <Link
+                      to={`/settings/kiosk/kiosk-list/${params.id}`}
+                      className={innerSection === 'kiosk-list' ? styles.activeLink : styles.link}
+                    >
+                      {t('Kiosk list')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={`/settings/kiosk/users/${params.id}`}
+                      className={innerSection === 'users' ? styles.activeLink : styles.link}
+                    >
+                      {t('Kiosk users')}
                     </Link>
                   </li>
                 </ul>

@@ -1,0 +1,28 @@
+@import "../../../Core/variables";
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__left {
+    //margin-right: auto !important;
+    &__label {
+      font-size: 14px !important;
+      color: $gray !important;
+      font-family: "Helvetica Neue Bold", sans-serif !important;
+    }
+
+    & label + div {
+      margin-top: unset;
+    }
+  }
+
+  button {
+    max-width: 257px;
+  }
+}
+
+.footer {
+  margin-left: -9px;
+}

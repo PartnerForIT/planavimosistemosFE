@@ -32,6 +32,8 @@ import Accounts from './components/Settings/Accounts/AccountsList';
 import ActivityLog from './components/Settings/ActivityLog';
 import Grouping from './components/Settings/Accounts/Grouping';
 import Roles from './components/Settings/Accounts/Roles';
+import KioskList from './components/Settings/Kiosk/KioskList';
+import KioskUsers from './components/Settings/Kiosk/KioskUsers';
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'grouwn',
@@ -62,6 +64,8 @@ const App = () => (
           <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
           <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
           <AuthRoute exact path='/settings/accounts/roles/:id' component={Roles} />
+          <AuthRoute exact path='/settings/kiosk/kiosk-list/:id' component={KioskList} />
+          <AuthRoute exact path='/settings/kiosk/users/:id' component={KioskUsers} />
           <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
           <AuthRoute exact path='/settings/logbook/journal/:id' component={SettingJournal} />
           <AuthRoute exact path='/settings/logbook/overtime/:id' component={Overtime} />
