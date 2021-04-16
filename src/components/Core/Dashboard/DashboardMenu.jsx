@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, Link } from 'react-router-dom';
@@ -121,11 +121,154 @@ const permissionsConfig = [
 export default function DashboardMenu() {
   const classes = useStyles();
   const { t } = useTranslation();
-  const params = useParams();
+  const { id: companyId } = useParams();
   const { pathname } = useLocation();
   const section = pathname.split('/')[2];
   const innerSection = pathname.split('/')[3];
   const permissions = usePermissions(permissionsConfig);
+
+  const menuItems = useMemo(() => {
+    const nextMenuItems = [];
+
+    if (permissions.company_edit_settings) {
+      nextMenuItems.push({
+        icon: GenaralIcon,
+        title: t('General'),
+        name: 'general',
+        items: [
+          {
+            to: `/settings/general/company/${companyId}`,
+            name: 'company',
+            title: t('Company'),
+          },
+          {
+            to: `/settings/general/work-time/${companyId}`,
+            name: 'work-time',
+            title: t('Work Time'),
+          },
+          {
+            to: `/settings/general/security/${companyId}`,
+            name: 'security',
+            title: t('Security'),
+          },
+        ],
+      });
+    }
+
+    if (permissions.accounts_see_and_edit || permissions.roles_create || permissions.groups) {
+      const subItems = [];
+
+      if (permissions.accounts_see_and_edit) {
+        subItems.push({
+          to: `/settings/accounts/accounts-list/${companyId}`,
+          name: 'accounts-list',
+          title: t('Accounts list'),
+        });
+      }
+
+      if (permissions.roles_create) {
+        subItems.push({
+          to: `/settings/accounts/roles/${companyId}`,
+          name: 'roles',
+          title: t('Roles'),
+        });
+      }
+
+      if (permissions.groups) {
+        subItems.push({
+          to: `/settings/accounts/grouping/${companyId}`,
+          name: 'grouping',
+          title: t('Grouping'),
+        });
+      }
+
+      nextMenuItems.push({
+        icon: AccountIcon,
+        title: t('Accounts'),
+        name: 'accounts',
+        items: subItems,
+      });
+    }
+
+    if (permissions.logbook) {
+      nextMenuItems.push({
+        icon: LogbookIcon,
+        title: t('Logbook'),
+        name: 'logbook',
+        items: [
+          {
+            to: `/settings/logbook/journal/${companyId}`,
+            name: 'journal',
+            title: t('Journal'),
+          },
+          {
+            to: `/settings/logbook/overtime/${companyId}`,
+            name: 'overtime',
+            title: t('Overtime'),
+          },
+        ],
+      });
+    }
+
+    /* Kiosk */
+    if (permissions) {
+      nextMenuItems.push({
+        icon: KioskIcon,
+        title: t('Kiosk'),
+        name: 'kiosk',
+        items: [
+          {
+            to: `/settings/kiosk/kiosk-list/${companyId}`,
+            name: 'kiosk-list',
+            title: t('Kiosk list'),
+          },
+          {
+            to: `/settings/kiosk/users/${companyId}`,
+            name: 'users',
+            title: t('Kiosk users'),
+          },
+        ],
+      });
+    }
+
+    if (permissions.events) {
+      nextMenuItems.push({
+        to: `/settings/events/${companyId}`,
+        icon: EventsIcon,
+        title: t('Events'),
+        name: 'events',
+      });
+    }
+
+    if (permissions.categories_create) {
+      nextMenuItems.push({
+        to: `/settings/categories/${companyId}`,
+        icon: CategoriesIcon,
+        title: t('Categories'),
+        name: 'categories',
+      });
+    }
+
+    if (permissions.activity_log) {
+      nextMenuItems.push({
+        to: `/settings/activity-log/${companyId}`,
+        icon: ActivityLogIcon,
+        title: t('Activity Log'),
+        name: 'activity-log',
+      });
+    }
+
+    if (permissions.data_delete) {
+      nextMenuItems.push({
+        to: `/settings/delete/${companyId}`,
+        icon: DeleteIcon,
+        title: t('Data Delete'),
+        name: 'delete',
+      });
+    }
+
+    return nextMenuItems;
+  }, [permissions, companyId, t]);
 
   const IconWrapper = ({ children }) => (
     <div className={styles.iconWrapper}>
@@ -136,284 +279,67 @@ export default function DashboardMenu() {
   return (
     <div className={styles.dashboardMenu}>
       <div className={styles.dashboardScroll}>
-        {/* General */}
         {
-          permissions.company_edit_settings && (
-            <Accordion
-              className={classes.accordion}
-              defaultExpanded={section === 'general'}
-              classes={{
-                expanded: classes.expanded,
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon className={section === 'general' ? classes.activeIcon : classes.icon} />}
-                className={section === 'general' ? classes.accordionActiveDiv : classes.accordionDiv}
+          menuItems.map((item, index) => (
+            item.items ? (
+              <Accordion
+                className={classes.accordion}
+                defaultExpanded={section === item.name}
                 classes={{
-                  expandIcon: classes.expandIcon,
-                  expanded: classes.summaryExpanded,
-                  content: classes.content,
+                  expanded: classes.expanded,
                 }}
-                aria-controls='panel1-content'
-                id='panel1-header'
+                key={item.name}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon className={section === item.name ? classes.activeIcon : classes.icon} />}
+                  className={section === item.name ? classes.accordionActiveDiv : classes.accordionDiv}
+                  classes={{
+                    expandIcon: classes.expandIcon,
+                    expanded: classes.summaryExpanded,
+                    content: classes.content,
+                  }}
+                  aria-controls={`panel${index + 1}-content`}
+                  id={`panel${index + 1}-header`}
+                >
+                  <IconWrapper>
+                    <item.icon fill={section === item.name ? '4080fc' : '#808f94'} />
+                  </IconWrapper>
+                  <span className={styles.menuText}>
+                    {item.title}
+                  </span>
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionContent}>
+                  <ul className={styles.dashboardLinkBlock}>
+                    {
+                      item.items.map((subItem) => (
+                        <li>
+                          <Link
+                            to={subItem.to}
+                            className={innerSection === subItem.name ? styles.activeLink : styles.link}
+                          >
+                            {subItem.title}
+                          </Link>
+                        </li>
+                      ))
+                    }
+                  </ul>
+                </AccordionDetails>
+              </Accordion>
+            ) : (
+              <Link
+                to={item.to}
+                className={section === item.name ? styles.activeOnelink : styles.Onelink}
+                key={item.name}
               >
                 <IconWrapper>
-                  <GenaralIcon fill={section === 'general' ? '4080fc' : '#808f94'} />
+                  <item.icon />
                 </IconWrapper>
-                <span className={styles.menuText}>{t('General')}</span>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionContent}>
-                <ul className={styles.dashboardLinkBlock}>
-                  <li>
-                    <Link
-                      to={`/settings/general/company/${params.id}`}
-                      className={innerSection === 'company' ? styles.activeLink : styles.link}
-                    >
-                      {t('Company')}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={`/settings/general/work-time/${params.id}`}
-                      className={innerSection === 'work-time' ? styles.activeLink : styles.link}
-                    >
-                      {t('Work Time')}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={`/settings/general/security/${params.id}`}
-                      className={innerSection === 'security' ? styles.activeLink : styles.link}
-                    >
-                      {t('Security')}
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionDetails>
-            </Accordion>
-          )
-        }
-
-        {/* Accounts */}
-        {
-          (permissions.accounts_see_and_edit || permissions.roles_create || permissions.groups) && (
-            <Accordion
-              className={classes.accordion}
-              defaultExpanded={section === 'accounts'}
-              classes={{
-                expanded: classes.expanded,
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon className={section === 'accounts' ? classes.activeIcon : classes.icon} />}
-                className={section === 'accounts' ? classes.accordionActiveDiv : classes.accordionDiv}
-                classes={{
-                  expandIcon: classes.expandIcon,
-                  expanded: classes.summaryExpanded,
-                  content: classes.content,
-                }}
-                aria-controls='panel2-content'
-                id='panel2-header'
-              >
-                <IconWrapper>
-                  <AccountIcon fill={section === 'accounts' ? '4080fc' : '#808f94'} />
-                </IconWrapper>
-
-                <span className={styles.menuText}>{t('Accounts')}</span>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionContent}>
-                <ul className={styles.dashboardLinkBlock}>
-                  {
-                    permissions.accounts_see_and_edit && (
-                      <li>
-                        <Link
-                          to={`/settings/accounts/accounts-list/${params.id}`}
-                          className={innerSection === 'accounts-list' ? styles.activeLink : styles.link}
-                        >
-                          {t('Accounts list')}
-                        </Link>
-                      </li>
-                    )
-                  }
-                  {
-                    permissions.roles_create && (
-                      <li>
-                        <Link
-                          to={`/settings/accounts/roles/${params.id}`}
-                          className={innerSection === 'roles' ? styles.activeLink : styles.link}
-                        >
-                          {t('Roles')}
-                        </Link>
-                      </li>
-                    )
-                  }
-                  {
-                    permissions.groups && (
-                      <li>
-                        <Link
-                          to={`/settings/accounts/grouping/${params.id}`}
-                          className={innerSection === 'grouping' ? styles.activeLink : styles.link}
-                        >
-                          {t('Grouping')}
-                        </Link>
-                      </li>
-                    )
-                  }
-                </ul>
-              </AccordionDetails>
-            </Accordion>
-          )
-        }
-        {/* Events */}
-        {
-          permissions.logbook && (
-            <Accordion
-              className={classes.accordion}
-              defaultExpanded={section === 'logbook'}
-              classes={{
-                expanded: classes.expanded,
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon className={section === 'logbook' ? classes.activeIcon : classes.icon} />}
-                className={section === 'logbook' ? classes.accordionActiveDiv : classes.accordionDiv}
-                classes={{
-                  expandIcon: classes.expandIcon,
-                  expanded: classes.summaryExpanded,
-                  content: classes.content,
-                }}
-                aria-controls='panel3-content'
-                id='panel3-header'
-              >
-                <IconWrapper>
-                  <LogbookIcon fill={section === 'logbook' ? '4080fc' : '#808f94'} />
-                </IconWrapper>
-                <span className={styles.menuText}>{t('Logbook')}</span>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionContent}>
-                <ul className={styles.dashboardLinkBlock}>
-                  <li>
-                    <Link
-                      to={`/settings/logbook/journal/${params.id}`}
-                      className={innerSection === 'journal' ? styles.activeLink : styles.link}
-                    >
-                      {t('Journal')}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={`/settings/logbook/overtime/${params.id}`}
-                      className={innerSection === 'overtime' ? styles.activeLink : styles.link}
-                    >
-                      {t('Overtime')}
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionDetails>
-            </Accordion>
-          )
-        }
-        {/* Kiosk */}
-        {
-          (permissions) && (
-            <Accordion
-              className={classes.accordion}
-              defaultExpanded={section === 'kiosk'}
-              classes={{
-                expanded: classes.expanded,
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon className={section === 'kiosk' ? classes.activeIcon : classes.icon} />}
-                className={section === 'kiosk' ? classes.accordionActiveDiv : classes.accordionDiv}
-                classes={{
-                  expandIcon: classes.expandIcon,
-                  expanded: classes.summaryExpanded,
-                  content: classes.content,
-                }}
-                aria-controls='panel4-content'
-                id='panel4-header'
-              >
-                <IconWrapper>
-                  <KioskIcon fill={section === 'kiosk' ? '#4080fc' : '#808f94'} />
-                </IconWrapper>
-
-                <span className={styles.menuText}>{t('Kiosk')}</span>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionContent}>
-                <ul className={styles.dashboardLinkBlock}>
-                  <li>
-                    <Link
-                      to={`/settings/kiosk/kiosk-list/${params.id}`}
-                      className={innerSection === 'kiosk-list' ? styles.activeLink : styles.link}
-                    >
-                      {t('Kiosk list')}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={`/settings/kiosk/users/${params.id}`}
-                      className={innerSection === 'users' ? styles.activeLink : styles.link}
-                    >
-                      {t('Kiosk users')}
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionDetails>
-            </Accordion>
-          )
-        }
-        {
-          permissions.events && (
-            <Link
-              to={`/settings/events/${params.id}`}
-              className={section === 'events' ? styles.activeOnelink : styles.Onelink}
-            >
-              <IconWrapper>
-                <EventsIcon />
-              </IconWrapper>
-              <span className={styles.textLink}>{t('Events')}</span>
-            </Link>
-          )
-        }
-        {
-          permissions.categories_create && (
-            <Link
-              to={`/settings/categories/${params.id}`}
-              className={section === 'categories' ? styles.activeOnelink : styles.Onelink}
-            >
-              <IconWrapper>
-                <CategoriesIcon />
-              </IconWrapper>
-              <span className={styles.textLink}>{t('Categories')}</span>
-            </Link>
-          )
-        }
-        {
-          permissions.activity_log && (
-            <Link
-              to={`/settings/activity-log/${params.id}`}
-              className={section === 'activity-log' ? styles.activeOnelink : styles.Onelink}
-            >
-              <IconWrapper>
-                <ActivityLogIcon />
-              </IconWrapper>
-              <span className={styles.textLink}>{t('Activity Log')}</span>
-            </Link>
-          )
-        }
-        {
-          permissions.data_delete && (
-            <Link
-              to={`/settings/delete/${params.id}`}
-              className={section === 'delete' ? styles.activeOnelink : styles.Onelink}
-            >
-              <IconWrapper>
-                <DeleteIcon />
-              </IconWrapper>
-              <span className={styles.textLink}>{t('Data Delete')}</span>
-            </Link>
-          )
+                <span className={styles.textLink}>
+                  {item.title}
+                </span>
+              </Link>
+            )
+          ))
         }
       </div>
     </div>
