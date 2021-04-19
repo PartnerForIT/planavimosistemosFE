@@ -520,7 +520,7 @@ export default React.memo(({
   };
 
   return (
-    <Content title='Event Rule' tooltip='Tooltip'>
+    <Content title='Event Rule' tooltip='Tooltip' scroll={false}>
       <InputSelect
         name='event_type_id'
         value={values.event_type_id}

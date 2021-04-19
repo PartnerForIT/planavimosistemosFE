@@ -18,7 +18,6 @@ const initialFormValues = {
 };
 export default ({
   handleClose,
-  title,
   open,
   onSubmit,
   initialValues,

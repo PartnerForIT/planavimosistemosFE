@@ -49,6 +49,7 @@ $arrow-size: 21px;
     background-color: white;
     padding: $card-padding;
     border-radius: $card-padding;
+    height: calc(100% - 24px);
   }
 }
 

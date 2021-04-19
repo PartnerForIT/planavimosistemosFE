@@ -60,7 +60,7 @@ function Content({
                   {children}
                 </Scrollbar>
               )
-              : { children }
+              : children
           }
       </div>
     </div>

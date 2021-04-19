@@ -30,7 +30,7 @@ const data2 = [
     groups: 'groups',
     subgroup: 'subgroup',
     place: 'place',
-    pin: '2341',
+    pinCode: '2341',
     isKiosk: true,
   },
   {

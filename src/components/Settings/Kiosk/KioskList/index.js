@@ -187,8 +187,8 @@ export default () => {
                 name='country'
                 value=''
                 onChange={() => {}}
-                options={[]}
-                valueKey='code'
+                options={allPlaces}
+                valueKey='id'
                 labelKey='name'
               />
             </div>
