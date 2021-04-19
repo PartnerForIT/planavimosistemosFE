@@ -23,6 +23,33 @@
   }
 }
 
+.subTitle {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 11px;
+  font-family: "Helvetica Neue Bold", sans-serif;
+  font-size: 14px;
+  color: #808f94;
+
+  /* stylelint-disable */
+  & > div {
+    margin-left: 23px;
+  }
+}
+
+.viewPassword {
+  text-decoration: underline;
+  border: 0;
+  background: none;
+  color: $blue-grownu;
+  cursor: pointer;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .footer {
   margin-left: -9px;
 }

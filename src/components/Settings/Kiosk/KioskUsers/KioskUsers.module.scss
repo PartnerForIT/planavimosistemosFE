@@ -1,0 +1,74 @@
+@import "../../../Core/variables";
+
+.filterBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+
+  &__leftContainer {
+    display: flex;
+    flex: 1;
+    max-width: 221px;
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    p {
+      font-weight: bold;
+    }
+
+    button {
+      margin: 5px 0 5px 8px;
+      width: 96px;
+
+      &:nth-of-type(1) {
+        margin-left: 14px;
+        width: 116px;
+      }
+
+      &:nth-of-type(2) {
+        width: 135px;
+      }
+
+      &:nth-of-type(3) {
+        width: 104px;
+      }
+    }
+  }
+}
+
+.viewPin {
+  text-decoration: underline;
+  border: 0;
+  background: none;
+  color: $blue-grownu;
+  cursor: pointer;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    text-decoration: none;
+    color: #d5dde1;
+    pointer-events: none;
+  }
+}
+
+.isKiosk {
+  font-size: 14px;
+
+  &_true {
+    color: #32c536;
+  }
+
+  &_false {
+    color: #fd9d27;
+  }
+}

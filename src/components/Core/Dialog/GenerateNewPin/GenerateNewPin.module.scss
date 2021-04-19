@@ -1,0 +1,17 @@
+@import "../../variables";
+
+.description {
+  display: flex;
+  font-family: "Helvetica Neue Bold", sans-serif;
+  font-size: 14px;
+  height: 77px;
+  margin-bottom: 10px;
+  max-width: 226px;
+  color: $gray;
+}
+
+.userSelected {
+  font-family: "Helvetica Neue Bold", sans-serif;
+  font-size: 18px;
+  margin-bottom: 34px;
+}

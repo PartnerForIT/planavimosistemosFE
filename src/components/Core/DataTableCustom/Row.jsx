@@ -171,7 +171,7 @@ const Row = ({
             const offsetSelectable = selectable && !selectAll ? 5 : 35;
             if (totalCustomWidthColumns > 0) {
               if (columnsWidth[column.field]) {
-                minWidth = selectable && column.field === 'status'
+                minWidth = selectable && idx === 0
                   ? columnsWidth[column.field] - offsetSelectable
                   : columnsWidth[column.field];
                 width = minWidth;

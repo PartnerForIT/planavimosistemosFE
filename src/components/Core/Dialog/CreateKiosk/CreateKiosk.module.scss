@@ -1,0 +1,26 @@
+@import "../../variables";
+
+.formControl {
+  margin-bottom: 20px;
+
+  & label + div {
+    margin-top: unset;
+  }
+}
+
+.buttonSaveBlock {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    width: 100%;
+  }
+}
+
+.error {
+  color: $red-600;
+  display: flex;
+  max-width: 300px;
+}

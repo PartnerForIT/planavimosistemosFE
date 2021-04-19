@@ -248,7 +248,7 @@ export default function DataTable({
                       role='columnheader'
                     >
                       {
-                       selectAll && column.field === 'status'
+                       selectAll && idx === 0
                         && (
                         <StyledCheckbox
                           style={{ padding: '0 9px 0 3px' }}

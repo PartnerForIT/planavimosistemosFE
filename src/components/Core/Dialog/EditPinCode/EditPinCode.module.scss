@@ -1,0 +1,45 @@
+@import "../../variables";
+
+.formControl {
+  margin-bottom: 25px;
+}
+
+.buttonSaveBlock {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    width: 100%;
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #808f94;
+  font-size: 14px;
+  font-weight: 500;
+  margin: -7px 0 14px 0;
+  transform: translate(0, 1.5px) scale(1);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+
+  button {
+    width: 120px;
+  }
+}
+
+.hr {
+  background-color: #cbd1d8;
+  height: 1px;
+  width: 100%;
+  margin-bottom: 17px;
+}
+
+.error {
+  color: $red-600;
+  display: flex;
+  max-width: 300px;
+}
