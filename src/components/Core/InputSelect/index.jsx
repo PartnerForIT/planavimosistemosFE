@@ -113,8 +113,8 @@ export default ({
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div id={id} className={containerClasses}>
-        {/* eslint-disable-next-line jsx-a11y/aria-role */}
         <div
+          // eslint-disable-next-line jsx-a11y/aria-role
           role='input'
           id={id}
           className='input-select__control'

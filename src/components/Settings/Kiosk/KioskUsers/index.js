@@ -56,7 +56,7 @@ const columnsWidthArray = {
   groups: 150,
   subgroup: 150,
 };
-const data = [...data2,...data2,...data2,...data2,...data2,...data2,...data2,...data2,...data2]
+const data = [...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2];
 export default () => {
   const { t } = useTranslation();
   const useStyles = makeStyles(() => ({
@@ -178,10 +178,10 @@ export default () => {
       setCheckedItems([...checkedItems]);
     }
   };
-  const selectAllHandler = (data = []) => {
-    const value = data.length;
+  const selectAllHandler = (formData = []) => {
+    const value = formData.length;
     // eslint-disable-next-line no-shadow
-    const checkedItems = data.map(({ id }) => id);
+    const checkedItems = formData.map(({ id }) => id);
     setCheckedItems(checkedItems);
     setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
   };

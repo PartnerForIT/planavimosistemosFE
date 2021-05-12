@@ -63,9 +63,8 @@ export default ({
 
     return nextErrors;
   }, [formValues, security]);
-  const disabled = useMemo(() => {
-    return !((isEdit || formValues.password) && formValues.user && formValues.place && formValues.name);
-  }, [formValues, isEdit]);
+  const disabled = useMemo(() => !((isEdit || formValues.password)
+    && formValues.user && formValues.place && formValues.name), [formValues, isEdit]);
 
   return (
     <Dialog

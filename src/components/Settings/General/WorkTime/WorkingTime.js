@@ -6,7 +6,6 @@ import SimpleSelect from '../../../Core/SimpleSelect';
 import timeArr from '../../../Helpers/time';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 
-
 export default function WorkingTime({
   styles, days,
   handleChangeDays, startTime, handleChangeStartTime,
