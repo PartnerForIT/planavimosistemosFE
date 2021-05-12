@@ -119,6 +119,7 @@
 
   color: $blue-2;
 
+  /* stylelint-disable no-descending-specificity */
   path {
     fill: $blue-2;
   }

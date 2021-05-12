@@ -122,6 +122,7 @@
   }
 }
 
+/* stylelint-disable no-descending-specificity */
 label + .input-select {
   margin-top: 24px;
 }
