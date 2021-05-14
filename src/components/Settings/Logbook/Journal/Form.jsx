@@ -55,11 +55,11 @@ export default ({
         <div className={style.generalBlock}>
           <div className={style.labelText}>{t('Cost, Hourly rate')}</div>
           <Input
-            value={journalData.hourly_charge}
+            value={journalData.hourly_cost}
             type='number'
             min='1'
             width={40}
-            name='hourly_charge'
+            name='hourly_cost'
             onChange={handleInputChange}
             readOnly={readOnly}
           />
@@ -76,11 +76,11 @@ export default ({
         <div className={style.generalBlock}>
           <div className={style.labelText}>{t('Charge, Hourly rate')}</div>
           <Input
-            value={journalData.hourly_cost}
+            value={journalData.hourly_charge}
             type='number'
             min='1'
             width={40}
-            name='hourly_cost'
+            name='hourly_charge'
             onChange={handleInputChange}
             readOnly={readOnly}
           />
