@@ -117,6 +117,10 @@ const permissionsConfig = [
     name: 'accounts_see_and_edit',
     permission: 'accounts_see_and_edit',
   },
+  {
+    name: 'kiosk',
+    permission: 'kiosk_create',
+  },
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -211,7 +215,7 @@ export default function DashboardMenu() {
     }
 
     /* Kiosk */
-    if (permissions) {
+    if (permissions.kiosk) {
       nextMenuItems.push({
         icon: KioskIcon,
         title: t('Kiosk'),
