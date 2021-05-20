@@ -120,6 +120,7 @@ const permissionsConfig = [
   {
     name: 'kiosk',
     permission: 'kiosk_create',
+    module: 'kiosk',
   },
 ];
 export default function DashboardMenu() {
