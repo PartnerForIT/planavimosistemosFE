@@ -18,6 +18,9 @@ export default ({
   initialValues,
   currentPinCode,
   onSubmit,
+  loading,
+  generatePinCode,
+  generatedPinCode,
 }) => {
   const { t } = useTranslation();
   const [formValues, setFormValues] = useState(initialFormValues);
@@ -30,7 +33,7 @@ export default ({
     setFormValues(initialFormValues);
   };
   const onGeneratePinCode = () => {
-
+    generatePinCode();
   };
 
   useEffect(() => {
@@ -40,6 +43,15 @@ export default ({
       });
     }
   }, [initialValues]);
+  useEffect(() => {
+    if (generatedPinCode) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        pinCode: generatedPinCode,
+        repeatPinCode: generatedPinCode,
+      }));
+    }
+  }, [generatedPinCode]);
 
   const errors = useMemo(() => {
     const nextErrors = {};
@@ -67,9 +79,10 @@ export default ({
       <div className={styles.sectionTitle}>
         {t('Change PIN')}
         <Button
-          onClick={() => onGeneratePinCode()}
+          onClick={onGeneratePinCode}
           fillWidth
           size='big'
+          loading={loading}
         >
           {t('Generate')}
         </Button>

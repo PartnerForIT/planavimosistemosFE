@@ -1,31 +1,20 @@
 import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
-// import {
-//   makeStyles,
-// } from '@material-ui/core/styles';
 
-import styles from './KioskUsers.module.scss';
 import Button from '../../../Core/Button/Button';
 import InputSelect from '../../../Core/InputSelect';
+import styles from './KioskUsers.module.scss';
 
 export default function Filter({
-  users,
+  dropdownValue,
   handleChangeUser,
   changeUserKiosk,
   checkedItems,
   stats,
-  onNewPin,
+  onNewPinCodes,
 }) {
-  // const classes = useStyles();
   const { t } = useTranslation();
-  // const [search, setSearch] = useState('');
-  // const [open, setOpen] = useState(false);
-
-  // const handleClose = () => {
-  //   clearCheckbox();
-  //   setOpen(false);
-  // };
 
   return (
     <div className={styles.filterBlock}>
@@ -34,19 +23,19 @@ export default function Filter({
           id='users'
           name='users'
           onChange={handleChangeUser}
-          value={users}
+          value={dropdownValue}
           options={[
             {
-              value: 3,
-              label: `All Users ${stats.accounts ?? ''}`,
+              value: null,
+              label: `All Users ${stats.total ?? ''}`,
             },
             {
               value: 1,
-              label: `Activate ${stats.active ?? ''}`,
+              label: `Yes ${stats.yes ?? ''}`,
             },
             {
               value: 0,
-              label: `Suspended ${stats.suspended ?? ''}`,
+              label: `No ${stats.no ?? ''}`,
             },
           ]}
         />
@@ -61,20 +50,20 @@ export default function Filter({
 
         <Button
           green
-          onClick={() => changeUserKiosk('use')}
+          onClick={() => changeUserKiosk(true)}
           disabled={!checkedItems.length > 0}
         >
           {t('Use Kiosk')}
         </Button>
         <Button
           yellow
-          onClick={() => changeUserKiosk('remove')}
+          onClick={() => changeUserKiosk(false)}
           disabled={!checkedItems.length > 0}
         >
           {t('Remove Kiosk')}
         </Button>
         <Button
-          onClick={onNewPin}
+          onClick={onNewPinCodes}
           disabled={!checkedItems.length > 0}
         >
           {t('New PIN')}

@@ -25,31 +25,31 @@ import {
   snackbarText,
   snackbarType,
 } from '../../../../store/settings/selectors';
+import {
+  kiosksLoadingSelector,
+  kiosksSelector,
+  settingsPhotoTakeLoadingSelector,
+  settingsPhotoTakeSelector,
+} from '../../../../store/kiosks/selectors';
 import StyledCheckbox from '../../../Core/Checkbox/Checkbox';
 import DialogCreateKiosk from '../../../Core/Dialog/CreateKiosk';
 import DialogEditPasswordKiosk from '../../../Core/Dialog/EditPasswordKiosk';
 import DeleteItem from '../../../Core/Dialog/DeleteItem';
 import Tooltip from '../../../Core/Tooltip';
+import Progress from '../../../Core/Progress';
 import { placesSelector } from '../../../../store/places/selectors';
 import { getPlaces } from '../../../../store/places/actions';
+import {
+  getKiosks,
+  postKiosk,
+  patchKiosk,
+  deleteKiosk,
+  getSettingsPhotoTake,
+  postSettingsPhotoTake,
+  postKioskChangePassword,
+} from '../../../../store/kiosks/actions';
 import styles from './KioskList.module.scss';
 
-const data = [
-  {
-    id: 'ed',
-    name: 'name',
-    place: 'place',
-    admin: 'admin',
-    password: 'password',
-  },
-  {
-    id: 'ed',
-    name: 'name 3',
-    place: 'place 3',
-    admin: 'admin 3',
-    password: 'password 3',
-  },
-];
 export default () => {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
@@ -66,25 +66,27 @@ export default () => {
   }));
   const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(getPlaces(companyId));
-  }, [dispatch, companyId]);
-
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const security = useSelector(securityCompanySelector);
   const allPlaces = useSelector(placesSelector);
+  const kiosksLoading = useSelector(kiosksLoadingSelector);
+  const kiosks = useSelector(kiosksSelector);
+  const settingsPhotoTakeLoading = useSelector(settingsPhotoTakeLoadingSelector);
+  const settingsPhotoTake = useSelector(settingsPhotoTakeSelector);
 
   const [selectedItemId, setSelectedItemId] = useState('');
   const [deleteKioskVisible, setDeleteKioskVisible] = useState(false);
   const [viewPasswordVisible, setViewPasswordVisible] = useState(false);
   const [createEditKioskVisible, setCreateEditKioskVisible] = useState(false);
+  const [settingsValues, setSettingsValues] = useState({});
+  const [currentPlace, setCurrentPlace] = useState('');
 
   const columns = useMemo(() => [
     { label: 'Kiosk name', field: 'name', checked: true },
-    { label: 'Assigned to place', field: 'place', checked: true },
-    { label: 'Kiosk admin user', field: 'admin', checked: true },
+    { label: 'Assigned to place', field: 'place_name', checked: true },
+    { label: 'Kiosk admin user', field: 'user_name', checked: true },
     {
       label: 'Password',
       field: 'password',
@@ -104,11 +106,11 @@ export default () => {
   ], []);
   const selectedItem = useMemo(() => {
     if (selectedItemId) {
-      return data.find((item) => item.id === selectedItemId) || {};
+      return kiosks.find((item) => item.id === selectedItemId) || {};
     }
 
     return {};
-  }, [selectedItemId]);
+  }, [kiosks, selectedItemId]);
 
   const onEditItem = (id) => {
     setSelectedItemId(id);
@@ -126,31 +128,50 @@ export default () => {
       setCreateEditKioskVisible(false);
     }
     if (selectedItemId) {
-      setSelectedItemId(false);
+      setSelectedItemId('');
     }
     if (deleteKioskVisible) {
       setDeleteKioskVisible(false);
     }
   };
   const handleSubmitChangePassword = (values) => {
-    console.log('values', values);
+    dispatch(postKioskChangePassword(companyId, selectedItem.id, { password: values.password }));
     handleCloseDialog();
   };
-  const handleSubmitItem = (values) => {
-    console.log('values', values);
+  const handleSubmit = (values) => {
+    if (selectedItem.id) {
+      dispatch(patchKiosk(companyId, selectedItem.id, values));
+    } else {
+      dispatch(postKiosk(companyId, values));
+    }
+
     handleCloseDialog();
   };
-  const handleConfirmRemoveItem = () => {
+  const handleConfirmRemove = () => {
+    dispatch(deleteKiosk(companyId, selectedItem.id));
     handleCloseDialog();
+  };
+  const handleChangeCheckbox = (id) => {
+    setSettingsValues((prevState) => {
+      dispatch(postSettingsPhotoTake(
+        companyId,
+        id === 'take_in' ? 'in' : 'out',
+        !prevState[id] ? 'on' : 'off',
+      ));
+      return {
+        ...prevState,
+        [id]: !prevState[id],
+      };
+    });
+  };
+  const handleChangePlace = (event) => {
+    setCurrentPlace(event.target.value);
   };
 
   // eslint-disable-next-line no-shadow
-  const sorting = useCallback((employees, { field, asc }) => {
+  const sorting = useCallback((data, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
-      if (field === 'cost' || field === 'sallary') {
-        return sortNumFunction(a.profitability, b.profitability);
-      }
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
@@ -162,8 +183,25 @@ export default () => {
       }
       return b[field].toString().localeCompare(a[field]);
     };
-    return employees.sort(sortFunction);
+    return data.sort(sortFunction);
   }, []);
+
+  useEffect(() => {
+    dispatch(getPlaces(companyId));
+    dispatch(getSettingsPhotoTake(companyId));
+  }, [dispatch, companyId]);
+  useEffect(() => {
+    dispatch(getKiosks(companyId, currentPlace));
+  }, [dispatch, companyId, currentPlace]);
+  useEffect(() => {
+    if (settingsPhotoTake) {
+      console.log('settingsPhotoTake', settingsPhotoTake);
+      setSettingsValues({
+        take_in: !!settingsPhotoTake.take_in,
+        take_out: !!settingsPhotoTake.take_out,
+      });
+    }
+  }, [settingsPhotoTake]);
 
   return (
     <MainLayout>
@@ -183,10 +221,10 @@ export default () => {
               />
               <InputSelect
                 id='place-select'
-                labelId='v'
+                labelId='country'
                 name='country'
-                value=''
-                onChange={() => {}}
+                value={currentPlace}
+                onChange={handleChangePlace}
                 options={allPlaces}
                 valueKey='id'
                 labelKey='name'
@@ -206,35 +244,42 @@ export default () => {
             <Tooltip title='Kiosk list' />
           </div>
           <DataTable
-            data={data}
+            data={kiosks}
             columns={columns || []}
             // columnsWidth={columnsWidthArray || {}}
             sortable
-            onSort={(field, asc) => sorting(data, { field, asc })}
-            handlePagination={console.log}
+            onSort={(field, asc) => sorting(kiosks, { field, asc })}
+            handlePagination={Function.prototype}
             selectedItem=''
             verticalOffset='420px'
             simpleTable
             withoutFilterColumns
             hoverActions
-            // loading={loading}
+            loading={kiosksLoading}
             editRow={onEditItem}
             removeRow={onDeleteItem}
             grey
           />
           <div className={styles.footer}>
             <StyledCheckbox
-              // id={id}
+              id='take_in'
               label={t('Request photo to be taken on Clock In through the Kiosk')}
-              // checked={!!isDefault}
-              // onChange={onChangeCheckbox}
+              checked={settingsValues.take_in}
+              onChange={handleChangeCheckbox}
             />
             <StyledCheckbox
-              // id={id}
+              id='take_out'
               label={t('Request photo to be taken on Clock Out through the Kiosk')}
-              // checked={!!isDefault}
-              // onChange={onChangeCheckbox}
+              checked={settingsValues.take_out}
+              onChange={handleChangeCheckbox}
             />
+            {
+              settingsPhotoTakeLoading && (
+                <div className={styles.footer__loader}>
+                  <Progress />
+                </div>
+              )
+            }
           </div>
           <DialogEditPasswordKiosk
             open={viewPasswordVisible}
@@ -248,16 +293,16 @@ export default () => {
             open={createEditKioskVisible}
             handleClose={handleCloseDialog}
             places={allPlaces}
-            onSubmit={handleSubmitItem}
+            onSubmit={handleSubmit}
             security={security}
             initialValues={selectedItem}
           />
           <DeleteItem
             open={deleteKioskVisible}
             handleClose={handleCloseDialog}
-            title={t('Delete kiosk')}
+            title={t('Delete kiosks')}
             description={selectedItem?.name}
-            onConfirmRemove={handleConfirmRemoveItem}
+            onConfirmRemove={handleConfirmRemove}
           />
           <Snackbar
             anchorOrigin={{

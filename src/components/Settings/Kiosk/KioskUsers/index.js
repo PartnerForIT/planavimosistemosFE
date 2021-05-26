@@ -5,7 +5,8 @@ import React, {
   useMemo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -17,38 +18,28 @@ import GenerateNewPin from '../../../Core/Dialog/GenerateNewPin';
 import EditPinCode from '../../../Core/Dialog/EditPinCode';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import Kiosk2Icon from '../../../Icons/Kiosk2';
+import TimeFormat from '../../../shared/TimeFormat';
 import Filter from './Filter';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
+import {
+  kiosksUsersLoadingSelector,
+  kiosksUsersSelector,
+  pinCodeGenerateLoadingSelector,
+  pinCodeSelector,
+} from '../../../../store/kiosks/selectors';
+import {
+  getKiosksUsers,
+  patchUpdateStatus,
+  patchUpdatePinCode,
+  patchUpdatePinCodes,
+  getPinCodeGenerate,
+} from '../../../../store/kiosks/actions';
 import styles from './KioskUsers.module.scss';
 
-const data2 = [
-  {
-    id: 1,
-    employee: 'name',
-    role: 'place',
-    skills: 'admin',
-    groups: 'groups',
-    subgroup: 'subgroup',
-    place: 'place',
-    pinCode: '2341',
-    isKiosk: true,
-  },
-  {
-    id: 2,
-    employee: 'name 3',
-    role: 'place 3',
-    skills: 'admin 3',
-    groups: 'password 3',
-    subgroup: 'subgroup',
-    place: 'place',
-    pinCode: '2341',
-    isKiosk: false,
-  },
-];
 const columnsWidthArray = {
-  isKiosk: 150,
-  pin: 100,
-  employee: 140,
+  is_kiosk: 150,
+  pin_code: 100,
+  name: 140,
   place: 150,
   skills: 200,
   role: 150,
@@ -56,9 +47,11 @@ const columnsWidthArray = {
   groups: 150,
   subgroup: 150,
 };
-const data = [...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2, ...data2];
+
 export default () => {
   const { t } = useTranslation();
+  const { id: companyId } = useParams();
+  const dispatch = useDispatch();
   const useStyles = makeStyles(() => ({
     error: {
       background: '#de4343',
@@ -74,6 +67,10 @@ export default () => {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
+  const kiosksUsers = useSelector(kiosksUsersSelector);
+  const kiosksUsersLoading = useSelector(kiosksUsersLoadingSelector);
+  const pinCode = useSelector(pinCodeSelector);
+  const pinCodeGenerateLoading = useSelector(pinCodeGenerateLoadingSelector);
 
   const [selectedItemId, setSelectedItemId] = useState('');
   const [viewPinVisible, setViewPinVisible] = useState(false);
@@ -81,16 +78,15 @@ export default () => {
   const [all, setAll] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [columnsFiltered, setColumnsFiltered] = useState([]);
-  const [usersOptions, setUsersOptions] = useState(3);
-  const [employeesAll, setEmployeesAll] = useState([]);
+  const [dropdownValue, setDropdownValue] = useState(null);
 
   const columns = useMemo(() => {
     const nextColumns = [
       {
         label: 'Kiosk user',
-        field: 'isKiosk',
+        field: 'is_kiosk',
         checked: true,
-        cellRenderer: ({ isKiosk }) => (
+        cellRenderer: ({ is_kiosk: isKiosk }) => (
           <span className={`${styles.isKiosk} ${isKiosk ? styles.isKiosk_true : styles.isKiosk_false}`}>
             {isKiosk ? 'Yes' : 'No'}
           </span>
@@ -98,9 +94,9 @@ export default () => {
       },
       {
         label: 'PIN',
-        field: 'pin',
+        field: 'pin_code',
         checked: true,
-        cellRenderer: ({ id, isKiosk }) => (
+        cellRenderer: ({ id, is_kiosk: isKiosk }) => (
           <button
             disabled={!isKiosk}
             className={styles.viewPin}
@@ -113,7 +109,7 @@ export default () => {
           </button>
         ),
       },
-      { label: 'Employee', field: 'employee', checked: true },
+      { label: 'Employee', field: 'name', checked: true },
       { label: 'Role', field: 'role', checked: true },
       { label: 'Skill', field: 'skills', checked: true },
       { label: 'Group', field: 'groups', checked: true },
@@ -130,19 +126,48 @@ export default () => {
   }, [columnsFiltered]);
   const selectedItem = useMemo(() => {
     if (selectedItemId) {
-      return data.find((item) => item.id === selectedItemId) || {};
+      return kiosksUsers.employees.find((item) => item.id === selectedItemId) || {};
     }
 
     return {};
-  }, [selectedItemId]);
+  }, [kiosksUsers, selectedItemId]);
+  const employees = useMemo(() => {
+    if (kiosksUsers?.employees) {
+      return kiosksUsers.employees.map((item) => {
+        const {
+          name,
+          surname,
+          status,
+          created_at: createdAt,
+          updated_at: updatedAt,
+          place,
+          groups,
+          skills,
+          subgroups,
+          permissions,
+          ...employee
+        } = item;
 
-  // eslint-disable-next-line no-shadow
-  const sorting = useCallback((employees, { field, asc }) => {
+        return {
+          ...employee,
+          groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
+          subgroup: subgroups?.[0]?.name ?? '',
+          skills: skills?.[0]?.name ?? '',
+          place: place?.[0]?.name ?? '',
+          role: permissions?.[0]?.account_roles?.name ?? '',
+          created_at: createdAt ? <TimeFormat date={createdAt} /> : '',
+          updated_at: updatedAt ? <TimeFormat date={updatedAt} /> : '',
+          name: `${name} ${surname}`,
+        };
+      }) ?? [];
+    }
+
+    return [];
+  }, [kiosksUsers]);
+
+  const handleSort = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
-      if (field === 'cost' || field === 'sallary') {
-        return sortNumFunction(a.profitability, b.profitability);
-      }
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
@@ -155,52 +180,70 @@ export default () => {
       return b[field].toString().localeCompare(a[field]);
     };
     return employees.sort(sortFunction);
-  }, []);
-  const handleChangeUsers = (e) => {
-    const { value } = e.target;
-    setUsersOptions(parseInt(value, 10));
+  }, [employees]);
+  const handleChangeDropdown = (e) => {
+    setDropdownValue(e.target.value);
     setCheckedItems([]);
-    // dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 3 ? { status: value } : null));
   };
   const selectionHandler = (itemId, value) => {
-    // eslint-disable-next-line array-callback-return
-    employeesAll.forEach((item) => {
+    employees.forEach((item) => {
       if (item.id === itemId) {
         // eslint-disable-next-line no-param-reassign
         item.checked = !item.checked;
       }
     });
+
     if (value) {
       setCheckedItems([...checkedItems, itemId]);
     } else {
       const index = checkedItems.indexOf(itemId);
-      checkedItems.splice(index, 1);
-      setCheckedItems([...checkedItems]);
+      setCheckedItems([
+        ...checkedItems.slice(0, index),
+        ...checkedItems.slice(index + 1),
+      ]);
     }
   };
   const selectAllHandler = (formData = []) => {
     const value = formData.length;
-    // eslint-disable-next-line no-shadow
-    const checkedItems = formData.map(({ id }) => id);
-    setCheckedItems(checkedItems);
-    setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
+    setCheckedItems(formData.map(({ id }) => id));
+    employees.forEach((item) => {
+      // eslint-disable-next-line no-param-reassign
+      item.checked = !!value;
+    });
   };
-  const handleChangeUserKiosk = () => {
-
+  const handleChangeUserKiosk = (status) => {
+    dispatch(patchUpdateStatus(companyId, {
+      employee_ids: `[${checkedItems.map((item) => `${item}`)}]`,
+      status,
+    }));
+    setCheckedItems([]);
   };
-  const onNewPin = (id) => {
+  const handleNewPinCodes = (id) => {
     setSelectedItemId(id);
     setGeneratePinVisible(true);
   };
+  const handleSetNewPinCode = (values) => {
+    dispatch(patchUpdatePinCode(companyId, selectedItemId, {
+      pin_code: values.pinCode,
+    }));
+    setViewPinVisible(false);
+    setSelectedItemId('');
+  };
+  const handleGenerateNewPin = () => {
+    dispatch(getPinCodeGenerate(companyId));
+  };
   const handleGenerateNewPins = () => {
-
+    dispatch(patchUpdatePinCodes(companyId, {
+      employee_ids: `[${checkedItems.map((item) => `${item}`)}]`,
+    }));
+    setCheckedItems([]);
+    setSelectedItemId('');
+    setGeneratePinVisible(false);
   };
 
   useEffect(() => {
-    if (data) {
-      setEmployeesAll(data);
-    }
-  }, [data]);
+    dispatch(getKiosksUsers(companyId, dropdownValue));
+  }, [dispatch, companyId, dropdownValue]);
 
   return (
     <MainLayout>
@@ -208,9 +251,9 @@ export default () => {
         <TitleBlock
           title={t('Kiosk users')}
           info={{
-            Users: 6,
-            Yes: 1,
-            No: 5,
+            Users: kiosksUsers?.stats?.total,
+            Yes: kiosksUsers?.stats?.yes,
+            No: kiosksUsers?.stats?.no,
           }}
           tooltip={t('Kiosk users')}
         >
@@ -218,16 +261,20 @@ export default () => {
         </TitleBlock>
         <PageLayout>
           <Filter
-            handleChangeUser={handleChangeUsers}
-            users={usersOptions}
+            handleChangeUser={handleChangeDropdown}
+            dropdownValue={dropdownValue}
             changeUserKiosk={handleChangeUserKiosk}
             checkedItems={checkedItems ?? []}
             clearCheckbox={() => ({})}
-            stats={{}}
-            onNewPin={onNewPin}
+            stats={{
+              total: kiosksUsers?.stats?.total,
+              yes: kiosksUsers?.stats?.yes,
+              no: kiosksUsers?.stats?.no,
+            }}
+            onNewPinCodes={handleNewPinCodes}
           />
           <DataTable
-            data={employeesAll}
+            data={employees}
             columns={columns || []}
             columnsWidth={columnsWidthArray}
             onColumnsChange={setColumnsFiltered}
@@ -235,8 +282,8 @@ export default () => {
             selectAllItems={selectAllHandler}
             sortable
             selectable
-            onSort={(field, asc) => sorting(data, { field, asc })}
-            handlePagination={console.log}
+            onSort={handleSort}
+            handlePagination={Function.prototype}
             // selectedItem=''
             verticalOffset='329px'
             // withoutFilterColumns
@@ -244,13 +291,17 @@ export default () => {
             all={all}
             setAll={setAll}
             selectAll
-            // loading={loading}
+            loading={kiosksUsersLoading}
           />
           <EditPinCode
             open={viewPinVisible}
             handleClose={() => setViewPinVisible(false)}
-            currentPinCode={selectedItem.pinCode}
-            title={`${selectedItem.employee} PIN`}
+            currentPinCode={selectedItem.pin_code}
+            title={`${selectedItem.name} PIN`}
+            loading={pinCodeGenerateLoading}
+            generatedPinCode={pinCode}
+            generatePinCode={handleGenerateNewPin}
+            onSubmit={handleSetNewPinCode}
           />
           <GenerateNewPin
             handleClose={() => setGeneratePinVisible(false)}

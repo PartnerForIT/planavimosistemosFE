@@ -12,9 +12,9 @@ import passwordValidator from '../../../Helpers/passwordValidator';
 
 const initialFormValues = {
   name: '',
-  user: '',
+  user_name: '',
   password: '',
-  place: '',
+  place_id: '',
 };
 export default ({
   handleClose,
@@ -64,7 +64,7 @@ export default ({
     return nextErrors;
   }, [formValues, security]);
   const disabled = useMemo(() => !((isEdit || formValues.password)
-    && formValues.user && formValues.place && formValues.name), [formValues, isEdit]);
+    && formValues.user_name && formValues.place_id && formValues.name), [formValues, isEdit]);
 
   return (
     <Dialog
@@ -84,12 +84,12 @@ export default ({
         />
       </div>
       <div className={styles.formControl}>
-        <Label text={t('Assign to place')} htmlFor='place' />
+        <Label text={t('Assign to place')} htmlFor='place_id' />
         <InputSelect
           id='country-select'
           labelId='country-select'
-          name='place'
-          value={formValues.place}
+          name='place_id'
+          value={formValues.place_id}
           onChange={handleInputChange}
           options={places}
           valueKey='id'
@@ -97,11 +97,11 @@ export default ({
         />
       </div>
       <div className={styles.formControl}>
-        <Label text={t('Create a user')} htmlFor='user' />
+        <Label text={t('Create a user')} htmlFor='user_name' />
         <Input
           placeholder={t('Enter user name')}
-          value={formValues.user}
-          name='user'
+          value={formValues.user_name}
+          name='user_name'
           fullWidth
           onChange={handleInputChange}
         />

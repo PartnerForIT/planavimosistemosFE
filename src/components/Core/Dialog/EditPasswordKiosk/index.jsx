@@ -66,7 +66,7 @@ export default ({
       <div className={styles.formControl}>
         <Label text={t('Current password')} htmlFor='current_password' />
         <Input
-          placeholder={t('Enter kiosk name')}
+          placeholder={t('Enter kiosks name')}
           value={currentPassword}
           name='current_password'
           fullWidth

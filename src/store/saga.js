@@ -10,6 +10,7 @@ import OrganizationListWatcher from './organizationList/saga';
 import SettingsWatcher from './settings/saga';
 import LogbookWatcher from './logbook/saga';
 import EventsWatcher from './events/saga';
+import KiosksWatcher from './kiosks/saga';
 
 function onRequest(request) {
   // intercept a request here
@@ -38,6 +39,7 @@ export default function* rootSaga() {
     SettingsWatcher(),
     LogbookWatcher(),
     EventsWatcher(),
+    KiosksWatcher(),
     createRequestInstance({
       onRequest,
       onError,
