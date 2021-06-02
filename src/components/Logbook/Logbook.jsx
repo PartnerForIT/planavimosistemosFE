@@ -528,7 +528,7 @@ const Logbook = () => {
             selectedItem && (
               <>
                 <Scrollbar
-                  style={{ height: `calc(100vh - 218px - ${isApproval ? '64px' : '0px'})` }}
+                  style={{ height: `calc(100vh - 318px - ${isApproval ? '64px' : '0px'})` }}
                   removeTracksWhenNotUsed
                   trackXProps={{
                     renderer: (props) => {
