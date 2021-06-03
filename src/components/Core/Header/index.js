@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
-import LogbookIcon from '../../Icons/Logbook';
+import LogbookIcon from '../../Icons/LogbookIcon';
 import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
 // import AnalyticsIcon from '../../Icons/Analytics';
@@ -28,6 +28,7 @@ import {
   postSupportTicketLoadingSelector,
   isCreateTicketSelector,
 } from '../../../store/company/selectors';
+import grownu from '../../Icons/Grownu.png';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -123,6 +124,13 @@ export default function ButtonAppBar({ logOut }) {
             (!companyId && user?.user?.role_id === 1)
             && (
             <div className={styles.linkBlock}>
+              <div className={styles.logoWrapper}>
+                <img
+                  alt=''
+                  src={grownu}
+                  className={styles.logo}
+                />
+              </div>
               <Link to='/overview' className={pageName === 'overview' ? styles.activelink : styles.link}>
                 <OverviewIcon className={styles.icon} />
                 <span className={styles.link__text}>{t('Overview')}</span>
@@ -144,6 +152,13 @@ export default function ButtonAppBar({ logOut }) {
           {
             companyId && (
               <div className={styles.linkBlock}>
+                <div className={styles.logoWrapper}>
+                  <img
+                    alt=''
+                    src={grownu}
+                    className={styles.logo}
+                  />
+                </div>
                 {
                   // <Link
                   //   to={`/overview/${companyId}`}
@@ -165,7 +180,7 @@ export default function ButtonAppBar({ logOut }) {
                       to={`/logbook/${companyId}`}
                       className={pageName === 'logbook' ? styles.activelink : styles.link}
                     >
-                      <LogbookIcon className={styles.icon} />
+                      <LogbookIcon className={styles.icon} width={19.28} height={24.9} />
                       <span className={styles.link__text}>{t('Logbook')}</span>
                     </Link>
                   )

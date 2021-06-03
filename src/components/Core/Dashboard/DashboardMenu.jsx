@@ -9,7 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
-import LogbookIcon from '../../Icons/Logbook2';
+// import LogbookIcon from '../../Icons/Logbook2';
+import LogbookIcon from '../../Icons/LogbookIcon';
 import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
 import ActivityLogIcon from '../../Icons/ActivityLog';
@@ -245,15 +246,6 @@ export default function DashboardMenu() {
       });
     }
 
-    if (permissions.categories_create) {
-      nextMenuItems.push({
-        to: `/settings/categories/${companyId}`,
-        icon: CategoriesIcon,
-        title: t('Categories'),
-        name: 'categories',
-      });
-    }
-
     if (permissions.activity_log) {
       nextMenuItems.push({
         to: `/settings/activity-log/${companyId}`,
@@ -269,6 +261,15 @@ export default function DashboardMenu() {
         icon: DeleteIcon,
         title: t('Data Delete'),
         name: 'delete',
+      });
+    }
+
+    if (permissions.categories_create) {
+      nextMenuItems.push({
+        to: `/settings/categories/${companyId}`,
+        icon: CategoriesIcon,
+        title: t('Categories'),
+        name: 'categories',
       });
     }
 
@@ -307,7 +308,7 @@ export default function DashboardMenu() {
                   id={`panel${index + 1}-header`}
                 >
                   <IconWrapper>
-                    <item.icon fill={section === item.name ? '4080fc' : '#808f94'} />
+                    <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
                   </IconWrapper>
                   <span className={styles.menuText}>
                     {item.title}
