@@ -1,0 +1,58 @@
+@import '../../variables';
+
+.description {
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 14px;
+  color: #808f94;
+  text-align: center;
+  width: 334px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  color: #808f94;
+  font-size: 14px;
+  font-family: "Helvetica Neue Bold", sans-serif;
+  margin-top: 27px;
+  white-space: pre;
+}
+
+.textarea {
+  resize: none;
+  margin-top: 11px;
+  margin-bottom: 27px;
+  border: 1px solid #d0dfef;
+  border-radius: 4px;
+  padding: 8px 11px;
+  width: 405px;
+  box-sizing: border-box;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 15px;
+  color: #313946;
+
+  &:focus {
+    border: 1px solid #b2c3d6;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #aab4bf;
+  }
+}
+
+.button {
+  padding: 0 36px;
+  align-self: center;
+}
+
+.buttonDone {
+  margin-top: 30px;
+  padding: 0 36px;
+  align-self: center;
+}
+
+.buttonDoneIcon {
+  width: 19px !important;
+  height: 14px !important;
+}

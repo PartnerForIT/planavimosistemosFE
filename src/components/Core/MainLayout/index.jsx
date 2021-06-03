@@ -5,7 +5,7 @@ import { companyModulesLoading, companyModulesRequestWasSent } from '../../../st
 import Header from '../Header';
 import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
-import getOrganisationModules from '../../../store/company/actions';
+import { getOrganisationModules } from '../../../store/company/actions';
 import Progress from '../Progress';
 
 export default function MainLayout({ children }) {

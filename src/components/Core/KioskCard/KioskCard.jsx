@@ -39,7 +39,7 @@ export default ({
             </span>
             <img
               className={styles.kioskCard__image}
-              src={photoIn}
+              src={photoOut}
               alt='out'
             />
           </>

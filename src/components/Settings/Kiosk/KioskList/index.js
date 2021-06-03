@@ -80,7 +80,7 @@ export default () => {
   const [deleteKioskVisible, setDeleteKioskVisible] = useState(false);
   const [viewPasswordVisible, setViewPasswordVisible] = useState(false);
   const [createEditKioskVisible, setCreateEditKioskVisible] = useState(false);
-  const [settingsValues, setSettingsValues] = useState({});
+  const [settingsValues, setSettingsValues] = useState({ take_in: false, take_out: false });
   const [currentPlace, setCurrentPlace] = useState('');
 
   const columns = useMemo(() => [
@@ -195,7 +195,6 @@ export default () => {
   }, [dispatch, companyId, currentPlace]);
   useEffect(() => {
     if (settingsPhotoTake) {
-      console.log('settingsPhotoTake', settingsPhotoTake);
       setSettingsValues({
         take_in: !!settingsPhotoTake.take_in,
         take_out: !!settingsPhotoTake.take_out,
@@ -261,6 +260,7 @@ export default () => {
             grey
           />
           <div className={styles.footer}>
+            {console.log('settingsValues.take_in', settingsValues.take_in)}
             <StyledCheckbox
               id='take_in'
               label={t('Request photo to be taken on Clock In through the Kiosk')}

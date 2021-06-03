@@ -18,10 +18,16 @@ import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
+import SupportTicket from '../Dialog/SupportTicket';
 import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
+import { postSupportTicket, doneSupportTicket } from '../../../store/company/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import usePermissions from '../usePermissions';
 import { userSelector } from '../../../store/auth/selectors';
+import {
+  postSupportTicketLoadingSelector,
+  isCreateTicketSelector,
+} from '../../../store/company/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,15 +76,12 @@ export default function ButtonAppBar({ logOut }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openSupportTicket, setOpenSupportTicket] = useState(false);
   const [editPasswordVisible, setEditPasswordVisible] = useState(false);
   const [passwords, setPasswords] = useState(initialPasswords);
   const security = useSelector(securityCompanySelector);
-
-  useEffect(() => {
-    if (companyId) {
-      dispatch(getSecurityCompany(companyId));
-    }
-  }, [dispatch, companyId]);
+  const postSupportTicketLoading = useSelector(postSupportTicketLoadingSelector);
+  const isCreateTicket = useSelector(isCreateTicketSelector);
 
   const editHandleClose = () => {
     setEditPasswordVisible(false);
@@ -93,10 +96,23 @@ export default function ButtonAppBar({ logOut }) {
     }
     editHandleClose();
   };
-
   const changeLanguage = (data) => {
     dispatch(editSettingCompany({ lang: data.toUpperCase() }, companyId));
   };
+  const handleSubmit = (description) => {
+    dispatch(postSupportTicket({
+      companyId,
+      data: {
+        description,
+      },
+    }));
+  };
+
+  useEffect(() => {
+    if (companyId) {
+      dispatch(getSecurityCompany(companyId));
+    }
+  }, [dispatch, companyId]);
 
   return (
     <div className={classes.root}>
@@ -205,13 +221,15 @@ export default function ButtonAppBar({ logOut }) {
                   <SettingsIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Settings')}</span>
                 </Link>
-                <Link
-                  to={`/help/${companyId}`}
-                  className={pageName === 'help' ? styles.activelink : styles.link}
+                <button
+                  className={styles.link}
+                  onClick={() => {
+                    setOpenSupportTicket(true);
+                  }}
                 >
                   <HelpIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Help')}</span>
-                </Link>
+                </button>
               </div>
             )}
             <AvatarComponent
@@ -222,6 +240,21 @@ export default function ButtonAppBar({ logOut }) {
 
         </Toolbar>
       </AppBar>
+
+      <SupportTicket
+        open={openSupportTicket}
+        onExited={() => {
+          if (isCreateTicket) {
+            dispatch(doneSupportTicket());
+          }
+        }}
+        handleClose={() => {
+          setOpenSupportTicket(false);
+        }}
+        onSubmit={handleSubmit}
+        loading={postSupportTicketLoading}
+        isCreateTicket={isCreateTicket}
+      />
 
       <MenuDialog
         setAnchorEl={setAnchorEl}

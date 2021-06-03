@@ -31,10 +31,13 @@
   position: relative;
   width: 70px;
   padding: 14px 6px 10px 6px;
-  font-size: 14px;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   color: $gray;
+  background-color: transparent;
+  border: none;
+  box-sizing: content-box;
+  font: 14px Helvetica Neue, sans-serif;
 
   .icon path {
     fill: $gray !important;
@@ -43,6 +46,7 @@
   &__text {
     display: inline-block;
     padding-top: 5px;
+    line-height: 16px;
   }
 
   &::before {
