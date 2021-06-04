@@ -303,7 +303,6 @@ export default function OrganizationList() {
           changeStatusCompany={changeStatusCompany}
           checkedItems={checkedItems}
           enterOrganization={enterOrganization}
-          companies={companies}
           clearCheckbox={clearCheckbox}
           selectedItem={selectedItem}
         />

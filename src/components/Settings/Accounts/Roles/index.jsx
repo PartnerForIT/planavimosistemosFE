@@ -44,7 +44,6 @@ const initialRoleAccess = {
   // Access by Module
   moduleAccess: {
     logbook: {
-      enabled: false,
       options: {
         edit_settings: 'Can edit Events settings',
         edit_logs: 'Can edit entry logs',
@@ -57,7 +56,6 @@ const initialRoleAccess = {
       },
     },
     reports: {
-      enabled: false,
       options: {
         costs: 'Can see costs',
         earnings: 'Can see earnings',
@@ -67,92 +65,75 @@ const initialRoleAccess = {
       },
     },
     events: {
-      enabled: false,
       options: {
         receive_app: 'Receive notifications',
+      },
+    },
+    schedule: {
+      options: {
+        view: 'Can see Schedule',
+        assigned_place: 'Only assigned place view',
       },
     },
   },
 
   // Organization access
   organisation: {
-
     groups: {
-      enabled: true,
-
       options: {
         create: 'Can create Groups',
       },
     },
     roles: {
-      enabled: true,
-
       options: {
         create: 'Can create Roles',
       },
-
     },
     categories: {
-      enabled: true,
-
       options: {
         create: 'Can create Categories',
       },
-
     },
     events: {
-      enabled: true,
-
       options: {
         create: 'Can create Events',
       },
-
     },
     data: {
-      enabled: true,
-
       options: {
         delete: 'Can delete entry data',
       },
-
     },
     accounts: {
-      enabled: true,
-
       options: {
         create: 'Can create New accounts',
         delete: 'Can delete Accounts list',
         see_and_edit: 'Can see & edit Accounts List',
       },
-
     },
     activity_log: {
-      enabled: true,
-
       options: {
         view: 'Can see Activity Log',
       },
-
     },
     company: {
-      enabled: true,
-
       options: {
         edit_settings: 'Can edit General Settings',
       },
     },
     manager: {
-      enabled: true,
-
       options: {
         mobile: 'Use Managers Mobile View',
       },
     },
     kiosk: {
-      enabled: true,
-
       options: {
         create: 'Can create Kiosks & PIN',
+      },
+    },
+    schedule: {
+      options: {
+        create_and_edit: 'Can create & edit Schedule',
       },
     },
   },
@@ -162,6 +143,14 @@ const permissionsConfig = [
   {
     name: 'reports',
     module: 'reports',
+  },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+  },
+  {
+    name: 'schedule_simple',
+    module: 'schedule_simple',
   },
   {
     name: 'events',
@@ -292,7 +281,7 @@ function Roles() {
 
   useEffect(() => {
     setDefaultRoleAccess(() => {
-      const { moduleAccess } = initialRoleAccess;
+      const { moduleAccess, organisation } = initialRoleAccess;
 
       const nextModuleAccess = Object.keys(moduleAccess).reduce((acc, key) => {
         acc[key] = {
@@ -301,9 +290,13 @@ function Roles() {
         };
         return acc;
       }, {});
-      const nextOrganisation = {
-        ...initialRoleAccess.organisation,
-      };
+      const nextOrganisation = Object.keys(organisation).reduce((acc, key) => {
+        acc[key] = {
+          ...organisation[key],
+          enabled: true,
+        };
+        return acc;
+      }, {});
 
       /* permissions */
       if (!permissions.logbook) {
@@ -336,6 +329,16 @@ function Roles() {
       }
       if (!permissions.events) {
         delete nextModuleAccess.events;
+      }
+      if (!permissions.schedule_shift) {
+        // delete nextModuleAccess.events;
+
+        if (!permissions.schedule_simple) {
+          delete nextModuleAccess.schedule;
+          delete nextOrganisation.schedule;
+        } else {
+          delete nextModuleAccess.schedule.options.assigned_place;
+        }
       }
       if (!permissions.activity_log) {
         delete nextOrganisation.activity_log;

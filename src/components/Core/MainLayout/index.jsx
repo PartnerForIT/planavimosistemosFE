@@ -23,7 +23,7 @@ export default function MainLayout({ children }) {
   });
 
   useLayoutEffect(() => {
-    if (!requestWasSent) {
+    if (!requestWasSent && companyId) {
       dispatch(getOrganisationModules(companyId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Dialog from '../index';
@@ -12,112 +12,99 @@ import Button from '../../Button/Button';
 import Progress from '../../Progress';
 import style from '../Dialog.module.scss';
 
-export default function EditModules({
-  open, handleClose, title, checkedItem, companies,
-}) {
+const initialValues = {
+  logbook: false,
+  events: false,
+  reports: false,
+  activity_log: false,
+  schedule_simple: false,
+  schedule_shift: false,
+  create_places: false,
+  create_jobs: false,
+  create_groups: false,
+  use_manager_mobile: false,
+  use_approval_flow: false,
+  cost_earning: false,
+  profitability: false,
+  comments_photo: false,
+  kiosk: false,
+};
+
+export default ({
+  open,
+  handleClose,
+  title,
+  checkedItemId,
+}) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const storeModules = useSelector(modulesSelector);
   const isLoading = useSelector(isLoadingModulesSelector);
 
-  const [costDisabled, setCostDisabled] = useState(false);
-
-  const [modules, setModules] = useState({
-    logbook: false,
-    events: false,
-    reports: false,
-    schedule: false,
-    activity_log: false,
-    create_places: false,
-    create_jobs: false,
-    create_groups: false,
-    use_manager_mobile: false,
-    use_approval_flow: false,
-    cost_earning: false,
-    profitability: false,
-    comments_photo: false,
-    kiosk: false,
-  });
-
-  const [company, setCompany] = useState([]);
+  const [modules, setModules] = useState(initialValues);
 
   useEffect(() => {
-    if (company[0]) {
-      dispatch(getModules(checkedItem));
+    if (open && checkedItemId) {
+      dispatch(getModules(checkedItemId));
     }
-  }, [checkedItem, company, dispatch]);
+  }, [checkedItemId, open, dispatch]);
 
   useEffect(() => {
-    if (Object.keys(storeModules).length > 0) {
-      setModules({
-        logbook: storeModules.logbook !== 0,
-        events: storeModules.events !== 0,
-        reports: storeModules.reports !== 0,
-        schedule: storeModules.schedule !== 0,
-        activity_log: storeModules.activity_log !== 0,
-        create_places: storeModules.create_places !== 0,
-        create_jobs: storeModules.create_jobs !== 0,
-        create_groups: storeModules.create_groups !== 0,
-        use_manager_mobile: storeModules.use_manager_mobile !== 0,
-        use_approval_flow: storeModules.use_approval_flow !== 0,
-        cost_earning: storeModules.cost_earning !== 0,
-        profitability: storeModules.profitability !== 0,
-        comments_photo: storeModules.comments_photo !== 0,
-        kiosk: storeModules.kiosk !== 0,
-      });
+    const storeModulesArr = Object.keys(storeModules);
+
+    if (storeModulesArr.length > 0) {
+      const currentModules = storeModulesArr.reduce((acc, item) => {
+        acc[item] = !!storeModules[item];
+        return acc;
+      }, {});
+      setModules((prevState) => ({
+        ...prevState,
+        ...currentModules,
+      }));
     }
   }, [isLoading, storeModules]);
-  const companyById = useCallback((id) => companies.filter((item) => item.id === id), [companies]);
-
-  useEffect(() => {
-    if (open && checkedItem) {
-      setCompany(companyById(checkedItem));
-    }
-  }, [checkedItem, companyById, open]);
 
   const handleChange = (event) => {
-    if (event.target.name === 'profitability') {
-      if (event.target.checked) {
-        setCostDisabled(true);
-        setModules({
-          ...modules,
-          cost_earning: true,
-          [event.target.name]: event.target.checked,
-        });
-      } else {
-        setCostDisabled(false);
-        setModules({
-          ...modules,
-          cost_earning: false,
-          [event.target.name]: event.target.checked,
-        });
+    const { name, checked } = event.target;
+
+    switch (name) {
+      case 'schedule_shift': {
+        setModules((prevState) => ({
+          ...prevState,
+          schedule_shift: checked,
+          schedule_simple: false,
+          create_places: checked || prevState.create_places,
+        }));
+        break;
       }
-    } else {
-      setModules({ ...modules, [event.target.name]: event.target.checked });
+      case 'schedule_simple': {
+        setModules((prevState) => ({
+          ...prevState,
+          schedule_simple: checked,
+          schedule_shift: false,
+        }));
+        break;
+      }
+      case 'profitability': {
+        setModules({
+          ...modules,
+          cost_earning: checked,
+          [name]: checked,
+        });
+        break;
+      }
+      default: {
+        setModules({ ...modules, [name]: checked });
+      }
     }
   };
 
   const handleExited = () => {
-    setModules({
-      gbook: false,
-      events: false,
-      reports: false,
-      schedule: false,
-      activity_log: false,
-      create_places: false,
-      create_jobs: false,
-      create_groups: false,
-      use_manager_mobile: false,
-      use_approval_flow: false,
-      cost_earning: false,
-      profitability: false,
-      comments_photo: false,
-      kiosk: false,
-    });
+    setModules(initialValues);
   };
 
   const saveChangeModules = () => {
-    dispatch(patchModules(checkedItem, modules));
+    dispatch(patchModules(checkedItemId, modules));
     handleClose(false);
   };
 
@@ -147,9 +134,15 @@ export default function EditModules({
               />
               <Checkbox
                 onChange={handleChange}
-                checked={modules.schedule}
-                label={t('Schedule')}
-                name='schedule'
+                checked={modules.schedule_simple}
+                label={t('Simple Schedule')}
+                name='schedule_simple'
+              />
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.schedule_shift}
+                label={t('Schedule with shift')}
+                name='schedule_shift'
               />
               <Checkbox
                 onChange={handleChange}
@@ -163,6 +156,7 @@ export default function EditModules({
               <Checkbox
                 onChange={handleChange}
                 checked={modules.create_places}
+                disabled={modules.schedule_shift}
                 label={t('Can create Places')}
                 name='create_places'
               />
@@ -195,7 +189,7 @@ export default function EditModules({
                 checked={modules.cost_earning}
                 label={t('Can use Cost and Earnings')}
                 name='cost_earning'
-                disabled={costDisabled || modules.profitability}
+                disabled={modules.profitability}
               />
               <Checkbox
                 onChange={handleChange}
@@ -232,4 +226,4 @@ export default function EditModules({
 
     </Dialog>
   );
-}
+};

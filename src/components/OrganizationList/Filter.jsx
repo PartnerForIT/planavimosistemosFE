@@ -41,7 +41,6 @@ export default function Filter({
   checkedItems,
   selectedItem,
   enterOrganization,
-  companies,
   clearCheckbox,
 }) {
   const classes = useStyles();
@@ -151,8 +150,7 @@ export default function Filter({
       <EditModules
         open={open}
         handleClose={handleClose}
-        companies={companies}
-        checkedItem={checkedItems[0] || selectedItem?.id}
+        checkedItemId={checkedItems[0] || selectedItem?.id}
         title={t('Have access to these modules')}
       />
     </div>
