@@ -94,6 +94,9 @@ import {
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
   POST_EVENT_SUCCESS,
+  GET_SETTINGS_SCHEDULE,
+  GET_SETTINGS_SCHEDULE_SUCCESS,
+  GET_SETTINGS_SCHEDULE_ERROR,
 } from './types';
 
 const initialState = {
@@ -128,6 +131,8 @@ const initialState = {
   permissions: [],
   import: {},
   events: [],
+  schedule: {},
+  scheduleLoading: false,
 };
 
 function filterdeleteHoliday(array, id) {
@@ -613,7 +618,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
     /* events */
     case GET_EVENTS:
       return { ...state, eventsLoading: true };
-
     case GET_EVENTS_SUCCESS:
       return {
         ...state,
@@ -639,7 +643,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         eventUpdateLoading: true,
       };
-
     case PATCH_EVENT_SUCCESS: {
       const itemIndex = state.events.findIndex((item) => item.id === action.data.id);
       return {
@@ -664,7 +667,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         eventUpdateLoading: true,
       };
-
     case DELETE_EVENT_SUCCESS: {
       const itemIndex = state.events.findIndex((item) => item.id === action.id);
       return {
@@ -674,6 +676,27 @@ export const reducerOrganizationList = (state = initialState, action) => {
           ...state.events.slice(itemIndex + 1),
         ],
         eventUpdateLoading: false,
+      };
+    }
+
+    /* Schedule */
+    case GET_SETTINGS_SCHEDULE: {
+      return {
+        ...state,
+        scheduleLoading: true,
+      };
+    }
+    case GET_SETTINGS_SCHEDULE_SUCCESS: {
+      return {
+        ...state,
+        schedule: action.data,
+        scheduleLoading: false,
+      };
+    }
+    case GET_SETTINGS_SCHEDULE_ERROR: {
+      return {
+        ...state,
+        scheduleLoading: false,
       };
     }
 

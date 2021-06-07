@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
-// import LogbookIcon from '../../Icons/Logbook2';
+import ScheduleIcon from '../../Icons/Schedule';
 import LogbookIcon from '../../Icons/LogbookIcon';
 import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
@@ -123,6 +123,16 @@ const permissionsConfig = [
     permission: 'kiosk_create',
     module: 'kiosk',
   },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+    permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'schedule_simple',
+    module: 'schedule_simple',
+    permission: 'schedule_create_and_edit',
+  },
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -216,7 +226,7 @@ export default function DashboardMenu() {
       });
     }
 
-    /* Kiosk */
+    // Kiosk
     if (permissions.kiosk) {
       nextMenuItems.push({
         icon: KioskIcon,
@@ -243,6 +253,16 @@ export default function DashboardMenu() {
         icon: EventsIcon,
         title: t('Events'),
         name: 'events',
+      });
+    }
+
+    // Schedule
+    if (permissions.schedule_shift || permissions.schedule_simple) {
+      nextMenuItems.push({
+        to: `/settings/schedule/${companyId}`,
+        icon: ScheduleIcon,
+        title: t('Schedule'),
+        name: 'schedule',
       });
     }
 

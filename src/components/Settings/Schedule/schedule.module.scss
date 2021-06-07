@@ -1,0 +1,74 @@
+.icon {
+  width: 40px !important;
+  height: 34px !important;
+}
+
+.clockInRestriction {
+  display: flex;
+
+  label {
+    margin-right: 23px;
+  }
+}
+
+.clockIn {
+  display: flex;
+  align-items: center;
+  margin-left: -9px;
+
+  & > div {
+    min-width: 30px;
+
+    input {
+      width: 30px;
+      max-width: 30px;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 10px 5px;
+      margin-left: 15px;
+      margin-right: 9px;
+
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      &[type=number] {
+        -moz-appearance: textfield;
+      }
+    }
+  }
+}
+
+.hr {
+  height: 1px;
+  background: #e8eff6;
+  margin: 20px 0 23px 0;
+}
+
+.workAtNight {
+  display: flex;
+
+  label {
+    margin-right: 67px;
+    font-family: "Helvetica Neue Bold", sans-serif;
+  }
+}
+
+.dayStart {
+  display: flex;
+  flex-direction: column;
+  width: 210px;
+  margin-top: 5px;
+
+  &__label {
+    display: flex;
+
+    label {
+      margin-right: 23px;
+    }
+  }
+}

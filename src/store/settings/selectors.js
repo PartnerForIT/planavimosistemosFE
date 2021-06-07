@@ -35,3 +35,7 @@ export const eventsSelector = (state) => state.settings.events;
 export const eventsTypesSelector = (state) => state.settings.eventsTypes;
 export const eventsLoadingSelector = (state) => state.settings.eventsLoading;
 export const eventUpdateLoadingSelector = (state) => state.settings.eventUpdateLoading;
+
+// schedule
+export const scheduleSelector = (state) => state.settings.schedule;
+export const scheduleLoadingSelector = (state) => state.settings.scheduleLoading;

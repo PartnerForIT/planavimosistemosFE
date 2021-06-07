@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Label from '../../../Core/InputLabel';
 import Tooltip from '../../../Core/Tooltip';
 import SimpleSelect from '../../../Core/SimpleSelect';
-import timeArr from '../../../Helpers/time';
+import { timeArr } from '../../../Helpers/time';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 
 export default function WorkingTime({

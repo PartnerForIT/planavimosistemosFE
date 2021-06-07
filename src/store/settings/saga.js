@@ -59,6 +59,8 @@ import {
   POST_EVENT,
   PATCH_EVENT,
   DELETE_EVENT,
+  GET_SETTINGS_SCHEDULE,
+  POST_SETTINGS_SCHEDULE,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -117,11 +119,14 @@ import {
   patchEventSuccess,
   deleteEventSuccess,
   postEventSuccess,
+  getScheduleSuccess,
+  getScheduleError,
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
 
 import { makeQueryString } from '../../components/Helpers';
+import getToken from '../getToken';
 
 axios.defaults.timeout = 10000 * 10;
 
@@ -1449,6 +1454,41 @@ function* deleteEvent(action) {
   }
 }
 
+/* schedule */
+function* getSchedule(action) {
+  try {
+    const { data } = yield call(
+      axios.get,
+      `${config.api.url}/company/${action.companyId}/schedule/settings`,
+      getToken(),
+    );
+    yield put(getScheduleSuccess(data));
+  } catch (e) {
+    yield put(getScheduleError());
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* postSchedule(action) {
+  try {
+    const { data } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.companyId}/schedule/settings/edit`,
+      action.data,
+      getToken(),
+    );
+    yield put(addSnackbar('Schedule parameters edited successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* SettingsWatcher() {
   yield takeLeading(PATCH_JOB, patchJob);
   yield takeLeading(DELETE_JOB, deleteJob);
@@ -1505,4 +1545,6 @@ export default function* SettingsWatcher() {
   yield takeLatest(POST_EVENT, postEvent);
   yield takeLatest(PATCH_EVENT, patchEvent);
   yield takeLatest(DELETE_EVENT, deleteEvent);
+  yield takeLatest(GET_SETTINGS_SCHEDULE, getSchedule);
+  yield takeLatest(POST_SETTINGS_SCHEDULE, postSchedule);
 }

@@ -116,6 +116,11 @@ import {
   PATCH_EVENT_SUCCESS,
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
+
+  GET_SETTINGS_SCHEDULE,
+  GET_SETTINGS_SCHEDULE_SUCCESS,
+  GET_SETTINGS_SCHEDULE_ERROR,
+  POST_SETTINGS_SCHEDULE,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -731,4 +736,22 @@ export const deleteEvent = (companyId, id) => ({
 export const deleteEventSuccess = (id) => ({
   type: DELETE_EVENT_SUCCESS,
   id,
+});
+
+/* Schedule */
+export const getSchedule = (companyId) => ({
+  type: GET_SETTINGS_SCHEDULE,
+  companyId,
+});
+export const getScheduleSuccess = (data) => ({
+  type: GET_SETTINGS_SCHEDULE_SUCCESS,
+  data,
+});
+export const getScheduleError = () => ({
+  type: GET_SETTINGS_SCHEDULE_ERROR,
+});
+export const postSchedule = (companyId, data) => ({
+  type: POST_SETTINGS_SCHEDULE,
+  companyId,
+  data,
 });
