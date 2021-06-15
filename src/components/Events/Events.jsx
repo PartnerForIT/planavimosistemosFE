@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { useParams } from 'react-router-dom';
-import Snackbar from '@material-ui/core/Snackbar';
-import { makeStyles } from '@material-ui/core/styles';
 
 import MaynLayout from '../Core/MainLayout';
 import styles from './Events.module.scss';
@@ -21,7 +19,6 @@ import TableIcon from '../Icons/TableIcon';
 import { employeesSelector } from '../../store/employees/selectors';
 import { AccountGroupsSelector } from '../../store/settings/selectors';
 import { eventsSelector, eventsLoadingSelector } from '../../store/events/selectors';
-import { isShowSnackbar, snackbarText, snackbarType } from '../../store/organizationList/selectors';
 import { getAccountGroups } from '../../store/settings/actions';
 import { getEventsList, enterViewed, getEventView } from '../../store/events/actions';
 import { getEmployees } from '../../store/employees/actions';
@@ -85,17 +82,6 @@ const columnsWidth = {
 //   },
 // ];
 
-const useStyles = makeStyles(() => ({
-  error: {
-    background: '#de4343',
-    color: '#fff',
-  },
-  success: {
-    background: '#3bc39e',
-    color: '#fff',
-  },
-}));
-
 const Events = () => {
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState(columns);
@@ -115,15 +101,11 @@ const Events = () => {
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
   const { t } = useTranslation();
-  const classes = useStyles();
   const dispatch = useDispatch();
   const eventsLoading = useSelector(eventsLoadingSelector);
   const events = useSelector(eventsSelector);
   const getAllEmployees = useSelector(employeesSelector);
   const selectGroups = useSelector(AccountGroupsSelector);
-  const isSnackbar = useSelector(isShowSnackbar);
-  const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
   const { id: companyId } = useParams();
   // const permissions = usePermissions(permissionsConfig);
 
@@ -355,21 +337,6 @@ const Events = () => {
           }
         </div>
       </div>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        ContentProps={{
-          classes: {
-            root: typeSnackbar === 'error' ? classes.error : classes.success,
-          },
-        }}
-        severity='error'
-        open={isSnackbar}
-        message={textSnackbar}
-        key='right'
-      />
     </MaynLayout>
   );
 };

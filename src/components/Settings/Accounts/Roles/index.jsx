@@ -61,7 +61,7 @@ const initialRoleAccess = {
         earnings: 'Can see earnings',
         profit: 'Can see profit',
         generate: 'Can generate reports',
-        assigned_place: 'Reports only for assigned place',
+        assigned_place: 'Schedule only for assigned place',
       },
     },
     events: {

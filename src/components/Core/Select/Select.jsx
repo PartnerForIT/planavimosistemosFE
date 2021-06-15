@@ -12,7 +12,13 @@ import styles from './Select.module.scss';
 
 const initialItems = [];
 export default function CustomSelect({
-  items = initialItems, placeholder, buttonLabel, onChange = () => ({}), onFilter, width = '100%', type = 'items',
+  items = initialItems,
+  placeholder,
+  buttonLabel,
+  onChange = Function.prototype,
+  onFilter,
+  width = '100%',
+  type = 'items',
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -209,7 +215,7 @@ export default function CustomSelect({
                 }
               </Scrollbar>
             </CheckboxGroup>
-            <Button fillWidth onClick={() => onFilter()}>{buttonLabel}</Button>
+            <Button fillWidth onClick={() => onFilter(itemsArray)}>{buttonLabel}</Button>
           </div>
         ) : null}
       </div>

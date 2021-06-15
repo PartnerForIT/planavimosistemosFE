@@ -1,0 +1,29 @@
+@import "../variables";
+
+.buttonGroupToggle {
+  display: flex;
+  border-radius: 4px;
+  background-color: #ebf3fa;
+  padding: 2px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 98px;
+    border-radius: 3px;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 14px;
+    color: #000;
+    outline: transparent;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &_selected {
+      color: $white;
+      background: $blue-grownu;
+    }
+  }
+}

@@ -31,9 +31,12 @@ import Accounts from './components/Settings/Accounts/AccountsList';
 import ActivityLog from './components/Settings/ActivityLog';
 import Grouping from './components/Settings/Accounts/Grouping';
 import Roles from './components/Settings/Accounts/Roles';
-import Schedule from './components/Settings/Schedule';
+import ScheduleSettings from './components/Settings/Schedule';
 import KioskList from './components/Settings/Kiosk/KioskList';
 import KioskUsers from './components/Settings/Kiosk/KioskUsers';
+import Schedule from './components/Schedule/Schedule';
+import CreateShift from './components/Schedule/CreateShift';
+import SnackbarBlock from './components/Core/SnackbarBlock';
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'grouwn',
@@ -56,6 +59,8 @@ const App = () => (
           <AuthRoute exact path='/events/:id' component={Events} />
           <AuthRoute exact path='/overview' component={Overview} />
           <AuthRoute exact path='/overview/:id' component={Overview} />
+          <AuthRoute exact path='/schedule/:id' component={Schedule} />
+          <AuthRoute exact path='/schedule/:id/create' component={CreateShift} />
           <AuthRoute exact path='/settings/:id' component={Settings} />
           <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
           <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />
@@ -63,7 +68,7 @@ const App = () => (
           <AuthRoute exact path='/settings/accounts/accounts-list/:id' component={Accounts} />
           <AuthRoute exact path='/settings/accounts/grouping/:id' component={Grouping} />
           <AuthRoute exact path='/settings/accounts/roles/:id' component={Roles} />
-          <AuthRoute exact path='/settings/schedule/:id' component={Schedule} />
+          <AuthRoute exact path='/settings/schedule/:id' component={ScheduleSettings} />
           <AuthRoute exact path='/settings/kiosk/kiosk-list/:id' component={KioskList} />
           <AuthRoute exact path='/settings/kiosk/users/:id' component={KioskUsers} />
           <AuthRoute exact path='/settings/categories/:id' component={SettingCategories} />
@@ -77,6 +82,7 @@ const App = () => (
         </Switch>
       </Router>
     </Suspense>
+    <SnackbarBlock />
   </StylesProvider>
 );
 

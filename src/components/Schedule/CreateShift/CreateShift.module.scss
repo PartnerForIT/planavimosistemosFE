@@ -1,0 +1,39 @@
+.createShift {
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 0 15px 0 16px;
+    height: 68px;
+    background-color: #fafbfc;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+    &__title {
+      font-size: 24px;
+      font-family: "Helvetica Neue Bold", sans-serif;
+      margin-right: auto;
+    }
+
+    & > div {
+      margin-right: 20px;
+
+      //&:nth-child(2) {
+      //}
+
+      &:nth-child(3) {
+        width: 267px;
+      }
+
+      &:nth-child(4) {
+        max-width: 170px;
+      }
+    }
+
+    & > button {
+      width: 170px;
+    }
+  }
+}

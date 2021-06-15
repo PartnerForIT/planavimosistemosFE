@@ -5,9 +5,7 @@ import React, {
   useRef,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import Snackbar from '@material-ui/core/Snackbar';
 import { useTranslation } from 'react-i18next';
 import MaynLayout from '../Core/MainLayout';
 import PageLayout from '../Core/PageLayout';
@@ -19,23 +17,14 @@ import {
   getCountries, addOrganization, getCompanies, postChangeOfStatus,
 } from '../../store/organizationList/actions';
 import {
-  countriesSelector, isShowSnackbar, snackbarType, snackbarText,
-  companiesSelector, statsSelector, isLoadingSelector,
+  countriesSelector,
+  companiesSelector,
+  statsSelector,
+  isLoadingSelector,
 } from '../../store/organizationList/selectors';
 import DeleteConfirmation from '../Core/Dialog/DeleteConfirmation';
 import DataTable from '../Core/DataTableCustom/OLT';
 import routes from '../../config/routes';
-
-const useStyles = makeStyles(() => ({
-  error: {
-    background: '#de4343',
-    color: '#fff',
-  },
-  success: {
-    background: '#3bc39e',
-    color: '#fff',
-  },
-}));
 
 const columns = [
   { label: 'ID', field: 'id', checked: true },
@@ -68,7 +57,6 @@ const columnsWidthArray = {
 const page = {};
 
 export default function OrganizationList() {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -94,9 +82,6 @@ export default function OrganizationList() {
   const [totalDuration] = useState(null);
 
   const countries = useSelector(countriesSelector);
-  const isSnackbar = useSelector(isShowSnackbar);
-  const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
   const companies = useSelector(companiesSelector);
   const stats = useSelector(statsSelector);
   const isLoading = useSelector(isLoadingSelector);
@@ -346,19 +331,6 @@ export default function OrganizationList() {
           accountList
         />
       </PageLayout>
-
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        ContentProps={{
-          classes: {
-            root: typeSnackbar === 'error' ? classes.error : classes.success,
-          },
-        }}
-        severity='error'
-        open={isSnackbar}
-        message={textSnackbar}
-        key='rigth'
-      />
     </MaynLayout>
   );
 }

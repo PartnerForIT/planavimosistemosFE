@@ -1,0 +1,37 @@
+.shiftColor {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &__label {
+    font-size: 15px;
+    font-family: Helvetica Neue, sans-serif;
+    margin-right: 10px;
+    color: #818f94;
+  }
+
+  &__button {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+  }
+
+  &__modal {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    background-color: #fff;
+    border: 1px solid #0085ff;
+    border-radius: 6px;
+    padding: 13px 15px 15px 15px;
+    width: 200px;
+    z-index: 2;
+
+    &__title {
+      font-size: 14px;
+      font-family: "Helvetica Neue Medium", sans-serif;
+    }
+  }
+}
