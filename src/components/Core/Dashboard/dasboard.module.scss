@@ -89,6 +89,15 @@
   }
 }
 
+.Onelink:hover svg {
+  g[data-name="schedule"] {
+    path[data-name="Контур 13723"],
+    g[data-name="Эллипс 7"] {
+      stroke: $blue-2 !important;
+    }
+  }
+}
+
 .Onelink,
 %Onelink {
   display: flex;

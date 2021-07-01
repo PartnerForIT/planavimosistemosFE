@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames';
 
 import PalceIcon from '../../Icons/Place';
 import OverviewIcon from '../../Icons/Overview';
@@ -13,6 +14,7 @@ import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
 // import AnalyticsIcon from '../../Icons/Analytics';
 import EventsIcon from '../../Icons/Events';
+import ScheduleIcon from '../../Icons/Schedule';
 // import VacationIcon from '../../Icons/Vacation';
 import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
@@ -29,6 +31,12 @@ import {
   isCreateTicketSelector,
 } from '../../../store/company/selectors';
 import grownu from '../../Icons/Grownu.png';
+import GenaralIcon from "../../Icons/GeneralIcon";
+import AccountIcon from "../../Icons/AccountsIcon";
+import KioskIcon from "../../Icons/Kiosk";
+import ActivityLogIcon from "../../Icons/ActivityLog";
+import DeleteIcon from "../../Icons/DeleteIcon";
+import CategoriesIcon from "../../Icons/Categories";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -62,6 +70,14 @@ const permissionsConfig = [
   {
     name: 'reports',
     module: 'reports',
+  },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+  },
+  {
+    name: 'schedule_simple',
+    module: 'schedule_simple',
   },
 ];
 
@@ -109,6 +125,69 @@ export default function ButtonAppBar({ logOut }) {
     }));
   };
 
+  const menuLeftItems = useMemo(() => {
+    const nextMenuItems = [];
+    const isSuperAdmin = user?.user?.role_id === 1;
+
+    /* Super Admin Links */
+    if (!companyId && isSuperAdmin) {
+      return [
+        {
+          Icon: OverviewIcon,
+          title: t('Overview'),
+          name: 'overview',
+          to: '/overview',
+        },
+        {
+          Icon: PalceIcon,
+          title: t('Org. List'),
+          name: 'organization-list',
+          to: '/organization-list',
+        },
+      ];
+    }
+
+    /* Company Links */
+    if (permissions.logbook) {
+      nextMenuItems.push({
+        Icon: LogbookIcon,
+        title: t('Logbook'),
+        name: 'logbook',
+        to: `/logbook/${companyId}`,
+        width: 19.28,
+        height: 24.9,
+      });
+    }
+    if (permissions.events) {
+      nextMenuItems.push({
+        Icon: EventsIcon,
+        title: t('Events'),
+        name: 'events',
+        to: `/events/${companyId}`,
+      });
+    }
+    if (permissions.reports) {
+      nextMenuItems.push({
+        Icon: OverviewIcon,
+        title: t('Reports'),
+        name: 'reports',
+        to: `/reports/${companyId}`,
+      });
+    }
+    if (permissions.schedule_shift || permissions.schedule_simple) {
+      nextMenuItems.push({
+        Icon: ScheduleIcon,
+        title: t('Schedule'),
+        name: 'schedule',
+        to: `/schedule/${companyId}`,
+        width: 33,
+        height: 28,
+      });
+    }
+
+    return nextMenuItems;
+  }, [permissions, companyId, t, user]);
+
   useEffect(() => {
     if (companyId) {
       dispatch(getSecurityCompany(companyId));
@@ -119,119 +198,66 @@ export default function ButtonAppBar({ logOut }) {
     <div className={classes.root}>
       <AppBar position='fixed' className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          {/* SuperAdmin Links */}
-          {
-            (!companyId && user?.user?.role_id === 1)
-            && (
-            <div className={styles.linkBlock}>
-              <div className={styles.logoWrapper}>
-                <img
-                  alt=''
-                  src={grownu}
-                  className={styles.logo}
-                />
-              </div>
-              <Link to='/overview' className={pageName === 'overview' ? styles.activelink : styles.link}>
-                <OverviewIcon className={styles.icon} />
-                <span className={styles.link__text}>{t('Overview')}</span>
-              </Link>
+          <div className={styles.linkBlock}>
+            <div className={styles.logoWrapper}>
+              <img
+                alt=''
+                src={grownu}
+                className={styles.logo}
+              />
+            </div>
+            {menuLeftItems.map((item) => (
               <Link
-                to='/organization-list'
-                className={pageName === 'organization-list' ? styles.activelink : styles.link}
+                to={item.to}
+                className={classNames(styles.link, { [styles.link_active]: pageName === item.name })}
               >
-                <PalceIcon className={styles.icon} />
+                <item.Icon
+                  className={styles.icon}
+                  width={item.width}
+                  heigt={item.height}
+                />
                 <span className={styles.link__text}>
-                  {' '}
-                  {t('Org. List')}
+                  {item.title}
                 </span>
               </Link>
-            </div>
-            )
-          }
-          {/* Company Links */}
-          {
-            companyId && (
-              <div className={styles.linkBlock}>
-                <div className={styles.logoWrapper}>
-                  <img
-                    alt=''
-                    src={grownu}
-                    className={styles.logo}
-                  />
-                </div>
-                {
-                  // <Link
-                  //   to={`/overview/${companyId}`}
-                  //   className={pageName === 'overview' ? styles.activelink : styles.link}
-                  // >
-                  //   <OverviewIcon className={styles.icon}/>
-                  //   <span className={styles.link__text}>{t('Overview')}</span>
-                  // </Link>
-                }
-                {
-                  // <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activelink : styles.link}>
-                  //   <PalceIcon className={styles.icon} />
-                  //   <span className={styles.link__text}>{t('Place')}</span>
-                  // </Link>
-                }
-                {
-                  permissions.logbook && (
-                    <Link
-                      to={`/logbook/${companyId}`}
-                      className={pageName === 'logbook' ? styles.activelink : styles.link}
-                    >
-                      <LogbookIcon className={styles.icon} width={19.28} height={24.9} />
-                      <span className={styles.link__text}>{t('Logbook')}</span>
-                    </Link>
-                  )
-                }
-                {
-                  // <Link
-                  //     to={`/analytics/${id}`}
-                  //     className={pageName === 'analytics' ? styles.activelink : styles.link}
-                  // >
-                  //   <AnalyticsIcon className={styles.icon} />
-                  //   <span className={styles.link__text}>{t('Analytics')}</span>
-                  // </Link>
-                }
-                {
-                  permissions.events && (
-                    <Link
-                      to={`/events/${companyId}`}
-                      className={pageName === 'events' ? styles.activelink : styles.link}
-                    >
-                      <EventsIcon fill='#808f94' viewBox='0 0 32 32' className={styles.icon} />
-                      <span className={styles.link__text}>{t('Events')}</span>
-                    </Link>
-                  )
-                }
-                {
-                  permissions.reports && (
-                    <Link
-                      to={`/reports/${companyId}`}
-                      className={pageName === 'reports' ? styles.activelink : styles.link}
-                    >
-                      <OverviewIcon className={styles.icon} />
-                      <span className={styles.link__text}>{t('Reports')}</span>
-                    </Link>
-                  )
-                }
-                {
-                  // <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activelink : styles.link}>
-                  //   <VacationIcon className={styles.icon} />
-                  //   <span className={styles.link__text}>{t('Vacation')}</span>
-                  // </Link>
-                }
-              </div>
-            )
-          }
+            ))}
+            {
+              // companyId && (
+              //   <>
+              //     <Link
+              //       to={`/overview/${companyId}`}
+              //       className={pageName === 'overview' ? styles.activeLink : styles.link}
+              //     >
+              //       <OverviewIcon className={styles.icon}/>
+              //       <span className={styles.link__text}>{t('Overview')}</span>
+              //     </Link>
+              //     <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activeLink : styles.link}>
+              //       <PalceIcon className={styles.icon} />
+              //       <span className={styles.link__text}>{t('Place')}</span>
+              //     </Link>
+              //     <Link
+              //         to={`/analytics/${id}`}
+              //         className={pageName === 'analytics' ? styles.activeLink : styles.link}
+              //     >
+              //       <AnalyticsIcon className={styles.icon} />
+              //       <span className={styles.link__text}>{t('Analytics')}</span>
+              //     </Link>
+              //     <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activeLink : styles.link}>
+              //       <VacationIcon className={styles.icon} />
+              //       <span className={styles.link__text}>{t('Vacation')}</span>
+              //     </Link>
+              //   </>
+              // )
+            }
+          </div>
+
           <div className={styles.rightLinkBlock}>
             {/* Company Links */}
             {companyId && (
               <div className={styles.linkBlock}>
                 <Link
                   to={`/settings/${companyId}`}
-                  className={pageName === 'settings' ? styles.activelink : styles.link}
+                  className={classNames(styles.link, { [styles.link_active]: pageName === 'settings' })}
                 >
                   <SettingsIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Settings')}</span>

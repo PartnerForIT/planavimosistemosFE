@@ -8,21 +8,6 @@
   display: flex;
 }
 
-.activelink {
-  @extend .link;
-
-  background: $blue-100;
-  color: $blue-2;
-
-  path {
-    fill: $blue-2 !important;
-  }
-
-  &::before {
-    opacity: 1;
-  }
-}
-
 .logoWrapper {
   border-right: 1px solid #d0dfef;
   margin-right: 5px;
@@ -48,6 +33,7 @@
   border: none;
   box-sizing: content-box;
   font: 14px Helvetica Neue, sans-serif;
+  cursor: pointer;
 
   .icon path {
     fill: $gray !important;
@@ -73,13 +59,20 @@
     transition: all 0.2s ease-in-out;
   }
 
+  &_active,
   &:hover {
     background: $blue-100;
     color: $blue-2;
-    cursor: pointer;
 
-    path {
+    .icon path {
       fill: $blue-2 !important;
+    }
+
+    g[data-name="schedule"] {
+      path[data-name="Контур 13723"],
+      g[data-name="Эллипс 7"] {
+        stroke: $blue-2 !important;
+      }
     }
 
     &::before {

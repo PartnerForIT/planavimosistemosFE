@@ -358,7 +358,7 @@ export default function DashboardMenu() {
                 key={item.name}
               >
                 <IconWrapper>
-                  <item.icon />
+                  <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
                 </IconWrapper>
                 <span className={styles.textLink}>
                   {item.title}
