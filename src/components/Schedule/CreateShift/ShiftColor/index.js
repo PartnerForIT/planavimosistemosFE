@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import classes from './ShiftColor.module.scss';
@@ -10,17 +8,21 @@ export default ({
   label,
   modalLabel,
   value,
+  colors,
+  onChange,
 }) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { id: companyId } = useParams();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickOpenModal = () => {
-    setIsOpen(true);
+    setIsOpen((prevState) => !prevState);
   };
   const handleOnClickAway = () => {
+    setIsOpen(false);
+  };
+  const handleChange = (color) => {
+    onChange(color);
     setIsOpen(false);
   };
 
@@ -50,10 +52,30 @@ export default ({
                 {modalLabel}
               </div>
               <div className={classes.shiftColor__modal__label}>
-                {modalLabel}
+                {t('Bright')}
+              </div>
+              <div className={classes.shiftColor__modal__colors}>
+                {colors.bright.map((item) => (
+                  <button
+                    className={classes.shiftColor__modal__colors__item}
+                    style={{ backgroundColor: item }}
+                    aria-label={item}
+                    onClick={() => handleChange(item)}
+                  />
+                ))}
               </div>
               <div className={classes.shiftColor__modal__label}>
-                {modalLabel}
+                {t('Calm')}
+              </div>
+              <div className={classes.shiftColor__modal__colors}>
+                {colors.calm.map((item) => (
+                  <button
+                    className={classes.shiftColor__modal__colors__item}
+                    style={{ backgroundColor: item }}
+                    aria-label={item}
+                    onClick={() => handleChange(item)}
+                  />
+                ))}
               </div>
             </div>
           )
