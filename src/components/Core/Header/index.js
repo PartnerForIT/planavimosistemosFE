@@ -209,6 +209,7 @@ export default function ButtonAppBar({ logOut }) {
             {menuLeftItems.map((item) => (
               <Link
                 to={item.to}
+                key={item.name}
                 className={classNames(styles.link, { [styles.link_active]: pageName === item.name })}
               >
                 <item.Icon

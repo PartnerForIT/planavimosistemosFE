@@ -17,6 +17,8 @@
   border-radius: 16px;
   width: 100%;
   min-height: calc(100vh - 121px);
+  display: flex;
+  flex-direction: column;
 }
 
 .progressBlock {

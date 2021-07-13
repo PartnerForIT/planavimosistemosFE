@@ -35,7 +35,7 @@ import ScheduleSettings from './components/Settings/Schedule';
 import KioskList from './components/Settings/Kiosk/KioskList';
 import KioskUsers from './components/Settings/Kiosk/KioskUsers';
 import Schedule from './components/Schedule/Schedule';
-import CreateShift from './components/Schedule/CreateShift';
+import CreateShift from './components/Schedule/Shift';
 import SnackbarBlock from './components/Core/SnackbarBlock';
 
 const generateClassName = createGenerateClassName({
@@ -60,7 +60,8 @@ const App = () => (
           <AuthRoute exact path='/overview' component={Overview} />
           <AuthRoute exact path='/overview/:id' component={Overview} />
           <AuthRoute exact path='/schedule/:id' component={Schedule} />
-          <AuthRoute exact path='/schedule/:id/create' component={CreateShift} />
+          <AuthRoute exact path='/:id/schedule/shift/:shiftId' component={CreateShift} />
+          <AuthRoute exact path='/:id/schedule/shift/create' component={CreateShift} />
           <AuthRoute exact path='/settings/:id' component={Settings} />
           <AuthRoute exact path='/settings/general/company/:id' component={SettingCompany} />
           <AuthRoute exact path='/settings/general/work-time/:id' component={SettingWorkTime} />

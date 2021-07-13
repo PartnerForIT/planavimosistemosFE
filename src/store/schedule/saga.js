@@ -7,17 +7,62 @@ import {
 import config from 'config';
 import axios from 'axios';
 import {
+  GET_SCHEDULE,
+  POST_SHIFT,
   GET_SHIFT,
+  PUT_SHIFT,
 } from './types';
-import { getShiftSuccess, getShiftError } from './actions';
+import {
+  getScheduleSuccess,
+  getScheduleError,
+  postShiftSuccess,
+  postShiftError,
+  getShiftSuccess,
+  getShiftError,
+  putShiftSuccess,
+  putShiftError,
+} from './actions';
 import { addSnackbar, dismissSnackbar } from '../organizationList/actions';
 import getToken from '../getToken';
+
+function* getSchedule(action) {
+  try {
+    const { data } = yield call(
+      axios.get,
+      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}`,
+      getToken(),
+    );
+    yield put(getScheduleSuccess(data));
+  } catch (error) {
+    yield put(getScheduleError());
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* postShift(action) {
+  try {
+    yield call(
+      axios.post,
+      `${config.api.url}/company/${action.companyId}/shift/store`,
+      action.data,
+      getToken(),
+    );
+    yield put(postShiftSuccess());
+  } catch (error) {
+    yield put(postShiftError());
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
 
 function* getShift(action) {
   try {
     const { data } = yield call(
       axios.get,
-      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}`,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}`,
       getToken(),
     );
     yield put(getShiftSuccess(data));
@@ -29,6 +74,26 @@ function* getShift(action) {
   }
 }
 
+function* putShift(action) {
+  try {
+    const { data } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.companyId}/shift/edit/${action.id}`,
+      action.data,
+      getToken(),
+    );
+    yield put(putShiftSuccess(data));
+  } catch (error) {
+    yield put(putShiftError());
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* ScheduleWatcher() {
+  yield takeLatest(GET_SCHEDULE, getSchedule);
   yield takeLatest(GET_SHIFT, getShift);
+  yield takeLatest(POST_SHIFT, postShift);
+  yield takeLatest(PUT_SHIFT, putShift);
 }
