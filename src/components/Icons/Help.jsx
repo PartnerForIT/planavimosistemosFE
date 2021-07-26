@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function HelpIcon() {
   return (
-    <SvgIcon viewBox='0 0 24.902 24.902'>
+    <SvgIcon viewBox='0 0 24.902 24.902' data-name='help-icon'>
       <path
         id='Контур_12983'
         data-name='Контур 12983'

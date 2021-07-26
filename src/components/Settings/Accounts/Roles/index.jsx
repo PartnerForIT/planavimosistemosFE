@@ -12,6 +12,7 @@ import PageLayout from '../../../Core/PageLayout';
 import Progress from '../../../Core/Progress';
 import {
   AccountGroupsSelector, employeesSelector,
+  JournalDataSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, rolesLoading, rolesSelector, snackbarText, snackbarType,
 } from '../../../../store/settings/selectors';
 import { userSelector } from '../../../../store/auth/selectors';
@@ -25,6 +26,7 @@ import {
   loadEmployeesAll,
   loadPermissions,
   updateRole,
+  loadLogbookJournal,
 } from '../../../../store/settings/actions';
 import AddEditItem from '../../../Core/Dialog/AddEditItem';
 import usePermissions from '../../../Core/usePermissions';
@@ -45,7 +47,7 @@ const initialRoleAccess = {
   moduleAccess: {
     logbook: {
       options: {
-        edit_settings: 'Can edit Events settings',
+        edit_settings: 'Can edit Logbook settings',
         edit_logs: 'Can edit entry logs',
         delete_logs: 'Can delete entry logs',
         earnings: 'Can see earnings (APP)',
@@ -61,7 +63,7 @@ const initialRoleAccess = {
         earnings: 'Can see earnings',
         profit: 'Can see profit',
         generate: 'Can generate reports',
-        assigned_place: 'Schedule only for assigned place',
+        assigned_place: 'Reports only for assigned place',
       },
     },
     events: {
@@ -177,7 +179,7 @@ const permissionsConfig = [
     module: 'activity_log',
   },
 ];
-function Roles() {
+export default () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -192,6 +194,7 @@ function Roles() {
   const roles = useSelector(rolesSelector);
   const loading = useSelector(rolesLoading);
   const allPermissions = useSelector(permissionsSelector);
+  const journal = useSelector(JournalDataSelector);
   const { users: employees } = useSelector(employeesSelector);
   const groups = useSelector(AccountGroupsSelector);
   const [activeRole, setActiveRole] = useState({});
@@ -252,6 +255,7 @@ function Roles() {
 
     // eslint-disable-next-line no-shadow
     const nextPermissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
+    console.log('data', data);
 
     dispatch(updateRole(id, activeRole.id, {
       permissions: nextPermissions,
@@ -270,6 +274,7 @@ function Roles() {
     dispatch(getRoles(id));
     dispatch(loadEmployeesAll(id));
     dispatch(getAccountGroups(id));
+    dispatch(loadLogbookJournal(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -285,7 +290,9 @@ function Roles() {
 
       const nextModuleAccess = Object.keys(moduleAccess).reduce((acc, key) => {
         acc[key] = {
-          ...moduleAccess[key],
+          options: {
+            ...moduleAccess[key].options,
+          },
           enabled: true,
         };
         return acc;
@@ -302,7 +309,7 @@ function Roles() {
       if (!permissions.logbook) {
         delete nextModuleAccess.logbook;
       } else {
-        if (!permissions.use_approval_flow) {
+        if (!permissions.use_approval_flow || !journal.approve_flow) {
           delete nextModuleAccess.logbook.options.requests;
           delete nextModuleAccess.logbook.options.requests_in_place;
         }
@@ -349,7 +356,7 @@ function Roles() {
         moduleAccess: nextModuleAccess,
       };
     });
-  }, [permissions]);
+  }, [permissions, journal]);
 
   useEffect(() => {
     if (roles.length && !_.isEmpty(activeRole)) {
@@ -373,17 +380,8 @@ function Roles() {
     }
   };
 
-  const patchRole = (roleId, data) => {
-    const {
-      name,
-      checked,
-    } = data;
-    if (checked) {
-      dispatch(updateRole(id, roleId, { default: checked ? 1 : 0 }));
-    }
-    if (name) {
-      dispatch(updateRole(id, roleId, { name }));
-    }
+  const changeDefaultRole = (roleId, checked) => {
+    dispatch(updateRole(id, roleId, { default: checked ? 1 : 0 }));
   };
 
   const removeRole = (roleId) => {
@@ -408,7 +406,7 @@ function Roles() {
                   setActiveRole={setActiveRole}
                   createNewRole={() => setNewRoleOpen(true)}
                   remove={removeRole}
-                  updateRole={patchRole}
+                  changeDefaultRole={changeDefaultRole}
                   loading={loading}
                   setEditVisible={setEditVisible}
                   availableDetails={availableDetails}
@@ -466,6 +464,4 @@ function Roles() {
       </Dashboard>
     </MaynLayout>
   );
-}
-
-export default Roles;
+};

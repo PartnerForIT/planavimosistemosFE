@@ -329,6 +329,18 @@ export default function ImportAccounts({
     }
   };
 
+  const handleChangeIgnoreEmpty = () => {
+    const nextIgnoreEmpty = !ignoreEmpty;
+    setIgnoreEmpty(nextIgnoreEmpty);
+
+    setData(((prevState) => prevState.map((item) => ({
+      ...item,
+      warning: nextIgnoreEmpty
+        ? !(item.email && item.name && item.surname)
+        : !(item.group && item.subgroup && item.place && item.role && item.skill),
+    }))));
+  };
+
   return (
     <Dialog
       handleClose={handleCloseHandler}
@@ -395,7 +407,7 @@ export default function ImportAccounts({
             selectedItem={{}}
             setSelectedItem={() => ({})}
             onSelect={selectionHandler}
-            colored={{ warning: !ignoreEmpty, error: true, success: true }}
+            colored={{ warning: true, error: true, success: true }}
             selectAllItems={selectAllHandler}
             all={all}
             setAll={setAll}
@@ -413,7 +425,7 @@ export default function ImportAccounts({
             <StyledCheckbox
               label={t('Ignore empty values')}
               checked={ignoreEmpty}
-              onChange={() => setIgnoreEmpty((prevState) => !prevState)}
+              onChange={handleChangeIgnoreEmpty}
             />
           </div>
           <div className={classes.importStats}>

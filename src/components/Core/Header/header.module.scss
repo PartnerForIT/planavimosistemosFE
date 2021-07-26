@@ -6,16 +6,19 @@
 
 .rightLinkBlock {
   display: flex;
+  height: 71px;
 }
 
 .logoWrapper {
   border-right: 1px solid #d0dfef;
   margin-right: 5px;
   height: 71px;
-}
 
-.logo {
-  margin: 25px 28px 18px 5px;
+  & > svg {
+    margin: 25px 28px 18px 5px;
+    width: 95px;
+    height: 28px;
+  }
 }
 
 .link {
@@ -25,6 +28,7 @@
   justify-content: center;
   position: relative;
   width: 70px;
+  min-width: 70px;
   padding: 14px 6px 10px 6px;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
@@ -48,10 +52,8 @@
   &::before {
     content: "";
     position: absolute;
-    //display: 0;
     left: 0;
     right: 0;
-    top: auto;
     bottom: 0;
     height: 2px;
     background: $blue;
@@ -71,6 +73,21 @@
     g[data-name="schedule"] {
       path[data-name="Контур 13723"],
       g[data-name="Эллипс 7"] {
+        stroke: $blue-2 !important;
+      }
+    }
+
+    svg[data-name="settings-icon"],
+    svg[data-name="events-icon"],
+    svg[data-name="help-icon"] {
+      path {
+        fill: $blue-2 !important;
+      }
+    }
+
+    svg[data-name="logbook-icon"] {
+      path {
+        fill: $blue-2 !important;
         stroke: $blue-2 !important;
       }
     }

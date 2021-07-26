@@ -8,7 +8,9 @@ export const login = (email, password) => ({
     method: 'POST',
     url: '/auth/login',
     data: {
-      email, password,
+      email,
+      password,
+      device: 'Web',
     },
   },
   meta: {

@@ -22,19 +22,13 @@ const columnsWidthArray = {
 const page = {};
 
 export default function ActivityTable({
-  style, activityLog = [], employees, places, t, isLoading,
+  style, activityLog = [], places, t, isLoading,
 }) {
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [totalDuration] = useState(null);
-
-  // filter function
-  const userName = useCallback((row) => {
-    const name = employees.filter((item) => item.user_id === row.user_id);
-    return name[0] ? `${name[0].name} ${name[0].surname}` : '';
-  }, [employees]);
 
   const paceName = useCallback((row) => {
     const place = places.filter((item) => item.id === row.place_id);
@@ -46,11 +40,11 @@ export default function ActivityTable({
       ? activityLog.map((item) => ({
         ...item,
         created_at: item.created_at ? moment(item.created_at).format('lll') : '',
-        user_id: userName(item),
+        user_id: `${item.user?.name} ${item.user?.surname}`,
         place_id: paceName(item),
       }))
       : activityLog);
-  }, [activityLog, paceName, userName]);
+  }, [activityLog, paceName]);
 
   const selectionHandler = (itemId, value) => {
     setDataArray((prevState) => prevState.map((item) => {

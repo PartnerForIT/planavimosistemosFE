@@ -31,12 +31,11 @@ function RoleDetails({
   employees,
   groups,
   setRoleAccess,
-  roleEmployeesEdit = () => ({}),
-  rolesPermissionsEdit = () => ({}),
+  roleEmployeesEdit = Function.prototype,
+  rolesPermissionsEdit,
   permissionsIds,
   disable,
   setDisable,
-  setDisableReady,
   permissions,
 }) {
   const [activePermissions, setActivePermissions] = useState(
@@ -66,6 +65,11 @@ function RoleDetails({
       if (prevState.some((i) => i === id)) {
         return prevState.filter((i) => i !== id);
       }
+
+      if (permissionsIds.accounts.create === id) {
+        return [...prevState, id, permissionsIds.accounts.see_and_edit];
+      }
+
       return [...prevState, id];
     });
     setReady(true);
@@ -104,11 +108,9 @@ function RoleDetails({
             readOnly={readOnly}
             categoriesNames={categoriesNames}
             setRoleAccess={setRoleAccess}
-            rolesPermissionsEdit={rolesPermissionsEdit}
             activePermissions={activePermissions}
             permissionsIds={permissionsIds}
             onChangeHandler={onChangeHandler}
-            setDisableReady={setDisableReady}
           />
         )
       }
@@ -119,7 +121,6 @@ function RoleDetails({
         readOnly={readOnly}
         categoriesNames={categoriesNames}
         setRoleAccess={setRoleAccess}
-        rolesPermissionsEdit={rolesPermissionsEdit}
         activePermissions={activePermissions}
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}

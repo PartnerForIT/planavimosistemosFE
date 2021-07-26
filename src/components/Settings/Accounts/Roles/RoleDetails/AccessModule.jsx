@@ -3,15 +3,13 @@ import React from 'react';
 import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
 
-const AccessModule = React.memo(({
+export default React.memo(({
   roleAccess = {},
   categoriesNames = {},
-  setRoleAccess,
   activeRole,
   activePermissions = [],
   onChangeHandler,
   permissionsIds,
-  setDisableReady,
   readOnly,
 }) => (
   <Content title='Access by module' tooltip='Tooltip'>
@@ -19,23 +17,20 @@ const AccessModule = React.memo(({
       Object.keys(roleAccess.moduleAccess).map((key) => (
         <OptionsCheckBoxGroup
           key={key}
+          id={permissionsIds[key].module_access}
           name={key}
-          active={roleAccess.moduleAccess[key].enabled ? roleAccess.moduleAccess[key].checked ?? true : false}
-          enabled={roleAccess.moduleAccess[key].enabled}
+          active={activePermissions.some((i) => i === permissionsIds[key].module_access)}
+          enabled={permissionsIds[key]}
           readOnly={readOnly}
           details={roleAccess.moduleAccess[key].options}
           categoriesNames={categoriesNames}
           roleAccess={roleAccess}
-          setRoleAccess={setRoleAccess}
           activeRole={activeRole}
           onChangeHandler={onChangeHandler}
           permissionsIds={permissionsIds}
           activePermissions={activePermissions}
-          setDisableReady={setDisableReady}
         />
       ))
     }
   </Content>
 ));
-
-export default AccessModule;

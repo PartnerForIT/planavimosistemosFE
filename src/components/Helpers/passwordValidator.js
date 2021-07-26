@@ -1,5 +1,5 @@
 const passwordValidator = ({
-  password = '', minLength = 8, numbers = true, specialChars = true, uppercase = true,
+  password = '', minLength = 1, numbers = false, specialChars = false, uppercase = false,
 }) => {
   if (password.length) {
     if (minLength && password.length < minLength) {

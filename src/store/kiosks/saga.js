@@ -85,7 +85,7 @@ function* postKiosk(action) {
     yield put(postKioskSuccess(data));
   } catch (e) {
     yield put(postKioskError());
-    yield put(addSnackbar(e.message || 'An error occurred while adding a kiosk', 'error'));
+    yield put(addSnackbar(e.response?.data?.message || e.message || 'An error occurred while adding a kiosk', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }

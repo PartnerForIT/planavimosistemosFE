@@ -35,6 +35,7 @@ function Third({
   security,
   setUser,
   create,
+  firstUser,
 }) {
   const { t } = useTranslation();
 
@@ -44,11 +45,6 @@ function Third({
   } = security;
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(false);
-
-  // numbers
-  // special_chars
-  // uppercase
-  // min_password_length
 
   const generatePass = () => {
     const password = passwordGenerator({
@@ -66,9 +62,9 @@ function Third({
     const { password = '' } = user;
     const {
       // eslint-disable-next-line no-shadow
-      min_password_length: minLength = 8, numbers = false,
+      min_password_length: minLength = 1, numbers = false,
       // eslint-disable-next-line no-shadow
-      special_chars: specialChars = true, uppercase = true,
+      special_chars: specialChars = false, uppercase = false,
     } = security;
 
     const error = passwordValidator({
@@ -158,85 +154,79 @@ function Third({
   return (
     <>
       <form className={style.thirdForm}>
-
         <div className={classnames(style.info, style.borderRight)}>
           <UserCard user={user} groups={groups} places={places} skills={skills} />
         </div>
         <div className={style.form}>
 
-          <div className={style.formItem}>
-            <div className={style.radio}>
-              <Label text={t('User invitation mode')} htmlFor='invitation' />
-              {
-                simpleInvitation
-                && (
-                  <FormControlLabel
-                    value='invitation'
-                    control={(
-                      <BlueRadio
-                        checked={simpleInvitation}
-                        onChange={checkboxHandler}
-                        value='simple'
-                        name='invitation'
-                        label={t('Simple')}
-                        inputProps={{ 'aria-label': t('Simple') }}
-                      />
-                    )}
-                    label={t('Simple')}
-                  />
-                )
-              }
-              {
-                !simpleInvitation
-                && (
-                  <FormControlLabel
-                    value='invitation'
-                    control={(
-                      <BlueRadio
-                        checked={!simpleInvitation}
-                        onChange={checkboxHandler}
-                        value='email'
-                        name='invitation'
-                        label={t('Invitation link via e-mail')}
-                        inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
-                      />
-                    )}
-                    label={t('Invitation link via e-mail')}
-                  />
-                )
-              }
-            </div>
-          </div>
           {
-            !simpleInvitation
-              ? <><Email user={user} handleInput={handleInput} errors={errors} /></>
-              : (
-                <>
-                  <Email user={user} handleInput={handleInput} errors={errors} />
-                  <div className={style.formItem}>
-                    <Label htmlFor='password' text={t('Password')} />
-                    <div className={classnames(style.grid, style.start)}>
-                      <div>
-                        <Input
-                          type='password'
-                          name='password'
-                          fullWidth
-                          placeholder={t('Enter Password')}
-                          value={user.password ?? ''}
-                          onChange={handleInput}
-                          required
-                          autoComplete='new-password'
-                        />
-                        {
-                          errors.password
-                          && <small className='error'>{errors.password?.message}</small>
-                        }
-                      </div>
-                      <Button size='big' onClick={generatePass}>{t('Generate')}</Button>
-                    </div>
+            !firstUser && (
+              <div className={style.formItem}>
+                <div className={style.radio}>
+                  <Label text={t('User invitation mode')} htmlFor='invitation' />
+                  {
+                    simpleInvitation ? (
+                      <FormControlLabel
+                        value='invitation'
+                        control={(
+                          <BlueRadio
+                            checked={simpleInvitation}
+                            onChange={checkboxHandler}
+                            value='simple'
+                            name='invitation'
+                            label={t('Simple')}
+                            inputProps={{ 'aria-label': t('Simple') }}
+                          />
+                        )}
+                        label={t('Simple')}
+                      />
+                    ) : (
+                      <FormControlLabel
+                        value='invitation'
+                        control={(
+                          <BlueRadio
+                            checked={!simpleInvitation}
+                            onChange={checkboxHandler}
+                            value='email'
+                            name='invitation'
+                            label={t('Invitation link via e-mail')}
+                            inputProps={{ 'aria-label': t('Invitation link via e-mail') }}
+                          />
+                        )}
+                        label={t('Invitation link via e-mail')}
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            )
+          }
+          <Email user={user} handleInput={handleInput} errors={errors} />
+          {
+            (!firstUser && simpleInvitation) && (
+              <div className={style.formItem}>
+                <Label htmlFor='password' text={t('Password')} />
+                <div className={classnames(style.grid, style.start)}>
+                  <div>
+                    <Input
+                      type='password'
+                      name='password'
+                      fullWidth
+                      placeholder={t('Enter Password')}
+                      value={user.password ?? ''}
+                      onChange={handleInput}
+                      required
+                      autoComplete='new-password'
+                    />
+                    {
+                      errors.password
+                      && <small className='error'>{errors.password?.message}</small>
+                    }
                   </div>
-                </>
-              )
+                  <Button size='big' onClick={generatePass}>{t('Generate')}</Button>
+                </div>
+              </div>
+            )
           }
         </div>
 
@@ -248,7 +238,7 @@ function Third({
           size='big'
           green
           inverse
-          disabled={simpleInvitation ? !(user.password && _.isEmpty(errors.password)) : false}
+          disabled={(!firstUser && simpleInvitation) ? !(user.password && _.isEmpty(errors.password)) : false}
         >
           {t('Create and Invite')}
         </Button>

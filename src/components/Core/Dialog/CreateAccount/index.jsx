@@ -15,6 +15,7 @@ export default function CreateAccount({
   places,
   security,
   createAccount,
+  firstUser,
 }) {
   const initialUser = {
     photo: '',
@@ -99,6 +100,7 @@ export default function CreateAccount({
           setUser={setUser}
           security={security}
           create={create}
+          firstUser={firstUser}
         />
       </div>
 

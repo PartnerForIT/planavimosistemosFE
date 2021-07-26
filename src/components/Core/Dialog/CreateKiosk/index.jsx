@@ -52,8 +52,8 @@ export default ({
     const { password } = formValues;
 
     const {
-      min_password_length: minLength = 8, numbers = false,
-      special_chars: specialChars = true, uppercase = true,
+      min_password_length: minLength = 1, numbers = false,
+      special_chars: specialChars = false, uppercase = false,
     } = security;
 
     const error = passwordValidator({

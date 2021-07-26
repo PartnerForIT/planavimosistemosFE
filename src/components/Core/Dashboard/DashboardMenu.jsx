@@ -92,6 +92,7 @@ const permissionsConfig = [
   {
     name: 'logbook',
     module: 'logbook',
+    permission: 'logbook_module_access',
   },
   {
     name: 'events',
@@ -132,6 +133,10 @@ const permissionsConfig = [
     name: 'schedule_simple',
     module: 'schedule_simple',
     permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'schedule_module',
+    permission: 'schedule_module_access',
   },
 ];
 export default function DashboardMenu() {
@@ -257,7 +262,7 @@ export default function DashboardMenu() {
     }
 
     // Schedule
-    if (permissions.schedule_shift || permissions.schedule_simple) {
+    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_module) {
       nextMenuItems.push({
         to: `/settings/schedule/${companyId}`,
         icon: ScheduleIcon,

@@ -121,7 +121,6 @@ export default function ActivityLog() {
                   <Table
                     style={styles}
                     activityLog={activityLog}
-                    employees={employeesArr}
                     places={placesArr}
                     t={t}
                     isLoading={isLoading}

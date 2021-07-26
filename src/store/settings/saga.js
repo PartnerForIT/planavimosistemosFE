@@ -124,6 +124,7 @@ import {
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
+import { authCheck } from '../auth/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 import getToken from '../getToken';
@@ -883,6 +884,8 @@ function* patchRole(action) {
     const { data: { permissions, name, users }, roleId } = action;
 
     const roles = yield select((state) => state.settings.roles ?? []);
+    // const newPermissions = yield select((state) => state.settings.permissions ?? []);
+    // const userRoleId = yield select((state) => state.auth.user.user.role_id ?? []);
 
     if (permissions) {
       // eslint-disable-next-line no-unused-vars
@@ -894,9 +897,14 @@ function* patchRole(action) {
           ...tokens,
         });
 
+      // console.log('permissions = ', permissions);
+      // console.log('permissions = ', newPermissions);
+      // console.log('action = ', action);
+      // console.log('roleId = ', roleId);
+      // console.log('userRoleId = ', userRoleId);
+      yield put(authCheck());
       yield put(getRolesSuccess(roles.map((role) => (role.id === roleId ? { ...role, data } : role))));
-    }
-    if (!permissions) {
+    } else {
       // eslint-disable-next-line no-unused-vars
       const { data } = yield call(axios.patch,
         `${config.api.url}/company/${action.companyId}/account-roles/update/${roleId}`,

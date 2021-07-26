@@ -5,40 +5,27 @@ import classes from '../Roles.module.scss';
 
 const OptionsCheckBoxGroup = ({
   name = '',
+  id,
   details = {},
   categoriesNames = {},
   active = false,
-  setRoleAccess,
   onChangeHandler,
   permissionsIds,
   activePermissions,
-  setDisableReady,
   enabled = false,
   readOnly = false,
 }) => {
   const { t } = useTranslation();
+  const style = { lineHeight: 0.5 };
+
   return (
     <>
       <StyledCheckbox
         label={t(categoriesNames[name] ?? '')}
-        style={{ lineHeight: 0.5 }}
+        style={style}
         /* eslint-disable-next-line no-shadow */
-        onChange={(opt, checked) => {
-          setRoleAccess((prevState) => ({
-            ...prevState,
-            moduleAccess: {
-              ...prevState.moduleAccess,
-              [opt]: {
-                ...prevState.moduleAccess[opt],
-                checked,
-              },
-            },
-          }));
-          if (!checked) {
-            setDisableReady(true);
-          }
-        }}
-        id={name}
+        onChange={onChangeHandler}
+        id={id}
         checked={active}
         disabled={!enabled || readOnly}
       />
@@ -47,16 +34,16 @@ const OptionsCheckBoxGroup = ({
           {
             Object.keys(details)
               .map((x) => {
-                const id = permissionsIds[name][x] ?? 0;
+                const detailId = permissionsIds[name][x] ?? 0;
                 return (
                   <StyledCheckbox
                     key={x}
-                    id={id}
+                    id={detailId}
                     label={t(details[x])}
-                    style={{ lineHeight: 0.5 }}
+                    style={style}
                     onChange={onChangeHandler}
                     disabled={!active || readOnly}
-                    checked={activePermissions.some((i) => i === id)}
+                    checked={activePermissions.some((i) => i === detailId)}
                   />
                 );
               })

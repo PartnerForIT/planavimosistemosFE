@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +12,9 @@ import OverviewIcon from '../../Icons/Overview';
 import LogbookIcon from '../../Icons/LogbookIcon';
 import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
-// import AnalyticsIcon from '../../Icons/Analytics';
 import EventsIcon from '../../Icons/Events';
 import ScheduleIcon from '../../Icons/Schedule';
-// import VacationIcon from '../../Icons/Vacation';
+import Grownu from '../../Icons/Grownu';
 import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
@@ -30,13 +29,6 @@ import {
   postSupportTicketLoadingSelector,
   isCreateTicketSelector,
 } from '../../../store/company/selectors';
-import grownu from '../../Icons/Grownu.png';
-import GenaralIcon from "../../Icons/GeneralIcon";
-import AccountIcon from "../../Icons/AccountsIcon";
-import KioskIcon from "../../Icons/Kiosk";
-import ActivityLogIcon from "../../Icons/ActivityLog";
-import DeleteIcon from "../../Icons/DeleteIcon";
-import CategoriesIcon from "../../Icons/Categories";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -62,22 +54,27 @@ const permissionsConfig = [
   {
     name: 'logbook',
     module: 'logbook',
+    permission: 'logbook_module_access',
   },
   {
     name: 'events',
     module: 'events',
+    permission: 'events_module_access',
   },
   {
     name: 'reports',
     module: 'reports',
+    permission: 'reports_module_access',
   },
   {
     name: 'schedule_shift',
     module: 'schedule_shift',
+    permission: 'schedule_module_access',
   },
   {
     name: 'schedule_simple',
     module: 'schedule_simple',
+    permission: 'schedule_module_access',
   },
 ];
 
@@ -200,11 +197,7 @@ export default function ButtonAppBar({ logOut }) {
         <Toolbar className={classes.toolbar}>
           <div className={styles.linkBlock}>
             <div className={styles.logoWrapper}>
-              <img
-                alt=''
-                src={grownu}
-                className={styles.logo}
-              />
+              <Grownu />
             </div>
             {menuLeftItems.map((item) => (
               <Link
@@ -222,45 +215,17 @@ export default function ButtonAppBar({ logOut }) {
                 </span>
               </Link>
             ))}
-            {
-              // companyId && (
-              //   <>
-              //     <Link
-              //       to={`/overview/${companyId}`}
-              //       className={pageName === 'overview' ? styles.activeLink : styles.link}
-              //     >
-              //       <OverviewIcon className={styles.icon}/>
-              //       <span className={styles.link__text}>{t('Overview')}</span>
-              //     </Link>
-              //     <Link to={`/place/${id}`} className={pageName === 'place' ? styles.activeLink : styles.link}>
-              //       <PalceIcon className={styles.icon} />
-              //       <span className={styles.link__text}>{t('Place')}</span>
-              //     </Link>
-              //     <Link
-              //         to={`/analytics/${id}`}
-              //         className={pageName === 'analytics' ? styles.activeLink : styles.link}
-              //     >
-              //       <AnalyticsIcon className={styles.icon} />
-              //       <span className={styles.link__text}>{t('Analytics')}</span>
-              //     </Link>
-              //     <Link to={`/vacation/${id}`} className={pageName === 'vacation' ? styles.activeLink : styles.link}>
-              //       <VacationIcon className={styles.icon} />
-              //       <span className={styles.link__text}>{t('Vacation')}</span>
-              //     </Link>
-              //   </>
-              // )
-            }
           </div>
 
           <div className={styles.rightLinkBlock}>
             {/* Company Links */}
             {companyId && (
-              <div className={styles.linkBlock}>
+              <>
                 <Link
                   to={`/settings/${companyId}`}
                   className={classNames(styles.link, { [styles.link_active]: pageName === 'settings' })}
                 >
-                  <SettingsIcon className={styles.icon} />
+                  <SettingsIcon />
                   <span className={styles.link__text}>{t('Settings')}</span>
                 </Link>
                 <button
@@ -272,7 +237,7 @@ export default function ButtonAppBar({ logOut }) {
                   <HelpIcon className={styles.icon} />
                   <span className={styles.link__text}>{t('Help')}</span>
                 </button>
-              </div>
+              </>
             )}
             <AvatarComponent
               setAnchorEl={setAnchorEl}

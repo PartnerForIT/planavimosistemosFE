@@ -19,7 +19,7 @@ const CardItem = ({
   onClickRemove,
   isDefault,
   canDelete = true,
-  onChangeCheckbox,
+  onChangeDefault,
   itemName,
   ariaLabel,
   descriptionCount,
@@ -49,13 +49,13 @@ const CardItem = ({
       <p className={classes.card_title}>{name}</p>
       <small>{`${userCount} ${t(descriptionCount)}`}</small>
       {
-        !!onChangeCheckbox && (!!isDefault || selected) && (
+        !!onChangeDefault && (!!isDefault || selected) && (
           <div className={classes.card_check}>
             <StyledCheckbox
               id={id}
               label={t('Make default')}
               checked={!!isDefault}
-              onChange={onChangeCheckbox}
+              onChange={onChangeDefault}
             />
           </div>
         )

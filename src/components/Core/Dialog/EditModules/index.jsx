@@ -181,7 +181,7 @@ export default ({
               <Checkbox
                 onChange={handleChange}
                 checked={modules.use_approval_flow}
-                label={t('Can use Approval Flow in Events')}
+                label={t('Can use Approval Flow in Logbook')}
                 name='use_approval_flow'
               />
               <Checkbox

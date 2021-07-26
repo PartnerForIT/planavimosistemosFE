@@ -34,7 +34,7 @@ const InvitePage = () => {
   const employee = false;
 
   const {
-    minLength = 8, numbers = true, specialChars = true, uppercase = true,
+    minLength = 1, numbers = false, specialChars = false, uppercase = false,
   } = security;
 
   const [values, setValues] = useState({

@@ -3,7 +3,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
 export default ({ className, fill }) => (
-  <SvgIcon width='15' height='19' viewBox='0 0 15 19' className={className}>
+  <SvgIcon width='15' height='19' viewBox='0 0 15 19' className={className} data-name='logbook-icon'>
     <path
       id='Вычитание_7'
       data-name='Вычитание 7'

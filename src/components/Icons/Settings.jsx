@@ -2,9 +2,9 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-export default function HelpIcon() {
+export default function SettingsIcon() {
   return (
-    <SvgIcon viewBox='0 0 24.597 20.789'>
+    <SvgIcon viewBox='0 0 24.597 20.789' data-name='settings-icon'>
       <path
         id='Контур_13423'
         data-name='Контур 13423'

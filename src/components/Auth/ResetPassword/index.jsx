@@ -38,10 +38,10 @@ const ResetPassword = () => {
     loading,
   } = useSelector(companyServicesInfoSelector);
   const {
-    minLength = 8,
-    numbers = true,
-    specialChars = true,
-    uppercase = true,
+    minLength = 1,
+    numbers = false,
+    specialChars = false,
+    uppercase = false,
   } = security;
 
   const handleInput = (e) => {

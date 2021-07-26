@@ -450,6 +450,7 @@ export default function AccountsList() {
             places={places}
             security={security}
             createAccount={createAccount}
+            firstUser={!employees.length}
           />
           <EditAccount
             open={!!editVisible}
@@ -485,6 +486,10 @@ export default function AccountsList() {
             title={t('Import accounts')}
             open={importVisible}
             handleClose={() => {
+              if (importLoading) {
+                return;
+              }
+
               setImportVisible(false);
               if (!_.isEmpty(imported)) {
                 setCheckedItems([]);
