@@ -85,7 +85,6 @@ const InvitePage = () => {
       dispatch(confirmPassword({
         token,
         password: values.password,
-        password_confirmation: values.repeatPassword,
         email,
       }))
         .then(() => {
