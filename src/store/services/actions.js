@@ -21,10 +21,13 @@ export const confirmPassword = ({
   type: CONFIRM_PASSWORD,
   request: {
     method: 'POST',
-    url: `/password_confirmation/${token}`,
+    url: '/password/reset',
   },
   data: {
-    email, password, password_confirmation,
+    email,
+    password,
+    password_confirmation,
+    token,
   },
   meta: {
     thunk: true,
