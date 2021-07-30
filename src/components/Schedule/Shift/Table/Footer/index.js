@@ -1,21 +1,41 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 import Item from './Item';
 import classes from './Footer.module.scss';
 
-export default ({
-  data,
-}) => {
-  const { t } = useTranslation();
+const data = [
+  'total',
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+];
 
-  return (
-    <div className={classes.footer}>
-      {
-        data.map((item, index) => (
-          <Item key={`${item}-${index}`} />
-        ))
-      }
-    </div>
-  );
-};
+export default ({
+  timesPanel,
+  daysOfWeek,
+}) => (
+  <div className={classes.footer}>
+    {
+      data.map((item) => (
+        <Item
+          key={item}
+          employeeCount={timesPanel[item]?.employeeCount}
+          empty={(
+            (item === 'total' || (daysOfWeek[item - 1]?.checked && !daysOfWeek[item - 1]?.disabled))
+              ? !timesPanel[item]?.employeeCount
+              : true
+          )}
+          photos={timesPanel[item]?.photos}
+          hours={timesPanel[item]?.time}
+          money={timesPanel[item]?.cost}
+          title={timesPanel[item]?.title}
+          nested={timesPanel[item]?.children}
+        />
+      ))
+    }
+  </div>
+);

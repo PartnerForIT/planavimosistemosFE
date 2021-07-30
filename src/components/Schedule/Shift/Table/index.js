@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useEffect,
   useCallback,
   useMemo,
   useRef,
@@ -19,7 +18,6 @@ import SectionEmpty from './SectionEmpty';
 import Section from './Section';
 import DefaultShiftTime from './DefaultShiftTime';
 import classes from './Table.module.scss';
-import MainLayout from "../../../Core/MainLayout";
 
 /* consts */
 const cellArr = new Array(7).fill().map((_, index) => ({ id: `cell-background-${index}` }));
@@ -66,11 +64,17 @@ const daysOfWeekInitial = {
   2: weekMock,
   3: weekMock,
 };
-const dataInitial = {
+const initialData = {
   0: [],
   1: [],
   2: [],
   3: [],
+};
+const initialTimesPanel = {
+  0: {},
+  1: {},
+  2: {},
+  3: {},
 };
 
 const ResourcesCell = ({
@@ -282,18 +286,28 @@ const RowDefaultTimeContent = ({
   );
 };
 
-// initialData={initialValues.data}
+const trackYProps = {
+  renderer: ({ elementRef, ...props }) => (
+    <span
+      {...props}
+      ref={elementRef}
+      className={classes.scrollableContent__scrollbarTrackY}
+    />
+  ),
+};
+
 export default forwardRef(({
   numberOfWeeks,
   customWorkingTime,
   allJobTypes,
   employees,
+  startShiftFrom,
   initialValues = {
-    data: dataInitial,
+    data: initialData,
     resources: [],
+    timesPanel: initialTimesPanel,
   },
 }, ref) => {
-  // console.log('table = ', initialValues);
   const [data, setData] = useState(initialValues.data);
   const [resources, setResources] = useState(initialValues.resources);
   const [daysOfWeek, setDaysOfWeek] = useState(daysOfWeekInitial);
@@ -395,8 +409,6 @@ export default forwardRef(({
       const foundIndex = prevState[currentWeek].findIndex((item) => item.resourceId === resourceId);
       const cellIndex = cellId;
 
-      console.log('currentWeek', currentWeek);
-      console.log('prevState', prevState);
       return {
         ...prevState,
         [currentWeek]: [
@@ -446,39 +458,6 @@ export default forwardRef(({
       })),
     ]);
   };
-  const handleChangeNumber = ({ rowId, value }) => {
-    setResources((prevState) => {
-      const foundIndex = prevState.findIndex((item) => item.id === rowId);
-
-      let children;
-      if (value > prevState[foundIndex].children.length) {
-        children = [
-          ...prevState[foundIndex].children,
-          {
-            id: prevState[foundIndex].children.length,
-          },
-        ];
-      } else if (prevState[foundIndex].children.every((item) => item.title)) {
-        return prevState;
-      } else {
-        const foundEmptyLastIndex = prevState[foundIndex].children
-          .reduce((acc, curr, index) => (!curr.title ? index : acc), 0);
-        children = [
-          ...prevState[foundIndex].children.slice(0, foundEmptyLastIndex),
-          ...prevState[foundIndex].children.slice(foundEmptyLastIndex + 1),
-        ];
-      }
-
-      return [
-        ...prevState.slice(0, foundIndex),
-        {
-          ...prevState[foundIndex],
-          children,
-        },
-        ...prevState.slice(foundIndex + 1),
-      ];
-    });
-  };
   const handleSubmitAddEmployees = useCallback(({ parentRowId, items }) => {
     let currentItemIndex = 0;
     const newData = [];
@@ -526,6 +505,39 @@ export default forwardRef(({
       return acc;
     }, {}));
   }, [numberOfWeeks, defaultWorkingTime]);
+  const handleChangeNumber = ({ rowId, value }) => {
+    setResources((prevState) => {
+      const foundIndex = prevState.findIndex((item) => item.id === rowId);
+
+      let children;
+      if (value > prevState[foundIndex].children.length) {
+        children = [
+          ...prevState[foundIndex].children,
+          {
+            id: prevState[foundIndex].children.length,
+          },
+        ];
+      } else if (prevState[foundIndex].children.every((item) => item.title)) {
+        return prevState;
+      } else {
+        const foundEmptyLastIndex = prevState[foundIndex].children
+          .reduce((acc, curr, index) => (!curr.title ? index : acc), 0);
+        children = [
+          ...prevState[foundIndex].children.slice(0, foundEmptyLastIndex),
+          ...prevState[foundIndex].children.slice(foundEmptyLastIndex + 1),
+        ];
+      }
+
+      return [
+        ...prevState.slice(0, foundIndex),
+        {
+          ...prevState[foundIndex],
+          children,
+        },
+        ...prevState.slice(foundIndex + 1),
+      ];
+    });
+  };
   const handleDelete = ({ rowId, parentRowId }) => {
     setResources((prevState) => {
       if (parentRowId) {
@@ -639,6 +651,137 @@ export default forwardRef(({
 
     return new Array(count).fill().map((_, index) => ({ id: `row-background-${index}`, data: cellArr }));
   }, [resources]);
+  const timesPanel = useMemo(() => {
+    const startDay = startShiftFrom.clone().startOf('isoWeek').add(-1, 'days');
+    return Object.keys(initialTimesPanel).reduce((acc, week) => {
+      if (week <= numberOfWeeks - 1) {
+        const total = {
+          children: resources.map((jobType) => {
+            const children = jobType.children.reduce((accK, employee) => {
+              if (employee.title) {
+                accK.push({
+                  avatar: employee.photo,
+                  employeeId: employee.employeeId,
+                  name: employee.title,
+                  job_type_name: jobType.title,
+                  cost: 0,
+                  time: 0,
+                });
+              }
+              return accK;
+            }, []);
+
+            return {
+              name: jobType.title,
+              jobTypeId: jobType.jobTypeId,
+              employeeCount: children.length,
+              cost: 0,
+              time: 0,
+              children,
+            };
+          }),
+          cost: 0,
+          time: 0,
+        };
+
+        const weekInfo = weekMock.reduce((accJ, dayOfWeek, indexDay) => {
+          let totalDayEmployees = 0;
+          let dayTotalTime = 0;
+          let dayTotalCost = 0;
+          const photos = [];
+
+          const dayInfo = {
+            children: resources.map((jobType, index) => {
+              const {
+                children,
+                jobTypeTotalTime,
+                jobTypeTotalCost,
+              } = jobType.children.reduce((accK, employee, indexJ) => {
+                if (employee.title) {
+                  const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
+                  const foundData = data[week].find((itemD) => itemD.resourceId === employee.id);
+
+                  const timeStart = foundData.data[indexDay].time.start.split(':');
+                  const timeEnd = foundData.data[indexDay].time.end.split(':');
+                  const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
+                  const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
+                  const time = totalTimeEnd > totalTimeStart
+                      ? totalTimeEnd - totalTimeStart
+                      : totalTimeStart - totalTimeEnd;
+                  const cost = time * foundEmployee.profitability.cost;
+
+                  accK.jobTypeTotalTime += time;
+                  accK.jobTypeTotalCost += cost;
+                  accK.children.push({
+                    avatar: employee.photo,
+                    employeeId: employee.employeeId,
+                    name: employee.title,
+                    job_type_name: jobType.title,
+                    time,
+                    cost,
+                  });
+
+                  // total
+                  if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
+                    total.children[index].children[indexJ].cost += cost;
+                    total.children[index].children[indexJ].time += time;
+                    total.children[index].cost += cost;
+                    total.children[index].time += time;
+                    total.cost += cost;
+                    total.time += time;
+                  }
+
+                  if (photos.length < 2 && employee.photo) {
+                    photos.push(employee.photo);
+                  }
+                }
+                return accK;
+              }, {
+                children: [],
+                jobTypeTotalTime: 0,
+                jobTypeTotalCost: 0,
+              });
+
+              totalDayEmployees += children.length;
+              dayTotalTime += jobTypeTotalTime;
+              dayTotalCost += jobTypeTotalCost;
+
+              return {
+                name: jobType.title,
+                jobTypeId: jobType.jobTypeId,
+                employeeCount: children.length,
+                children,
+                time: jobTypeTotalTime,
+                cost: jobTypeTotalCost,
+              };
+            }),
+            employeeCount: totalDayEmployees,
+            photos,
+            time: dayTotalTime,
+            cost: dayTotalCost,
+            title: startDay.add(1, 'days').format('dddd MMMM DD'),
+          };
+
+          return {
+            ...accJ,
+            [dayOfWeek.id]: dayInfo,
+          };
+        }, {});
+
+        total.photos = weekInfo[1].photos;
+        total.employeeCount = weekInfo[1].employeeCount;
+
+        acc[week] = {
+          ...weekInfo,
+          total,
+        };
+      } else {
+        acc[week] = {};
+      }
+
+      return acc;
+    }, {});
+  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek]);
 
   return (
     <div className={classes.table}>
@@ -653,19 +796,8 @@ export default forwardRef(({
       <Scrollbar
         className={classes.scrollableContent}
         ref={scrollContainerRef}
+        trackYProps={trackYProps}
         noScrollX
-        trackYProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classes.scrollableContent__scrollbarTrackY}
-              />
-            );
-          },
-        }}
       >
         <>
           <div className={classes.table__content} ref={contentRef}>
@@ -746,7 +878,8 @@ export default forwardRef(({
         </>
       </Scrollbar>
       <Footer
-        data={new Array(8).fill()}
+        timesPanel={timesPanel[currentWeek]}
+        daysOfWeek={daysOfWeek[currentWeek]}
       />
     </div>
   );
