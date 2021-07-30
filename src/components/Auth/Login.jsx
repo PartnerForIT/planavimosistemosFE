@@ -12,13 +12,18 @@ import Logo from '../Logo';
 import styles from './Login.module.scss';
 import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
-import { login } from '../../store/auth/actions';
+import { authCheck, login } from '../../store/auth/actions';
 import routes from '../../config/routes';
-import { authErrorSelector, isLoadingSelector } from '../../store/auth/selectors';
+import {
+  authErrorSelector,
+  isLoadingSelector,
+} from '../../store/auth/selectors';
+import Progress from '../Core/Progress';
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -27,10 +32,15 @@ const LoginContainer = () => {
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const roleId = user.role_id;
-
-      history.push(roleId === 1 ? routes.ORG_LIST : `/${routes.COMPANY}/${user.company_id}`);
+      dispatch(authCheck())
+        .then((data) => {
+          const roleId = data.data.user.role_id;
+          history.push(roleId === 1 ? routes.ORG_LIST : `/${routes.COMPANY}/${data.data.user.company_id}`);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,6 +63,14 @@ const LoginContainer = () => {
   };
 
   const Delimiter = () => (<div className={styles.delimiter} />);
+
+  if (loading) {
+    return (
+      <div className={styles.porgressBlock}>
+        <Progress />
+      </div>
+    );
+  }
 
   return (
     <BackgroundWrapper className={styles.container}>

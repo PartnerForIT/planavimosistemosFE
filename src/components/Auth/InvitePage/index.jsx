@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { clearServices, confirmPassword, getCompanyInfo } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
@@ -19,8 +19,7 @@ const InvitePage = () => {
   const { t } = useTranslation();
   const { token } = useParams();
   const dispatch = useDispatch();
-
-  const [redirect, setRedirect] = useState(false);
+  const history = useHistory();
 
   const {
     email, security, company: { companyName = '' }, loading,
@@ -89,17 +88,11 @@ const InvitePage = () => {
       }))
         .then(() => {
           dispatch(clearServices());
-          setRedirect(true);
+          history.replace('/');
         })
-        .catch((e) => console.log(e));
+        .catch((e) => console.error(e));
     }
   };
-
-  if (redirect) {
-    return (
-      <Redirect to='/' />
-    );
-  }
 
   return (
     <BackgroundWrapper className={classes.root}>

@@ -17,7 +17,6 @@ import Events from './components/Events/Events';
 import Overview from './components/Overview';
 import Settings from './components/Settings';
 import Login from './components/Auth/Login';
-import Logout from './components/Auth/Logout';
 import AuthRoute from './components/Auth/AuthRoute';
 import SettingCompany from './components/Settings/General/Company';
 import SettingJournal from './components/Settings/Logbook/Journal';
@@ -49,7 +48,6 @@ const App = () => (
         <Switch>
           <Route exact path='/' component={Login} />
           <Route path='/404' component={Page404} />
-          <Route exact path='/logout' component={Logout} />
           <Route exact path='/forgot-password' component={ForgotPassword} />
           <Route exact path='/invite/:token' component={InvitePage} />
           <Route exact path='/reset/:token' component={ResetPassword} />

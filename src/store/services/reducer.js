@@ -28,12 +28,13 @@ export const reducer = (state = initialState, action) => {
         ...state, loading: false, error: action.error,
       };
 
-    case (CONFIRM_PASSWORD):
+    case CONFIRM_PASSWORD:
       return {
         ...state,
         loading: true,
       };
     case success(CONFIRM_PASSWORD):
+      localStorage.setItem('token', action.data.token);
       return {
         ...state,
         loading: false,
