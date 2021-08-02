@@ -100,7 +100,11 @@ function RoleDetails({
         readOnly={readOnly}
       />
       {
-        (permissions.reports || permissions.events || permissions.logbook) && (
+        (permissions.schedule_simple
+          || permissions.schedule_shift
+          || permissions.reports
+          || permissions.events
+          || permissions.logbook) && (
           <AccessModule
             activeRole={activeRole}
             availableDetails={availableDetails}

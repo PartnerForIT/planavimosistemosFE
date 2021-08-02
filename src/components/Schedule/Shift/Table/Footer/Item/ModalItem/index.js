@@ -13,6 +13,7 @@ const ModalItem = ({
   avatar,
   main,
   childLevel = 0,
+  withCost = false,
 }) => {
   const [isExtended, setIsExtended] = useState(true);
   const dots = useMemo(() => new Array(childLevel - (childLevel > 0 ? 1 : 0))
@@ -51,9 +52,13 @@ const ModalItem = ({
             <div className={classes.modalItem__content__row__first}>
               {title}
             </div>
-            <div className={classes.modalItem__content__row__first}>
-              {`${cost} USD`}
-            </div>
+            {
+              withCost && (
+                <div className={classes.modalItem__content__row__first}>
+                  {`${cost} USD`}
+                </div>
+              )
+            }
           </div>
           <div className={classes.modalItem__content__row}>
             <div className={classes.modalItem__content__row__second}>

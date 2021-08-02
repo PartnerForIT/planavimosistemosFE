@@ -32,6 +32,7 @@ import { settingWorkTime, isLoadingSelector } from '../../../store/settings/sele
 import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { employeesSelector } from '../../../store/employees/selectors';
 import { postShiftIsLoadingSelector, shiftSelector } from '../../../store/schedule/selectors';
+import usePermissions from '../../Core/usePermissions';
 
 import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
@@ -137,6 +138,13 @@ const weekMock = [
   },
 ];
 
+const permissionsConfig = [
+  {
+    name: 'cost',
+    module: 'cost_earning',
+  },
+];
+
 export default () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -150,7 +158,7 @@ export default () => {
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
   const [startShiftFrom, setStartShiftFrom] = useState(moment());
   const [customWorkingTime, setCustomWorkingTime] = useState(false);
-  const [saveChanges, setSaveChanges] = useState(false);
+  const [saveChanges, setSaveChanges] = useState('');
   const places = useSelector(placesSelector);
   const workTime = useSelector(settingWorkTime);
   const allJobTypes = useSelector(jobTypesSelector);
@@ -158,6 +166,7 @@ export default () => {
   const isLoading = useSelector(isLoadingSelector);
   const isLoadingPostShift = useSelector(postShiftIsLoadingSelector);
   const shift = useSelector(shiftSelector);
+  const permissions = usePermissions(permissionsConfig);
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -265,6 +274,10 @@ export default () => {
   };
   const handleCreatePlace = (placeName) => {
     dispatch(actionCreatePlace({ name: placeName }, companyId));
+
+    if (saveChanges === 'create_place') {
+      setSaveChanges(false);
+    }
   };
   const handleSaveShift = (values = {}) => {
     const {
@@ -337,8 +350,6 @@ export default () => {
         })),
       })),
     };
-    // console.log('data = ', JSON.stringify(data));
-    console.log('data = ', data);
 
     if (isCreate) {
       dispatch(postShift({ companyId, data }));
@@ -365,7 +376,7 @@ export default () => {
   useEffect(() => {
     dispatch(getPlaces(companyId)).then(({ data }) => {
       if (!data.length) {
-        setSaveChanges(true);
+        setSaveChanges('create_place');
       }
     });
     dispatch(getJobTypes(companyId));
@@ -392,8 +403,9 @@ export default () => {
   }, [initialValues]);
   useEffect(() => {
     if (workTime.work_time.work_days) {
-      const { days } = workTime.work_time.work_days;
       if (isCreate) {
+        const days = workTime.work_time.work_days?.days ?? [];
+
         // это создание, значит тянем онли с work_time
         const week = weekMock.reduce((acc, item, index) => {
           acc[index] = days.some((itemJ) => (itemJ.day === item.id));
@@ -443,7 +455,7 @@ export default () => {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
         const defaultTime = new Array(4).fill().reduce((acc, _, index) => {
           acc[index] = weekMock.map((item, indexDay) => {
-            const foundItem = shift.shift_info.defaultTime[index].find((itemJ) => (itemJ.day_of_week === indexDay));
+            const foundItem = shift.shift_info.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
 
             if (foundItem) {
               return {
@@ -554,12 +566,14 @@ export default () => {
             startShiftFrom={startShiftFrom}
             initialValues={initialValues}
             isCreate={isCreate}
+            withCost={permissions.cost}
           />
         )
       }
       {
         saveChanges && (
           <PopupSave
+            saveChanges={saveChanges}
             places={places}
             shiftName={shiftName}
             selectedPlace={selectedPlace}

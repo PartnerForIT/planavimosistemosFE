@@ -17,6 +17,7 @@ const data = [
 export default ({
   timesPanel,
   daysOfWeek,
+  withCost,
 }) => (
   <div className={classes.footer}>
     {
@@ -34,6 +35,7 @@ export default ({
           money={timesPanel[item]?.cost}
           title={timesPanel[item]?.title}
           nested={timesPanel[item]?.children}
+          withCost={withCost}
         />
       ))
     }

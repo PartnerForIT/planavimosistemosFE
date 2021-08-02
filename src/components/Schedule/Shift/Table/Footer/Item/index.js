@@ -65,6 +65,7 @@ export default ({
   nested,
   title,
   empty,
+  withCost,
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -122,9 +123,13 @@ export default ({
           <div className={classes.item__content__statistic__hours}>
             {`${hours} ${t('hours')}`}
           </div>
-          <div className={classes.item__content__statistic__money}>
-            {`${money} USD`}
-          </div>
+          {
+            withCost && (
+              <div className={classes.item__content__statistic__money}>
+                {`${money} USD`}
+              </div>
+            )
+          }
         </div>
       </button>
       {
@@ -153,6 +158,7 @@ export default ({
                       cost={item.cost}
                       time={item.time}
                       nested={item.children}
+                      withCost={withCost}
                       main
                     />
                   ))

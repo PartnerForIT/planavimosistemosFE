@@ -265,7 +265,7 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getSkills(companyId));
-    dispatch(getSchedule({ companyId, timeline: 'day' }));
+    dispatch(getSchedule({ companyId, timeline: 'daily' }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

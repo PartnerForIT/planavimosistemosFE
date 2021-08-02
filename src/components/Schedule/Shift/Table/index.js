@@ -302,6 +302,7 @@ export default forwardRef(({
   allJobTypes,
   employees,
   startShiftFrom,
+  withCost,
   initialValues = {
     data: initialData,
     resources: [],
@@ -594,15 +595,14 @@ export default forwardRef(({
         setData((prevState) => {
           const nextState = {};
 
-          if (prevState[1]) {
-            // eslint-disable-next-line prefer-destructuring
-            nextState[1] = prevState[0];
-          }
-          if ((countOfWeeks - 1) > 1 && prevState[2]) {
+          // eslint-disable-next-line prefer-destructuring
+          nextState[1] = prevState[0];
+
+          if ((countOfWeeks - 1) > 1) {
             // eslint-disable-next-line prefer-destructuring
             nextState[2] = prevState[0];
           }
-          if ((countOfWeeks - 1) > 2 && prevState[3]) {
+          if ((countOfWeeks - 1) > 2) {
             // eslint-disable-next-line prefer-destructuring
             nextState[3] = prevState[0];
           }
@@ -652,6 +652,7 @@ export default forwardRef(({
     return new Array(count).fill().map((_, index) => ({ id: `row-background-${index}`, data: cellArr }));
   }, [resources]);
   const timesPanel = useMemo(() => {
+    console.log('data', data);
     const startDay = startShiftFrom.clone().startOf('isoWeek').add(-1, 'days');
     return Object.keys(initialTimesPanel).reduce((acc, week) => {
       if (week <= numberOfWeeks - 1) {
@@ -706,8 +707,8 @@ export default forwardRef(({
                   const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
                   const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
                   const time = totalTimeEnd > totalTimeStart
-                      ? totalTimeEnd - totalTimeStart
-                      : totalTimeStart - totalTimeEnd;
+                    ? totalTimeEnd - totalTimeStart
+                    : totalTimeStart - totalTimeEnd;
                   const cost = time * foundEmployee.profitability.cost;
 
                   accK.jobTypeTotalTime += time;
@@ -880,6 +881,7 @@ export default forwardRef(({
       <Footer
         timesPanel={timesPanel[currentWeek]}
         daysOfWeek={daysOfWeek[currentWeek]}
+        withCost={withCost}
       />
     </div>
   );
