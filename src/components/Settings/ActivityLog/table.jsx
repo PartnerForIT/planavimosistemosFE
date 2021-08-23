@@ -40,7 +40,7 @@ export default function ActivityTable({
       ? activityLog.map((item) => ({
         ...item,
         created_at: item.created_at ? moment(item.created_at).format('lll') : '',
-        user_id: `${item.user?.name} ${item.user?.surname}`,
+        user_id: `${item.user?.employee?.name} ${item.user?.employee?.surname}`,
         place_id: paceName(item),
       }))
       : activityLog);
