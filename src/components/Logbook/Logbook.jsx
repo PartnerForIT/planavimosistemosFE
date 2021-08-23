@@ -8,11 +8,9 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core/styles';
 
 import MaynLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
-import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
@@ -54,7 +52,9 @@ import { downloadExcel, downloadPdf } from '../../store/reports/actions';
 import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+
 import EditEntry from './EditEntry';
+import styles from './Logbook.module.scss';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -134,17 +134,6 @@ const permissionsConfig = [
     module: 'comments_photo',
   },
 ];
-
-const useStyles = makeStyles(() => ({
-  error: {
-    background: '#de4343',
-    color: '#fff',
-  },
-  success: {
-    background: '#3bc39e',
-    color: '#fff',
-  },
-}));
 
 const Logbook = () => {
   /* Data table */
@@ -785,9 +774,11 @@ const Logbook = () => {
                   <EmployeeInfo />
                 )
                 : (
-                  <div className={styles.emptyWrapper}>
+                  <div className={styles.empty}>
                     <TableIcon />
-                    <p>Select any entry to get a detailed editable info</p>
+                    <div className={styles.empty__text}>
+                      Select any entry to get a detailed editable info
+                    </div>
                   </div>
                 )
           }

@@ -95,6 +95,10 @@ const permissionsConfig = [
     permission: 'logbook_module_access',
   },
   {
+    name: 'logbook_edit_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
     name: 'events',
     module: 'events',
     permission: 'events_create',
@@ -211,7 +215,7 @@ export default function DashboardMenu() {
       });
     }
 
-    if (permissions.logbook) {
+    if (permissions.logbook && permissions.logbook_edit_settings) {
       nextMenuItems.push({
         icon: LogbookIcon,
         title: t('Logbook'),
