@@ -37,6 +37,7 @@ $icon-width: 33px;
   padding: 11px;
   outline: none;
   max-height: 36px;
+  margin: 0;
 
   @include placeholder($input-placeholder-color);
 }
