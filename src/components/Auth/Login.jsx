@@ -34,8 +34,11 @@ const LoginContainer = () => {
     if (localStorage.getItem('token')) {
       dispatch(authCheck())
         .then((data) => {
-          const roleId = data.data.user.role_id;
-          history.push(roleId === 1 ? routes.ORG_LIST : `/${routes.COMPANY}/${data.data.user.company_id}`);
+          const {
+            role_id: roleId,
+            company_id: companyId,
+          } = data.data.user;
+          history.push(roleId === 1 ? routes.ORG_LIST : `/settings/${companyId}`);
           setLoading(false);
         })
         .catch(() => setLoading(false));
@@ -47,11 +50,16 @@ const LoginContainer = () => {
 
   const handleLogin = () => {
     dispatch(login(email, password)).then((data) => {
-      const roleId = data.data.user.role_id;
-      // eslint-disable-next-line no-unused-expressions
-      roleId === 1
-        ? history.push(routes.ORG_LIST)
-        : history.push(`/${routes.COMPANY}/${data.data.user.company_id}`);
+      const {
+        role_id: roleId,
+        company_id: companyId,
+      } = data.data.user;
+
+      if (roleId === 1) {
+        history.push(routes.ORG_LIST);
+      } else {
+        history.push(`/settings/${companyId}`);
+      }
     }).catch((error) => {
       console.log('Login error', error);
     });
