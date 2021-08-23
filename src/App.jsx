@@ -33,8 +33,8 @@ import Roles from './components/Settings/Accounts/Roles';
 import ScheduleSettings from './components/Settings/Schedule';
 import KioskList from './components/Settings/Kiosk/KioskList';
 import KioskUsers from './components/Settings/Kiosk/KioskUsers';
-import Schedule from './components/Schedule/Schedule';
-import CreateShift from './components/Schedule/Shift';
+import Schedule from './screens/Schedule';
+import CreateShift from './screens/Schedule/Shift';
 import SnackbarBlock from './components/Core/SnackbarBlock';
 
 const generateClassName = createGenerateClassName({
@@ -82,6 +82,7 @@ const App = () => (
       </Router>
     </Suspense>
     <SnackbarBlock />
+    <div id='portal' />
   </StylesProvider>
 );
 

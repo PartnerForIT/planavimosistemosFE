@@ -23,7 +23,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SCHEDULE:
-      return { ...state, loading: true };
+      return { ...state, loading: !action.firstLoading };
     case GET_SCHEDULE_SUCCESS:
       return {
         ...state,

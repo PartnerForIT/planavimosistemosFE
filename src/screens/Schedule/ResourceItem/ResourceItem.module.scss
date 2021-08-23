@@ -1,0 +1,13 @@
+.resourceItem {
+  &__title {
+    font-family: "Helvetica Neue Medium", sans-serif;
+    font-size: 14px;
+    color: black;
+    padding-bottom: 12px;
+    width: 168px;
+  }
+
+  &__space {
+    margin-top: -7px;
+  }
+}

@@ -1,0 +1,13 @@
+.rowContent {
+  display: flex;
+  border-bottom: 1px solid #d9dfe3;
+  height: 41px;
+
+  & > * {
+    border-left: 1px solid #d9dfe3;
+
+    &:first-child {
+      border-left-color: transparent;
+    }
+  }
+}

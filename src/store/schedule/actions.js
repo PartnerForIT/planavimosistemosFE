@@ -14,10 +14,17 @@ import {
   RESET_SHIFT,
 } from './types';
 
-export const getSchedule = ({ companyId, timeline }) => ({
+export const getSchedule = ({
+  companyId,
+  timeline,
+  fromDate,
+  firstLoading,
+}) => ({
   type: GET_SCHEDULE,
   companyId,
   timeline,
+  fromDate,
+  firstLoading,
 });
 export const getScheduleSuccess = (data) => ({
   type: GET_SCHEDULE_SUCCESS,

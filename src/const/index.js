@@ -12,6 +12,23 @@ export const EVENT_TYPE = {
   REMINDER_TO_CLOCK_OUT: 10,
 };
 
+export const TIMES_PANEL = [
+  'total',
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+];
+
+export const TIMELINE = {
+  DAY: 'day',
+  WEEK: 'week',
+  MONTH: 'month',
+};
+
 // const colors = {
 //   bright: [
 //     '#F23D79',

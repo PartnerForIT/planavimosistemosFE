@@ -1,0 +1,21 @@
+.content {
+  position: fixed;
+  //top: 0;
+  //right: -204px;
+  left: calc(100% + 4px);
+  background-color: #fff;
+  border: 1px solid #0085ff;
+  border-radius: 6px;
+  padding: 12px 15px;
+  box-sizing: border-box;
+  z-index: 8;
+
+  &__cancel {
+    position: absolute;
+    background: transparent;
+    border: none;
+    right: 8px;
+    top: 10px;
+    cursor: pointer;
+  }
+}

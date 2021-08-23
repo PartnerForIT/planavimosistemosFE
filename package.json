@@ -55,6 +55,8 @@
     "react-scrollbars-custom": "^4.0.21",
     "react-select": "^3.2.0",
     "react-switch": "^5.0.1",
+    "react-tooltip": "^4.2.21",
+    "react-use": "^17.2.4",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
