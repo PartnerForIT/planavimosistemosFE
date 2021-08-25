@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { format } from 'date-fns';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
@@ -147,7 +147,10 @@ const Logbook = () => {
   const [loading, setLoading] = useState(null);
   // const [page, setPage] = useState(1);
 
-  const [dateRange, setDateRange] = useState({});
+  const [dateRange, setDateRange] = useState({
+    startDate: startOfWeek(new Date()),
+    endDate: endOfWeek(new Date()),
+  });
 
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
@@ -683,6 +686,7 @@ const Logbook = () => {
   }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
+  console.log('dateRange', dateRange);
   return (
     <MaynLayout>
       <div className={styles.container}>

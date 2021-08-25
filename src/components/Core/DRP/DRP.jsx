@@ -16,7 +16,7 @@ const DRP = ({
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
   const [lastDateRange, setLastDateRange] = useState(initRange || {});
-  const [predefinedDateRange, setPredefinedDateRange] = useState({});
+  const [predefinedDateRange, setPredefinedDateRange] = useState(initRange || {});
   const { t } = useTranslation();
   const { startDate, endDate } = dateRange;
 

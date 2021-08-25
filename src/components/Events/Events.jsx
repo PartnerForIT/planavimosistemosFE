@@ -89,8 +89,8 @@ const Events = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const [dateRange, setDateRange] = useState({
-    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    startDate: startOfWeek(new Date()),
+    endDate: endOfWeek(new Date()),
   });
 
   const [groups, setGroups] = useState([]);

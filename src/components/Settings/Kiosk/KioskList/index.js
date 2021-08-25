@@ -53,7 +53,7 @@ import styles from './KioskList.module.scss';
 export default () => {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const useStyles = makeStyles(() => ({
     error: {
       background: '#de4343',
@@ -70,7 +70,7 @@ export default () => {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const security = useSelector(securityCompanySelector);
-  const allPlaces = useSelector(placesSelector);
+  const places = useSelector(placesSelector);
   const kiosksLoading = useSelector(kiosksLoadingSelector);
   const kiosks = useSelector(kiosksSelector);
   const settingsPhotoTakeLoading = useSelector(settingsPhotoTakeLoadingSelector);
@@ -81,7 +81,7 @@ export default () => {
   const [viewPasswordVisible, setViewPasswordVisible] = useState(false);
   const [createEditKioskVisible, setCreateEditKioskVisible] = useState(false);
   const [settingsValues, setSettingsValues] = useState({ take_in: false, take_out: false });
-  const [currentPlace, setCurrentPlace] = useState('');
+  const [filterPlace, setFilterPlace] = useState('allPlaces');
 
   const columns = useMemo(() => [
     { label: 'Kiosk name', field: 'name', checked: true },
@@ -111,7 +111,15 @@ export default () => {
 
     return {};
   }, [kiosks, selectedItemId]);
+  const optionsPlaces = useMemo(() => [
+    ...places,
+    {
+      id: 'allPlaces',
+      name: t('All places'),
+    },
+  ], [places, i18n.language]);
 
+  // allPlaces
   const onEditItem = (id) => {
     setSelectedItemId(id);
     setCreateEditKioskVisible(true);
@@ -165,7 +173,7 @@ export default () => {
     });
   };
   const handleChangePlace = (event) => {
-    setCurrentPlace(event.target.value);
+    setFilterPlace(event.target.value);
   };
 
   // eslint-disable-next-line no-shadow
@@ -191,8 +199,12 @@ export default () => {
     dispatch(getSettingsPhotoTake(companyId));
   }, [dispatch, companyId]);
   useEffect(() => {
-    dispatch(getKiosks(companyId, currentPlace));
-  }, [dispatch, companyId, currentPlace]);
+    if (filterPlace !== 'allPlaces') {
+      dispatch(getKiosks(companyId, filterPlace));
+    } else {
+      dispatch(getKiosks(companyId));
+    }
+  }, [dispatch, companyId, filterPlace]);
   useEffect(() => {
     if (settingsPhotoTake) {
       setSettingsValues({
@@ -222,9 +234,9 @@ export default () => {
                 id='place-select'
                 labelId='country'
                 name='country'
-                value={currentPlace}
+                value={filterPlace}
                 onChange={handleChangePlace}
-                options={allPlaces}
+                options={optionsPlaces}
                 valueKey='id'
                 labelKey='name'
               />
@@ -292,7 +304,7 @@ export default () => {
           <DialogCreateKiosk
             open={createEditKioskVisible}
             handleClose={handleCloseDialog}
-            places={allPlaces}
+            places={places}
             onSubmit={handleSubmit}
             security={security}
             initialValues={selectedItem}
