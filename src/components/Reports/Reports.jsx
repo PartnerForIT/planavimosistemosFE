@@ -495,28 +495,22 @@ const Reports = () => {
               disableTrackYMousewheelScrolling
               noScrollY
               trackXProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                    />
-                  );
-                },
+                renderer: ({ elementRef, ...restProps }) => (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                  />
+                ),
               }}
               trackYProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                    />
-                  );
-                },
+                renderer: ({ elementRef, ...restProps }) => (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                  />
+                ),
               }}
             >
               <div
@@ -568,6 +562,7 @@ const Reports = () => {
                     verticalOffset='212px'
                     amount={totalStat}
                     permissions={permissions}
+                    white
                   />
                 ))
                 : (

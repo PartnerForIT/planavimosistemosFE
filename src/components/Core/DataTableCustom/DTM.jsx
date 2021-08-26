@@ -120,7 +120,11 @@ export default function DataTable({
   };
 
   const footerTitleClasses = classNames(
-    styles.footerTitle, styles.footerTitleReports,
+    styles.footerTitle,
+    styles.footerTitleReports,
+    {
+      [styles.footerTitle_reports]: reports,
+    },
   );
 
   const footerTitleCosts = classNames(
@@ -173,28 +177,22 @@ export default function DataTable({
         style={{ height: `calc(100vh - ${verticalOffset} - 47px)` }}
         removeTracksWhenNotUsed
         trackXProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollbarTrackX, { trackX: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackX}
+            />
+          ),
         }}
         trackYProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackY}
+            />
+          ),
         }}
       >
         <div className={tableContentClasses}>
@@ -333,44 +331,38 @@ export default function DataTable({
 
         {
           totalDuration && (
-          <FooterTitle
-            title='Overall worktime: '
-            wrapperClassNames={footerTitleClasses}
-            amountColorClassName={styles.blue}
-            amount={totalDuration}
-          />
+            <FooterTitle
+              title='Overall worktime: '
+              wrapperClassNames={footerTitleClasses}
+              amountColorClassName={styles.blue}
+              amount={totalDuration}
+            />
           )
         }
         {
-          permissions.cost && permissions.profit && !!salary && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amount={<TextWithSign label={salary} />}
-              />
-            </>
+          permissions.cost && permissions.profit && !!salary && !reports && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amount={<TextWithSign label={salary} />}
+            />
           )
         }
         {
-          permissions.cost && !!cost && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amountColorClassName={styles.red}
-                amount={<TextWithSign label={cost} />}
-              />
-            </>
+          permissions.cost && !!cost && !reports && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amountColorClassName={styles.red}
+              amount={<TextWithSign label={cost} />}
+            />
           )
         }
         {
-          permissions.cost && permissions.profit && !!profit && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amountColorClassName={styles.green}
-                amount={<TextWithSign label={profit} />}
-              />
-            </>
+          permissions.cost && permissions.profit && !!profit && !reports && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amountColorClassName={styles.green}
+              amount={<TextWithSign label={profit} />}
+            />
           )
         }
         {

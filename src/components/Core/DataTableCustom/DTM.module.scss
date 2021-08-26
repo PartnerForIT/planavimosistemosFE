@@ -562,15 +562,19 @@ header {
   font-family: "Helvetica Neue Bold", sans-serif;
   font-size: 14px;
   //font-weight: 600;
-}
 
-.footerCost {
-  min-width: 6ex;
+  &_reports {
+    margin-right: 0;
+  }
 }
 
 .footerTitleReports {
   margin-left: auto;
   padding-right: 35px;
+}
+
+.footerCost {
+  min-width: 6ex;
 }
 
 .totals {
@@ -948,6 +952,7 @@ div {
   &_white {
     .headerWrapper {
       background-color: white;
+      box-shadow: unset;
 
       .flexTable.header .columnName {
         color: #808f94;

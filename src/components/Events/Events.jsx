@@ -321,6 +321,7 @@ const Events = () => {
             selectedItem={selectedItem}
             setSelectedItem={rowSelectionHandler}
             verticalOffset='123px'
+            white
           />
         </div>
 
