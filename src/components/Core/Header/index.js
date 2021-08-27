@@ -82,7 +82,7 @@ export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const pageName = pathname.split('/')[1];
+  const [,, pageName] = pathname.split('/');
   const { id: companyId } = useParams();
   const user = useSelector(userSelector);
   const dispatch = useDispatch();

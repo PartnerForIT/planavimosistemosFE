@@ -192,28 +192,22 @@ export default function DataTable({
         }}
         removeTracksWhenNotUsed
         trackXProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollableContent__scrollbarTrackX, { trackX: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classNames(styles.scrollableContent__scrollbarTrackX, { trackX: true })}
+            />
+          ),
         }}
         trackYProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollableContent__scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classNames(styles.scrollableContent__scrollbarTrackY, { trackY: true })}
+            />
+          ),
         }}
         onScroll={onScroll}
       >

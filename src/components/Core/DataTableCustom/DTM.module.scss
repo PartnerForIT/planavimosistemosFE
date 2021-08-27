@@ -806,6 +806,7 @@ div {
 .scrollingSimplePanel {
   @extend .scrollingPanel;
 
+  z-index: 2;
   box-shadow: none;
 }
 

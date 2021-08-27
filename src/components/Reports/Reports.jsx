@@ -94,7 +94,7 @@ const permissionsConfig = [
     permission: 'reports_assigned_place',
   },
 ];
-const Reports = () => {
+export default () => {
   /* Reports data */
   const reportTabs = useRef(null);
   const [activeReport, setActiveReport] = useState();
@@ -704,5 +704,3 @@ const Reports = () => {
     </MainLayout>
   );
 };
-
-export default Reports;
