@@ -98,6 +98,14 @@ $icon-width: 33px;
   border: unset;
   border-bottom: 0.5px solid #cbd1d8;
   border-radius: unset;
+  background-color: transparent !important;
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
 
   @include placeholder();
 }
