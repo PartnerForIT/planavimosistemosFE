@@ -686,7 +686,6 @@ const Logbook = () => {
   }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
-  console.log('dateRange', dateRange);
   return (
     <MaynLayout>
       <div className={styles.container}>

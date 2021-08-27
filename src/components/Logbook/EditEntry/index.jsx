@@ -262,12 +262,14 @@ export default ({
           .set({
             h: item.started.split(':')[0],
             m: item.started.split(':')[1],
+            s: 0,
           })
           .format('YYYY-MM-DD HH:mm:ss'),
         finished_at: moment(item.finished_at)
           .set({
             h: item.finished.split(':')[0],
             m: item.finished.split(':')[1],
+            s: 0,
           })
           .format('YYYY-MM-DD HH:mm:ss'),
         delete: item.isRemove ? 1 : 0,
@@ -318,6 +320,8 @@ export default ({
         }
       }
     });
+    console.log('timeParts = ', timeParts);
+    console.log('timeParts = ', body.totalBreakTime);
 
     body.totalWorkTime = {
       hours: Math.floor(body.totalWorkTime / 60),
@@ -344,19 +348,13 @@ export default ({
         removeTracksWhenNotUsed
         noScrollX
         trackYProps={{
-          renderer: (props) => {
-            const {
-              elementRef,
-              ...restProps
-            } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(classes.scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps}) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classes.scrollbarTrackY}
+            />
+          ),
         }}
       >
         <div className={classes.editEntry}>
