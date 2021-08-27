@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import MaynLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
@@ -306,7 +307,11 @@ const Logbook = () => {
             .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
             .filter((it) => !sortStatus.some((status) => status === it.status));
         }
-        return { ...item, items };
+        return {
+          ...item,
+          label: moment(item.date).format('dddd, DD. MMMM, YYYY').toUpperCase(),
+          items,
+        };
       }).filter(({ items }) => items.length));
       setColumnsWidthArray(columnsWidth);
       setTotalDuration(getTotalDuration);
