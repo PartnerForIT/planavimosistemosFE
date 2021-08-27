@@ -28,7 +28,6 @@ const useStyles = makeStyles({
   },
 
   summary: {
-    height: '35px',
     minHeight: '35px',
     paddingLeft: '3px',
     paddingRight: 12,
@@ -45,8 +44,11 @@ const useStyles = makeStyles({
     },
   },
 
+  summaryContent: {
+    margin: '0 !important',
+  },
+
   summaryExpanded: {
-    height: '35px',
     minHeight: '35px !important',
 
     '&::after': {
@@ -161,6 +163,7 @@ export default function Dropdown({
         classes={{
           root: classes.summary,
           expanded: classes.summaryExpanded,
+          content: classes.summaryContent,
         }}
         expandIcon={(
           <ExpandMoreIcon
