@@ -1205,7 +1205,7 @@ function* assignPlace({
 }) {
   try {
     const employee = yield select((state) => state.settings.employee);
-    const oldPlaceId = employee.place[0]?.id;
+    const oldPlaceId = employee?.place?.[0]?.id;
 
     if (place !== oldPlaceId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
@@ -1243,9 +1243,9 @@ function* assignGroup({
       };
 
     const employee = yield select((state) => state.settings.employee);
-    const oldGroupId = employee.groups?.[0]?.id;
-    const oldSubGroupId = employee.subgroups?.[0]?.id;
-    const oldSubGroupParentId = employee.subgroups?.[0]?.parent_group_id;
+    const oldGroupId = employee?.groups?.[0]?.id;
+    const oldSubGroupId = employee?.subgroups?.[0]?.id;
+    const oldSubGroupParentId = employee?.subgroups?.[0]?.parent_group_id;
 
     if (oldGroupId) {
       if (groupId !== oldGroupId || subgroup) {
@@ -1281,7 +1281,7 @@ function* assignSkill({
 }) {
   try {
     const employee = yield select((state) => state.settings.employee);
-    const oldSkillId = employee.skills[0]?.id;
+    const oldSkillId = employee?.skills?.[0]?.id;
     if (skill !== oldSkillId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
       const { data } = yield call(axios.post,

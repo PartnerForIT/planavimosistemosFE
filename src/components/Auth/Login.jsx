@@ -38,7 +38,7 @@ const LoginContainer = () => {
             role_id: roleId,
             company_id: companyId,
           } = data.data.user;
-          history.push(roleId === 1 ? routes.ORG_LIST : `/settings/${companyId}`);
+          history.push(roleId === 1 ? routes.ORG_LIST : `${companyId}/settings/`);
           setLoading(false);
         })
         .catch(() => setLoading(false));
@@ -58,7 +58,7 @@ const LoginContainer = () => {
       if (roleId === 1) {
         history.push(routes.ORG_LIST);
       } else {
-        history.push(`/settings/${companyId}`);
+        history.push(`/${companyId}/settings`);
       }
     }).catch((error) => {
       console.log('Login error', error);

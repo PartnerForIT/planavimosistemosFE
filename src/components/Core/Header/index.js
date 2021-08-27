@@ -150,7 +150,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: LogbookIcon,
         title: t('Logbook'),
         name: 'logbook',
-        to: `/logbook/${companyId}`,
+        to: `/${companyId}/logbook`,
         width: 19.28,
         height: 24.9,
       });
@@ -160,7 +160,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: EventsIcon,
         title: t('Events'),
         name: 'events',
-        to: `/events/${companyId}`,
+        to: `/${companyId}/events`,
       });
     }
     if (permissions.reports) {
@@ -168,7 +168,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: OverviewIcon,
         title: t('Reports'),
         name: 'reports',
-        to: `/reports/${companyId}`,
+        to: `/${companyId}/reports`,
       });
     }
     if (permissions.schedule_shift || permissions.schedule_simple) {
@@ -176,7 +176,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: ScheduleIcon,
         title: t('Schedule'),
         name: 'schedule',
-        to: `/schedule/${companyId}`,
+        to: `/${companyId}/schedule`,
         width: 33,
         height: 28,
       });
@@ -222,7 +222,7 @@ export default function ButtonAppBar({ logOut }) {
             {companyId && (
               <>
                 <Link
-                  to={`/settings/${companyId}`}
+                  to={`/${companyId}/settings`}
                   className={classNames(styles.link, { [styles.link_active]: pageName === 'settings' })}
                 >
                   <SettingsIcon />

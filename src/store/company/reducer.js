@@ -6,6 +6,8 @@ import {
   POST_SUPPORT_TICKET,
   POST_SUPPORT_TICKET_ERROR,
   POST_SUPPORT_TICKET_SUCCESS,
+  // GET_COMPANY_INFO,
+  GET_COMPANY_INFO_SUCCESS,
 } from './types';
 
 const initialState = {
@@ -14,10 +16,24 @@ const initialState = {
   requestWasSent: false,
   isCreateTicket: false,
   postSupportTicketLoading: false,
+  companyInfo: {},
+  isLoadingCompany: true,
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    // case GET_COMPANY_INFO:
+    //   return {
+    //     ...state,
+    //     isLoadingCompany: true,
+    //   };
+    case GET_COMPANY_INFO_SUCCESS:
+      return {
+        ...state,
+        isLoadingCompany: false,
+        companyInfo: action.data,
+      };
+
     case GET_ORGANISATION_MODULES:
       return {
         ...state, error: null, loading: true, requestWasSent: true,

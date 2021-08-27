@@ -4,6 +4,8 @@ import {
   POST_SUPPORT_TICKET_SUCCESS,
   POST_SUPPORT_TICKET_ERROR,
   DONE_SUPPORT_TICKET,
+  GET_COMPANY_INFO,
+  GET_COMPANY_INFO_SUCCESS,
 } from './types';
 
 export const getOrganisationModules = (companyId) => ({
@@ -30,4 +32,13 @@ export const postSupportTicketError = () => ({
 });
 export const doneSupportTicket = () => ({
   type: DONE_SUPPORT_TICKET,
+});
+
+export const getCompanyInfo = (id) => ({
+  type: GET_COMPANY_INFO,
+  id,
+});
+export const getCompanyInfoSuccess = (data) => ({
+  type: GET_COMPANY_INFO_SUCCESS,
+  data,
 });
