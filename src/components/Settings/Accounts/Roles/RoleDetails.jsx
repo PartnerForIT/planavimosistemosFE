@@ -75,21 +75,17 @@ function RoleDetails({
     setReady(true);
   };
 
-  const detailsClasses = classNames(
-    classes.details,
-    {
-      [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
-    },
-  );
+  const detailsClasses = classNames(classes.details, {
+    [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
+  });
 
   return (
     <div className={detailsClasses}>
       {
-        loading
-        && (
-        <div className={classes.loader}>
-          <Progress />
-        </div>
+        loading && (
+          <div className={classes.loader}>
+            <Progress />
+          </div>
         )
       }
       <Users
