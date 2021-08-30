@@ -112,11 +112,11 @@ export default () => {
     return {};
   }, [kiosks, selectedItemId]);
   const optionsPlaces = useMemo(() => [
-    ...places,
     {
       id: 'allPlaces',
       name: t('All places'),
     },
+    ...places,
   ], [places, i18n.language]);
 
   // allPlaces
