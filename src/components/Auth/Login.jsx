@@ -60,8 +60,10 @@ const LoginContainer = () => {
       } else {
         history.push(`/${companyId}/settings`);
       }
-    }).catch((error) => {
-      console.log('Login error', error);
+    }).catch(({ error }) => {
+      if (error.response.data.error === 'Your account is blocked') {
+        history.push('/locked');
+      }
     });
   };
   const handleKeyDown = (event) => {
