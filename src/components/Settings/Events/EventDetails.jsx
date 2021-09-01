@@ -26,13 +26,6 @@ function EventDetails({
       reminder_settings: false,
     };
 
-    if (activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_OUT
-        || activeEvent.event_type_id === EVENT_TYPE.MISSING_CLOCK_IN) {
-      initialValues.time = (activeEvent.time / 60 / 60) || 0;
-    } else {
-      initialValues.time = (activeEvent.time / 60) || 0;
-    }
-
     if (activeEvent.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_IN
         || activeEvent.event_type_id === EVENT_TYPE.REMINDER_TO_CLOCK_OUT) {
       if (activeEvent.type === 0) {

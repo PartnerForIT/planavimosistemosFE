@@ -266,16 +266,8 @@ const EventInformation = ({
   );
 };
 
-const mockSelectedItem = {
-  total: {
-    week: 0,
-    month: 1,
-    total: 1,
-  },
-};
-
 export default ({
-  selectedItem = mockSelectedItem,
+  selectedItem,
 }) => {
   const { t } = useTranslation();
   const { icon, title, subTitle } = useMemo(() => {

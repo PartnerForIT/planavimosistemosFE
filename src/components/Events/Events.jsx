@@ -28,11 +28,14 @@ import { getPlaces } from '../../store/places/actions';
 import EventCard from './EventCard';
 
 const columns = [
-  { label: 'Reason', field: 'reason', checked: true },
-  { label: 'Employee', field: 'employee', checked: true },
-  { label: 'Group', field: 'group', checked: true },
+  { label: 'Event Name', field: 'name', checked: true },
+  { label: 'Event Rule', field: 'eventRuleName', checked: true },
+  { label: 'Employee name', field: 'employee', checked: true },
+  { label: 'Skill', field: 'skill', checked: true },
   { label: 'Place', field: 'place', checked: true },
-  { label: 'Timestamp', field: 'time', checked: true },
+  { label: 'Group', field: 'group', checked: true },
+  { label: 'Sub-Group', field: 'subgroup', checked: true },
+  { label: 'Timestamp', field: 'timestamp', checked: true },
 ];
 const columnsWidth = {
   reason: 300,
@@ -133,9 +136,6 @@ const Events = () => {
     const eventsParse = events.reduce((acc, item) => {
       const nextItem = {
         ...item,
-        group: item.group?.name,
-        place: item.place?.name,
-        employee: item.employee?.name,
         time: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
       };
       let time;
