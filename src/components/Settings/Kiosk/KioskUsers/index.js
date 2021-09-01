@@ -137,8 +137,6 @@ export default () => {
           name,
           surname,
           status,
-          created_at: createdAt,
-          updated_at: updatedAt,
           place,
           groups,
           skills,

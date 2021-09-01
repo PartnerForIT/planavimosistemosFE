@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import moment from 'moment';
 import _ from 'lodash';
+
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
@@ -43,9 +45,10 @@ import EditAccount from '../../../Core/Dialog/EditAccount';
 import CurrencySign from '../../../shared/CurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
-import TimeFormat from '../../../shared/TimeFormat';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
 import usePermissions from '../../../Core/usePermissions';
+import useCompanyInfo from '../../../../hooks/useCompanyInfo';
+
 import styles from './accounts.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -187,6 +190,7 @@ export default function AccountsList() {
   const [all, setAll] = useState(false);
 
   const permissions = usePermissions(permissionsConfig);
+  const { dateFormat } = useCompanyInfo();
 
   const updateEmployee = (data) => {
     if (editVisible) {
@@ -297,7 +301,10 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, created_at, updated_at, place, groups, skills, subgroups, permissions,
+      name, surname, status, groups, skills, subgroups, permissions,
+      created_at: createdAt,
+      updated_at: updatedAt,
+      place,
       ...rest
     } = empl;
     return {
@@ -307,10 +314,8 @@ export default function AccountsList() {
       skills: skills?.[0]?.name ?? '',
       place: place?.[0]?.name ?? '',
       role: permissions?.[0]?.account_roles?.name ?? '',
-      // eslint-disable-next-line camelcase
-      created_at: created_at ? <TimeFormat date={created_at} /> : '',
-      // eslint-disable-next-line camelcase
-      updated_at: updated_at ? <TimeFormat date={updated_at} /> : '',
+      created_at: createdAt ? moment(createdAt).format(dateFormat) : '',
+      updated_at: updatedAt ? moment(updatedAt).format(dateFormat) : '',
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };

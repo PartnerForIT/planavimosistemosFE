@@ -592,7 +592,12 @@ export default () => {
             </div>
             <div className={sidebarContentClasses}>
               <div className={styles.sidebarTitle}>Report period</div>
-              <DRP initRange={dateRange} onChange={setDateRange} small right />
+              <DRP
+                initRange={dateRange}
+                onChange={setDateRange}
+                small
+                right
+              />
               {
                 permissions.cost && (
                   <StyledCheckbox
