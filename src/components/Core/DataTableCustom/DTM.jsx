@@ -340,7 +340,7 @@ export default function DataTable({
           )
         }
         {
-          permissions.cost && permissions.profit && !!salary && !reports && (
+          permissions.cost && permissions.profit && !!salary && (
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amount={<TextWithSign label={salary} />}
@@ -348,7 +348,7 @@ export default function DataTable({
           )
         }
         {
-          permissions.cost && !!cost && !reports && (
+          permissions.cost && !!cost && (
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.red}
@@ -357,7 +357,7 @@ export default function DataTable({
           )
         }
         {
-          permissions.cost && permissions.profit && !!profit && !reports && (
+          permissions.cost && permissions.profit && !!profit && (
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.green}
