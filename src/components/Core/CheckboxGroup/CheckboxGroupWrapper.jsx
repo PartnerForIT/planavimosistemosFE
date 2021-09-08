@@ -11,7 +11,7 @@ import styles from '../Select/Select.module.scss';
 
 const CheckboxGroupWrapper = ({
   items = [], onChange = () => ({}), height, maxHeight, wrapperMarginBottom,
-  defaultChecked = [], sorted = false,
+  defaultChecked = [], sorted = false, choiceOfOnlyOne,
 }) => {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([...defaultChecked]);
@@ -111,7 +111,7 @@ const CheckboxGroupWrapper = ({
   }, [checkedItems, def, itemsArray, itemsStat, onChange, sorted]);
 
   const handleCheckboxChange = useCallback((item) => {
-    const checkedItemsArray = [];
+    let checkedItemsArray = [];
     const setCheckedToAll = (array, value) => {
       const arrayCopy = [...array];
       return arrayCopy.map((o) => {
@@ -124,9 +124,19 @@ const CheckboxGroupWrapper = ({
         } else if (o.items) {
           if (!newObj.disabled && typeof value !== 'undefined') newObj.checked = value;
           newObj.items = setCheckedToAll(o.items, value);
-        } else if (!newObj.disabled && typeof value !== 'undefined') newObj.checked = value;
+        } else if (!newObj.disabled && typeof value !== 'undefined') {
+          newObj.checked = value;
+        } else if (choiceOfOnlyOne) {
+          newObj.checked = false;
+        }
 
-        if (!newObj.disabled && newObj.checked) checkedItemsArray.push(newObj);
+        if (!newObj.disabled && newObj.checked) {
+          if (choiceOfOnlyOne) {
+            checkedItemsArray = [newObj];
+          } else {
+            checkedItemsArray.push(newObj);
+          }
+        }
 
         return newObj;
       });
@@ -149,6 +159,7 @@ const CheckboxGroupWrapper = ({
       height={height}
       maxHeight={maxHeight}
       wrapperMarginBottom={wrapperMarginBottom}
+      choiceOfOnlyOne={choiceOfOnlyOne}
     >
       <Scrollbar
         className={styles.scrollableContent}
@@ -190,6 +201,7 @@ const CheckboxGroupWrapper = ({
                     checked={data.checked}
                     items={data.items}
                     onChange={handleCheckboxChange}
+                    choiceOfOnlyOne={choiceOfOnlyOne}
                   />
                 )
                 : (

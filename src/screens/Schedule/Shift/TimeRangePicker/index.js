@@ -3,6 +3,7 @@ import React, {
   useRef,
   useMemo,
   useEffect,
+  memo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -10,10 +11,10 @@ import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
 
 import { timeArr } from '../../../../components/Helpers/time';
+import getOverflowParent from '../../../../helpers/getOverflowParent';
 import Button from '../../../../components/Core/Button/Button';
 import Dots from '../../../../components/Icons/Dots';
 import classes from './TimeRangePicker.module.scss';
-import getOverflowParent from '../../../../helpers/getOverflowParent';
 
 const ButtonTime = ({
   name,
@@ -39,7 +40,7 @@ const trackYProps = {
   ),
 };
 
-export default React.memo(({
+export default memo(({
   cellId,
   value,
   onChange,
@@ -125,6 +126,23 @@ export default React.memo(({
       }
     }
   }, [isOpenMenu]);
+  useEffect(() => {
+    if (isOpen) {
+      try {
+        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
+        const buttonBounding = buttonRef.current.getBoundingClientRect();
+        const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
+        const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
+        const menuPlacementVertical = (offsetBottom - heightContent) > 0 ? 'bottom' : 'top';
+
+        if (menuPlacementVertical === 'top') {
+          contentBoxRef.current.classList.add(classes.timeRangeColor__modal_top);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isOpen]);
 
   return (
     <ClickAwayListener onClickAway={handleCloseModal}>

@@ -4,6 +4,7 @@
   flex: 1;
   $timeRangeColor: &;
   $widthMenuModal: 200;
+  $widthMenuModal: 200;
 
   &__button {
     height: 32px;
@@ -247,6 +248,10 @@
 
       &_left {
         left: -#{$widthMenuModal + 1}px;
+      }
+
+      &_top {
+        bottom: 0;
       }
     }
   }

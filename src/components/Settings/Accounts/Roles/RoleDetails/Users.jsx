@@ -51,7 +51,6 @@ const Users = React.memo(({
     if (search.trim() && employees) {
       const filtered = employees.filter((e) => stringMatch(`${e.name} ${e.surname}`)
         || stringMatch(e.groups[0]?.name)
-        || stringMatch(e.groups[0]?.name)
         || stringMatch(e.subgroups[0]?.name)
         || stringMatch(e.subgroups[0]?.parent_group?.name));
       setEmpList([...filtered]);

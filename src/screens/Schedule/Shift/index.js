@@ -356,6 +356,8 @@ export default () => {
     } else {
       dispatch(putShift({ companyId, data, id: shiftId }));
     }
+
+    setSaveChanges('');
   };
   const handleChangeNumberOfWeeks = (value) => {
     setNumberOfWeeks(value);

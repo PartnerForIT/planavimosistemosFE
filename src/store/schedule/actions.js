@@ -12,6 +12,9 @@ import {
   PUT_SHIFT_SUCCESS,
   PUT_SHIFT_ERROR,
   RESET_SHIFT,
+  PATCH_CHANGE_EMPLOYEE,
+  PATCH_CHANGE_TIMELINE,
+  DELETE_TIMELINE,
 } from './types';
 
 export const getSchedule = ({
@@ -71,6 +74,49 @@ export const putShiftSuccess = (data) => ({
 });
 export const putShiftError = () => ({
   type: PUT_SHIFT_ERROR,
+});
+
+export const patchChangeEmployee = ({
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+}) => ({
+  type: PATCH_CHANGE_EMPLOYEE,
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+});
+export const patchChangeTimeline = ({
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+}) => ({
+  type: PATCH_CHANGE_TIMELINE,
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+});
+export const deleteTimeline = ({
+  companyId,
+  data,
+  shiftId,
+  id,
+  body,
+}) => ({
+  type: DELETE_TIMELINE,
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
 });
 
 export const resetShift = () => ({

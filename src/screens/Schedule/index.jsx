@@ -25,7 +25,13 @@ import { TIMELINE } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
-import { getSchedule } from '../../store/schedule/actions';
+import {
+  getSchedule,
+  deleteTimeline,
+  patchChangeTimeline,
+  patchChangeEmployee,
+} from '../../store/schedule/actions';
+import { loadEmployeesAll } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
@@ -145,7 +151,7 @@ export default () => {
     history.push(`/${companyId}/schedule/shift/create`);
   };
   const handleResourceLabelClassNames = ({ resource }) => {
-    const { extendedProps: props } = resource._resource;
+    const { extendedProps: props } = resource;
     const classes = [];
 
     if (props.lastShift) {
@@ -171,27 +177,73 @@ export default () => {
   const handleEditShift = (shiftId) => {
     history.push(`/${companyId}/schedule/shift/${shiftId}`);
   };
-  const handleChangeEmployee = (employeeId) => {
-    // onChangeEmployee(employeeId);
+  const getBodyForGetSchedule = () => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+
+    return {
+      companyId,
+      timeline,
+      fromDate: nextFromDate.format('YYYY-MM-DD'),
+    };
   };
-  const handleChangeWorkingTime = (employeeId) => {
-    // onChangeWorkingTime(employeeId);
+  const handleChangeEmployee = ({ employeeId, shiftId, id }) => {
+    dispatch(patchChangeEmployee({
+      companyId,
+      shiftId,
+      data: {
+        employee_id: employeeId,
+      },
+      body: getBodyForGetSchedule(),
+      id,
+    }));
   };
-  const handleDeleteTimeline = (employeeId) => {
-    // onDeleteTimeline(employeeId);
+  const handleChangeWorkingTime = ({ shiftId, id, time }) => {
+    dispatch(patchChangeTimeline({
+      companyId,
+      shiftId,
+      data: {
+        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
+        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+      },
+      body: getBodyForGetSchedule(),
+      id,
+    }));
+  };
+  const handleDeleteTimeline = ({ id, shiftId }) => {
+    dispatch(deleteTimeline({
+      companyId,
+      shiftId,
+      body: getBodyForGetSchedule(),
+      id,
+    }));
   };
 
-  const renderEventContent = ({ event, timeText }) => {
+  const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
-    console.log('props', resourceInfo);
+
+    let shiftId;
+    let withMenu = false;
+    if (resourceInfo.extendedProps.employeeId) {
+      [shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
+      withMenu = shiftInfo.custom_time;
+    }
 
     return (
       <EventContent
+        id={event.id}
+        shiftId={shiftId}
+        resourceId={resourceInfo.id}
         title={event.title}
         employeeName={resourceInfo.title}
         timeText={timeText}
+        start={event.start}
+        end={event.end}
         photo={resourceInfo.extendedProps.photo}
-        withMenu={!!resourceInfo.extendedProps.employeeId}
+        withMenu={withMenu}
         employeeId={resourceInfo.extendedProps.employeeId}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
@@ -205,9 +257,7 @@ export default () => {
       count,
       photo,
       shiftId,
-    } = resource._resource.extendedProps;
-    // console.log('shiftId', shiftId);
-    // console.log('resource._resource.extendedProps', resource._resource.extendedProps);
+    } = resource.extendedProps;
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
@@ -271,6 +321,7 @@ export default () => {
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
     }));
+    dispatch(loadEmployeesAll(companyId));
 
     return () => {
       // eslint-disable-next-line no-unused-expressions
