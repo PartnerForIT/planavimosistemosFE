@@ -1,15 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  forwardRef,
+  useState,
+  useRef,
+  useEffect,
+  useImperativeHandle,
+} from 'react';
 
 import Button from './Button';
 import Content from './Content';
 import ItemMenu from './MenuItem';
 
-const Dropdown = ({
+const Dropdown = forwardRef(({
   children,
   light,
   cancel,
   onCancel,
-}) => {
+}, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const buttonRef = useRef(null);
@@ -25,18 +31,20 @@ const Dropdown = ({
       }
       setIsOpen(false);
     };
-    // const handleScroll = () => {
-    //   setIsOpen(false);
-    // };
-
     document.addEventListener('mousedown', handleOuterDropdownClick, false);
-    // window.addEventListener('wheel', handleScroll, false);
 
     return () => {
       document.removeEventListener('mousedown', handleOuterDropdownClick, false);
-      // window.removeEventListener('wheel', handleScroll, false);
     };
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    open: () => {
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+    },
+  }));
 
   const handleClick = () => {
     setIsOpen((prevState) => !prevState);
@@ -61,6 +69,8 @@ const Dropdown = ({
             offset={buttonRef.current.getBoundingClientRect()}
             cancel={cancel}
             onCancel={onCancel}
+            maxHeight={421}
+            withBorder
           >
             {children}
           </Content>
@@ -68,7 +78,7 @@ const Dropdown = ({
       }
     </>
   );
-};
+});
 
 Dropdown.ItemMenu = ItemMenu;
 

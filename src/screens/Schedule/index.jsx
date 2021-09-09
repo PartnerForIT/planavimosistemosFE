@@ -71,15 +71,17 @@ export default () => {
   const permissions = usePermissions(permissionsConfig);
 
   const resources = useMemo(() => {
-    const updateChildren = (children, upLastShift, upLastJobType) => {
+    const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
         return children.map((item, index) => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
+          const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
 
           const nextItem = {
             ...item,
-            children: updateChildren(item.children, lastShift, lastJobType),
+            eventDurationEditable: !!item.employeeId && timeline === TIMELINE.DAY && customTime,
+            children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
           if (lastShift) {
@@ -221,7 +223,7 @@ export default () => {
     }));
   };
 
-  const renderEventContent = ({ event, timeText, view }) => {
+  const renderEventContent = ({ event, timeText, view, isResizing, ...props }) => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
@@ -241,10 +243,12 @@ export default () => {
         employeeName={resourceInfo.title}
         timeText={timeText}
         start={event.start}
+        newEmployee={event.extendedProps.new_employee}
+        oldEmployee={event.extendedProps.old_employee}
+        isResizing={isResizing}
         end={event.end}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu}
-        employeeId={resourceInfo.extendedProps.employeeId}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
@@ -286,6 +290,26 @@ export default () => {
         onClickNext={handleClickNext}
       />
     );
+  };
+  const handleEventChange = ({ event }) => {
+    const resourceInfo = event.getResources()[0];
+    const [shiftId] = resourceInfo.id.split('-');
+
+    handleChangeWorkingTime({
+      id: event.id,
+      shiftId,
+      time: {
+        start: moment(event.start),
+        end: moment(event.end),
+      },
+    });
+    // if (event.title === 'Job 3') {
+    //   // console.log('event', {...event});
+    //   // console.log('view', view);
+    //   console.log('props', props);
+    //   // console.log('isResizing', isResizing);
+    // }
+    // event.setProp('startEditable', true);
   };
 
   const updateWidthCell = (rows) => {
@@ -454,12 +478,14 @@ export default () => {
                       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
                       resources={resources}
                       events={schedule.events}
-                      editable={timeline === TIMELINE.DAY}
+                      eventStartEditable={false}
+                      eventDurationEditable={timeline === TIMELINE.DAY}
                       eventContent={renderEventContent}
                       resourceAreaHeaderContent={renderResourceAreaHeaderContent}
                       viewDidMount={handleViewDidMount}
                       resourceLabelClassNames={handleResourceLabelClassNames}
                       resourceLabelContent={renderResourceLabelContent}
+                      eventResize={handleEventChange}
                       // nowIndicator
                     />
                     <Tooltip

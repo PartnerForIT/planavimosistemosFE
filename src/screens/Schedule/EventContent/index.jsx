@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
 
 import Dropdown from '../Dropdown';
+import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import classes from './EventContent.module.scss';
@@ -16,22 +17,25 @@ export default ({
   jobTypeName,
   employeeName,
   withMenu,
-  employeeId,
   onChangeEmployee,
   onChangeWorkingTime,
   onDeleteTimeline,
+  newEmployee,
+  oldEmployee,
   start,
   end,
 }) => {
   const { t } = useTranslation();
 
   const [content, setContent] = useState('menu');
+  const modalRef = useRef(null);
 
   useEffect(() => {
     Tooltip.rebuild();
   });
 
   const openChangeEmployee = () => {
+    modalRef.current.open();
     setContent('changeEmployee');
   };
   const openChangeWorkingTime = () => {
@@ -62,8 +66,12 @@ export default ({
 
     onChangeWorkingTime({ id, shiftId, time });
   };
-  const handleChangeEmployee = () => {
-    onChangeEmployee({ shiftId, employeeId, id });
+  const handleChangeEmployee = (nextEmployeeId) => {
+    onChangeEmployee({
+      shiftId,
+      employeeId: nextEmployeeId,
+      id,
+    });
   };
 
   return (
@@ -82,11 +90,22 @@ export default ({
         )
       }
       {
-        withMenu && (
+        oldEmployee && (
+          <ReplacedEmployee
+            newEmployee={newEmployee}
+            oldEmployee={oldEmployee}
+            onDelete={handleDeleteTimeline}
+            onChangeEmployee={openChangeEmployee}
+          />
+        )
+      }
+      {
+        withMenu ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
             onCancel={handleCancel}
+            ref={modalRef}
           >
             {
               content === 'changeEmployee' && (
@@ -156,6 +175,8 @@ export default ({
             }
             <div className={classes.eventContent__space} />
           </Dropdown>
+        ) : (
+          <div className={classes.eventContent__rightSpace} />
         )
       }
     </div>

@@ -3,15 +3,21 @@ import ReactDOM from 'react-dom';
 
 import CrossIcon from '../../../../components/Icons/Cross';
 import classes from './Content.module.scss';
+import classNames from "classnames";
 
-const height = 421;
 export default ({
   children,
   offset,
   wrapperRef,
   cancel,
   onCancel,
+  maxHeight,
+  withBorder,
 }) => {
+  const contentClasses = classNames(classes.content, {
+    [classes.content_border]: withBorder,
+  });
+
   const showComponent = () => {
     const style = {};
 
@@ -23,7 +29,7 @@ export default ({
     }
 
     // default bottom
-    if (offset.top + height > window.innerHeight) {
+    if (offset.top + maxHeight > window.innerHeight) {
       style.bottom = window.innerHeight - offset.bottom + 18;
     } else {
       style.top = offset.top + offset.height + 6;
@@ -35,7 +41,7 @@ export default ({
       <div
         style={style}
         ref={wrapperRef}
-        className={classes.content}
+        className={contentClasses}
       >
         {
           cancel && (

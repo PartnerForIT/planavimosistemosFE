@@ -229,7 +229,7 @@
         }
       }
 
-      &:hover .fc-event-draggable {
+      &:hover .fc-event-resizable {
         &::after,
         &::before {
           content: '';

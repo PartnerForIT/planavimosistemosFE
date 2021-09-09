@@ -22,7 +22,7 @@ export default ({
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const { users: employees } = useSelector(employeesSelector);
-  console.log('employees', employees);
+
   const employToCheck = useCallback(({
     id,
     name,
@@ -33,10 +33,6 @@ export default ({
     checked: false,
   }), []);
 
-  const handleOnApplyEmployee = () => {
-    onChangeEmployee();
-  };
-
   const handleInputChange = (e) => {
     setSearchValue(e.target.value);
   };
@@ -46,6 +42,9 @@ export default ({
     } else {
       setSelectedEmployee(null);
     }
+  };
+  const handleOnApplyEmployee = () => {
+    onChangeEmployee(selectedEmployee.id);
   };
 
   const filteredEmployees = useMemo(() => {

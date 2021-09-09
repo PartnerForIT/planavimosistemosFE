@@ -10,6 +10,24 @@
     border-radius: 12px;
   }
 
+  &__replacedUser {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: #000;
+    border: 1px solid #fff;
+    cursor: pointer;
+
+    svg {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
   &__userInfo {
     display: flex;
     align-items: center;
@@ -62,5 +80,9 @@
 
   &__space {
     margin-top: -7px;
+  }
+
+  &__rightSpace {
+    width: 12px;
   }
 }
