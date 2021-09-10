@@ -33,6 +33,7 @@ import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { employeesSelector } from '../../../store/employees/selectors';
 import { postShiftIsLoadingSelector, shiftSelector } from '../../../store/schedule/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
+import { COLORS_SHIFT } from '../../../const';
 
 import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
@@ -40,48 +41,6 @@ import ButtonsField from './ButtonsField';
 import Table from './Table';
 import classes from './Shift.module.scss';
 
-const colors = {
-  bright: [
-    '#663D4A',
-    '#663D58',
-    '#663D66',
-    '#583D66',
-    '#4B3D66',
-    '#3D3D66',
-    '#3D4B66',
-    '#3D5866',
-    '#3D6666',
-    '#3D6658',
-    '#3D664B',
-    '#4B663D',
-    '#58663D',
-    '#66663D',
-    '#66663D',
-    '#66583D',
-    '#664B3D',
-    '#663D3D',
-  ],
-  calm: [
-    '#805965',
-    '#805973',
-    '#805980',
-    '#735980',
-    '#665980',
-    '#595980',
-    '#596680',
-    '#597380',
-    '#598080',
-    '#598073',
-    '#598066',
-    '#598059',
-    '#668059',
-    '#738059',
-    '#808059',
-    '#807359',
-    '#806659',
-    '#805959',
-  ],
-};
 const makeShiftForOptions = [
   {
     label: 'One week',
@@ -152,7 +111,7 @@ export default () => {
   const { pathname } = useLocation();
   const tableRef = useRef(null);
 
-  const [colorShift, setColorShift] = useState('#663D4A');
+  const [colorShift, setColorShift] = useState(COLORS_SHIFT.bright[0]);
   const [selectedPlace, setSelectedPlace] = useState('');
   const [shiftName, setShiftName] = useState('');
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
@@ -504,7 +463,7 @@ export default () => {
           modalLabel={t('Shift')}
           value={colorShift}
           onChange={handleChangeShiftColor}
-          colors={colors}
+          colors={COLORS_SHIFT}
         />
         <Input
           placeholder={t('Enter Shift Name')}

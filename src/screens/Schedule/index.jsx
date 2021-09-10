@@ -13,6 +13,7 @@ import moment from 'moment';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
@@ -21,8 +22,8 @@ import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Checkbox from '../../components/Core/Checkbox/Checkbox2';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
-import { TIMELINE } from '../../const';
-import { resourcesMock } from '../../const/mock';
+import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
+import { resourcesMock, photo } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
 import {
@@ -72,6 +73,8 @@ export default () => {
   const permissions = usePermissions(permissionsConfig);
 
   const resources = useMemo(() => {
+    let currentColor = 0;
+    let colorType = 'bright';
     const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
         return children.map((item, index) => {
@@ -79,8 +82,33 @@ export default () => {
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
 
+          // Set color
+          let eventBackgroundColor = item.color;
+          let eventBorderColor = item.color;
+
+          if (item.shiftId) {
+            colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
+          }
+
+          if (item.job_type_id) {
+            if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
+              currentColor = 0;
+            }
+
+            eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor];
+            eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor];
+            currentColor += 1;
+          }
+
+          if (item.employeeId) {
+            eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
+          }
+
           const nextItem = {
             ...item,
+            eventBackgroundColor,
+            eventBorderColor,
             eventDurationEditable: !!item.employeeId && timeline === TIMELINE.DAY && customTime,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
@@ -236,10 +264,12 @@ export default () => {
 
     let shiftId;
     let withMenu = false;
+    let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
       [shiftId] = resourceInfo.id.split('-');
       const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
       withMenu = shiftInfo.custom_time;
+      employeeName = resourceInfo.title;
     }
 
     return (
@@ -248,13 +278,14 @@ export default () => {
         shiftId={shiftId}
         resourceId={resourceInfo.id}
         title={event.title}
-        employeeName={resourceInfo.title}
+        employeeName={employeeName}
         timeText={timeText}
         start={event.start}
         newEmployee={event.extendedProps.new_employee}
         oldEmployee={event.extendedProps.old_employee}
         end={event.end}
-        photo={resourceInfo.extendedProps.photo}
+        viewType={view.type}
+        photo={photo || resourceInfo.extendedProps.photo}
         withMenu={withMenu}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
@@ -479,6 +510,7 @@ export default () => {
                           snapDuration: '6:00',
                         },
                       }}
+                      resourceOrder='id'
                       headerToolbar={false}
                       aspectRatio={1}
                       height='100%'

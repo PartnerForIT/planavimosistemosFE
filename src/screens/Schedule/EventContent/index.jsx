@@ -4,6 +4,7 @@ import Tooltip from 'react-tooltip';
 import moment from 'moment';
 
 import Dropdown from '../Dropdown';
+import { TIMELINE } from '../../../const';
 import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
@@ -24,6 +25,7 @@ export default ({
   oldEmployee,
   start,
   end,
+  viewType,
 }) => {
   const { t } = useTranslation();
 
@@ -79,6 +81,7 @@ export default ({
       className={classes.eventContent}
       data-for='time'
       data-tip={title}
+      id='dropdownButton'
     >
       {
         photo && (
@@ -89,6 +92,14 @@ export default ({
           />
         )
       }
+      {
+        viewType === TIMELINE.DAY && employeeName && (
+          <span className={classes.eventContent__title}>
+            {`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
+          </span>
+        )
+      }
+      <div className={classes.eventContent__leftSpace} />
       {
         oldEmployee && (
           <ReplacedEmployee
@@ -155,7 +166,7 @@ export default ({
                     {t('Working Time')}
                   </div>
                   <div className={classes.eventContent__value}>
-                    {title}
+                    {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
                   </div>
                   <Dropdown.ItemMenu
                     title={t('Change Employee')}
