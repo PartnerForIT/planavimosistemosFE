@@ -14,6 +14,7 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
+  DELETE_SHIFT,
 } from './types';
 import {
   getScheduleSuccess,
@@ -142,6 +143,21 @@ function* deleteTimeline(action) {
   }
 }
 
+function* deleteShift(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/shift/delete/${action.id}`,
+      getToken(),
+    );
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* ScheduleWatcher() {
   yield takeLatest(GET_SCHEDULE, getSchedule);
   yield takeLatest(GET_SHIFT, getShift);
@@ -150,4 +166,5 @@ export default function* ScheduleWatcher() {
   yield takeLatest(PATCH_CHANGE_EMPLOYEE, patchChangeEmployee);
   yield takeLatest(PATCH_CHANGE_TIMELINE, patchChangeTimeline);
   yield takeLatest(DELETE_TIMELINE, deleteTimeline);
+  yield takeLatest(DELETE_SHIFT, deleteShift);
 }

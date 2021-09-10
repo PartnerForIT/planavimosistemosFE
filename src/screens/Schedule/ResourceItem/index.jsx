@@ -10,6 +10,7 @@ export default ({
   photo,
   withMenu,
   onEditShift,
+  onDeleteShift,
 }) => {
   const { t } = useTranslation();
 
@@ -27,7 +28,7 @@ export default ({
       }
       {
         withMenu && (
-          <Dropdown>
+          <Dropdown buttonClass={classes.resourceItem__buttonDots}>
             <div className={classes.resourceItem__title}>
               {title}
             </div>
@@ -37,6 +38,7 @@ export default ({
             />
             <Dropdown.ItemMenu
               title={t('Delete Shift')}
+              onClick={onDeleteShift}
               remove
             />
             <div className={classes.resourceItem__space} />

@@ -15,6 +15,7 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
+  DELETE_SHIFT,
 } from './types';
 
 export const getSchedule = ({
@@ -115,6 +116,12 @@ export const deleteTimeline = ({
   companyId,
   shiftId,
   data,
+  id,
+  body,
+});
+export const deleteShift = ({ companyId, id, body }) => ({
+  type: DELETE_SHIFT,
+  companyId,
   id,
   body,
 });

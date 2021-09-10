@@ -30,6 +30,7 @@ import {
   deleteTimeline,
   patchChangeTimeline,
   patchChangeEmployee,
+  deleteShift,
 } from '../../store/schedule/actions';
 import { loadEmployeesAll } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
@@ -191,6 +192,13 @@ export default () => {
       fromDate: nextFromDate.format('YYYY-MM-DD'),
     };
   };
+  const handleDeleteShift = (shiftId) => {
+    dispatch(deleteShift({
+      companyId,
+      id: shiftId,
+      body: getBodyForGetSchedule(),
+    }));
+  };
   const handleChangeEmployee = ({ employeeId, shiftId, id }) => {
     dispatch(patchChangeEmployee({
       companyId,
@@ -223,7 +231,7 @@ export default () => {
     }));
   };
 
-  const renderEventContent = ({ event, timeText, view, isResizing, ...props }) => {
+  const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
@@ -245,7 +253,6 @@ export default () => {
         start={event.start}
         newEmployee={event.extendedProps.new_employee}
         oldEmployee={event.extendedProps.old_employee}
-        isResizing={isResizing}
         end={event.end}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu}
@@ -268,6 +275,7 @@ export default () => {
         photo={photo}
         withMenu={!!shiftId}
         onEditShift={() => handleEditShift(shiftId)}
+        onDeleteShift={() => handleDeleteShift(shiftId)}
       />
     );
   };

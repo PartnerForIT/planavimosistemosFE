@@ -9,10 +9,12 @@ export default forwardRef(({
   onClick,
   active,
   light,
+  className,
 }, ref) => {
   const buttonClasses = classNames(classes.button, {
     [classes.button_active]: active,
     [classes.button_light]: light,
+    [className]: className,
   });
 
   return (

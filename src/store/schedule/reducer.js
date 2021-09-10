@@ -12,6 +12,7 @@ import {
   PUT_SHIFT_SUCCESS,
   PUT_SHIFT_ERROR,
   RESET_SHIFT,
+  DELETE_SHIFT,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
@@ -50,6 +51,7 @@ export default (state = initialState, action) => {
       return { ...state, postShiftLoading: false };
 
     case GET_SHIFT:
+    case DELETE_SHIFT:
     case PATCH_CHANGE_EMPLOYEE:
     case PATCH_CHANGE_TIMELINE:
     case DELETE_TIMELINE:

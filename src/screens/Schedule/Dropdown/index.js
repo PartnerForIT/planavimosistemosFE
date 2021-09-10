@@ -15,6 +15,7 @@ const Dropdown = forwardRef(({
   light,
   cancel,
   onCancel,
+  buttonClass,
 }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,6 +61,7 @@ const Dropdown = forwardRef(({
         ref={buttonRef}
         active={isOpen}
         light={light}
+        className={buttonClass}
       />
       {
         isOpen && (
