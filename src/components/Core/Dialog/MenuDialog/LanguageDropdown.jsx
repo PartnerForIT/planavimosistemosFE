@@ -34,7 +34,7 @@ const useStyles = makeStyles({
   details: {
     display: 'flex',
     flexDirection: 'column',
-    padding: 0,
+    padding: '6px 0',
     position: 'unset',
   },
 
@@ -43,13 +43,17 @@ const useStyles = makeStyles({
     minHeight: 24,
     padding: 0,
     position: 'unset',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
 
   content: {
     display: 'flex',
     alignItems: 'center',
     color: '#808f94',
-    fontSize: 13.3333,
+    fontFamily: 'Helvetica Neue, sans-serif',
+    fontSize: 12,
   },
 
   expanded: {
@@ -98,7 +102,7 @@ function LanguageDropdown({
         aria-controls='additional-actions1-content'
         id='additional-actions1-header'
       >
-        <GlobeIcon aria-hidden />
+        <GlobeIcon aria-hidden className={classes.globeIcon} />
         {t('Change language')}
       </AccordionSummary>
       <AccordionDetails className={st.details}>

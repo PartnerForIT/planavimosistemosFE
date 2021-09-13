@@ -15,32 +15,34 @@ const paperStyle = {
   minWidth: 250,
   minHeight: 100,
   fontSize: 14,
+  border: '1px solid #d0dfef',
+  boxShadow: '0 3px 16px #e2e9ed',
 };
 
 const LogoutMenuItem = withStyles(() => ({
   root: {
     padding: 0,
-    margin: '20px 6px 6px 6px',
+    margin: 6,
     background: 'white',
     borderRadius: 6,
+    height: 43,
     position: 'relative',
     overflow: 'visible',
-    fontFamily: 'Helvetica Neue, sans-serif',
     '&:hover': {
-      backgroundColor: '#d0dfef82',
+      backgroundColor: '#F6FAFD',
     },
     '&:focus': {
-      backgroundColor: '#d0dfef82',
+      backgroundColor: '#F6FAFD',
     },
-    '&::after': {
-      content: "''",
-      position: 'absolute',
-      width: '100%',
-      height: 1,
-      backgroundColor: '#d0dfef82',
-      display: 'block',
-      top: -6,
-    },
+    // '&::after': {
+    //   content: "''",
+    //   position: 'absolute',
+    //   width: '100%',
+    //   height: 1,
+    //   backgroundColor: '#d0dfef82',
+    //   display: 'block',
+    //   top: -6,
+    // },
   },
 }))(MenuItem);
 
@@ -111,7 +113,7 @@ function MenuDialog({
           className={classes.changePass}
           onClick={passwordClick}
         >
-          <LockIcon aria-hidden />
+          <LockIcon aria-hidden className={classes.changePass__icon} />
           {t('Change password')}
         </button>
       </MenuItem>
@@ -126,6 +128,7 @@ function MenuDialog({
           setLanguage={setLanguage}
         />
       </MenuItem>
+      <div className={classes.menu__hr} />
       <LogoutMenuItem
         onKeyDown={(e) => {
           onKeyDown(e, () => logoutFlow());
@@ -137,8 +140,8 @@ function MenuDialog({
           className={classes.logoutBtn}
           onClick={logoutFlow}
         >
-          <LogOutIcon aria-hidden />
-          {t('Logout')}
+          <LogOutIcon aria-hidden className={classes.logoutBtn__icon} />
+          {t('Log out')}
         </button>
       </LogoutMenuItem>
     </Menu>
