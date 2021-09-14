@@ -55,7 +55,6 @@ export default () => {
     <Switch>
       <Route exact path='/:id/logbook' component={Logbook} />
       <Route exact path='/:id/events' component={Events} />
-      <Route exact path='/:id/overview' component={Overview} />
       <Route exact path='/:id/schedule' component={Schedule} />
       <Route exact path='/:id/schedule/shift/:shiftId' component={CreateShift} />
       <Route exact path='/:id/schedule/shift/create' component={CreateShift} />

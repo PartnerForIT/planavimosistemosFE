@@ -16,6 +16,7 @@ import Login from './components/Auth/Login';
 import AuthRoute from './components/Auth/AuthRoute';
 import SnackbarBlock from './components/Core/SnackbarBlock';
 import Company from './screens/Company';
+import Overview from './components/Overview';
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'grouwn',
@@ -32,6 +33,7 @@ const App = () => (
           <Route exact path='/invite/:token' component={InvitePage} />
           <Route exact path='/reset/:token' component={ResetPassword} />
           <Route exact path='/locked' component={LockedAccount} />
+          <AuthRoute exact path='/overview' component={Overview} />
           <AuthRoute exact path='/organization-list' component={OrganizationList} />
           <AuthRoute path='/:id' component={Company} />
           <Redirect from='*' to='/404' />
