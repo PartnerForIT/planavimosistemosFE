@@ -213,7 +213,7 @@ header {
 
 .settingsCell {
   position: absolute;
-  top: 15px;
+  top: 10px;
   right: 5px;
   width: 20px !important;
   min-width: 20px !important;
@@ -1003,6 +1003,19 @@ div {
 
     :global .ScrollbarsCustom-Scroller {
       margin-bottom: 5px !important;
+    }
+  }
+
+  &_simpleTable {
+    background-color: $input-background-color;
+
+    .headerWrapper {
+      background-color: $input-background-color;
+      border-bottom: $input-border-style;
+    }
+
+    .scrollingPanel {
+      background-color: transparent;
     }
   }
 }

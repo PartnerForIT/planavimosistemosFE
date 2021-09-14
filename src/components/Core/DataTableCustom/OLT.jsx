@@ -161,6 +161,7 @@ export default function DataTable({
       [styles.tableContainer_grey]: grey,
       [styles.tableContainer_greyTitle]: greyTitle,
       [styles.tableContainer_accountList]: accountList,
+      [styles.tableContainer_simpleTable]: simpleTable,
     },
   );
 
