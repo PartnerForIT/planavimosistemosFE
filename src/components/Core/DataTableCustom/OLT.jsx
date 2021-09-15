@@ -32,6 +32,7 @@ export default function DataTable({
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
   accountList = false,
+  withoutShitCode,
 }) {
   const [tableData, setTableData] = useState(data);
   const [, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -310,6 +311,7 @@ export default function DataTable({
                 hoverable={hoverable}
                 colored={colored}
                 tableRef={tableRef}
+                withoutShitCode={withoutShitCode}
               />
             ))
           }
