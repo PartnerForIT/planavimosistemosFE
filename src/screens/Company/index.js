@@ -2,15 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, useParams, Route } from 'react-router-dom';
 
-import { userSelector } from '../../store/auth/selectors';
 import Progress from '../../components/Core/Progress';
 import Logbook from '../../components/Logbook/Logbook';
-import { getCompanyInfo } from '../../store/company/actions';
-import { isLoadingCompanySelector } from '../../store/company/selectors';
+import { getCompanyInfo, getOrganisationModules } from '../../store/company/actions';
+import { companyModulesLoading, isLoadingCompanySelector } from '../../store/company/selectors';
 
 import styles from './Company.module.scss';
 import Events from '../../components/Events/Events';
-import Overview from '../../components/Overview';
 import Schedule from '../Schedule';
 import CreateShift from '../Schedule/Shift';
 import Settings from '../../components/Settings';
@@ -36,14 +34,16 @@ export default () => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector(isLoadingCompanySelector);
+  const isLoadingCompanyModules = useSelector(companyModulesLoading);
 
   useEffect(() => {
     if (companyId) {
       dispatch(getCompanyInfo(companyId, true));
+      dispatch(getOrganisationModules(companyId));
     }
   }, [companyId]);
 
-  if (isLoading) {
+  if (isLoading || isLoadingCompanyModules) {
     return (
       <div className={styles.progressBlock}>
         <Progress />
