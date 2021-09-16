@@ -22,15 +22,16 @@ const InvitePage = () => {
   const history = useHistory();
 
   const {
-    email, security, company: { companyName = '' }, loading,
+    email,
+    security,
+    company: { companyName = '' },
+    loading,
+    admin,
   } = useSelector(companyServicesInfoSelector);
 
   useLayoutEffect(() => {
     dispatch(getCompanyInfo(token));
   }, [dispatch, token]);
-
-  const admin = true;
-  const employee = false;
 
   const {
     minLength = 1, numbers = false, specialChars = false, uppercase = false,
@@ -102,15 +103,13 @@ const InvitePage = () => {
         <div className={classes.description}>
           <p>
             {
-              employee && t(`You have been invited to the ${companyName} organization account as a company employee.`)
-            }
-            {
-              admin && t(`You are the main admin user of the ${companyName} organization account.`)
+              admin
+                ? t(`You are the main admin user of the ${companyName} organization account.`)
+                : t(`You have been invited to the ${companyName} organization account as a company employee.`)
             }
           </p>
           <p>
-            {t('Your registered e-mail')}
-            :
+            {`${t('Your registered e-mail')}:`}
           </p>
           <p className={classes.black}>{email}</p>
           <p>{t('Please create your password')}</p>

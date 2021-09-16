@@ -20,6 +20,7 @@ export const reducer = (state = initialState, action) => {
         email: action.data?.password?.email,
         security: action.data?.security,
         company: action.data?.company,
+        admin: action.data?.is_first,
         loading: false,
       };
 
