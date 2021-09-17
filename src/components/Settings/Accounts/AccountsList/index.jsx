@@ -193,8 +193,25 @@ export default function AccountsList() {
   const { dateFormat } = useCompanyInfo();
 
   const updateEmployee = (data) => {
+    const payload = {
+      ...data,
+      skill_id: data.skill,
+      place_id: data.place,
+    };
+
+    if (data.group) {
+      if (data.subgroup) {
+        payload.parent_group_id = data.group;
+        payload.group_id = data.subgroup;
+        payload.subgroup = true;
+      } else {
+        payload.group_id = data.group;
+        payload.subgroup = false;
+      }
+    }
+
     if (editVisible) {
-      dispatch(patchEmployee(id, editVisible, data));
+      dispatch(patchEmployee(id, editVisible, payload));
       setEditVisible(false);
     }
   };

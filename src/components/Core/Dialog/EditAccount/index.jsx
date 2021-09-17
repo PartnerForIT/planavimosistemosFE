@@ -71,7 +71,7 @@ export default function EditAccount({
   skills = [],
   groups = [],
   places = [],
-  onSubmit = () => ({}),
+  onSubmit = Function.prototype,
   handleClose: externalHandleClose,
 }) {
   const { t } = useTranslation();

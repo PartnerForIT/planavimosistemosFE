@@ -6,6 +6,8 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
+import { ErrorBoundary } from 'react-error-boundary';
+
 import Page404 from './components/404';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
@@ -23,26 +25,30 @@ const generateClassName = createGenerateClassName({
 });
 
 const App = () => (
-  <StylesProvider generateClassName={generateClassName}>
-    <Suspense fallback={<div>loading</div>}>
-      <Router>
-        <Switch>
-          <Route exact path='/' component={Login} />
-          <Route path='/404' component={Page404} />
-          <Route exact path='/forgot-password' component={ForgotPassword} />
-          <Route exact path='/invite/:token' component={InvitePage} />
-          <Route exact path='/reset/:token' component={ResetPassword} />
-          <Route exact path='/locked' component={LockedAccount} />
-          <AuthRoute exact path='/overview' component={Overview} />
-          <AuthRoute exact path='/organization-list' component={OrganizationList} />
-          <AuthRoute path='/:id' component={Company} />
-          <Redirect from='*' to='/404' />
-        </Switch>
-      </Router>
-    </Suspense>
-    <SnackbarBlock />
-    <div id='portal' />
-  </StylesProvider>
+  <ErrorBoundary
+    FallbackComponent={Page404}
+  >
+    <StylesProvider generateClassName={generateClassName}>
+      <Suspense fallback={<div>loading</div>}>
+        <Router>
+          <Switch>
+            <Route exact path='/' component={Login} />
+            <Route path='/404' component={Page404} />
+            <Route exact path='/forgot-password' component={ForgotPassword} />
+            <Route exact path='/invite/:token' component={InvitePage} />
+            <Route exact path='/reset/:token' component={ResetPassword} />
+            <Route exact path='/locked' component={LockedAccount} />
+            <AuthRoute exact path='/overview' component={Overview} />
+            <AuthRoute exact path='/organization-list' component={OrganizationList} />
+            <AuthRoute path='/:id' component={Company} />
+            <Redirect from='*' to='/404' />
+          </Switch>
+        </Router>
+      </Suspense>
+      <SnackbarBlock />
+      <div id='portal' />
+    </StylesProvider>
+  </ErrorBoundary>
 );
 
 export default App;
