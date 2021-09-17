@@ -45,7 +45,10 @@ const ForgotPassword = () => {
       .then(() => setSent(true))
       .catch((body) => {
         if (body.error.response.data.error === 'Your account is blocked') {
-          history.push('/locked');
+          history.push('/locked', {
+            adminEmail: error.response.data.admin_email,
+            attempts: error.response.data.attempts,
+          });
         }
       });
   };

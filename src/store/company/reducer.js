@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   modules: {},
-  loading: false,
+  loading: true,
   isCreateTicket: false,
   postSupportTicketLoading: false,
   companyInfo: {},
@@ -35,13 +35,23 @@ export const reducer = (state = initialState, action) => {
 
     case GET_ORGANISATION_MODULES:
       return {
-        ...state, error: null, loading: true,
+        ...state,
+        error: null,
+        loading: true,
       };
     case success(GET_ORGANISATION_MODULES): {
-      return { ...state, modules: action.data, loading: false };
+      return {
+        ...state,
+        modules: action.data,
+        loading: false,
+      };
     }
     case error(GET_ORGANISATION_MODULES): {
-      return { ...state, error: action.error, loading: false };
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
     }
 
     case POST_SUPPORT_TICKET:
