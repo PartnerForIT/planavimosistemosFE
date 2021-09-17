@@ -66,6 +66,10 @@ function RoleDetails({
         return prevState.filter((i) => i !== id);
       }
 
+      if (permissionsIds.logbook.profit === id) {
+        return [...prevState, id, permissionsIds.logbook.costs];
+      }
+
       if (permissionsIds.accounts.create === id) {
         return [...prevState, id, permissionsIds.accounts.see_and_edit];
       }
