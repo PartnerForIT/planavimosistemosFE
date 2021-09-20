@@ -85,15 +85,9 @@ export default function AccountsList() {
     setOpenDialog(false);
   };
 
-  const employeeId = () => {
-    // eslint-disable-next-line no-shadow
-    const id = employeesArr.filter((item) => item.user_id === parseInt(inputValues.employee, 10));
-    return id[0] ? `${id[0].id}` : '';
-  };
-
   const submitDeleteData = () => {
     const data = {
-      employee_id: parseInt(employeeId(), 10),
+      employee_id: inputValues.employee,
       date_from: moment(inputValues.from.startDate).format('YYYY-MM-DD'),
       date_to: moment(inputValues.from.endDate).format('YYYY-MM-DD'),
     };

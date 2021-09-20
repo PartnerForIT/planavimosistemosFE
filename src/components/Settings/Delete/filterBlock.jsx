@@ -3,7 +3,7 @@ import Label from '../../Core/InputLabel';
 import Tooltip from '../../Core/Tooltip';
 import DateRangePicker from '../../Core/DateRangePicker';
 import Button from '../../Core/Button/Button';
-import DialogCreateJob from '../../Core/Dialog/DeleteData';
+import DialogDeleteData from '../../Core/Dialog/DeleteData';
 import SimpleSelect from '../../Core/SimpleSelect';
 
 export default function FilterDelete({
@@ -44,7 +44,7 @@ export default function FilterDelete({
       >
         {t('Delete data')}
       </Button>
-      <DialogCreateJob
+      <DialogDeleteData
         open={openDialog}
         handleClose={handleDialog}
         title={t('Delete Data?')}
