@@ -105,9 +105,9 @@ export default function DataTable({
     document.documentElement.style.setProperty(`--scroll-left-${id}`, '0px');
   }, [id]);
 
-  const sort = (field, asc) => {
+  const sort = (field, asc, column) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
-    onSort(field, !asc);
+    onSort(field, !asc, column);
   };
 
   const columnsChangeHandler = (item) => {
@@ -264,7 +264,7 @@ export default function DataTable({
                       }
                       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
                         className={sortBlockClasses}
-                        onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
+                        onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field], column)}
                       >
                         <div className={classNames(styles.flexCenter)}>
                           {column.label}

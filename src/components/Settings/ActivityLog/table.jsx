@@ -4,8 +4,13 @@ import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
 
 const columns = [
-  { label: 'Timestamp', field: 'created_at', checked: true },
-  { label: 'User', field: 'user_id', checked: true },
+  {
+    label: 'Timestamp',
+    field: 'created_at',
+    checked: true,
+    date: true,
+  },
+  { label: 'User', field: 'user', checked: true },
   { label: 'Place', field: 'place_id', checked: true },
   { label: 'Action', field: 'action', checked: true },
   { label: 'Device', field: 'device', checked: true },
@@ -13,7 +18,7 @@ const columns = [
 
 const columnsWidthArray = {
   created_at: 220,
-  user_id: 160,
+  user: 160,
   place_id: 180,
   action: 180,
   device: 180,
@@ -40,10 +45,10 @@ export default function ActivityTable({
       ? activityLog.map((item) => ({
         ...item,
         created_at: item.created_at ? moment(item.created_at).format('lll') : '',
-        user_id: `${item.user?.employee?.name} ${item.user?.employee?.surname}`,
+        user: `${item.user?.employee?.name} ${item.user?.employee?.surname}`,
         place_id: paceName(item),
-      }))
-      : activityLog);
+      })).reverse()
+      : activityLog.reverse());
   }, [activityLog, paceName]);
 
   const selectionHandler = (itemId, value) => {
@@ -65,9 +70,16 @@ export default function ActivityTable({
     }
   };
 
-  const sortHandler = useCallback((field, asc) => {
+  const sortHandler = useCallback((field, asc, column) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
+    const sortDate = (a, b) => (asc
+      ? (new Date(a[field]) - new Date(b[field]))
+      : (new Date(b[field]) - new Date(a[field])));
+
     const sortFunction = (a, b) => {
+      if (column.date) {
+        return sortDate(a, b);
+      }
       if (typeof a[field] === 'number' && typeof b[field] === 'number') {
         return sortNumFunction(a, b);
       }
