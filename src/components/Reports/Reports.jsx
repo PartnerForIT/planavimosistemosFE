@@ -94,6 +94,19 @@ const permissionsConfig = [
     permission: 'reports_assigned_place',
   },
 ];
+const columnsWidth = {
+  // user: 500,
+  // skill: 120,
+  // jobType: 140,
+  // group: 140,
+  // subgroup: 140,
+  // duration: 180,
+  //
+  // cost: 130,
+  // sallary: 130,
+  // profit: 130,
+};
+
 export default () => {
   /* Reports data */
   const reportTabs = useRef(null);
@@ -253,33 +266,46 @@ export default () => {
             let reportsSalary = 0;
             let reportsProfit = 0;
 
-            return {
+            const nextReport = {
               ...rest,
               items: items.map(({ data, ...other }) => ({
                 ...other,
                 data: {
                   ...data,
-                  columns: [...data.columns, ...profitabilityColumns]
+                  // columnsWidth: {
+                  //   date: 'auto',
+                  //   start: 'auto',
+                  //   end: 'auto',
+                  //   comment: 'auto',
+                  //   duration: 180,
+                  //   cost: 130,
+                  //   sallary: 130,
+                  //   profit: 130,
+                  // },
+                  columns: [
+                    ...data.columns.slice(0, 4),
+                    {},
+                    {},
+                    ...data.columns.slice(4),
+                    ...profitabilityColumns,
+                  ]
                     .filter(({ field }) => {
                       if (!costState.show_earnings && field === 'sallary') {
                         return false;
-                      } if (!costState.show_costs && field === 'cost') {
+                      }
+                      if (!costState.show_costs && field === 'cost') {
                         return false;
-                      } if (!comments && field === 'comment') {
+                      }
+                      if (!comments && field === 'comment') {
                         return false;
                       }
                       return !(!costState.show_profit && field === 'profit');
                     }),
-                  items: [...data.items].map(({ profitability: prof, ...all }) => {
+                  items: data.items.map(({ profitability: prof, ...all }) => {
                     const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
                     reportsCost += cost;
                     reportsSalary += sallary;
                     reportsProfit += profit;
-                    setTotalStat((prevState) => ({
-                      sallary: prevState.sallary + sallary,
-                      profit: prevState.profit + profit,
-                      cost: prevState.profit + profit,
-                    }));
                     return {
                       ...all,
                       ...(prof || {}),
@@ -291,10 +317,24 @@ export default () => {
               sallary: reportsSalary,
               profit: reportsProfit,
             };
+
+            setTotalStat((prevState) => ({
+              sallary: prevState.sallary + reportsSalary,
+              profit: prevState.profit + reportsProfit,
+              cost: prevState.profit + reportsCost,
+            }));
+
+            return nextReport;
           }),
         };
         if (reportIndex >= 0) {
-          return [...state].splice(reportIndex, 1, { ...mappedReport });
+          return [
+            ...state.slice(0, reportIndex),
+            {
+              ...mappedReport,
+            },
+            ...state.slice(reportIndex + 1),
+          ];
         }
 
         return [...state, mappedReport];
@@ -539,6 +579,7 @@ export default () => {
               </div>
             </Scrollbar>
           )}
+          {console.log('itemsArray', itemsArray)}
           <div
             className={mainContainerClasses}
             style={{ height: itemsArray.length > 0 ? 'calc(100vh - 210px)' : 'calc(100vh - 125px)' }}
@@ -550,6 +591,7 @@ export default () => {
                     key={report.id.toString()}
                     data={report.report || []}
                     columns={columnsArray || []}
+                    columnsWidth={columnsWidth}
                     onColumnsChange={setColumnsArray}
                     loading={loading}
                     onSort={sortHandler}
@@ -561,7 +603,9 @@ export default () => {
                     downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                     verticalOffset='212px'
                     amount={totalStat}
-                    permissions={permissions}
+                    withCost={permissions.cost && costState.show_costs}
+                    withProfit={permissions.cost && permissions.profit && costState.show_profit}
+                    withSalary={permissions.cost && permissions.profit && costState.show_earnings}
                     white
                   />
                 ))

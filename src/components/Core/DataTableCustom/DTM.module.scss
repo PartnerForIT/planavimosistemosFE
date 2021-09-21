@@ -557,20 +557,16 @@ header {
   }
 }
 
+.footerTitleReports {
+  margin-left: auto;
+  padding-right: 35px;
+}
+
 .footerTitle {
   color: #3e4552;
   font-family: "Helvetica Neue Bold", sans-serif;
   font-size: 14px;
   //font-weight: 600;
-
-  &_reports {
-    margin-right: 0;
-  }
-}
-
-.footerTitleReports {
-  margin-left: auto;
-  padding-right: 35px;
 }
 
 .footerCost {
@@ -957,6 +953,34 @@ div {
 
       .flexTable.header .columnName {
         color: #808f94;
+      }
+    }
+  }
+
+  &_reports {
+    .footerTitle {
+      margin-right: 0;
+      margin-left: 0;
+      padding-right: 0;
+      width: 14%;
+
+      &_first {
+        width: 25%;
+      }
+
+      &:last-child {
+        text-align: end;
+        padding-right: 10px;
+      }
+    }
+
+    .tableFooter {
+      padding-right: 31px;
+
+      &__spacer {
+        height: 1px;
+        width: 1px;
+        margin-right: auto;
       }
     }
   }

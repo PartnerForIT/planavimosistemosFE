@@ -236,6 +236,7 @@ const Row = ({
             <SimpleTable
               columns={row.data.columns}
               rows={row.data.items}
+              columnsWidth={row.data.columnsWidth}
               expanded={subTableExpanded}
               selectable={selectable}
               reports={reports}
