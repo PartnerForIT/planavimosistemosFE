@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
+
 import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
@@ -42,6 +44,7 @@ import { dateToUCT } from '../Helpers';
 import { skillsSelector } from '../../store/skills/selectors';
 import { getSkills } from '../../store/skills/actions';
 import usePermissions from '../Core/usePermissions';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -108,6 +111,8 @@ const columnsWidth = {
 };
 
 export default () => {
+  const { getDateFormat } = useCompanyInfo();
+
   /* Reports data */
   const reportTabs = useRef(null);
   const [activeReport, setActiveReport] = useState();
@@ -261,6 +266,11 @@ export default () => {
         const reportIndex = state.findIndex(({ id }) => id === reportId);
         const mappedReport = {
           ...generatedReport,
+          description: moment(generatedReport.description).format(getDateFormat({
+            'YY.MM.DD': 'yyyy-MM-DD',
+            'DD.MM.YY': 'DD-MM-yyyy',
+            'MM.DD.YY': 'MM-DD-yyyy',
+          })),
           report: generatedReport.report.map(({ items, ...rest }) => {
             let reportsCost = 0;
             let reportsSalary = 0;
@@ -308,6 +318,11 @@ export default () => {
                     reportsProfit += profit;
                     return {
                       ...all,
+                      date: moment(all.date).format(getDateFormat({
+                        'YY.MM.DD': 'yyyy-MM-DD',
+                        'DD.MM.YY': 'DD-MM-yyyy',
+                        'MM.DD.YY': 'MM-DD-yyyy',
+                      })),
                       ...(prof || {}),
                     };
                   }),

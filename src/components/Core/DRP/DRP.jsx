@@ -2,16 +2,21 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DateRangePicker } from 'custom-react-daterange-picker';
 import { format } from 'date-fns';
-import './DRP.scss';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { useTranslation } from 'react-i18next';
+
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import Button from '../Button/Button';
+
+import './DRP.scss';
 import defaultRanges from './defaultRanges';
 
 const DRP = ({
   initRange, onChange, small, right,
 }) => {
+  const { getDateFormat } = useCompanyInfo();
+
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
@@ -79,6 +84,12 @@ const DRP = ({
     if (dateRange.startDate && dateRange.endDate) setOpen(false);
   }, [dateRange]);
 
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.dd',
+    'DD.MM.YY': 'dd.MM.yyyy',
+    'MM.DD.YY': 'MM.dd.yyyy',
+  });
+
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className={pickerWrapperClasses}>
@@ -113,7 +124,7 @@ const DRP = ({
           className={startInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={startDate ? format(startDate, 'MM.dd.yyyy') : t('Start Date')}
+          value={startDate ? format(startDate, formatDate) : t('Start Date')}
         />
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
@@ -121,7 +132,7 @@ const DRP = ({
           className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={endDate ? format(endDate, 'MM.dd.yyyy') : t('End Date')}
+          value={endDate ? format(endDate, formatDate) : t('End Date')}
         />
         {
           right ? (

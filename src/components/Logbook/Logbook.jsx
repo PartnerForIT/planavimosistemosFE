@@ -38,7 +38,7 @@ import { getSkills } from '../../store/skills/actions';
 import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
-import { dateToUCT, minutesToString } from '../Helpers';
+import { minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
 import CommentCard from '../Core/CommentCard/CommentCard';
 import KioskCard from '../Core/KioskCard/KioskCard';
@@ -56,6 +56,7 @@ import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import EditEntry from './EditEntry';
 import styles from './Logbook.module.scss';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -136,7 +137,9 @@ const permissionsConfig = [
   },
 ];
 
-const Logbook = () => {
+export default () => {
+  const { getDateFormat } = useCompanyInfo();
+
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
@@ -307,9 +310,16 @@ const Logbook = () => {
             .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
             .filter((it) => !sortStatus.some((status) => status === it.status));
         }
+
+        const partFormat = getDateFormat({
+          'YY.MM.DD': 'YYYY. MMMM, DD',
+          'DD.MM.YY': 'DD. MMMM, YYYY',
+          'MM.DD.YY': 'MMMM. DD, YYYY',
+        });
+
         return {
           ...item,
-          label: moment(item.date).format('dddd, DD. MMMM, YYYY').toUpperCase(),
+          label: moment(item.date).format(`dddd, ${partFormat}`).toUpperCase(),
           items,
         };
       }).filter(({ items }) => items.length));
@@ -503,13 +513,21 @@ const Logbook = () => {
           <div className={styles.employeeName}>{selectedItem.employee}</div>
           <div className={styles.date}>
             {
-              format(
-                new Date(
-                  dateToUCT(selectedItem.works[0].started_at).getTime()
-                    + dateToUCT(selectedItem.works[0].started_at)
-                      .getTimezoneOffset() * 60 * 1000,
-                ), 'iii, dd, MMMM, yyyy',
-              )
+              // format(
+              //   new Date(
+              //     dateToUCT(selectedItem.works[0].started_at).getTime()
+              //       + dateToUCT(selectedItem.works[0].started_at)
+              //         .getTimezoneOffset() * 60 * 1000,
+              //   ), 'iii, dd, MMMM, yyyy',
+              // )
+            }
+            {
+              moment(selectedItem.works[0].started_at)
+                .format(`ddd, ${getDateFormat({
+                  'YY.MM.DD': 'YYYY, MMMM, DD',
+                  'DD.MM.YY': 'DD, MMMM, YYYY',
+                  'MM.DD.YY': 'MMMM, DD, YYYY',
+                })}`)
             }
           </div>
           <Delimiter />
@@ -520,28 +538,22 @@ const Logbook = () => {
                   style={{ height: `calc(100vh - 318px - ${isApproval ? '64px' : '0px'})` }}
                   removeTracksWhenNotUsed
                   trackXProps={{
-                    renderer: (props) => {
-                      const { elementRef, ...restProps } = props;
-                      return (
-                        <span
-                          {...restProps}
-                          ref={elementRef}
-                          className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                        />
-                      );
-                    },
+                    renderer: ({ elementRef, ...restProps }) => (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                      />
+                    ),
                   }}
                   trackYProps={{
-                    renderer: (props) => {
-                      const { elementRef, ...restProps } = props;
-                      return (
-                        <span
-                          {...restProps}
-                          ref={elementRef}
-                          className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                        />
-                      );
-                    },
+                    renderer: ({ elementRef, ...restProps }) => (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                      />
+                    ),
                   }}
                 >
                   <Timeline
@@ -795,5 +807,3 @@ const Logbook = () => {
     </MaynLayout>
   );
 };
-
-export default Logbook;
