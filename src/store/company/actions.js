@@ -6,6 +6,7 @@ import {
   DONE_SUPPORT_TICKET,
   GET_COMPANY_INFO,
   GET_COMPANY_INFO_SUCCESS,
+  UPDATE_COMPANY_INFO,
 } from './types';
 
 export const getOrganisationModules = (companyId) => ({
@@ -40,5 +41,10 @@ export const getCompanyInfo = (id) => ({
 });
 export const getCompanyInfoSuccess = (data) => ({
   type: GET_COMPANY_INFO_SUCCESS,
+  data,
+});
+
+export const updateCompanyInfo = (data) => ({
+  type: UPDATE_COMPANY_INFO,
   data,
 });

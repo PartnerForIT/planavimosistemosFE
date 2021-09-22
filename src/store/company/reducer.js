@@ -7,6 +7,7 @@ import {
   POST_SUPPORT_TICKET_ERROR,
   POST_SUPPORT_TICKET_SUCCESS,
   // GET_COMPANY_INFO,
+  UPDATE_COMPANY_INFO,
   GET_COMPANY_INFO_SUCCESS,
 } from './types';
 
@@ -32,6 +33,16 @@ export const reducer = (state = initialState, action) => {
         isLoadingCompany: false,
         companyInfo: action.data,
       };
+
+    case UPDATE_COMPANY_INFO: {
+      return {
+        ...state,
+        companyInfo: {
+          ...state.companyInfo,
+          ...action.data,
+        },
+      };
+    }
 
     case GET_ORGANISATION_MODULES:
       return {

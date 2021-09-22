@@ -85,9 +85,9 @@ const DRP = ({
   }, [dateRange]);
 
   const formatDate = getDateFormat({
-    'YY.MM.DD': 'yyyy.MM.dd',
-    'DD.MM.YY': 'dd.MM.yyyy',
-    'MM.DD.YY': 'MM.dd.yyyy',
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
   });
 
   return (
@@ -132,7 +132,7 @@ const DRP = ({
           className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={endDate ? moment(startDate).format(formatDate) : t('End Date')}
+          value={endDate ? moment(endDate).format(formatDate) : t('End Date')}
         />
         {
           right ? (

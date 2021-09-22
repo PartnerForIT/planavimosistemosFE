@@ -124,6 +124,7 @@ import {
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
 import { authCheck } from '../auth/actions';
+import { updateCompanyInfo } from '../company/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 import getToken from '../getToken';
@@ -153,6 +154,14 @@ function* editSettingsCompany(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+
+    const companyInfo = yield select((state) => state.company.companyInfo);
+    if (companyInfo.date_format !== action.data.date_format) {
+      yield put(updateCompanyInfo({
+        date_format: action.data.date_format,
+      }));
+    }
+
     // yield put(getSettingCompanySuccess(data));
     yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
