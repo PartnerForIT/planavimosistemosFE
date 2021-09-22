@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DateRangePicker } from 'custom-react-daterange-picker';
-import { format } from 'date-fns';
+import moment from 'moment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { useTranslation } from 'react-i18next';
@@ -124,7 +124,7 @@ const DRP = ({
           className={startInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={startDate ? format(startDate, formatDate) : t('Start Date')}
+          value={startDate ? moment(startDate).format(formatDate) : t('Start Date')}
         />
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
@@ -132,7 +132,7 @@ const DRP = ({
           className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={endDate ? format(endDate, formatDate) : t('End Date')}
+          value={endDate ? moment(startDate).format(formatDate) : t('End Date')}
         />
         {
           right ? (
