@@ -264,6 +264,11 @@ export default () => {
       setItemsArray((state) => {
         const reportId = generatedReport.id;
         const reportIndex = state.findIndex(({ id }) => id === reportId);
+
+        let reportsCost = 0;
+        let reportsSalary = 0;
+        let reportsProfit = 0;
+
         const mappedReport = {
           ...generatedReport,
           description: moment(generatedReport.description).format(getDateFormat({
@@ -272,9 +277,6 @@ export default () => {
             'MM.DD.YY': 'MM-DD-yyyy',
           })),
           report: generatedReport.report.map(({ items, ...rest }) => {
-            let reportsCost = 0;
-            let reportsSalary = 0;
-            let reportsProfit = 0;
 
             const nextReport = {
               ...rest,
@@ -323,7 +325,9 @@ export default () => {
                         'DD.MM.YY': 'DD-MM-yyyy',
                         'MM.DD.YY': 'MM-DD-yyyy',
                       })),
-                      ...(prof || {}),
+                      cost,
+                      sallary,
+                      profit,
                     };
                   }),
                 },
@@ -333,15 +337,10 @@ export default () => {
               profit: reportsProfit,
             };
 
-            setTotalStat((prevState) => ({
-              sallary: prevState.sallary + reportsSalary,
-              profit: prevState.profit + reportsProfit,
-              cost: prevState.profit + reportsCost,
-            }));
-
             return nextReport;
           }),
         };
+
         if (reportIndex >= 0) {
           return [
             ...state.slice(0, reportIndex),
@@ -351,6 +350,12 @@ export default () => {
             ...state.slice(reportIndex + 1),
           ];
         }
+
+        setTotalStat((prevState) => ({
+          sallary: prevState.sallary + reportsSalary,
+          profit: prevState.profit + reportsProfit,
+          cost: prevState.profit + reportsCost,
+        }));
 
         return [...state, mappedReport];
       });
