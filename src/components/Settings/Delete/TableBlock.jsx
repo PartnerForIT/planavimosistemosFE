@@ -5,7 +5,7 @@ import Label from '../../Core/InputLabel';
 
 const columns = [
   { label: 'Timestamp', field: 'created_at', checked: true },
-  { label: 'User', field: 'user_id', checked: true },
+  { label: 'User', field: 'email', checked: true },
   { label: 'IP', field: 'ip_address', checked: true },
   { label: 'Information', field: 'information', checked: true },
 ];
