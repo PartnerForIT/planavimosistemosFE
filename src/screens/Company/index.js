@@ -11,6 +11,7 @@ import Progress from '../../components/Core/Progress';
 import Logbook from '../../components/Logbook/Logbook';
 import { getCompanyInfo, getOrganisationModules } from '../../store/company/actions';
 import { companyModulesLoading, isLoadingCompanySelector } from '../../store/company/selectors';
+import { userSelector } from '../../store/auth/selectors';
 
 import Events from '../../components/Events/Events';
 import Schedule from '../Schedule';
@@ -131,6 +132,7 @@ export default () => {
 
   const isLoading = useSelector(isLoadingCompanySelector);
   const isLoadingCompanyModules = useSelector(companyModulesLoading);
+  const user = useSelector(userSelector);
 
   useEffect(() => {
     if (companyId) {
@@ -160,6 +162,13 @@ export default () => {
   //     }
   //   }
   // }, [isLoadingCompanyModules, pathname]);
+
+  const isSuperAdmin = user?.user?.role_id === 1;
+  if (!isSuperAdmin && user.employee.company_id !== +companyId) {
+    return (
+      <Redirect from='*' to='/404' />
+    );
+  }
 
   if (isLoading || isLoadingCompanyModules) {
     return (
