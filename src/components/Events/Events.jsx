@@ -330,9 +330,11 @@ const Events = () => {
             selectedItem
               ? <EventCard selectedItem={selectedItem} />
               : (
-                <div className={styles.emptyWrapper}>
+                <div className={styles.empty}>
                   <TableIcon />
-                  <p>{t('Select any entry to get a detailed event info')}</p>
+                  <div className={styles.empty__text}>
+                    Select any entry to get a detailed editable info
+                  </div>
                 </div>
               )
           }
