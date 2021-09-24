@@ -244,12 +244,38 @@ export default ({
     setFormValues(nextInputValues);
   };
   const handleChangeTimePart = (values) => {
+    const nextValues = { ...values };
     const foundIndex = timeParts.findIndex((item) => (item.id === values.id));
+
+    if (values.finished && foundIndex < timeParts.length - 1) {
+      const finished = values.finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      const started = timeParts[foundIndex + 1].started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      // The end time of the current time interval is longer than the start time of the next time interval
+      if (endTimeInMinutes > startTimeInMinutes) {
+        nextValues.finished = timeParts[foundIndex + 1].started;
+      }
+    } else if (values.started && foundIndex > 0) {
+      const started = values.started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      const finished = timeParts[foundIndex - 1].finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      // The start time of the current time interval is less than the end time of the previous time interval
+      if (startTimeInMinutes < endTimeInMinutes) {
+        nextValues.started = timeParts[foundIndex - 1].finished;
+      }
+    }
+
     setTimeParts((prevValues) => [
       ...prevValues.slice(0, foundIndex),
       {
         ...prevValues[foundIndex],
-        ...values,
+        ...nextValues,
       },
       ...prevValues.slice(foundIndex + 1),
     ]);
@@ -320,8 +346,6 @@ export default ({
         }
       }
     });
-    console.log('timeParts = ', timeParts);
-    console.log('timeParts = ', body.totalBreakTime);
 
     body.totalWorkTime = {
       hours: Math.floor(body.totalWorkTime / 60),
