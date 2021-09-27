@@ -247,6 +247,28 @@ export default ({
     const nextValues = { ...values };
     const foundIndex = timeParts.findIndex((item) => (item.id === values.id));
 
+    if (values.finished) {
+      const finished = values.finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      const started = timeParts[foundIndex].started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      if (endTimeInMinutes < startTimeInMinutes) {
+        nextValues.finished = timeParts[foundIndex].finished;
+      }
+    } else if (values.started) {
+      const started = values.started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      const finished = timeParts[foundIndex].finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      if (startTimeInMinutes > endTimeInMinutes) {
+        nextValues.started = timeParts[foundIndex].started;
+      }
+    }
+
     if (values.finished && foundIndex < timeParts.length - 1) {
       const finished = values.finished.split(':');
       const endTimeInMinutes = (finished[0] * 60 + +finished[1]);

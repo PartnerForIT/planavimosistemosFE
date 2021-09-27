@@ -260,6 +260,11 @@ export default () => {
   }, [getAllSkills]);
 
   useEffect(() => {
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'yyyy-MM-DD',
+      'DD.MM.YY': 'DD-MM-yyyy',
+      'MM.DD.YY': 'MM-DD-yyyy',
+    });
     if (generatedReport.report) {
       setItemsArray((state) => {
         const reportId = generatedReport.id;
@@ -271,74 +276,66 @@ export default () => {
 
         const mappedReport = {
           ...generatedReport,
-          description: moment(generatedReport.description).format(getDateFormat({
-            'YY.MM.DD': 'yyyy-MM-DD',
-            'DD.MM.YY': 'DD-MM-yyyy',
-            'MM.DD.YY': 'MM-DD-yyyy',
-          })),
-          report: generatedReport.report.map(({ items, ...rest }) => {
-
-            const nextReport = {
-              ...rest,
-              items: items.map(({ data, ...other }) => ({
-                ...other,
-                data: {
-                  ...data,
-                  // columnsWidth: {
-                  //   date: 'auto',
-                  //   start: 'auto',
-                  //   end: 'auto',
-                  //   comment: 'auto',
-                  //   duration: 180,
-                  //   cost: 130,
-                  //   sallary: 130,
-                  //   profit: 130,
-                  // },
-                  columns: [
-                    ...data.columns.slice(0, 4),
-                    {},
-                    {},
-                    ...data.columns.slice(4),
-                    ...profitabilityColumns,
-                  ]
-                    .filter(({ field }) => {
-                      if (!costState.show_earnings && field === 'sallary') {
-                        return false;
-                      }
-                      if (!costState.show_costs && field === 'cost') {
-                        return false;
-                      }
-                      if (!comments && field === 'comment') {
-                        return false;
-                      }
-                      return !(!costState.show_profit && field === 'profit');
-                    }),
-                  items: data.items.map(({ profitability: prof, ...all }) => {
-                    const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
-                    reportsCost += cost;
-                    reportsSalary += sallary;
-                    reportsProfit += profit;
-                    return {
-                      ...all,
-                      date: moment(all.date).format(getDateFormat({
-                        'YY.MM.DD': 'yyyy-MM-DD',
-                        'DD.MM.YY': 'DD-MM-yyyy',
-                        'MM.DD.YY': 'MM-DD-yyyy',
-                      })),
-                      cost,
-                      sallary,
-                      profit,
-                    };
+          description: `${moment(generatedReport.startDate).format(formatDate)}
+           - ${moment(generatedReport.endDate).format(formatDate)}`,
+          report: generatedReport.report.map(({ items, ...rest }) => ({
+            ...rest,
+            items: items.map(({ data, ...other }) => ({
+              ...other,
+              data: {
+                ...data,
+                // columnsWidth: {
+                //   date: 'auto',
+                //   start: 'auto',
+                //   end: 'auto',
+                //   comment: 'auto',
+                //   duration: 180,
+                //   cost: 130,
+                //   sallary: 130,
+                //   profit: 130,
+                // },
+                columns: [
+                  ...data.columns.slice(0, 4),
+                  {},
+                  {},
+                  ...data.columns.slice(4),
+                  ...profitabilityColumns,
+                ]
+                  .filter(({ field }) => {
+                    if (!costState.show_earnings && field === 'sallary') {
+                      return false;
+                    }
+                    if (!costState.show_costs && field === 'cost') {
+                      return false;
+                    }
+                    if (!comments && field === 'comment') {
+                      return false;
+                    }
+                    return !(!costState.show_profit && field === 'profit');
                   }),
-                },
-              })),
-              cost: reportsCost,
-              sallary: reportsSalary,
-              profit: reportsProfit,
-            };
-
-            return nextReport;
-          }),
+                items: data.items.map(({ profitability: prof, ...all }) => {
+                  const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
+                  reportsCost += cost;
+                  reportsSalary += sallary;
+                  reportsProfit += profit;
+                  return {
+                    ...all,
+                    date: moment(all.date).format(getDateFormat({
+                      'YY.MM.DD': 'yyyy-MM-DD',
+                      'DD.MM.YY': 'DD-MM-yyyy',
+                      'MM.DD.YY': 'MM-DD-yyyy',
+                    })),
+                    cost,
+                    sallary,
+                    profit,
+                  };
+                }),
+              },
+            })),
+            cost: reportsCost,
+            sallary: reportsSalary,
+            profit: reportsProfit,
+          })),
         };
 
         if (reportIndex >= 0) {
