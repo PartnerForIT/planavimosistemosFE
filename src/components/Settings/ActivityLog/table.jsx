@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 
 const columns = [
   {
@@ -29,6 +30,13 @@ const page = {};
 export default function ActivityTable({
   style, activityLog = [], places, t, isLoading,
 }) {
+  const { getDateFormat } = useCompanyInfo();
+  const dateFormat = getDateFormat({
+    'YY.MM.DD': 'YYYY, MMM DD',
+    'DD.MM.YY': 'DD MMM, YYYY',
+    'MM.DD.YY': 'MMM DD, YYYY',
+  });
+
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -44,7 +52,7 @@ export default function ActivityTable({
     setDataArray(activityLog.length
       ? activityLog.map((item) => ({
         ...item,
-        created_at: item.created_at ? moment(item.created_at).format('lll') : '',
+        created_at: item.created_at ? moment(item.created_at).format(`${dateFormat} HH:mm`) : '',
         user: `${item.user?.employee?.name} ${item.user?.employee?.surname}`,
         place_id: paceName(item),
       })).reverse()

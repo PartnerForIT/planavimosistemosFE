@@ -347,7 +347,7 @@ export default ({
         {selectedItem?.employee}
       </span>
       <span className={classes.container__date}>
-        {moment(selectedItem?.timestamp).format('hh:mm DD. MMM, yyyy')}
+        {selectedItem?.timestamp}
       </span>
       <EventInformation
         type={selectedItem.event_type_id}

@@ -16,6 +16,7 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 import { employeesSelector } from '../../store/employees/selectors';
 import { AccountGroupsSelector } from '../../store/settings/selectors';
 import { eventsSelector, eventsLoadingSelector } from '../../store/events/selectors';
@@ -86,6 +87,8 @@ const columnsWidth = {
 // ];
 
 const Events = () => {
+  const { getDateFormat } = useCompanyInfo();
+
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState(columns);
 
@@ -133,16 +136,28 @@ const Events = () => {
   }, []);
 
   useEffect(() => {
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'YYYY, MMM, DD',
+      'DD.MM.YY': 'DD, MMM, YYYY',
+      'MM.DD.YY': 'MMM, DD, YYYY',
+    });
+    const formatDate2 = getDateFormat({
+      'YY.MM.DD': 'YYYY-MM-DD',
+      'DD.MM.YY': 'DD-MM-YYYY',
+      'MM.DD.YY': 'MM-DD-YYYY',
+    });
+
     const eventsParse = events.reduce((acc, item) => {
       const nextItem = {
         ...item,
+        timestamp: moment(item.timestamp).format(`${formatDate2} hh:mm`),
         time: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
       };
       let time;
       if (!item.seen) {
         time = 'seen';
       } else {
-        time = moment(item.timestamp).format('MMM, DD, YYYY');
+        time = moment(item.timestamp).format(formatDate);
       }
 
       if (acc[time]) {
@@ -238,7 +253,17 @@ const Events = () => {
       // });
       // setItemsArray(itemsArray);
     }
-    setSelectedItem(selectedRow);
+
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'yyyy, MMM, DD',
+      'DD.MM.YY': 'DD. MMM, yyyy',
+      'MM.DD.YY': 'MMM. DD, yyyy',
+    });
+
+    setSelectedItem({
+      ...selectedRow,
+      timestamp: moment(selectedRow.timestamp).format(`hh:mm ${formatDate}`),
+    });
   };
 
   const onGroupsSelectChange = (selectedGroups) => {

@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
+
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
 
@@ -22,6 +24,13 @@ const page = {};
 export default function DeleteDataTable({
   style, deleteData = [], employees, t, isLoading,
 }) {
+  const { getDateFormat } = useCompanyInfo();
+  const dateFormat = getDateFormat({
+    'YY.MM.DD': 'YYYY, MMM DD',
+    'DD.MM.YY': 'DD MMM, YYYY',
+    'MM.DD.YY': 'MMM DD, YYYY',
+  });
+
   const [columnsArray, setColumnsArray] = useState(columns);
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -41,7 +50,7 @@ export default function DeleteDataTable({
     setDataArray(deleteData.length
       ? deleteData.map((item) => ({
         ...item,
-        created_at: item.created_at ? moment(item.created_at).format('lll') : '',
+        created_at: item.created_at ? moment(item.created_at).format(`${dateFormat} HH:mm`) : '',
         user_id: userName(item),
       }))
       : deleteData);

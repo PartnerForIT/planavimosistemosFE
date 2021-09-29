@@ -190,7 +190,13 @@ export default function AccountsList() {
   const [all, setAll] = useState(false);
 
   const permissions = usePermissions(permissionsConfig);
-  const { dateFormat } = useCompanyInfo();
+  const { getDateFormat } = useCompanyInfo();
+
+  const dateFormat = getDateFormat({
+    'YY.MM.DD': 'YYYY, MMM DD',
+    'DD.MM.YY': 'DD MMM, YYYY',
+    'MM.DD.YY': 'MMM DD, YYYY',
+  });
 
   const updateEmployee = (data) => {
     const payload = {
@@ -331,8 +337,8 @@ export default function AccountsList() {
       skills: skills?.[0]?.name ?? '',
       place: place?.[0]?.name ?? '',
       role: permissions?.[0]?.account_roles?.name ?? '',
-      created_at: createdAt ? moment(createdAt).format(dateFormat) : '',
-      updated_at: updatedAt ? moment(updatedAt).format(dateFormat) : '',
+      created_at: createdAt ? moment(createdAt).format(`${dateFormat} HH:mm`) : '',
+      updated_at: updatedAt ? moment(updatedAt).format(`${dateFormat} HH:mm`) : '',
       name: `${name} ${surname}`,
       status: parseInt(status, 10),
     };

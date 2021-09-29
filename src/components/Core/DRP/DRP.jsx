@@ -16,6 +16,11 @@ const DRP = ({
   initRange, onChange, small, right,
 }) => {
   const { getDateFormat } = useCompanyInfo();
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
+  });
 
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
@@ -83,12 +88,6 @@ const DRP = ({
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) setOpen(false);
   }, [dateRange]);
-
-  const formatDate = getDateFormat({
-    'YY.MM.DD': 'yyyy.MM.DD',
-    'DD.MM.YY': 'DD.MM.yyyy',
-    'MM.DD.YY': 'MM.DD.yyyy',
-  });
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
