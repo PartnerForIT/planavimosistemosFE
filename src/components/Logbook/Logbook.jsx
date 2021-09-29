@@ -198,18 +198,18 @@ export default () => {
           charge += itemSalary;
           profit += itemProfit;
 
-          setTotal((prevState) => ({
-            salary: prevState.salary + charge,
-            cost: prevState.cost + cost,
-            profit: prevState.profit + profit,
-          }));
-
           return {
             ...rest,
             ...profitability,
           };
         }),
       };
+
+      setTotal(() => ({
+        salary: charge,
+        cost,
+        profit,
+      }));
 
       return {
         ...newDay,
@@ -292,7 +292,7 @@ export default () => {
     })).then(() => {
       setCheckedItems([]);
       setSelectedItem(null);
-    }).catch();
+    });
   }, [checkedEmployees, checkedSkills, companyId, dateRange, dispatch, search]);
 
   useEffect(() => {
