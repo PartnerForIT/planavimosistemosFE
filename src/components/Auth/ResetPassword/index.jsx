@@ -38,9 +38,9 @@ export default () => {
     loading,
   } = useSelector(companyServicesInfoSelector);
   const {
-    minLength = 1,
-    min_password_length: numbers = false,
+    min_password_length: minLength = 1,
     special_chars: specialChars = false,
+    numbers = false,
     uppercase = false,
   } = security;
 
