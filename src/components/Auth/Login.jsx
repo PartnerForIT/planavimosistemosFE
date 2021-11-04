@@ -23,6 +23,7 @@ import Progress from '../Core/Progress';
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const LoginContainer = () => {
   }, []);
 
   const handleLogin = () => {
-    dispatch(login(email, password)).then((data) => {
+    dispatch(login(email, password, remember)).then((data) => {
       const {
         role_id: roleId,
         company_id: companyId,
@@ -124,7 +125,7 @@ const LoginContainer = () => {
           </div>
           <Delimiter />
           <div className={styles.buttons}>
-            <StyledCheckbox label={t('Remember me')} onChange={() => null} />
+            <StyledCheckbox label={t('Remember me')} onChange={(item, rememberValue) => setRemember(rememberValue)} />
             <Button onClick={handleLogin} size='medium' loading={isLoading}>
               {t('Login')}
             </Button>
