@@ -18,6 +18,7 @@ import Input from '../../Core/Input/Input';
 import LockLoginIcon from '../../Icons/LockLoginIcon';
 import Logo from '../../Logo';
 import classes from './ResetPassword.module.scss';
+import Page404 from '../../404/index';
 
 export default () => {
   const [values, setValues] = useState({
@@ -92,7 +93,9 @@ export default () => {
       })
       .catch((e) => console.log(e));
   };
-
+  if (!Object.keys(security).length && !loading) {
+    return <Page404 />;
+  }
   return (
     <BackgroundWrapper className={classes.root}>
       <Card className={classes.card}>
