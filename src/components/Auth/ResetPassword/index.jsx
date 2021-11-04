@@ -68,6 +68,7 @@ export default () => {
     dispatch(getCompanyInfo(token));
   }, [dispatch, token]);
   useEffect(() => {
+    values.password !== values.repeatPassword ? setMatchError(true) : setMatchError(false);
     if (values.password) {
       const { password: err } = passwordValidator({
         password: values.password, minLength, numbers, specialChars, uppercase,
@@ -78,7 +79,7 @@ export default () => {
         setError(null);
       }
     }
-  }, [minLength, numbers, specialChars, uppercase, values.password]);
+  }, [minLength, numbers, specialChars, uppercase, values.password, values.repeatPassword]);
 
   const onSubmit = () => {
     dispatch(setNewPassword({
