@@ -117,11 +117,7 @@ const LoginContainer = () => {
             onKeyDown={handleKeyDown}
           />
           <div className={styles.errorBlock}>
-            {
-              authError?.response?.data?.error && (
-                <p>{t('Wrong password or email')}</p>
-              )
-            }
+            {authError}
           </div>
           <Delimiter />
           <div className={styles.buttons}>
