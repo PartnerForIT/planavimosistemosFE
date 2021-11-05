@@ -137,8 +137,8 @@ const Events = () => {
 
   useEffect(() => {
     const formatDate = getDateFormat({
-      'YY.MM.DD': 'YYYY, MMM, DD',
-      'DD.MM.YY': 'DD, MMM, YYYY',
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
       'MM.DD.YY': 'MMM, DD, YYYY',
     });
     const formatDate2 = getDateFormat({
