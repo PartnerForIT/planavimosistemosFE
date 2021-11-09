@@ -18,7 +18,7 @@ const Users = React.memo(({
   readOnly,
 }) => {
   const employToCheck = useCallback(({
-    id,
+    id = '0',
     name,
     surname,
   }) => ({

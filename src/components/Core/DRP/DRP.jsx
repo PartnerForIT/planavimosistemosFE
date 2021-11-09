@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { DateRangePicker } from 'custom-react-daterange-picker';
+import { DateRangePicker } from '@matharumanpreet00/react-daterange-picker';
 import { format } from 'date-fns';
 import './DRP.scss';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
