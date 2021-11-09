@@ -133,7 +133,7 @@ const LoginContainer = () => {
       </Card>
 
       <footer>
-        <Link to='/forgot-passwor' className={styles.forgotLink}>{t('Forgot your password?')}</Link>
+        <Link to='/forgot-password' className={styles.forgotLink}>{t('Forgot your password?')}</Link>
       </footer>
 
     </BackgroundWrapper>
