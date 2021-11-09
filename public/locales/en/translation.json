@@ -19,6 +19,8 @@
   "Last Month": "Last Month",
   "Delete All": "Delete All",
   "Generate Report": "Generate Report",
+  "Unblock Account text": "You have initiated reset password process for your account",
+  "Unblock Account": "Unblock Account",
   "confirmation_delete": "Are you sure you want to delete {{name}}, \nall data will be erased without possibility to restore?",
   "Delete confirmation": "Delete confirmation"
 }
