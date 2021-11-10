@@ -16,8 +16,7 @@
 
 .pickerDefaultWrapper {
   position: absolute;
-  top: 30px;
-  top: 100px;
+  top: 145px;
   left: 90px;
   z-index: 10;
   border-radius: 6px;
@@ -118,4 +117,12 @@
 .definedRangesRight {
   top: 125px;
   right: 15px;
+}
+
+.pickerRightWrapper {
+  top: 120px;
+  right: 35px;
+  position: absolute;
+  width: 700px;
+  z-index: 1000;
 }
