@@ -15,11 +15,6 @@ import classes from './UnlockAccount.module.scss';
 import Button from '../../Core/Button/Button';
 
 export default () => {
-  const [values, setValues] = useState({
-    password: '',
-    repeatPassword: '',
-  });
-
   const { t } = useTranslation();
   const { token } = useParams();
   const history = useHistory();
@@ -30,31 +25,7 @@ export default () => {
     security,
     loading,
   } = useSelector(companyServicesInfoSelector);
-  const {
-    min_password_length: minLength = 1,
-    special_chars: specialChars = false,
-    numbers = false,
-    uppercase = false,
-  } = security;
 
-
-  useLayoutEffect(() => {
-    dispatch(getCompanyInfo(token));
-  }, [dispatch, token]);
-
-  const onSubmit = () => {
-    dispatch(setNewPassword({
-      email,
-      password_confirmation: values.repeatPassword,
-      password: values.password,
-      token,
-    }))
-      .then(({ data }) => {
-        localStorage.setItem('token', data.token);
-        history.push('/');
-      })
-      .catch((e) => console.log(e));
-  };
 
   return (
     <BackgroundWrapper className={classes.root}>
@@ -67,7 +38,7 @@ export default () => {
           <p className={classes.black}>
             {email}
           </p>
-          <Button size='large' green>{t('Unblock Account')}</Button>
+          <Button className={classes.buttonBlock} size='large' green>{t('Unblock Account')}</Button>
         </div>
       </Card>
     </BackgroundWrapper>

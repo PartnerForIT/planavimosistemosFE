@@ -174,7 +174,7 @@ export default function AccountsList() {
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
-  const [usersOptions, setUsersOptions] = useState(3);
+  const [usersOptions, setUsersOptions] = useState(4);
   const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [importVisible, setImportVisible] = useState(false);
@@ -306,7 +306,7 @@ export default function AccountsList() {
     const { value } = e.target;
     setUsersOptions(parseInt(value, 10));
     setCheckedItems([]);
-    dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 3 ? { status: value } : null));
+    dispatch(loadEmployeesAll(id, parseInt(value, 10) !== 4 ? { status: value } : null));
   };
 
   const handleChangingStatus = (status) => {

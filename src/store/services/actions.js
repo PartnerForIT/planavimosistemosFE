@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import {
   GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, RESET_PASSWORD,
-  SET_NEW_PASSWORD,
+  SET_NEW_PASSWORD, UNLOCK_ACCOUNT,
 } from './types';
 
 export const getCompanyInfo = (token) => ({
@@ -57,6 +57,27 @@ export const setNewPassword = (data) => ({
   request: {
     method: 'POST',
     url: '/password/reset',
+    data,
+  },
+  meta: {
+    thunk: true,
+  },
+});
+export const unlockAccount = (token) => ({
+  type: UNLOCK_ACCOUNT,
+  request: {
+    method: 'GET',
+    url: `/unlock/${token}`,
+  },
+  meta: {
+    thunk: true,
+  },
+});
+export const unlockUser = (data) => ({
+  type: UNLOCK_USER,
+  request: {
+    method: 'Post',
+    url: '/unlock/',
     data,
   },
   meta: {

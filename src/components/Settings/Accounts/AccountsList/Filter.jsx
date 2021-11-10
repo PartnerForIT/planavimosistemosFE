@@ -45,7 +45,6 @@ export default function Filter({
   //   clearCheckbox();
   //   setOpen(false);
   // };
-
   return (
     <div className={styles.filterBlock}>
       <FormControl className={styles.filterBlock__leftContainer}>
@@ -56,7 +55,7 @@ export default function Filter({
           value={users}
           options={[
             {
-              value: 3,
+              value: 4,
               label: `All Users ${stats.accounts ?? ''}`,
             },
             {
@@ -66,6 +65,10 @@ export default function Filter({
             {
               value: 0,
               label: `Suspended ${stats.suspended ?? ''}`,
+            },
+            {
+              value: 3,
+              label: `Blocked ${stats.blocked ?? ''}`,
             },
           ]}
         />
@@ -77,13 +80,22 @@ export default function Filter({
           {' '}
           USERS SELECTED
         </p>
-
+        {stats?.blocked >= 1
+        && (
+        <Button
+          danger
+          onClick={() => null}
+          disabled={!checkedItems.length > 0 && !selectedItem.id}
+        >
+          {t('Unblock')}
+        </Button>
+)}
         <Button
           green
           onClick={() => changeUserStatus('activate')}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
-          {t('Active')}
+          {t('Activate')}
         </Button>
         <Button
           yellow
@@ -95,7 +107,7 @@ export default function Filter({
         {
           withDeleteButton && (
             <Button
-              danger
+              black
               onClick={() => changeUserStatus('delete')}
               disabled={!checkedItems.length > 0 && !selectedItem.id}
             >

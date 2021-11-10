@@ -39,7 +39,7 @@ const App = () => (
             <Route exact path='/invite/:token' component={InvitePage} />
             <Route exact path='/reset/:token' component={ResetPassword} />
             <Route exact path='/locked' component={LockedAccount} />
-            <Route exact path='/unblock/:token' component={UnblockAccount} />
+            <Route exact path='/unlock/:token' component={UnblockAccount} />
             <AuthRoute exact path='/overview' component={Overview} />
             <AuthRoute exact path='/organization-list' component={OrganizationList} />
             <AuthRoute path='/:id' component={Company} />
