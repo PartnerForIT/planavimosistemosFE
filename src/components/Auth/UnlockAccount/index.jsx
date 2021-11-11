@@ -11,6 +11,7 @@ import Card from '../../Card';
 import Logo from '../../Logo';
 import classes from './UnlockAccount.module.scss';
 import Button from '../../Core/Button/Button';
+import SupportTicket from '../../Core/Dialog';
 
 export default () => {
   const { t } = useTranslation();
@@ -40,6 +41,14 @@ export default () => {
           <Button onClick={() => dispatch(unlockUser({ token }))} className={classes.buttonBlock} size='large' green>
             {t('Unblock Account')}
           </Button>
+          <SupportTicket title='Account Unblock process succesfully' className={classes.dialogWrapper} open>
+            <div>
+              <div className={classes.dialogUnderTitle}>
+                Users unblocked and noticed
+                <div className={classes.dialogText}>{email}</div>
+              </div>
+            </div>
+          </SupportTicket>
         </div>
       </Card>
     </BackgroundWrapper>

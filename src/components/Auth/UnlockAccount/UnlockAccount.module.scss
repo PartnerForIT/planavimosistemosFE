@@ -39,3 +39,21 @@ p {
   font-size: $normal-font-size;
   width: 250px;
 }
+
+.dialogWrapper {
+  margin: auto;
+  width: 450px;
+  font-size: large;
+}
+
+.dialogUnderTitle {
+  margin-top: 20px;
+  font-weight: bolder;
+  text-align: center;
+  color: gray;
+}
+
+.dialogText {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
