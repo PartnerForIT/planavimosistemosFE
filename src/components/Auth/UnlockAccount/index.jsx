@@ -1,12 +1,10 @@
 import React, {
   useEffect,
-  useLayoutEffect,
-  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
-import { setNewPassword, getCompanyInfo } from '../../../store/services/actions';
+import { useHistory, useParams } from 'react-router-dom';
+import { unlockUser, unlockAccount } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import BackgroundWrapper from '../BackgroundWrapper';
 import Card from '../../Card';
@@ -17,16 +15,17 @@ import Button from '../../Core/Button/Button';
 export default () => {
   const { t } = useTranslation();
   const { token } = useParams();
-  const history = useHistory();
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const {
-    email,
-    security,
-    loading,
+    email, error,
   } = useSelector(companyServicesInfoSelector);
-
-
+  useEffect(() => {
+    dispatch(unlockAccount(token));
+  }, [dispatch, token]);
+  if (error) {
+    history.push('/404');
+  }
   return (
     <BackgroundWrapper className={classes.root}>
       <Card className={classes.card}>
@@ -38,7 +37,9 @@ export default () => {
           <p className={classes.black}>
             {email}
           </p>
-          <Button className={classes.buttonBlock} size='large' green>{t('Unblock Account')}</Button>
+          <Button onClick={() => dispatch(unlockUser({ token }))} className={classes.buttonBlock} size='large' green>
+            {t('Unblock Account')}
+          </Button>
         </div>
       </Card>
     </BackgroundWrapper>

@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 import { success, error } from 'redux-saga-requests';
-import { GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, UNLOCK_ACCOUNT, UNLOCK_USER } from './types';
+import {
+  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, UNLOCK_ACCOUNT, UNLOCK_USER,
+} from './types';
 
 const initialState = {
   email: '',
@@ -49,14 +51,16 @@ export const reducer = (state = initialState, action) => {
     case CLEAR_SERVICES:
       return initialState;
 
-    case UNLOCK_ACCOUNT:
+    case success(UNLOCK_ACCOUNT):
       return {
         ...state,
-        email: action.data?.password?.email,
-        security: action.data?.security,
-        company: action.data?.company,
-        admin: action.data?.is_first,
+        email: action.data?.email,
         loading: false,
+        error: false,
+      };
+    case error(UNLOCK_ACCOUNT):
+      return {
+        ...state, loading: false, error: true,
       };
     case UNLOCK_USER:
       return {
