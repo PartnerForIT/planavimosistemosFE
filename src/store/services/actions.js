@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import {
   GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, RESET_PASSWORD,
-  SET_NEW_PASSWORD, UNLOCK_ACCOUNT,
+  SET_NEW_PASSWORD, UNLOCK_ACCOUNT, UNLOCK_USER,
 } from './types';
 
 export const getCompanyInfo = (token) => ({
