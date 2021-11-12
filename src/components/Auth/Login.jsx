@@ -24,7 +24,6 @@ const LoginContainer = () => {
   const history = useHistory();
   const authError = useSelector(authErrorSelector);
   const isLoading = useSelector(isLoadingSelector);
-
   useEffect(() => {
     if (localStorage.getItem('token')) {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -42,8 +41,13 @@ const LoginContainer = () => {
       roleId === 1
         ? history.push(routes.ORG_LIST)
         : history.push(`/${routes.COMPANY}/${data.data.user.company_id}`);
-    }).catch((error) => {
-      console.log('Login error', error);
+    }).catch(({ error }) => {
+      if (error.response.data.message === 'Your account is blocked') {
+        history.push('/locked', {
+          adminEmail: error.response.data.admin_email,
+          attempts: error.response.data.attempts,
+        });
+      }
     });
   };
   const handleKeyDown = (event) => {

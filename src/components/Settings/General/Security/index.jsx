@@ -91,7 +91,7 @@ export default function Sesurity() {
       notify_admin: payload.notify_admin,
       invitation: payload.invitation === true ? 1 : 0,
       min_password_length: payload.min_length ? payload.min_password_length : null,
-      login_attempts: login_attempts !== '' ? login_attempts : null,
+      login_attempts: payload.login_attempts !== '' ? payload.login_attempts : null,
     };
     dispatch(editSecurityPage(data, id));
   }, [dispatch, id]);
