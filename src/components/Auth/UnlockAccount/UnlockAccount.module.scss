@@ -38,22 +38,28 @@ p {
   border-radius: 10px;
   font-size: $normal-font-size;
   width: 250px;
+  height: 100%;
 }
 
 .dialogWrapper {
   margin: auto;
-  width: 450px;
+  width: 500px;
   font-size: large;
 }
 
 .dialogUnderTitle {
-  margin-top: 20px;
+  margin-top: 10px;
   font-weight: bolder;
+  font-size: medium;
   text-align: center;
   color: gray;
 }
 
 .dialogText {
-  margin-top: 30px;
-  margin-bottom: 40px;
+  font-weight: bolder;
+  font-size: medium;
+  text-align: center;
+  color: gray;
+  margin-top: 40px;
+  margin-bottom: 20px;
 }

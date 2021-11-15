@@ -62,12 +62,18 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state, loading: false, error: true,
       };
-    case UNLOCK_USER:
+    case success(UNLOCK_USER):
       return {
         ...state,
         loading: false,
+        status: true,
       };
-
+    case error(UNLOCK_USER):
+      return {
+        ...state,
+        loading: false,
+        status: false,
+      };
     default:
       return state;
   }

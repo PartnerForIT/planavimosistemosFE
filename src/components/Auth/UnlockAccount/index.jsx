@@ -1,5 +1,5 @@
 import React, {
-  useEffect,
+  useEffect, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,14 +12,16 @@ import Logo from '../../Logo';
 import classes from './UnlockAccount.module.scss';
 import Button from '../../Core/Button/Button';
 import SupportTicket from '../../Core/Dialog';
+import SuccessIcon from '../../Icons/SuccessIcon';
 
 export default () => {
   const { t } = useTranslation();
   const { token } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [open, setOpen] = useState(false);
   const {
-    email, error,
+    email, error, status,
   } = useSelector(companyServicesInfoSelector);
   useEffect(() => {
     dispatch(unlockAccount(token));
@@ -27,6 +29,9 @@ export default () => {
   if (error) {
     history.push('/404');
   }
+  useEffect(() => {
+    setOpen(status);
+  }, [status]);
   return (
     <BackgroundWrapper className={classes.root}>
       <Card className={classes.card}>
@@ -41,11 +46,15 @@ export default () => {
           <Button onClick={() => dispatch(unlockUser({ token }))} className={classes.buttonBlock} size='large' green>
             {t('Unblock Account')}
           </Button>
-          <SupportTicket title='Account Unblock process succesfully' className={classes.dialogWrapper} open>
+          {/* eslint-disable-next-line max-len */}
+          <SupportTicket title='Account Unblock process succesfully' className={classes.dialogWrapper} open={open} onExited={() => { history.push('/'); }}>
             <div>
               <div className={classes.dialogUnderTitle}>
                 Users unblocked and noticed
                 <div className={classes.dialogText}>{email}</div>
+                <Button className={classes.buttonBlock} onClick={() => history.push('/')} size='large' green>
+                  <SuccessIcon />
+                </Button>
               </div>
             </div>
           </SupportTicket>
