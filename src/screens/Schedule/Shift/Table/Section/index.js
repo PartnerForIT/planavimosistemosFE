@@ -19,6 +19,7 @@ export default ({
   onChangeNumber,
   onDelete,
   withMenu,
+  nestingLevel = 1,
 }) => {
   const { t } = useTranslation();
 
@@ -63,7 +64,7 @@ export default ({
   }, [isOpenMenu]);
 
   return (
-    <div className={sectionClass}>
+    <div style={{ backgroundColor: `${nestingLevel === 0 ? 'lightgray' : 'inherit'}` }} className={sectionClass}>
       {title}
       {
         (withNumberInput || withExpander) && (

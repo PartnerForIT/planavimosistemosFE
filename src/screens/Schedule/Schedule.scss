@@ -13,7 +13,7 @@
     padding: 13px 15px;
     border-radius: 12px;
     background-color: #feffff;
-    border: 1px solid rgba(#e2ebf4, 0.85);
+    border: 0.5px solid rgba(#e2ebf4, 0.85);
     margin-bottom: 16px;
     z-index: 4;
 
@@ -174,6 +174,10 @@
     font-weight: normal;
   }
 
+  .fc-h-event {
+    border: 0.5px solid;
+  }
+
   .fc-view-harness {
     border-radius: 12px 12px 0 0;
     overflow: hidden;
@@ -329,7 +333,7 @@
           justify-content: space-between;
           flex: 1;
           height: 32px;
-          border: 1px solid #d0d6db;
+          border: 0.5px solid #d0d6db;
           background-color: #fff;
           border-radius: 4px;
           font-family: 'Helvetica Neue Medium', sans-serif;
@@ -405,6 +409,10 @@
         }
       }
     }
+  }
+
+  .fc-datagrid-cell-place {
+    .fc-datagrid-cell-main { background-color: lightgrey !important; }
   }
 
   .fc-resource-timeline-divider {
