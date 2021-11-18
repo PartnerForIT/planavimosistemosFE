@@ -52,8 +52,8 @@ const TextWithSign = ({ label }) => (
 );
 
 const profitabilityColumns = [
-  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 
@@ -259,7 +259,7 @@ const Reports = () => {
                 ...other,
                 data: {
                   ...data,
-                  columns: [...data.columns, ...profitabilityColumns]
+                  columns: [...generatedReport.employee_columns, ...profitabilityColumns]
                     .filter(({ field }) => {
                       if (!costState.show_earnings && field === 'sallary') {
                         return false;
@@ -364,6 +364,13 @@ const Reports = () => {
 
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
+
+    const { startDate, endDate } = dateRange;
+    const placesArr = checkedPlaces.map((place) => place.id);
+    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     if (selectedReport) {
       let filter = '';
       if (selectedReport.places?.length && !selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
@@ -376,17 +383,16 @@ const Reports = () => {
         filter = 3;
       }
 
-      const requestObj = {
-        'date-start': selectedReport.startDate,
-        'date-end': selectedReport.endDate,
-        places: selectedReport.places?.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-        jobTypes: selectedReport.jobTypes?.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : undefined,
-        employees: selectedReport.employees?.length > 0 ? `[${selectedReport.employees.join(',')}]` : undefined,
+      dispatch(action(companyId, {
+        startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        jobTypesArr,
+        employeesArr,
+        placesArr,
+        skillsArr,
         filter,
         ...showCostsInReport(),
-      };
-
-      dispatch(action(companyId, requestObj)).then(({ data }) => {
+      })).then(({ data }) => {
         const link = document.createElement('a');
         link.setAttribute('download',
           `Report_${format(dateToUCT(selectedReport.startDate),
