@@ -109,7 +109,7 @@ export default () => {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId && timeline === TIMELINE.DAY && customTime,
+            eventDurationEditable: !!item.employeeId,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
@@ -270,7 +270,7 @@ export default () => {
     if (resourceInfo.extendedProps.employeeId) {
       [shiftId] = resourceInfo.id.split('-');
       const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
-      withMenu = shiftInfo.custom_time;
+      withMenu = true;
       employeeName = resourceInfo.title;
     }
 
@@ -374,7 +374,7 @@ export default () => {
     resizeObserverRef.current = new ResizeObserver((item) => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
-    }).observe(container[0], { box : 'border-box' });
+    }).observe(container[0], { box: 'border-box' });
   };
 
   useEffect(() => {
