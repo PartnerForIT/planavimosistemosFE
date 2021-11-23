@@ -1,3 +1,4 @@
+import { success, error } from 'redux-saga-requests';
 import {
   GET_SCHEDULE,
   GET_SCHEDULE_SUCCESS,
@@ -16,18 +17,22 @@ import {
 
 const initialState = {
   schedule: null,
+  resources: null,
+  events: null,
   loading: false,
   shift: null,
 };
 
-export default (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SCHEDULE:
       return { ...state, loading: true };
-    case GET_SCHEDULE_SUCCESS:
+    case success(GET_SCHEDULE):
       return {
         ...state,
         schedule: action.data,
+        resources: action.data.resources,
+        events: action.data.events,
         loading: false,
       };
     case GET_SCHEDULE_ERROR:
@@ -56,3 +61,5 @@ export default (state = initialState, action) => {
     default: return state;
   }
 };
+
+export default reducer;

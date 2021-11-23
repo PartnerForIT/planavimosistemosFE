@@ -19,116 +19,8 @@ import { getEmployees } from '../../store/employees/actions';
 import { getSchedule } from '../../store/schedule/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
-import { scheduleSelector, isLoadingSelector } from '../../store/schedule/selectors';
+import { resourcesSelector, eventsSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import './Schedule.scss';
-
-const photo = 'data:image/jpeg;base64,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';
-
-// const resourceGroupField = 'groupId';
-const resources = [
-  {
-    id: 'A',
-    title: 'Shift A',
-    children: [
-      {
-        id: 'A1',
-        title: 'Barmen',
-        // todo create front
-        eventBackgroundColor: 'red',
-        count: 2,
-        children: [
-          {
-            id: 'A11',
-            title: 'Lisa Tontoni',
-            // todo create front
-            eventBackgroundColor: 'blue',
-            job: 'true',
-            photo,
-          },
-          {
-            id: 'A12',
-            title: 'Vardas Pavarde',
-            // todo create front
-            job: 'true',
-            eventBackgroundColor: 'blue',
-            photo,
-          },
-        ],
-      },
-      {
-        id: 'A2',
-        title: 'Waitress',
-        color: 'red',
-        // todo create front
-        eventBackgroundColor: '#21D09D',
-        eventBorderColor: '#21D09D',
-        count: 2,
-        children: [
-          {
-            id: 'A21',
-            title: 'Jesica Topetti',
-            // todo create front
-            job: 'true',
-            last: 'true',
-            eventBackgroundColor: 'rgba(33, 208, 157, 0.5)',
-            eventBorderColor: '#21D09D',
-          },
-          {
-            id: 'A22',
-            title: 'Lina Tartolietio',
-            // todo create front
-            job: 'true',
-            last: 'true',
-            eventBackgroundColor: 'rgba(33, 208, 157, 0.5)',
-            eventBorderColor: '#21D09D',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'B',
-    title: 'Shift B',
-    eventBackgroundColor: '#3978F0',
-    eventBorderColor: '#3978F0',
-    // groupId: 'A',
-  },
-  {
-    id: 'C',
-    title: 'Shift C',
-    // groupId: 'A',
-  },
-];
-const events = [
-  {
-    id: '1',
-    resourceId: 'B',
-    title: 'Meeting',
-    start: moment().add(-3, 'hours').format(),
-    end: moment().add(1, 'hours').format(),
-  },
-  {
-    id: '2',
-    resourceId: 'A2',
-    title: 'Meeting',
-    start: moment().set({ hours: 0, minutes: 0 }).format(),
-    end: moment().set({ hours: 24, minutes: 0 }).format(),
-  },
-  {
-    id: '4',
-    resourceId: 'C',
-    title: 'Meeting',
-    start: moment().set({ hours: 12, minutes: 0 }).format(),
-    end: moment().set({ hours: 15, minutes: 0 }).format(),
-  },
-  {
-    id: '3',
-    resourceId: 'A22',
-    title: 'Meeting',
-    start: moment().add(-8, 'hours').format(),
-    end: moment().format(),
-  },
-];
 
 export default () => {
   const { t } = useTranslation();
@@ -143,6 +35,8 @@ export default () => {
   const employees = useSelector(employeesSelector);
   const skills = useSelector(skillsSelector);
   const isLoading = useSelector(isLoadingSelector);
+  const resources = useSelector(resourcesSelector);
+  const events = useSelector(eventsSelector);
 
   // const onSkillsSelectChange = (selectedSkills) => {
   //   setFilter((prevState) => ({
