@@ -295,10 +295,10 @@ export default () => {
                 //   profit: 130,
                 // },
                 columns: [
-                  ...data.columns.slice(0, 4),
+                  ...generatedReport.employee_columns.slice(0, 4),
                   {},
                   {},
-                  ...data.columns.slice(4),
+                  ...generatedReport.employee_columns.slice(4),
                   ...profitabilityColumns,
                 ]
                   .filter(({ field }) => {
@@ -421,6 +421,13 @@ export default () => {
 
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
+
+    const { startDate, endDate } = dateRange;
+    const placesArr = checkedPlaces.map((place) => place.id);
+    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     if (selectedReport) {
       let filter = '';
       if (selectedReport.places?.length && !selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
@@ -434,11 +441,12 @@ export default () => {
       }
 
       const requestObj = {
-        'date-start': selectedReport.startDate,
-        'date-end': selectedReport.endDate,
-        places: selectedReport.places?.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-        jobTypes: selectedReport.jobTypes?.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : undefined,
-        employees: selectedReport.employees?.length > 0 ? `[${selectedReport.employees.join(',')}]` : undefined,
+        startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        jobTypesArr,
+        employeesArr,
+        placesArr,
+        skillsArr,
         filter,
         ...showCostsInReport(),
       };
