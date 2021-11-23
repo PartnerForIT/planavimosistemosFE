@@ -66,6 +66,7 @@ const ResourceCell = ({
           onExpander={handleExpander}
           expander={expander}
           withExpander={withExpander}
+          nestingLevel={nestingLevel}
           // withNumberInput={withNumberInput}
           // count={countChildren}
           // onChangeNumber={handleChangeNumber}

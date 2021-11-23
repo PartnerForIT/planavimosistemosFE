@@ -77,7 +77,7 @@ export default () => {
     let colorType = 'bright';
     const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
-        return children.map((item, index) => {
+        return Object.values(children).map((item, index) => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
@@ -109,7 +109,7 @@ export default () => {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId && timeline === TIMELINE.DAY && customTime,
+            eventDurationEditable: !!item.employeeId,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
@@ -202,7 +202,9 @@ export default () => {
     } else if (props.employeeId) {
       classes.push('fc-datagrid-cell-employee');
     }
-
+    if (props.lastJobType) {
+      classes.push('fc-datagrid-cell-last-job-type');
+    }
     return classes;
   };
   const handleEditShift = (shiftId) => {
@@ -268,7 +270,7 @@ export default () => {
     if (resourceInfo.extendedProps.employeeId) {
       [shiftId] = resourceInfo.id.split('-');
       const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
-      withMenu = shiftInfo.custom_time;
+      withMenu = true;
       employeeName = resourceInfo.title;
     }
 
@@ -372,7 +374,7 @@ export default () => {
     resizeObserverRef.current = new ResizeObserver((item) => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
-    }).observe(container[0], { box : 'border-box' });
+    }).observe(container[0], { box: 'border-box' });
   };
 
   useEffect(() => {
@@ -479,7 +481,7 @@ export default () => {
               {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
-                    resources={schedule.resources || resourcesMock}
+                    resources={Object.values(schedule.resources) || resourcesMock}
                     events={schedule.events}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
