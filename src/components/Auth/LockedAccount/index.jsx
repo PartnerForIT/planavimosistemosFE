@@ -8,10 +8,12 @@ import Logo from '../../Logo';
 import BackgroundWrapper from '../BackgroundWrapper';
 import classes from './styles.module.scss';
 
-const LockedAccount = () => {
+const LockedAccount = ({
+  location: {
+    state,
+  },
+}) => {
   const { t } = useTranslation();
-
-  const email = 'edgaras.vr@gmail.com';
   const history = useHistory();
 
   return (
@@ -21,9 +23,10 @@ const LockedAccount = () => {
         <p
           className={classes.title}
         >
-          {`${t('Your account has been locked due to 5 failed login attempts, contact your company manager')}:`}
+          {`${t('Your account has been locked due to')} ${state.attempts}
+           ${t('failed login attempts, contact your company manager')}:`}
         </p>
-        <p>{email}</p>
+        <p>{state.adminEmail}</p>
         <div className={classes.buttonBlock}>
 
           <Button

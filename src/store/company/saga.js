@@ -2,12 +2,13 @@ import {
   call,
   put,
   takeLatest,
-  delay,
+  delay, takeLeading,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
 import {
   POST_SUPPORT_TICKET,
+  GET_COMPANY_INFO,
 } from './types';
 import {
   addSnackbar,
@@ -16,6 +17,7 @@ import {
 import {
   postSupportTicketError,
   postSupportTicketSuccess,
+  getCompanyInfoSuccess,
 } from './actions';
 import getToken from '../getToken';
 
@@ -36,6 +38,20 @@ function* postSupportTicket(action) {
   }
 }
 
+function* getCompanyInfo(action) {
+  try {
+    const { data } = yield call(
+      axios.get,
+      `${config.api.url}/company/${action.id}/edit`,
+      getToken(),
+    );
+    yield put(getCompanyInfoSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function* EventsWatcher() {
   yield takeLatest(POST_SUPPORT_TICKET, postSupportTicket);
+  yield takeLeading(GET_COMPANY_INFO, getCompanyInfo);
 }

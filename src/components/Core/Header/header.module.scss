@@ -11,7 +11,6 @@
 
 .logoWrapper {
   border-right: 1px solid #d0dfef;
-  margin-right: 5px;
   height: 71px;
 
   & > svg {
@@ -38,6 +37,7 @@
   box-sizing: content-box;
   font: 14px Helvetica Neue, sans-serif;
   cursor: pointer;
+  margin: 0;
 
   .icon path {
     fill: $gray !important;

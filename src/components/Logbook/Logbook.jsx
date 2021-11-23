@@ -3,16 +3,15 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { format } from 'date-fns';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 import MaynLayout from '../Core/MainLayout';
 import CurrencySign from '../shared/CurrencySign';
-import styles from './Logbook.module.scss';
 import DRP from '../Core/DRP/DRP';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
@@ -39,7 +38,7 @@ import { getSkills } from '../../store/skills/actions';
 import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
-import { dateToUCT, minutesToString } from '../Helpers';
+import { minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
 import CommentCard from '../Core/CommentCard/CommentCard';
 import KioskCard from '../Core/KioskCard/KioskCard';
@@ -54,7 +53,10 @@ import { downloadExcel, downloadPdf } from '../../store/reports/actions';
 import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+
 import EditEntry from './EditEntry';
+import styles from './Logbook.module.scss';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -135,18 +137,9 @@ const permissionsConfig = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
-  error: {
-    background: '#de4343',
-    color: '#fff',
-  },
-  success: {
-    background: '#3bc39e',
-    color: '#fff',
-  },
-}));
+export default () => {
+  const { getDateFormat } = useCompanyInfo();
 
-const Logbook = () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
@@ -158,7 +151,10 @@ const Logbook = () => {
   const [loading, setLoading] = useState(null);
   // const [page, setPage] = useState(1);
 
-  const [dateRange, setDateRange] = useState({});
+  const [dateRange, setDateRange] = useState({
+    startDate: startOfWeek(new Date()),
+    endDate: endOfWeek(new Date()),
+  });
 
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
@@ -202,18 +198,18 @@ const Logbook = () => {
           charge += itemSalary;
           profit += itemProfit;
 
-          setTotal((prevState) => ({
-            salary: prevState.salary + charge,
-            cost: prevState.cost + cost,
-            profit: prevState.profit + profit,
-          }));
-
           return {
             ...rest,
             ...profitability,
           };
         }),
       };
+
+      setTotal(() => ({
+        salary: charge,
+        cost,
+        profit,
+      }));
 
       return {
         ...newDay,
@@ -296,7 +292,7 @@ const Logbook = () => {
     })).then(() => {
       setCheckedItems([]);
       setSelectedItem(null);
-    }).catch();
+    });
   }, [checkedEmployees, checkedSkills, companyId, dateRange, dispatch, search]);
 
   useEffect(() => {
@@ -314,7 +310,18 @@ const Logbook = () => {
             .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
             .filter((it) => !sortStatus.some((status) => status === it.status));
         }
-        return { ...item, items };
+
+        const partFormat = getDateFormat({
+          'YY.MM.DD': 'YYYY. MMMM, DD',
+          'DD.MM.YY': 'DD. MMMM, YYYY',
+          'MM.DD.YY': 'MMMM. DD, YYYY',
+        });
+
+        return {
+          ...item,
+          label: moment(item.date).format(`dddd, ${partFormat}`).toUpperCase(),
+          items,
+        };
       }).filter(({ items }) => items.length));
       setColumnsWidthArray(columnsWidth);
       setTotalDuration(getTotalDuration);
@@ -506,13 +513,21 @@ const Logbook = () => {
           <div className={styles.employeeName}>{selectedItem.employee}</div>
           <div className={styles.date}>
             {
-              format(
-                new Date(
-                  dateToUCT(selectedItem.works[0].started_at).getTime()
-                    + dateToUCT(selectedItem.works[0].started_at)
-                      .getTimezoneOffset() * 60 * 1000,
-                ), 'iii, dd, MMMM, yyyy',
-              )
+              // format(
+              //   new Date(
+              //     dateToUCT(selectedItem.works[0].started_at).getTime()
+              //       + dateToUCT(selectedItem.works[0].started_at)
+              //         .getTimezoneOffset() * 60 * 1000,
+              //   ), 'iii, dd, MMMM, yyyy',
+              // )
+            }
+            {
+              moment(selectedItem.works[0].started_at)
+                .format(`ddd, ${getDateFormat({
+                  'YY.MM.DD': 'YYYY, MMMM, DD',
+                  'DD.MM.YY': 'DD, MMMM, YYYY',
+                  'MM.DD.YY': 'MMMM, DD, YYYY',
+                })}`)
             }
           </div>
           <Delimiter />
@@ -523,28 +538,22 @@ const Logbook = () => {
                   style={{ height: `calc(100vh - 318px - ${isApproval ? '64px' : '0px'})` }}
                   removeTracksWhenNotUsed
                   trackXProps={{
-                    renderer: (props) => {
-                      const { elementRef, ...restProps } = props;
-                      return (
-                        <span
-                          {...restProps}
-                          ref={elementRef}
-                          className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                        />
-                      );
-                    },
+                    renderer: ({ elementRef, ...restProps }) => (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                      />
+                    ),
                   }}
                   trackYProps={{
-                    renderer: (props) => {
-                      const { elementRef, ...restProps } = props;
-                      return (
-                        <span
-                          {...restProps}
-                          ref={elementRef}
-                          className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                        />
-                      );
-                    },
+                    renderer: ({ elementRef, ...restProps }) => (
+                      <span
+                        {...restProps}
+                        ref={elementRef}
+                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                      />
+                    ),
                   }}
                 >
                   <Timeline
@@ -785,9 +794,11 @@ const Logbook = () => {
                   <EmployeeInfo />
                 )
                 : (
-                  <div className={styles.emptyWrapper}>
+                  <div className={styles.empty}>
                     <TableIcon />
-                    <p>Select any entry to get a detailed editable info</p>
+                    <div className={styles.empty__text}>
+                      Select any entry to get a detailed editable info
+                    </div>
                   </div>
                 )
           }
@@ -796,5 +807,3 @@ const Logbook = () => {
     </MaynLayout>
   );
 };
-
-export default Logbook;

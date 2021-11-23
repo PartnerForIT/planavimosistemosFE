@@ -266,8 +266,7 @@ export default function OrganizationList() {
       checked: false,
     })));
     setCheckedItems([]);
-    // history.push({pathname: routes.COMPANY, state: {company_id: checkedItems[0]}});
-    const win = window.open(`${routes.COMPANY}/${checkedItems[0] || selectedItem?.id}`, '_blank');
+    const win = window.open(`/${checkedItems[0] || selectedItem?.id}/${routes.COMPANY}/`, '_blank');
     win.focus();
   };
 

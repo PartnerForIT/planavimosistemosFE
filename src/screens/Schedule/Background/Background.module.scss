@@ -1,0 +1,30 @@
+.background {
+  display: flex;
+  position: absolute;
+  top: 80px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  //background-color: rgba(black, 0.05);
+  z-index: 2;
+
+  & > * {
+    border-left: 1px solid transparent;
+  }
+
+  & > *:first-child {
+    border-right: 1px solid transparent;
+    //width: 30%;
+    width: calc(30% - 1px);
+    border-left: none;
+  }
+
+  & > *:nth-child(2) {
+    border-left: none;
+  }
+
+  & > *:last-child {
+    //border-right: 1px solid transparent;
+    border-bottom-right-radius: 12px;
+  }
+}

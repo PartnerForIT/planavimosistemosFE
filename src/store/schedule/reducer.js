@@ -12,6 +12,10 @@ import {
   PUT_SHIFT_SUCCESS,
   PUT_SHIFT_ERROR,
   RESET_SHIFT,
+  DELETE_SHIFT,
+  PATCH_CHANGE_EMPLOYEE,
+  PATCH_CHANGE_TIMELINE,
+  DELETE_TIMELINE,
 } from './types';
 
 const initialState = {
@@ -23,7 +27,10 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SCHEDULE:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: !action.firstLoading,
+      };
     case GET_SCHEDULE_SUCCESS:
       return {
         ...state,
@@ -44,7 +51,14 @@ export default (state = initialState, action) => {
       return { ...state, postShiftLoading: false };
 
     case GET_SHIFT:
-      return { ...state, loading: true };
+    case DELETE_SHIFT:
+    case PATCH_CHANGE_EMPLOYEE:
+    case PATCH_CHANGE_TIMELINE:
+    case DELETE_TIMELINE:
+      return {
+        ...state,
+        loading: true,
+      };
     case GET_SHIFT_SUCCESS:
       return { ...state, shift: action.data, loading: false };
     case GET_SHIFT_ERROR:

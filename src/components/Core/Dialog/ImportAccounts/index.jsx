@@ -122,6 +122,7 @@ export default function ImportAccounts({
   const [createMissing, setCreateMissing] = useState(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [isAllSelected, setIsAllSelected] = useState(false);
   const [all, setAll] = useState(false);
 
   const clearData = () => {
@@ -262,35 +263,39 @@ export default function ImportAccounts({
     }
   };
 
+  const getCheckedItems = (items) => items.filter(({ warning, success, error }) => {
+    if (error || success) {
+      return false;
+    }
+    if (warning && ignoreEmpty) {
+      return true;
+    }
+    return !warning;
+  }).map(({ id }) => id);
   const selectAllHandler = (items = []) => {
     const value = items.length;
-    // eslint-disable-next-line no-shadow
-    const checkedItems = items.filter(({ warning, error }) => {
-      if (error) { return false; }
-      if (ignoreEmpty) {
-        return true;
-      }
-      return !(!ignoreEmpty && warning);
-    }).map(({ id }) => id);
+    const checkedItems = getCheckedItems(items);
 
     setData(data.map(({
       warning, error, success, checked, ...rest
     }) => {
       let check = !!value;
-      if (!success) {
-        if (ignoreEmpty && warning) {
-          check = !!value;
-        }
-        if (!ignoreEmpty && warning) {
-          check = false;
-        }
+
+      if (success || (!ignoreEmpty && warning)) {
+        check = false;
       }
 
       return {
-        ...rest, warning, error, success, checked: check,
+        ...rest,
+        warning,
+        error,
+        success,
+        checked: check,
       };
     }));
+
     setSelectedItems(checkedItems);
+    setIsAllSelected(!!value);
   };
 
   const importHandler = () => {
@@ -333,12 +338,47 @@ export default function ImportAccounts({
     const nextIgnoreEmpty = !ignoreEmpty;
     setIgnoreEmpty(nextIgnoreEmpty);
 
-    setData(((prevState) => prevState.map((item) => ({
-      ...item,
-      warning: nextIgnoreEmpty
-        ? !(item.email && item.name && item.surname)
-        : !(item.group && item.subgroup && item.place && item.role && item.skill),
-    }))));
+    setData(((prevState) => {
+      let nextState = prevState.map((item) => {
+        const warning = nextIgnoreEmpty
+          ? !(item.email && item.name && item.surname)
+          : !(item.group && item.subgroup && item.place && item.role && item.skill);
+
+        return {
+          ...item,
+          warning,
+        };
+      });
+
+      if (isAllSelected) {
+        const checkedItems = getCheckedItems(nextState);
+
+        nextState = nextState.map(({
+          warning,
+          error,
+          success,
+          checked,
+          ...rest
+        }) => {
+          let check = checked;
+          if (!success && !error) {
+            check = !warning;
+          }
+
+          return {
+            ...rest,
+            warning,
+            error,
+            success,
+            checked: check,
+          };
+        });
+
+        setSelectedItems(checkedItems);
+      }
+
+      return nextState;
+    }));
   };
 
   return (
@@ -411,6 +451,7 @@ export default function ImportAccounts({
             selectAllItems={selectAllHandler}
             all={all}
             setAll={setAll}
+            withoutShitCode
           />
           {!data.length && <OverView />}
           {/*   loader? */}

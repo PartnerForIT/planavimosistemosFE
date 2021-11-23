@@ -11,7 +11,10 @@ export default function filterActivity({
     <div className={style.filterBlock}>
       <div className={style.formControl}>
         <div className={style.filterBlock__date}>
-          <DateRangePicker initRange={inputValues.from} onChange={handleInputChange} />
+          <DateRangePicker
+            initRange={inputValues.from}
+            onChange={handleInputChange}
+          />
         </div>
       </div>
       <div className={style.formControl}>

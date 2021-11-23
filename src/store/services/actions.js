@@ -16,15 +16,17 @@ export const getCompanyInfo = (token) => ({
 });
 
 export const confirmPassword = ({
-  token, password, email, password_confirmation,
+  token, password, email,
 }) => ({
   type: CONFIRM_PASSWORD,
   request: {
     method: 'POST',
-    url: `/password_confirmation/${token}`,
-  },
-  data: {
-    email, password, password_confirmation,
+    url: '/password/reset',
+    data: {
+      email,
+      password,
+      token,
+    },
   },
   meta: {
     thunk: true,

@@ -43,6 +43,9 @@ export default function DataTable({
   selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
   permissions = {},
+  withCost,
+  withProfit,
+  withSalary,
   amount: { salary = 0, cost = 0, profit = 0 } = {},
   white = false,
 }) {
@@ -120,7 +123,8 @@ export default function DataTable({
   };
 
   const footerTitleClasses = classNames(
-    styles.footerTitle, styles.footerTitleReports,
+    styles.footerTitle,
+    styles.footerTitleReports,
   );
 
   const footerTitleCosts = classNames(
@@ -158,6 +162,7 @@ export default function DataTable({
     styles.tableContainer,
     {
       [styles.tableContainer_white]: white,
+      [styles.tableContainer_reports]: reports,
     },
   );
 
@@ -173,28 +178,22 @@ export default function DataTable({
         style={{ height: `calc(100vh - ${verticalOffset} - 47px)` }}
         removeTracksWhenNotUsed
         trackXProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollbarTrackX, { trackX: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackX}
+            />
+          ),
         }}
         trackYProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackY}
+            />
+          ),
         }}
       >
         <div className={tableContentClasses}>
@@ -311,7 +310,7 @@ export default function DataTable({
           }
         </div>
       </Scrollbar>
-      <div className={classNames(styles.tableFooter)}>
+      <div className={styles.tableFooter}>
         { typeof downloadExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
@@ -330,47 +329,43 @@ export default function DataTable({
             <PdfIcon />
           </div>
         ) }
-
+        {
+          reports && <div className={styles.tableFooter__spacer} />
+        }
         {
           totalDuration && (
-          <FooterTitle
-            title='Overall worktime: '
-            wrapperClassNames={footerTitleClasses}
-            amountColorClassName={styles.blue}
-            amount={totalDuration}
-          />
+            <FooterTitle
+              title='Overall worktime: '
+              wrapperClassNames={`${footerTitleClasses} ${styles.footerTitle_first}`}
+              amountColorClassName={styles.blue}
+              amount={totalDuration}
+            />
           )
         }
         {
-          permissions.cost && permissions.profit && !!salary && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amount={<TextWithSign label={salary} />}
-              />
-            </>
+          (withSalary || (permissions.cost && permissions.profit && !!salary)) && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amount={<TextWithSign label={salary} />}
+            />
           )
         }
         {
-          permissions.cost && !!cost && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amountColorClassName={styles.red}
-                amount={<TextWithSign label={cost} />}
-              />
-            </>
+          (withCost || (permissions.cost && !!cost)) && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amountColorClassName={styles.red}
+              amount={<TextWithSign label={cost} />}
+            />
           )
         }
         {
-          permissions.cost && permissions.profit && !!profit && (
-            <>
-              <FooterTitle
-                wrapperClassNames={footerTitleCosts}
-                amountColorClassName={styles.green}
-                amount={<TextWithSign label={profit} />}
-              />
-            </>
+          (withProfit || (permissions.cost && permissions.profit && !!profit)) && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amountColorClassName={styles.green}
+              amount={<TextWithSign label={profit} />}
+            />
           )
         }
         {

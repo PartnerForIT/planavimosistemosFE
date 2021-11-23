@@ -25,9 +25,6 @@ export default function CustomSelect({
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [open, setOpen] = useState(false);
 
-  // useEffect(() => {
-  //   console.count('items');
-  // }, [items]);
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
@@ -56,7 +53,6 @@ export default function CustomSelect({
     setItemsStat({ ...stat });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
-
   useEffect(() => {
     setItemsStat({
       ...itemsStat,
@@ -93,8 +89,6 @@ export default function CustomSelect({
     setCheckedItems(checkedItemsArray);
     onChange(checkedItemsArray);
   }, [itemsArray, onChange]);
-  // };
-
   const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array) => {
@@ -126,28 +120,25 @@ export default function CustomSelect({
     // });
   }, [itemsArray, itemsStat, onChange]);
 
-  const wrapperClasses = classNames(
-    styles.inputWrapper,
-    { [styles.inputWrapperOpened]: open },
-  );
+  const wrapperClasses = classNames(styles.inputWrapper, {
+    [styles.inputWrapperOpened]: open,
+  });
+  const customSelectClasses = classNames(styles.customSelect, {
+    [styles.customSelectOpened]: open,
+  });
 
-  const customSelectClasses = classNames(
-    styles.customSelect,
-    { [styles.customSelectOpened]: open },
-  );
-
-  const scrollableContentClasses = classNames(
-    styles.scrollableContent,
-  );
-
-  const generateLabel = () => (checkedItems.length === 1 ? checkedItems[0].label
+  const generateLabel = () => (checkedItems.length === 1 ? (checkedItems[0].label || checkedItems[0].title)
     : `${checkedItems.filter((e) => e.type !== 'group').length} ${type} selected`);
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div style={{ width }}>
-        {/* eslint-disable-next-line jsx-a11y/aria-role */}
-        <div role='input' className={wrapperClasses} onClick={() => setOpen(!open)}>
+        <div
+          // eslint-disable-next-line jsx-a11y/aria-role
+          role='input'
+          className={wrapperClasses}
+          onClick={() => setOpen(!open)}
+        >
           <input
             type='text'
             value={checkedItems.length > 0 ? generateLabel() : ''}
@@ -158,33 +149,30 @@ export default function CustomSelect({
 
         {open ? (
           <div className={classNames(styles.contentBox)}>
-            <CheckboxGroup selectAll={selectAll} itemsStat={itemsStat}>
+            <CheckboxGroup
+              selectAll={selectAll}
+              itemsStat={itemsStat}
+            >
               <Scrollbar
-                className={scrollableContentClasses}
+                className={styles.scrollableContent}
                 removeTracksWhenNotUsed
                 trackXProps={{
-                  renderer: (props) => {
-                    const { elementRef, ...restProps } = props;
-                    return (
-                      <span
-                        {...restProps}
-                        ref={elementRef}
-                        className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                      />
-                    );
-                  },
+                  renderer: ({ elementRef, ...restProps }) => (
+                    <span
+                      {...restProps}
+                      ref={elementRef}
+                      className={styles.scrollbarTrackX}
+                    />
+                  ),
                 }}
                 trackYProps={{
-                  renderer: (props) => {
-                    const { elementRef, ...restProps } = props;
-                    return (
-                      <span
-                        {...restProps}
-                        ref={elementRef}
-                        className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                      />
-                    );
-                  },
+                  renderer: ({ elementRef, ...restProps }) => (
+                    <span
+                      {...restProps}
+                      ref={elementRef}
+                      className={styles.scrollbarTrackY}
+                    />
+                  ),
                 }}
               >
                 {
@@ -193,7 +181,7 @@ export default function CustomSelect({
                       ? (
                         <Dropdown
                           key={data.id.toString()}
-                          label={data.label}
+                          label={data.label || data.title}
                           currentItem={data}
                           checked={data.checked}
                           items={data.items}
@@ -203,7 +191,7 @@ export default function CustomSelect({
                       : (
                         <StyledCheckbox
                           key={data.id.toString()}
-                          label={data.label}
+                          label={data.label || data.title}
                           item={data}
                           id={data.id}
                           checked={data.checked}
@@ -215,7 +203,12 @@ export default function CustomSelect({
                 }
               </Scrollbar>
             </CheckboxGroup>
-            <Button fillWidth onClick={() => onFilter(itemsArray)}>{buttonLabel}</Button>
+            <Button
+              fillWidth
+              onClick={() => onFilter(itemsArray)}
+            >
+              {buttonLabel}
+            </Button>
           </div>
         ) : null}
       </div>

@@ -66,6 +66,10 @@ function RoleDetails({
         return prevState.filter((i) => i !== id);
       }
 
+      if (permissionsIds.logbook.profit === id) {
+        return [...prevState, id, permissionsIds.logbook.costs];
+      }
+
       if (permissionsIds.accounts.create === id) {
         return [...prevState, id, permissionsIds.accounts.see_and_edit];
       }
@@ -75,21 +79,17 @@ function RoleDetails({
     setReady(true);
   };
 
-  const detailsClasses = classNames(
-    classes.details,
-    {
-      [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
-    },
-  );
+  const detailsClasses = classNames(classes.details, {
+    [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
+  });
 
   return (
     <div className={detailsClasses}>
       {
-        loading
-        && (
-        <div className={classes.loader}>
-          <Progress />
-        </div>
+        loading && (
+          <div className={classes.loader}>
+            <Progress />
+          </div>
         )
       }
       <Users
@@ -100,7 +100,11 @@ function RoleDetails({
         readOnly={readOnly}
       />
       {
-        (permissions.reports || permissions.events || permissions.logbook) && (
+        (permissions.schedule_simple
+          || permissions.schedule_shift
+          || permissions.reports
+          || permissions.events
+          || permissions.logbook) && (
           <AccessModule
             activeRole={activeRole}
             availableDetails={availableDetails}

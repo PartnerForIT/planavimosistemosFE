@@ -11,6 +11,10 @@ import {
   POST_SHIFT,
   GET_SHIFT,
   PUT_SHIFT,
+  PATCH_CHANGE_EMPLOYEE,
+  PATCH_CHANGE_TIMELINE,
+  DELETE_TIMELINE,
+  DELETE_SHIFT,
 } from './types';
 import {
   getScheduleSuccess,
@@ -21,6 +25,7 @@ import {
   getShiftError,
   putShiftSuccess,
   putShiftError,
+  getSchedule as getScheduleAction,
 } from './actions';
 import { addSnackbar, dismissSnackbar } from '../organizationList/actions';
 import getToken from '../getToken';
@@ -29,7 +34,7 @@ function* getSchedule(action) {
   try {
     const { data } = yield call(
       axios.get,
-      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}`,
+      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}&from_date=${action.fromDate}`,
       getToken(),
     );
     yield put(getScheduleSuccess(data));
@@ -91,9 +96,75 @@ function* putShift(action) {
   }
 }
 
+function* patchChangeEmployee(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/employee/${action.id}`,
+      action.data,
+      getToken(),
+    );
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchChangeTimeline(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/timeline/${action.id}`,
+      action.data,
+      getToken(),
+    );
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteTimeline(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/delete/timeline/${action.id}`,
+      getToken(),
+    );
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* deleteShift(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/shift/delete/${action.id}`,
+      getToken(),
+    );
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 export default function* ScheduleWatcher() {
   yield takeLatest(GET_SCHEDULE, getSchedule);
   yield takeLatest(GET_SHIFT, getShift);
   yield takeLatest(POST_SHIFT, postShift);
   yield takeLatest(PUT_SHIFT, putShift);
+  yield takeLatest(PATCH_CHANGE_EMPLOYEE, patchChangeEmployee);
+  yield takeLatest(PATCH_CHANGE_TIMELINE, patchChangeTimeline);
+  yield takeLatest(DELETE_TIMELINE, deleteTimeline);
+  yield takeLatest(DELETE_SHIFT, deleteShift);
 }

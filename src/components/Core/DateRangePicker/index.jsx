@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DateRangePicker } from '@matharumanpreet00/react-daterange-picker';
-import { format } from 'date-fns';
+import moment from 'moment';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { useTranslation } from 'react-i18next';
 
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import './style.scss';
 
 export default ({
   initRange,
   onChange,
 }) => {
+  const { getDateFormat } = useCompanyInfo();
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
+  });
+
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
   const [lastDateRange, setLastDateRange] = useState(initRange || {});
@@ -62,7 +70,7 @@ export default ({
             type='text'
             className={startInputClasses}
             onClick={inputClickHandler}
-            value={startDate ? format(startDate, 'MM.dd.yyyy') : t('Start Date')}
+            value={startDate ? moment(startDate).format(formatDate) : t('Start Date')}
             readOnly
           />
         </div>
@@ -72,7 +80,7 @@ export default ({
             type='text'
             className={endInputClasses}
             onClick={inputClickHandler}
-            value={endDate ? format(endDate, 'MM.dd.yyyy') : t('End Date')}
+            value={endDate ? moment(endDate).format(formatDate) : t('End Date')}
             readOnly
           />
         </div>

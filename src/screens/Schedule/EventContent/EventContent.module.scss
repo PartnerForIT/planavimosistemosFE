@@ -1,0 +1,84 @@
+.eventContent {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 6px;
+  visibility: hidden;
+  $eventContent: &;
+
+  &__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    margin-right: 5px;
+  }
+
+  &__title {
+    font-size: 12px;
+    line-height: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #333945;
+  }
+
+  &__leftSpace {
+    margin-left: auto;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    width: 168px;
+
+    &__avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      margin-right: 10px;
+    }
+
+    &__right {
+      display: flex;
+      flex-direction: column;
+
+      &__fullName {
+        font-size: 14px;
+        font-family: Helvetica Neue, sans-serif;
+        color: black;
+        line-height: 17px;
+      }
+
+      &__jobType {
+        font-size: 11px;
+        font-family: "Helvetica Neue Medium", sans-serif;
+        color: #808f94;
+        line-height: 16px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #808f94;
+    line-height: 16px;
+    margin-top: 11px;
+  }
+
+  &__value {
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #333945;
+    line-height: 16px;
+    margin-top: 3px;
+    margin-bottom: 12px;
+  }
+
+  &__space {
+    margin-top: -7px;
+  }
+
+  &__rightSpace {
+    width: 12px;
+  }
+}

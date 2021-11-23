@@ -1,0 +1,63 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  flex: 1;
+  color: #333945;
+  font-size: 12px;
+  font-family: 'Helvetica Neue Medium', sans-serif;
+  line-height: 16px;
+  text-align: center;
+  min-width: 0;
+  $cell: &;
+
+  &_past {
+    // passing day
+    // past
+    color: #818f94;
+  }
+
+  &_statistic {
+    flex: 2;
+  }
+
+  &_weekend {
+    background-color: #f9fbfc;
+  }
+
+  &__content {
+    position: relative;
+    pointer-events: none;
+    $content: &;
+
+    &__placeholder {
+      visibility: hidden;
+      position: absolute;
+    }
+  }
+
+  &_doesNotFit {
+    color: #1d88fc;
+
+    #{$cell} {
+      &__content {
+        z-index: 2;
+        pointer-events: auto;
+
+        &__tooltip {
+          background: #fff;
+          border-radius: 6px;
+        }
+
+        &__text {
+          overflow: hidden;
+          border-radius: 2px;
+          background-color: #edf7fa;
+          padding: 1px;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ const Row = ({
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   withoutRightPanel = false, tableRef = null,
+  withoutShitCode,
 }) => {
   const selected = useMemo(() => {
     if (multiselect) {
@@ -114,6 +115,10 @@ const Row = ({
   }, [index, tableRef, windowWidth]);
 
   useEffect(() => {
+    if (withoutShitCode) {
+      return;
+    }
+
     if (((colored.warning && row.warning)
         // || (colored.error && row.error)
         || (colored.success && row.success)) && row.checked) {
@@ -231,6 +236,7 @@ const Row = ({
             <SimpleTable
               columns={row.data.columns}
               rows={row.data.items}
+              columnsWidth={row.data.columnsWidth}
               expanded={subTableExpanded}
               selectable={selectable}
               reports={reports}

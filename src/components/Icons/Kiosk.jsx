@@ -3,7 +3,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
 export default ({ fill }) => (
-  <SvgIcon viewBox='0 0 14.5 22'>
+  <SvgIcon viewBox='0 0 17 24' style={{ width: 22, height: 29 }}>
     <path
       fillRule='evenodd'
       clipRule='evenodd'

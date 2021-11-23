@@ -76,13 +76,65 @@ const permissionsConfig = [
     module: 'schedule_simple',
     permission: 'schedule_module_access',
   },
+
+  {
+    name: 'activity_log',
+    permission: 'activity_log_view',
+    module: 'activity_log',
+  },
+  {
+    name: 'groups',
+    module: 'create_groups',
+    permission: 'groups_create',
+  },
+  {
+    name: 'logbook_edit_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
+    name: 'events_create',
+    permission: 'events_create',
+  },
+  {
+    name: 'company_edit_settings',
+    permission: 'company_edit_settings',
+  },
+  {
+    name: 'roles_create',
+    permission: 'roles_create',
+  },
+  {
+    name: 'data_delete',
+    permission: 'data_delete',
+  },
+  {
+    name: 'categories_create',
+    permission: 'categories_create',
+  },
+  {
+    name: 'accounts_see_and_edit',
+    permission: 'accounts_see_and_edit',
+  },
+  {
+    name: 'kiosk',
+    permission: 'kiosk_create',
+    module: 'kiosk',
+  },
+  {
+    name: 'schedule_create_and_edit',
+    permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'schedule_module',
+    permission: 'schedule_module_access',
+  },
 ];
 
 export default function ButtonAppBar({ logOut }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const pageName = pathname.split('/')[1];
+  const [,, pageName] = pathname.split('/');
   const { id: companyId } = useParams();
   const user = useSelector(userSelector);
   const dispatch = useDispatch();
@@ -150,7 +202,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: LogbookIcon,
         title: t('Logbook'),
         name: 'logbook',
-        to: `/logbook/${companyId}`,
+        to: `/${companyId}/logbook`,
         width: 19.28,
         height: 24.9,
       });
@@ -160,7 +212,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: EventsIcon,
         title: t('Events'),
         name: 'events',
-        to: `/events/${companyId}`,
+        to: `/${companyId}/events`,
       });
     }
     if (permissions.reports) {
@@ -168,7 +220,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: OverviewIcon,
         title: t('Reports'),
         name: 'reports',
-        to: `/reports/${companyId}`,
+        to: `/${companyId}/reports`,
       });
     }
     if (permissions.schedule_shift || permissions.schedule_simple) {
@@ -176,7 +228,7 @@ export default function ButtonAppBar({ logOut }) {
         Icon: ScheduleIcon,
         title: t('Schedule'),
         name: 'schedule',
-        to: `/schedule/${companyId}`,
+        to: `/${companyId}/schedule`,
         width: 33,
         height: 28,
       });
@@ -184,6 +236,19 @@ export default function ButtonAppBar({ logOut }) {
 
     return nextMenuItems;
   }, [permissions, companyId, t, user]);
+  const withSettingsButton = useMemo(() => (
+    permissions.accounts_see_and_edit
+    || permissions.company_edit_settings
+    || permissions.roles_create
+    || permissions.groups
+    || (permissions.logbook && permissions.logbook_edit_settings)
+    || permissions.kiosk
+    || (permissions.events && permissions.events_create)
+    || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_create_and_edit)
+    || permissions.activity_log
+    || permissions.data_delete
+    || permissions.categories_create
+  ), [permissions]);
 
   useEffect(() => {
     if (companyId) {
@@ -221,13 +286,17 @@ export default function ButtonAppBar({ logOut }) {
             {/* Company Links */}
             {companyId && (
               <>
-                <Link
-                  to={`/settings/${companyId}`}
-                  className={classNames(styles.link, { [styles.link_active]: pageName === 'settings' })}
-                >
-                  <SettingsIcon />
-                  <span className={styles.link__text}>{t('Settings')}</span>
-                </Link>
+                {
+                  withSettingsButton && (
+                    <Link
+                      to={`/${companyId}/settings`}
+                      className={classNames(styles.link, { [styles.link_active]: pageName === 'settings' })}
+                    >
+                      <SettingsIcon />
+                      <span className={styles.link__text}>{t('Settings')}</span>
+                    </Link>
+                  )
+                }
                 <button
                   className={styles.link}
                   onClick={() => {
@@ -244,7 +313,6 @@ export default function ButtonAppBar({ logOut }) {
               setMenuOpen={setMenuOpen}
             />
           </div>
-
         </Toolbar>
       </AppBar>
 

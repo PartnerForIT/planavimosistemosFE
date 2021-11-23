@@ -16,6 +16,7 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 import { employeesSelector } from '../../store/employees/selectors';
 import { AccountGroupsSelector } from '../../store/settings/selectors';
 import { eventsSelector, eventsLoadingSelector } from '../../store/events/selectors';
@@ -28,11 +29,14 @@ import { getPlaces } from '../../store/places/actions';
 import EventCard from './EventCard';
 
 const columns = [
-  { label: 'Reason', field: 'reason', checked: true },
-  { label: 'Employee', field: 'employee', checked: true },
-  { label: 'Group', field: 'group', checked: true },
+  { label: 'Event Name', field: 'name', checked: true },
+  { label: 'Event Rule', field: 'eventRuleName', checked: true },
+  { label: 'Employee name', field: 'employee', checked: true },
+  { label: 'Skill', field: 'skill', checked: true },
   { label: 'Place', field: 'place', checked: true },
-  { label: 'Timestamp', field: 'time', checked: true },
+  { label: 'Group', field: 'group', checked: true },
+  { label: 'Sub-Group', field: 'subgroup', checked: true },
+  { label: 'Timestamp', field: 'timestamp', checked: true },
 ];
 const columnsWidth = {
   reason: 300,
@@ -83,14 +87,16 @@ const columnsWidth = {
 // ];
 
 const Events = () => {
+  const { getDateFormat } = useCompanyInfo();
+
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState(columns);
 
   const [selectedItem, setSelectedItem] = useState(null);
 
   const [dateRange, setDateRange] = useState({
-    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    startDate: startOfWeek(new Date()),
+    endDate: endOfWeek(new Date()),
   });
 
   const [groups, setGroups] = useState([]);
@@ -130,19 +136,28 @@ const Events = () => {
   }, []);
 
   useEffect(() => {
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
+      'MM.DD.YY': 'MMM, DD, YYYY',
+    });
+    const formatDate2 = getDateFormat({
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
+      'MM.DD.YY': 'MMMM, DD, YYYY',
+    });
+
     const eventsParse = events.reduce((acc, item) => {
       const nextItem = {
         ...item,
-        group: item.group?.name,
-        place: item.place?.name,
-        employee: item.employee?.name,
+        timestamp: moment(item.timestamp).format(`${formatDate2} hh:mm`),
         time: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
       };
       let time;
       if (!item.seen) {
         time = 'seen';
       } else {
-        time = moment(item.timestamp).format('MMM, DD, YYYY');
+        time = moment(item.date).format(`dddd, ${formatDate}`).toUpperCase();
       }
 
       if (acc[time]) {
@@ -238,7 +253,17 @@ const Events = () => {
       // });
       // setItemsArray(itemsArray);
     }
-    setSelectedItem(selectedRow);
+
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'yyyy, MMM, DD',
+      'DD.MM.YY': 'DD. MMM, yyyy',
+      'MM.DD.YY': 'MMM. DD, yyyy',
+    });
+
+    setSelectedItem({
+      ...selectedRow,
+      timestamp: moment(selectedRow.timestamp).format(`hh:mm ${formatDate}`),
+    });
   };
 
   const onGroupsSelectChange = (selectedGroups) => {
@@ -321,6 +346,7 @@ const Events = () => {
             selectedItem={selectedItem}
             setSelectedItem={rowSelectionHandler}
             verticalOffset='123px'
+            white
           />
         </div>
 
@@ -329,9 +355,11 @@ const Events = () => {
             selectedItem
               ? <EventCard selectedItem={selectedItem} />
               : (
-                <div className={styles.emptyWrapper}>
+                <div className={styles.empty}>
                   <TableIcon />
-                  <p>{t('Select any entry to get a detailed event info')}</p>
+                  <div className={styles.empty__text}>
+                    Select any entry to get a detailed editable info
+                  </div>
                 </div>
               )
           }

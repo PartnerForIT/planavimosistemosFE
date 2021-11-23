@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
+
 import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
@@ -42,6 +44,7 @@ import { dateToUCT } from '../Helpers';
 import { skillsSelector } from '../../store/skills/selectors';
 import { getSkills } from '../../store/skills/actions';
 import usePermissions from '../Core/usePermissions';
+import useCompanyInfo from '../../hooks/useCompanyInfo';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -94,7 +97,22 @@ const permissionsConfig = [
     permission: 'reports_assigned_place',
   },
 ];
-const Reports = () => {
+const columnsWidth = {
+  // user: 500,
+  // skill: 120,
+  // jobType: 140,
+  // group: 140,
+  // subgroup: 140,
+  // duration: 180,
+  //
+  // cost: 130,
+  // sallary: 130,
+  // profit: 130,
+};
+
+export default () => {
+  const { getDateFormat } = useCompanyInfo();
+
   /* Reports data */
   const reportTabs = useRef(null);
   const [activeReport, setActiveReport] = useState();
@@ -242,60 +260,99 @@ const Reports = () => {
   }, [getAllSkills]);
 
   useEffect(() => {
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'yyyy-MM-DD',
+      'DD.MM.YY': 'DD-MM-yyyy',
+      'MM.DD.YY': 'MM-DD-yyyy',
+    });
     if (generatedReport.report) {
       setItemsArray((state) => {
         const reportId = generatedReport.id;
         const reportIndex = state.findIndex(({ id }) => id === reportId);
+
+        let reportsCost = 0;
+        let reportsSalary = 0;
+        let reportsProfit = 0;
+
         const mappedReport = {
           ...generatedReport,
-          report: generatedReport.report.map(({ items, ...rest }) => {
-            let reportsCost = 0;
-            let reportsSalary = 0;
-            let reportsProfit = 0;
-
-            return {
-              ...rest,
-              items: items.map(({ data, ...other }) => ({
-                ...other,
-                data: {
-                  ...data,
-                  columns: [...generatedReport.employee_columns, ...profitabilityColumns]
-                    .filter(({ field }) => {
-                      if (!costState.show_earnings && field === 'sallary') {
-                        return false;
-                      } if (!costState.show_costs && field === 'cost') {
-                        return false;
-                      } if (!comments && field === 'comment') {
-                        return false;
-                      }
-                      return !(!costState.show_profit && field === 'profit');
-                    }),
-                  items: [...data.items].map(({ profitability: prof, ...all }) => {
-                    const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
-                    reportsCost += cost;
-                    reportsSalary += sallary;
-                    reportsProfit += profit;
-                    setTotalStat((prevState) => ({
-                      sallary: prevState.sallary + sallary,
-                      profit: prevState.profit + profit,
-                      cost: prevState.profit + profit,
-                    }));
-                    return {
-                      ...all,
-                      ...(prof || {}),
-                    };
+          description: `${moment(generatedReport.startDate).format(formatDate)}
+           - ${moment(generatedReport.endDate).format(formatDate)}`,
+          report: generatedReport.report.map(({ items, ...rest }) => ({
+            ...rest,
+            items: items.map(({ data, ...other }) => ({
+              ...other,
+              data: {
+                ...data,
+                // columnsWidth: {
+                //   date: 'auto',
+                //   start: 'auto',
+                //   end: 'auto',
+                //   comment: 'auto',
+                //   duration: 180,
+                //   cost: 130,
+                //   sallary: 130,
+                //   profit: 130,
+                // },
+                columns: [
+                  ...data.columns.slice(0, 4),
+                  {},
+                  {},
+                  ...data.columns.slice(4),
+                  ...profitabilityColumns,
+                ]
+                  .filter(({ field }) => {
+                    if (!costState.show_earnings && field === 'sallary') {
+                      return false;
+                    }
+                    if (!costState.show_costs && field === 'cost') {
+                      return false;
+                    }
+                    if (!comments && field === 'comment') {
+                      return false;
+                    }
+                    return !(!costState.show_profit && field === 'profit');
                   }),
-                },
-              })),
-              cost: reportsCost,
-              sallary: reportsSalary,
-              profit: reportsProfit,
-            };
-          }),
+                items: data.items.map(({ profitability: prof, ...all }) => {
+                  const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
+                  reportsCost += cost;
+                  reportsSalary += sallary;
+                  reportsProfit += profit;
+                  return {
+                    ...all,
+                    date: moment(all.date).format(getDateFormat({
+                      'YY.MM.DD': 'yyyy-MM-DD',
+                      'DD.MM.YY': 'DD-MM-yyyy',
+                      'MM.DD.YY': 'MM-DD-yyyy',
+                    })),
+                    cost,
+                    sallary,
+                    profit,
+                  };
+                }),
+              },
+            })),
+            cost: reportsCost,
+            sallary: reportsSalary,
+            profit: reportsProfit,
+          })),
         };
+
         if (reportIndex >= 0) {
-          return [...state].splice(reportIndex, 1, { ...mappedReport });
+          return [
+            ...state.slice(0, reportIndex),
+            {
+              ...mappedReport,
+            },
+            ...state.slice(reportIndex + 1),
+          ];
         }
+
+        setTotalStat((prevState) => ({
+          sallary: prevState.sallary + reportsSalary,
+          profit: prevState.profit + reportsProfit,
+          cost: prevState.profit + reportsCost,
+        }));
 
         return [...state, mappedReport];
       });
@@ -364,13 +421,6 @@ const Reports = () => {
 
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
-
-    const { startDate, endDate } = dateRange;
-    const placesArr = checkedPlaces.map((place) => place.id);
-    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
-    const employeesArr = checkedEmployees.map((emp) => emp.id);
-    const skillsArr = checkedSkills.map((emp) => emp.id);
-
     if (selectedReport) {
       let filter = '';
       if (selectedReport.places?.length && !selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
@@ -383,16 +433,17 @@ const Reports = () => {
         filter = 3;
       }
 
-      dispatch(action(companyId, {
-        startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
-        endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
-        jobTypesArr,
-        employeesArr,
-        placesArr,
-        skillsArr,
+      const requestObj = {
+        'date-start': selectedReport.startDate,
+        'date-end': selectedReport.endDate,
+        places: selectedReport.places?.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
+        jobTypes: selectedReport.jobTypes?.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : undefined,
+        employees: selectedReport.employees?.length > 0 ? `[${selectedReport.employees.join(',')}]` : undefined,
         filter,
         ...showCostsInReport(),
-      })).then(({ data }) => {
+      };
+
+      dispatch(action(companyId, requestObj)).then(({ data }) => {
         const link = document.createElement('a');
         link.setAttribute('download',
           `Report_${format(dateToUCT(selectedReport.startDate),
@@ -501,28 +552,22 @@ const Reports = () => {
               disableTrackYMousewheelScrolling
               noScrollY
               trackXProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames(styles.scrollbarTrackX, { trackX: true })}
-                    />
-                  );
-                },
+                renderer: ({ elementRef, ...restProps }) => (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackX, { trackX: true })}
+                  />
+                ),
               }}
               trackYProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames(styles.scrollbarTrackY, { trackY: true })}
-                    />
-                  );
-                },
+                renderer: ({ elementRef, ...restProps }) => (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames(styles.scrollbarTrackY, { trackY: true })}
+                  />
+                ),
               }}
             >
               <div
@@ -562,6 +607,7 @@ const Reports = () => {
                     key={report.id.toString()}
                     data={report.report || []}
                     columns={columnsArray || []}
+                    columnsWidth={columnsWidth}
                     onColumnsChange={setColumnsArray}
                     loading={loading}
                     onSort={sortHandler}
@@ -573,7 +619,10 @@ const Reports = () => {
                     downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                     verticalOffset='212px'
                     amount={totalStat}
-                    permissions={permissions}
+                    withCost={permissions.cost && costState.show_costs}
+                    withProfit={permissions.cost && permissions.profit && costState.show_profit}
+                    withSalary={permissions.cost && permissions.profit && costState.show_earnings}
+                    white
                   />
                 ))
                 : (
@@ -603,7 +652,12 @@ const Reports = () => {
             </div>
             <div className={sidebarContentClasses}>
               <div className={styles.sidebarTitle}>Report period</div>
-              <DRP initRange={dateRange} onChange={setDateRange} small right />
+              <DRP
+                initRange={dateRange}
+                onChange={setDateRange}
+                small
+                right
+              />
               {
                 permissions.cost && (
                   <StyledCheckbox
@@ -715,5 +769,3 @@ const Reports = () => {
     </MainLayout>
   );
 };
-
-export default Reports;

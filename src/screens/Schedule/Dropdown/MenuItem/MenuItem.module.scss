@@ -1,0 +1,23 @@
+.menuItem {
+  display: flex;
+  align-items: center;
+  color: #333945;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 12px;
+  line-height: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 9px 0;
+  width: 100%;
+  border-top: 1px solid rgba(#707070, 0.24);
+
+  &_remove {
+    color: #818f94;
+  }
+
+  &__chevron {
+    margin-left: auto;
+    transform: rotate(90deg);
+  }
+}

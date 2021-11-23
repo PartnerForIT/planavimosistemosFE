@@ -4,6 +4,16 @@ import Resizer from 'react-image-file-resizer';
 // export const dateToUCT = (date) => (new Date(`${date}Z`.replace(' ', 'T')));
 export const dateToUCT = (date) => (new Date(date.replace(/-/g, '/').replace('T', ' ').replace(/\..*|\+.*/, '')));
 
+export const timeToHours = (str) => {
+  if (!str) {
+    return 0;
+  }
+
+  const [hours, minutes] = str.split(':');
+
+  return +hours + minutes / 60;
+};
+
 export const timeToMinutes = (str) => {
   const timeArr = str.split(':');
   return parseInt(timeArr[0], 10) * 60 + parseInt(timeArr[1], 10);

@@ -4,7 +4,6 @@ import {
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
-import _ from 'lodash';
 import {
   GET_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
@@ -125,6 +124,7 @@ import {
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
 import { authCheck } from '../auth/actions';
+import { updateCompanyInfo } from '../company/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 import getToken from '../getToken';
@@ -154,6 +154,14 @@ function* editSettingsCompany(action) {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+
+    const companyInfo = yield select((state) => state.company.companyInfo);
+    if (companyInfo.date_format !== action.data.date_format) {
+      yield put(updateCompanyInfo({
+        date_format: action.data.date_format,
+      }));
+    }
+
     // yield put(getSettingCompanySuccess(data));
     yield put(addSnackbar('Company parameters edited successfully', 'success'));
     yield delay(4000);
@@ -974,84 +982,15 @@ function* getEmployeeEdit(action) {
 
 function* updateEmployee(action) {
   try {
-    const employees = yield select((state) => state.settings.employees);
-    const employee = yield select((state) => state.settings.employee);
-    const oldGroupId = employee.groups?.[0]?.id ?? employee.subgroups?.[0]?.parent_group_id;
-    const oldSubGroupId = employee.subgroups?.[0]?.id;
-    const oldSkillId = employee.skills[0]?.id;
-    const oldPlaceId = employee.place[0]?.id;
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
+      action.data,
+      token(),
+    );
 
-    const {
-      group,
-      subgroup,
-      place,
-      skill,
-      ...rest
-    } = action.data;
-
-    const newOptions = {};
-
-    Object.keys(rest).forEach((key) => {
-      if (employee[key] !== rest[key]) {
-        newOptions[key] = rest[key];
-      }
-    });
-
-    if (!_.isEmpty(newOptions)) {
-    // eslint-disable-next-line no-unused-vars
-      const { data } = yield call(axios.patch,
-        `${config.api.url}/company/${action.id}/employees/update/${action.employeeId}`,
-        { ...rest }, token());
-    }
-
-    if (place) {
-      // eslint-disable-next-line no-use-before-define
-      yield call(assignPlace, {
-        companyId: action.id,
-        employeeId: action.employeeId,
-        place,
-      });
-    }
-
-    if (group && !subgroup) {
-      // eslint-disable-next-line no-use-before-define
-      yield call(assignGroup, {
-        companyId: action.id,
-        group,
-        employeeId: action.employeeId,
-      });
-    }
-
-    if (subgroup) {
-      // eslint-disable-next-line no-use-before-define
-      yield call(assignGroup, {
-        companyId: action.id,
-        group,
-        subgroup,
-        employeeId: action.employeeId,
-      });
-    }
-
-    if (skill) {
-      // eslint-disable-next-line no-use-before-define
-      yield call(assignSkill, {
-        companyId: action.id,
-        skill,
-        employeeId: action.employeeId,
-      });
-    }
-
-    if (!_.isEmpty(newOptions) || +group !== oldGroupId
-      || +subgroup !== oldSubGroupId
-      || +place !== oldPlaceId || +skill !== oldSkillId) {
-      yield put(loadEmployeesAll(action.id));
-
-      yield put(addSnackbar('Updated account successfully', 'success'));
-      yield delay(4000);
-      yield put(dismissSnackbar());
-    } else {
-      yield put(loadEmployeesSuccess(employees));
-    }
+    yield put(loadEmployeesAll(action.id));
+    // }
   } catch (e) {
     yield put(patchEmployeeError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
@@ -1205,7 +1144,7 @@ function* assignPlace({
 }) {
   try {
     const employee = yield select((state) => state.settings.employee);
-    const oldPlaceId = employee.place[0]?.id;
+    const oldPlaceId = employee?.place?.[0]?.id;
 
     if (place !== oldPlaceId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
@@ -1243,9 +1182,9 @@ function* assignGroup({
       };
 
     const employee = yield select((state) => state.settings.employee);
-    const oldGroupId = employee.groups?.[0]?.id;
-    const oldSubGroupId = employee.subgroups?.[0]?.id;
-    const oldSubGroupParentId = employee.subgroups?.[0]?.parent_group_id;
+    const oldGroupId = employee?.groups?.[0]?.id;
+    const oldSubGroupId = employee?.subgroups?.[0]?.id;
+    const oldSubGroupParentId = employee?.subgroups?.[0]?.parent_group_id;
 
     if (oldGroupId) {
       if (groupId !== oldGroupId || subgroup) {
@@ -1281,7 +1220,7 @@ function* assignSkill({
 }) {
   try {
     const employee = yield select((state) => state.settings.employee);
-    const oldSkillId = employee.skills[0]?.id;
+    const oldSkillId = employee?.skills?.[0]?.id;
     if (skill !== oldSkillId) {
     // eslint-disable-next-line no-unused-vars,no-shadow
       const { data } = yield call(axios.post,

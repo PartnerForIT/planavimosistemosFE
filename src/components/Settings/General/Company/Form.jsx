@@ -97,7 +97,7 @@ export default function CompaneForm({
           fullWidth
           value={inputValues.lang}
           options={langArray}
-          readOnly={readOnly}
+          readOnly
         />
       </div>
       <div className={styles.formControl}>
