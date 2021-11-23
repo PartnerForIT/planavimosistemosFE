@@ -26,7 +26,7 @@ function token() {
 function* loadCountries() {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/countries`, token());
-    yield put(getCountriesSuccess(data));
+    yield put(getCountriesSuccess(data.countries));
   } catch (error) {
     yield put(getCountriesError(error));
   }
