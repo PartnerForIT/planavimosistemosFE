@@ -18,6 +18,14 @@ const OptionsCheckBoxGroup = ({
   const { t } = useTranslation();
   const style = { lineHeight: 0.5 };
 
+  const getDisabled = (action) => {
+    if (name === 'logbook' && action === 'costs') {
+      return activePermissions.some((it) => it === permissionsIds[name].profit);
+    }
+
+    return false;
+  };
+
   return (
     <>
       <StyledCheckbox
@@ -42,7 +50,7 @@ const OptionsCheckBoxGroup = ({
                     label={t(details[x])}
                     style={style}
                     onChange={onChangeHandler}
-                    disabled={!active || readOnly}
+                    disabled={!active || readOnly || getDisabled(x)}
                     checked={activePermissions.some((i) => i === detailId)}
                   />
                 );

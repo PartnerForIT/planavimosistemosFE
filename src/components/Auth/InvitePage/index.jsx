@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { clearServices, confirmPassword, getCompanyInfo } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
@@ -19,19 +19,19 @@ const InvitePage = () => {
   const { t } = useTranslation();
   const { token } = useParams();
   const dispatch = useDispatch();
-
-  const [redirect, setRedirect] = useState(false);
+  const history = useHistory();
 
   const {
-    email, security, company: { companyName = '' }, loading,
+    email,
+    security,
+    company: { companyName = '' },
+    loading,
+    admin,
   } = useSelector(companyServicesInfoSelector);
 
   useLayoutEffect(() => {
     dispatch(getCompanyInfo(token));
   }, [dispatch, token]);
-
-  const admin = true;
-  const employee = false;
 
   const {
     minLength = 1, numbers = false, specialChars = false, uppercase = false,
@@ -85,22 +85,15 @@ const InvitePage = () => {
       dispatch(confirmPassword({
         token,
         password: values.password,
-        password_confirmation: values.repeatPassword,
         email,
       }))
         .then(() => {
           dispatch(clearServices());
-          setRedirect(true);
+          history.replace('/');
         })
-        .catch((e) => console.log(e));
+        .catch((e) => console.error(e));
     }
   };
-
-  if (redirect) {
-    return (
-      <Redirect to='/' />
-    );
-  }
 
   return (
     <BackgroundWrapper className={classes.root}>
@@ -110,15 +103,13 @@ const InvitePage = () => {
         <div className={classes.description}>
           <p>
             {
-              employee && t(`You have been invited to the ${companyName} organization account as a company employee.`)
-            }
-            {
-              admin && t(`You are the main admin user of the ${companyName} organization account.`)
+              admin
+                ? t(`You are the main admin user of the ${companyName} organization account.`)
+                : t(`You have been invited to the ${companyName} organization account as a company employee.`)
             }
           </p>
           <p>
-            {t('Your registered e-mail')}
-            :
+            {`${t('Your registered e-mail')}:`}
           </p>
           <p className={classes.black}>{email}</p>
           <p>{t('Please create your password')}</p>

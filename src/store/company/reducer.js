@@ -6,27 +6,63 @@ import {
   POST_SUPPORT_TICKET,
   POST_SUPPORT_TICKET_ERROR,
   POST_SUPPORT_TICKET_SUCCESS,
+  // GET_COMPANY_INFO,
+  UPDATE_COMPANY_INFO,
+  GET_COMPANY_INFO_SUCCESS,
 } from './types';
 
 const initialState = {
   modules: {},
-  loading: false,
-  requestWasSent: false,
+  loading: true,
   isCreateTicket: false,
   postSupportTicketLoading: false,
+  companyInfo: {},
+  isLoadingCompany: true,
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    // case GET_COMPANY_INFO:
+    //   return {
+    //     ...state,
+    //     isLoadingCompany: true,
+    //   };
+    case GET_COMPANY_INFO_SUCCESS:
+      return {
+        ...state,
+        isLoadingCompany: false,
+        companyInfo: action.data,
+      };
+
+    case UPDATE_COMPANY_INFO: {
+      return {
+        ...state,
+        companyInfo: {
+          ...state.companyInfo,
+          ...action.data,
+        },
+      };
+    }
+
     case GET_ORGANISATION_MODULES:
       return {
-        ...state, error: null, loading: true, requestWasSent: true,
+        ...state,
+        error: null,
+        loading: true,
       };
     case success(GET_ORGANISATION_MODULES): {
-      return { ...state, modules: action.data, loading: false };
+      return {
+        ...state,
+        modules: action.data,
+        loading: false,
+      };
     }
     case error(GET_ORGANISATION_MODULES): {
-      return { ...state, error: action.error, loading: false };
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
     }
 
     case POST_SUPPORT_TICKET:

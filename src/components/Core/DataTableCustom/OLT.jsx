@@ -32,6 +32,7 @@ export default function DataTable({
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
   accountList = false,
+  withoutShitCode,
 }) {
   const [tableData, setTableData] = useState(data);
   const [, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -104,9 +105,9 @@ export default function DataTable({
     document.documentElement.style.setProperty(`--scroll-left-${id}`, '0px');
   }, [id]);
 
-  const sort = (field, asc) => {
+  const sort = (field, asc, column) => {
     setSortOptionsAsc({ ...sortOptionsAsc, [field]: !asc });
-    onSort(field, !asc);
+    onSort(field, !asc, column);
   };
 
   const columnsChangeHandler = (item) => {
@@ -161,6 +162,7 @@ export default function DataTable({
       [styles.tableContainer_grey]: grey,
       [styles.tableContainer_greyTitle]: greyTitle,
       [styles.tableContainer_accountList]: accountList,
+      [styles.tableContainer_simpleTable]: simpleTable,
     },
   );
 
@@ -192,28 +194,22 @@ export default function DataTable({
         }}
         removeTracksWhenNotUsed
         trackXProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollableContent__scrollbarTrackX, { trackX: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classNames(styles.scrollableContent__scrollbarTrackX, { trackX: true })}
+            />
+          ),
         }}
         trackYProps={{
-          renderer: (props) => {
-            const { elementRef, ...restProps } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(styles.scrollableContent__scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classNames(styles.scrollableContent__scrollbarTrackY, { trackY: true })}
+            />
+          ),
         }}
         onScroll={onScroll}
       >
@@ -268,7 +264,7 @@ export default function DataTable({
                       }
                       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
                         className={sortBlockClasses}
-                        onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
+                        onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field], column)}
                       >
                         <div className={classNames(styles.flexCenter)}>
                           {column.label}
@@ -315,6 +311,7 @@ export default function DataTable({
                 hoverable={hoverable}
                 colored={colored}
                 tableRef={tableRef}
+                withoutShitCode={withoutShitCode}
               />
             ))
           }

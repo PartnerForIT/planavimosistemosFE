@@ -18,7 +18,6 @@ import GenerateNewPin from '../../../Core/Dialog/GenerateNewPin';
 import EditPinCode from '../../../Core/Dialog/EditPinCode';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import Kiosk2Icon from '../../../Icons/Kiosk2';
-import TimeFormat from '../../../shared/TimeFormat';
 import Filter from './Filter';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
 import {
@@ -138,8 +137,6 @@ export default () => {
           name,
           surname,
           status,
-          created_at: createdAt,
-          updated_at: updatedAt,
           place,
           groups,
           skills,
@@ -155,8 +152,6 @@ export default () => {
           skills: skills?.[0]?.name ?? '',
           place: place?.[0]?.name ?? '',
           role: permissions?.[0]?.account_roles?.name ?? '',
-          created_at: createdAt ? <TimeFormat date={createdAt} /> : '',
-          updated_at: updatedAt ? <TimeFormat date={updatedAt} /> : '',
           name: `${name} ${surname}`,
         };
       }) ?? [];

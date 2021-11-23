@@ -33,11 +33,18 @@ export const reducer = (state = initialState, action) => {
       };
 
     case LOGIN_CHECK:
-      return { ...state, error: null, loading: true };
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
 
     case success(LOGIN_CHECK): {
       return {
-        ...state, user: action.data, loading: false, isAuthorized: true,
+        ...state,
+        user: action.data,
+        loading: false,
+        isAuthorized: true,
       };
     }
 
@@ -46,7 +53,10 @@ export const reducer = (state = initialState, action) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       return {
-        ...state, loading: false, error: action.error, isAuthorized: false,
+        ...state,
+        loading: false,
+        error: action.error,
+        isAuthorized: false,
       };
 
     default: return state;

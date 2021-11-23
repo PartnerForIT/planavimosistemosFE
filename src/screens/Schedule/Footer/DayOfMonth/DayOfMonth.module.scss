@@ -1,0 +1,33 @@
+.dayOfMonth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border-left: 1px solid #d9dfe3;
+
+  &_statistic {
+    flex: 2;
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #333945;
+  }
+
+  &:first-child {
+    border-left-color: transparent;
+  }
+
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #f7f8f8;
+    border: 1px solid #d9dee3;
+    color: #8a949f;
+    font-size: 12px;
+    cursor: pointer;
+  }
+}

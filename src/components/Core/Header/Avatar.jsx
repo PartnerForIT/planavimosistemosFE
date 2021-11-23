@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
 import Avatar from '@material-ui/core/Avatar';
+import { useSelector } from 'react-redux';
+
 import styles from './header.module.scss';
 import { onKeyDown } from '../../Helpers';
+import { userSelector } from '../../../store/auth/selectors';
 
 export default function AvatarComponent({
   setAnchorEl = () => ({}), setMenuOpen = () => ({}),
 }) {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useSelector(userSelector);
 
   const clickHandler = (e) => {
     setAnchorEl(e.currentTarget);

@@ -81,7 +81,7 @@ $sidebar-border-radius: 12px;
   }
 }
 
-.emptyWrapper {
+.empty {
   align-self: center;
   font-family: Helvetica Neue, sans-serif;
   font-size: 18px;
@@ -91,6 +91,14 @@ $sidebar-border-radius: 12px;
   svg {
     width: 174px !important;
     height: 168px !important;
+  }
+
+  &__text {
+    font-size: 18px;
+    line-height: 25px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #5f6265;
+    margin-top: 18px;
   }
 }
 

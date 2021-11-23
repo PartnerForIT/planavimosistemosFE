@@ -97,8 +97,7 @@ export default function Grouping() {
     if (Groups) {
       groups = Groups.map((group) => ({
         ...group,
-        users: (group?.subgroups?.reduce((acc, item) => acc + (item.users?.length ?? 0), 0) ?? 0)
-          + (group.users?.length ?? 0),
+        users: group.users?.length ?? 0,
         subgroups: group.subgroups?.length ?? 0,
         actions: 'tableActions',
       })) ?? [];

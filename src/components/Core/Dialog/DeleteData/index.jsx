@@ -9,16 +9,15 @@ export default function DeleteData({
   buttonTitle, buttonTitle2, deleteData, employees, cancelDelete, submitDeleteData,
 }) {
   const name = () => {
-    const fullName = employees.filter((item) => item.user_id === parseInt(deleteData.employee, 10));
-    return fullName[0] ? `${fullName[0].name} ${fullName[0].surname}` : '';
+    const employee = employees.find((item) => item.id === deleteData.employee);
+    return employee?.fullName || '';
   };
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.daleteData}>
         <div>
-          Employee
-          {name()}
+          {`Employee ${name()}`}
         </div>
         <div>
           From

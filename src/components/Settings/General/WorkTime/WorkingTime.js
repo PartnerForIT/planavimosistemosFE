@@ -34,7 +34,7 @@ export default function WorkingTime({
               fullWidth
               value={startTime[`start${index + 1}`]}
               options={timeArr}
-              readOnly={readOnly}
+              readOnly={readOnly || !days[item]}
               withoutSearch
             />
             <div className={styles.workigTime__to}>To</div>
@@ -44,7 +44,7 @@ export default function WorkingTime({
               fullWidth
               value={startTime[`finish${index + 1}`]}
               options={timeArr}
-              readOnly={readOnly}
+              readOnly={readOnly || !days[item]}
               withoutSearch
             />
           </div>

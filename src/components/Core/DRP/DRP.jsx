@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DateRangePicker } from '@matharumanpreet00/react-daterange-picker';
-import { format } from 'date-fns';
-import './DRP.scss';
+import moment from 'moment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { useTranslation } from 'react-i18next';
+
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import Button from '../Button/Button';
+
+import './DRP.scss';
 import defaultRanges from './defaultRanges';
 
 const DRP = ({
   initRange, onChange, small, right,
 }) => {
+  const { getDateFormat } = useCompanyInfo();
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
+  });
+
   const [open, setOpen] = useState(false);
   const [definedRangesOpen, setDefinedRangesOpen] = useState(false);
   const [dateRange, setDateRange] = useState(initRange || {});
   const [lastDateRange, setLastDateRange] = useState(initRange || {});
-  const [predefinedDateRange, setPredefinedDateRange] = useState({});
+  const [predefinedDateRange, setPredefinedDateRange] = useState(initRange || {});
   const { t } = useTranslation();
   const { startDate, endDate } = dateRange;
 
@@ -113,7 +123,7 @@ const DRP = ({
           className={startInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={startDate ? format(startDate, 'MM.dd.yyyy') : t('Start Date')}
+          value={startDate ? moment(startDate).format(formatDate) : t('Start Date')}
         />
         <span className='to'>{ ` ${t('To')} ` }</span>
         <input
@@ -121,7 +131,7 @@ const DRP = ({
           className={endInputClasses}
           readOnly
           onClick={() => inputClickHandler()}
-          value={endDate ? format(endDate, 'MM.dd.yyyy') : t('End Date')}
+          value={endDate ? moment(endDate).format(formatDate) : t('End Date')}
         />
         {
           right ? (

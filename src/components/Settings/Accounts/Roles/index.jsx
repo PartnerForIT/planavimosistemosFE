@@ -255,7 +255,6 @@ export default () => {
 
     // eslint-disable-next-line no-shadow
     const nextPermissions = _.unionWith(newPermissions, oldFiltered, _.isEqual);
-    console.log('data', data);
 
     dispatch(updateRole(id, activeRole.id, {
       permissions: nextPermissions,

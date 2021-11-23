@@ -28,13 +28,15 @@
     }
 
     &__input {
-      border: 1px solid #d0dfef;
+      border: $input-border-style;
       border-radius: 4px;
       color: #333945;
       font-family: Helvetica Neue, sans-serif;
       font-size: 16px;
-      max-width: 126px;
+      max-width: 150px;
       padding: 8px 12px;
+      height: 36px;
+      box-sizing: border-box;
       background-color: $input-background-color;
 
       &:focus {

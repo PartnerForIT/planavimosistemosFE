@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Content from './Content';
 import StyledCheckbox from '../../../../Core/Checkbox/Checkbox';
 
-const OrganisationAccess = React.memo(({
+export default memo(({
   roleAccess: {
     organisation,
   } = {},
@@ -14,6 +14,13 @@ const OrganisationAccess = React.memo(({
   readOnly,
 }) => {
   const { t } = useTranslation();
+  const getDisabled = (module, action) => {
+    if (module === 'accounts' && action !== 'see_and_edit') {
+      return activePermissions.every((it) => it !== permissionsIds[module].see_and_edit);
+    }
+
+    return false;
+  };
 
   return (
     <Content tooltip='Tooltip' title='Organisation access'>
@@ -30,7 +37,7 @@ const OrganisationAccess = React.memo(({
                       label={t(organisation[key].options[name])}
                       id={id}
                       onChange={onChangeHandler}
-                      disabled={!organisation[key].enabled || readOnly}
+                      disabled={!organisation[key].enabled || readOnly || getDisabled(key, name)}
                       checked={activePermissions.some((it) => it === id)}
                     />
                   );
@@ -55,5 +62,3 @@ const OrganisationAccess = React.memo(({
     </Content>
   );
 });
-
-export default OrganisationAccess;

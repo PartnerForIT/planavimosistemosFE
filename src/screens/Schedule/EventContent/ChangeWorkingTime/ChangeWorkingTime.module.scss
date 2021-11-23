@@ -1,0 +1,55 @@
+.changeWorkingTime {
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    font-size: 14px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    color: black;
+    line-height: 17px;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    line-height: 16px;
+    color: #808f94;
+    margin-top: 8px;
+    white-space: nowrap;
+    width: 263px;
+
+    &__avatar {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+  }
+
+  &__form {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 4px;
+
+    & > *:first-child button,
+    & > *:last-child {
+      min-height: 36px;
+      max-height: 36px;
+    }
+
+    & > *:first-child {
+      max-width: 110px;
+      margin-right: 7px;
+    }
+
+    & > *:last-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 146px;
+      padding: 0;
+    }
+  }
+}

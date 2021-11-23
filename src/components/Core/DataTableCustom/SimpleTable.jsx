@@ -4,6 +4,7 @@ import styles from './DTM.module.scss';
 
 export default function SimpleTable({
   rows, columns, expanded, selectable, reports,
+  columnsWidth,
 }) {
   const simpleTableContainer = classNames(
     styles.simpleTableContainer,
@@ -34,16 +35,25 @@ export default function SimpleTable({
     >
       <div className={classNames(styles.flexTable, styles.header)} role='rowgroup'>
         {
-          columns.map((column, idx) => (
-            <div
-              key={idx.toString()}
-              className={simpleTableHeaderClasses}
-              style={{ width: `calc(100% / ${columns.length})` }}
-              role='columnheader'
-            >
-              {column.label}
-            </div>
-          ))
+          columns.map((column, idx) => {
+            let width = `calc(100% / ${columns.length})`;
+            let minWidth = `calc(100% / ${columns.length})`;
+            if (columnsWidth && columnsWidth[column.field]) {
+              width = columnsWidth[column.field];
+              minWidth = columnsWidth[column.field];
+              // minWidth = columnsWidth[column.field];
+            }
+            return (
+              <div
+                key={idx.toString()}
+                className={simpleTableHeaderClasses}
+                style={{ width, minWidth }}
+                role='columnheader'
+              >
+                {column.label}
+              </div>
+            );
+          })
         }
       </div>
       <div className={classNames(styles.simpleTableContent)}>
@@ -51,16 +61,24 @@ export default function SimpleTable({
           rows.map((row, idx) => (
             <div key={idx.toString()} className={classNames(styles.flexTable, styles.row)} role='rowgroup'>
               {
-                columns.map((column, idz) => (
-                  <div
-                    key={idz.toString()}
-                    className={simpleTableCellClasses}
-                    style={{ width: `calc(100% / ${columns.length})` }}
-                    role='cell'
-                  >
-                    {row[column.field]}
-                  </div>
-                ))
+                columns.map((column, idz) => {
+                  let width = `calc(100% / ${columns.length})`;
+                  let minWidth = `calc(100% / ${columns.length})`;
+                  if (columnsWidth && columnsWidth[column.field]) {
+                    width = columnsWidth[column.field];
+                    minWidth = columnsWidth[column.field];
+                  }
+                  return (
+                    <div
+                      key={idz.toString()}
+                      className={simpleTableCellClasses}
+                      style={{ width, minWidth }}
+                      role='cell'
+                    >
+                      {row[column.field]}
+                    </div>
+                  );
+                })
               }
             </div>
           ))

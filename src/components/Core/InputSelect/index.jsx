@@ -44,11 +44,11 @@ export default ({
   const buttonRef = useRef(null);
   const contentBox = useRef(null);
 
-  const handleCheckboxChange = useCallback((item) => {
+  const handleCheckboxChange = useCallback((item, nextValue) => {
     onChange({
       target: {
         name,
-        value: item[valueKey],
+        value: nextValue ? item[valueKey] : undefined,
       },
     });
     setOpen(false);
@@ -142,16 +142,13 @@ export default ({
               removeTracksWhenNotUsed
               noScrollX
               trackYProps={{
-                renderer: (props) => {
-                  const { elementRef, ...restProps } = props;
-                  return (
-                    <span
-                      {...restProps}
-                      ref={elementRef}
-                      className={classNames('input-select__content-box__scrollbar__track-y', { trackY: true })}
-                    />
-                  );
-                },
+                renderer: ({ elementRef, ...restProps }) => (
+                  <span
+                    {...restProps}
+                    ref={elementRef}
+                    className={classNames('input-select__content-box__scrollbar__track-y', { trackY: true })}
+                  />
+                ),
               }}
             >
               {

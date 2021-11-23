@@ -12,6 +12,8 @@ $top-padding-gap: 10px;
   min-width: 200px;
   max-width: 250px;
   border-radius: 13px;
+  border: 1px solid #d0dfef !important;
+  box-shadow: 0 3px 16px #e2e9ed !important;
   z-index: 9999;
 
   .top {
@@ -32,6 +34,8 @@ $top-padding-gap: 10px;
     @extend %transition;
     @extend %fullWidth;
 
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
     color: $blue-grownu;
     display: flex;
     //background-color: white;
@@ -42,13 +46,18 @@ $top-padding-gap: 10px;
     align-items: center;
     border-radius: 5px;
 
+    &__icon {
+      width: 13px;
+      height: 13px;
+    }
+
     svg {
       margin-right: 20px;
     }
 
-    &:hover {
-      background: $light-blue2;
-    }
+    //&:hover {
+    //  background: $light-blue2;
+    //}
   }
 
   &_item {
@@ -69,6 +78,10 @@ $top-padding-gap: 10px;
       border: 1px solid $light-blue;
       border-radius: 5px;
       position: relative;
+
+      button {
+        font-family: "Helvetica Neue Medium", sans-serif !important;
+      }
     }
 
     svg.status {
@@ -79,8 +92,14 @@ $top-padding-gap: 10px;
 
     &:hover {
       border-radius: 5px;
-      background-color: $light-blue !important; // reassignment of MiUi root
+      background-color: #f6fafd !important; // reassignment of MiUi root
     }
+  }
+
+  &__hr {
+    height: 1px;
+    width: 100%;
+    background-color: #d0dfef;
   }
 
   .icon {
@@ -118,6 +137,7 @@ $top-padding-gap: 10px;
       text-align: left;
       align-items: center;
       color: $gray;
+      height: 24px;
 
       @extend %btn_unset;
     }
@@ -132,7 +152,7 @@ $top-padding-gap: 10px;
     content: "";
     width: calc(100% + 40px);
     height: 1px;
-    background: $light-blue;
+    background: #d0dfef;
     display: block;
     left: -20px;
     top: 36px;
@@ -159,11 +179,24 @@ $top-padding-gap: 10px;
 .changePass {
   @extend %btn_unset;
 
+  font-size: 12px;
+  font-family: Helvetica Neue, sans-serif;
   text-align: left;
   color: $gray;
-  padding: 0;
+  padding: 4px 0;
   display: flex;
   align-items: center;
   justify-content: unset;
   width: 100%;
+
+  &__icon {
+    width: 12px !important;
+    height: 14px !important;
+  }
+}
+
+.globeIcon {
+  width: 14px !important;
+  min-width: 14px !important;
+  height: 14px !important;
 }

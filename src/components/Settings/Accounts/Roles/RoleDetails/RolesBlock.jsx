@@ -30,6 +30,7 @@ function RolesBlock({
   const [removeVisible, setRemoveVisible] = useState(false);
   const [disable, setDisable] = useState([]);
 
+  const isSuperAdmin = user?.user?.role_id === 1;
   const isCompanyAdmin = useMemo(() => {
     if (roles?.length) {
       return roles[0].account_user_roles.some((item) => item.employee?.user_id === user.user.id);
@@ -82,7 +83,7 @@ function RolesBlock({
                     permissions={permissions}
                     disable={disable}
                     setDisable={setDisable}
-                    readOnly={!role.can_delete && !isCompanyAdmin}
+                    readOnly={!role.can_delete && !isCompanyAdmin && !isSuperAdmin}
                   />
                 )
               }

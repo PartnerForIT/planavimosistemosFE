@@ -22,6 +22,7 @@ import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import classes from './EditAccount.module.scss';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
+import InputSelect from '../../InputSelect';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,7 +72,7 @@ export default function EditAccount({
   skills = [],
   groups = [],
   places = [],
-  onSubmit = () => ({}),
+  onSubmit = Function.prototype,
   handleClose: externalHandleClose,
 }) {
   const { t } = useTranslation();
@@ -166,17 +167,49 @@ export default function EditAccount({
     const { name, value } = e.target;
 
     setUser((prevState) => {
-      if (name !== 'group') {
-        return {
-          ...prevState,
-          [name]: value,
-        };
+      switch (name) {
+        case 'group': {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
+          // remove group
+          if (!value) {
+            delete nextValues.subgroup;
+            delete nextValues.group;
+            return nextValues;
+          }
+
+          // change or set group
+          const foundGroup = groups.find(({ id }) => id === value);
+
+          if (foundGroup.subgroups.length) {
+            nextValues.subgroup = foundGroup.subgroups[0].id;
+          } else {
+            delete nextValues.subgroup;
+          }
+
+          return nextValues;
+        }
+        case 'subgroup': {
+          if (value) {
+            return {
+              ...prevState,
+              [name]: value,
+            };
+          }
+
+          return prevState;
+        }
+
+        default: {
+          return {
+            ...prevState,
+            [name]: value,
+          };
+        }
       }
-      const { subgroup: $, ...rest } = prevState;
-      return {
-        ...rest,
-        [name]: value,
-      };
     });
   };
 
@@ -419,25 +452,29 @@ export default function EditAccount({
                             <>
                               <div className={classes.formItem}>
                                 <Label htmlFor='group' text={t('Assign to Group')} />
-                                <AddEditSelectOptions
+                                <InputSelect
                                   id='group'
-                                  options={groupsOpt}
-                                  user={user}
-                                  name='group'
-                                  handleInput={handleInput}
                                   placeholder={t('Select a group')}
+                                  options={groupsOpt}
+                                  value={user.group}
+                                  name='group'
+                                  onChange={handleInput}
+                                  valueKey='id'
+                                  labelKey='name'
                                 />
                               </div>
                               <div className={classes.formItem}>
                                 <Label htmlFor='subgroup' text={t('Assign to Subgroup')} />
-                                <AddEditSelectOptions
+                                <InputSelect
                                   id='subgroup'
-                                  options={subGroupsOpt}
-                                  user={user}
-                                  disabled={!subGroupsOpt.length}
-                                  name='subgroup'
                                   placeholder={t('Select a subgroup')}
-                                  handleInput={handleInput}
+                                  options={subGroupsOpt}
+                                  name='subgroup'
+                                  onChange={handleInput}
+                                  value={user.subgroup}
+                                  disabled={!subGroupsOpt.length}
+                                  valueKey='id'
+                                  labelKey='name'
                                 />
                                 {
                                   errors.subgroup

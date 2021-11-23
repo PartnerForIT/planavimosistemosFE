@@ -95,6 +95,10 @@ const permissionsConfig = [
     permission: 'logbook_module_access',
   },
   {
+    name: 'logbook_edit_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
     name: 'events',
     module: 'events',
     permission: 'events_create',
@@ -144,8 +148,7 @@ export default function DashboardMenu() {
   const { t } = useTranslation();
   const { id: companyId } = useParams();
   const { pathname } = useLocation();
-  const section = pathname.split('/')[2];
-  const innerSection = pathname.split('/')[3];
+  const [,,, section, innerSection] = pathname.split('/');
   const permissions = usePermissions(permissionsConfig);
 
   const menuItems = useMemo(() => {
@@ -158,17 +161,17 @@ export default function DashboardMenu() {
         name: 'general',
         items: [
           {
-            to: `/settings/general/company/${companyId}`,
+            to: `/${companyId}/settings/general/company`,
             name: 'company',
             title: t('Company'),
           },
           {
-            to: `/settings/general/work-time/${companyId}`,
+            to: `/${companyId}/settings/general/work-time`,
             name: 'work-time',
             title: t('Work Time'),
           },
           {
-            to: `/settings/general/security/${companyId}`,
+            to: `/${companyId}/settings/general/security`,
             name: 'security',
             title: t('Security'),
           },
@@ -181,7 +184,7 @@ export default function DashboardMenu() {
 
       if (permissions.accounts_see_and_edit) {
         subItems.push({
-          to: `/settings/accounts/accounts-list/${companyId}`,
+          to: `/${companyId}/settings/accounts/accounts-list`,
           name: 'accounts-list',
           title: t('Accounts list'),
         });
@@ -189,7 +192,7 @@ export default function DashboardMenu() {
 
       if (permissions.roles_create) {
         subItems.push({
-          to: `/settings/accounts/roles/${companyId}`,
+          to: `/${companyId}/settings/accounts/roles`,
           name: 'roles',
           title: t('Roles'),
         });
@@ -197,7 +200,7 @@ export default function DashboardMenu() {
 
       if (permissions.groups) {
         subItems.push({
-          to: `/settings/accounts/grouping/${companyId}`,
+          to: `/${companyId}/settings/accounts/grouping`,
           name: 'grouping',
           title: t('Grouping'),
         });
@@ -211,19 +214,19 @@ export default function DashboardMenu() {
       });
     }
 
-    if (permissions.logbook) {
+    if (permissions.logbook && permissions.logbook_edit_settings) {
       nextMenuItems.push({
         icon: LogbookIcon,
         title: t('Logbook'),
         name: 'logbook',
         items: [
           {
-            to: `/settings/logbook/journal/${companyId}`,
+            to: `/${companyId}/settings/logbook/journal`,
             name: 'journal',
             title: t('Journal'),
           },
           {
-            to: `/settings/logbook/overtime/${companyId}`,
+            to: `/${companyId}/settings/logbook/overtime`,
             name: 'overtime',
             title: t('Overtime'),
           },
@@ -239,12 +242,12 @@ export default function DashboardMenu() {
         name: 'kiosk',
         items: [
           {
-            to: `/settings/kiosk/kiosk-list/${companyId}`,
+            to: `/${companyId}/settings/kiosk/kiosk-list`,
             name: 'kiosk-list',
             title: t('Kiosk list'),
           },
           {
-            to: `/settings/kiosk/users/${companyId}`,
+            to: `/${companyId}/settings/kiosk/users`,
             name: 'users',
             title: t('Kiosk users'),
           },
@@ -254,7 +257,7 @@ export default function DashboardMenu() {
 
     if (permissions.events) {
       nextMenuItems.push({
-        to: `/settings/events/${companyId}`,
+        to: `/${companyId}/settings/events`,
         icon: EventsIcon,
         title: t('Events'),
         name: 'events',
@@ -264,7 +267,7 @@ export default function DashboardMenu() {
     // Schedule
     if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_module) {
       nextMenuItems.push({
-        to: `/settings/schedule/${companyId}`,
+        to: `/${companyId}/settings/schedule`,
         icon: ScheduleIcon,
         title: t('Schedule'),
         name: 'schedule',
@@ -273,7 +276,7 @@ export default function DashboardMenu() {
 
     if (permissions.activity_log) {
       nextMenuItems.push({
-        to: `/settings/activity-log/${companyId}`,
+        to: `/${companyId}/settings/activity-log`,
         icon: ActivityLogIcon,
         title: t('Activity Log'),
         name: 'activity-log',
@@ -282,7 +285,7 @@ export default function DashboardMenu() {
 
     if (permissions.data_delete) {
       nextMenuItems.push({
-        to: `/settings/delete/${companyId}`,
+        to: `/${companyId}/settings/delete`,
         icon: DeleteIcon,
         title: t('Data Delete'),
         name: 'delete',
@@ -291,7 +294,7 @@ export default function DashboardMenu() {
 
     if (permissions.categories_create) {
       nextMenuItems.push({
-        to: `/settings/categories/${companyId}`,
+        to: `/${companyId}/settings/categories`,
         icon: CategoriesIcon,
         title: t('Categories'),
         name: 'categories',

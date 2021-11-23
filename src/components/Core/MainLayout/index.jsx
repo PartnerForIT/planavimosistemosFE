@@ -1,19 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
-import { companyModulesLoading, companyModulesRequestWasSent } from '../../../store/company/selectors';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import Header from '../Header';
 import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
-import { getOrganisationModules } from '../../../store/company/actions';
-import Progress from '../Progress';
 
 export default function MainLayout({ children }) {
   const dispatch = useDispatch();
-  const { id: companyId } = useParams();
-
-  const isLoading = useSelector(companyModulesLoading);
-  const requestWasSent = useSelector(companyModulesRequestWasSent);
 
   useEffect(() => {
     const expires = localStorage.getItem('expires_in');
@@ -21,13 +14,6 @@ export default function MainLayout({ children }) {
       dispatch(refreshToken());
     }
   });
-
-  useLayoutEffect(() => {
-    if (!requestWasSent && companyId) {
-      dispatch(getOrganisationModules(companyId));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [redirect, setRedirect] = useState(false);
   const logOut = () => {
@@ -40,13 +26,6 @@ export default function MainLayout({ children }) {
 
   if (redirect) {
     return <Redirect to='/' />;
-  }
-  if (isLoading) {
-    return (
-      <div className={styles.progressBlock}>
-        <Progress />
-      </div>
-    );
   }
 
   return (

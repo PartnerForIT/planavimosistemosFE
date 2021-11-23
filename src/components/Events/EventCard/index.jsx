@@ -266,16 +266,8 @@ const EventInformation = ({
   );
 };
 
-const mockSelectedItem = {
-  total: {
-    week: 0,
-    month: 1,
-    total: 1,
-  },
-};
-
 export default ({
-  selectedItem = mockSelectedItem,
+  selectedItem,
 }) => {
   const { t } = useTranslation();
   const { icon, title, subTitle } = useMemo(() => {
@@ -355,7 +347,7 @@ export default ({
         {selectedItem?.employee}
       </span>
       <span className={classes.container__date}>
-        {moment(selectedItem?.timestamp).format('hh:mm DD. MMM, yyyy')}
+        {selectedItem?.timestamp}
       </span>
       <EventInformation
         type={selectedItem.event_type_id}

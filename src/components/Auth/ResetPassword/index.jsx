@@ -19,7 +19,7 @@ import LockLoginIcon from '../../Icons/LockLoginIcon';
 import Logo from '../../Logo';
 import classes from './ResetPassword.module.scss';
 
-const ResetPassword = () => {
+export default () => {
   const [values, setValues] = useState({
     password: '',
     repeatPassword: '',
@@ -38,9 +38,9 @@ const ResetPassword = () => {
     loading,
   } = useSelector(companyServicesInfoSelector);
   const {
-    minLength = 1,
+    min_password_length: minLength = 1,
+    special_chars: specialChars = false,
     numbers = false,
-    specialChars = false,
     uppercase = false,
   } = security;
 
@@ -86,7 +86,10 @@ const ResetPassword = () => {
       password: values.password,
       token,
     }))
-      .then(() => history.push('/'))
+      .then(({ data }) => {
+        localStorage.setItem('token', data.token);
+        history.push('/');
+      })
       .catch((e) => console.log(e));
   };
 
@@ -158,5 +161,3 @@ const ResetPassword = () => {
     </BackgroundWrapper>
   );
 };
-
-export default ResetPassword;

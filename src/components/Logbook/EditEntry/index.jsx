@@ -244,12 +244,60 @@ export default ({
     setFormValues(nextInputValues);
   };
   const handleChangeTimePart = (values) => {
+    const nextValues = { ...values };
     const foundIndex = timeParts.findIndex((item) => (item.id === values.id));
+
+    if (values.finished) {
+      const finished = values.finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      const started = timeParts[foundIndex].started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      if (endTimeInMinutes < startTimeInMinutes) {
+        nextValues.finished = timeParts[foundIndex].finished;
+      }
+    } else if (values.started) {
+      const started = values.started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      const finished = timeParts[foundIndex].finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      if (startTimeInMinutes > endTimeInMinutes) {
+        nextValues.started = timeParts[foundIndex].started;
+      }
+    }
+
+    if (values.finished && foundIndex < timeParts.length - 1) {
+      const finished = values.finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      const started = timeParts[foundIndex + 1].started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      // The end time of the current time interval is longer than the start time of the next time interval
+      if (endTimeInMinutes > startTimeInMinutes) {
+        nextValues.finished = timeParts[foundIndex + 1].started;
+      }
+    } else if (values.started && foundIndex > 0) {
+      const started = values.started.split(':');
+      const startTimeInMinutes = (started[0] * 60 + +started[1]);
+
+      const finished = timeParts[foundIndex - 1].finished.split(':');
+      const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
+
+      // The start time of the current time interval is less than the end time of the previous time interval
+      if (startTimeInMinutes < endTimeInMinutes) {
+        nextValues.started = timeParts[foundIndex - 1].finished;
+      }
+    }
+
     setTimeParts((prevValues) => [
       ...prevValues.slice(0, foundIndex),
       {
         ...prevValues[foundIndex],
-        ...values,
+        ...nextValues,
       },
       ...prevValues.slice(foundIndex + 1),
     ]);
@@ -262,12 +310,14 @@ export default ({
           .set({
             h: item.started.split(':')[0],
             m: item.started.split(':')[1],
+            s: 0,
           })
           .format('YYYY-MM-DD HH:mm:ss'),
         finished_at: moment(item.finished_at)
           .set({
             h: item.finished.split(':')[0],
             m: item.finished.split(':')[1],
+            s: 0,
           })
           .format('YYYY-MM-DD HH:mm:ss'),
         delete: item.isRemove ? 1 : 0,
@@ -344,19 +394,13 @@ export default ({
         removeTracksWhenNotUsed
         noScrollX
         trackYProps={{
-          renderer: (props) => {
-            const {
-              elementRef,
-              ...restProps
-            } = props;
-            return (
-              <span
-                {...restProps}
-                ref={elementRef}
-                className={classNames(classes.scrollbarTrackY, { trackY: true })}
-              />
-            );
-          },
+          renderer: ({ elementRef, ...restProps}) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={classes.scrollbarTrackY}
+            />
+          ),
         }}
       >
         <div className={classes.editEntry}>

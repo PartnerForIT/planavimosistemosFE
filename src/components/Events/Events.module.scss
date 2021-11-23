@@ -49,19 +49,6 @@ $sidebar-border-radius: 12px;
   min-height: 400px;
 }
 
-.emptyWrapper {
-  align-self: center;
-  font-family: Helvetica Neue, sans-serif;
-  font-size: 18px;
-  color: #5f6265;
-  width: 200px;
-
-  svg {
-    width: 174px !important;
-    height: 168px !important;
-  }
-}
-
 .scrollbarTrackY {
   background-color: transparent !important;
   border-radius: 10px !important;
@@ -245,5 +232,26 @@ $sidebar-border-radius: 12px;
         margin-top: 0;
       }
     }
+  }
+}
+
+.empty {
+  align-self: center;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 18px;
+  color: #5f6265;
+  width: 200px;
+
+  svg {
+    width: 174px !important;
+    height: 168px !important;
+  }
+
+  &__text {
+    font-size: 18px;
+    line-height: 25px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #5f6265;
+    margin-top: 18px;
   }
 }

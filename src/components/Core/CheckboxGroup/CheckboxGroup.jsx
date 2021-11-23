@@ -6,6 +6,7 @@ import styles from './CheckboxGroup.module.scss';
 
 export default function CheckboxGroup({
   items, children, selectAll, itemsStat, height, maxHeight, wrapperMarginBottom: marginBottom,
+  choiceOfOnlyOne,
 }) {
   const { t } = useTranslation();
 
@@ -65,22 +66,26 @@ export default function CheckboxGroup({
 
   return (
     <div className={classNames(styles.checkboxGroup)} style={{ marginBottom }}>
-      <div className={classNames(styles.headerRow)}>
-        <button
-          className={classNames(styles.button)}
-          onClick={() => selectAll(true)}
-          disabled={itemsStat.checked === itemsStat.total}
-        >
-          {t('Select All')}
-        </button>
-        <button
-          className={classNames(styles.button)}
-          onClick={() => selectAll(false)}
-          disabled={itemsStat.unchecked === itemsStat.total}
-        >
-          {t('Select None')}
-        </button>
-      </div>
+      {
+        !choiceOfOnlyOne && (
+          <div className={classNames(styles.headerRow)}>
+            <button
+              className={classNames(styles.button)}
+              onClick={() => selectAll(true)}
+              disabled={itemsStat.checked === itemsStat.total}
+            >
+              {t('Select All')}
+            </button>
+            <button
+              className={classNames(styles.button)}
+              onClick={() => selectAll(false)}
+              disabled={itemsStat.unchecked === itemsStat.total}
+            >
+              {t('Select None')}
+            </button>
+          </div>
+        )
+      }
       <div className={classNames(styles.contentBox)} style={{ height, maxHeight }}>
         {
           children || items.map((item, idx) => (

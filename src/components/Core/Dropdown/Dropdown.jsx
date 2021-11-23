@@ -28,7 +28,6 @@ const useStyles = makeStyles({
   },
 
   summary: {
-    height: '35px',
     minHeight: '35px',
     paddingLeft: '3px',
     paddingRight: 12,
@@ -45,8 +44,11 @@ const useStyles = makeStyles({
     },
   },
 
+  summaryContent: {
+    margin: '0 !important',
+  },
+
   summaryExpanded: {
-    height: '35px',
     minHeight: '35px !important',
 
     '&::after': {
@@ -57,6 +59,7 @@ const useStyles = makeStyles({
 
 export default function Dropdown({
   currentItem, label, items, checked, onChange,
+  choiceOfOnlyOne,
 }) {
   const [expanded, setExpanded] = useState(false);
   const [itemsArray, setItemsArray] = useState([]);
@@ -161,6 +164,7 @@ export default function Dropdown({
         classes={{
           root: classes.summary,
           expanded: classes.summaryExpanded,
+          content: classes.summaryContent,
         }}
         expandIcon={(
           <ExpandMoreIcon
@@ -177,7 +181,11 @@ export default function Dropdown({
           onFocus={(event) => event.stopPropagation()}
           control={(
             <StyledCheckbox
-              onChange={() => onChange(currentItem)}
+              onChange={() => {
+                if (!choiceOfOnlyOne) {
+                  onChange(currentItem);
+                }
+              }}
               checked={checked}
             />
           )}
@@ -196,6 +204,7 @@ export default function Dropdown({
                   checked={item.checked}
                   items={item.items}
                   onChange={onChange}
+                  choiceOfOnlyOne={choiceOfOnlyOne}
                 />
               )
               : (
