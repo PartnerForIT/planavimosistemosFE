@@ -23,7 +23,7 @@ import Checkbox from '../../components/Core/Checkbox/Checkbox2';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
 import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
-import { resourcesMock, photo } from '../../const/mock';
+import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
 import {
@@ -265,11 +265,12 @@ export default () => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
+    let placeId;
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
-      [shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
+      [placeId,shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(placeId+'-'+shiftId).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
     }
@@ -287,7 +288,7 @@ export default () => {
         oldEmployee={event.extendedProps.old_employee}
         end={event.end}
         viewType={view.type}
-        photo={photo || resourceInfo.extendedProps.photo}
+        photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
