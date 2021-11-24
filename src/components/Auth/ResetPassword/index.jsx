@@ -91,7 +91,7 @@ export default () => {
       token,
     }))
       .then(({ data }) => {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.access_token);
       })
       .catch((e) => console.log(e));
     await dispatch(login(email, values.password, false)).then((data) => {

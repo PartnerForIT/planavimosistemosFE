@@ -16,8 +16,10 @@
 
 .pickerDefaultWrapper {
   position: absolute;
-  top: 30px;
+  top: 90px;
   left: 90px;
+  z-index: 10;
+  border-radius: 6px;
 }
 
 .dateInput {
@@ -63,7 +65,7 @@
 }
 
 .pickerRightWrapper {
-  top: 60px;
+  top: 55px;
   right: 15px;
   position: absolute;
   width: 583px;
@@ -115,4 +117,12 @@
 .definedRangesRight {
   top: 125px;
   right: 15px;
+}
+
+.pickerRightWrapper {
+  top: 55px;
+  right: 35px;
+  position: absolute;
+  width: 580px;
+  z-index: 1000;
 }

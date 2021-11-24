@@ -137,14 +137,14 @@ const Events = () => {
 
   useEffect(() => {
     const formatDate = getDateFormat({
-      'YY.MM.DD': 'YYYY, MMM, DD',
-      'DD.MM.YY': 'DD, MMM, YYYY',
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
       'MM.DD.YY': 'MMM, DD, YYYY',
     });
     const formatDate2 = getDateFormat({
-      'YY.MM.DD': 'YYYY-MM-DD',
-      'DD.MM.YY': 'DD-MM-YYYY',
-      'MM.DD.YY': 'MM-DD-YYYY',
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
+      'MM.DD.YY': 'MMMM, DD, YYYY',
     });
 
     const eventsParse = events.reduce((acc, item) => {
@@ -157,7 +157,7 @@ const Events = () => {
       if (!item.seen) {
         time = 'seen';
       } else {
-        time = moment(item.timestamp).format(formatDate);
+        time = moment(item.date).format(`dddd, ${formatDate}`).toUpperCase();
       }
 
       if (acc[time]) {

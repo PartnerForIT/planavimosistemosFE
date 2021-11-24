@@ -109,7 +109,7 @@ export default function Company() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     const nextInputValues = { ...inputValues, [name]: value };
-    setInputValues({ ...nextInputValues, logo: file });
+    setInputValues({ ...nextInputValues});
     editCompany(nextInputValues);
   };
 
