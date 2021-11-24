@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { clearServices, confirmPassword, getCompanyInfo } from '../../../store/services/actions';
+import { clearServices, confirmPassword, getInviteInfo } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
 import BackgroundWrapper from '../BackgroundWrapper';
@@ -30,11 +30,14 @@ const InvitePage = () => {
   } = useSelector(companyServicesInfoSelector);
 
   useLayoutEffect(() => {
-    dispatch(getCompanyInfo(token));
+    dispatch(getInviteInfo(token));
   }, [dispatch, token]);
 
   const {
-    minLength = 1, numbers = false, specialChars = false, uppercase = false,
+    min_password_length: minLength = 1,
+    special_chars: specialChars = false,
+    numbers = false,
+    uppercase = false,
   } = security;
 
   const [values, setValues] = useState({
@@ -84,12 +87,13 @@ const InvitePage = () => {
     if (!error && !matchError && values.password && values.repeatPassword) {
       dispatch(confirmPassword({
         token,
+        password_confirmation: values.repeatPassword,
         password: values.password,
         email,
       }))
-        .then(() => {
-          dispatch(clearServices());
-          history.replace('/');
+        .then(({ data }) => {
+          localStorage.setItem('token', data.access_token);
+          history.push('/');
         })
         .catch((e) => console.error(e));
     }
@@ -119,6 +123,7 @@ const InvitePage = () => {
           <div className={classes.formItem}>
             <Input
               name='password'
+              type='password'
               value={values.password}
               fullWidth
               underlined
@@ -132,6 +137,7 @@ const InvitePage = () => {
           <div className={classes.formItem}>
             <Input
               name='repeatPassword'
+              type='password'
               fullWidth
               value={values.repeatPassword}
               underlined

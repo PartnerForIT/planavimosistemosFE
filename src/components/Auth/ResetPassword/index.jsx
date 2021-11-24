@@ -87,7 +87,7 @@ export default () => {
       token,
     }))
       .then(({ data }) => {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.access_token);
         history.push('/');
       })
       .catch((e) => console.log(e));
