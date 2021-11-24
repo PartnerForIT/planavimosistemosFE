@@ -42,10 +42,10 @@ const LoginContainer = () => {
         ? history.push(routes.ORG_LIST)
         : history.push(`/${routes.COMPANY}/${data.data.user.company_id}`);
     }).catch(({ error }) => {
-      if (error.response.data.message === 'Your account is blocked') {
+      if (error.response.data.status === 423) {
         history.push('/locked', {
-          adminEmail: error.response.data.admin_email,
-          attempts: error.response.data.attempts,
+          adminEmail: error.response.data.error.admin_email,
+          attempts: error.response.data.error.attempts,
         });
       }
     });
