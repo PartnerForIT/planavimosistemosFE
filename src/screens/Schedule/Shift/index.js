@@ -162,36 +162,7 @@ export default () => {
         }, {});
       let data;
       if (shift.shift_info.custom_time) {
-        data = new Array(shift.shift_info.week_count).fill().reduce((acc, _, indexWeek) => {
-          acc[indexWeek] = shift.resources.reduce((accJ, item) => {
-            item.children.forEach((child) => {
-              accJ.push({
-                resourceId: child.id,
-                data: weekMock.map((dayOfWeek, indexDay) => {
-                  const foundItem = shift.shift_info.defaultTime[indexWeek]
-                    .find((itemJ) => (itemJ.day_of_week === (dayOfWeek.id - 1)));
-
-                  const day = {
-                    id: `defaultWorkingTime-${indexDay}`,
-                    time: { day: indexDay },
-                  };
-
-                  if (foundItem) {
-                    day.time.start = foundItem.start;
-                    day.time.end = foundItem.end;
-                  } else {
-                    day.time.start = '8:00';
-                    day.time.end = '17:00';
-                  }
-                  return day;
-                }),
-              });
-            });
-
-            return accJ;
-          }, []);
-          return acc;
-        }, {});
+        data = parseEvents(shift.events)
       } else {
         data = new Array(shift.shift_info.week_count).fill().reduce((acc, _, indexWeek) => {
           acc[indexWeek] = shift.resources.reduce((accJ, item) => {
