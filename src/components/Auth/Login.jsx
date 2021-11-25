@@ -23,13 +23,13 @@ import Progress from '../Core/Progress';
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const authError = useSelector(authErrorSelector);
   const isLoading = useSelector(isLoadingSelector);
-
   useEffect(() => {
     if (localStorage.getItem('token')) {
       dispatch(authCheck())
@@ -49,7 +49,7 @@ const LoginContainer = () => {
   }, []);
 
   const handleLogin = () => {
-    dispatch(login(email, password)).then((data) => {
+    dispatch(login(email, password, remember)).then((data) => {
       const {
         role_id: roleId,
         company_id: companyId,
@@ -61,10 +61,10 @@ const LoginContainer = () => {
         history.push(`/${companyId}/settings`);
       }
     }).catch(({ error }) => {
-      if (error.response.data.error === 'Your account is blocked') {
+      if (error.response.data.status === 423) {
         history.push('/locked', {
-          adminEmail: error.response.data.admin_email,
-          attempts: error.response.data.attempts,
+          adminEmail: error.response.data.error.admin_email,
+          attempts: error.response.data.error.attempts,
         });
       }
     });
@@ -116,15 +116,11 @@ const LoginContainer = () => {
             onKeyDown={handleKeyDown}
           />
           <div className={styles.errorBlock}>
-            {
-              authError?.response?.data?.error && (
-                <p>{t('Wrong password or email')}</p>
-              )
-            }
+            {authError}
           </div>
           <Delimiter />
           <div className={styles.buttons}>
-            <StyledCheckbox label={t('Remember me')} onChange={() => null} />
+            <StyledCheckbox label={t('Remember me')} onChange={(item, rememberValue) => setRemember(rememberValue)} />
             <Button onClick={handleLogin} size='medium' loading={isLoading}>
               {t('Login')}
             </Button>

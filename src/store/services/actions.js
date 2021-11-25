@@ -15,18 +15,23 @@ export const getCompanyInfo = (token) => ({
   },
 });
 
-export const confirmPassword = ({
-  token, password, email,
-}) => ({
+export const getInviteInfo = (token) => ({
+  type: GET_INFO,
+  request: {
+    method: 'GET',
+    url: `/invite/find/${token}`,
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
+export const confirmPassword = (data) => ({
   type: CONFIRM_PASSWORD,
   request: {
     method: 'POST',
-    url: '/password/reset',
-    data: {
-      email,
-      password,
-      token,
-    },
+    url: '/invite/reset',
+    data,
   },
   meta: {
     thunk: true,

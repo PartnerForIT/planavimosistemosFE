@@ -55,8 +55,8 @@ const TextWithSign = ({ label }) => (
 );
 
 const profitabilityColumns = [
-  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 
@@ -295,10 +295,10 @@ export default () => {
                 //   profit: 130,
                 // },
                 columns: [
-                  ...data.columns.slice(0, 4),
+                  ...generatedReport.employee_columns.slice(0, 4),
                   {},
                   {},
-                  ...data.columns.slice(4),
+                  ...generatedReport.employee_columns.slice(4),
                   ...profitabilityColumns,
                 ]
                   .filter(({ field }) => {
@@ -421,6 +421,13 @@ export default () => {
 
   const downloadReport = (action, ext) => {
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
+
+    const { startDate, endDate } = dateRange;
+    const placesArr = checkedPlaces.map((place) => place.id);
+    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     if (selectedReport) {
       let filter = '';
       if (selectedReport.places?.length && !selectedReport.jobTypes?.length && !selectedReport.employees?.length) {
@@ -434,11 +441,12 @@ export default () => {
       }
 
       const requestObj = {
-        'date-start': selectedReport.startDate,
-        'date-end': selectedReport.endDate,
-        places: selectedReport.places?.length > 0 ? `[${selectedReport.places.join(',')}]` : '[]',
-        jobTypes: selectedReport.jobTypes?.length > 0 ? `[${selectedReport.jobTypes.join(',')}]` : undefined,
-        employees: selectedReport.employees?.length > 0 ? `[${selectedReport.employees.join(',')}]` : undefined,
+        startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
+        jobTypesArr,
+        employeesArr,
+        placesArr,
+        skillsArr,
         filter,
         ...showCostsInReport(),
       };
@@ -596,7 +604,6 @@ export default () => {
               </div>
             </Scrollbar>
           )}
-          {console.log('itemsArray', itemsArray)}
           <div
             className={mainContainerClasses}
             style={{ height: itemsArray.length > 0 ? 'calc(100vh - 210px)' : 'calc(100vh - 125px)' }}

@@ -23,7 +23,7 @@ import Checkbox from '../../components/Core/Checkbox/Checkbox2';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
 import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
-import { resourcesMock, photo } from '../../const/mock';
+import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
 import {
@@ -77,7 +77,7 @@ export default () => {
     let colorType = 'bright';
     const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
-        return children.map((item, index) => {
+        return Object.values(children).map((item, index) => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
@@ -109,7 +109,7 @@ export default () => {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId && timeline === TIMELINE.DAY && customTime,
+            eventDurationEditable: !!item.employeeId,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
@@ -202,7 +202,9 @@ export default () => {
     } else if (props.employeeId) {
       classes.push('fc-datagrid-cell-employee');
     }
-
+    if (props.lastJobType) {
+      classes.push('fc-datagrid-cell-last-job-type');
+    }
     return classes;
   };
   const handleEditShift = (shiftId) => {
@@ -263,12 +265,13 @@ export default () => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
+    let placeId;
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
-      [shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(shiftId).extendedProps;
-      withMenu = shiftInfo.custom_time;
+      [placeId,shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(placeId+'-'+shiftId).extendedProps;
+      withMenu = true;
       employeeName = resourceInfo.title;
     }
 
@@ -285,7 +288,7 @@ export default () => {
         oldEmployee={event.extendedProps.old_employee}
         end={event.end}
         viewType={view.type}
-        photo={photo || resourceInfo.extendedProps.photo}
+        photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
@@ -372,7 +375,7 @@ export default () => {
     resizeObserverRef.current = new ResizeObserver((item) => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
-    }).observe(container[0], { box : 'border-box' });
+    }).observe(container[0], { box: 'border-box' });
   };
 
   useEffect(() => {
@@ -479,7 +482,7 @@ export default () => {
               {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
-                    resources={schedule.resources || resourcesMock}
+                    resources={Object.values(schedule.resources) || resourcesMock}
                     events={schedule.events}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}

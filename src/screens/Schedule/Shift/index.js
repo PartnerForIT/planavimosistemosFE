@@ -116,7 +116,7 @@ export default () => {
   const [shiftName, setShiftName] = useState('');
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
   const [startShiftFrom, setStartShiftFrom] = useState(moment());
-  const [customWorkingTime, setCustomWorkingTime] = useState(false);
+  const [customWorkingTime, setCustomWorkingTime] = useState(true);
   const [saveChanges, setSaveChanges] = useState('');
   const places = useSelector(placesSelector);
   const workTime = useSelector(settingWorkTime);
@@ -162,7 +162,36 @@ export default () => {
         }, {});
       let data;
       if (shift.shift_info.custom_time) {
-        data = parseEvents(shift.events);
+        data = new Array(shift.shift_info.week_count).fill().reduce((acc, _, indexWeek) => {
+          acc[indexWeek] = shift.resources.reduce((accJ, item) => {
+            item.children.forEach((child) => {
+              accJ.push({
+                resourceId: child.id,
+                data: weekMock.map((dayOfWeek, indexDay) => {
+                  const foundItem = shift.shift_info.defaultTime[indexWeek]
+                    .find((itemJ) => (itemJ.day_of_week === (dayOfWeek.id - 1)));
+
+                  const day = {
+                    id: `defaultWorkingTime-${indexDay}`,
+                    time: { day: indexDay },
+                  };
+
+                  if (foundItem) {
+                    day.time.start = foundItem.start;
+                    day.time.end = foundItem.end;
+                  } else {
+                    day.time.start = '8:00';
+                    day.time.end = '17:00';
+                  }
+                  return day;
+                }),
+              });
+            });
+
+            return accJ;
+          }, []);
+          return acc;
+        }, {});
       } else {
         data = new Array(shift.shift_info.week_count).fill().reduce((acc, _, indexWeek) => {
           acc[indexWeek] = shift.resources.reduce((accJ, item) => {
@@ -520,7 +549,7 @@ export default () => {
           <Table
             ref={tableRef}
             numberOfWeeks={numberOfWeeks}
-            customWorkingTime={customWorkingTime}
+            customWorkingTime
             workTime={workTime}
             allJobTypes={allJobTypes}
             employees={employees}
