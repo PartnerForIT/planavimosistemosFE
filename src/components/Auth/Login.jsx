@@ -12,13 +12,19 @@ import Logo from '../Logo';
 import styles from './Login.module.scss';
 import Input from '../Core/Input/Input';
 import Button from '../Core/Button/Button';
-import { login } from '../../store/auth/actions';
+import { authCheck, login } from '../../store/auth/actions';
 import routes from '../../config/routes';
-import { authErrorSelector, isLoadingSelector } from '../../store/auth/selectors';
+import {
+  authErrorSelector,
+  isLoadingSelector,
+} from '../../store/auth/selectors';
+import Progress from '../Core/Progress';
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -26,18 +32,34 @@ const LoginContainer = () => {
   const isLoading = useSelector(isLoadingSelector);
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const roleId = user.role_id;
-      history.push(roleId === 1 ? routes.ORG_LIST : `${user.company_id}/settings/`);
+      dispatch(authCheck())
+        .then((data) => {
+          const {
+            role_id: roleId,
+            company_id: companyId,
+          } = data.data.user;
+          history.push(roleId === 1 ? routes.ORG_LIST : `${companyId}/settings/`);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = () => {
-    dispatch(login(email, password)).then((data) => {
-      const roleId = data.data.user.role_id;
-      // eslint-disable-next-line no-unused-expressions
-      history.push(roleId === 1 ? routes.ORG_LIST : `${data.data.user.company_id}/settings/`);
+    dispatch(login(email, password, remember)).then((data) => {
+      const {
+        role_id: roleId,
+        company_id: companyId,
+      } = data.data.user;
+
+      if (roleId === 1) {
+        history.push(routes.ORG_LIST);
+      } else {
+        history.push(`/${companyId}/settings`);
+      }
     }).catch(({ error }) => {
       if (error.response.data.status === 423) {
         history.push('/locked', {
@@ -54,6 +76,14 @@ const LoginContainer = () => {
   };
 
   const Delimiter = () => (<div className={styles.delimiter} />);
+
+  if (loading) {
+    return (
+      <div className={styles.porgressBlock}>
+        <Progress />
+      </div>
+    );
+  }
 
   return (
     <BackgroundWrapper className={styles.container}>
@@ -86,15 +116,11 @@ const LoginContainer = () => {
             onKeyDown={handleKeyDown}
           />
           <div className={styles.errorBlock}>
-            {
-              authError?.response?.data?.error && (
-                <p>{t('Wrong password or email')}</p>
-              )
-            }
+            {authError}
           </div>
           <Delimiter />
           <div className={styles.buttons}>
-            <StyledCheckbox label={t('Remember me')} onChange={() => null} />
+            <StyledCheckbox label={t('Remember me')} onChange={(item, rememberValue) => setRemember(rememberValue)} />
             <Button onClick={handleLogin} size='medium' loading={isLoading}>
               {t('Login')}
             </Button>

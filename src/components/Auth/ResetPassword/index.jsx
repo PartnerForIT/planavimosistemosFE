@@ -18,6 +18,9 @@ import Input from '../../Core/Input/Input';
 import LockLoginIcon from '../../Icons/LockLoginIcon';
 import Logo from '../../Logo';
 import classes from './ResetPassword.module.scss';
+import Page404 from '../../404/index';
+import { login } from '../../../store/auth/actions';
+import routes from '../../../config/routes';
 
 export default () => {
   const [values, setValues] = useState({
@@ -67,6 +70,7 @@ export default () => {
     dispatch(getCompanyInfo(token));
   }, [dispatch, token]);
   useEffect(() => {
+    if (values.password !== values.repeatPassword) { setMatchError(true); } else { setMatchError(false); }
     if (values.password) {
       const { password: err } = passwordValidator({
         password: values.password, minLength, numbers, specialChars, uppercase,
@@ -77,10 +81,10 @@ export default () => {
         setError(null);
       }
     }
-  }, [minLength, numbers, specialChars, uppercase, values.password]);
+  }, [minLength, numbers, specialChars, uppercase, values.password, values.repeatPassword]);
 
-  const onSubmit = () => {
-    dispatch(setNewPassword({
+  const onSubmit = async () => {
+    await dispatch(setNewPassword({
       email,
       password_confirmation: values.repeatPassword,
       password: values.password,
@@ -88,11 +92,23 @@ export default () => {
     }))
       .then(({ data }) => {
         localStorage.setItem('token', data.access_token);
-        history.push('/');
       })
       .catch((e) => console.log(e));
+    await dispatch(login(email, values.password, false)).then((data) => {
+      const {
+        role_id: roleId,
+        company_id: companyId,
+      } = data.data.user;
+      if (roleId === 1) {
+        history.push(routes.ORG_LIST);
+      } else {
+        history.push(`/${companyId}/settings`);
+      }
+    });
   };
-
+  if (!Object.keys(security).length && !loading) {
+    return <Page404 />;
+  }
   return (
     <BackgroundWrapper className={classes.root}>
       <Card className={classes.card}>

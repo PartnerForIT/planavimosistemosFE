@@ -2,7 +2,7 @@ import {
   LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN,
 } from './types';
 
-export const login = (email, password) => ({
+export const login = (email, password, remember) => ({
   type: LOGIN,
   request: {
     method: 'POST',
@@ -10,6 +10,7 @@ export const login = (email, password) => ({
     data: {
       email,
       password,
+      remember,
       device: 'Web',
     },
   },

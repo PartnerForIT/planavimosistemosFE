@@ -29,7 +29,7 @@ export const reducer = (state = initialState, action) => {
 
     case error(LOGIN):
       return {
-        ...state, loading: false, error: action.error, isAuthorized: false,
+        ...state, loading: false, error: action.error.response.data.message, isAuthorized: false,
       };
 
     case LOGIN_CHECK:
