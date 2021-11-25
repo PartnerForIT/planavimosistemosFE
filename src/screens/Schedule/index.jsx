@@ -57,7 +57,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  // const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({ employers: [] });
   const [isOnlyWorkingDays, setIsOnlyWorkingDays] = useState(false);
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -72,9 +72,35 @@ export default () => {
 
   const permissions = usePermissions(permissionsConfig);
 
+  const filteringResource = (data) => {
+    if (schedule?.resources) {
+      const a = schedule;
+      a.resources.map((i) => {
+        i.children.map((j) => {
+          j.children.map((k) => {
+            k.children.map((l) => {
+              let jjj=false;
+              data.employers.map((it) => {
+                if(it.id === l.employeeId){
+                  jjj=true;
+                } });
+              if(!jjj){
+                l = {};
+                console.log(l);
+              }
+            });
+          });
+        });
+      });
+      console.log(a);
+      return a.resources;
+    }
+  };
+
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
+    filteringResource(filter);
     const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
         return Object.values(children).map((item, index) => {
@@ -128,14 +154,17 @@ export default () => {
       return [];
     };
 
+    if(filter.employers){
+      return updateChildren(filteringResource(filter))
+    }
+
     if (schedule?.resources) {
       return updateChildren(schedule.resources);
     }
 
     // schedule.resources
     return schedule?.resources;
-  }, [schedule?.resources]);
-
+  }, [filter, schedule?.resources]);
   // const onSkillsSelectChange = (selectedSkills) => {
   //   setFilter((prevState) => ({
   //     ...prevState,
@@ -145,13 +174,9 @@ export default () => {
   const onJobTypeSelectFilter = () => {
     // sendRequest({ skills: checkedSkills.map((item) => item.id) });
   };
-  // const onEmployeesSelectChange = (selectedEmployees) => {
-  //   console.log('selectedEmployees', selectedEmployees);
-  //   setFilter((prevState) => ({
-  //     ...prevState,
-  //     employees: selectedEmployees,
-  //   }));
-  // };
+  const onEmployeesSelectChange = (selectedEmployees) => {
+    console.log('selectedEmployees', selectedEmployees);
+  };
   const handleGetSchedule = ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
     if (nextTimeline === TIMELINE.WEEK) {
@@ -164,12 +189,12 @@ export default () => {
       fromDate: nextFromDate.format('YYYY-MM-DD'),
     }));
   };
-  const onEmployeesSelectFilter = () => {
-    // sendRequest({
-    //   employees: checkedEmployees
-    //       .map((item) => item.id)
-    //       .filter((item) => typeof item !== 'string'),
-    // });
+  const onEmployeesSelectFilter = (emp) => {
+    const arrChecked = emp?.filter((i) => i.checked);
+    setFilter((prevState) => ({
+      ...prevState,
+      employers: arrChecked,
+    }));
   };
   const handleChangeTimeline = (value) => {
     setTimeline(value);
@@ -269,8 +294,8 @@ export default () => {
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
-      [placeId,shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(placeId+'-'+shiftId).extendedProps;
+      [placeId, shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
     }
@@ -444,7 +469,7 @@ export default () => {
             buttonLabel={t('Filter')}
             items={employees}
             onFilter={onEmployeesSelectFilter}
-            // onChange={onEmployeesSelectChange}
+            onChange={onEmployeesSelectChange}
             width='auto'
           />
           <ButtonGroupToggle

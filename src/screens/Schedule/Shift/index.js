@@ -358,7 +358,7 @@ export default () => {
       setShiftName(initialValues.shift_info.name);
       setColorShift(initialValues.shift_info.color_shift);
       setSelectedPlace(initialValues.shift_info.place.id);
-      setCustomWorkingTime(!!initialValues.shift_info.custom_time);
+      setCustomWorkingTime(true);
       setNumberOfWeeks(initialValues.shift_info.week_count);
     }
   }, [initialValues]);
