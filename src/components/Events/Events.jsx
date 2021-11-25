@@ -139,7 +139,7 @@ const Events = () => {
     const formatDate = getDateFormat({
       'YY.MM.DD': 'YYYY, MMMM, DD',
       'DD.MM.YY': 'DD, MMMM, YYYY',
-      'MM.DD.YY': 'MMM, DD, YYYY',
+      'MM.DD.YY': 'MMMM, DD, YYYY',
     });
     const formatDate2 = getDateFormat({
       'YY.MM.DD': 'YYYY, MMMM, DD',
