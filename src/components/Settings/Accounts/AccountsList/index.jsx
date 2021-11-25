@@ -324,7 +324,7 @@ export default function AccountsList() {
   const employees = useMemo(() => employeesAll.map((empl) => {
     const {
       // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, groups, skills, subgroups, permissions,
+      name, surname, status, groups, skills, subgroups, role,
       created_at: createdAt,
       updated_at: updatedAt,
       place,
@@ -332,11 +332,11 @@ export default function AccountsList() {
     } = empl;
     return {
       ...rest,
-      groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
-      subgroup: subgroups?.[0]?.name ?? '',
-      skills: skills?.[0]?.name ?? '',
-      place: place?.[0]?.name ?? '',
-      role: permissions?.[0]?.account_roles?.name ?? '',
+      groups: groups,
+      subgroup: subgroups,
+      skills: skills,
+      place: place,
+      role: role,
       created_at: createdAt ? moment(createdAt).format(`${dateFormat} HH:mm`) : '',
       updated_at: updatedAt ? moment(updatedAt).format(`${dateFormat} HH:mm`) : '',
       name: `${name} ${surname}`,

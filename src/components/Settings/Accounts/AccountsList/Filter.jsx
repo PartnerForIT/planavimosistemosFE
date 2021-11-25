@@ -84,7 +84,7 @@ export default function Filter({
         && (
         <Button
           danger
-          onClick={() => null}
+          onClick={() => changeUserStatus('ublock')}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Unblock')}

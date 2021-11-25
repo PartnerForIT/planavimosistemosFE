@@ -38,7 +38,7 @@ export default () => {
         <Logo />
         <div className={classes.description}>
           <p>
-            {`${t('Unblock Account text')}:`}
+            {`${t('You have initiated unblock process for ')}:`}
           </p>
           <p className={classes.black}>
             {email}
