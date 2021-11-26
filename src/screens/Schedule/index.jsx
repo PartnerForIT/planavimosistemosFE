@@ -69,38 +69,31 @@ export default () => {
   const jobTypes = useSelector(jobTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const isLoading = useSelector(isLoadingSelector);
-
+  const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
 
   const filteringResource = (data) => {
+    console.log('schedule', schedule, filter);
     if (schedule?.resources) {
-      const a = schedule;
-      a.resources.map((i) => {
-        i.children.map((j) => {
-          j.children.map((k) => {
-            k.children.map((l) => {
-              let jjj=false;
-              data.employers.map((it) => {
-                if(it.id === l.employeeId){
-                  jjj=true;
-                } });
-              if(!jjj){
-                l = {};
-                console.log(l);
-              }
+      const a = schedule.resources.filter((i) => {
+        i.children.filter((j) => {
+          j.children.filter((k) => {
+            data.employers.map((it) => {
+              k.children = k.children.filter((l) => it.id === l.employeeId);
             });
+            return k.children.length;
           });
+          return j.children.length;
         });
+        return i.children.length;
       });
-      console.log(a);
-      return a.resources;
+      setFilterData(a);
     }
   };
 
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
-    filteringResource(filter);
     const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
       if (children) {
         return Object.values(children).map((item, index) => {
@@ -150,13 +143,8 @@ export default () => {
           return nextItem;
         });
       }
-
       return [];
     };
-
-    if(filter.employers){
-      return updateChildren(filteringResource(filter))
-    }
 
     if (schedule?.resources) {
       return updateChildren(schedule.resources);
@@ -164,7 +152,7 @@ export default () => {
 
     // schedule.resources
     return schedule?.resources;
-  }, [filter, schedule?.resources]);
+  }, [schedule?.resources]);
   // const onSkillsSelectChange = (selectedSkills) => {
   //   setFilter((prevState) => ({
   //     ...prevState,
@@ -196,6 +184,10 @@ export default () => {
       employers: arrChecked,
     }));
   };
+  useEffect(() => {
+    filteringResource(filter);
+  }, [filter]);
+  console.log(filterData);
   const handleChangeTimeline = (value) => {
     setTimeline(value);
     handleGetSchedule({ nextTimeline: value });
