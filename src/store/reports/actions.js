@@ -18,12 +18,12 @@ export const getReport = (companyId, data) => ({
   },
 });
 
-export const downloadExcel = (companyId, data) => ({
+export const downloadExcel = (companyId, data, source) => ({
   type: EXCEL,
   request: {
     method: 'POST',
-    url: `/company/${companyId}/reports/export/excel`,
-    params: {
+    url: `/company/${companyId}/${source}/export/excel`,
+    data: {
       ...data,
     },
     responseType: 'application/json',
@@ -33,11 +33,11 @@ export const downloadExcel = (companyId, data) => ({
   },
 });
 
-export const downloadPdf = (companyId, data) => ({
+export const downloadPdf = (companyId, data,source) => ({
   type: PDF,
   request: {
     method: 'POST',
-    url: `/company/${companyId}/reports/export/pdf`,
+    url: `/company/${companyId}/${source}/export/pdf`,
     data: {
       ...data,
     },

@@ -451,7 +451,7 @@ export default () => {
         ...showCostsInReport(),
       };
 
-      dispatch(action(companyId, requestObj)).then(({ data }) => {
+      dispatch(action(companyId, requestObj,'reports')).then(({ data }) => {
         const link = document.createElement('a');
         link.setAttribute('download',
           `Report_${format(dateToUCT(selectedReport.startDate),
