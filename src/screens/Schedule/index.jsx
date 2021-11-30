@@ -46,6 +46,13 @@ import ResourceItem from './ResourceItem';
 import Background from './Background';
 import Footer from './Footer';
 import './Schedule.scss';
+import {
+  scheduleSelector as scheduleSettingSelector,
+} from '../../store/settings/selectors';
+import {
+  getSchedule as getscheduleSetting ,
+} from '../../store/settings/actions';
+
 
 const permissionsConfig = [
   {
@@ -73,7 +80,7 @@ export default () => {
   const [filterData, setFilterData] = useState({});
   const [shifts, setShifts] = useState([]);
   const permissions = usePermissions(permissionsConfig);
-
+  const scheduleSettings=useSelector(scheduleSettingSelector);
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
@@ -313,7 +320,7 @@ export default () => {
       withMenu = true;
       employeeName = resourceInfo.title;
     }
-
+    console.log(event);
     return (
       <EventContent
         id={event.id}
@@ -420,6 +427,7 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
+    dispatch(getscheduleSetting(companyId));
     dispatch(getSchedule({
       companyId,
       timeline,
@@ -551,6 +559,8 @@ export default () => {
                           snapDuration: '6:00',
                         },
                       }}
+                      slotMinTime={scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00'}
+                      slotMaxTime='24:00:00'
                       resourceOrder='id'
                       headerToolbar={false}
                       aspectRatio={1}
