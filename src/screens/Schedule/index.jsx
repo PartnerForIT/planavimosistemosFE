@@ -10,6 +10,7 @@ import momentPlugin from '@fullcalendar/moment';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import cloneDeep from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
@@ -45,6 +46,13 @@ import ResourceItem from './ResourceItem';
 import Background from './Background';
 import Footer from './Footer';
 import './Schedule.scss';
+import {
+  scheduleSelector as scheduleSettingSelector,
+} from '../../store/settings/selectors';
+import {
+  getSchedule as getscheduleSetting ,
+} from '../../store/settings/actions';
+
 
 const permissionsConfig = [
   {
@@ -57,7 +65,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  // const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({ employers: [],place:[] });
   const [isOnlyWorkingDays, setIsOnlyWorkingDays] = useState(false);
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -69,9 +77,10 @@ export default () => {
   const jobTypes = useSelector(jobTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const isLoading = useSelector(isLoadingSelector);
-
+  const [filterData, setFilterData] = useState({});
+  const [shifts, setShifts] = useState([]);
   const permissions = usePermissions(permissionsConfig);
-
+  const scheduleSettings=useSelector(scheduleSettingSelector);
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
@@ -124,34 +133,59 @@ export default () => {
           return nextItem;
         });
       }
-
       return [];
     };
-
-    if (schedule?.resources) {
-      return updateChildren(schedule.resources);
+    if (filterData[0]) {
+      return updateChildren(filterData);
+    }
+    else{
+      if (schedule?.resources) {
+        return updateChildren(schedule.resources);
+      }
     }
 
     // schedule.resources
     return schedule?.resources;
-  }, [schedule?.resources]);
+  }, [schedule?.resources,filterData]);
 
-  // const onSkillsSelectChange = (selectedSkills) => {
-  //   setFilter((prevState) => ({
-  //     ...prevState,
-  //     skills: selectedSkills,
-  //   }));
-  // };
-  const onJobTypeSelectFilter = () => {
-    // sendRequest({ skills: checkedSkills.map((item) => item.id) });
+  const filteringResource = (data) => {
+    if (schedule?.resources) {
+      dispatch(getSchedule({
+        companyId,
+        timeline,
+        fromDate: moment(new Date()).format('YYYY-MM-DD'),
+        firstLoading: true,
+      }));
+      const copyObject = cloneDeep(schedule.resources).__wrapped__;
+      const a = copyObject.filter((i) => {
+        i.children.filter((j) => {
+          j.children = j.children.filter((k) => {
+            let checkPlace = false;
+            data.place.map((placeEL) => {
+              if (placeEL.id === k.job_type_id) {
+                checkPlace = true;
+              }
+            });
+            k.children = k.children.filter((it) => {
+              let checkEmployer = false;
+              data.employers.map((employer) => {
+                if (employer.id === it.employeeId) {
+                  checkEmployer = true;
+                }
+              });
+              if (!data.employers.length){return true}
+              return checkEmployer;
+            });
+            return checkPlace;
+          });
+          return j.children.length;
+        });
+        return i.children.length;
+      });
+      setFilterData(a);
+    }
   };
-  // const onEmployeesSelectChange = (selectedEmployees) => {
-  //   console.log('selectedEmployees', selectedEmployees);
-  //   setFilter((prevState) => ({
-  //     ...prevState,
-  //     employees: selectedEmployees,
-  //   }));
-  // };
+
   const handleGetSchedule = ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
     if (nextTimeline === TIMELINE.WEEK) {
@@ -164,13 +198,25 @@ export default () => {
       fromDate: nextFromDate.format('YYYY-MM-DD'),
     }));
   };
-  const onEmployeesSelectFilter = () => {
-    // sendRequest({
-    //   employees: checkedEmployees
-    //       .map((item) => item.id)
-    //       .filter((item) => typeof item !== 'string'),
-    // });
+
+  const onPlaceSelectFilter = (place) => {
+    const arrChecked = place?.filter((i) => i.checked);
+    setFilter((prevState) => ({
+      ...prevState,
+      place: arrChecked,
+    }));
   };
+
+  const onEmployeesSelectFilter = (emp) => {
+    const arrChecked = emp?.filter((i) => i.checked);
+    setFilter((prevState) => ({
+      ...prevState,
+      employers: arrChecked,
+    }));
+  };
+  useEffect(() => {
+    filteringResource(filter);
+  }, [filter]);
   const handleChangeTimeline = (value) => {
     setTimeline(value);
     handleGetSchedule({ nextTimeline: value });
@@ -269,12 +315,12 @@ export default () => {
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
-      [placeId,shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(placeId+'-'+shiftId).extendedProps;
+      [placeId, shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
     }
-
+    console.log(event);
     return (
       <EventContent
         id={event.id}
@@ -381,6 +427,7 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
+    dispatch(getscheduleSetting(companyId));
     dispatch(getSchedule({
       companyId,
       timeline,
@@ -427,7 +474,7 @@ export default () => {
             placeholder={t('All job types')}
             buttonLabel={t('Filter')}
             items={jobTypes}
-            onFilter={onJobTypeSelectFilter}
+            onFilter={onPlaceSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />
@@ -444,7 +491,6 @@ export default () => {
             buttonLabel={t('Filter')}
             items={employees}
             onFilter={onEmployeesSelectFilter}
-            // onChange={onEmployeesSelectChange}
             width='auto'
           />
           <ButtonGroupToggle
@@ -513,6 +559,8 @@ export default () => {
                           snapDuration: '6:00',
                         },
                       }}
+                      slotMinTime={scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00'}
+                      slotMaxTime='24:00:00'
                       resourceOrder='id'
                       headerToolbar={false}
                       aspectRatio={1}
