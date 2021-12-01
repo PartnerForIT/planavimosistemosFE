@@ -180,7 +180,10 @@ export default () => {
         });
         return i.children.length;
       });
-      setFilterData(a);
+      if (!data.employers.length && !data.place.length) {
+        setFilterData(a);
+      }
+      setFilterData({});
     }
   };
 
@@ -417,13 +420,13 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
-    dispatch(getscheduleSetting(companyId));
     dispatch(getSchedule({
       companyId,
       timeline,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
     }));
+    dispatch(getscheduleSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
 
     return () => {
