@@ -126,7 +126,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
         // eslint-disable-next-line no-shadow
-        photo, groups, subgroups,
+        photo,avatar, groups, subgroups,
       } = employee;
       setUser({
         email,
@@ -138,6 +138,7 @@ export default function EditAccount({
         cost,
         charge,
         photo,
+        avatar,
         group: Array.isArray(groups) && groups.length ? groups[0]?.id : subgroups[0]?.parent_group_id ?? '',
         subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
@@ -320,7 +321,7 @@ export default function EditAccount({
             : (
               <>
                 <div className={style.avatarBlock}>
-                  <img src={user.photo ?? avatar} className={styles.large} alt='Account logo' />
+                  <img src={user.photo ?? (user.avatar ?? avatar)} className={styles.large} alt='Account logo' />
                   <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
                 </div>
 
