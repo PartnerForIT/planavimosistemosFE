@@ -56,7 +56,6 @@ export default ({
           <div className={style.labelText}>{t('Cost, Hourly rate')}</div>
           <Input
             value={journalData.hourly_cost}
-            type='number'
             min='1'
             width={40}
             name='hourly_cost'
@@ -77,7 +76,6 @@ export default ({
           <div className={style.labelText}>{t('Charge, Hourly rate')}</div>
           <Input
             value={journalData.hourly_charge}
-            type='number'
             min='1'
             width={40}
             name='hourly_charge'

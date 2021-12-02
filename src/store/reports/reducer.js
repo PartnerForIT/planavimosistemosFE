@@ -7,7 +7,7 @@ import {
 const initialState = {
   report: [],
   columns: [],
-  totalDuration: null,
+  total: null,
   places: [],
   employees: [],
   jobTypes: [],
@@ -25,7 +25,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         report: action.data,
-        totalDuration: action.data.totalDuration,
+        total: action.data.total,
         columns: action.data.columns,
         loading: false,
       };

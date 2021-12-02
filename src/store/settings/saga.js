@@ -273,7 +273,7 @@ function* changeSecurityCompany(action) {
 function* loadSettingsSkills(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/specialities`, token());
-    yield put(loadSkillsSuccess(data));
+    yield put(loadSkillsSuccess(data.skills));
   } catch (e) {
     console.log(e);
   }
