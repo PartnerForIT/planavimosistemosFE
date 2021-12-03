@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Dialog from '../index';
 import style from './CreateAccount.module.scss';
 import FirstStep from './First';
 import SecondStep from './Second';
 import Third from './Third';
+import {errorPushEmployerSelector} from "../../../../store/settings/selectors";
+import {useSelector} from "react-redux";
 
 export default function CreateAccount({
   handleClose,
@@ -38,6 +40,8 @@ export default function CreateAccount({
   const stepUp = () => setStep((prevState) => (prevState < 3 ? prevState + 1 : prevState));
   const stepDown = () => setStep((prevState) => (prevState > 1 ? prevState - 1 : prevState));
 
+  const closeStat = useSelector(errorPushEmployerSelector);
+
   const close = () => {
     setUser(initialUser);
     setStep(1);
@@ -46,9 +50,12 @@ export default function CreateAccount({
 
   const create = (data) => {
     createAccount(data);
-    close();
   };
-
+  useEffect(() => {
+    if (closeStat === false) {
+      close();
+    }
+  }, [closeStat]);
   const handleInput = (e) => {
     const {
       name,

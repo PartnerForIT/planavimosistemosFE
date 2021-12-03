@@ -120,7 +120,7 @@ import {
   GET_SETTINGS_SCHEDULE,
   GET_SETTINGS_SCHEDULE_SUCCESS,
   GET_SETTINGS_SCHEDULE_ERROR,
-  POST_SETTINGS_SCHEDULE,
+  POST_SETTINGS_SCHEDULE, EMPLOYEE_DROP_STATUS,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -557,6 +557,10 @@ export const createEmployee = (companyId, userData) => ({
   type: CREATE_EMPLOYEE,
   companyId,
   userData,
+});
+
+export const dropStatusEmployer = () => ({
+  type: EMPLOYEE_DROP_STATUS,
 });
 
 export const createEmployeeError = (data) => ({

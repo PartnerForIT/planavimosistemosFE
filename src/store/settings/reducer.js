@@ -1,3 +1,4 @@
+import { success, error } from 'redux-saga-requests';
 import {
   GET_SETTINGS_COMPANY,
   GET_SETTINGS_COMPANY_SUCCESS,
@@ -96,7 +97,7 @@ import {
   POST_EVENT_SUCCESS,
   GET_SETTINGS_SCHEDULE,
   GET_SETTINGS_SCHEDULE_SUCCESS,
-  GET_SETTINGS_SCHEDULE_ERROR,
+  GET_SETTINGS_SCHEDULE_ERROR, EMPLOYEE_DROP_STATUS,
 } from './types';
 
 const initialState = {
@@ -133,6 +134,7 @@ const initialState = {
   events: [],
   schedule: {},
   scheduleLoading: false,
+  errorCreatingEmployer: undefined,
 };
 
 function filterdeleteHoliday(array, id) {
@@ -577,15 +579,30 @@ export const reducerOrganizationList = (state = initialState, action) => {
         snackbarType: '',
       };
 
-    case CREATE_EMPLOYEE:
+    case error(CREATE_EMPLOYEE):
+      console.log(action.data.response.data.message);
       return {
         ...state,
+        errorCreatingEmployer: true,
       };
 
+    case success(CREATE_EMPLOYEE):
+      console.log(action.data);
+      return {
+        ...state,
+        errorCreatingEmployer: false,
+      };
     case CREATE_EMPLOYEE_ERROR:
       return {
         ...state,
         error: action.data,
+      };
+
+    case EMPLOYEE_DROP_STATUS:
+      console.log('222')
+      return {
+        ...state,
+        errorCreatingEmployer: undefined,
       };
 
     case LOAD_PERMISSIONS:

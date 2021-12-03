@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 import classnames from 'classnames';
 
+import { useDispatch } from 'react-redux';
+import { dropStatusEmployer } from 'store/settings/actions';
 import style from './CreateAccount.module.scss';
 import PlaceholderAvatar from '../../../Icons/PlaceholderAvatar';
 import Button from '../../Button/Button';
@@ -31,6 +33,7 @@ const FirstStep = ({
   const [errors, setErrors] = useState({});
 
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (file) {
@@ -40,7 +43,7 @@ const FirstStep = ({
 
   const nextWithValidate = () => {
     const { email } = user;
-
+    dispatch(dropStatusEmployer());
     const setError = ({
       name,
       message,

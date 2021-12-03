@@ -14,6 +14,8 @@ import Input from '../../Input/Input';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import passwordGenerator from '../../../Helpers/passwordGenerator';
 import passwordValidator from '../../../Helpers/passwordValidator';
+import {errorPushEmployerSelector} from "../../../../store/settings/selectors";
+import {useSelector} from "react-redux";
 
 const BlueRadio = withStyles({
   root: {
@@ -46,6 +48,7 @@ function Third({
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(false);
 
+  const errorEmployer = useSelector(errorPushEmployerSelector);
   const generatePass = () => {
     const password = passwordGenerator({
       length: min_password_length ?? 8,
@@ -143,13 +146,15 @@ function Third({
         message: t('Password is required'),
       });
     }
+    if (!_.isEmpty(user) && ready) {
+      create(user);
+    }
   };
-
   useEffect(() => {
     if (!_.isEmpty(user) && ready) {
       create(user);
     }
-  }, [create, ready, user]);
+  }, [ready, user]);
 
   return (
     <>
@@ -238,7 +243,7 @@ function Third({
           size='big'
           green
           inverse
-          disabled={(!firstUser && simpleInvitation) ? !(user.password && _.isEmpty(errors.password)) : false}
+          disabled={((!firstUser && simpleInvitation) ? !(user.password && _.isEmpty(errors.password)) : false) || errorEmployer}
         >
           {t('Create and Invite')}
         </Button>
