@@ -276,8 +276,7 @@ export default () => {
 
         const mappedReport = {
           ...generatedReport,
-          description: `${moment(generatedReport.startDate).format(formatDate)}
-           - ${moment(generatedReport.endDate).format(formatDate)}`,
+          description: `${moment(generatedReport.startDate).format(formatDate)} - ${moment(generatedReport.endDate).format(formatDate)}`,
           report: generatedReport.report.map(({ items, ...rest }) => ({
             ...rest,
             items: items.map(({ data, ...other }) => ({
@@ -331,10 +330,7 @@ export default () => {
                   };
                 }),
               },
-            })),
-            cost: reportsCost,
-            sallary: reportsSalary,
-            profit: reportsProfit,
+            }))
           })),
         };
 
@@ -451,7 +447,7 @@ export default () => {
         ...showCostsInReport(),
       };
 
-      dispatch(action(companyId, requestObj)).then(({ data }) => {
+      dispatch(action(companyId, requestObj,'reports')).then(({ data }) => {
         const link = document.createElement('a');
         link.setAttribute('download',
           `Report_${format(dateToUCT(selectedReport.startDate),
@@ -620,7 +616,7 @@ export default () => {
                     loading={loading}
                     onSort={sortHandler}
                     selectedItem={selectedItem}
-                    totalDuration={report.totalDuration}
+                    total={report.total}
                     setSelectedItem={rowSelectionHandler}
                     reports
                     downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}

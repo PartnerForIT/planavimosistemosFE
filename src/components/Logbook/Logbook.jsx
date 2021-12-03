@@ -75,8 +75,8 @@ const columns = [
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
-  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 const columnsWidth = {
@@ -464,18 +464,20 @@ export default () => {
   const downloadReport = (action, ext) => {
     const { startDate, endDate } = dateRange;
 
-    const checkedEmp = checkedEmployees.map((item) => item.id);
-    const checkedSk = checkedSkills.map((item) => item.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     const requestObj = {
-      'date-start': startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
-      'date-end': endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
       // places: null,
       // jobTypes: null,
-      employees: checkedEmp.length ? checkedEmp : null,
-      skills: checkedSk.length ? checkedSk : null,
+      employeesArr,
+      skillsArr,
+      columnsArray
     };
 
-    dispatch(action(companyId, requestObj)).then(({ data }) => {
+    dispatch(action(companyId, requestObj,'logbook')).then(({ data }) => {
       // eslint-disable-next-line no-shadow
       const { startDate, endDate } = dateRange;
       // Insert a link that allows the user to download the PDF file
