@@ -45,8 +45,8 @@ export default function DataTable({
   permissions = {},
   withCost,
   withProfit,
-  withSalary,
-  amount: { salary = 0, cost = 0, profit = 0 } = {},
+  withSallary,
+  amount: { sallary = 0, cost = 0, profit = 0 } = {},
   white = false,
 }) {
   const [tableData, setTableData] = useState(data);
@@ -352,7 +352,7 @@ export default function DataTable({
           )
         }
         {
-          (withSalary || (permissions.cost && permissions.profit && !!salary)) && (
+          (withSallary || (permissions.cost && permissions.profit && !!sallary)) && (
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amount={<TextWithSign label={total.sallary} />}
