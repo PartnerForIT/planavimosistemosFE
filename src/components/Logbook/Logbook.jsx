@@ -71,6 +71,7 @@ const columns = [
   { label: 'Employee', field: 'employee', checked: true },
   { label: 'Skill', field: 'skill', checked: true },
   { label: 'Place', field: 'place', checked: true },
+  { label: 'Shift', field: 'shift_name', checked: true},
   { label: 'Job Type', field: 'jobType', checked: true },
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
@@ -135,6 +136,10 @@ const permissionsConfig = [
     name: 'comments_photo',
     module: 'comments_photo',
   },
+  {
+    name: 'Shift_name',
+    module: 'shift_name',
+  }
 ];
 
 export default () => {
@@ -342,10 +347,12 @@ export default () => {
       if (!permissions.cost && column.field === 'cost') {
         return false;
       }
+      if (permissions.shift_name && column.field === 'shift_name') {
+        return false;
+      }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         return false;
       }
-
       return true;
     });
 
@@ -753,7 +760,7 @@ export default () => {
               <Button onClick={applyHandler}>{t('Apply')}</Button>
             </div>
           </header>
-          <Delimiter />
+          <Delimiter/>
           <DataTable
             data={itemsArray || []}
             columns={columnsArray || []}
