@@ -271,7 +271,7 @@ export default () => {
         const reportIndex = state.findIndex(({ id }) => id === reportId);
 
         let reportsCost = 0;
-        let reportsSalary = 0;
+        let reportsSallary = 0;
         let reportsProfit = 0;
 
         const mappedReport = {
@@ -315,7 +315,7 @@ export default () => {
                 items: data.items.map(({ profitability: prof, ...all }) => {
                   const { cost = 0, sallary = 0, profit = 0 } = prof ?? {};
                   reportsCost += cost;
-                  reportsSalary += sallary;
+                  reportsSallary += sallary;
                   reportsProfit += profit;
                   return {
                     ...all,
@@ -345,7 +345,7 @@ export default () => {
         }
 
         setTotalStat((prevState) => ({
-          sallary: prevState.sallary + reportsSalary,
+          sallary: prevState.sallary + reportsSallary,
           profit: prevState.profit + reportsProfit,
           cost: prevState.profit + reportsCost,
         }));
@@ -625,7 +625,7 @@ export default () => {
                     amount={totalStat}
                     withCost={permissions.cost && costState.show_costs}
                     withProfit={permissions.cost && permissions.profit && costState.show_profit}
-                    withSalary={permissions.cost && permissions.profit && costState.show_earnings}
+                    withSallary={permissions.cost && permissions.profit && costState.show_earnings}
                     white
                   />
                 ))

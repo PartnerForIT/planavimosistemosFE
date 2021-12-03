@@ -21,7 +21,7 @@ import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
 import {
   workTimeSelector,
-  totalDurationSelector,
+  totalSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import {
@@ -144,7 +144,7 @@ export default () => {
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
   const [columnsWidthArray, setColumnsWidthArray] = useState({});
-  const [totalDuration, setTotalDuration] = useState(null);
+  //const [total, setTotal] = useState(null);
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -169,7 +169,7 @@ export default () => {
   const wTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const { users: employees } = useSelector(employeesSelector);
-  const getTotalDuration = useSelector(totalDurationSelector);
+  const getTotal = useSelector(totalSelector);
   const selectSkills = useSelector(skillsSelector);
   const user = useSelector(userSelector);
   const journal = useSelector(JournalDataSelector);
@@ -178,26 +178,20 @@ export default () => {
 
   const [workTime, setWorkTime] = useState([]);
 
-  const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
+  const [total, setTotal] = useState({ sallary: 0, cost: 0, profit: 0 });
 
   useEffect(() => {
     const { cost: costEarning, profit: profitAccess } = permissions;
 
     setWorkTime(wTime.map((day) => {
       const { items } = day;
-      let cost = 0;
-      let charge = 0;
-      let profit = 0;
+      let cost = day.cost;
+      let charge = day.sallary;
+      let profit = day.profit;
 
       const newDay = {
         ...day,
         items: items.map(({ profitability = {}, ...rest }) => {
-          const { cost: itemCost, charge: itemSalary, profit: itemProfit } = profitability;
-
-          cost += itemCost;
-          charge += itemSalary;
-          profit += itemProfit;
-
           return {
             ...rest,
             ...profitability,
@@ -205,11 +199,7 @@ export default () => {
         }),
       };
 
-      setTotal(() => ({
-        salary: charge,
-        cost,
-        profit,
-      }));
+
 
       return {
         ...newDay,
@@ -324,9 +314,9 @@ export default () => {
         };
       }).filter(({ items }) => items.length));
       setColumnsWidthArray(columnsWidth);
-      setTotalDuration(getTotalDuration);
+      setTotal(getTotal);
     }
-  }, [workTime, getTotalDuration, sortStatus]);
+  }, [workTime, getTotal, sortStatus]);
 
   useEffect(() => {
     const allColumnsArray = columns.filter((column) => {
@@ -770,7 +760,7 @@ export default () => {
             totalItemsCount={workTime?.total}
             handlePagination={console.log}
             selectedItem={selectedItem}
-            totalDuration={totalDuration}
+            total={total}
             setSelectedItem={rowSelectionHandler}
             verticalOffset='200px'
             fieldIcons={icons}
