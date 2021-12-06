@@ -89,7 +89,15 @@ export default () => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
-
+          if (item.shiftId) {
+            item.count = item.count || 0;
+            item.children.map((i) => {
+              item.count = item.count + i.children.length;
+            });
+          }
+          if (item.job_type_id) {
+            item.count = item.children.length;
+          }
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
@@ -361,6 +369,7 @@ export default () => {
       photo,
       shiftId,
     } = resource.extendedProps;
+    console.log(resources,resource.extendedProps);
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
