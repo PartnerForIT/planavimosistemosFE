@@ -66,7 +66,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  const [filter, setFilter] = useState({ employers: [], place: [], shift:[], });
+  const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
@@ -134,7 +134,7 @@ export default () => {
       }
       return [];
     };
-    if (filterData[0] && (filter.employers.length || filter.place.length || filter.shift.length)) {
+    if (filterData[0] && (filter.employers.length || filter.place.length || filter.shiftType.length)) {
       return updateChildren(filterData);
     }
 
@@ -153,7 +153,7 @@ export default () => {
       const a = copyObject.filter((i) => {
         i.children=i.children.filter((j) => {
           let checkShift = false;
-          data.shift.map((shiftEl) => {
+          data.shiftType.map((shiftEl) => {
             if (shiftEl.id === j.shiftId) {
               checkShift = true;
             }
@@ -178,11 +178,12 @@ export default () => {
             if (!data.place.length) { return true; }
             return checkPlace;
           });
+          if (!data.shiftType.length) { return true; }
           return checkShift;
         });
-        return !!i.children.length;
+        return i.children.length;
       });
-      if (data.employers.length || data.place.length || data.shift.length) {
+      if (data.employers.length || data.place.length || data.shiftType.length) {
         setFilterData(a);
       }
       else{
@@ -206,6 +207,7 @@ export default () => {
 
   const onPlaceSelectFilter = (place) => {
     const arrChecked = place?.filter((i) => i.checked);
+    console.log('aaa',arrChecked);
     setFilter((prevState) => ({
       ...prevState,
       place: arrChecked,
@@ -214,10 +216,9 @@ export default () => {
 
   const onShiftSelectFilter = (shift) => {
     const arrChecked = shift?.filter((i) => i.checked);
-    console.log(arrChecked,'arrChecked');
     setFilter((prevState) => ({
       ...prevState,
-      shift: arrChecked,
+      shiftType: arrChecked,
     }));
   };
 

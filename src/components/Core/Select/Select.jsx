@@ -203,12 +203,6 @@ export default function CustomSelect({
                 }
               </Scrollbar>
             </CheckboxGroup>
-            <Button
-              fillWidth
-              onClick={() => onFilter(itemsArray)}
-            >
-              {buttonLabel}
-            </Button>
           </div>
         ) : null}
       </div>
