@@ -134,7 +134,7 @@ export default () => {
       }
       return [];
     };
-    if (filterData[0]) {
+    if (filterData[0] && (filter.employers.length || filter.place.length)) {
       return updateChildren(filterData);
     }
 

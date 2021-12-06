@@ -187,13 +187,13 @@ function* editSettingsWorkTime(action) {
     const { data: { week_start, week_start_time, work_days } } = action;
 
     // eslint-disable-next-line no-unused-vars
-    const { data } = yield call(axios.patch,
+    const { data } = yield call(axios.post,
       `${config.api.url}/company/${action.id}/work-time/update`, null,
       {
-        params: {
+        data: {
           week_start,
           week_start_time,
-          work_days: JSON.stringify(work_days),
+          work_days,
         },
         ...token(),
       });
@@ -273,7 +273,7 @@ function* changeSecurityCompany(action) {
 function* loadSettingsSkills(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/specialities`, token());
-    yield put(loadSkillsSuccess(data));
+    yield put(loadSkillsSuccess(data.skills));
   } catch (e) {
     console.log(e);
   }

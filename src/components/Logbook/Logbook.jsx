@@ -21,7 +21,7 @@ import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
 import {
   workTimeSelector,
-  totalDurationSelector,
+  totalSelector,
   workTimeLoadingSelector,
 } from '../../store/worktime/selectors';
 import {
@@ -71,12 +71,13 @@ const columns = [
   { label: 'Employee', field: 'employee', checked: true },
   { label: 'Skill', field: 'skill', checked: true },
   { label: 'Place', field: 'place', checked: true },
+  { label: 'Shift', field: 'shift_name', checked: true},
   { label: 'Job Type', field: 'jobType', checked: true },
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
-  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
+  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 const columnsWidth = {
@@ -135,6 +136,10 @@ const permissionsConfig = [
     name: 'comments_photo',
     module: 'comments_photo',
   },
+  {
+    name: 'Shift_name',
+    module: 'shift_name',
+  }
 ];
 
 export default () => {
@@ -144,7 +149,7 @@ export default () => {
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
   const [columnsWidthArray, setColumnsWidthArray] = useState({});
-  const [totalDuration, setTotalDuration] = useState(null);
+  //const [total, setTotal] = useState(null);
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -169,7 +174,7 @@ export default () => {
   const wTime = useSelector(workTimeSelector);
   const workTimeLoading = useSelector(workTimeLoadingSelector);
   const { users: employees } = useSelector(employeesSelector);
-  const getTotalDuration = useSelector(totalDurationSelector);
+  const getTotal = useSelector(totalSelector);
   const selectSkills = useSelector(skillsSelector);
   const user = useSelector(userSelector);
   const journal = useSelector(JournalDataSelector);
@@ -178,26 +183,20 @@ export default () => {
 
   const [workTime, setWorkTime] = useState([]);
 
-  const [total, setTotal] = useState({ salary: 0, cost: 0, profit: 0 });
+  const [total, setTotal] = useState({ sallary: 0, cost: 0, profit: 0 });
 
   useEffect(() => {
     const { cost: costEarning, profit: profitAccess } = permissions;
 
     setWorkTime(wTime.map((day) => {
       const { items } = day;
-      let cost = 0;
-      let charge = 0;
-      let profit = 0;
+      let cost = day.cost;
+      let charge = day.sallary;
+      let profit = day.profit;
 
       const newDay = {
         ...day,
         items: items.map(({ profitability = {}, ...rest }) => {
-          const { cost: itemCost, charge: itemSalary, profit: itemProfit } = profitability;
-
-          cost += itemCost;
-          charge += itemSalary;
-          profit += itemProfit;
-
           return {
             ...rest,
             ...profitability,
@@ -205,11 +204,7 @@ export default () => {
         }),
       };
 
-      setTotal(() => ({
-        salary: charge,
-        cost,
-        profit,
-      }));
+
 
       return {
         ...newDay,
@@ -282,12 +277,16 @@ export default () => {
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
+
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     dispatch(getWorkTime(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
       search,
-      employees: checkedEmployees.map((item) => item.id),
-      skills: checkedSkills.map((item) => item.id),
+      employeesArr,
+      skillsArr,
       ...props,
     })).then(() => {
       setCheckedItems([]);
@@ -324,9 +323,9 @@ export default () => {
         };
       }).filter(({ items }) => items.length));
       setColumnsWidthArray(columnsWidth);
-      setTotalDuration(getTotalDuration);
+      setTotal(getTotal);
     }
-  }, [workTime, getTotalDuration, sortStatus]);
+  }, [workTime, getTotal, sortStatus]);
 
   useEffect(() => {
     const allColumnsArray = columns.filter((column) => {
@@ -342,10 +341,12 @@ export default () => {
       if (!permissions.cost && column.field === 'cost') {
         return false;
       }
+      if (permissions.shift_name && column.field === 'shift_name') {
+        return false;
+      }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         return false;
       }
-
       return true;
     });
 
@@ -464,18 +465,20 @@ export default () => {
   const downloadReport = (action, ext) => {
     const { startDate, endDate } = dateRange;
 
-    const checkedEmp = checkedEmployees.map((item) => item.id);
-    const checkedSk = checkedSkills.map((item) => item.id);
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     const requestObj = {
-      'date-start': startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
-      'date-end': endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
+      endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
       // places: null,
       // jobTypes: null,
-      employees: checkedEmp.length ? checkedEmp : null,
-      skills: checkedSk.length ? checkedSk : null,
+      employeesArr,
+      skillsArr,
+      columnsArray
     };
 
-    dispatch(action(companyId, requestObj)).then(({ data }) => {
+    dispatch(action(companyId, requestObj,'logbook')).then(({ data }) => {
       // eslint-disable-next-line no-shadow
       const { startDate, endDate } = dateRange;
       // Insert a link that allows the user to download the PDF file
@@ -751,7 +754,7 @@ export default () => {
               <Button onClick={applyHandler}>{t('Apply')}</Button>
             </div>
           </header>
-          <Delimiter />
+          <Delimiter/>
           <DataTable
             data={itemsArray || []}
             columns={columnsArray || []}
@@ -768,7 +771,7 @@ export default () => {
             totalItemsCount={workTime?.total}
             handlePagination={console.log}
             selectedItem={selectedItem}
-            totalDuration={totalDuration}
+            total={total}
             setSelectedItem={rowSelectionHandler}
             verticalOffset='200px'
             fieldIcons={icons}

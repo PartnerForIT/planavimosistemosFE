@@ -69,7 +69,7 @@ export default function Journal() {
   const [journalData, setJournalData] = useState({
     hourly_charge: '',
     hourly_cost: '',
-    show_earned_salary: false,
+    show_earned_sallary: false,
     merge_entries: false,
     profitability: false,
     approve_flow: false,
@@ -91,7 +91,7 @@ export default function Journal() {
       setJournalData({
         hourly_charge: journal.hourly_charge ? journal.hourly_charge : '',
         hourly_cost: journal.hourly_cost ? journal.hourly_cost : '',
-        show_earned_salary: journal.show_earned_salary !== 0,
+        show_earned_sallary: journal.show_earned_sallary !== 0,
         merge_entries: journal.merge_entries !== 0,
         profitability: journal.profitability !== 0,
         approve_flow: journal.approve_flow !== 0,
@@ -110,7 +110,7 @@ export default function Journal() {
     const data = {
       hourly_charge: payload.hourly_charge,
       hourly_cost: payload.hourly_cost,
-      show_earned_salary: payload.show_earned_salary ? 1 : 0,
+      show_earned_sallary: payload.show_earned_sallary ? 1 : 0,
       merge_entries: payload.merge_entries ? 1 : 0,
       profitability: payload.profitability ? 1 : 0,
       approve_flow: payload.approve_flow ? 1 : 0,

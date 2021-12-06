@@ -33,7 +33,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         workTime: action.data.work_time,
-        totalDuration: action.data.total_duration,
+        total: action.data.total,
         columns: action.data.columns,
         columnsWidth: action.data.columns_width,
         loading: false,

@@ -38,15 +38,15 @@ const FooterTitle = ({
 );
 
 export default function DataTable({
-  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
+  data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, total, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination = Function.prototype,
   selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
   permissions = {},
   withCost,
   withProfit,
-  withSalary,
-  amount: { salary = 0, cost = 0, profit = 0 } = {},
+  withSallary,
+  amount: { sallary = 0, cost = 0, profit = 0 } = {},
   white = false,
 }) {
   const [tableData, setTableData] = useState(data);
@@ -333,20 +333,12 @@ export default function DataTable({
           reports && <div className={styles.tableFooter__spacer} />
         }
         {
-          totalDuration && (
+          total && (
             <FooterTitle
               title='Overall worktime: '
               wrapperClassNames={`${footerTitleClasses} ${styles.footerTitle_first}`}
               amountColorClassName={styles.blue}
-              amount={totalDuration}
-            />
-          )
-        }
-        {
-          (withSalary || (permissions.cost && permissions.profit && !!salary)) && (
-            <FooterTitle
-              wrapperClassNames={footerTitleCosts}
-              amount={<TextWithSign label={salary} />}
+              amount={total.duration}
             />
           )
         }
@@ -355,7 +347,15 @@ export default function DataTable({
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.red}
-              amount={<TextWithSign label={cost} />}
+              amount={<TextWithSign label={total.cost} />}
+            />
+          )
+        }
+        {
+          (withSallary || (permissions.cost && permissions.profit && !!sallary)) && (
+            <FooterTitle
+              wrapperClassNames={footerTitleCosts}
+              amount={<TextWithSign label={total.sallary} />}
             />
           )
         }
@@ -364,7 +364,7 @@ export default function DataTable({
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.green}
-              amount={<TextWithSign label={profit} />}
+              amount={<TextWithSign label={total.profit} />}
             />
           )
         }

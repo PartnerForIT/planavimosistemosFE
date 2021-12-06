@@ -9,7 +9,7 @@ import formatArr from '../../../Helpers/dateFormat';
 import SimpleSelect from '../../../Core/SimpleSelect';
 
 export default function CompaneForm({
-  styles, handleOpen, handleInputChange,
+  styles, handleOpen, handleInputChange, handleCompanyChange,
   inputValues, countries = [], currencies = [],
   file, company, timeZones = [], readOnly,
 }) {
@@ -78,7 +78,7 @@ export default function CompaneForm({
           <Label text={t('Country')} htmlFor='country' />
         </div>
         <SimpleSelect
-          handleInputChange={handleInputChange}
+          handleInputChange={handleCompanyChange}
           name='country'
           fullWidth
           value={inputValues.country}

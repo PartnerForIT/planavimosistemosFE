@@ -12,7 +12,7 @@ import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
-import avatar from '../../../Icons/avatar.png';
+import avatar_default from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
@@ -113,8 +113,8 @@ export default function EditAccount({
     });
   };
 
-  const createNewSkill = () => {
-    dispatch(createSkill(skillName, companyId));
+  const createNewSkill = (skill) => {
+    dispatch(createSkill(skill, companyId));
     setSkillOpen(false);
   };
 
@@ -126,7 +126,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
         // eslint-disable-next-line no-shadow
-        photo, groups, subgroups,
+        avatar, groups, subgroups,
       } = employee;
       setUser({
         email,
@@ -137,7 +137,7 @@ export default function EditAccount({
         external_id,
         cost,
         charge,
-        photo,
+        avatar,
         group: Array.isArray(groups) && groups.length ? groups[0]?.id : subgroups[0]?.parent_group_id ?? '',
         subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
@@ -320,7 +320,7 @@ export default function EditAccount({
             : (
               <>
                 <div className={style.avatarBlock}>
-                  <img src={user.photo ?? avatar} className={styles.large} alt='Account logo' />
+                  <img src={user.avatar ?? avatar_default} className={styles.large} alt='Account logo' />
                   <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
                 </div>
 
