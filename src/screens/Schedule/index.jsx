@@ -148,12 +148,7 @@ export default () => {
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
-      dispatch(getSchedule({
-        companyId,
-        timeline,
-        fromDate: moment(new Date()).format('YYYY-MM-DD'),
-        firstLoading: true,
-      }));
+      handleGetSchedule({ fromDate: fromDateRef.current });
       const copyObject = cloneDeep(schedule.resources).__wrapped__;
       const a = copyObject.filter((i) => {
         i.children.filter((j) => {
@@ -180,10 +175,14 @@ export default () => {
         });
         return i.children.length;
       });
-      if (!data.employers.length && !data.place.length) {
+      console.log(data,'data');
+      if (data.employers.length || data.place.length) {
+        console.log(a,'aa');
         setFilterData(a);
       }
-      setFilterData({});
+      else{
+        setFilterData({});
+      }
     }
   };
 
