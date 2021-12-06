@@ -34,7 +34,10 @@ import {
   patchChangeEmployee,
   deleteShift,
 } from '../../store/schedule/actions';
-import { loadEmployeesAll } from '../../store/settings/actions';
+import {
+  loadEmployeesAll,
+  getSchedule as getscheduleSetting,
+} from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
@@ -49,10 +52,6 @@ import './Schedule.scss';
 import {
   scheduleSelector as scheduleSettingSelector,
 } from '../../store/settings/selectors';
-import {
-  getSchedule as getscheduleSetting ,
-} from '../../store/settings/actions';
-
 
 const permissionsConfig = [
   {
@@ -65,7 +64,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  const [filter, setFilter] = useState({ employers: [],place:[] });
+  const [filter, setFilter] = useState({ employers: [], place: [] });
   const [isOnlyWorkingDays, setIsOnlyWorkingDays] = useState(false);
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -138,15 +137,14 @@ export default () => {
     if (filterData[0] && (filter.employers.length || filter.place.length)) {
       return updateChildren(filterData);
     }
-    else{
-      if (schedule?.resources) {
-        return updateChildren(schedule.resources);
-      }
+
+    if (schedule?.resources) {
+      return updateChildren(schedule.resources);
     }
 
     // schedule.resources
     return schedule?.resources;
-  }, [schedule?.resources,filterData]);
+  }, [filterData, schedule?.resources]);
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
@@ -173,7 +171,7 @@ export default () => {
                   checkEmployer = true;
                 }
               });
-              if (!data.employers.length){return true}
+              if (!data.employers.length) { return true; }
               return checkEmployer;
             });
             return checkPlace;
@@ -182,7 +180,10 @@ export default () => {
         });
         return i.children.length;
       });
-      setFilterData(a);
+      if (!data.employers.length && !data.place.length) {
+        setFilterData(a);
+      }
+      setFilterData({});
     }
   };
 
@@ -320,7 +321,6 @@ export default () => {
       withMenu = true;
       employeeName = resourceInfo.title;
     }
-    console.log(event);
     return (
       <EventContent
         id={event.id}
@@ -391,13 +391,6 @@ export default () => {
         end: moment(event.end),
       },
     });
-    // if (event.title === 'Job 3') {
-    //   // console.log('event', {...event});
-    //   // console.log('view', view);
-    //   console.log('props', props);
-    //   // console.log('isResizing', isResizing);
-    // }
-    // event.setProp('startEditable', true);
   };
 
   const updateWidthCell = (rows) => {
@@ -427,13 +420,13 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
-    dispatch(getscheduleSetting(companyId));
     dispatch(getSchedule({
       companyId,
       timeline,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
     }));
+    dispatch(getscheduleSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
 
     return () => {
@@ -466,6 +459,12 @@ export default () => {
     }
   }, [timeline]);
 
+  const workAtNightMode = () => {
+    if (scheduleSettings.working_at_night) {
+      return `${+scheduleSettings.time_view_stats.split(':')[0] + 24}:00:00`;
+    }
+    return '24:00:00';
+  };
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -560,7 +559,7 @@ export default () => {
                         },
                       }}
                       slotMinTime={scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00'}
-                      slotMaxTime='24:00:00'
+                      slotMaxTime={workAtNightMode()}
                       resourceOrder='id'
                       headerToolbar={false}
                       aspectRatio={1}
