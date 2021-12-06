@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import DayTotalModal from './DayTotalModal';
 import classes from './DayTotal.module.scss';
+import CurrencySign from "../../../components/shared/CurrencySign";
 
 export default ({
   employeesCount,
@@ -73,7 +74,7 @@ export default ({
           {
             withCost && (
               <div className={classes.dayTotal__content__statistic__money}>
-                {`${money} USD`}
+                {`${money}`}<CurrencySign/>
               </div>
             )
           }

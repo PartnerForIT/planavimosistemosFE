@@ -511,11 +511,11 @@ export default () => {
             onChange={handleChangeTimeline}
             value={timeline}
           />
-          <Checkbox
-            onChange={handleChangeOnlyWorkingDays}
-            checked={isOnlyWorkingDays}
-            label={t('Show only working days')}
-          />
+          {/*<Checkbox*/}
+          {/*  onChange={handleChangeOnlyWorkingDays}*/}
+          {/*  checked={isOnlyWorkingDays}*/}
+          {/*  label={t('Show only working days')}*/}
+          {/*/>*/}
           <Button onClick={handleCreateNewShift}>
             {t('Create new shift')}
           </Button>
