@@ -47,6 +47,7 @@ export default function Company() {
     contact_person_email: '',
     timezone: '',
     date_format: '',
+    currency:'',
   });
 
   useEffect(() => {
@@ -113,20 +114,23 @@ export default function Company() {
     editCompany(nextInputValues);
   };
 
-  useEffect(() => {
-    if (inputValues.country && countries.length) {
-      const foundCountry = countries.find(({ code }) => code === inputValues.country);
-      setTimeZones(foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? []);
-      setCurrencies(foundCountry.currencies);
-      if (foundCountry?.timezones?.[0] || foundCountry?.currencies?.[0]) {
-        setInputValues((prevState) => ({
-          ...prevState,
-          timezone: foundCountry?.timezones?.[0] || '',
-          currency: foundCountry?.currencies?.[0]?.code || '',
-        }));
-      }
-    }
-  }, [countries, inputValues.country]);
+
+  const handleCompanyChange = (event) => {
+    const { name, value } = event.target;
+    const foundCountry = countries.find(({ code }) => code === value);
+
+    const nextInputValues = {
+      ...inputValues,
+      'country': value,
+      'timezone': foundCountry?.timezones?.[0] || '',
+      'currency':  foundCountry?.currencies?.[0]?.code || ''
+    };
+    setInputValues({ ...nextInputValues});
+    editCompany(nextInputValues);
+
+    setTimeZones(foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? []);
+    setCurrencies(foundCountry.currencies);
+  };
 
   return (
     <MaynLayout>
@@ -143,6 +147,7 @@ export default function Company() {
                 styles={styles}
                 handleOpen={handleOpen}
                 handleInputChange={handleInputChange}
+                handleCompanyChange={handleCompanyChange}
                 inputValues={inputValues}
                 countries={countries}
                 currencies={currencies}

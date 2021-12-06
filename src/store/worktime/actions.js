@@ -8,8 +8,9 @@ import {
 export const getWorkTime = (companyId, queryObj) => ({
   type: GET_WORK_TIME,
   request: {
-    method: 'GET',
-    url: `/company/${companyId}/logbook?${makeQueryString(queryObj)}`,
+    method: 'POST',
+    url: `/company/${companyId}/logbook`,
+    data: queryObj
   },
   meta: {
     thunk: true,
