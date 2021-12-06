@@ -111,7 +111,6 @@ export default function Company() {
     const { name, value } = event.target;
     const nextInputValues = { ...inputValues, [name]: value };
     setInputValues({ ...nextInputValues});
-    editCompany(nextInputValues);
   };
 
 
@@ -143,6 +142,10 @@ export default function Company() {
           timezone: foundCountry?.timezones?.[0] || '',
           currency: foundCountry?.currencies?.[0]?.code || '',
         }));
+        editCompany({...inputValues,
+          timezone: foundCountry?.timezones?.[0] || '',
+          currency: foundCountry?.currencies?.[0]?.code || '',
+        });
       }
     }
   }, [countries, inputValues.country]);

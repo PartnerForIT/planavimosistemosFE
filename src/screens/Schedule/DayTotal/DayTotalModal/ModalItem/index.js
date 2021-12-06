@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import ChevronIcon from '../../../../../components/Icons/Chevron';
 import classes from './ModalItem.module.scss';
+import CurrencySign from "../../../../../components/shared/CurrencySign";
 
 const ModalItem = ({
   title,
@@ -55,7 +56,7 @@ const ModalItem = ({
             {
               withCost && (
                 <div className={classes.modalItem__content__row__first}>
-                  {`${cost} USD`}
+                  {`${cost}`} <CurrencySign/>
                 </div>
               )
             }

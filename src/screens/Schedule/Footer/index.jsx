@@ -8,6 +8,7 @@ import Item from '../DayTotal';
 import DayOfMonth from './DayOfMonth';
 
 import classes from './Footer.module.scss';
+import CurrencySign from "../../../components/shared/CurrencySign";
 
 export default ({
   timeline,
@@ -61,7 +62,7 @@ export default ({
                 <span className={classes.footer__total}>
                   {`${t('Total Cost')}: `}
                   <span className={classes.footer__total__value}>
-                    {`${data.cost ?? 0} USD`}
+                    {`${data.cost ?? 0}`} <CurrencySign/>
                   </span>
                 </span>
               )
@@ -109,12 +110,13 @@ export default ({
                     text={item.statistic
                       ? item.id === 'totalTime'
                         ? `${data.total?.time ?? 0} h`
-                        : `${data.total?.cost ?? 0} $`
+                        : `${data.total?.cost ?? 0}`
                       : ''}
                     // title={data[item.id].title}
                   />
                 ))
               }
+              <CurrencySign/>
             </div>
             <div className={classes.footer__empty} />
           </>

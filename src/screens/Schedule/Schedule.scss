@@ -165,8 +165,16 @@
     justify-content: center;
     font-family: "Helvetica Neue Medium", sans-serif;
     font-size: 14px;
+    position: relative;
+    z-index: 3;
   }
 
+  .fc-day-past {
+    color: #9c9da0;
+  }
+  .fc-day-today {
+    color: #1d88fc;
+  }
   // row header cell
   .fc-timeline-slot-cushion {
     font-family: "Helvetica Neue Medium", sans-serif;
