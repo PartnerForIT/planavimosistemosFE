@@ -112,7 +112,7 @@ export default function OrganizationList() {
       created_at: item.created_at ? moment(item.created_at).format('lll') : '',
       suspended_at: item.suspended_at ? moment(item.suspended_at).format('lll') : '',
       deleted_at: item.deleted_at ? moment(item.deleted_at).format('lll') : '',
-      country: nameCountry(item),
+      country: item.country,
     })));
   }, [companies, nameCountry]);
 
