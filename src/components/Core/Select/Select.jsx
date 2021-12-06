@@ -181,7 +181,7 @@ export default function CustomSelect({
                       ? (
                         <Dropdown
                           key={data.id.toString()}
-                          label={data.label || data.title}
+                          label={data.label || data.title || data.name}
                           currentItem={data}
                           checked={data.checked}
                           items={data.items}

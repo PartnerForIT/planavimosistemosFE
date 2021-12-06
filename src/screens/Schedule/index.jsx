@@ -485,7 +485,7 @@ export default () => {
             placeholder={t('All job types')}
             buttonLabel={t('Filter')}
             items={jobTypes}
-            onFilter={onPlaceSelectFilter}
+            onChange={onPlaceSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />
@@ -493,7 +493,7 @@ export default () => {
             placeholder={t('All shifts')}
             buttonLabel={t('Filter')}
             items={shiftsTypes?.shiftTypes}
-            onFilter={onShiftSelectFilter}
+            onChange={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />
@@ -501,7 +501,7 @@ export default () => {
             placeholder={t('All employees')}
             buttonLabel={t('Filter')}
             items={employees}
-            onFilter={onEmployeesSelectFilter}
+            onChange={onEmployeesSelectFilter}
             width='auto'
           />
           <ButtonGroupToggle
