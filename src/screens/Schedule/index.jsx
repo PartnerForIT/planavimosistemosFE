@@ -215,7 +215,6 @@ export default () => {
 
   const onPlaceSelectFilter = (place) => {
     const arrChecked = place?.filter((i) => i.checked);
-    console.log('aaa',arrChecked);
     setFilter((prevState) => ({
       ...prevState,
       place: arrChecked,
@@ -369,7 +368,6 @@ export default () => {
       photo,
       shiftId,
     } = resource.extendedProps;
-    console.log(resources,resource.extendedProps);
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
