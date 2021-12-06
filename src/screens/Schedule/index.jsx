@@ -52,6 +52,8 @@ import './Schedule.scss';
 import {
   scheduleSelector as scheduleSettingSelector,
 } from '../../store/settings/selectors';
+import { getShiftTypes } from '../../store/shiftsTypes/actions';
+import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 
 const permissionsConfig = [
   {
@@ -64,20 +66,18 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  const [filter, setFilter] = useState({ employers: [], place: [] });
-  const [isOnlyWorkingDays, setIsOnlyWorkingDays] = useState(false);
+  const [filter, setFilter] = useState({ employers: [], place: [], shift:[], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-
   const employees = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
+  const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
-  const [shifts, setShifts] = useState([]);
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
   const resources = useMemo(() => {
@@ -134,7 +134,7 @@ export default () => {
       }
       return [];
     };
-    if (filterData[0] && (filter.employers.length || filter.place.length)) {
+    if (filterData[0] && (filter.employers.length || filter.place.length || filter.shift.length)) {
       return updateChildren(filterData);
     }
 
@@ -151,7 +151,13 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
       const copyObject = cloneDeep(schedule.resources).__wrapped__;
       const a = copyObject.filter((i) => {
-        i.children.filter((j) => {
+        i.children=i.children.filter((j) => {
+          let checkShift = false;
+          data.shift.map((shiftEl) => {
+            if (shiftEl.id === j.shiftId) {
+              checkShift = true;
+            }
+          });
           j.children = j.children.filter((k) => {
             let checkPlace = false;
             data.place.map((placeEL) => {
@@ -169,15 +175,14 @@ export default () => {
               if (!data.employers.length) { return true; }
               return checkEmployer;
             });
+            if (!data.place.length) { return true; }
             return checkPlace;
           });
-          return j.children.length;
+          return checkShift;
         });
-        return i.children.length;
+        return !!i.children.length;
       });
-      console.log(data,'data');
-      if (data.employers.length || data.place.length) {
-        console.log(a,'aa');
+      if (data.employers.length || data.place.length || data.shift.length) {
         setFilterData(a);
       }
       else{
@@ -207,6 +212,15 @@ export default () => {
     }));
   };
 
+  const onShiftSelectFilter = (shift) => {
+    const arrChecked = shift?.filter((i) => i.checked);
+    console.log(arrChecked,'arrChecked');
+    setFilter((prevState) => ({
+      ...prevState,
+      shift: arrChecked,
+    }));
+  };
+
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
@@ -221,9 +235,7 @@ export default () => {
     setTimeline(value);
     handleGetSchedule({ nextTimeline: value });
   };
-  const handleChangeOnlyWorkingDays = () => {
-    setIsOnlyWorkingDays((prevState) => !prevState);
-  };
+
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
   };
@@ -427,6 +439,7 @@ export default () => {
     }));
     dispatch(getscheduleSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
+    dispatch(getShiftTypes(companyId));
 
     return () => {
       // eslint-disable-next-line no-unused-expressions
@@ -479,8 +492,8 @@ export default () => {
           <CustomSelect
             placeholder={t('All shifts')}
             buttonLabel={t('Filter')}
-            items={[]}
-            // onFilter={onSkillsSelectFilter}
+            items={shiftsTypes?.shiftTypes}
+            onFilter={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />

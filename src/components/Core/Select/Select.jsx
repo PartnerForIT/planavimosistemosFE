@@ -191,7 +191,7 @@ export default function CustomSelect({
                       : (
                         <StyledCheckbox
                           key={data.id.toString()}
-                          label={data.label || data.title}
+                          label={data.label || data.title || data.name}
                           item={data}
                           id={data.id}
                           checked={data.checked}
