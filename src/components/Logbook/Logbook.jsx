@@ -277,12 +277,16 @@ export default () => {
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
+
+    const employeesArr = checkedEmployees.map((emp) => emp.id);
+    const skillsArr = checkedSkills.map((emp) => emp.id);
+
     dispatch(getWorkTime(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : '',
       search,
-      employees: checkedEmployees.map((item) => item.id),
-      skills: checkedSkills.map((item) => item.id),
+      employeesArr,
+      skillsArr,
       ...props,
     })).then(() => {
       setCheckedItems([]);

@@ -223,6 +223,7 @@ export default function AccountsList() {
   };
   const createAccount = (userData) => {
     dispatch(createEmployee(id, userData));
+    setNewVisible(false);
   };
 
   const userStats = useMemo(() => {
@@ -427,6 +428,7 @@ export default function AccountsList() {
                     clearCheckbox={() => ({})}
                     stats={userStats}
                     selectedItem={selected}
+                    employees={employees}
                     withDeleteButton={permissions.accounts_delete}
                   />
                   <DataTable

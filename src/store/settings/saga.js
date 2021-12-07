@@ -1131,7 +1131,7 @@ function* createEmployee(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(createEmployeeError(e));
-    yield put(addSnackbar('An error occurred while adding employee', 'error'));
+    yield put(addSnackbar('An error occurred while adding employee - '+e.response.data.message, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }

@@ -22,7 +22,7 @@ function EventDetails({
   const [values, setValues] = useState(() => {
     const initialValues = {
       ...activeEvent,
-      reminder_time: false,
+      reminder_time: true,
       reminder_settings: false,
     };
 

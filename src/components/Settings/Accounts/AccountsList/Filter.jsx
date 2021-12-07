@@ -34,7 +34,7 @@ export default function Filter({
   checkedItems,
   stats,
   selectedItem,
-  withDeleteButton,
+  withDeleteButton, employees,
 }) {
   // const classes = useStyles();
   const { t } = useTranslation();
@@ -45,6 +45,19 @@ export default function Filter({
   //   clearCheckbox();
   //   setOpen(false);
   // };
+  const unblockVisible = () => {
+    let b = false;
+    if (Array.isArray(checkedItems)) {
+      checkedItems.map((i) => {
+        employees.map((j) => {
+          if (j.id === i && j.status===3) {
+            b = true;
+          }
+        });
+      });
+      return b;
+    }
+  };
   return (
     <div className={styles.filterBlock}>
       <FormControl className={styles.filterBlock__leftContainer}>
@@ -80,7 +93,7 @@ export default function Filter({
           {' '}
           USERS SELECTED
         </p>
-        {stats?.blocked >= 1
+        {stats?.blocked >= 1 && unblockVisible()
         && (
         <Button
           danger
