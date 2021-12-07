@@ -46,7 +46,7 @@ export default function CreateAccount({
 
   const create = (data) => {
     createAccount(data);
-    close();
+    //close();
   };
 
   const handleInput = (e) => {

@@ -607,27 +607,40 @@ export default () => {
             {
               itemsArray.length > 0 && activeReport
                 ? itemsArray.map((report) => report.id === activeReport && (
-                  <DataTable
-                    key={report.id.toString()}
-                    data={report.report || []}
-                    columns={columnsArray || []}
-                    columnsWidth={columnsWidth}
-                    onColumnsChange={setColumnsArray}
-                    loading={loading}
-                    onSort={sortHandler}
-                    selectedItem={selectedItem}
-                    total={report.total}
-                    setSelectedItem={rowSelectionHandler}
-                    reports
-                    downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
-                    downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
-                    verticalOffset='212px'
-                    amount={totalStat}
-                    withCost={permissions.cost && costState.show_costs}
-                    withProfit={permissions.cost && permissions.profit && costState.show_profit}
-                    withSallary={permissions.cost && permissions.profit && costState.show_earnings}
-                    white
-                  />
+                  report.report.length > 0 ? (
+                     <DataTable
+                       key={report.id.toString()}
+                       data={report.report || []}
+                       columns={columnsArray || []}
+                       columnsWidth={columnsWidth}
+                       onColumnsChange={setColumnsArray}
+                       loading={loading}
+                       onSort={sortHandler}
+                       selectedItem={selectedItem}
+                       total={report.total}
+                       setSelectedItem={rowSelectionHandler}
+                       reports
+                       downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
+                       downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
+                       verticalOffset='212px'
+                       amount={totalStat}
+                       withCost={permissions.cost && costState.show_costs}
+                       withProfit={permissions.cost && permissions.profit && costState.show_profit}
+                       withSallary={permissions.cost && permissions.profit && costState.show_earnings}
+                       white
+                     />
+                   ) : <div className={styles.emptyContainer}>
+                    <div className={styles.emptyContent}>
+                      <div>
+                        <ReportsIcon className={styles.reportsIcon} />
+                        <p className={styles.title}>NOTHING FOUND</p>
+                        <p className={styles.description}>Please select an object or place to generate report</p>
+                      </div>
+                      <div className={styles.arrowIcon}>
+                        <ArrowRightIcon />
+                      </div>
+                    </div>
+                  </div>
                 ))
                 : (
                   <div className={styles.emptyContainer}>
@@ -635,7 +648,7 @@ export default () => {
                       <div>
                         <ReportsIcon className={styles.reportsIcon} />
                         <p className={styles.title}>NOTHING SELECTED</p>
-                        <p className={styles.description}>Please select an object or place to genenerate report</p>
+                        <p className={styles.description}>Please select an object or place to generate report</p>
                       </div>
                       <div className={styles.arrowIcon}>
                         <ArrowRightIcon />

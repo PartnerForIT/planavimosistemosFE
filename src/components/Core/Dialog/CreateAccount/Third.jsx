@@ -148,6 +148,7 @@ function Third({
   useEffect(() => {
     if (!_.isEmpty(user) && ready) {
       create(user);
+      setReady(false);
     }
   }, [create, ready, user]);
 

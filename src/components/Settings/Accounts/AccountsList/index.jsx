@@ -223,6 +223,7 @@ export default function AccountsList() {
   };
   const createAccount = (userData) => {
     dispatch(createEmployee(id, userData));
+    setNewVisible(false);
   };
 
   const userStats = useMemo(() => {
