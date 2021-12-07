@@ -52,6 +52,8 @@ import './Schedule.scss';
 import {
   scheduleSelector as scheduleSettingSelector,
 } from '../../store/settings/selectors';
+import { getShiftTypes } from '../../store/shiftsTypes/actions';
+import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 
 const permissionsConfig = [
   {
@@ -64,20 +66,18 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  const [filter, setFilter] = useState({ employers: [], place: [] });
-  const [isOnlyWorkingDays, setIsOnlyWorkingDays] = useState(false);
+  const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-
   const employees = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
+  const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
-  const [shifts, setShifts] = useState([]);
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
   const resources = useMemo(() => {
@@ -89,7 +89,15 @@ export default () => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
-
+          if (item.shiftId) {
+            item.count = item.count || 0;
+            item.children.map((i) => {
+              item.count = item.count + i.children.length;
+            });
+          }
+          if (item.job_type_id) {
+            item.count = item.children.length;
+          }
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
@@ -134,7 +142,7 @@ export default () => {
       }
       return [];
     };
-    if (filterData[0] && (filter.employers.length || filter.place.length)) {
+    if (filterData[0] && (filter.employers.length || filter.place.length || filter.shiftType.length)) {
       return updateChildren(filterData);
     }
 
@@ -148,15 +156,16 @@ export default () => {
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
-      dispatch(getSchedule({
-        companyId,
-        timeline,
-        fromDate: moment(new Date()).format('YYYY-MM-DD'),
-        firstLoading: true,
-      }));
+      handleGetSchedule({ fromDate: fromDateRef.current });
       const copyObject = cloneDeep(schedule.resources).__wrapped__;
       const a = copyObject.filter((i) => {
-        i.children.filter((j) => {
+        i.children=i.children.filter((j) => {
+          let checkShift = false;
+          data.shiftType.map((shiftEl) => {
+            if (shiftEl.id === j.shiftId) {
+              checkShift = true;
+            }
+          });
           j.children = j.children.filter((k) => {
             let checkPlace = false;
             data.place.map((placeEL) => {
@@ -174,16 +183,20 @@ export default () => {
               if (!data.employers.length) { return true; }
               return checkEmployer;
             });
+            if (!data.place.length) { return true; }
             return checkPlace;
           });
-          return j.children.length;
+          if (!data.shiftType.length) { return true; }
+          return checkShift;
         });
         return i.children.length;
       });
-      if (!data.employers.length && !data.place.length) {
+      if (data.employers.length || data.place.length || data.shiftType.length) {
         setFilterData(a);
       }
-      setFilterData({});
+      else{
+        setFilterData({});
+      }
     }
   };
 
@@ -208,6 +221,14 @@ export default () => {
     }));
   };
 
+  const onShiftSelectFilter = (shift) => {
+    const arrChecked = shift?.filter((i) => i.checked);
+    setFilter((prevState) => ({
+      ...prevState,
+      shiftType: arrChecked,
+    }));
+  };
+
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
@@ -222,9 +243,7 @@ export default () => {
     setTimeline(value);
     handleGetSchedule({ nextTimeline: value });
   };
-  const handleChangeOnlyWorkingDays = () => {
-    setIsOnlyWorkingDays((prevState) => !prevState);
-  };
+
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
   };
@@ -428,6 +447,7 @@ export default () => {
     }));
     dispatch(getscheduleSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
+    dispatch(getShiftTypes(companyId));
 
     return () => {
       // eslint-disable-next-line no-unused-expressions
@@ -473,15 +493,15 @@ export default () => {
             placeholder={t('All job types')}
             buttonLabel={t('Filter')}
             items={jobTypes}
-            onFilter={onPlaceSelectFilter}
+            onChange={onPlaceSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />
           <CustomSelect
             placeholder={t('All shifts')}
             buttonLabel={t('Filter')}
-            items={[]}
-            // onFilter={onSkillsSelectFilter}
+            items={shiftsTypes?.shiftTypes}
+            onChange={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
           />
@@ -489,7 +509,7 @@ export default () => {
             placeholder={t('All employees')}
             buttonLabel={t('Filter')}
             items={employees}
-            onFilter={onEmployeesSelectFilter}
+            onChange={onEmployeesSelectFilter}
             width='auto'
           />
           <ButtonGroupToggle

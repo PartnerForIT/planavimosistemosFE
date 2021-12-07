@@ -1,0 +1,1 @@
+export const GET_SHIFT_TYPES = 'GET_SHIFT_TYPES';
