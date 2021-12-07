@@ -22,6 +22,7 @@ import logbook from './logbook/reducer';
 import events from './events/reducer';
 import kiosks from './kiosks/reducer';
 import schedule from './schedule/reducer';
+import shiftTypes from './shiftsTypes/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   events,
   kiosks,
   schedule,
+  shiftTypes,
 });
 
 const middlewares = [
