@@ -801,12 +801,6 @@ export default forwardRef(({
         makeShiftFor={numberOfWeeks}
         currentWeek={currentWeek}
       />
-      <Scrollbar
-        className={classes.scrollableContent}
-        ref={scrollContainerRef}
-        trackYProps={trackYProps}
-        noScrollX
-      >
         <>
           <div className={classes.table__content} ref={contentRef}>
             <div className={classes.table__content__resources}>
@@ -884,7 +878,6 @@ export default forwardRef(({
             ))}
           </div>
         </>
-      </Scrollbar>
       <Footer
         timesPanel={timesPanel[currentWeek]}
         daysOfWeek={daysOfWeek[currentWeek]}
