@@ -180,7 +180,7 @@ export default function CustomSelect({
                     data.type && data.type === 'group'
                       ? (
                         <Dropdown
-                          key={data.id.toString()}
+                          key={data.id}
                           label={data.label || data.title || data.name}
                           currentItem={data}
                           checked={data.checked}
@@ -190,8 +190,8 @@ export default function CustomSelect({
                       )
                       : (
                         <StyledCheckbox
-                          key={data.id.toString()}
-                          label={data.label || data.title || data.name}
+                            key={data.id}
+                            label={data.label || data.title || data.name}
                           item={data}
                           id={data.id}
                           checked={data.checked}
