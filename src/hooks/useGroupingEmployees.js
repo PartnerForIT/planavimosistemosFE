@@ -4,25 +4,24 @@ export default (empList, employToCheck) => {
   const employeesWithoutGroups = useMemo(() => empList
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i)), [empList, employToCheck]);
-
-  const employeesWithGroupsSubGroups = useMemo(() => empList
+    const employeesWithGroupsSubGroups = useMemo(() => empList
     .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
-
-  const mapEmployeesGroups = useCallback((employeeArray) => {
+    const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
 
-    employeeArray.forEach((item) => {
+      employeeArray.forEach((item) => {
       const {
         // eslint-disable-next-line no-shadow
         groups,
         subgroups,
+        group_id,
+        subgroup_id,
       } = item;
-
-      const groupId = groups[0]?.id ?? subgroups[0]?.parent_group_id ?? '';
-      const subGroupId = subgroups[0]?.id ?? '';
-      const groupname = groups[0]?.name ?? subgroups[0]?.parent_group?.name ?? '';
-      const subGroupName = subgroups[0]?.name ?? '';
+      const groupId = group_id ?? subgroup_id ?? '';
+      const subGroupId =  group_id ?? subgroup_id ?? '';
+      const groupname = groups ?? subgroups ?? '';
+      const subGroupName = subgroups ?? '';
       const type = 'group';
       // eslint-disable-next-line no-nested-ternary
       _temp[groupId] = _temp[groupId]
