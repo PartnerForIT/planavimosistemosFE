@@ -64,9 +64,12 @@
       $row: &;
 
       &__cell {
+        background-color: white;
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 1px solid #d9dfe3;
+        border-collapse: collapse;
 
         & > div {
           max-width: 110px;
