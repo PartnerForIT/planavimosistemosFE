@@ -123,6 +123,8 @@
   .fc-timeline-slot,
   .fc-timeline-lane {
     border-color: #d9dfe3;
+    position: relative;
+    z-index: 1;
   }
 
   // resource area header
