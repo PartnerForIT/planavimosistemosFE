@@ -19,7 +19,7 @@ export default (empList, employToCheck) => {
         subgroup_id,
       } = item;
       const groupId = group_id ?? subgroup_id ?? '';
-      const subGroupId =  group_id ?? subgroup_id ?? '';
+      const subGroupId = group_id ?? subgroup_id ?? '';
       const groupname = groups ?? subgroups ?? '';
       const subGroupName = subgroups ?? '';
       const type = 'group';
