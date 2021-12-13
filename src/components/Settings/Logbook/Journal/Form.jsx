@@ -48,6 +48,7 @@ export default ({
   permissions,
   readOnly,
 }) => (
+
   <div className={style.logbookBlock}>
     <Label text={`${t('General Journal Settings')} :`} />
 
@@ -74,7 +75,7 @@ export default ({
     {
       permissions.profitability && (
         <div className={style.generalBlock}>
-          <div className={style.labelText}>{t('Charge, Hourly rate')}</div>
+          <div className={style.labelText}>{t(`Charge, Hourly rate`)}</div>
           <Input
             value={journalData.hourly_charge}
             min='1'
@@ -83,6 +84,7 @@ export default ({
             onChange={handleInputChange}
             readOnly={readOnly}
           />
+          <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
             title='Charge hourly rate, entry field, and currency symbol based on general settings currency settings'
           />
