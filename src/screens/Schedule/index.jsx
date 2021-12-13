@@ -301,6 +301,7 @@ export default () => {
       shiftId,
       data: {
         employee_id: employeeId,
+        data: id,
       },
       body: getBodyForGetSchedule(),
       id,
@@ -313,6 +314,7 @@ export default () => {
       data: {
         dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
         dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+        data: id,
       },
       body: getBodyForGetSchedule(),
       id,

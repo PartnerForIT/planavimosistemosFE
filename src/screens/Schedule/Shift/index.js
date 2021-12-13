@@ -170,7 +170,7 @@ export default () => {
               accJ.push({
                 resourceId: child.id,
                 data: weekMock.map((dayOfWeek, indexDay) => {
-                  const foundItem = shift.shift_info.defaultTime[indexWeek]
+                  const foundItem = shift.defaultTime[indexWeek]
                     .find((itemJ) => (itemJ.day_of_week === (dayOfWeek.id - 1)));
 
                   const day = {
@@ -416,7 +416,7 @@ export default () => {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
         const defaultTime = new Array(4).fill().reduce((acc, _, index) => {
           acc[index] = weekMock.map((item, indexDay) => {
-            const foundItem = shift.shift_info.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
+            const foundItem = shift.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
 
             if (foundItem) {
               return {
@@ -440,7 +440,7 @@ export default () => {
           });
           return acc;
         }, {});
-        const workingSetting = shift.shift_info.working_setting;
+        const workingSetting = shift.working_setting;
 
         tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
         tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
