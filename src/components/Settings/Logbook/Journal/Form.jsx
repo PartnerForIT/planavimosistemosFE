@@ -11,6 +11,7 @@ import Input from '../../../Core/Input/Input';
 import Label from '../../../Core/InputLabel';
 import Checkbox from '../../../Core/Checkbox/Checkbox2';
 import Select from '../../../Core/SimpleSelect';
+import CurrencySign from "../../../shared/CurrencySign";
 
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },
@@ -62,7 +63,7 @@ export default ({
             onChange={handleInputChange}
             readOnly={readOnly}
           />
-          <div className={style.labelText2}>$</div>
+          <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
             title='Cost hourly rate, entry field, and currency symbol based on general settings currency settings'
           />
