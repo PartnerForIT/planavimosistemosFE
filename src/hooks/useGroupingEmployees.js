@@ -4,13 +4,12 @@ export default (empList, employToCheck) => {
   const employeesWithoutGroups = useMemo(() => empList
     .filter((empl) => !empl.groups.length && !empl.subgroups.length)
     .map((i) => employToCheck(i)), [empList, employToCheck]);
-    const employeesWithGroupsSubGroups = useMemo(() => empList
+  const employeesWithGroupsSubGroups = useMemo(() => empList
     .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
-    const mapEmployeesGroups = useCallback((employeeArray) => {
+  const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
-
-      employeeArray.forEach((item) => {
+    employeeArray.forEach((item) => {
       const {
         // eslint-disable-next-line no-shadow
         groups,
@@ -19,14 +18,14 @@ export default (empList, employToCheck) => {
         subgroup_id,
       } = item;
       const groupId = group_id ?? subgroup_id ?? '';
-      const subGroupId =  group_id ?? subgroup_id ?? '';
+      const subGroupId = subgroup_id ?? '';
       const groupname = groups ?? subgroups ?? '';
       const subGroupName = subgroups ?? '';
       const type = 'group';
-      // eslint-disable-next-line no-nested-ternary
+        // eslint-disable-next-line no-nested-ternary
       _temp[groupId] = _temp[groupId]
         // eslint-disable-next-line no-nested-ternary
-        ? _temp[groupId][subGroupId]
+        ?  _temp[groupId]
           ? {
             ..._temp[groupId],
             label: groupname,
@@ -34,7 +33,7 @@ export default (empList, employToCheck) => {
             [subGroupId]: {
               label: subGroupName,
               type,
-              items: [..._temp[groupId][subGroupId].items, employToCheck(item)],
+              // items:[..._temp?.[groupId]?.[subGroupId]?.items, employToCheck(item)] ,
             },
           }
           : subGroupId ? {
@@ -78,21 +77,20 @@ export default (empList, employToCheck) => {
         .map((k) => ({
           id: k.toString(),
           ...obj[k],
-        }))[0];
+        }));
       if (item.type && Array.isArray(item.items)) {
         const {
           type, label, items, ...rest
         } = item;
-
-        const newItem = mapObjToNamedGroup(rest);
+          const newItem = mapObjToNamedGroup(rest);
         return {
-          id: `gr_${key.toString()}`, type, label, items: newItem ? [...items, mapObjToNamedGroup(rest)] : items,
+          id: `gr_${key.toString()}`, type, label, items: newItem ? [...items, ...mapObjToNamedGroup(rest)] : items,
         };
       }
       if (item.type && !Array.isArray(item.items)) {
         const { type, label, ...rest } = item;
         return {
-          id: `sg_${key.toString()}`, type, label, items: [mapObjToNamedGroup(rest)],
+          id: `sg_${key.toString()}`, type, label, items: [...mapObjToNamedGroup(rest)],
         };
       }
 
