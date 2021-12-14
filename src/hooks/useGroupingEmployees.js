@@ -33,7 +33,7 @@ export default (empList, employToCheck) => {
             [subGroupId]: {
               label: subGroupName,
               type,
-              // items:[..._temp?.[groupId]?.[subGroupId]?.items, employToCheck(item)] ,
+              items:[employToCheck(item)],
             },
           }
           : subGroupId ? {
@@ -100,5 +100,7 @@ export default (empList, employToCheck) => {
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
 
-  return allSortedEmployees;
+    console.log('sss',allSortedEmployees);
+
+    return allSortedEmployees;
 };
