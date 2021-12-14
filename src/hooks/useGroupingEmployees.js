@@ -100,7 +100,5 @@ export default (empList, employToCheck) => {
   const allSortedEmployees = useMemo(() => mappedMerged.concat(employeesWithoutGroups),
     [employeesWithoutGroups, mappedMerged]);
 
-    console.log('sss',allSortedEmployees);
-
     return allSortedEmployees;
 };
