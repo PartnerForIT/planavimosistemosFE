@@ -15,22 +15,39 @@ const RowContent = ({
   useEffect(() => {
     ReactTooltip.rebuild();
   });
-
   const foundItem = useMemo(() => events.find((item) => resourceId === item.resourceId), [events, resourceId]);
 
+  let time = 0;
+  let cost = 0;
+  const check = (statistic, id) => {
+    if (statistic && id === "totalTime"){
+      return time
+    }
+    if (statistic && id === "totalCost"){
+      return cost
+    }
+
+    return ''
+  }
   return (
     <>
       <div className={classes.rowContent}>
         {
-          daysOfMonth.map((item) => (
-            <Cell
-              key={item.id}
-              title={item.statistic ? foundItem?.times?.[item.id] : foundItem?.times?.[item.id]?.hours ?? ''}
-              statistic={item.statistic}
-              weekend={item.weekend}
-              past={!item.statistic && pastDay >= item.id}
-            />
-          ))
+          daysOfMonth.map((item, index) => {
+                  if(index < item.id ){
+                    time+=foundItem.hours
+                    cost+=foundItem.cost
+                  }
+         return (
+             <Cell
+                key={item.id}
+                title={item.statistic ? check(item.statistic, item.id) : foundItem.hours ?? ''}
+                statistic={item.statistic}
+                weekend={item.weekend}
+                past={!item.statistic && pastDay >= item.id}
+            />)
+          }
+          )
         }
       </div>
       {
