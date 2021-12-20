@@ -18,6 +18,7 @@ export default ({
   onClose,
   onCreatePlace,
   onSaveShift,
+    save
 }) => {
   const { t } = useTranslation();
 
@@ -66,6 +67,7 @@ export default ({
     setIsLoading(true);
   };
   const handleSaveShift = () => {
+    save()
     onSaveShift(values);
   };
 

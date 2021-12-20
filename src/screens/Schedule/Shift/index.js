@@ -4,7 +4,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import {useParams, useLocation, useHistory} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Switch from 'react-switch';
@@ -126,6 +126,7 @@ export default () => {
   const isLoadingPostShift = useSelector(postShiftIsLoadingSelector);
   const shift = useSelector(shiftSelector);
   const permissions = usePermissions(permissionsConfig);
+  const history = useHistory();
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -326,8 +327,15 @@ export default () => {
     setStartShiftFrom(value);
     tableRef.current.updateStartDay(value);
   };
+
+  const saveChangesRoute = () =>{
+    history.push(`/${companyId}/schedule`);
+  }
+
+  // console.log('111',);
   const handleSaveChanges = () => {
     if (selectedPlace && shiftName) {
+      saveChangesRoute()
       handleSaveShift();
     } else {
       setSaveChanges(true);
@@ -541,6 +549,7 @@ export default () => {
             onClose={handleClose}
             onCreatePlace={handleCreatePlace}
             onSaveShift={handleSaveShift}
+            save={saveChangesRoute}
           />
         )
       }
