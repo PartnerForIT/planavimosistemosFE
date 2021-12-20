@@ -18,6 +18,7 @@ import {
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
 } from './types';
+import {ADD_SNACKBAR} from "../organizationList/types";
 
 const initialState = {
   schedule: null,
@@ -68,6 +69,11 @@ export const reducer = (state = initialState, action) => {
 
     case RESET_SHIFT:
       return { ...state, shift: null };
+    case ADD_SNACKBAR:
+      return {
+        ...state,
+       loading: false
+      };
 
     default: return state;
   }

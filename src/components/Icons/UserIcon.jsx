@@ -3,12 +3,12 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
 export default ({ photo, classes }) => (
-  <div className={classes.cellNameWithAvatar}>
+  <div >
     {
       photo && (
         <img
           alt=''
-          className={classes.cellNameWithAvatar__image}
+          // className={classes}
           src={photo}
         />
       )
