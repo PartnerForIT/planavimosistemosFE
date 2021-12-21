@@ -31,7 +31,7 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SCHEDULE:
-      return { ...state, loading: !action.firstLoading };
+      return { ...state, loading: true };
     case success(GET_SCHEDULE):
       return {
         ...state,
