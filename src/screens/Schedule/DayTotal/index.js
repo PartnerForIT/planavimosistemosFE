@@ -53,16 +53,16 @@ export default ({
         ref={buttonRef}
       >
         <div className={classes.dayTotal__content__users}>
-          {
-            photos.map((photo) => photo && (
-              <img
-                key={photo}
-                alt='avatar'
-                className={classes.dayTotal__content__users__avatar}
-                src={photo}
-              />
-            ))
-          }
+          {/*{*/}
+          {/*  photos.map((photo) => photo && (*/}
+          {/*    <img*/}
+          {/*      key={photo}*/}
+          {/*      alt='avatar'*/}
+          {/*      className={classes.dayTotal__content__users__avatar}*/}
+          {/*      src={photo}*/}
+          {/*    />*/}
+          {/*  ))*/}
+          {/*}*/}
           <div className={classes.dayTotal__content__users__count}>
             {employeesCount}
           </div>
