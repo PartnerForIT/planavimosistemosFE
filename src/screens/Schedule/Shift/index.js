@@ -329,10 +329,9 @@ export default () => {
   };
 
   const saveChangesRoute = () =>{
-    history.push(`/${companyId}/schedule`);
+      history.push(`/${companyId}/schedule`);
   }
 
-  // console.log('111',);
   const handleSaveChanges = () => {
     if (selectedPlace && shiftName) {
       saveChangesRoute()
