@@ -24,8 +24,8 @@ const Users = React.memo(({
   }) => ({
     id,
     label: `${name} ${surname}`,
-    checked: activeRole?.account_user_roles.some(({ employee_id }) => employee_id === id),
-  }), [activeRole.account_user_roles]);
+    checked: activeRole?.accountUserRoles.some(({ employee_id }) => employee_id === id),
+  }), [activeRole.accountUserRoles]);
 
   const [search, setSearch] = useState('');
   const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
@@ -59,14 +59,14 @@ const Users = React.memo(({
     }
   }, [employees, search, stringMatch]);
 
-  const checkedByDefault = useMemo(() => activeRole?.account_user_roles
+  const checkedByDefault = useMemo(() => activeRole?.accountUserRoles
     .map((worker) => {
       const { employee } = worker;
       if (employee) {
         return employToCheck(employee);
       } return null;
     }).filter((item) => !!item) ?? [],
-  [activeRole.account_user_roles, employToCheck]);
+  [activeRole.accountUserRoles, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
