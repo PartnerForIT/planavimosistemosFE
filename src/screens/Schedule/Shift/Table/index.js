@@ -731,12 +731,12 @@ export default forwardRef(({
 
                   // total
                   if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
-                    total.children[index].children[indexJ].cost += cost;
-                    total.children[index].children[indexJ].time += time;
-                    total.children[index].cost += cost;
-                    total.children[index].time += time;
-                    total.cost += cost;
-                    total.time += time;
+                    // total.children[index].children[indexJ].cost += cost;
+                    // total.children[index].children[indexJ].time += time;
+                    // total.children[index].cost += cost;
+                    // total.children[index].time += time;
+                    // total.cost += cost;
+                    // total.time += time;
                   }
 
                   if (photos.length < 2 && employee.photo) {
