@@ -543,14 +543,14 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         rolesLoading: false,
-        roles: action.data,
+        roles: action.data.accountRoles,
       };
 
     case GET_ROLE_DETAILS_SUCCESS:
       return {
         ...state,
         rolesLoading: false,
-        roleDetails: action.data,
+        roleDetails: action.data.accountRoles,
       };
 
     case DELETE_ROLE_ERROR:
@@ -561,7 +561,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         rolesLoading: false,
-        error: action.data,
+        error: action.data.accountRoles,
       };
 
     case ADD_SETTING_SNACKBAR:

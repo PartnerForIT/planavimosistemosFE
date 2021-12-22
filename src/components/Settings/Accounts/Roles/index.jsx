@@ -236,7 +236,7 @@ export default () => {
   const rolesPermissionsEdit = (data) => {
     // eslint-disable-next-line no-shadow
     const oldRolePermissions = roles.find(({ id }) => id === activeRole.id)
-      ?.account_roles_permissions
+      ?.accountRolesPermissions
       // eslint-disable-next-line no-shadow
       ?.map(({ permission_id: id, access }) => ({ id, access }));
 
@@ -264,7 +264,7 @@ export default () => {
   const availableDetails = useMemo(() => {
     if (!_.isEmpty(activeRole) && allPermissions.length) {
       // eslint-disable-next-line no-shadow
-      return allPermissions.filter((perm) => activeRole.account_roles_permissions.some(({ id }) => id === perm.id));
+      return allPermissions.filter((perm) => activeRole.accountRolesPermissions.some(({ id }) => id === perm.id));
     }
     return [];
   }, [activeRole, allPermissions]);
