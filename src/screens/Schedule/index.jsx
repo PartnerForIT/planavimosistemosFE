@@ -32,7 +32,7 @@ import {
   deleteTimeline,
   patchChangeTimeline,
   patchChangeEmployee,
-  deleteShift,
+  deleteShift, putShift,
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
@@ -54,6 +54,8 @@ import {
 } from '../../store/settings/selectors';
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
+import AddTempEmployee from "./AddTempEmployee";
+import Dropdown from "../../components/Core/Dropdown/Dropdown";
 
 const permissionsConfig = [
   {
@@ -80,6 +82,10 @@ export default () => {
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
+  const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
+  const [tempShiftID,setTempShiftID] = useState(0)
+  const [tempJobTypeID,setTempJobTypeID] = useState(0)
+
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
@@ -120,12 +126,15 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-
+          if (item.employeeId === 0) {
+            eventBorderColor = COLORS_JOB_TYPE[colorType][18];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
+          }
           const nextItem = {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId,
+            eventDurationEditable: !!item.employeeId ,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
@@ -250,7 +259,6 @@ export default () => {
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
-
     if (props.lastShift) {
       classes.push('fc-datagrid-cell-last-shift');
     }
@@ -270,6 +278,9 @@ export default () => {
     }
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
+    }
+    if (props.job_type_name === ''){
+      classes.push('fc-datagrid-cell-empty');
     }
     return classes;
   };
@@ -328,6 +339,12 @@ export default () => {
       id,
     }));
   };
+  const addTempEmployees =  (shiftId,jobTypeId) => {
+     setmodalAddTempEmployee(data => !data)
+      setTempShiftID(shiftId)
+    setTempJobTypeID(jobTypeId)
+  }
+
 
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
@@ -337,6 +354,12 @@ export default () => {
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
+      [placeId, shiftId] = resourceInfo.id.split('-');
+      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
+      withMenu = true;
+      employeeName = resourceInfo.title;
+    }
+    if (resourceInfo.extendedProps.employeeId === 0){
       [placeId, shiftId] = resourceInfo.id.split('-');
       const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
@@ -361,6 +384,7 @@ export default () => {
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
+        modalAddTempEmployee={modalAddTempEmployee}
       />
     );
   };
@@ -369,14 +393,20 @@ export default () => {
       count,
       photo,
       shiftId,
+      employeeId,
+      shift_id,
+      jobTypeId
     } = resource.extendedProps;
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
         photo={photo}
+        shiftId={shiftId}
         withMenu={!!shiftId}
+        employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => handleDeleteShift(shiftId)}
+        addEmployee={()=>addTempEmployees(shift_id,jobTypeId)}
       />
     );
   };
@@ -600,6 +630,18 @@ export default () => {
                       eventResize={handleEventChange}
                       // nowIndicator
                     />
+                    {
+                      (modalAddTempEmployee)
+                          ?<AddTempEmployee
+                              photo={''}
+                              jobTypeName={''}
+                              employeeName={''}
+                              companyId={companyId}
+                              tempShiftID={tempShiftID}
+                              tempJobTypeID={tempJobTypeID}
+                          />
+                          : ''
+                    }
                     <Tooltip
                       id='time'
                       className='schedule-screen__tooltip'

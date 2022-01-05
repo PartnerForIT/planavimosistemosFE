@@ -1,0 +1,47 @@
+.changeEmployee {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  max-width: 300px;
+  background-color: #fff;
+  padding: 20px;
+  z-index: 4;
+  left: 400px;
+  top: 300px;
+  border: 1px solid #1d88fc;
+  border-radius: 10px;
+  &__title {
+    font-size: 14px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    color: black;
+    line-height: 17px;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    line-height: 16px;
+    color: #808f94;
+    margin-top: 8px;
+    white-space: nowrap;
+    width: 263px;
+    margin-bottom: 10px;
+
+    &__avatar {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+  }
+
+  & > *:nth-child(4) {
+    margin: 10px 0 !important;
+  }
+
+  & > *:last-child {
+    margin-bottom: 5px;
+  }
+}

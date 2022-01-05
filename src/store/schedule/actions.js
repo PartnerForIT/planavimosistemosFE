@@ -15,7 +15,7 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
-  DELETE_SHIFT,
+  DELETE_SHIFT, ADD_TEMP_EMPLOYEE, ADD_TEMP_EMPLOYEE_SUCCESS,
 } from './types';
 
 export const getSchedule = ({
@@ -43,6 +43,18 @@ export const postShift = ({ companyId, data }) => ({
   companyId,
   data,
 });
+
+export const addTempemployee = ({companyId,data,shiftId})=>({
+  type:ADD_TEMP_EMPLOYEE,
+  companyId,
+  data,
+  shiftId
+})
+
+export const addTempemployeeSuccess = (data) => ({
+  type:ADD_TEMP_EMPLOYEE_SUCCESS,
+  data
+})
 export const postShiftSuccess = () => ({
   type: POST_SHIFT_SUCCESS,
 });

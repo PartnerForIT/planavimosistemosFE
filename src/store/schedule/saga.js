@@ -14,7 +14,7 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
-  DELETE_SHIFT,
+  DELETE_SHIFT, ADD_TEMP_EMPLOYEE,
 } from './types';
 import {
   getScheduleSuccess,
@@ -25,7 +25,7 @@ import {
   getShiftError,
   putShiftSuccess,
   putShiftError,
-  getSchedule as getScheduleAction,
+  getSchedule as getScheduleAction, addTempemployeeSuccess,
 } from './actions';
 import { addSnackbar, dismissSnackbar } from '../organizationList/actions';
 import getToken from '../getToken';
@@ -128,6 +128,23 @@ function* patchChangeTimeline(action) {
   }
 }
 
+function* addTempEmployee(action){
+  try {
+    const {data} = yield call(
+        axios.post,
+        `${config.api.url}/company/${action.companyId}/shift/add-assistant/${action.shiftId}`,
+        action.data,
+        getToken()
+    )
+    yield put(addTempemployeeSuccess(data))
+    yield put(getScheduleAction(action.body));
+  }catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* deleteTimeline(action) {
   try {
     yield call(
@@ -167,4 +184,5 @@ export default function* ScheduleWatcher() {
   yield takeLatest(PATCH_CHANGE_TIMELINE, patchChangeTimeline);
   yield takeLatest(DELETE_TIMELINE, deleteTimeline);
   yield takeLatest(DELETE_SHIFT, deleteShift);
+  yield takeLatest(ADD_TEMP_EMPLOYEE,addTempEmployee)
 }

@@ -92,6 +92,8 @@ export const COLORS_JOB_TYPE = {
     '#F23DF2',
     '#B63DF2',
     '#793DF2',
+      '#adc0cc'
+
   ],
   calm: [
     '#CC527A',
@@ -112,5 +114,6 @@ export const COLORS_JOB_TYPE = {
     '#CCA352',
     '#CC7A52',
     '#CC5252',
+      '#adc0cc'
   ],
 };
