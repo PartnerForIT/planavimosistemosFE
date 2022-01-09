@@ -582,7 +582,7 @@ export default () => {
                       }}
                       slotMinTime={scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00'}
                       slotMaxTime={workAtNightMode()}
-                      resourceOrder='id'
+                      resourceOrder='sort'
                       headerToolbar={false}
                       aspectRatio={1}
                       height='100%'
