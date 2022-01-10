@@ -85,6 +85,7 @@ export default () => {
   const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
   const [tempShiftID,setTempShiftID] = useState(0)
   const [tempJobTypeID,setTempJobTypeID] = useState(0)
+  const [tempEmployeeID,setTempEmployeeID] = useState(0)
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -97,9 +98,9 @@ export default () => {
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
           if (item.shiftId) {
             item.count = item.count || 0;
-            item.children.map((i) => {
-              item.count = item.count + i.children.length;
-            });
+            // item.children.map((i) => {
+            //   item.count = item.count + i.children.length;
+            // });
           }
           if (item.job_type_id) {
             item.count = item.children.length;
@@ -126,7 +127,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employeeId === 0) {
+          if (item.employeeId > 3000) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][18];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
           }
@@ -279,7 +280,7 @@ export default () => {
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
     }
-    if (props.job_type_name === ''){
+    if (props.employeeId > 3000){
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
@@ -339,10 +340,11 @@ export default () => {
       id,
     }));
   };
-  const addTempEmployees =  (shiftId,jobTypeId) => {
+  const addTempEmployees =  (shiftId,employeeId) => {
      setmodalAddTempEmployee(data => !data)
       setTempShiftID(shiftId)
-    setTempJobTypeID(jobTypeId)
+    setTempEmployeeID(employeeId)
+      console.log('111', employeeId);
   }
 
 
@@ -354,12 +356,6 @@ export default () => {
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
-      [placeId, shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
-      withMenu = true;
-      employeeName = resourceInfo.title;
-    }
-    if (resourceInfo.extendedProps.employeeId === 0){
       [placeId, shiftId] = resourceInfo.id.split('-');
       const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
@@ -394,9 +390,10 @@ export default () => {
       photo,
       shiftId,
       employeeId,
-      shift_id,
-      jobTypeId
+      jobTypeId,
+      shift_id
     } = resource.extendedProps;
+    console.log('111',resource.extendedProps);
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
@@ -406,7 +403,7 @@ export default () => {
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => handleDeleteShift(shiftId)}
-        addEmployee={()=>addTempEmployees(shift_id,jobTypeId)}
+        addEmployee={()=>addTempEmployees(shift_id,employeeId)}
       />
     );
   };
@@ -639,6 +636,7 @@ export default () => {
                               companyId={companyId}
                               tempShiftID={tempShiftID}
                               tempJobTypeID={tempJobTypeID}
+                              tempEmployeeID={tempEmployeeID}
                           />
                           : ''
                     }

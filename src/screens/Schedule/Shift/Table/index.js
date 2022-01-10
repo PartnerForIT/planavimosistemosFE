@@ -324,6 +324,7 @@ export default forwardRef(({
   const [currentWeek, setCurrentWeek] = useState(0);
   const scrollContainerRef = useRef(null);
   const contentRef = useRef(null);
+  console.log('fff',data);
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
@@ -716,18 +717,18 @@ export default forwardRef(({
                   const time = totalTimeEnd > totalTimeStart
                     ? totalTimeEnd - totalTimeStart
                     : totalTimeStart - totalTimeEnd;
-                  const cost = time * foundEmployee.profitability.cost;
+                  // const cost = time * foundEmployee.profitability.cost;
 
-                  accK.jobTypeTotalTime += time;
-                  accK.jobTypeTotalCost += cost;
-                  accK.children.push({
-                    avatar: employee.photo,
-                    employeeId: employee.employeeId,
-                    name: employee.title,
-                    job_type_name: jobType.title,
-                    time,
-                    cost,
-                  });
+                  // accK.jobTypeTotalTime += time;
+                  // accK.jobTypeTotalCost += cost;
+                  // accK.children.push({
+                  //   avatar: employee.photo,
+                  //   employeeId: employee.employeeId,
+                  //   name: employee.title,
+                  //   job_type_name: jobType.title,
+                  //   time,
+                  //   cost,
+                  // });
 
                   // total
                   if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {

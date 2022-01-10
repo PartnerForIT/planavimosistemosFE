@@ -20,7 +20,8 @@ export default ({
   employeeName,
                     companyId,
                     tempShiftID,
-                    tempJobTypeID
+                    tempJobTypeID,
+                    tempEmployeeID
 }) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
@@ -48,7 +49,6 @@ export default ({
       setSelectedEmployee(checked[0]);
     } else {
       setSelectedEmployee(null);
-
     }
   };
 
@@ -58,15 +58,16 @@ export default ({
               data: {
                   employee_id: selectedEmployee.id,
                   job_type_id: 7,
-                  start: `2022-01-10 14:30:00`,
-                  end: '2022-01-10 19:00:00'
+                  start: `2022-01-11 14:30:00`,
+                  end: '2022-01-11 19:00:00',
+                  time_cell_id:tempEmployeeID
               },
               shiftId: tempShiftID
           }
       )
      )
   };
-  const filteredEmployees = useMemo(() => {
+    const filteredEmployees = useMemo(() => {
     const stringMatch = (str = '') => str.toLowerCase().includes(searchValue.toLowerCase());
 
     if (searchValue.trim()) {
