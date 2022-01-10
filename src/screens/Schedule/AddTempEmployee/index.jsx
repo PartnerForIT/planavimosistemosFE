@@ -58,8 +58,8 @@ export default ({
               data: {
                   employee_id: selectedEmployee.id,
                   job_type_id: tempJobTypeID,
-                  start: `2022-01-04 14:30:00`,
-                  end: '2022-01-04 19:00:00'
+                  start: `2022-01-10 14:30:00`,
+                  end: '2022-01-10 19:00:00'
               },
               shiftId: tempShiftID
           }
