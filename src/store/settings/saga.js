@@ -851,8 +851,8 @@ function* createRole(action) {
       ...data,
       default: 0,
       can_delete: 1,
-      account_user_roles: [],
-      account_roles_permissions: [],
+      accountUserRoles: [],
+      accountRolesPermissions: [],
     }]));
     yield put(addSnackbar('Added Role successfully', 'success'));
     yield delay(4000);

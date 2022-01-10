@@ -731,12 +731,12 @@ export default forwardRef(({
 
                   // total
                   if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
-                    total.children[index].children[indexJ].cost += cost;
-                    total.children[index].children[indexJ].time += time;
-                    total.children[index].cost += cost;
-                    total.children[index].time += time;
-                    total.cost += cost;
-                    total.time += time;
+                    // total.children[index].children[indexJ].cost += cost;
+                    // total.children[index].children[indexJ].time += time;
+                    // total.children[index].cost += cost;
+                    // total.children[index].time += time;
+                    // total.cost += cost;
+                    // total.time += time;
                   }
 
                   if (photos.length < 2 && employee.photo) {
@@ -801,12 +801,6 @@ export default forwardRef(({
         makeShiftFor={numberOfWeeks}
         currentWeek={currentWeek}
       />
-      <Scrollbar
-        className={classes.scrollableContent}
-        ref={scrollContainerRef}
-        trackYProps={trackYProps}
-        noScrollX
-      >
         <>
           <div className={classes.table__content} ref={contentRef}>
             <div className={classes.table__content__resources}>
@@ -884,7 +878,6 @@ export default forwardRef(({
             ))}
           </div>
         </>
-      </Scrollbar>
       <Footer
         timesPanel={timesPanel[currentWeek]}
         daysOfWeek={daysOfWeek[currentWeek]}

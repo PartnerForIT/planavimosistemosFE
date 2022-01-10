@@ -4,7 +4,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import {useParams, useLocation, useHistory} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Switch from 'react-switch';
@@ -126,6 +126,7 @@ export default () => {
   const isLoadingPostShift = useSelector(postShiftIsLoadingSelector);
   const shift = useSelector(shiftSelector);
   const permissions = usePermissions(permissionsConfig);
+  const history = useHistory();
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -170,7 +171,7 @@ export default () => {
               accJ.push({
                 resourceId: child.id,
                 data: weekMock.map((dayOfWeek, indexDay) => {
-                  const foundItem = shift.shift_info.defaultTime[indexWeek]
+                  const foundItem = shift.defaultTime[indexWeek]
                     .find((itemJ) => (itemJ.day_of_week === (dayOfWeek.id - 1)));
 
                   const day = {
@@ -326,8 +327,14 @@ export default () => {
     setStartShiftFrom(value);
     tableRef.current.updateStartDay(value);
   };
+
+  const saveChangesRoute = () =>{
+      history.push(`/${companyId}/schedule`);
+  }
+
   const handleSaveChanges = () => {
     if (selectedPlace && shiftName) {
+      saveChangesRoute()
       handleSaveShift();
     } else {
       setSaveChanges(true);
@@ -416,7 +423,7 @@ export default () => {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
         const defaultTime = new Array(4).fill().reduce((acc, _, index) => {
           acc[index] = weekMock.map((item, indexDay) => {
-            const foundItem = shift.shift_info.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
+            const foundItem = shift.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
 
             if (foundItem) {
               return {
@@ -440,7 +447,7 @@ export default () => {
           });
           return acc;
         }, {});
-        const workingSetting = shift.shift_info.working_setting;
+        const workingSetting = shift.working_setting;
 
         tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
         tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
@@ -541,6 +548,7 @@ export default () => {
             onClose={handleClose}
             onCreatePlace={handleCreatePlace}
             onSaveShift={handleSaveShift}
+            save={saveChangesRoute}
           />
         )
       }

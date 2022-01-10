@@ -75,7 +75,6 @@ export default ({
       id,
     });
   };
-
   return (
     <div
       className={classes.eventContent}
@@ -84,20 +83,33 @@ export default ({
       id='dropdownButton'
     >
       {
-        photo && (
-          <img
-            alt='avatar'
-            src={photo}
-            className={classes.eventContent__avatar}
-          />
+        (!!newEmployee?.photo || newEmployee?.photo === null )
+          ? (newEmployee?.photo === null)
+            ? ''
+            :<img
+                    alt='avatar'
+                    src={newEmployee?.photo}
+                    className={classes.eventContent__avatar}
+                />
+            :photo && (
+            <img
+                alt='avatar'
+                src={photo}
+                className={classes.eventContent__avatar}
+            />
         )
       }
       {
-        viewType === TIMELINE.DAY && employeeName && (
-          <span className={classes.eventContent__title}>
-            {`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
-          </span>
-        )
+            viewType === TIMELINE.DAY && employeeName && (
+                <span className={classes.eventContent__title}>
+                  {
+                    (!!newEmployee?.name)
+
+                      ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                      :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                  }
+                </span>
+          )
       }
       <div className={classes.eventContent__leftSpace} />
       {

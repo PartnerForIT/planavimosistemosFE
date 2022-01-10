@@ -100,7 +100,7 @@ function* patchChangeEmployee(action) {
   try {
     yield call(
       axios.patch,
-      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/employee/${action.id}`,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/employee`,
       action.data,
       getToken(),
     );
@@ -116,7 +116,7 @@ function* patchChangeTimeline(action) {
   try {
     yield call(
       axios.patch,
-      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/timeline/${action.id}`,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/change/timeline`,
       action.data,
       getToken(),
     );

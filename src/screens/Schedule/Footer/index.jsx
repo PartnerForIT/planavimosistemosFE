@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useEffect, useMemo} from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
@@ -9,6 +9,11 @@ import DayOfMonth from './DayOfMonth';
 
 import classes from './Footer.module.scss';
 import CurrencySign from "../../../components/shared/CurrencySign";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {currencySelector, settingCompanySelector, settingsLoadingSelector} from "../../../store/settings/selectors";
+import {getCurrencies, getSettingCompany} from "../../../store/settings/actions";
+import _ from "lodash";
 
 export default ({
   timeline,
@@ -20,6 +25,12 @@ export default ({
   const containerClasses = classNames(classes.footer, {
     [classes[`footer_${timeline}`]]: !!timeline,
   });
+  const dispatch = useDispatch();
+
+  const { id } = useParams();
+  const currencies = useSelector(currencySelector);
+  const company = useSelector(settingCompanySelector);
+  const settingsLoading = useSelector(settingsLoadingSelector);
 
   const time = useMemo(() => {
     if (timeline === TIMELINE.DAY) {
@@ -29,6 +40,29 @@ export default ({
     return 0;
   }, [data.time]);
 
+  useEffect(() => {
+    if (Array.isArray(currencies) && !currencies.length && !settingsLoading) {
+      dispatch(getCurrencies());
+    }
+  }, [currencies, dispatch, settingsLoading]);
+
+  useEffect(() => {
+    if (_.isEmpty(company) && !settingsLoading) {
+      dispatch(getSettingCompany(id));
+    }
+  }, [company, dispatch, id, settingsLoading]);
+
+  const currency = useMemo(
+      () => {
+        if (Array.isArray(currencies)) {
+          return currencies
+              .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+        }
+
+        return '';
+      },
+      [company.currency, currencies],
+  );
   return (
     <div
       id='schedule-footer'
@@ -110,13 +144,12 @@ export default ({
                     text={item.statistic
                       ? item.id === 'totalTime'
                         ? `${data.total?.time ?? 0} h`
-                        : `${data.total?.cost ?? 0}`
+                        : `${data.total?.cost ?? 0 } ${currency}`
                       : ''}
                     // title={data[item.id].title}
                   />
                 ))
               }
-              <CurrencySign/>
             </div>
             <div className={classes.footer__empty} />
           </>

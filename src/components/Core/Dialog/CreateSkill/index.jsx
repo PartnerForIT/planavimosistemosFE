@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import Switch from 'react-switch';
 import Dialog from '../index';
@@ -6,6 +6,12 @@ import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
+import CurrencySign from "../../../shared/CurrencySign";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {currencySelector, settingCompanySelector, settingsLoadingSelector} from "../../../../store/settings/selectors";
+import {getCurrencies, getSettingCompany} from "../../../../store/settings/actions";
+import _ from "lodash";
 
 const initialFormValues = {
   name: '',
@@ -18,7 +24,12 @@ export default function CreateSkill({
   buttonTitle, createSkill, initialValues, permissions,
 }) {
   const { t } = useTranslation();
+  const { id } = useParams();
+  const currencies = useSelector(currencySelector);
+  const company = useSelector(settingCompanySelector);
+  const settingsLoading = useSelector(settingsLoadingSelector);
   const [formValues, setFormValues] = useState(initialFormValues);
+
 
   const handleSkillChange = (event) => {
     const { name, value } = event.target;
@@ -29,8 +40,8 @@ export default function CreateSkill({
   };
   const handleExited = () => {
     setFormValues(initialFormValues);
-  };
 
+  };
   useEffect(() => {
     if (initialValues) {
       setFormValues({
@@ -39,6 +50,32 @@ export default function CreateSkill({
       });
     }
   }, [initialValues]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (Array.isArray(currencies) && !currencies.length && !settingsLoading) {
+      dispatch(getCurrencies());
+    }
+  }, [currencies, dispatch, settingsLoading]);
+
+  useEffect(() => {
+    if (_.isEmpty(company) && !settingsLoading) {
+      dispatch(getSettingCompany(id));
+    }
+  }, [company, dispatch, id, settingsLoading]);
+
+  const currency = useMemo(
+      () => {
+        if (Array.isArray(currencies)) {
+          return currencies
+              .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+        }
+
+        return '';
+      },
+      [company.currency, currencies],
+  );
 
   return (
     <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
@@ -69,7 +106,7 @@ export default function CreateSkill({
               />
             </div>
             <div className={style.formControl}>
-              <Label text={t('Cost, Hourly rate, $')} htmlFor='cost' />
+              <Label text={t(`Cost, Hourly rate,${currency}`)} htmlFor='cost' />
               <Input
                 placeholder={`${t('How much new user cost/h')}`}
                 value={formValues.cost}
@@ -85,7 +122,7 @@ export default function CreateSkill({
       {
         permissions.profit && (
           <div className={style.formControl}>
-            <Label text={t('Charge, Hourly rate, $')} htmlFor='earn' />
+            <Label text={t(`Charge, Hourly rate,${currency}`)} htmlFor='earn' />
             <Input
               placeholder={`${t('How much you charge per h')}`}
               value={formValues.earn}
