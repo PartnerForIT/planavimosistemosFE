@@ -57,7 +57,7 @@ export default ({
               companyId: companyId,
               data: {
                   employee_id: selectedEmployee.id,
-                  job_type_id: tempJobTypeID,
+                  job_type_id: 7,
                   start: `2022-01-10 14:30:00`,
                   end: '2022-01-10 19:00:00'
               },
