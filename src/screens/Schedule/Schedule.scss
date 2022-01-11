@@ -441,12 +441,12 @@
           background-color: #d0d6db;
           position: relative;
           margin-left: 7px;
-          &:nth-child(1){
-            visibility: hidden;
-          }
-          &:nth-child(2){
-            visibility: hidden;
-          }
+          //&:nth-child(1){
+          //  visibility: hidden;
+          //}
+          //&:nth-child(2){
+          //  visibility: hidden;
+          //}
           &::before {
             content: '';
             position: absolute;
@@ -506,10 +506,6 @@
           position: relative;
           border: 1.9px dashed #d0d6db;
           color: #d0d6db;
-          cursor: pointer;
-          &:hover{
-            background-color: #1d88fc;
-          }
           & div{
             position: absolute;
             width: 100%;
@@ -596,5 +592,26 @@
 
   .fc-resource-timeline-divider {
     width: 0;
+  }
+}
+.empty-add{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
+  &:hover{
+    border-color: rgb(72, 195, 224);
+    background-color: rgba(72, 195, 224, 0.5);
+
+    &::before{
+      content:'+';
+      position: absolute;
+      font-size: 24px;
+      top: 24%;
+      left: 49%;
+      color: #48c3e0;
+    }
   }
 }

@@ -127,7 +127,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employeeId > 3000) {
+          if (item.employeeId < 0 ) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][18];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
           }
@@ -280,7 +280,7 @@ export default () => {
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
     }
-    if (props.employeeId > 3000){
+    if (props.employeeId < 0){
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
@@ -340,11 +340,13 @@ export default () => {
       id,
     }));
   };
-  const addTempEmployees =  (shiftId,employeeId) => {
+  const addTempEmployees =  (shiftId,employeeId,jobTypeId) => {
      setmodalAddTempEmployee(data => !data)
       setTempShiftID(shiftId)
     setTempEmployeeID(employeeId)
+    setTempJobTypeID(jobTypeId)
       console.log('111', employeeId);
+    console.log('1111', jobTypeId);
   }
 
 
@@ -353,13 +355,19 @@ export default () => {
 
     let shiftId;
     let placeId;
+    let employee_Id;
+    let jobTypeId;
     let withMenu = false;
     let employeeName;
+    console.log('zzz',resourceInfo.extendedProps);
     if (resourceInfo.extendedProps.employeeId) {
       [placeId, shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
+      // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
+      employee_Id = resourceInfo.extendedProps.employeeId
+      shiftId = resourceInfo.extendedProps.shift_id
+      jobTypeId = resourceInfo.extendedProps.job_type_id
     }
     return (
       <EventContent
@@ -381,6 +389,7 @@ export default () => {
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
         modalAddTempEmployee={modalAddTempEmployee}
+        addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId)}
       />
     );
   };
@@ -390,10 +399,7 @@ export default () => {
       photo,
       shiftId,
       employeeId,
-      jobTypeId,
-      shift_id
     } = resource.extendedProps;
-    console.log('111',resource.extendedProps);
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
@@ -403,7 +409,6 @@ export default () => {
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => handleDeleteShift(shiftId)}
-        addEmployee={()=>addTempEmployees(shift_id,employeeId)}
       />
     );
   };

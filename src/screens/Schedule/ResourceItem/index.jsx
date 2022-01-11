@@ -11,14 +11,13 @@ export default ({
   withMenu,
   onEditShift,
   onDeleteShift,
-  addEmployee,
 }) => {
   const { t } = useTranslation();
   return (
     <>
       {
         (title.includes('Empty'))
-            ?  <div onClick={addEmployee}><span>Empty</span></div>
+            ?  <div><span>Empty</span></div>
             : title
       }
       {
