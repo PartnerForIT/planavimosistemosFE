@@ -33,7 +33,7 @@ function RolesBlock({
   const isSuperAdmin = user?.user?.role_id === 1;
   const isCompanyAdmin = useMemo(() => {
     if (roles?.length) {
-      return roles[0].account_user_roles.some((item) => item.employee?.user_id === user.user.id);
+      return roles[0].accountUserRoles.some((item) => item.user_id === user.user.id);
     }
 
     return false;
@@ -60,7 +60,7 @@ function RolesBlock({
                 onChangeDefault={changeDefaultRole}
                 isDefault={role.default}
                 name={role.name}
-                userCount={role.account_user_roles?.length}
+                userCount={role.accountUserRoles?.length}
                 selected={role.id === activeRole.id}
                 canDelete={!!role.can_delete}
                 itemName='role'
