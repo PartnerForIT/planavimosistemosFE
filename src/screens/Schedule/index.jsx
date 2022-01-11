@@ -86,6 +86,7 @@ export default () => {
   const [tempShiftID,setTempShiftID] = useState(0)
   const [tempJobTypeID,setTempJobTypeID] = useState(0)
   const [tempEmployeeID,setTempEmployeeID] = useState(0)
+  const [tempEventID,setTempEventID] = useState(0)
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -127,7 +128,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employeeId < 0 ) {
+          if (item.employee_type == 3 ) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][18];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
           }
@@ -280,7 +281,7 @@ export default () => {
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
     }
-    if (props.employeeId < 0){
+    if (props.employee_type == 3){
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
@@ -340,11 +341,12 @@ export default () => {
       id,
     }));
   };
-  const addTempEmployees =  (shiftId,employeeId,jobTypeId) => {
+  const addTempEmployees =  (shiftId,employeeId,jobTypeId,eventId) => {
      setmodalAddTempEmployee(data => !data)
       setTempShiftID(shiftId)
     setTempEmployeeID(employeeId)
     setTempJobTypeID(jobTypeId)
+    setTempEventID(eventId)
       console.log('111', employeeId);
     console.log('1111', jobTypeId);
   }
@@ -389,7 +391,7 @@ export default () => {
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
         modalAddTempEmployee={modalAddTempEmployee}
-        addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId)}
+        addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
       />
     );
   };
@@ -642,6 +644,7 @@ export default () => {
                               tempShiftID={tempShiftID}
                               tempJobTypeID={tempJobTypeID}
                               tempEmployeeID={tempEmployeeID}
+                              tempEventID={tempEventID}
                           />
                           : ''
                     }

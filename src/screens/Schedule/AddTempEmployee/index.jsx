@@ -21,7 +21,8 @@ export default ({
                     companyId,
                     tempShiftID,
                     tempJobTypeID,
-                    tempEmployeeID
+                    tempEmployeeID,
+                    tempEventID
 }) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
@@ -57,10 +58,10 @@ export default ({
               companyId: companyId,
               data: {
                   employee_id: selectedEmployee.id,
-                  job_type_id: 7,
-                  start: `2022-01-11 14:30:00`,
-                  end: '2022-01-11 19:00:00',
-                  time_cell_id:tempEmployeeID
+                  //job_type_id: 7,
+                  //start: `2022-01-11 14:30:00`,
+                  //end: '2022-01-11 19:00:00',
+                  data:tempEventID
               },
               shiftId: tempShiftID
           }
