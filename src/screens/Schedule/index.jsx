@@ -113,7 +113,10 @@ export default () => {
           if (item.shiftId) {
             colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
           }
-
+          if (item.place_id){
+            eventBorderColor = COLORS_JOB_TYPE[colorType][19];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][19], 0.5);
+          }
           if (item.job_type_id) {
             if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
               currentColor = 0;
@@ -123,7 +126,6 @@ export default () => {
             eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor];
             currentColor += 1;
           }
-
           if (item.employeeId) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
@@ -243,6 +245,7 @@ export default () => {
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
+
       ...prevState,
       employers: arrChecked,
     }));
@@ -325,6 +328,7 @@ export default () => {
     dispatch(patchChangeTimeline({
       companyId,
       shiftId,
+
       data: {
         dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
         dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
@@ -358,6 +362,7 @@ export default () => {
       firstLoading: false,
 
     }));
+
     dispatch(addTempemployee({
               companyId: companyId,
               data: {
