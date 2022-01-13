@@ -104,6 +104,7 @@ function* patchChangeEmployee(action) {
       action.data,
       getToken(),
     );
+    console.log('aaa',action);
     yield put(getScheduleAction(action.body));
   } catch (error) {
     yield put(addSnackbar(error, 'error'));
@@ -136,8 +137,6 @@ function* addTempEmployee(action){
         action.data,
         getToken()
     )
-    yield put(addTempemployeeSuccess(data))
-    yield put(getScheduleAction(action.body));
   }catch (error) {
     yield put(addSnackbar(error, 'error'));
     yield delay(4000);

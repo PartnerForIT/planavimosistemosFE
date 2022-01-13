@@ -71,9 +71,9 @@ export const reducer = (state = initialState, action) => {
       return { ...state, shift: null };
 
     case ADD_TEMP_EMPLOYEE:
-      return {...state,loading: true}
-    case ADD_TEMP_EMPLOYEE_SUCCESS:
-      return {...state,loading: false}
+      return {...state}
+    // case ADD_TEMP_EMPLOYEE_SUCCESS:
+    //   return {...state}
     case ADD_SNACKBAR:
       return {
         ...state,

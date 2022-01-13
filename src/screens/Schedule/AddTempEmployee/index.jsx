@@ -10,19 +10,12 @@ import Input from "../../../components/Core/Input/Input";
 import CheckboxGroupWrapper from "../../../components/Core/CheckboxGroup/CheckboxGroupWrapper";
 import useGroupingEmployees from "../../../hooks/useGroupingEmployees";
 import {employeesSelector} from "../../../store/settings/selectors";
-import {addTempemployee, addTempEmployee} from "../../../store/schedule/actions";
-import ChangeWorkingTime from "../EventContent/ChangeWorkingTime";
+import {addTempemployee, getSchedule} from "../../../store/schedule/actions";
 import moment from "moment";
 
 export default ({
-  photo,
-  jobTypeName,
-  employeeName,
-                    companyId,
-                    tempShiftID,
-                    tempJobTypeID,
-                    tempEmployeeID,
-                    tempEventID
+                    setmodalAddTempEmployee,
+                    addTempEmployeeDispatch
 }) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
@@ -41,7 +34,11 @@ export default ({
     label: `${name} ${surname}`,
     checked: false,
   }), []);
-
+    const style = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems:'center'
+    };
   const handleInputChange = (e) => {
     setSearchValue(e.target.value);
   };
@@ -53,20 +50,18 @@ export default ({
     }
   };
 
+    const closeModalAddTempEmployee = () => {
+        setmodalAddTempEmployee(false)
+    }
   const handleOnApplyEmployee = () => {
-     dispatch(addTempemployee({
-              companyId: companyId,
-              data: {
-                  employee_id: selectedEmployee.id,
-                  //job_type_id: 7,
-                  //start: `2022-01-11 14:30:00`,
-                  //end: '2022-01-11 19:00:00',
-                  data:tempEventID
-              },
-              shiftId: tempShiftID
-          }
-      )
-     )
+      addTempEmployeeDispatch(selectedEmployee.id)
+      closeModalAddTempEmployee()
+      // dispatch(getSchedule({
+      //     companyId,
+      //     timeline,
+      //     fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      //     firstLoading: true,
+      // }));
   };
     const filteredEmployees = useMemo(() => {
     const stringMatch = (str = '') => str.toLowerCase().includes(searchValue.toLowerCase());
@@ -83,21 +78,12 @@ export default ({
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
   return (
     <div className={classes.changeEmployee}>
-      <div className={classes.changeEmployee__title}>
-        {t('Add Employee')}
-      </div>
-      <div className={classes.changeEmployee__userInfo}>
-        {
-          photo && (
-            <img
-              className={classes.changeEmployee__userInfo__avatar}
-              alt='avatar'
-              src={photo}
-            />
-          )
-        }
-        {`${employeeName} • ${jobTypeName}`}
-      </div>
+        <div style={style}>
+            <div className={classes.changeEmployee__title}>
+                {t('Add Employee')}
+            </div>
+        <div onClick={closeModalAddTempEmployee} className={'close-modal-add-temp-employee'} style={{cursor:'pointer'}}>X</div>
+        </div>
       <Input
         icon={<SearchIcon />}
         placeholder='Search by employees'

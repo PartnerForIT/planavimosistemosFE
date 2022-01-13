@@ -189,6 +189,7 @@ export default ({
                   />
                   <Dropdown.ItemMenu
                     title={t('Change Working Time')}
+
                     onClick={openChangeWorkingTime}
                   />
                   <Dropdown.ItemMenu
@@ -208,3 +209,4 @@ export default ({
     </div>
   );
 };
+

@@ -32,7 +32,7 @@ import {
   deleteTimeline,
   patchChangeTimeline,
   patchChangeEmployee,
-  deleteShift, putShift,
+  deleteShift, putShift, addTempemployee,
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
@@ -99,9 +99,9 @@ export default () => {
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
           if (item.shiftId) {
             item.count = item.count || 0;
-            // item.children.map((i) => {
-            //   item.count = item.count + i.children.length;
-            // });
+            item.children.map((i) => {
+              item.count = item.count + i.children.length;
+            });
           }
           if (item.job_type_id) {
             item.count = item.children.length;
@@ -128,7 +128,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employee_type == 3 ) {
+          if (item.employee_type == 3|| item.employee_type == 2 ) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][18];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
           }
@@ -261,6 +261,7 @@ export default () => {
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
+    console.log('aaa',props);
     if (props.lastShift) {
       classes.push('fc-datagrid-cell-last-shift');
     }
@@ -269,7 +270,7 @@ export default () => {
       classes.push('fc-datagrid-cell-last-job-type');
     }
 
-    if (props.placeId) {
+    if (props.place_id) {
       classes.push('fc-datagrid-cell-place');
     } else if (props.shiftId) {
       classes.push('fc-datagrid-cell-shift');
@@ -281,7 +282,7 @@ export default () => {
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
     }
-    if (props.employee_type == 3){
+    if (props.employee_type == 3 || props.employee_type == 2){
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
@@ -347,11 +348,28 @@ export default () => {
     setTempEmployeeID(employeeId)
     setTempJobTypeID(jobTypeId)
     setTempEventID(eventId)
-      console.log('111', employeeId);
-    console.log('1111', jobTypeId);
   }
 
+  const addTempEmployeeDispatch = (selectedEmployee) => {
+    dispatch(getSchedule({
+      companyId,
+      timeline,
+      fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      firstLoading: false,
 
+    }));
+    dispatch(addTempemployee({
+              companyId: companyId,
+              data: {
+                employee_id: selectedEmployee,
+                data:tempEventID
+              },
+              body: getBodyForGetSchedule(),
+              shiftId: tempShiftID,
+            }
+        )
+    )
+  }
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
 
@@ -361,7 +379,6 @@ export default () => {
     let jobTypeId;
     let withMenu = false;
     let employeeName;
-    console.log('zzz',resourceInfo.extendedProps);
     if (resourceInfo.extendedProps.employeeId) {
       [placeId, shiftId] = resourceInfo.id.split('-');
       // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
@@ -493,6 +510,7 @@ export default () => {
   }, []);
   useEffect(() => {
     switch (timeline) {
+
       case TIMELINE.DAY:
       case TIMELINE.WEEK: {
         const calendarApi = calendarRef.current?.getApi();
@@ -521,6 +539,7 @@ export default () => {
     }
     return '24:00:00';
   };
+
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -637,14 +656,8 @@ export default () => {
                     {
                       (modalAddTempEmployee)
                           ?<AddTempEmployee
-                              photo={''}
-                              jobTypeName={''}
-                              employeeName={''}
-                              companyId={companyId}
-                              tempShiftID={tempShiftID}
-                              tempJobTypeID={tempJobTypeID}
-                              tempEmployeeID={tempEmployeeID}
-                              tempEventID={tempEventID}
+                              setmodalAddTempEmployee={setmodalAddTempEmployee}
+                              addTempEmployeeDispatch={addTempEmployeeDispatch}
                           />
                           : ''
                     }
