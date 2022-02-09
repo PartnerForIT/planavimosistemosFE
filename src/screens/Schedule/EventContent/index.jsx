@@ -114,6 +114,7 @@ export default ({
                 </span>
           )
       }
+
       <div className={classes.eventContent__leftSpace} />
       {
         oldEmployee && (
@@ -208,5 +209,6 @@ export default ({
       }
     </div>
   );
+
 };
 

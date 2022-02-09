@@ -30,6 +30,7 @@ export default ({
   }) => ({
     id,
     label: `${name} ${surname}`,
+
     checked: false,
   }), []);
 

@@ -106,17 +106,21 @@ export default () => {
           if (item.job_type_id) {
             item.count = item.children.length;
           }
+          console.log('www',item);
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
 
+          if (item.place_id){
+            eventBorderColor = COLORS_JOB_TYPE[colorType][217];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][217], 0.5);
+          }
           if (item.shiftId) {
             colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
+            eventBorderColor = COLORS_SHIFT[colorType][currentColor];
+            eventBackgroundColor = COLORS_SHIFT[colorType][currentColor];
           }
-          if (item.place_id){
-            eventBorderColor = COLORS_JOB_TYPE[colorType][19];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][19], 0.5);
-          }
+
           if (item.job_type_id) {
             if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
               currentColor = 0;
@@ -126,13 +130,14 @@ export default () => {
             eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor];
             currentColor += 1;
           }
+
           if (item.employeeId) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
           if (item.employee_type == 3|| item.employee_type == 2 ) {
-            eventBorderColor = COLORS_JOB_TYPE[colorType][18];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][18], 0.5);
+            eventBorderColor = COLORS_JOB_TYPE[colorType][216];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
           const nextItem = {
             ...item,
@@ -264,7 +269,6 @@ export default () => {
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
-    console.log('aaa',props);
     if (props.lastShift) {
       classes.push('fc-datagrid-cell-last-shift');
     }
@@ -492,6 +496,7 @@ export default () => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
     }).observe(container[0], { box: 'border-box' });
+
   };
 
   useEffect(() => {
@@ -499,6 +504,7 @@ export default () => {
     dispatch(getJobTypes(companyId));
     dispatch(getSchedule({
       companyId,
+
       timeline,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
