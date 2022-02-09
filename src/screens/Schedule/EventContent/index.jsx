@@ -26,6 +26,7 @@ export default ({
   start,
   end,
   viewType,
+                  addEmployee
 }) => {
   const { t } = useTranslation();
 
@@ -101,16 +102,19 @@ export default ({
       }
       {
             viewType === TIMELINE.DAY && employeeName && (
-                <span className={classes.eventContent__title}>
+                <span className={classes.eventContent__title} >
                   {
                     (!!newEmployee?.name)
 
                       ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-                      :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                       :(employeeName === 'Empty')
+                        ?<span onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
                   }
                 </span>
           )
       }
+
       <div className={classes.eventContent__leftSpace} />
       {
         oldEmployee && (
@@ -186,6 +190,7 @@ export default ({
                   />
                   <Dropdown.ItemMenu
                     title={t('Change Working Time')}
+
                     onClick={openChangeWorkingTime}
                   />
                   <Dropdown.ItemMenu
@@ -204,4 +209,6 @@ export default ({
       }
     </div>
   );
+
 };
+

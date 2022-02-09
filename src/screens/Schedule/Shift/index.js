@@ -152,7 +152,6 @@ export default () => {
                   end: '17:00',
                 };
               }
-
               return {
                 id: `${indexDay}`,
                 time,

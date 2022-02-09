@@ -32,7 +32,7 @@ import {
   deleteTimeline,
   patchChangeTimeline,
   patchChangeEmployee,
-  deleteShift,
+  deleteShift, putShift, addTempemployee,
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
@@ -54,6 +54,8 @@ import {
 } from '../../store/settings/selectors';
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
+import AddTempEmployee from "./AddTempEmployee";
+import Dropdown from "../../components/Core/Dropdown/Dropdown";
 
 const permissionsConfig = [
   {
@@ -80,6 +82,12 @@ export default () => {
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
+  const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
+  const [tempShiftID,setTempShiftID] = useState(0)
+  const [tempJobTypeID,setTempJobTypeID] = useState(0)
+  const [tempEmployeeID,setTempEmployeeID] = useState(0)
+  const [tempEventID,setTempEventID] = useState(0)
+
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
@@ -98,12 +106,19 @@ export default () => {
           if (item.job_type_id) {
             item.count = item.children.length;
           }
+          console.log('www',item);
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
 
+          if (item.place_id){
+            eventBorderColor = COLORS_JOB_TYPE[colorType][217];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][217], 0.5);
+          }
           if (item.shiftId) {
             colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
+            eventBorderColor = COLORS_SHIFT[colorType][currentColor];
+            eventBackgroundColor = COLORS_SHIFT[colorType][currentColor];
           }
 
           if (item.job_type_id) {
@@ -120,12 +135,15 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-
+          if (item.employee_type == 3|| item.employee_type == 2 ) {
+            eventBorderColor = COLORS_JOB_TYPE[colorType][216];
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
+          }
           const nextItem = {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId,
+            eventDurationEditable: !!item.employeeId ,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
 
@@ -232,6 +250,7 @@ export default () => {
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
+
       ...prevState,
       employers: arrChecked,
     }));
@@ -250,7 +269,6 @@ export default () => {
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
-
     if (props.lastShift) {
       classes.push('fc-datagrid-cell-last-shift');
     }
@@ -259,7 +277,7 @@ export default () => {
       classes.push('fc-datagrid-cell-last-job-type');
     }
 
-    if (props.placeId) {
+    if (props.place_id) {
       classes.push('fc-datagrid-cell-place');
     } else if (props.shiftId) {
       classes.push('fc-datagrid-cell-shift');
@@ -270,6 +288,9 @@ export default () => {
     }
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
+    }
+    if (props.employee_type == 3 || props.employee_type == 2){
+      classes.push('fc-datagrid-cell-empty');
     }
     return classes;
   };
@@ -311,6 +332,7 @@ export default () => {
     dispatch(patchChangeTimeline({
       companyId,
       shiftId,
+
       data: {
         dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
         dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
@@ -328,19 +350,52 @@ export default () => {
       id,
     }));
   };
+  const addTempEmployees =  (shiftId,employeeId,jobTypeId,eventId) => {
+     setmodalAddTempEmployee(data => !data)
+      setTempShiftID(shiftId)
+    setTempEmployeeID(employeeId)
+    setTempJobTypeID(jobTypeId)
+    setTempEventID(eventId)
+  }
 
+  const addTempEmployeeDispatch = (selectedEmployee) => {
+    dispatch(getSchedule({
+      companyId,
+      timeline,
+      fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      firstLoading: false,
+
+    }));
+
+    dispatch(addTempemployee({
+              companyId: companyId,
+              data: {
+                employee_id: selectedEmployee,
+                data:tempEventID
+              },
+              body: getBodyForGetSchedule(),
+              shiftId: tempShiftID,
+            }
+        )
+    )
+  }
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
     let placeId;
+    let employee_Id;
+    let jobTypeId;
     let withMenu = false;
     let employeeName;
     if (resourceInfo.extendedProps.employeeId) {
       [placeId, shiftId] = resourceInfo.id.split('-');
-      const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
+      // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
+      employee_Id = resourceInfo.extendedProps.employeeId
+      shiftId = resourceInfo.extendedProps.shift_id
+      jobTypeId = resourceInfo.extendedProps.job_type_id
     }
     return (
       <EventContent
@@ -361,6 +416,8 @@ export default () => {
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
+        modalAddTempEmployee={modalAddTempEmployee}
+        addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
       />
     );
   };
@@ -369,12 +426,15 @@ export default () => {
       count,
       photo,
       shiftId,
+      employeeId,
     } = resource.extendedProps;
     return (
       <ResourceItem
         title={`${fieldValue} ${count ? `(${count})` : ''}`}
         photo={photo}
+        shiftId={shiftId}
         withMenu={!!shiftId}
+        employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => handleDeleteShift(shiftId)}
       />
@@ -436,6 +496,7 @@ export default () => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
     }).observe(container[0], { box: 'border-box' });
+
   };
 
   useEffect(() => {
@@ -443,6 +504,7 @@ export default () => {
     dispatch(getJobTypes(companyId));
     dispatch(getSchedule({
       companyId,
+
       timeline,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
@@ -459,6 +521,7 @@ export default () => {
   }, []);
   useEffect(() => {
     switch (timeline) {
+
       case TIMELINE.DAY:
       case TIMELINE.WEEK: {
         const calendarApi = calendarRef.current?.getApi();
@@ -487,6 +550,7 @@ export default () => {
     }
     return '24:00:00';
   };
+
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -600,6 +664,14 @@ export default () => {
                       eventResize={handleEventChange}
                       // nowIndicator
                     />
+                    {
+                      (modalAddTempEmployee)
+                          ?<AddTempEmployee
+                              setmodalAddTempEmployee={setmodalAddTempEmployee}
+                              addTempEmployeeDispatch={addTempEmployeeDispatch}
+                          />
+                          : ''
+                    }
                     <Tooltip
                       id='time'
                       className='schedule-screen__tooltip'

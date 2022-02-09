@@ -16,7 +16,7 @@ import {
   DELETE_SHIFT,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
-  DELETE_TIMELINE,
+  DELETE_TIMELINE, ADD_TEMP_EMPLOYEE, ADD_TEMP_EMPLOYEE_SUCCESS,
 } from './types';
 import {ADD_SNACKBAR} from "../organizationList/types";
 
@@ -69,6 +69,11 @@ export const reducer = (state = initialState, action) => {
 
     case RESET_SHIFT:
       return { ...state, shift: null };
+
+    case ADD_TEMP_EMPLOYEE:
+      return {...state}
+    // case ADD_TEMP_EMPLOYEE_SUCCESS:
+    //   return {...state}
     case ADD_SNACKBAR:
       return {
         ...state,

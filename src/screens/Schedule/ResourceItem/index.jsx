@@ -13,10 +13,13 @@ export default ({
   onDeleteShift,
 }) => {
   const { t } = useTranslation();
-
   return (
     <>
-      {title}
+      {
+        (title.includes('Empty'))
+            ?  <div><span>Empty</span></div>
+            : title
+      }
       {
         photo && (
           <img
@@ -45,6 +48,7 @@ export default ({
           </Dropdown>
         )
       }
+      {/*<div onClick={addEmployee}>Empty</div>*/}
     </>
   );
 };

@@ -1,39 +1,44 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-import Button from '../../../../components/Core/Button/Button';
+import Button from '../../../components/Core/Button/Button';
 
-import classes from './ChangeEmployee.module.scss';
-import SearchIcon from "../../../../components/Icons/SearchIcon";
-import Input from "../../../../components/Core/Input/Input";
-import CheckboxGroupWrapper from "../../../../components/Core/CheckboxGroup/CheckboxGroupWrapper";
-import useGroupingEmployees from "../../../../hooks/useGroupingEmployees";
-import {employeesSelector} from "../../../../store/settings/selectors";
+import classes from './addTempEmployee.module.scss';
+import SearchIcon from "../../../components/Icons/SearchIcon";
+import Input from "../../../components/Core/Input/Input";
+import CheckboxGroupWrapper from "../../../components/Core/CheckboxGroup/CheckboxGroupWrapper";
+import useGroupingEmployees from "../../../hooks/useGroupingEmployees";
+import {employeesSelector} from "../../../store/settings/selectors";
+import {addTempemployee, getSchedule} from "../../../store/schedule/actions";
+import moment from "moment";
 
 export default ({
-  photo,
-  jobTypeName,
-  employeeName,
-  onChangeEmployee,
+                    setmodalAddTempEmployee,
+                    addTempEmployeeDispatch
 }) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-
   const { users: employees } = useSelector(employeesSelector);
+    // let fromDateRef = new Date();
+    // fromDateRef.format('YYYY-MM-DD')
 
-  const employToCheck = useCallback(({
+    const dispatch = useDispatch();
+    const employToCheck = useCallback(({
     id,
     name,
     surname,
   }) => ({
     id,
     label: `${name} ${surname}`,
-
     checked: false,
   }), []);
-
+    const style = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems:'center'
+    };
   const handleInputChange = (e) => {
     setSearchValue(e.target.value);
   };
@@ -44,11 +49,21 @@ export default ({
       setSelectedEmployee(null);
     }
   };
-  const handleOnApplyEmployee = () => {
-    onChangeEmployee(selectedEmployee.id);
-  };
 
-  const filteredEmployees = useMemo(() => {
+    const closeModalAddTempEmployee = () => {
+        setmodalAddTempEmployee(false)
+    }
+  const handleOnApplyEmployee = () => {
+      addTempEmployeeDispatch(selectedEmployee.id)
+      closeModalAddTempEmployee()
+      // dispatch(getSchedule({
+      //     companyId,
+      //     timeline,
+      //     fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      //     firstLoading: true,
+      // }));
+  };
+    const filteredEmployees = useMemo(() => {
     const stringMatch = (str = '') => str.toLowerCase().includes(searchValue.toLowerCase());
 
     if (searchValue.trim()) {
@@ -61,24 +76,14 @@ export default ({
     return employees;
   }, [searchValue, employees]);
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
-
   return (
     <div className={classes.changeEmployee}>
-      <div className={classes.changeEmployee__title}>
-        {t('Change Employee')}
-      </div>
-      <div className={classes.changeEmployee__userInfo}>
-        {
-          photo && (
-            <img
-              className={classes.changeEmployee__userInfo__avatar}
-              alt='avatar'
-              src={photo}
-            />
-          )
-        }
-        {`${employeeName} • ${jobTypeName}`}
-      </div>
+        <div style={style}>
+            <div className={classes.changeEmployee__title}>
+                {t('Add Employee')}
+            </div>
+        <div onClick={closeModalAddTempEmployee} className={'close-modal-add-temp-employee'} style={{cursor:'pointer'}}>X</div>
+        </div>
       <Input
         icon={<SearchIcon />}
         placeholder='Search by employees'
