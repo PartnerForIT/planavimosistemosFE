@@ -117,7 +117,7 @@ export default ({
 
       <div className={classes.eventContent__leftSpace} />
       {
-        oldEmployee && (
+        newEmployee?.name !== oldEmployee?.name && (
           <ReplacedEmployee
             newEmployee={newEmployee}
             oldEmployee={oldEmployee}

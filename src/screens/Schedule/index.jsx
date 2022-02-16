@@ -106,7 +106,7 @@ export default () => {
           if (item.job_type_id) {
             item.count = item.children.length;
           }
-          console.log('www',item);
+
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
@@ -359,14 +359,6 @@ export default () => {
   }
 
   const addTempEmployeeDispatch = (selectedEmployee) => {
-    dispatch(getSchedule({
-      companyId,
-      timeline,
-      fromDate: moment(new Date()).format('YYYY-MM-DD'),
-      firstLoading: false,
-
-    }));
-
     dispatch(addTempemployee({
               companyId: companyId,
               data: {
@@ -378,6 +370,12 @@ export default () => {
             }
         )
     )
+    dispatch(getSchedule({
+      companyId,
+      timeline,
+      fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      firstLoading: false,
+    }));
   }
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];

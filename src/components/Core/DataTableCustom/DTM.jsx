@@ -128,7 +128,7 @@ export default function DataTable({
   );
 
   const footerTitleCosts = classNames(
-    styles.footerTitle, styles.footerCost,
+    styles.footerTitle, styles.footerCost, styles.margin0,
   );
 
   const tableHeaderCell = classNames(
@@ -335,7 +335,7 @@ export default function DataTable({
         {
           total && (
             <FooterTitle
-              title='Overall worktime: '
+              title='Overall: '
               wrapperClassNames={`${footerTitleClasses} ${styles.footerTitle_first}`}
               amountColorClassName={styles.blue}
               amount={total.duration}
