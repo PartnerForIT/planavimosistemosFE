@@ -225,7 +225,7 @@ export default () => {
   }, [allPermissions]);
 
   const roleEmployeesEdit = (data) => {
-    dispatch(updateRole(id, activeRole.id, { users: data.length ? data.toString() : '' }));
+    dispatch(updateRole(id, activeRole.id, { users: data?.length ? data.toString() : '' }));
   };
 
   const removeRolesPermissions = (data = []) => {
@@ -240,7 +240,7 @@ export default () => {
       // eslint-disable-next-line no-shadow
       ?.map(({ permission_id: id, access }) => ({ id, access }));
 
-    const newPermissions = data.length ? data.map((item) => ({
+    const newPermissions = data?.length ? data.map((item) => ({
       id: item, access: 1,
     })) : [];
 
@@ -262,7 +262,7 @@ export default () => {
   };
 
   const availableDetails = useMemo(() => {
-    if (!_.isEmpty(activeRole) && allPermissions.length) {
+    if (!_.isEmpty(activeRole) && allPermissions?.length) {
       // eslint-disable-next-line no-shadow
       return allPermissions.filter((perm) => activeRole.accountRolesPermissions.some(({ id }) => id === perm.id));
     }
@@ -278,10 +278,10 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    if (!allPermissions.length) {
+    if (!allPermissions?.length) {
       dispatch(loadPermissions(id));
     }
-  }, [dispatch, id, allPermissions.length]);
+  }, [dispatch, id, allPermissions?.length]);
 
   useEffect(() => {
     setDefaultRoleAccess(() => {
@@ -357,13 +357,13 @@ export default () => {
     });
   }, [permissions, journal]);
 
-  useEffect(() => {
-    if (roles.length && !_.isEmpty(activeRole)) {
-      // eslint-disable-next-line no-shadow
-      const role = roles.find(({ id }) => id === activeRole.id);
-      setActiveRole(role);
-    }
-  }, [activeRole, roles, roles.length]);
+    useEffect(() => {
+      if (roles?.length && !_.isEmpty(activeRole)) {
+        // eslint-disable-next-line no-shadow
+        const role = roles.find(({id}) => id === activeRole.id);
+        setActiveRole(role);
+      }
+    }, [activeRole, roles]);
 
   const createNewRole = (roleName) => {
     if (roleName.trim()) {

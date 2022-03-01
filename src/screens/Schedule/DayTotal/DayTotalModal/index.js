@@ -38,7 +38,7 @@ export default ({
         trackYProps={trackYProps}
       >
         {
-          nested.map((item) => (
+          nested && nested.map((item) => (
             <ModalItem
               key={item.jobTypeId}
               title={item.name}

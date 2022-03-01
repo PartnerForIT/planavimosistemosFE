@@ -8,7 +8,7 @@ export default ({ photo, classes }) => (
       photo && (
         <img
           alt=''
-          // className={classes}
+          className={classes}
           src={photo}
         />
       )
