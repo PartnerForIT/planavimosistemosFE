@@ -111,8 +111,8 @@ export default ({
             employeesCount={data[item - 1]?.employeesCount}
             empty={!data[item - 1]?.employeesCount}
             photos={data[item - 1 - 1]?.photos ?? []}
-            hours={data[item - 1]?.time ?? 0}
-            money={data[item - 1]?.cost ?? 0}
+            hours={data[item - 1]?.time ?? data.total?.time}
+            money={data[item - 1]?.cost ?? data.total?.cost}
             title={data[item - 1]?.title}
             nested={data[item - 1]?.children}
             withCost={withCost}

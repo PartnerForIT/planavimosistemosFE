@@ -107,10 +107,11 @@ export default function Company() {
     dispatch(editSettingCompany({ ...inputValues, logo: base64 }, companyId));
   };
 
-  const handleInputChange = (event) => {
+  const   handleInputChange = (event) => {
     const { name, value } = event.target;
     const nextInputValues = { ...inputValues, [name]: value };
     setInputValues({ ...nextInputValues});
+    editCompany(nextInputValues);
   };
 
 

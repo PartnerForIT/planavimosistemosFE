@@ -32,18 +32,18 @@ export default ({
     setIsOpen(false);
   };
 
-  if (empty) {
-    return (
-      <div className={classes.dayTotal}>
-        <div className={classes.dayTotal__content}>
-          <div className={classes.dayTotal__content__emptyIcon} />
-          <div className={classes.dayTotal__content__noWorkers}>
-            {t('No workers this day')}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (empty) {
+  //   return (
+  //     <div className={classes.dayTotal}>
+  //       <div className={classes.dayTotal__content}>
+  //         <div className={classes.dayTotal__content__emptyIcon} />
+  //         <div className={classes.dayTotal__content__noWorkers}>
+  //           {t('No workers this day')}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className={dayTotalClasses}>
@@ -53,16 +53,16 @@ export default ({
         ref={buttonRef}
       >
         <div className={classes.dayTotal__content__users}>
-          {/*{*/}
-          {/*  photos.map((photo) => photo && (*/}
-          {/*    <img*/}
-          {/*      key={photo}*/}
-          {/*      alt='avatar'*/}
-          {/*      className={classes.dayTotal__content__users__avatar}*/}
-          {/*      src={photo}*/}
-          {/*    />*/}
-          {/*  ))*/}
-          {/*}*/}
+          {
+            photos?.map((photo) => photo && (
+              <img
+                key={photo}
+                alt='avatar'
+                className={classes.dayTotal__content__users__avatar}
+                src={photo}
+              />
+            ))
+          }
           <div className={classes.dayTotal__content__users__count}>
             {employeesCount}
           </div>
