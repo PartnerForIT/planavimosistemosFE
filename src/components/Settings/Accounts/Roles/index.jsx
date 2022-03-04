@@ -202,6 +202,7 @@ export default () => {
   const [editVisible, setEditVisible] = useState(false);
   const [defaultRoleAccess, setDefaultRoleAccess] = useState({});
 
+
   const permissionsIds = useMemo(() => {
     // eslint-disable-next-line no-underscore-dangle
     const _temp = {};
