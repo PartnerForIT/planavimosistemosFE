@@ -12,6 +12,7 @@ import useGroupingEmployees from "../../../hooks/useGroupingEmployees";
 import {employeesSelector} from "../../../store/settings/selectors";
 import {addTempemployee, getSchedule} from "../../../store/schedule/actions";
 import moment from "moment";
+import Cross from "../../../components/Icons/Cross";
 
 export default ({
                     setmodalAddTempEmployee,
@@ -21,6 +22,13 @@ export default ({
   const [searchValue, setSearchValue] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { users: employees } = useSelector(employeesSelector);
+  const styles = {
+      cursor: 'pointer',
+      position: 'absolute',
+      right: '15px',
+      top: '10px',
+      color: '#d9dfe3'
+  }
     // let fromDateRef = new Date();
     // fromDateRef.format('YYYY-MM-DD')
 
@@ -79,10 +87,10 @@ export default ({
   return (
     <div className={classes.changeEmployee}>
         <div style={style}>
-            <div className={classes.changeEmployee__title}>
+            <div className={classes.changeEmployee__title2}>
                 {t('Add Employee')}
             </div>
-        <div onClick={closeModalAddTempEmployee} className={'close-modal-add-temp-employee'} style={{cursor:'pointer'}}>X</div>
+        <div onClick={closeModalAddTempEmployee} className={'close-modal-add-temp-employee'} style={styles}><Cross/></div>
         </div>
       <Input
         icon={<SearchIcon />}
