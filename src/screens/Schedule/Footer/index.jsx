@@ -114,7 +114,7 @@ export default ({
             hours={data[item - 1]?.time ?? 0}
             money={data[item - 1]?.cost ?? 0}
             title={data[item - 1]?.title}
-            nested={data[item - 1]?.children}
+            nested={data.total?.children}
             withCost={withCost}
           />
         ))
