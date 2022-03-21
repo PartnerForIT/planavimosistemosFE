@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
+import { compareAsc, format } from 'date-fns'
 
 import Dropdown from '../Dropdown';
 import { TIMELINE } from '../../../const';
@@ -9,6 +10,7 @@ import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import classes from './EventContent.module.scss';
+import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 
 export default ({
   id,
@@ -26,7 +28,9 @@ export default ({
   start,
   end,
   viewType,
-                  addEmployee
+                  addEmployee,
+                  dayNumber,
+                  isCompleted
 }) => {
   const { t } = useTranslation();
 
@@ -76,15 +80,27 @@ export default ({
       id,
     });
   };
+ const today = format(new Date(), 'dd')
+
+  const dayEndCheck = () => {
+      if (isCompleted) {
+        return `${classes.eventContent} ${classes.dayEnd}`
+      } else return classes.eventContent
+    }
+  const [isShown, setIsShown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div
-      className={classes.eventContent}
+      className={dayEndCheck()}
       data-for='time'
       data-tip={title}
       id='dropdownButton'
+      onMouseEnter={() => setIsShown(true)}
+      onMouseLeave={() => setIsShown(false)}
     >
       {
-        (!!newEmployee?.photo || newEmployee?.photo === null )
+        (!!newEmployee?.photo)
           ? (newEmployee?.photo === null)
             ? ''
             :<img
@@ -117,12 +133,16 @@ export default ({
 
       <div className={classes.eventContent__leftSpace} />
       {
-        oldEmployee && (
+        newEmployee?.name !== oldEmployee?.name && (
           <ReplacedEmployee
             newEmployee={newEmployee}
             oldEmployee={oldEmployee}
             onDelete={handleDeleteTimeline}
             onChangeEmployee={openChangeEmployee}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            isShown={isCompleted ? isShown : isOpen}
+            isToday={isCompleted}
           />
         )
       }

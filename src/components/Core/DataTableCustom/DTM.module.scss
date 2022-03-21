@@ -33,7 +33,7 @@ header {
   padding: 0 1px;
 
   &:last-of-type {
-    justify-content: flex-end;
+    //justify-content: flex-end;
     padding-right: 10px;
   }
 }
@@ -260,7 +260,7 @@ header {
   .groupLabelText {
     user-select: none;
     //color: #4d7499;
-    //text-transform: uppercase;
+    text-transform: uppercase;
     font-family: "Helvetica Neue Medium", sans-serif;
     font-weight: 500;
   }
@@ -395,7 +395,7 @@ header {
   }
 
   &:last-of-type {
-    justify-content: flex-end;
+    //justify-content: flex-end;
     padding-right: 17px;
   }
 }
@@ -409,7 +409,7 @@ header {
   padding: 8px;
 
   &:last-of-type {
-    justify-content: flex-end;
+    //justify-content: flex-end;
   }
 }
 
@@ -453,7 +453,7 @@ header {
   display: flex;
   position: absolute;
   padding: 4px 10px 2px 20px;
-  justify-content: flex-end;
+  //justify-content: flex-end;
   align-items: center;
   width: 120px;
   text-align: right;
@@ -472,7 +472,7 @@ header {
 
   &:last-of-type {
     display: flex;
-    justify-content: flex-end;
+    //justify-content: flex-end;
   }
 }
 
@@ -558,7 +558,8 @@ header {
 }
 
 .footerTitleReports {
-  margin-left: auto;
+  margin-left: 390px;
+  margin-right: 0px;
   padding-right: 35px;
 }
 
@@ -1042,4 +1043,7 @@ div {
       background-color: transparent;
     }
   }
+}
+.margin0{
+  margin: 0 90px 0 30px;
 }

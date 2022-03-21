@@ -315,10 +315,9 @@ export default () => {
           'DD.MM.YY': 'DD. MMMM, YYYY',
           'MM.DD.YY': 'MMMM. DD, YYYY',
         });
-
         return {
           ...item,
-          label: moment(item.date).format(`dddd, ${partFormat}`).toUpperCase(),
+          label: moment(item.id).format(`dddd, ${partFormat}`).toUpperCase(),
           items,
         };
       }).filter(({ items }) => items.length));

@@ -56,6 +56,7 @@ import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
 import Dropdown from "../../components/Core/Dropdown/Dropdown";
+import {format} from "date-fns";
 
 const permissionsConfig = [
   {
@@ -87,6 +88,9 @@ export default () => {
   const [tempJobTypeID,setTempJobTypeID] = useState(0)
   const [tempEmployeeID,setTempEmployeeID] = useState(0)
   const [tempEventID,setTempEventID] = useState(0)
+  const [dayCheckData,setDayCheckData] = useState(0)
+  const today = format(new Date(), 'dd')
+
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -106,7 +110,7 @@ export default () => {
           if (item.job_type_id) {
             item.count = item.children.length;
           }
-          console.log('www',item);
+
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
@@ -143,10 +147,9 @@ export default () => {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            eventDurationEditable: !!item.employeeId ,
+            eventDurationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
-
           if (lastShift) {
             nextItem.lastShift = lastShift;
           }
@@ -262,7 +265,6 @@ export default () => {
     setTimeline(value);
     handleGetSchedule({ nextTimeline: value });
   };
-
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
   };
@@ -359,14 +361,6 @@ export default () => {
   }
 
   const addTempEmployeeDispatch = (selectedEmployee) => {
-    dispatch(getSchedule({
-      companyId,
-      timeline,
-      fromDate: moment(new Date()).format('YYYY-MM-DD'),
-      firstLoading: false,
-
-    }));
-
     dispatch(addTempemployee({
               companyId: companyId,
               data: {
@@ -378,6 +372,12 @@ export default () => {
             }
         )
     )
+    dispatch(getSchedule({
+      companyId,
+      timeline,
+      fromDate: moment(new Date()).format('YYYY-MM-DD'),
+      firstLoading: false,
+    }));
   }
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
@@ -388,6 +388,9 @@ export default () => {
     let jobTypeId;
     let withMenu = false;
     let employeeName;
+    let endDay;
+    let dayNumber;
+    let isCompleted;
     if (resourceInfo.extendedProps.employeeId) {
       [placeId, shiftId] = resourceInfo.id.split('-');
       // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
@@ -396,6 +399,9 @@ export default () => {
       employee_Id = resourceInfo.extendedProps.employeeId
       shiftId = resourceInfo.extendedProps.shift_id
       jobTypeId = resourceInfo.extendedProps.job_type_id
+      endDay = event.endStr
+      dayNumber = event._def.extendedProps.day_number
+      isCompleted = event._def.extendedProps.is_completed
     }
     return (
       <EventContent
@@ -418,6 +424,8 @@ export default () => {
         onDeleteTimeline={handleDeleteTimeline}
         modalAddTempEmployee={modalAddTempEmployee}
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
+        endDay={endDay}
+        isCompleted={isCompleted}
       />
     );
   };
@@ -441,6 +449,7 @@ export default () => {
     );
   };
   const renderResourceAreaHeaderContent = ({ view }) => {
+    const viewTitle = view.title?.split(' ')[3]
     const handleClickPrev = () => {
       view.calendar.prev();
       fromDateRef.current = view.getCurrentData().currentDate;
@@ -550,7 +559,6 @@ export default () => {
     }
     return '24:00:00';
   };
-
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -607,7 +615,8 @@ export default () => {
         </div>
         {
           (!schedule) ? (
-            <Progress />
+            // <Progress />
+              <></>
           ) : (
             <>
               {
@@ -698,11 +707,11 @@ export default () => {
         {
           (isLoading) && (
             <div className='schedule-screen__overlay-loading'>
-              <Progress />
+              <Progress/>
             </div>
           )
         }
-        <div />
+        <div/>
       </div>
     </MainLayout>
   );
