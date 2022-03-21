@@ -543,7 +543,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         rolesLoading: false,
-        roles: action.data.accountRoles,
+        roles: action.data?.accountRoles || action.data,
       };
 
     case GET_ROLE_DETAILS_SUCCESS:
