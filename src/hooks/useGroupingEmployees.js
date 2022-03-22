@@ -6,9 +6,11 @@ export default (empList, employToCheck) => {
     .map((i) => employToCheck(i)), [empList, employToCheck]);
   const employeesWithGroupsSubGroups = useMemo(() => empList
     .filter((empl) => empl.groups.length || empl.subgroups.length), [empList]);
+
+
   const mapEmployeesGroups = useCallback((employeeArray) => {
     // eslint-disable-next-line no-underscore-dangle
-    const _temp = {};
+    const _temp2 = {};
     employeeArray.forEach((item) => {
       const {
         // eslint-disable-next-line no-shadow
@@ -17,54 +19,34 @@ export default (empList, employToCheck) => {
         group_id,
         subgroup_id,
       } = item;
-      const groupId = group_id ?? subgroup_id ?? '';
-      const subGroupId = subgroup_id ?? '';
-      const groupname = groups ?? subgroups ?? '';
-      const subGroupName = subgroups ?? '';
-      const type = 'group';
-        // eslint-disable-next-line no-nested-ternary
-      _temp[groupId] = _temp[groupId]
-        // eslint-disable-next-line no-nested-ternary
-        ?  _temp[groupId]
-          ? {
-            ..._temp[groupId],
-            label: groupname,
-            type,
-            [subGroupId]: {
-              label: subGroupName,
-              type,
-              items:[employToCheck(item)],
-            },
-          }
-          : subGroupId ? {
-            [subGroupId]: {
-              label: subGroupName,
-              type,
-              items: [employToCheck(item)],
-            },
-          } : {
-            ..._temp[groupId],
-            items: [
-              ...(_temp[groupId].items || []),
-              employToCheck(item),
-            ],
-          }
-        : subGroupId ? {
-          label: groupname,
-          type,
-          [subGroupId]: {
-            label: subGroupName,
-            type,
-            items: [employToCheck(item)],
-          },
-        } : {
-          items: [employToCheck(item)],
-          label: groupname,
-          type,
-        };
+      const groupId = group_id ? ('group_' + group_id) : 'group_all';
+      const subGroupId = subgroup_id ? ('subgroup_' + subgroup_id) : 'subgroup_all';
+
+      if( _temp2[groupId] == undefined) {
+        _temp2[groupId] = {
+          type:'group',
+          label: groups
+        }
+      }
+
+      if(_temp2[groupId][subGroupId] == undefined) {
+        _temp2[groupId][subGroupId] = {
+          type: 'group',
+          label: subgroups,
+          items: []
+        }
+      }
+
+      _temp2[groupId][subGroupId].items.push({
+        checked: false,
+        id: item.id,
+        label: item.name + ' ' + item.surname
+      });
+
       return item;
     });
-    return { ..._temp };
+
+    return _temp2 ;
   }, [employToCheck]);
 
   const merged = useMemo(() => mapEmployeesGroups(employeesWithGroupsSubGroups),
