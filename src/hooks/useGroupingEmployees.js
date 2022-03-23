@@ -37,11 +37,7 @@ export default (empList, employToCheck) => {
         }
       }
 
-      _temp2[groupId][subGroupId].items.push({
-        checked: false,
-        id: item.id,
-        label: item.name + ' ' + item.surname
-      });
+      _temp2[groupId][subGroupId].items.push(employToCheck(item));
 
       return item;
     });
