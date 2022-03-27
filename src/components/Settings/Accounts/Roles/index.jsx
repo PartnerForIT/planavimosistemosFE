@@ -128,6 +128,11 @@ const initialRoleAccess = {
         mobile: 'Use Managers Mobile View',
       },
     },
+    app: {
+      options: {
+        manager: 'Managers view WEB'
+      }
+    },
     kiosk: {
       options: {
         create: 'Can create Kiosks & PIN',
