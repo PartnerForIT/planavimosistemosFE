@@ -269,6 +269,7 @@ const EventInformation = ({
 export default ({
   selectedItem,
 }) => {
+  
   const { t } = useTranslation();
   const { icon, title, subTitle } = useMemo(() => {
     switch (selectedItem?.event_type_id) {
@@ -356,10 +357,10 @@ export default ({
       />
       <div className={classes.container__employeeHabbits}>
         <div className={classes.container__employeeHabbits__header}>
-          {/*<UserIcon*/}
-          {/*  photo={selectedItem.photo}*/}
-          {/*  classes={classes}*/}
-          {/*/>*/}
+          <UserIcon
+            photo={selectedItem.photo}
+            className={classes.container__employeeHabbits__icon}
+          />
           {t('Employee Habbits')}
         </div>
         <span className={classes.container__employeeHabbits__subTitle}>

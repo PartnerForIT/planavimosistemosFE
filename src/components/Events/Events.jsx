@@ -91,7 +91,6 @@ const Events = () => {
 
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState(columns);
-
   const [selectedItem, setSelectedItem] = useState(null);
 
   const [dateRange, setDateRange] = useState({
@@ -151,7 +150,7 @@ const Events = () => {
       const nextItem = {
         ...item,
         timestamp: moment(item.timestamp).format(`${formatDate2} hh:mm`),
-        time: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
+        time_string: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
       };
       let time;
       if (!item.seen) {
@@ -262,7 +261,7 @@ const Events = () => {
 
     setSelectedItem({
       ...selectedRow,
-      timestamp: moment(selectedRow.timestamp).format(`hh:mm ${formatDate}`),
+      timestamp: moment(selectedRow.timestamp, 'YYYY, MMMM, DD HH:mm').format(`hh:mm ${formatDate}`),
     });
   };
 

@@ -38,6 +38,7 @@ const CheckboxGroupWrapper = ({
           }
           stat.total += 1;
         }
+        
         if (item.items) {
           setCheckedToAll(item.items);
         }
@@ -68,10 +69,35 @@ const CheckboxGroupWrapper = ({
   }, [items]);
 
   useEffect(() => {
+    const stat = { checked: 0, unchecked: 0, total: 0 };
+
+    const setCheckedToAll = (array) => {
+      const arrayCopy = array.length ? [...array] : [...itemsCopy];
+      if (!arrayCopy.length) return arrayCopy;
+
+      return arrayCopy.map((item) => {
+        if (!item.disabled) {
+          if (item.checked) {
+            stat.checked += 1;
+          } else {
+            stat.unchecked += 1;
+          }
+          stat.total += 1;
+        }
+        
+        if (item.items) {
+          setCheckedToAll(item.items);
+        }
+        return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
+      });
+    };
+
+    setCheckedToAll(itemsCopy)
+
     setItemsStat({
-      ...itemsStat,
+      ...stat,
       checked: checkedItems.length,
-      unchecked: itemsStat.total - checkedItems.length,
+      unchecked: stat.total - checkedItems.length,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);

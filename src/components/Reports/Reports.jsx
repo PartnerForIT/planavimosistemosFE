@@ -273,10 +273,10 @@ export default () => {
         let reportsCost = 0;
         let reportsSallary = 0;
         let reportsProfit = 0;
-
+        
         const mappedReport = {
           ...generatedReport,
-          description: `${moment(generatedReport.startDate).format(formatDate)} - ${moment(generatedReport.endDate).format(formatDate)}`,
+          description: `${moment(generatedReport.startDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)} - ${moment(generatedReport.endDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)}`,
           report: generatedReport.report.map(({ items, ...rest }) => ({
             ...rest,
             items: items.map(({ data, ...other }) => ({
@@ -319,7 +319,7 @@ export default () => {
                   reportsProfit += profit;
                   return {
                     ...all,
-                    date: moment(all.date).format(getDateFormat({
+                    date: moment(all.date, 'YYYY.MM.DD').format(getDateFormat({
                       'YY.MM.DD': 'yyyy-MM-DD',
                       'DD.MM.YY': 'DD-MM-yyyy',
                       'MM.DD.YY': 'MM-DD-yyyy',
