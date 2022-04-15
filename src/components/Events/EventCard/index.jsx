@@ -358,7 +358,6 @@ export default ({
       <div className={classes.container__employeeHabbits}>
         <div className={classes.container__employeeHabbits__header}>
           <UserIcon
-            photo={selectedItem.photo}
             className={classes.container__employeeHabbits__icon}
           />
           {t('Employee Habbits')}
