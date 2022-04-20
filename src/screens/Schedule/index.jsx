@@ -14,7 +14,7 @@ import cloneDeep from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
-import { alpha } from '@material-ui/core/styles/colorManipulator';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
@@ -118,7 +118,7 @@ export default () => {
 
           if (item.place_id){
             eventBorderColor = COLORS_JOB_TYPE[colorType][217];
-            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][217], 0.5);
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][217], 0.5);
           }
           if (item.shiftId) {
             colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
@@ -138,11 +138,11 @@ export default () => {
 
           if (item.employeeId) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
-            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
           if (item.employee_type == 3|| item.employee_type == 2 ) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
-            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][216], 0.5);
+            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
           const nextItem = {
             ...item,
@@ -313,7 +313,7 @@ export default () => {
     
     const calendarApi = calendarRef.current?.getApi();
     let send = { nextTimeline: value };
-    
+
     if (!calendarApi?.view?.getCurrentData()?.currentDate)
     {
       send.fromDate = moment(new Date()).format('YYYY-MM-DD');
