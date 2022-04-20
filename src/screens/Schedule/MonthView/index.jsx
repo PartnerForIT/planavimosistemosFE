@@ -147,7 +147,7 @@ export default ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalResources]);
-
+  
   return (
     <>
       <div className={classes.monthView}>

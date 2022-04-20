@@ -322,7 +322,7 @@ export default function DashboardMenu() {
                 classes={{
                   expanded: classes.expanded,
                 }}
-                key={item.name}
+                key={index}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon className={section === item.name ? classes.activeIcon : classes.icon} />}
@@ -345,8 +345,10 @@ export default function DashboardMenu() {
                 <AccordionDetails className={classes.accordionContent}>
                   <ul className={styles.dashboardLinkBlock}>
                     {
-                      item.items.map((subItem) => (
-                        <li>
+                      item.items.map((subItem, index) => (
+                        <li
+                          key={index}
+                        >
                           <Link
                             to={subItem.to}
                             className={innerSection === subItem.name ? styles.activeLink : styles.link}

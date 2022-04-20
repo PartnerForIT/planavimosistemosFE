@@ -63,6 +63,7 @@ export default ({
       },
       [company.currency, currencies],
   );
+  
   return (
     <div
       id='schedule-footer'
@@ -108,13 +109,13 @@ export default ({
         timeline === TIMELINE.WEEK && TIMES_PANEL.map((item) => (
           <Item
             key={item}
-            employeesCount={data[item - 1]?.employeesCount}
-            empty={!data[item - 1]?.employeesCount}
-            photos={data[item - 1 - 1]?.photos ?? []}
-            hours={data[item - 1]?.time ?? data.total?.time}
-            money={data[item - 1]?.cost ?? data.total?.cost}
-            title={data[item - 1]?.title}
-            nested={data.total?.children}
+            employeesCount={item - 1 >= 0 ? data[item - 1]?.employeesCount : data.total?.employeesCount}
+            empty={item - 1 >= 0 ? !data[item - 1]?.employeesCount : !data.total?.employeesCount}
+            photos={item - 1 >= 0 ? (data[item - 1 - 1]?.photos ?? []) : (data.total?.photos ?? [])}
+            hours={item - 1 >= 0 ? (data[item - 1]?.time ?? data.total?.time) : data.total?.time}
+            money={item - 1 >= 0 ? (data[item - 1]?.cost ?? data.total?.cost) : data.total?.cost}
+            title={item - 1 >= 0 ? (data[item - 1]?.title) : (data.total?.title)}
+            nested={item - 1 >= 0 ? (data[item - 1]?.children) : (data.total?.children)}
             withCost={withCost}
           />
         ))

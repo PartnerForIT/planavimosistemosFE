@@ -11,6 +11,13 @@
     z-index: 1;
   }
 
+  &__empty {
+    > div:last-child {
+      border: 1.9px dashed #d0d6db;
+      color: #d0d6db;
+    }
+  }
+
   &__padding {
     display: flex;
 

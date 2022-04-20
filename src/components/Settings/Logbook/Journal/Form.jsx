@@ -151,12 +151,7 @@ export default ({
       />
       <div className={style.tooltipBlock}>
         <Tooltip
-          title={t('Merge daily entries to one checkbox - so if user has did two or more working time '
-            + 'clock in and clock out, then we will have more than one entries in database and in the logbook '
-            + 'and in the reports for that day for that user. But we can merge it, and the merge goes '
-            + 'like this:The first entries start time clock in and the last entries of that day '
-            + 'finish time clock out. Brakes are merged and calculated as well. Please clarify with me '
-            + 'about this one')}
+          title={t('Merge daily entries to one')}
         />
       </div>
     </div>

@@ -9,6 +9,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
+import { IndeterminateCheckBox } from '@material-ui/icons';
 
 const initialItems = [];
 export default function CustomSelect({
@@ -29,25 +30,37 @@ export default function CustomSelect({
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
-    const setCheckedToAll = (array) => {
+    const setCheckedToAll = (array = []) => {
       const arrayCopy = array.length ? [...array] : items;
 
-      return arrayCopy.map((item) => {
-        if (!item.disabled) {
-          if (item.checked) {
-            checkedItemsArray.push(item);
-            stat.checked += 1;
-          } else {
-            stat.unchecked += 1;
-          }
-          stat.total += 1;
+      //merge with real items array
+      let merged = items.map((item, i) => {
+        const find = arrayCopy.find(x => x.id === item.id);
+        if (find) {
+          return { ...item, ...find };
         }
-        if (item.items?.length) {
-          setCheckedToAll(item.items);
-        }
-        return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
+
+        return item;
       });
+
+      return merged.map((item) => {
+          if (!item.disabled) {
+            if (item.checked) {
+              checkedItemsArray.push(item);
+              stat.checked += 1;
+            } else {
+              stat.unchecked += 1;
+            }
+            stat.total += 1;
+          }
+          if (item.items?.length) {
+            setCheckedToAll(item.items);
+          }
+
+          return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
+        });
     };
+    
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItemsArray);
     setItemsStat({ ...stat });
@@ -141,9 +154,10 @@ export default function CustomSelect({
         >
           <input
             type='text'
-            value={checkedItems.length > 0 ? generateLabel() : ''}
+            value={checkedItems.length > 0 ? generateLabel() || '' : ''}
             placeholder={placeholder}
             className={customSelectClasses}
+            onChange={() => {}}
           />
         </div>
 

@@ -44,7 +44,6 @@ export default ({
   //     </div>
   //   );
   // }
-
   return (
     <div className={dayTotalClasses}>
       <button

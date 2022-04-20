@@ -25,7 +25,7 @@ export default ({
   const handleCloseModal = () => {
     setIsOpen(false);
   };
-
+  
   return (
     <div className={dayOfMonthClasses}>
       {

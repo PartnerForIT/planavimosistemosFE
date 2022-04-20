@@ -28,12 +28,15 @@ const ResourceCell = ({
   nestingLevel = 0,
   lastChild1 = false,
   lastChild2 = false,
+  isEmpty = false,
+  employeesCount,
 }) => {
   const { t } = useTranslation();
 
   const rowClasses = classnames(classes.resourcesCell, {
     [classes.resourcesCell_lastChild1]: lastChild1 && nestingLevel > 1,
     [classes.resourcesCell_lastChild2]: lastChild2 && nestingLevel > 2,
+    [classes.resourcesCell__empty]: isEmpty,
   });
 
   // const handleChangeNumber = useCallback((value) => {
@@ -51,7 +54,6 @@ const ResourceCell = ({
   // const handleDelete = useCallback(() => {
   //   onDelete({ rowId, parentRowId });
   // }, [rowId, parentRowId]);
-
   return (
     <>
       <div className={rowClasses}>
@@ -61,7 +63,7 @@ const ResourceCell = ({
           ))}
         </div>
         <Section
-          title={`${title}-(${nestingLevel})`}
+          title={`${title} ${employeesCount ? `(${employeesCount})` : ''}`}
           avatar={avatar}
           onExpander={handleExpander}
           expander={expander}
@@ -76,11 +78,12 @@ const ResourceCell = ({
       {
         expander && items?.map((item, index) => (
           <ResourceCell
-            key={item.id}
+            key={index+'_'+nestingLevel}
             rowId={item.id}
             title={item.title}
             avatar={item.photo}
             items={item.children}
+            employeesCount={item.employeesCount}
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={item.expander}
@@ -88,6 +91,7 @@ const ResourceCell = ({
             lastChild1={nestingLevel === 0 ? (index + 1 === items.length) : lastChild1}
             lastChild2={nestingLevel === 1 ? (index + 1 === items.length) : lastChild2}
             nestingLevel={nestingLevel + 1}
+            isEmpty={item.empty}
             // lastChild={index + 1 === items.length}
             // employees={employees}
             // onSubmit={onSubmit}

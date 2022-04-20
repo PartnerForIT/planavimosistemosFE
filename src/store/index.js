@@ -55,9 +55,9 @@ const middlewares = [
 
 // Disable Logger at server side.
 // eslint-disable-next-line no-undef
-if (process.browser && process.env.NODE_ENV !== 'production') {
-  middlewares.push(loggerMiddleware);
-}
+//if (process.browser && process.env.NODE_ENV !== 'production') {
+//  middlewares.push(loggerMiddleware);
+//}
 
 const store = createStore(rootReducer, undefined, composeWithDevTools(applyMiddleware(...middlewares)));
 

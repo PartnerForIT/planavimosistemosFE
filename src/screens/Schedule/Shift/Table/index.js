@@ -123,7 +123,7 @@ const ResourcesCell = ({
   const handleDelete = useCallback(() => {
     onDelete({ rowId, parentRowId });
   }, [rowId, parentRowId]);
-
+  
   return (
     <>
       <div className={rowClasses}>
@@ -152,9 +152,9 @@ const ResourcesCell = ({
         }
       </div>
       {
-        expander && items?.map((item) => (
+        expander && items?.map((item, index) => (
           <ResourcesCell
-            key={item.id}
+            key={index}
             rowId={item.id}
             parentRowId={rowId}
             title={item.title}
@@ -324,7 +324,6 @@ export default forwardRef(({
   const [currentWeek, setCurrentWeek] = useState(0);
   const scrollContainerRef = useRef(null);
   const contentRef = useRef(null);
-  console.log('fff',data);
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
@@ -709,39 +708,40 @@ export default forwardRef(({
                 if (employee.title) {
                   const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
                   const foundData = data[week].find((itemD) => itemD.resourceId === employee.id);
+                  if (foundData) {
+                    const timeStart = foundData.data[indexDay].time.start.split(':');
+                    const timeEnd = foundData.data[indexDay].time.end.split(':');
+                    const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
+                    const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
+                    const time = totalTimeEnd > totalTimeStart
+                      ? totalTimeEnd - totalTimeStart
+                      : totalTimeStart - totalTimeEnd;
+                    // const cost = time * foundEmployee.profitability.cost;
 
-                  const timeStart = foundData.data[indexDay].time.start.split(':');
-                  const timeEnd = foundData.data[indexDay].time.end.split(':');
-                  const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
-                  const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
-                  const time = totalTimeEnd > totalTimeStart
-                    ? totalTimeEnd - totalTimeStart
-                    : totalTimeStart - totalTimeEnd;
-                  // const cost = time * foundEmployee.profitability.cost;
+                    // accK.jobTypeTotalTime += time;
+                    // accK.jobTypeTotalCost += cost;
+                    // accK.children.push({
+                    //   avatar: employee.photo,
+                    //   employeeId: employee.employeeId,
+                    //   name: employee.title,
+                    //   job_type_name: jobType.title,
+                    //   time,
+                    //   cost,
+                    // });
 
-                  // accK.jobTypeTotalTime += time;
-                  // accK.jobTypeTotalCost += cost;
-                  // accK.children.push({
-                  //   avatar: employee.photo,
-                  //   employeeId: employee.employeeId,
-                  //   name: employee.title,
-                  //   job_type_name: jobType.title,
-                  //   time,
-                  //   cost,
-                  // });
+                    // total
+                    if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
+                      // total.children[index].children[indexJ].cost += cost;
+                      // total.children[index].children[indexJ].time += time;
+                      // total.children[index].cost += cost;
+                      // total.children[index].time += time;
+                      // total.cost += cost;
+                      // total.time += time;
+                    }
 
-                  // total
-                  if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
-                    // total.children[index].children[indexJ].cost += cost;
-                    // total.children[index].children[indexJ].time += time;
-                    // total.children[index].cost += cost;
-                    // total.children[index].time += time;
-                    // total.cost += cost;
-                    // total.time += time;
-                  }
-
-                  if (photos.length < 2 && employee.photo) {
-                    photos.push(employee.photo);
+                    if (photos.length < 2 && employee.photo) {
+                      photos.push(employee.photo);
+                    }
                   }
                 }
                 return accK;

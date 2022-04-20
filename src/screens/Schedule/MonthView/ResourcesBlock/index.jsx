@@ -12,7 +12,7 @@ export default ({
       resources.map((item, index) => (
         <ResourcesCell
           title={item.title}
-          key={item.id}
+          key={index}
           items={item.children}
           expander={item.expander}
           onExpander={onExpander}

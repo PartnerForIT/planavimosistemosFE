@@ -14,7 +14,7 @@ import cloneDeep from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@material-ui/core/styles/colorManipulator';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
@@ -57,6 +57,7 @@ import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
 import Dropdown from "../../components/Core/Dropdown/Dropdown";
 import {format} from "date-fns";
+import { TheatersRounded } from '@material-ui/icons';
 
 const permissionsConfig = [
   {
@@ -117,7 +118,7 @@ export default () => {
 
           if (item.place_id){
             eventBorderColor = COLORS_JOB_TYPE[colorType][217];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][217], 0.5);
+            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][217], 0.5);
           }
           if (item.shiftId) {
             colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
@@ -137,11 +138,11 @@ export default () => {
 
           if (item.employeeId) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
+            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
           if (item.employee_type == 3|| item.employee_type == 2 ) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
+            eventBackgroundColor = alpha(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
           const nextItem = {
             ...item,
@@ -174,6 +175,52 @@ export default () => {
     // schedule.resources
     return schedule?.resources;
   }, [filterData, schedule?.resources]);
+
+  const filteredShifts = () => {
+
+    const updateShifts = (shifts) => {
+      let filteredShiftsPreview = [];
+      if (shifts) {
+        for (let i in shifts || []) {
+          for (let j in resources) {
+            if (resources[j].children) {
+              for (let k in resources[j].children) {
+                if (shifts[i].id == resources[j].children[k].shiftId) {
+                  let add = false;
+                  if (resources[j].children[k].children) {
+                    for (let m in resources[j].children[k].children) {
+                      if (resources[j].children[k].children[m].children) {
+                        for (let n in resources[j].children[k].children[m].children) {
+                          add = true;
+                        }
+                      }
+                    }
+                  }
+      
+                  if (add) {
+                    filteredShiftsPreview.push({...shifts[i]});
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return filteredShiftsPreview;
+    };
+    
+    if (filterData[0] && (filter.employers.length || filter.place.length)) {
+      return updateShifts(shiftsTypes?.shiftTypes);
+    }
+  
+    if (shiftsTypes?.shiftTypes) {
+      return shiftsTypes?.shiftTypes;
+    }
+
+    return shiftsTypes?.shiftTypes;
+
+  };
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
@@ -263,7 +310,16 @@ export default () => {
   }, [filter]);
   const handleChangeTimeline = (value) => {
     setTimeline(value);
-    handleGetSchedule({ nextTimeline: value });
+    
+    const calendarApi = calendarRef.current?.getApi();
+    let send = { nextTimeline: value };
+    
+    if (!calendarApi?.view?.getCurrentData()?.currentDate)
+    {
+      send.fromDate = moment(new Date()).format('YYYY-MM-DD');
+    }
+
+    handleGetSchedule(send);
   };
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
@@ -285,7 +341,7 @@ export default () => {
       classes.push('fc-datagrid-cell-shift');
     } else if (props.job_type_id) {
       classes.push('fc-datagrid-cell-job-type');
-    } else if (props.employeeId) {
+    } else if (props.employeeId || props.employeeId == 0) {
       classes.push('fc-datagrid-cell-employee');
     }
     if (props.lastJobType) {
@@ -403,6 +459,7 @@ export default () => {
       dayNumber = event._def.extendedProps.day_number
       isCompleted = event._def.extendedProps.is_completed
     }
+  
     return (
       <EventContent
         id={event.id}
@@ -435,10 +492,13 @@ export default () => {
       photo,
       shiftId,
       employeeId,
+      employeesCount,
     } = resource.extendedProps;
+    const realCount = employeesCount;
+
     return (
       <ResourceItem
-        title={`${fieldValue} ${count ? `(${count})` : ''}`}
+        title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
         shiftId={shiftId}
         withMenu={!!shiftId}
@@ -450,6 +510,7 @@ export default () => {
   };
   const renderResourceAreaHeaderContent = ({ view }) => {
     const viewTitle = view.title?.split(' ')[3]
+
     const handleClickPrev = () => {
       view.calendar.prev();
       fromDateRef.current = view.getCurrentData().currentDate;
@@ -460,7 +521,7 @@ export default () => {
       fromDateRef.current = view.getCurrentData().currentDate;
       handleGetSchedule({ fromDate: fromDateRef.current });
     };
-
+    
     return (
       <ResourceAreaHeader
         title={view.title}
@@ -511,6 +572,7 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
+
     dispatch(getSchedule({
       companyId,
 
@@ -559,6 +621,7 @@ export default () => {
     }
     return '24:00:00';
   };
+
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -574,7 +637,7 @@ export default () => {
           <CustomSelect
             placeholder={t('All shifts')}
             buttonLabel={t('Filter')}
-            items={shiftsTypes?.shiftTypes}
+            items={filteredShifts()}
             onChange={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
@@ -622,7 +685,7 @@ export default () => {
               {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
-                    resources={Object.values(schedule.resources) || resourcesMock}
+                    resources={Object.values(resources) || resourcesMock}
                     events={schedule.events}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}

@@ -32,7 +32,7 @@ const ModalItem = ({
       setIsExtended((prevState) => !prevState);
     }
   };
-
+  
   return (
     <>
       <div
@@ -94,19 +94,21 @@ const ModalItem = ({
         </div>
       </div>
       {
-        isExtended && nested && nested.map((item) => (
-          <ModalItem
-            key={item.jobTypeId || item.employeeId}
-            title={item.name}
-            subTitle={item.job_type_name || `${item.employeesCount} employee`}
-            cost={item.cost}
-            time={item.time}
-            nested={item.children}
-            avatar={item.avatar}
-            childLevel={childLevel + 1}
-            withCost={withCost}
-          />
-        ))
+        isExtended && nested && nested.map((item, index) => {
+            return (<ModalItem
+              key={index}
+              title={item.name}
+              subTitle={item.job_type_name || `${item.employeesCount} employee`}
+              cost={item.cost}
+              time={item.time}
+              nested={item.children}
+              avatar={item.avatar}
+              childLevel={childLevel + 1}
+              withCost={withCost}
+            
+            />
+          );
+        })
       }
     </>
   );

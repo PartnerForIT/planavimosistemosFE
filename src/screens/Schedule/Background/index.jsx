@@ -20,8 +20,9 @@ export default ({
       id='schedule-background'
     >
       {
-        TIMES_PANEL.map((item) => (
+        TIMES_PANEL.map((item, index) => (
           <Item
+            key={index+'-'+item.id}
             currentDay={item !== 'total' && day.clone().add('days', item - 1).isSame(currentDay, 'day')}
             dayGoneBy={day.clone().add('days', item).isBefore(currentDay)}
           />

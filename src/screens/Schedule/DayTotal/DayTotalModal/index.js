@@ -21,37 +21,41 @@ export default ({
   onClose,
   nested,
   withCost,
-}) => (
-  <ClickAwayListener onClickAway={onClose}>
-    <div className={classes.dayTotalModal}>
-      <div className={classes.dayTotalModal__title}>
-        {title}
+}) => {
+  return (
+    <ClickAwayListener onClickAway={onClose}>
+      <div className={classes.dayTotalModal}>
+        <div className={classes.dayTotalModal__title}>
+          {title}
+        </div>
+        <CloseIcon
+          className={classes.dayTotalModal__close}
+          onClick={onClose}
+        />
+        <Scrollbar
+          className={classes.scrollableContent}
+          noScrollX
+          permanentTrackY
+          trackYProps={trackYProps}
+        >
+          {
+            nested && nested.map((item, index) => {
+              return (
+                <ModalItem
+                  key={index}
+                  title={item.name}
+                  subTitle={item.job_type_name || `${item.employeesCount} employee`}
+                  cost={item.cost}
+                  time={item.time}
+                  nested={item.children}
+                  withCost={withCost}
+                  main
+                />
+              );
+            })
+          }
+        </Scrollbar>
       </div>
-      <CloseIcon
-        className={classes.dayTotalModal__close}
-        onClick={onClose}
-      />
-      <Scrollbar
-        className={classes.scrollableContent}
-        noScrollX
-        permanentTrackY
-        trackYProps={trackYProps}
-      >
-        {
-          nested && nested.map((item) => (
-            <ModalItem
-              key={item.jobTypeId}
-              title={item.name}
-              subTitle={item.job_type_name || `${item.employeesCount} employee`}
-              cost={item.cost}
-              time={item.time}
-              nested={item.children}
-              withCost={withCost}
-              main
-            />
-          ))
-        }
-      </Scrollbar>
-    </div>
-  </ClickAwayListener>
-);
+    </ClickAwayListener>
+  );
+}

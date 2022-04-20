@@ -11,6 +11,7 @@ export default ({
   <div className={styles.buttonGroupToggle}>
     {buttons.map((item) => (
       <button
+        key={item.id}
         className={`${styles.buttonGroupToggle__item}
          ${item.id === value ? styles.buttonGroupToggle__item_selected : ''}`}
         onClick={() => {
