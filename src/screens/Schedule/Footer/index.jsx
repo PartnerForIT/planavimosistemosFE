@@ -64,6 +64,23 @@ export default ({
       [company.currency, currencies],
   );
   
+  const parsablePhotos = () => {
+    if (typeof data.photos === 'object') {
+      let result = [];
+      for (let i in data.photos) {
+        if (typeof data.photos[i] === 'object') {
+
+        } else {
+          result.push(data.photos[i]);
+        }
+      }
+
+      return result;
+    }
+
+    return data.photos;
+  };
+
   return (
     <div
       id='schedule-footer'
@@ -74,7 +91,7 @@ export default ({
         timeline === TIMELINE.DAY && (
           <>
             {
-              data.photos?.map((photo) => photo && (
+              parsablePhotos()?.map((photo) => photo && (
                 <img
                   key={photo}
                   alt='avatar'
