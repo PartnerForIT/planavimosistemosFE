@@ -102,6 +102,7 @@ const ResourcesCell = ({
   onDelete,
   parentTitle,
   avatar,
+  empty,
 }) => {
   const rowClasses = classnames(classes.table__content__resources__cell, {
     [classes.table__content__resources__cell_main]: main,
@@ -128,7 +129,7 @@ const ResourcesCell = ({
     <>
       <div className={rowClasses}>
         {
-          title ? (
+          (title && !empty) ? (
             <Section
               title={title}
               avatar={avatar}
@@ -159,6 +160,7 @@ const ResourcesCell = ({
             parentRowId={rowId}
             title={item.title}
             avatar={item.photo}
+            empty={item.empty}
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={expander}
@@ -707,7 +709,7 @@ export default forwardRef(({
               } = jobType.children.reduce((accK, employee, indexJ) => {
                 if (employee.title) {
                   const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
-                  const foundData = data[week].find((itemD) => itemD.resourceId === employee.id);
+                  const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
                   if (foundData) {
                     const timeStart = foundData.data[indexDay].time.start.split(':');
                     const timeEnd = foundData.data[indexDay].time.end.split(':');
@@ -791,7 +793,7 @@ export default forwardRef(({
       return acc;
     }, {});
   }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek]);
-
+  
   return (
     <div className={classes.table}>
       <Header

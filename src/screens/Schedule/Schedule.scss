@@ -382,7 +382,7 @@
 
         &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon {
           &:nth-child(1)::before {
-            display: none;
+            //display: none;
           }
         }
       }
@@ -400,21 +400,20 @@
           }
         }
 
-        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-last-job-type .fc-datagrid-cell-cushion > .fc-icon {
-          &:nth-child(1)::before,
-          &:nth-child(2)::before {
-            display: none;
-          }
+        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon:nth-child(1)::before {
+          display: none;
         }
-        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon {
-          &:nth-child(1)::before{
-            display: none;
-          }
-        }
+
         &.fc-datagrid-cell-last-job-type .fc-datagrid-cell-cushion > .fc-icon {
           &:nth-child(2)::before {
             display: none;
           }
+        }
+      }
+
+      &.fc-datagrid-cell-job-type {
+        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon:not(:nth-child(3)):not(:nth-child(2))::before {
+          display: none;
         }
       }
     }
@@ -549,7 +548,7 @@
 
         &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon {
           &:nth-child(1)::before {
-            display: none;
+            //display: none;
           }
         }
       }
@@ -567,21 +566,20 @@
           }
         }
 
-        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-last-job-type .fc-datagrid-cell-cushion > .fc-icon {
-          &:nth-child(1)::before,
-          &:nth-child(2)::before {
-            display: none;
-          }
+        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon:nth-child(1)::before {
+          display: none;
         }
-        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon {
-          &:nth-child(1)::before{
-            display: none;
-          }
-        }
+
         &.fc-datagrid-cell-last-job-type .fc-datagrid-cell-cushion > .fc-icon {
           &:nth-child(2)::before {
             display: none;
           }
+        }
+      }
+
+      &.fc-datagrid-cell-job-type {
+        &.fc-datagrid-cell-last-shift .fc-datagrid-cell-cushion > .fc-icon:not(:nth-child(3)):not(:nth-child(2))::before {
+          display: none;
         }
       }
     }

@@ -32,6 +32,23 @@ export default ({
     setIsOpen(false);
   };
 
+  const parsablePhotos = () => {
+    if (typeof photos === 'object') {
+      let result = [];
+      for (let i in photos) {
+        if (typeof photos[i] === 'object') {
+
+        } else {
+          result.push(photos[i]);
+        }
+      }
+
+      return result;
+    }
+
+    return photos;
+  };
+
   // if (empty) {
   //   return (
   //     <div className={classes.dayTotal}>
@@ -44,6 +61,7 @@ export default ({
   //     </div>
   //   );
   // }
+  
   return (
     <div className={dayTotalClasses}>
       <button
@@ -53,7 +71,7 @@ export default ({
       >
         <div className={classes.dayTotal__content__users}>
           {
-            photos?.map((photo) => photo && (
+            parsablePhotos().map((photo) => photo && (
               <img
                 key={photo}
                 alt='avatar'

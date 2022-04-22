@@ -229,6 +229,7 @@ export default () => {
       const a = copyObject.filter((i) => {
         i.children=i.children.filter((j) => {
           let checkShift = false;
+          let checkEmployeeShift = data.employers.length ? false : true;
           data.shiftType.map((shiftEl) => {
             if (shiftEl.id === j.shiftId) {
               checkShift = true;
@@ -236,6 +237,7 @@ export default () => {
           });
           j.children = j.children.filter((k) => {
             let checkPlace = false;
+            let checkEmployeePlace = data.employers.length ? false : true;
             data.place.map((placeEL) => {
               if (placeEL.id === k.job_type_id) {
                 checkPlace = true;
@@ -246,16 +248,18 @@ export default () => {
               data.employers.map((employer) => {
                 if (employer.id === it.employeeId) {
                   checkEmployer = true;
+                  checkEmployeePlace = true;
+                  checkEmployeeShift = true;
                 }
               });
-              if (!data.employers.length) { return true; }
+              if (!data.employers.length) { checkEmployeeShift = true; checkEmployeePlace = true; return true; }
               return checkEmployer;
             });
-            if (!data.place.length) { return true; }
-            return checkPlace;
+            if (checkEmployeePlace && !data.place.length) { checkEmployeeShift = true; return true; }
+            return checkEmployeePlace && checkPlace;
           });
-          if (!data.shiftType.length) { return true; }
-          return checkShift;
+          if (checkEmployeeShift && !data.shiftType.length) { return true; }
+          return checkEmployeeShift && checkShift;
         });
         return i.children.length;
       });
@@ -327,6 +331,7 @@ export default () => {
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
+    
     if (props.lastShift) {
       classes.push('fc-datagrid-cell-last-shift');
     }
@@ -621,7 +626,7 @@ export default () => {
     }
     return '24:00:00';
   };
-
+  
   return (
     <MainLayout>
       <div className='schedule-screen'>

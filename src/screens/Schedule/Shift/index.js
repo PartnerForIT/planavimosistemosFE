@@ -210,6 +210,7 @@ export default () => {
             id: itemJ.id,
             photo: itemJ.photo,
             title: itemJ.title,
+            empty: itemJ.empty,
           })),
         })),
         data,
