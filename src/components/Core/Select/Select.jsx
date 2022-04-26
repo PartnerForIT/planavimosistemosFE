@@ -33,17 +33,7 @@ export default function CustomSelect({
     const setCheckedToAll = (array = []) => {
       const arrayCopy = array.length ? [...array] : items;
 
-      //merge with real items array
-      let merged = items.map((item, i) => {
-        const find = arrayCopy.find(x => x.id === item.id);
-        if (find) {
-          return { ...item, ...find };
-        }
-
-        return item;
-      });
-
-      return merged.map((item) => {
+      return arrayCopy.map((item) => {
           if (!item.disabled) {
             if (item.checked) {
               checkedItemsArray.push(item);
@@ -61,7 +51,7 @@ export default function CustomSelect({
         });
     };
     
-    setItemsArray(setCheckedToAll);
+    setItemsArray(setCheckedToAll(items));
     setCheckedItems(checkedItemsArray);
     setItemsStat({ ...stat });
     // eslint-disable-next-line react-hooks/exhaustive-deps

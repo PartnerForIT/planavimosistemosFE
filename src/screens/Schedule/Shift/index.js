@@ -67,7 +67,7 @@ const weekMock = [
   },
   {
     id: 2,
-    label: 'Thuesday',
+    label: 'Tuesday',
     checked: false,
   },
   {
