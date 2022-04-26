@@ -80,7 +80,7 @@ export default ({
 
     return data.photos;
   };
-
+  
   return (
     <div
       id='schedule-footer'

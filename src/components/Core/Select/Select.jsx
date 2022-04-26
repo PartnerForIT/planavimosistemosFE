@@ -50,7 +50,7 @@ export default function CustomSelect({
           return { ...item, checked: !!item.checked, type: item.type ? item.type : 'item' };
         });
     };
-    
+
     setItemsArray(setCheckedToAll(items));
     setCheckedItems(checkedItemsArray);
     setItemsStat({ ...stat });

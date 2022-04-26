@@ -44,9 +44,10 @@ const RowContent = ({
         {
           daysOfMonth.map((item, index) => {
                   if(index < item.id ){
-                    time+=foundItem.hours
-                    cost+=foundItem.cost
+                    time+=newFoundItem(item.title)?.hours ?? 0
+                    cost+=newFoundItem(item.title)?.cost ?? 0
                   }
+
          return (
              <Cell
                 key={item.id}
