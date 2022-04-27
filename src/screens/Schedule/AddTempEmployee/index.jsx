@@ -73,7 +73,7 @@ export default ({
   };
     const filteredEmployees = useMemo(() => {
     const stringMatch = (str = '') => str.toLowerCase().includes(searchValue.toLowerCase());
-
+    
     if (searchValue.trim()) {
       return employees.filter((e) => stringMatch(`${e.name} ${e.surname}`)
           || stringMatch(e.groups[0]?.name)

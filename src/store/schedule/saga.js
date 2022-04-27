@@ -104,7 +104,7 @@ function* patchChangeEmployee(action) {
       action.data,
       getToken(),
     );
-    console.log('aaa',action);
+    
     yield put(getScheduleAction(action.body));
   } catch (error) {
     yield put(addSnackbar(error, 'error'));
@@ -131,12 +131,14 @@ function* patchChangeTimeline(action) {
 
 function* addTempEmployee(action){
   try {
-    const {data} = yield call(
+    yield call(
         axios.post,
         `${config.api.url}/company/${action.companyId}/shift/add-assistant/${action.shiftId}`,
         action.data,
         getToken()
     )
+
+    yield put(getScheduleAction(action.body));
   }catch (error) {
     yield put(addSnackbar(error, 'error'));
     yield delay(4000);

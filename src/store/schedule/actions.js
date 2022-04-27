@@ -46,11 +46,12 @@ export const postShift = ({ companyId, data }) => ({
   data,
 });
 
-export const addTempemployee = ({companyId,data,shiftId})=>({
+export const addTempemployee = ({companyId,data,shiftId,body})=>({
   type:ADD_TEMP_EMPLOYEE,
   companyId,
   data,
-  shiftId
+  shiftId,
+  body
 })
 
 export const addTempemployeeSuccess = (data) => ({

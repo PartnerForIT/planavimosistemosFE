@@ -433,12 +433,15 @@ export default () => {
             }
         )
     )
+    
+    /*
     dispatch(getSchedule({
       companyId,
       timeline,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: false,
     }));
+    */
   }
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
