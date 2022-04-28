@@ -416,7 +416,9 @@ export default () => {
           3: defaultWorkingTime,
         };
 
-        tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
+        if (tableRef?.current) {
+          tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
+        }
 
         handleChangeStartDay(moment());
       } else if (shift) {
@@ -449,8 +451,10 @@ export default () => {
         }, {});
         const workingSetting = shift.working_setting;
 
-        tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
-        tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
+        if (tableRef?.current) {
+          tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
+          tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
+        }
         // todo после ухода с экрана, нужно не забыть зачистить шифт,
         //  так как по этому условию будет подходить старый шифт
 

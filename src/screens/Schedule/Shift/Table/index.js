@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
@@ -27,6 +28,7 @@ times: []
  */
 
 /* consts */
+
 const cellArr = new Array(7).fill().map((_, index) => ({ id: index }));
 const weekMock = [
   {
@@ -669,14 +671,19 @@ export default forwardRef(({
           children: resources.map((jobType) => {
             const children = jobType.children.reduce((accK, employee) => {
               if (employee.title) {
-                accK.push({
-                  avatar: employee.photo,
-                  employeeId: employee.employeeId,
-                  name: employee.title,
-                  job_type_name: jobType.title,
-                  cost: 0,
-                  time: 0,
-                });
+                const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
+                const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
+                const foundEmployeeInsideJob = foundEmployee ? jobType.children.find((itemE) => itemE.employeeId === foundEmployee.id && !itemE.empty) : false;
+                if (foundEmployee && foundData && foundEmployeeInsideJob) {
+                  accK.push({
+                    avatar: employee.photo,
+                    employeeId: employee.employeeId,
+                    name: employee.title,
+                    job_type_name: jobType.title,
+                    cost: 0,
+                    time: 0,
+                  });
+                }
               }
               return accK;
             }, []);
@@ -694,6 +701,8 @@ export default forwardRef(({
           time: 0,
         };
 
+        let uniqueEmployees = [];
+        
         const weekInfo = weekMock.reduce((accJ, dayOfWeek, indexDay) => {
           let totalDayEmployees = 0;
           let dayTotalTime = 0;
@@ -708,41 +717,52 @@ export default forwardRef(({
                 jobTypeTotalCost,
               } = jobType.children.reduce((accK, employee, indexJ) => {
                 if (employee.title) {
-                  const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
-                  const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
-                  if (foundData) {
-                    const timeStart = foundData.data[indexDay].time.start.split(':');
-                    const timeEnd = foundData.data[indexDay].time.end.split(':');
-                    const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
-                    const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
-                    const time = totalTimeEnd > totalTimeStart
-                      ? totalTimeEnd - totalTimeStart
-                      : totalTimeStart - totalTimeEnd;
-                    // const cost = time * foundEmployee.profitability.cost;
+                  if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
+                    const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
+                    const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
+                    const foundEmployeeInsideJob = foundEmployee ? jobType.children.find((itemE) => itemE.employeeId === foundEmployee.id && !itemE.empty) : false;
+                    if (foundData && foundEmployee && foundEmployeeInsideJob) {
+                      const timeStart = foundData.data[indexDay].time.start.split(':');
+                      const timeEnd = foundData.data[indexDay].time.end.split(':');
+                      const totalTimeStart = +timeStart[0] + timeStart[1] / 60;
+                      const totalTimeEnd = +timeEnd[0] + timeEnd[1] / 60;
+                      const time = totalTimeEnd > totalTimeStart
+                        ? totalTimeEnd - totalTimeStart
+                        : totalTimeStart - totalTimeEnd;
 
-                    // accK.jobTypeTotalTime += time;
-                    // accK.jobTypeTotalCost += cost;
-                    // accK.children.push({
-                    //   avatar: employee.photo,
-                    //   employeeId: employee.employeeId,
-                    //   name: employee.title,
-                    //   job_type_name: jobType.title,
-                    //   time,
-                    //   cost,
-                    // });
+                      const cost = time * foundEmployee.profitability.cost;
 
-                    // total
-                    if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
-                      // total.children[index].children[indexJ].cost += cost;
-                      // total.children[index].children[indexJ].time += time;
-                      // total.children[index].cost += cost;
-                      // total.children[index].time += time;
-                      // total.cost += cost;
-                      // total.time += time;
-                    }
+                      if (!uniqueEmployees.includes(foundEmployee.employeeId)) {
+                        uniqueEmployees.push(foundEmployee.employeeId);
+                      }
 
-                    if (photos.length < 2 && employee.photo) {
-                      photos.push(employee.photo);
+                      accK.jobTypeTotalTime += time;
+                      accK.jobTypeTotalCost += cost;
+                      accK.children.push({
+                        avatar: foundEmployee.photo,
+                        photo: foundEmployee.photo,
+                        employeeId: foundEmployee.employeeId,
+                        name: employee.title,
+                        title: employee.title,
+                        job_type_name: jobType.title,
+                        jobTypeId: jobType.id,
+                        employee_type: "3",
+                        time,
+                        cost,
+                      });
+
+                      // total
+                      
+                        total.children[index].children[indexJ].cost += cost;
+                        total.children[index].children[indexJ].time += time;
+                        total.children[index].cost += cost;
+                        total.children[index].time += time;
+                        total.cost += cost;
+                        total.time += time;
+
+                      if (photos.length < 2 && employee.photo) {
+                        photos.push(employee.photo);
+                      }
                     }
                   }
                 }
@@ -780,7 +800,7 @@ export default forwardRef(({
         }, {});
 
         total.photos = weekInfo[1].photos;
-        total.employeesCount = weekInfo[1].employeesCount;
+        total.employeesCount = uniqueEmployees.length;
 
         acc[week] = {
           ...weekInfo,
@@ -792,8 +812,31 @@ export default forwardRef(({
 
       return acc;
     }, {});
-  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek]);
-  
+  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
+
+  const { t } = useTranslation();
+  const timesPanelFull = useMemo(() => {
+    let res = {};
+    
+    Object.keys(timesPanel[currentWeek]).map((key) => {
+      if (timesPanel[currentWeek][key]) {
+        res[key] = {...timesPanel[currentWeek][key]};
+        res[key].children = [{...timesPanel[currentWeek][key], id: initialValues?.shift_info?.place?.id, place_id: initialValues?.shift_info?.place?.id, title: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name')), name: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name'))}];
+      }
+    });
+
+    let resShift = {};
+    Object.keys(res).map((key) => {
+      if (res[key]) {
+        resShift[key] = {...res[key]};
+        resShift[key].children = [{...res[key], id: initialValues?.shift_info?.id, place_id: initialValues?.shift_info?.id, title: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name')), name: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name'))}];
+      }
+    });
+
+    return resShift;
+
+  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
+
   return (
     <div className={classes.table}>
       <Header
@@ -882,7 +925,7 @@ export default forwardRef(({
           </div>
         </>
       <Footer
-        timesPanel={timesPanel[currentWeek]}
+        timesPanel={timesPanelFull}
         daysOfWeek={daysOfWeek[currentWeek]}
         withCost={withCost}
       />
