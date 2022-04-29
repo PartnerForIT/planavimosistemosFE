@@ -16,7 +16,8 @@ export default (permissionsConfig) => {
         if (item.permission && item.module) {
           acc[item.name] = Boolean((isSuperAdmin || user.user_permissions[item.permission]) && modules[item.module]);
         } else if (item.permission) {
-          acc[item.name] = Boolean(isSuperAdmin || user.user_permissions[item.permission]);
+          //for permissions where true mean disabled
+          acc[item.name] = item.default === false ? (user.user_permissions[item.permission] || false) : Boolean(isSuperAdmin || user.user_permissions[item.permission]);
         } else if (item.module) {
           acc[item.name] = Boolean(modules[item.module]);
         }

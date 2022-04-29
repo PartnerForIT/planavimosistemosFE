@@ -91,7 +91,8 @@
     }
 
     .fc-timeline-body {
-      position: unset;
+      //comment it, because it makes vertical lines shorter then scroll
+      //position: unset;
 
       .fc-timeline-event-harness {
         z-index: 3;

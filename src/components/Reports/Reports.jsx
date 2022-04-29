@@ -95,6 +95,7 @@ const permissionsConfig = [
   {
     name: 'reports_assigned_place',
     permission: 'reports_assigned_place',
+    default: false,
   },
 ];
 const columnsWidth = {
@@ -116,6 +117,7 @@ export default () => {
   /* Reports data */
   const reportTabs = useRef(null);
   const [activeReport, setActiveReport] = useState();
+  const [generateRequest, setGenerateRequest] = useState();
 
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
@@ -214,6 +216,7 @@ export default () => {
   };
 
   const sendRequest = () => {
+    setGenerateRequest(true);
     const { startDate, endDate } = dateRange;
     const placesArr = checkedPlaces.map((place) => place.id);
     const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
@@ -265,7 +268,8 @@ export default () => {
       'DD.MM.YY': 'DD-MM-yyyy',
       'MM.DD.YY': 'MM-DD-yyyy',
     });
-    if (generatedReport.report) {
+
+    if (generatedReport.report && (generateRequest || activeReport)) {
       setItemsArray((state) => {
         const reportId = generatedReport.id;
         const reportIndex = state.findIndex(({ id }) => id === reportId);
@@ -352,8 +356,14 @@ export default () => {
 
         return [...state, mappedReport];
       });
+
+      if (activeReport && !generateRequest && generatedReport.id != activeReport) {
+        //const removeReport = (reps) => reps.filter((rep) => { console.log('rep: ', rep); return rep.id !== activeReport});
+        //setItemsArray(removeReport);
+      }
       setActiveReport(generatedReport.id);
     }
+    setGenerateRequest(null);
     // setTotalDuration(getTotalDuration);
   }, [comments, costState.show_costs, costState.show_earnings,
     costState.show_profit, generatedReport]);
@@ -543,7 +553,7 @@ export default () => {
       [styles.sidebarContent_withButton]: permissions.reports_generate,
     },
   );
-
+  console.log('permissions: ', permissions);
   return (
     <MainLayout>
       <div className={styles.container}>
