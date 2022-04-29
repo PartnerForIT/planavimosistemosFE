@@ -702,6 +702,7 @@ export default forwardRef(({
         };
 
         let uniqueEmployees = [];
+        let uniqueEmployeePhotos = [];
         
         const weekInfo = weekMock.reduce((accJ, dayOfWeek, indexDay) => {
           let totalDayEmployees = 0;
@@ -734,6 +735,10 @@ export default forwardRef(({
 
                       if (!uniqueEmployees.includes(foundEmployee.employeeId)) {
                         uniqueEmployees.push(foundEmployee.employeeId);
+                      }
+
+                      if (uniqueEmployeePhotos.length < 2 && !uniqueEmployeePhotos.includes(employee.photo)) {
+                        uniqueEmployeePhotos.push(employee.photo);
                       }
 
                       accK.jobTypeTotalTime += time;
@@ -799,7 +804,7 @@ export default forwardRef(({
           };
         }, {});
 
-        total.photos = weekInfo[1].photos;
+        total.photos = uniqueEmployeePhotos;
         total.employeesCount = uniqueEmployees.length;
 
         acc[week] = {
@@ -821,7 +826,7 @@ export default forwardRef(({
     Object.keys(timesPanel[currentWeek]).map((key) => {
       if (timesPanel[currentWeek][key]) {
         res[key] = {...timesPanel[currentWeek][key]};
-        res[key].children = [{...timesPanel[currentWeek][key], id: initialValues?.shift_info?.place?.id, place_id: initialValues?.shift_info?.place?.id, title: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name')), name: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name'))}];
+        res[key].children = [{...timesPanel[currentWeek][key], id: initialValues?.shift_info?.id, place_id: initialValues?.shift_info?.id, title: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name')), name: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name'))}];
       }
     });
 
@@ -829,7 +834,7 @@ export default forwardRef(({
     Object.keys(res).map((key) => {
       if (res[key]) {
         resShift[key] = {...res[key]};
-        resShift[key].children = [{...res[key], id: initialValues?.shift_info?.id, place_id: initialValues?.shift_info?.id, title: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name')), name: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name'))}];
+        resShift[key].children = [{...res[key], id: initialValues?.shift_info?.place?.id, place_id: initialValues?.shift_info?.place?.id, title: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name')), name: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name'))}];
       }
     });
 
