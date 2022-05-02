@@ -268,7 +268,7 @@ export default () => {
       'DD.MM.YY': 'DD-MM-yyyy',
       'MM.DD.YY': 'MM-DD-yyyy',
     });
-
+    
     if (generatedReport.report && (generateRequest || activeReport)) {
       setItemsArray((state) => {
         const reportId = generatedReport.id;
@@ -358,8 +358,8 @@ export default () => {
       });
 
       if (activeReport && !generateRequest && generatedReport.id != activeReport) {
-        //const removeReport = (reps) => reps.filter((rep) => { console.log('rep: ', rep); return rep.id !== activeReport});
-        //setItemsArray(removeReport);
+        const removeReport = (reps) => reps.filter((rep) => { return rep.id !== activeReport});
+        setItemsArray(removeReport);
       }
       setActiveReport(generatedReport.id);
     }
@@ -553,7 +553,7 @@ export default () => {
       [styles.sidebarContent_withButton]: permissions.reports_generate,
     },
   );
-  console.log('permissions: ', permissions);
+  
   return (
     <MainLayout>
       <div className={styles.container}>
