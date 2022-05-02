@@ -9,12 +9,14 @@ export default ({
   statistic,
   weekend,
   past,
+  today,
   header,
 }) => {
   const cellClasses = classnames(classes.cell, {
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
+    [classes.cell_today]: today,
   });
 
   const refCell = useRef();

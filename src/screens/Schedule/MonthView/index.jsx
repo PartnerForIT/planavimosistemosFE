@@ -76,10 +76,13 @@ export default ({
     const day = currentMonth.clone().add('days', -1);
     const arr = new Array(currentMonth.daysInMonth()).fill().map((_, index) => {
       const dayNumber = day.add('days', 1).day();
+      const currentDay = moment();
+      
       return {
         id: index + 1,
         title: index + 1,
         weekend: dayNumber === 6 || dayNumber === 0,
+        today: currentDay.isSame(day, 'day'),
       };
     });
     arr.push({
@@ -165,6 +168,7 @@ export default ({
                   title={item.title}
                   statistic={item.statistic}
                   past={!item.statistic && flexBackground.past >= item.id}
+                  today={item.today}
                   header
                 />
               ))

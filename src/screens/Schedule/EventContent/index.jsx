@@ -96,7 +96,7 @@ export default ({
     <div
       className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
       data-for='time'
-      data-tip={title}
+      data-tip={activeDrag ? null : title}
       id='dropdownButton'
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
