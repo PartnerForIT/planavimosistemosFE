@@ -1,9 +1,8 @@
 .eventContent {
-  display: flex;
   align-items: center;
   flex: 1;
   padding: 6px;
-  visibility: hidden;
+  display: none;
   $eventContent: &;
 
   &__avatar {

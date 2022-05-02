@@ -11,6 +11,7 @@ import ChangeWorkingTime from './ChangeWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import classes from './EventContent.module.scss';
 import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
+import classNames from 'classnames';
 
 export default ({
   id,
@@ -30,7 +31,8 @@ export default ({
   viewType,
                   addEmployee,
                   dayNumber,
-                  isCompleted
+                  isCompleted,
+                  activeDrag
 }) => {
   const { t } = useTranslation();
 
@@ -92,7 +94,7 @@ export default ({
 
   return (
     <div
-      className={dayEndCheck()}
+      className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
       data-for='time'
       data-tip={title}
       id='dropdownButton'

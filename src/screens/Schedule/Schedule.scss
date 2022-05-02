@@ -237,8 +237,9 @@
           bottom: -1px;
         }
 
-        &:hover #dropdownButton {
-          visibility: visible;
+        &:hover #dropdownButton,
+        .active-drag#dropdownButton {
+          display: flex;
         }
       }
 
@@ -358,8 +359,11 @@
         }
         &:hover {
           #dropdownButton {
-            visibility: visible;
+            display: flex;
           }
+        }
+        .active-drag#dropdownButton {
+          display: flex;
         }
       }
       &.fc-datagrid-cell-shift .fc-datagrid-cell-cushion {
@@ -524,8 +528,11 @@
         }
         &:hover {
           #dropdownButton {
-            visibility: visible;
+            display: flex;
           }
+        }
+        .active-drag#dropdownButton {
+          display: flex;
         }
       }
       &.fc-datagrid-cell-shift .fc-datagrid-cell-cushion {

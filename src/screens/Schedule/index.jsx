@@ -88,6 +88,7 @@ export default () => {
   const [tempShiftID,setTempShiftID] = useState(0)
   const [tempJobTypeID,setTempJobTypeID] = useState(0)
   const [tempEmployeeID,setTempEmployeeID] = useState(0)
+  const [activeDrag,setActiveDrag] = useState('')
   const [tempEventID,setTempEventID] = useState(0)
   const [dayCheckData,setDayCheckData] = useState(0)
   const today = format(new Date(), 'dd')
@@ -467,7 +468,7 @@ export default () => {
       dayNumber = event._def.extendedProps.day_number
       isCompleted = event._def.extendedProps.is_completed
     }
-  
+    
     return (
       <EventContent
         id={event.id}
@@ -491,6 +492,7 @@ export default () => {
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         endDay={endDay}
         isCompleted={isCompleted}
+        activeDrag={activeDrag == resourceInfo.id}
       />
     );
   };
@@ -550,6 +552,13 @@ export default () => {
         end: moment(event.end),
       },
     });
+  };
+  const handleEventChangeStart  = ({ event, jsEvent }) => {
+    setActiveDrag(event.getResources()[0]?.id);
+  };
+
+  const handleEventChangeStop  = ({ event, jsEvent }) => {
+    setActiveDrag('');
   };
 
   const updateWidthCell = (rows) => {
@@ -742,6 +751,8 @@ export default () => {
                       resourceLabelClassNames={handleResourceLabelClassNames}
                       resourceLabelContent={renderResourceLabelContent}
                       eventResize={handleEventChange}
+                      eventResizeStart={handleEventChangeStart}
+                      eventResizeStop={handleEventChangeStop}
                       // nowIndicator
                     />
                     {
