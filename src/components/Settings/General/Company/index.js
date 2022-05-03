@@ -19,6 +19,7 @@ import {
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
 import styles from './company.module.scss';
+import moment from 'moment';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -135,7 +136,39 @@ export default function Company() {
   useEffect(() => {
     if (inputValues.country && countries.length) {
       const foundCountry = countries.find(({ code }) => code === inputValues.country);
-      setTimeZones(foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? []);
+      console.log('UTC'.substring(4, 6));
+
+      //fix for DST
+      const tzs = foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? [];
+      const moved_tzs = tzs.map((tz) => {
+        if (moment().isDST()) {
+          let hours = tz.code.substring(4, 6);
+          if (hours == '' || hours == '00') {
+            hours = 0;
+          }
+          let added_hour = hours*1;
+
+          if (tz.code.charAt(3) == '+' || tz.code.charAt(3) == '') {
+            added_hour += 1;
+          } else if (tz.code.charAt(3) == '-') {
+            added_hour -= 1;
+          }
+
+          if (added_hour < 10) {
+            added_hour = '0'+added_hour;
+          }
+
+          if (added_hour == 13) {
+            added_hour = '00';
+          }
+
+          tz.name = 'UTC'+(tz.code.charAt(3) == '' ? '+' : tz.code.charAt(3))+added_hour+':'+(tz.code.substring(7, 9) == '' ? '00' : tz.code.substring(7, 9));
+        }
+
+        return tz
+      });
+
+      setTimeZones(moved_tzs);
       setCurrencies(foundCountry.currencies);
       if (foundCountry?.timezones?.[0] || foundCountry?.currencies?.[0]) {
         setInputValues((prevState) => ({
