@@ -15,6 +15,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import ReactTooltip from 'react-tooltip';
+import classnames from 'classnames';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
@@ -58,6 +60,7 @@ import AddTempEmployee from "./AddTempEmployee";
 import Dropdown from "../../components/Core/Dropdown/Dropdown";
 import {format} from "date-fns";
 import { TheatersRounded } from '@material-ui/icons';
+import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 
 const permissionsConfig = [
   {
@@ -531,13 +534,30 @@ export default () => {
       fromDateRef.current = view.getCurrentData().currentDate;
       handleGetSchedule({ fromDate: fromDateRef.current });
     };
+
+    const holiday = (view.type == 'day' && schedule?.holidays) ? schedule?.holidays[view.getCurrentData().currentDate.getDate()] : false;
     
     return (
       <ResourceAreaHeader
         title={view.title}
+        holiday={holiday}
         onClickPrev={handleClickPrev}
         onClickNext={handleClickNext}
       />
+    );
+  };
+  const renderWeekHeader = (info) => {
+    const date = moment(info.date);
+    const holiday = (schedule?.holidays) ? schedule?.holidays[date.date()] : false;
+
+    return (
+      <div>
+        {date.format('ddd, DD')}
+        <HolidayIcon
+          holidays={holiday}
+          month={true}
+        />
+      </div>
     );
   };
   const handleEventChange = ({ event }) => {
@@ -583,7 +603,24 @@ export default () => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
     }).observe(container[0], { box: 'border-box' });
+  };
 
+  const handeSlotLaneClassNames = (info) => {
+    const date = moment(info.date);
+    const holiday = (schedule?.holidays) ? schedule?.holidays[date.date()] : false;
+    const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
+    let result = '';
+
+    if (timeline === TIMELINE.WEEK && h.date) {
+      result += 'cell_holiday ';
+      if (h.company_work_time_id) {
+        result += 'cell_holiday_company';
+      } else if ((h.date && !h.company_work_time_id)) {
+        result += 'cell_holiday_government';
+      }
+    }
+
+    return result;
   };
 
   useEffect(() => {
@@ -704,6 +741,7 @@ export default () => {
                   <MonthView
                     resources={Object.values(resources) || resourcesMock}
                     events={schedule.events}
+                    holidays={schedule?.holidays}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
                     withCost={permissions.cost}
@@ -728,7 +766,7 @@ export default () => {
                           // duration: {
                           //   days: 7,
                           // },
-                          slotLabelFormat: 'ddd DD',
+                          slotLabelFormat: renderWeekHeader,
                           slotDuration: '24:00',
                           snapDuration: '6:00',
                         },
@@ -753,6 +791,7 @@ export default () => {
                       eventResize={handleEventChange}
                       eventResizeStart={handleEventChangeStart}
                       eventResizeStop={handleEventChangeStop}
+                      slotLaneClassNames={handeSlotLaneClassNames}
                       // nowIndicator
                     />
                     {
@@ -765,6 +804,11 @@ export default () => {
                     }
                     <Tooltip
                       id='time'
+                      className='schedule-screen__tooltip'
+                      effect='solid'
+                    />
+                    <ReactTooltip
+                      id='holiday'
                       className='schedule-screen__tooltip'
                       effect='solid'
                     />

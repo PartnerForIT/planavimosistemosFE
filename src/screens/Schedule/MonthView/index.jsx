@@ -29,6 +29,7 @@ const trackYProps = {
 export default ({
   resources: externalResources,
   events,
+  holidays,
   onChangeMonth,
   withCost,
   timesPanel,
@@ -36,7 +37,7 @@ export default ({
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
-
+  
   const handleExpander = ({ rowId }) => {
     setResources((prevState) => {
       const changeExpander = (items) => {
@@ -77,12 +78,13 @@ export default ({
     const arr = new Array(currentMonth.daysInMonth()).fill().map((_, index) => {
       const dayNumber = day.add('days', 1).day();
       const currentDay = moment();
-      
+
       return {
         id: index + 1,
         title: index + 1,
         weekend: dayNumber === 6 || dayNumber === 0,
         today: currentDay.isSame(day, 'day'),
+        holiday: holidays[index + 1] ? holidays[index + 1] : false
       };
     });
     arr.push({
@@ -101,7 +103,7 @@ export default ({
 
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language, currentMonth, withCost]);
+  }, [i18n.language, currentMonth, withCost, holidays]);
   const backgroundArr = useMemo(() => {
     const getCount = (items) => {
       if (!items?.length) {
@@ -150,7 +152,7 @@ export default ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalResources]);
-  
+
   return (
     <>
       <div className={classes.monthView}>
@@ -169,6 +171,7 @@ export default ({
                   statistic={item.statistic}
                   past={!item.statistic && flexBackground.past >= item.id}
                   today={item.today}
+                  holiday={item.holiday}
                   header
                 />
               ))
@@ -216,6 +219,11 @@ export default ({
               }
               <ReactTooltip
                 id='title'
+                className={classes.monthView__content__data__tooltip}
+                effect='solid'
+              />
+              <ReactTooltip
+                id='holiday'
                 className={classes.monthView__content__data__tooltip}
                 effect='solid'
               />

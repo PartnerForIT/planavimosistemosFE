@@ -1,9 +1,11 @@
 import React from 'react';
 
+import HolidayIcon from '../../../components/Core/HolidayIcon/HolidayIcon';
 import classes from './ResourceAreaHeader.module.scss';
 
 export default ({
   title,
+  holiday,
   onClickPrev,
   onClickNext,
 }) => (
@@ -13,7 +15,12 @@ export default ({
       aria-label='prev'
       onClick={onClickPrev}
     />
-    {title}
+    <span>
+      {title}
+      <HolidayIcon
+        holidays={holiday}
+      />
+    </span>
     <button
       className={classes.resourceAreaHeader__buttonRight}
       aria-label='next'

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import ReactTooltip from 'react-tooltip';
+import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 
 import classes from './Cell.module.scss';
 
@@ -11,12 +12,19 @@ export default ({
   past,
   today,
   header,
+  holiday,
 }) => {
+  
+  const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
+
   const cellClasses = classnames(classes.cell, {
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
     [classes.cell_today]: today,
+    [classes.cell_holiday]: h.date ? true : false,
+    [classes.cell_holiday_company]: h.company_work_time_id ? true : false,
+    [classes.cell_holiday_government]: (h.date && !h.company_work_time_id) ? true : false,
   });
 
   const refCell = useRef();
@@ -49,6 +57,10 @@ export default ({
   return (
     <div className={cellClasses} ref={refCell}>
       {title}
+      <HolidayIcon
+        holidays={holiday}
+        month={true}
+      />
     </div>
   );
 };

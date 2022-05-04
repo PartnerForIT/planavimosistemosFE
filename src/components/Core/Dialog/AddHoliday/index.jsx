@@ -33,7 +33,7 @@ export default function AddHolidays({
           disableToolbar
           fullWidth
           variant='inline'
-          format='yyyy-MM-dd'
+          format='yyyy-MM-DD'
           margin='normal'
           id='date-picker-inline'
           label='Date'

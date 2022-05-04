@@ -32,4 +32,12 @@
   &__buttonRight {
     transform: rotate(90deg);
   }
+
+  > span {
+    display: flex;
+    align-items: center;
+    > div {
+      margin-left: 16px;
+    }
+  }
 }
