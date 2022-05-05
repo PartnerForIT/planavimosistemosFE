@@ -119,7 +119,7 @@ export default ({
         )
       }
       {
-            viewType === TIMELINE.DAY && employeeName && (
+            (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
                 <span className={classes.eventContent__title} >
                   {
                     (!!newEmployee?.name)
