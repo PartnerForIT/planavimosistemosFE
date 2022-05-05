@@ -21,6 +21,7 @@ export default ({
 
   const dayTotalClasses = classNames(classes.dayTotal, {
     [classes.dayTotal_empty]: empty,
+    'dayTotalItem': true
   });
 
   const buttonRef = useRef(null);

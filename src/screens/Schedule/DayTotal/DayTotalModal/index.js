@@ -2,6 +2,7 @@ import React from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CloseIcon from '@material-ui/icons/Close';
 import Scrollbar from 'react-scrollbars-custom';
+import classNames from 'classnames';
 
 import classes from './DayTotalModal.module.scss';
 import ModalItem from './ModalItem';
@@ -24,7 +25,7 @@ export default ({
 }) => {
   return (
     <ClickAwayListener onClickAway={onClose}>
-      <div className={classes.dayTotalModal}>
+      <div className={classNames(classes.dayTotalModal, 'dayTotalItemModal')}>
         <div className={classes.dayTotalModal__title}>
           {title}
         </div>
