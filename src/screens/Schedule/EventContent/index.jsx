@@ -119,18 +119,19 @@ export default ({
         )
       }
       {
-            (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
-                <span className={classes.eventContent__title} >
-                  {
-                    (!!newEmployee?.name)
+        
+          (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
+              <span className={classes.eventContent__title} >
+                {
+                  (!!newEmployee?.name)
 
-                      ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-                       :(employeeName === 'Empty')
-                        ?<span onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-                  }
-                </span>
-          )
+                    ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                      :(employeeName === 'Empty')
+                      ?<span onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                }
+              </span>
+        )
       }
 
       <div className={classes.eventContent__leftSpace} />
@@ -149,7 +150,7 @@ export default ({
         )
       }
       {
-        withMenu ? (
+        withMenu && employeeName !== 'Empty' ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
