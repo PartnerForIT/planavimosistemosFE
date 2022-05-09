@@ -8,6 +8,8 @@ import {
   GET_SETTINGS_WORK_TIME,
   GET_SETTINGS_WORK_TIME_SUCCESS,
   PATCH_WORK_TIME,
+  GET_HOLIDAYS,
+  GET_HOLIDAYS_SUCCESS,
   ADD_HOLIDAY,
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY,
@@ -170,6 +172,15 @@ export const patchWorkTime = (data, id) => ({
   id,
 });
 
+export const getHolidays = (companyId, year) => ({
+  type: GET_HOLIDAYS,
+  companyId,
+  year,
+});
+export const getHolidaysSuccess = (data) => ({
+  type: GET_HOLIDAYS_SUCCESS,
+  data,
+});
 export const addHoliday = (data, id) => ({
   type: ADD_HOLIDAY,
   data,

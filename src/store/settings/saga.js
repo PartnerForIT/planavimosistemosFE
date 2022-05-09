@@ -9,6 +9,7 @@ import {
   PATCH_SETTINGS_COMPANY,
   GET_SETTINGS_WORK_TIME,
   PATCH_WORK_TIME,
+  GET_HOLIDAYS,
   ADD_HOLIDAY,
   DELETE_HOLIDAY,
   GET_SECURITY_COMPANY,
@@ -66,6 +67,7 @@ import {
   addSnackbar,
   dismissSnackbar,
   getSettingWorkTimeSuccess,
+  getHolidaysSuccess,
   addHolidaySuccess,
   deleteHolidaySuccess,
   getSecurityCompanySuccess,
@@ -205,6 +207,15 @@ function* editSettingsWorkTime(action) {
     yield put(addSnackbar('Work time edited error', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
+  }
+}
+
+function* getHolidays(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/get-holidays/${action.year}`, token());
+    yield put(getHolidaysSuccess(data));
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -1446,6 +1457,7 @@ export default function* SettingsWatcher() {
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLeading(GET_SETTINGS_WORK_TIME, loadSettingsWorkTime);
+  yield takeLeading(GET_HOLIDAYS, getHolidays);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);
   yield takeLatest(DELETE_HOLIDAY, deleteCompanyHoliday);

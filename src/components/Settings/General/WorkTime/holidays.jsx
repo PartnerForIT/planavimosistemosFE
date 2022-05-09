@@ -8,7 +8,7 @@ import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import AddHolidays from '../../../Core/Dialog/AddHoliday';
 import DeleteIcon from '../../../Icons/DeleteIcon';
-import { addHoliday, deleteHoliday } from '../../../../store/settings/actions';
+import { getHolidays, addHoliday, deleteHoliday } from '../../../../store/settings/actions';
 import { onKeyDown } from '../../../Helpers';
 import ArrowLeftButton from '../../../Icons/ArrowLeftButton';
 import ArrowRightButton from '../../../Icons/ArrowRightButton';
@@ -48,13 +48,15 @@ export default function Holidays({
 
   const yearChangeHandler = (opt) => {
     const currentYear = new Date().getFullYear();
-
+    let changedYear = currentYear;
     if (opt > 0) {
       setYear((prevState) => (prevState < currentYear + 2 ? prevState + opt : prevState));
     }
     if (opt < 0) {
-      setYear((prevState) => (prevState > currentYear - 2 ? prevState + opt : prevState));
+      setYear((prevState) => (prevState < currentYear + 2 ? prevState + opt : prevState));
     }
+    
+    dispatch(getHolidays(companyId, year+opt));
   };
 
   return (

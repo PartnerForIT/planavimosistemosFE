@@ -6,6 +6,8 @@ import {
   DISMISS_SETTING_SNACKBAR,
   GET_SETTINGS_WORK_TIME,
   GET_SETTINGS_WORK_TIME_SUCCESS,
+  GET_HOLIDAYS,
+  GET_HOLIDAYS_SUCCESS,
   ADD_HOLIDAY_SUCCESS,
   DELETE_HOLIDAY_SUCCESS,
   GET_SECURITY_COMPANY,
@@ -185,6 +187,21 @@ export const reducerOrganizationList = (state = initialState, action) => {
           days: action.data ? action.data.days : [],
           national_holidays: action.data ? action.data.national_holidays : [],
           work_time: action.data ? action.data.work_time : {},
+        },
+        error: null,
+        loading: false,
+      };
+    case GET_HOLIDAYS:
+      return {
+        ...state,
+        error: null,
+        //loading: true,
+      };
+    case GET_HOLIDAYS_SUCCESS:
+      return {
+        ...state,
+        workTime: {
+          national_holidays: action.data ? action.data.national_holidays : [],
         },
         error: null,
         loading: false,
