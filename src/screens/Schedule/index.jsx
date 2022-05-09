@@ -469,8 +469,8 @@ export default () => {
       jobTypeId = resourceInfo.extendedProps.job_type_id
       endDay = event.endStr
       dayNumber = event._def.extendedProps.day_number
-      isCompleted = event._def.extendedProps.is_completed
     }
+    isCompleted = event?._def?.extendedProps?.is_completed
     
     return (
       <EventContent
@@ -546,12 +546,24 @@ export default () => {
       />
     );
   };
+  const handleClickDay = (date) => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      setTimeline(TIMELINE.DAY);
+      calendarApi.changeView(TIMELINE.DAY, date.format('YYYY-MM-DD'));
+      fromDateRef.current = date;
+      handleGetSchedule({ fromDate: date });
+    }
+  };
   const renderWeekHeader = (info) => {
     const date = moment(info.date);
     const holiday = (schedule?.holidays) ? schedule?.holidays[date.date()] : false;
 
     return (
-      <div>
+      <div
+        onClick={() => { handleClickDay(date) }}
+      >
+        <span className='schedule-enter-day'>{t('Enter')}</span>
         {date.format('ddd, DD')}
         <HolidayIcon
           holidays={holiday}
@@ -805,6 +817,21 @@ export default () => {
                     <Tooltip
                       id='time'
                       className='schedule-screen__tooltip'
+                      effect='solid'
+                    />
+                    <Tooltip
+                      id='time_active'
+                      className='schedule-screen__tooltip schedule-screen__tooltip__active'
+                      effect='solid'
+                    />
+                    <Tooltip
+                      id='time_past'
+                      className='schedule-screen__tooltip schedule-screen__tooltip__past'
+                      effect='solid'
+                    />
+                    <Tooltip
+                      id='time_empty'
+                      className='schedule-screen__tooltip schedule-screen__tooltip__empty'
                       effect='solid'
                     />
                     <ReactTooltip

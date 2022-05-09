@@ -12,6 +12,7 @@ import ChangeEmployee from './ChangeEmployee';
 import classes from './EventContent.module.scss';
 import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
+import { padStart } from '@fullcalendar/react';
 
 export default ({
   id,
@@ -82,6 +83,19 @@ export default ({
       id,
     });
   };
+  const tooltipType = () => {
+    let type = 'time';
+
+    if (start && end && moment().isBetween(start, end)) {
+      type += '_active';
+    } else if (isCompleted) {
+      type += '_past';
+    } else if (employeeName == 'Empty') {
+      type += '_empty';
+    }
+      
+    return type;
+  }
  const today = format(new Date(), 'dd')
 
   const dayEndCheck = () => {
@@ -95,7 +109,7 @@ export default ({
   return (
     <div
       className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
-      data-for='time'
+      data-for={tooltipType()}
       data-tip={activeDrag ? null : title}
       id='dropdownButton'
       onMouseEnter={() => setIsShown(true)}

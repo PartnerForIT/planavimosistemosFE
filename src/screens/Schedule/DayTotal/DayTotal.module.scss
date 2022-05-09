@@ -6,8 +6,42 @@
   position: relative;
   $item: &;
 
+  &:hover {
+    background: #EBF7FA;
+  }
+
   &_empty #{$item}__content {
     cursor: default;
+  }
+
+  &__empty {
+    color: #7E8E95;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    justify-content: flex-start;
+
+    &__circle {
+      background: #EFF4F7;
+      position: relative;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      margin-right: 5px;
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 6px;
+        right: 6px;
+        border-radius: 50%;
+        border: dashed 1px #B8BEC4;
+      }
+    }
   }
 
   &__content {

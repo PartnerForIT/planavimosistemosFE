@@ -65,39 +65,48 @@ export default ({
   
   return (
     <div className={dayTotalClasses}>
-      <button
-        className={classes.dayTotal__content}
-        onClick={handleClickOpenModal}
-        ref={buttonRef}
-      >
-        <div className={classes.dayTotal__content__users}>
-          {
-            parsablePhotos().map((photo) => photo && (
-              <img
-                key={photo}
-                alt='avatar'
-                className={classes.dayTotal__content__users__avatar}
-                src={photo}
-              />
-            ))
-          }
-          <div className={classes.dayTotal__content__users__count}>
-            {employeesCount}
-          </div>
-        </div>
-        <div className={classes.dayTotal__content__statistic}>
-          <div className={classes.dayTotal__content__statistic__hours}>
-            {`${hours} ${t('hours')}`}
-          </div>
-          {
-            withCost && (
-              <div className={classes.dayTotal__content__statistic__money}>
-                {`${money}`}<CurrencySign/>
+      {
+        employeesCount > 0
+        ? (
+          <button
+            className={classes.dayTotal__content}
+            onClick={handleClickOpenModal}
+            ref={buttonRef}
+          >
+            <div className={classes.dayTotal__content__users}>
+              {
+                parsablePhotos().map((photo) => photo && (
+                  <img
+                    key={photo}
+                    alt='avatar'
+                    className={classes.dayTotal__content__users__avatar}
+                    src={photo}
+                  />
+                ))
+              }
+              <div className={classes.dayTotal__content__users__count}>
+                {employeesCount}
               </div>
-            )
-          }
-        </div>
-      </button>
+            </div>
+            <div className={classes.dayTotal__content__statistic}>
+              <div className={classes.dayTotal__content__statistic__hours}>
+                {`${hours} ${t('hours')}`}
+              </div>
+              {
+                withCost && (
+                  <div className={classes.dayTotal__content__statistic__money}>
+                    {`${money}`}<CurrencySign/>
+                  </div>
+                )
+              }
+            </div>
+          </button>
+        ) : (
+          <div className={classes.dayTotal__empty}>
+            <span className={classes.dayTotal__empty__circle}></span>{t('No workers this day')}
+          </div>
+        )
+      }
       {
         isOpen && (
           <DayTotalModal
