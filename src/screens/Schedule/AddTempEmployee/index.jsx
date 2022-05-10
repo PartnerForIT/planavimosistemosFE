@@ -16,7 +16,8 @@ import Cross from "../../../components/Icons/Cross";
 
 export default ({
                     setmodalAddTempEmployee,
-                    addTempEmployeeDispatch
+                    addTempEmployeeDispatch,
+                    unavailableEmployees
 }) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
@@ -75,13 +76,14 @@ export default ({
     const stringMatch = (str = '') => str.toLowerCase().includes(searchValue.toLowerCase());
     
     if (searchValue.trim()) {
-      return employees.filter((e) => stringMatch(`${e.name} ${e.surname}`)
+      return employees.filter((e) => (stringMatch(`${e.name} ${e.surname}`)
           || stringMatch(e.groups[0]?.name)
           || stringMatch(e.subgroups[0]?.name)
-          || stringMatch(e.subgroups[0]?.parent_group?.name));
+          || stringMatch(e.subgroups[0]?.parent_group?.name))
+          && !unavailableEmployees.includes(e.id));
     }
 
-    return employees;
+    return employees.filter(e => { return !unavailableEmployees.includes(e.id) });
   }, [searchValue, employees]);
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
   return (

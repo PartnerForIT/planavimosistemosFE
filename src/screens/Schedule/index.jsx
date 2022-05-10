@@ -687,6 +687,17 @@ export default () => {
     }
     return '24:00:00';
   };
+
+  const unavailableEmployees = () => {
+    
+    const selectedEvent  = schedule?.events.find(e => e.id == tempEventID);
+    if (selectedEvent) {
+      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false && e.resourceId.indexOf(tempShiftID+'-') == 0);
+      return allEmployees.map(e => { const splitted = e.resourceId.split('-'); return splitted[2]*1 || '' });
+    }
+    
+    return [];
+  };
   
   return (
     <MainLayout>
@@ -811,6 +822,7 @@ export default () => {
                           ?<AddTempEmployee
                               setmodalAddTempEmployee={setmodalAddTempEmployee}
                               addTempEmployeeDispatch={addTempEmployeeDispatch}
+                              unavailableEmployees={unavailableEmployees()}
                           />
                           : ''
                     }
