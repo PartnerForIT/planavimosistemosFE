@@ -31,6 +31,9 @@ const Dropdown = forwardRef(({
         return;
       }
       setIsOpen(false);
+      if (onCancel) {
+        onCancel();
+      }
     };
     document.addEventListener('mousedown', handleOuterDropdownClick, false);
 
@@ -53,7 +56,7 @@ const Dropdown = forwardRef(({
   const handleCloseModal = () => {
     setIsOpen(false);
   };
-
+  
   return (
     <>
       <Button
