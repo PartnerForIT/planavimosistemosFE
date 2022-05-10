@@ -47,15 +47,7 @@ export default function Holidays({
   };
 
   const yearChangeHandler = (opt) => {
-    const currentYear = new Date().getFullYear();
-    let changedYear = currentYear;
-    if (opt > 0) {
-      setYear((prevState) => (prevState < currentYear + 2 ? prevState + opt : prevState));
-    }
-    if (opt < 0) {
-      setYear((prevState) => (prevState < currentYear + 2 ? prevState + opt : prevState));
-    }
-    
+    setYear(year+opt);
     dispatch(getHolidays(companyId, year+opt));
   };
 

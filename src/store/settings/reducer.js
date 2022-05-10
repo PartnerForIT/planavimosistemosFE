@@ -195,7 +195,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         error: null,
-        //loading: true,
+        loading: true,
       };
     case GET_HOLIDAYS_SUCCESS:
       return {
