@@ -164,7 +164,7 @@ export default ({
         )
       }
       {
-        withMenu && employeeName !== 'Empty' ? (
+        withMenu && (employeeName !== 'Empty' || newEmployee?.name) ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -176,7 +176,7 @@ export default ({
                 <ChangeEmployee
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={employeeName}
+                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
                   onChangeEmployee={handleChangeEmployee}
                 />
               )
@@ -186,7 +186,7 @@ export default ({
                 <ChangeWorkingTime
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={employeeName}
+                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
                   start={start}
                   end={end}
                   onChangeTime={handleChangeWorkingTime}
@@ -208,7 +208,7 @@ export default ({
                     }
                     <div className={classes.eventContent__userInfo__right}>
                       <div className={classes.eventContent__userInfo__right__fullName}>
-                        {employeeName}
+                        {newEmployee?.name ? newEmployee?.name : employeeName}
                       </div>
                       <div className={classes.eventContent__userInfo__right__jobType}>
                         {jobTypeName}
