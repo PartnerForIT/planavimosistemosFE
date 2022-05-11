@@ -251,14 +251,16 @@ export default () => {
         acc[week] = prevEvents[week].map((event) => ({
           ...event,
           data: event.data.reduce((accJ, item, indexDay) => {
-            const currentDayOfWeek = daysOfWeek[week][indexDay];
-            if (currentDayOfWeek.checked && !currentDayOfWeek.disabled) {
-              accJ.push({
-                ...item.time,
-                day: indexDay,
-              });
+            if (daysOfWeek[week]) {
+              const currentDayOfWeek = daysOfWeek[week][indexDay];
+              if (currentDayOfWeek.checked && !currentDayOfWeek.disabled) {
+                accJ.push({
+                  ...item.time,
+                  day: indexDay,
+                });
+              }
+              return accJ;
             }
-            return accJ;
           }, []),
         }));
         return acc;
@@ -333,9 +335,11 @@ export default () => {
   }
 
   const handleSaveChanges = () => {
+
     if (selectedPlace && shiftName) {
-      saveChangesRoute()
       handleSaveShift();
+      //tmp fix, need set in to (.then), when request come back.
+      setTimeout(() => saveChangesRoute(), 1000);
     } else {
       setSaveChanges(true);
     }

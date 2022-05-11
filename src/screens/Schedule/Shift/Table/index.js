@@ -521,7 +521,6 @@ export default forwardRef(({
   const handleChangeNumber = ({ rowId, value }) => {
     setResources((prevState) => {
       const foundIndex = prevState.findIndex((item) => item.id === rowId);
-
       let children;
       if (value > prevState[foundIndex].children.length) {
         children = [
@@ -530,11 +529,11 @@ export default forwardRef(({
             id: prevState[foundIndex].children.length,
           },
         ];
-      } else if (prevState[foundIndex].children.every((item) => item.title)) {
+      } else if (prevState[foundIndex].children.every((item) => item.title && item.title != 'Empty')) {
         return prevState;
       } else {
         const foundEmptyLastIndex = prevState[foundIndex].children
-          .reduce((acc, curr, index) => (!curr.title ? index : acc), 0);
+          .reduce((acc, curr, index) => ((!curr.title || curr.title == 'Empty') ? index : acc), 0);
         children = [
           ...prevState[foundIndex].children.slice(0, foundEmptyLastIndex),
           ...prevState[foundIndex].children.slice(foundEmptyLastIndex + 1),
@@ -757,6 +756,10 @@ export default forwardRef(({
                       });
 
                       // total
+
+                        if (!total.children[index].children[indexJ]) {
+                          total.children[index].children[indexJ] = {cost: 0, time: 0};
+                        }
                       
                         total.children[index].children[indexJ].cost += cost;
                         total.children[index].children[indexJ].time += time;
