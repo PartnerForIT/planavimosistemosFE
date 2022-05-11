@@ -15,6 +15,7 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   DELETE_TIMELINE,
+  EMPTY_TIMELINE,
   DELETE_SHIFT,
   ADD_TEMP_EMPLOYEE,
   ADD_TEMP_EMPLOYEE_SUCCESS,
@@ -128,6 +129,20 @@ export const deleteTimeline = ({
   body,
 }) => ({
   type: DELETE_TIMELINE,
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+});
+export const emptyTimeline = ({
+  companyId,
+  data,
+  shiftId,
+  id,
+  body,
+}) => ({
+  type: EMPTY_TIMELINE,
   companyId,
   shiftId,
   data,

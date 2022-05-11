@@ -25,11 +25,13 @@ export default ({
   onChangeEmployee,
   onChangeWorkingTime,
   onDeleteTimeline,
+  onEmptyTimeline,
   newEmployee,
   oldEmployee,
   start,
   end,
   viewType,
+  empty,
                   addEmployee,
                   dayNumber,
                   isCompleted,
@@ -56,6 +58,9 @@ export default ({
   };
   const handleDeleteTimeline = () => {
     onDeleteTimeline({ id, shiftId });
+  };
+  const handleEmptyTimeline = () => {
+    onEmptyTimeline({ id, shiftId });
   };
   const handleChangeWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -105,7 +110,7 @@ export default ({
     }
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  
   return (
     <div
       className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
@@ -116,8 +121,8 @@ export default ({
       onMouseLeave={() => setIsShown(false)}
     >
       {
-        (!!newEmployee?.photo)
-          ? (newEmployee?.photo === null)
+        (!!newEmployee?.photo || empty)
+          ? (newEmployee?.photo === null || empty)
             ? ''
             :<img
                     alt='avatar'
@@ -140,7 +145,7 @@ export default ({
                   (!!newEmployee?.name)
 
                     ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-                      :(employeeName === 'Empty')
+                      :(employeeName === 'Empty' || empty)
                       ?<span onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
                 }
@@ -164,7 +169,7 @@ export default ({
         )
       }
       {
-        withMenu && (employeeName !== 'Empty' || newEmployee?.name) ? (
+        withMenu && !empty && (employeeName !== 'Empty' || newEmployee?.name) ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -231,10 +236,17 @@ export default ({
                     onClick={openChangeWorkingTime}
                   />
                   <Dropdown.ItemMenu
+                    title={t('Empty Timeline')}
+                    onClick={handleEmptyTimeline}
+                    remove
+                  />
+                  {/*                   
+                  <Dropdown.ItemMenu
                     title={t('Delete Timeline')}
                     onClick={handleDeleteTimeline}
                     remove
                   />
+                   */}
                 </>
               )
             }

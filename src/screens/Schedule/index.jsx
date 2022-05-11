@@ -32,6 +32,7 @@ import { getEmployees } from '../../store/employees/actions';
 import {
   getSchedule,
   deleteTimeline,
+  emptyTimeline,
   patchChangeTimeline,
   patchChangeEmployee,
   deleteShift, putShift, addTempemployee,
@@ -417,6 +418,14 @@ export default () => {
       id,
     }));
   };
+  const handleEmptyTimeline = ({ id, shiftId }) => {
+    dispatch(emptyTimeline({
+      companyId,
+      shiftId,
+      body: getBodyForGetSchedule(),
+      id,
+    }));
+  };
   const addTempEmployees =  (shiftId,employeeId,jobTypeId,eventId) => {
      setmodalAddTempEmployee(data => !data)
       setTempShiftID(shiftId)
@@ -460,18 +469,18 @@ export default () => {
     let dayNumber;
     let isCompleted;
     if (resourceInfo.extendedProps.employeeId) {
-      [placeId, shiftId] = resourceInfo.id.split('-');
+      [shiftId] = resourceInfo.id.split('-');
       // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
       employeeName = resourceInfo.title;
       employee_Id = resourceInfo.extendedProps.employeeId
-      shiftId = resourceInfo.extendedProps.shift_id
+      shiftId = resourceInfo.extendedProps.shift_id ? resourceInfo.extendedProps.shift_id : shiftId
       jobTypeId = resourceInfo.extendedProps.job_type_id
       endDay = event.endStr
       dayNumber = event._def.extendedProps.day_number
     }
-    isCompleted = event?._def?.extendedProps?.is_completed
     
+    isCompleted = event?._def?.extendedProps?.is_completed
     return (
       <EventContent
         id={event.id}
@@ -481,6 +490,7 @@ export default () => {
         employeeName={employeeName}
         timeText={timeText}
         start={event.start}
+        empty={event.extendedProps.empty_event}
         newEmployee={event.extendedProps.new_employee}
         oldEmployee={event.extendedProps.old_employee}
         end={event.end}
@@ -491,6 +501,7 @@ export default () => {
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
+        onEmptyTimeline={handleEmptyTimeline}
         modalAddTempEmployee={modalAddTempEmployee}
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         endDay={endDay}
