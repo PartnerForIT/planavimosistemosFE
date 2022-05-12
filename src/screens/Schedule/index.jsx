@@ -145,7 +145,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employee_type == 3|| item.employee_type == 2 ) {
+          if (item.employee_type == 3|| item.employee_type == 2 || item.empty_event) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
