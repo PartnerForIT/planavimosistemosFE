@@ -468,7 +468,7 @@ export default () => {
     let endDay;
     let dayNumber;
     let isCompleted;
-    if (resourceInfo.extendedProps.employeeId) {
+    if (resourceInfo.extendedProps.employeeId || resourceInfo?.extendedProps?.employeeId == 0) {
       [shiftId] = resourceInfo.id.split('-');
       // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
       withMenu = true;
@@ -703,8 +703,20 @@ export default () => {
     
     const selectedEvent  = schedule?.events.find(e => e.id == tempEventID);
     if (selectedEvent) {
-      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false && e.resourceId.indexOf(tempShiftID+'-') == 0);
-      return allEmployees.map(e => { const splitted = e.resourceId.split('-'); return splitted[2]*1 || '' });
+      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false
+                                                      && e.resourceId.indexOf(tempShiftID+'-') == 0
+                                                      && selectedEvent.day_number == e.day_number
+                                                      && selectedEvent.start == e.start
+                                                      && selectedEvent.end == e.end);
+
+      return allEmployees.map(e => {
+        if (e?.new_employee?.id) {
+          return e?.new_employee?.id;
+        }
+
+        const splitted = e.resourceId.split('-');
+        return splitted[2]*1 || ''
+      });
     }
     
     return [];
