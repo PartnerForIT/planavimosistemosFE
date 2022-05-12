@@ -95,7 +95,7 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if (employeeName == 'Empty') {
+    } else if (!newEmployee?.name && (employeeName == 'Empty' || empty)) {
       type += '_empty';
     }
       
