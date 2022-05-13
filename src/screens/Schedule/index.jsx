@@ -495,6 +495,27 @@ export default () => {
     }
     
     isCompleted = event?._def?.extendedProps?.is_completed
+
+    let unEmployees = []
+    const selectedEvent  = schedule?.events.find(e => e.resourceId == resourceInfo.id);
+    if (selectedEvent) {
+      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false
+                                                      && e.resourceId.indexOf(shiftId+'-') == 0
+                                                      && selectedEvent.day_number == e.day_number
+                                                      && selectedEvent.start == e.start
+                                                      && selectedEvent.end == e.end);
+
+      unEmployees = allEmployees.map(e => {
+        if (e?.new_employee?.id) {
+          return e?.new_employee?.id;
+        }
+
+        const splitted = e.resourceId.split('-');
+        return splitted[2]*1 || ''
+      });
+    }
+
+
     return (
       <EventContent
         id={event.id}
@@ -521,6 +542,7 @@ export default () => {
         endDay={endDay}
         isCompleted={isCompleted}
         activeDrag={activeDrag == resourceInfo.id}
+        unavailableEmployees={unEmployees}
       />
     );
   };

@@ -35,7 +35,8 @@ export default ({
                   addEmployee,
                   dayNumber,
                   isCompleted,
-                  activeDrag
+                  activeDrag,
+                  unavailableEmployees
 }) => {
   const { t } = useTranslation();
 
@@ -183,6 +184,7 @@ export default ({
                   jobTypeName={jobTypeName}
                   employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
                   onChangeEmployee={handleChangeEmployee}
+                  unavailableEmployees={unavailableEmployees}
                 />
               )
             }
