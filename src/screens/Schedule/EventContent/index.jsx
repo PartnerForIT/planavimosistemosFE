@@ -121,7 +121,7 @@ export default ({
       onMouseLeave={() => setIsShown(false)}
     >
       {
-        (!!newEmployee?.photo || empty)
+        (!!newEmployee?.name || empty)
           ? (newEmployee?.photo === null || empty)
             ? ''
             :<img
@@ -203,12 +203,20 @@ export default ({
                 <>
                   <div className={classes.eventContent__userInfo}>
                     {
-                      photo && (
-                        <img
-                          className={classes.eventContent__userInfo__avatar}
-                          alt='avatar'
-                          src={photo}
-                        />
+                      (!!newEmployee?.name || empty)
+                        ? (newEmployee?.photo === null || empty)
+                          ? ''
+                          :<img
+                                  alt='avatar'
+                                  src={newEmployee?.photo}
+                                  className={classes.eventContent__userInfo__avatar}
+                              />
+                          :photo && (
+                          <img
+                              alt='avatar'
+                              src={photo}
+                              className={classes.eventContent__userInfo__avatar}
+                          />
                       )
                     }
                     <div className={classes.eventContent__userInfo__right}>
