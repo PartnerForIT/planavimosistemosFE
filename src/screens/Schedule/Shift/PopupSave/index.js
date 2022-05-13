@@ -5,6 +5,7 @@ import Input from '../../../../components/Core/Input/Input';
 import InputSelect from '../../../../components/Core/InputSelect';
 import Button from '../../../../components/Core/Button/Button';
 import classes from './PopupSave.module.scss';
+import classnames from 'classnames';
 
 const initialValues = {
   placeName: '',
@@ -17,8 +18,7 @@ export default ({
   selectedPlace,
   onClose,
   onCreatePlace,
-  onSaveShift,
-    save
+  onSaveShift
 }) => {
   const { t } = useTranslation();
 
@@ -67,8 +67,12 @@ export default ({
     setIsLoading(true);
   };
   const handleSaveShift = () => {
-    save()
-    onSaveShift(values);
+    if (
+        (type == 'enterShiftName' && values.shiftName)
+        || (type == 'selectPlace' && (values.placeName || values.placeId))
+        || (type == 'enterShiftNameAndPlace' && values.shiftName && (values.placeName || values.placeId))) {
+      onSaveShift(values);
+    }
   };
 
   return (
@@ -147,6 +151,7 @@ export default ({
                 !shiftName && (
                   <Input
                     placeholder={t('Enter shift name')}
+                    className={classnames(classes.popupSave__input, { [classes.popupSave__redBorder]: !values.shiftName })}
                     value={values.shiftName}
                     name='shiftName'
                     fullWidth

@@ -34,6 +34,7 @@ import { employeesSelector } from '../../../store/employees/selectors';
 import { postShiftIsLoadingSelector, shiftSelector } from '../../../store/schedule/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
 import { COLORS_SHIFT } from '../../../const';
+import ErrorModal from 'components/Core/Dialog/ErrorModal';
 
 import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
@@ -118,6 +119,7 @@ export default () => {
   const [startShiftFrom, setStartShiftFrom] = useState(moment());
   const [customWorkingTime, setCustomWorkingTime] = useState(true);
   const [saveChanges, setSaveChanges] = useState('');
+  const [saveErrorModal, setSaveErrorModal] = useState(false);
   const places = useSelector(placesSelector);
   const workTime = useSelector(settingWorkTime);
   const allJobTypes = useSelector(jobTypesSelector);
@@ -313,13 +315,22 @@ export default () => {
       })),
     };
 
-    if (isCreate) {
-      dispatch(postShift({ companyId, data }));
-    } else {
-      dispatch(putShift({ companyId, data, id: shiftId }));
-    }
+    const existJob = data.resources.find(i => i.job_type_id);
 
-    setSaveChanges('');
+    if (existJob) {
+      if (isCreate) {
+        dispatch(postShift({ companyId, data }));
+      } else {
+        dispatch(putShift({ companyId, data, id: shiftId }));
+      }
+
+      //tmp fix, need set in to (.then), when request come back.
+      setTimeout(() => saveChangesRoute(), 1000);
+
+      setSaveChanges('');
+    } else {
+      setSaveErrorModal(true)
+    }
   };
   const handleChangeNumberOfWeeks = (value) => {
     setNumberOfWeeks(value);
@@ -338,8 +349,6 @@ export default () => {
 
     if (selectedPlace && shiftName) {
       handleSaveShift();
-      //tmp fix, need set in to (.then), when request come back.
-      setTimeout(() => saveChangesRoute(), 1000);
     } else {
       setSaveChanges(true);
     }
@@ -556,7 +565,6 @@ export default () => {
             onClose={handleClose}
             onCreatePlace={handleCreatePlace}
             onSaveShift={handleSaveShift}
-            save={saveChangesRoute}
           />
         )
       }
@@ -565,6 +573,15 @@ export default () => {
           <div className={classes.loading}>
             <Progress />
           </div>
+        )
+      }
+      {
+        saveErrorModal && (
+          <ErrorModal 
+            header={`${t('Missing Schedule Data')}`}
+            text={`${t('None of work places has been created')}`}
+            onClose={() => { setSaveErrorModal(false) }}
+          />
         )
       }
     </MainLayout>
