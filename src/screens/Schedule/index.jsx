@@ -62,6 +62,7 @@ import Dropdown from "../../components/Core/Dropdown/Dropdown";
 import {format} from "date-fns";
 import { TheatersRounded } from '@material-ui/icons';
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
+import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
 
 const permissionsConfig = [
   {
@@ -95,8 +96,18 @@ export default () => {
   const [activeDrag,setActiveDrag] = useState('')
   const [tempEventID,setTempEventID] = useState(0)
   const [dayCheckData,setDayCheckData] = useState(0)
+  const [openDialog,setOpenDialog] = useState(false)
+  const [deletedShiftName,setDeletedShiftName] = useState('')
   const today = format(new Date(), 'dd')
 
+  const handleDialog = () => {
+    setOpenDialog(false);
+    setDeletedShiftName('');
+  };
+  const cancelDelete = () => {
+    setOpenDialog(false);
+    setDeletedShiftName('');
+  };
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -149,6 +160,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
+          
           const nextItem = {
             ...item,
             eventBackgroundColor,
@@ -378,6 +390,8 @@ export default () => {
     };
   };
   const handleDeleteShift = (shiftId) => {
+    setOpenDialog(false)
+    setDeletedShiftName('')
     dispatch(deleteShift({
       companyId,
       id: shiftId,
@@ -528,7 +542,7 @@ export default () => {
         withMenu={!!shiftId}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
-        onDeleteShift={() => handleDeleteShift(shiftId)}
+        onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
       />
     );
   };
@@ -873,6 +887,16 @@ export default () => {
                       id='holiday'
                       className='schedule-screen__tooltip'
                       effect='solid'
+                    />
+                    <DialogDeleteShift
+                      open={openDialog}
+                      handleClose={handleDialog}
+                      title={t('Delete Shift?')}
+                      buttonTitle2={t('Cancel')}
+                      buttonTitle={t('Delete')}
+                      shiftName={deletedShiftName}
+                      submitDeleteShift={() => handleDeleteShift(openDialog)}
+                      cancelDelete={cancelDelete}
                     />
                     {
                       timeline === TIMELINE.WEEK && (
