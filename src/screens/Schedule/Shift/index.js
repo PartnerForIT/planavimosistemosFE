@@ -250,22 +250,24 @@ export default () => {
     } = tableRef.current;
     const parseEvents = (prevEvents) => Object.keys(prevEvents)
       .reduce((acc, week) => {
-        acc[week] = prevEvents[week].map((event) => ({
-          ...event,
-          data: event.data.reduce((accJ, item, indexDay) => {
-            if (daysOfWeek[week]) {
-              const currentDayOfWeek = daysOfWeek[week][indexDay];
-              if (currentDayOfWeek.checked && !currentDayOfWeek.disabled) {
-                accJ.push({
-                  ...item.time,
-                  day: indexDay,
-                });
+        if (numberOfWeeks * 1  > week * 1) {
+          acc[week] = prevEvents[week].map((event) => ({
+            ...event,
+            data: event.data.reduce((accJ, item, indexDay) => {
+              if (daysOfWeek[week]) {
+                const currentDayOfWeek = daysOfWeek[week][indexDay];
+                if (currentDayOfWeek.checked && !currentDayOfWeek.disabled) {
+                  accJ.push({
+                    ...item.time,
+                    day: indexDay,
+                  });
+                }
+                return accJ;
               }
-              return accJ;
-            }
-          }, []),
-        }));
-        return acc;
+            }, []),
+          }));
+        }
+          return acc;
       }, {});
     const parseDefaultTime = (prevDefaultTime) => Object.keys(prevDefaultTime)
       .reduce((acc, week) => {

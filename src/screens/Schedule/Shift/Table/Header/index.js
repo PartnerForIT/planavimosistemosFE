@@ -29,7 +29,7 @@ export default ({
           className={classes.header__resource__next}
           aria-label='next'
           onClick={onClickNext}
-          disabled={currentWeek === makeShiftFor}
+          disabled={currentWeek + 1 >= makeShiftFor}
         />
       </div>
       {
