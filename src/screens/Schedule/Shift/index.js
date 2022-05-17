@@ -318,8 +318,9 @@ export default () => {
     };
 
     const existJob = data.resources.find(i => i.job_type_id);
+    const existEmployee = data.resources.find(i => i.children.find(c => c.employee_id));
 
-    if (existJob) {
+    if (existJob && existEmployee) {
       if (isCreate) {
         dispatch(postShift({ companyId, data }));
       } else {
@@ -331,7 +332,7 @@ export default () => {
 
       setSaveChanges('');
     } else {
-      setSaveErrorModal(true)
+      setSaveErrorModal(!existJob ? 'job' : 'employee')
     }
   };
   const handleChangeNumberOfWeeks = (value) => {
@@ -581,7 +582,7 @@ export default () => {
         saveErrorModal && (
           <ErrorModal 
             header={`${t('Missing Schedule Data')}`}
-            text={`${t('None of work places has been created')}`}
+            text={saveErrorModal == 'job' ? `${t('None of work places has been created')}` : `${t('Please choose employee')}`}
             onClose={() => { setSaveErrorModal(false) }}
           />
         )
