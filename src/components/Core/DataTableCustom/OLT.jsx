@@ -286,7 +286,7 @@ export default function DataTable({
             </header>
           </div>
           {
-            tableData.map((row, idx) => (
+            tableData.length ? tableData.map((row, idx) => (
               <Row
                 withoutRightPanel={withoutFilterColumns}
                 index={idx}
@@ -313,7 +313,7 @@ export default function DataTable({
                 tableRef={tableRef}
                 withoutShitCode={withoutShitCode}
               />
-            ))
+            )) : null
           }
         </div>
       </Scrollbar>

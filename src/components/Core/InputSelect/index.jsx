@@ -73,6 +73,10 @@ export default ({
     }
 
     // eslint-disable-next-line eqeqeq
+    if (!options || (options && options.message == 'Permission denied')) {
+      return placeholder
+    }
+
     return options.find((option) => option[valueKey] == value)?.[labelKey] || placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placeholder, open, options, value, searchValue, withoutSearch]);
