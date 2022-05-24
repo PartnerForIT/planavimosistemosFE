@@ -136,6 +136,17 @@
 
       .fc-timeline-event-harness {
         z-index: 3;
+
+        &:first-child .change-working-time {
+          margin-left: 0;
+          left: 0;
+        }
+
+        &:last-child .change-working-time {
+          margin-left: 0;
+          left: auto;
+          right: 0;
+        }
       }
     }
   }

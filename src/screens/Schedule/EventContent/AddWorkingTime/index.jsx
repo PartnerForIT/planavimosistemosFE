@@ -7,6 +7,7 @@ import TimeRangePicker from '../../Shift/TimeRangePicker';
 import Cross from "../../../../components/Icons/Cross";
 
 import classes from './AddWorkingTime.module.scss';
+import classnames from 'classnames';
 
 export default ({
   onClose,
@@ -31,7 +32,7 @@ export default ({
   };
 
   return (
-    <div className={classes.changeWorkingTime}>
+    <div className={classnames(classes.changeWorkingTime, 'change-working-time')}>
       <div onClick={onClose} className={classes.changeWorkingTime__close}><Cross/></div>
       
       <div className={classes.changeWorkingTime__title}>

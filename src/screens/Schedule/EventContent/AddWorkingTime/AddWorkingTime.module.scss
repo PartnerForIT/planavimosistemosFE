@@ -10,7 +10,10 @@
   box-sizing: border-box;
   z-index: 8;
   box-shadow: 0 3px 20px rgba(100, 125, 147, .27);
-  position: relative;
+  left: 50%;
+  position: absolute;
+  margin-left: -150px;
+  bottom: -10px;
 
   &__close {
     cursor: pointer;
