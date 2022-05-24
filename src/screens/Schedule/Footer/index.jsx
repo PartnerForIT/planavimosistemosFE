@@ -128,7 +128,7 @@ export default ({
             key={item}
             employeesCount={item - 1 >= 0 ? data[item - 1]?.employeesCount : data.total?.employeesCount}
             empty={item - 1 >= 0 ? !data[item - 1]?.employeesCount : !data.total?.employeesCount}
-            photos={item - 1 >= 0 ? (data[item - 1 - 1]?.photos ?? []) : (data.total?.photos ?? [])}
+            photos={item - 1 >= 0 ? (data[item - 1]?.photos ?? []) : (data.total?.photos ?? [])}
             hours={item - 1 >= 0 ? (data[item - 1]?.time ?? data.total?.time) : data.total?.time}
             money={item - 1 >= 0 ? (data[item - 1]?.cost ?? data.total?.cost) : data.total?.cost}
             title={item - 1 >= 0 ? (data[item - 1]?.title) : (data.total?.title)}

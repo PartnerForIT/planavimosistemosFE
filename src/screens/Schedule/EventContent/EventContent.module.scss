@@ -6,6 +6,10 @@
   visibility: hidden;
   $eventContent: &;
 
+  &__time {
+    visibility: visible;
+  }
+
   &__avatar {
     width: 24px;
     height: 24px;

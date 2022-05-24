@@ -17,6 +17,7 @@ import Tooltip from 'react-tooltip';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import ReactTooltip from 'react-tooltip';
 import classnames from 'classnames';
+import { getSettingWorkTime } from '../../store/settings/actions';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
@@ -29,13 +30,16 @@ import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
+import { companyModules } from '../../store/company/selectors';
+
 import {
   getSchedule,
   deleteTimeline,
   emptyTimeline,
   patchChangeTimeline,
+  patchAddTimeline,
   patchChangeEmployee,
-  deleteShift, putShift, addTempemployee,
+  deleteShift, putShift, addTempemployee, 
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
@@ -43,9 +47,11 @@ import {
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, isLoadingSelector } from '../../store/schedule/selectors';
+import { settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
 import EventContent from './EventContent';
+import ChangeWorkingTime from './EventContent/ChangeWorkingTime';
 import MonthView from './MonthView';
 import ResourceAreaHeader from './ResourceAreaHeader';
 import ResourceItem from './ResourceItem';
@@ -86,6 +92,7 @@ export default () => {
   const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const isLoading = useSelector(isLoadingSelector);
+  const modules = useSelector(companyModules);
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
@@ -99,6 +106,7 @@ export default () => {
   const [openDialog,setOpenDialog] = useState(false)
   const [deletedShiftName,setDeletedShiftName] = useState('')
   const today = format(new Date(), 'dd')
+  const workTime = useSelector(settingWorkTime);
 
   const handleDialog = () => {
     setOpenDialog(false);
@@ -118,6 +126,12 @@ export default () => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
+          //const currentEvent = schedule?.events.find(i => i.resourceId == item.id);
+
+          //console.log(schedule?.events, item, currentEvent, upCustomTime);
+
+          
+
           if (item.shiftId) {
             item.count = item.count || 0;
             item.children.map((i) => {
@@ -424,6 +438,20 @@ export default () => {
       id,
     }));
   };
+  const handleAddWorkingTime = ({ shiftId, id, time }) => {
+    dispatch(patchAddTimeline({
+      companyId,
+      shiftId,
+
+      data: {
+        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
+        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+        data: id,
+      },
+      body: getBodyForGetSchedule(),
+      id,
+    }));
+  };
   const handleDeleteTimeline = ({ id, shiftId }) => {
     dispatch(deleteTimeline({
       companyId,
@@ -515,7 +543,26 @@ export default () => {
       });
     }
 
+    let start = event.start;
+    let end = event.end;
 
+    if (event.extendedProps.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
+      const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());
+      if (time?.start) {
+        const [h, m] = time.start.split(':');
+        start = moment(start).set({h: h*1, m: m*1});
+      } else {
+        start = moment(start).set({h: 8});
+      }
+
+      if (time?.end) {
+        const [h, m] = time.end.split(':');
+        end = moment(end).set({h: h*1, m: m*1});
+      } else {
+        end = moment(end).set({h: 17});
+      }
+    }
+    
     return (
       <EventContent
         id={event.id}
@@ -524,11 +571,12 @@ export default () => {
         title={event.title}
         employeeName={employeeName}
         timeText={timeText}
-        start={event.start}
+        start={start}
+        end={end}
         empty={event.extendedProps.empty_event}
+        empty_manual={event.extendedProps.empty_manual}
         newEmployee={event.extendedProps.new_employee}
         oldEmployee={event.extendedProps.old_employee}
-        end={event.end}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu}
@@ -539,12 +587,21 @@ export default () => {
         onEmptyTimeline={handleEmptyTimeline}
         modalAddTempEmployee={modalAddTempEmployee}
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
+        addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
         activeDrag={activeDrag == resourceInfo.id}
         unavailableEmployees={unEmployees}
       />
     );
+  };
+  const handleEventClassNames = (info) => {
+    let classes = []
+    if (info.event.extendedProps.empty_manual) {
+      classes.push('is-empty-manual')
+    }
+
+    return classes;
   };
   const renderResourceLabelContent = ({ fieldValue, resource }) => {
     const {
@@ -685,6 +742,7 @@ export default () => {
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
+    dispatch(getSettingWorkTime(companyId));
 
     dispatch(getSchedule({
       companyId,
@@ -866,6 +924,7 @@ export default () => {
                       eventStartEditable={false}
                       eventDurationEditable={timeline === TIMELINE.DAY}
                       eventContent={renderEventContent}
+                      eventClassNames={handleEventClassNames}
                       resourceAreaHeaderContent={renderResourceAreaHeaderContent}
                       viewDidMount={handleViewDidMount}
                       resourceLabelClassNames={handleResourceLabelClassNames}

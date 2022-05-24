@@ -35,6 +35,7 @@ import { postShiftIsLoadingSelector, shiftSelector } from '../../../store/schedu
 import usePermissions from '../../../components/Core/usePermissions';
 import { COLORS_SHIFT } from '../../../const';
 import ErrorModal from 'components/Core/Dialog/ErrorModal';
+import { companyModules } from '../../../store/company/selectors';
 
 import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
@@ -129,6 +130,7 @@ export default () => {
   const shift = useSelector(shiftSelector);
   const permissions = usePermissions(permissionsConfig);
   const history = useHistory();
+  const modules = useSelector(companyModules);
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -294,19 +296,41 @@ export default () => {
         return acc;
       }, {});
 
+    let submitEvents = customWorkingTime ? parseEvents(events) : {}
+    if (modules?.manual_mode) {
+      Object.keys(submitEvents).map((key, index) => {
+          submitEvents[key] = submitEvents[key].map(item => {
+              return {
+                ...item,
+                data: [
+                  {day: 0, start: '00:00', end: '00:00'},
+                  {day: 1, start: '00:00', end: '00:00'},
+                  {day: 2, start: '00:00', end: '00:00'},
+                  {day: 3, start: '00:00', end: '00:00'},
+                  {day: 4, start: '00:00', end: '00:00'},
+                  {day: 5, start: '00:00', end: '00:00'},
+                  {day: 6, start: '00:00', end: '00:00'},
+                ]
+              }
+            }
+          );
+        }
+      );
+    }
+
     const data = {
       shift_info: {
         name: shiftName || values.shiftName,
         place_id: selectedPlace || values.placeId,
         color_shift: colorShift,
-        date_start: startShiftFrom.format('YYYY-MM-DD HH:mm'),
+        date_start: (modules?.manual_mode) ? startShiftFrom.startOf('isoWeek').format('YYYY-MM-DD HH:mm') : startShiftFrom.format('YYYY-MM-DD HH:mm'),
         custom_time: Number(customWorkingTime),
         company_id: companyId, // ?
         week_count: numberOfWeeks,
         working_setting: parseDaysOfWeek(daysOfWeek),
         defaultTime: parseDefaultTime(defaultWorkingTime),
       },
-      events: customWorkingTime ? parseEvents(events) : {},
+      events: submitEvents,
       resources: resources.map((item) => ({
         id: item.id,
         job_type_id: item.jobTypeId,
@@ -513,33 +537,34 @@ export default () => {
           {t('Save Changes')}
         </Button>
       </div>
-      <div className={classes.options}>
-        <ButtonsField
-          onChange={handleChangeNumberOfWeeks}
-          value={numberOfWeeks}
-          label={`${t('Make shift for')}:`}
-          options={makeShiftForOptions}
-        />
-        <DatePicker
-          label={`${t('Start Shift From')}:`}
-          value={startShiftFrom}
-          onChange={handleChangeStartDay}
-        />
-        <div className={classes.options__switch}>
-          {t('Use custom working time')}
-          <Tooltip title={t('Use custom working time')} />
-          <Switch
-            onChange={setCustomWorkingTime}
-            offColor='#808F94'
-            onColor='#0085FF'
-            uncheckedIcon={false}
-            checkedIcon={false}
-            checked={customWorkingTime}
-            height={21}
-            width={40}
+      { !modules?.manual_mode && (<div className={classes.options}>
+          <ButtonsField
+            onChange={handleChangeNumberOfWeeks}
+            value={numberOfWeeks}
+            label={`${t('Make shift for')}:`}
+            options={makeShiftForOptions}
           />
-        </div>
-      </div>
+          <DatePicker
+            label={`${t('Start Shift From')}:`}
+            value={startShiftFrom}
+            onChange={handleChangeStartDay}
+          />
+          <div className={classes.options__switch}>
+            {t('Use custom working time')}
+            <Tooltip title={t('Use custom working time')} />
+            <Switch
+              onChange={setCustomWorkingTime}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              checked={customWorkingTime}
+              height={21}
+              width={40}
+            />
+          </div>
+        </div>)
+      }
       {
         (isLoading || !workTime.work_time.work_days || (!shift && !isCreate)) ? (
           <Progress />

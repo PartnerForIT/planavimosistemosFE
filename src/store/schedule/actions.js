@@ -14,6 +14,7 @@ import {
   RESET_SHIFT,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
+  PATCH_ADD_TIMELINE,
   DELETE_TIMELINE,
   EMPTY_TIMELINE,
   DELETE_SHIFT,
@@ -115,6 +116,20 @@ export const patchChangeTimeline = ({
   body,
 }) => ({
   type: PATCH_CHANGE_TIMELINE,
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+});
+export const patchAddTimeline = ({
+  companyId,
+  shiftId,
+  data,
+  id,
+  body,
+}) => ({
+  type: PATCH_ADD_TIMELINE,
   companyId,
   shiftId,
   data,

@@ -6,6 +6,11 @@
   overflow: hidden;
   $table: &;
 
+  &__gray {
+    background: #fafbfc;
+    overflow: visible;
+  }
+
   &__content {
     flex: 1;
     display: grid;

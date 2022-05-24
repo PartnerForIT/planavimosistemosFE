@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
+import { useSelector } from 'react-redux';
 
 import TimeRangePicker from '../TimeRangePicker';
 import Header from './Header';
@@ -19,6 +20,7 @@ import SectionEmpty from './SectionEmpty';
 import Section from './Section';
 import DefaultShiftTime from './DefaultShiftTime';
 import classes from './Table.module.scss';
+import { companyModules } from '../../../../store/company/selectors';
 
 /*
 data: [
@@ -328,6 +330,7 @@ export default forwardRef(({
   const [currentWeek, setCurrentWeek] = useState(0);
   const scrollContainerRef = useRef(null);
   const contentRef = useRef(null);
+  const modules = useSelector(companyModules);
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
@@ -846,15 +849,18 @@ export default forwardRef(({
   }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
 
   return (
-    <div className={classes.table}>
-      <Header
-        onClickNext={handleClickNext}
-        onClickPrev={handleClickPrev}
-        daysOfWeek={daysOfWeek}
-        onChange={handleChangeWeek}
-        makeShiftFor={numberOfWeeks}
-        currentWeek={currentWeek}
-      />
+    <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
+      { !modules?.manual_mode && (
+        <Header
+          onClickNext={handleClickNext}
+          onClickPrev={handleClickPrev}
+          daysOfWeek={daysOfWeek}
+          onChange={handleChangeWeek}
+          makeShiftFor={numberOfWeeks}
+          currentWeek={currentWeek}
+        />
+        )
+      }
         <>
           <div className={classes.table__content} ref={contentRef}>
             <div className={classes.table__content__resources}>
@@ -890,53 +896,62 @@ export default forwardRef(({
                 ))
               }
             </div>
-            <div className={classes.table__content__data}>
-              <RowDefaultTimeContent
-                items={defaultWorkingTime[currentWeek]}
-                onChange={handleChangeDefaultTime}
-                customWorkingTime={customWorkingTime}
-                daysOfWeek={daysOfWeek[currentWeek]}
-              />
-              <div className={classes.table__content__data__row} />
-              {
-                resources.map((item) => (
-                  <RowContent
-                    key={`${currentWeek}-${item.id}`}
-                    title={item.title}
-                    items={data[currentWeek]}
-                    resources={item.children}
-                    expander={item.expander}
-                    resourceId={item.id}
-                    onChange={handleChangeTime}
-                    onDuplicateTimeToRow={handleDuplicateTimeToRow}
-                    onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
-                    disabledCell={!customWorkingTime}
-                    daysOfWeek={daysOfWeek[currentWeek]}
-                    defaultWorkingTime={defaultWorkingTime[currentWeek]}
-                    withDots
-                  />
-                ))
-              }
-            </div>
-          </div>
-          <div className={classes.table__background}>
-            {backgroundArr.map((item) => (
-              <div key={`cell-background-${item.id}`} className={classes.table__background__row}>
-                <div className={classes.table__background__row__resource} />
+            
+            { !modules?.manual_mode && (
+              <div className={classes.table__content__data}>
+                <RowDefaultTimeContent
+                  items={defaultWorkingTime[currentWeek]}
+                  onChange={handleChangeDefaultTime}
+                  customWorkingTime={customWorkingTime}
+                  daysOfWeek={daysOfWeek[currentWeek]}
+                />
+                <div className={classes.table__content__data__row} />
                 {
-                  item.data.map((itemJ) => (
-                    <div key={itemJ.id} className={classes.table__background__row__cell} />
+                  resources.map((item) => (
+                    <RowContent
+                      key={`${currentWeek}-${item.id}`}
+                      title={item.title}
+                      items={data[currentWeek]}
+                      resources={item.children}
+                      expander={item.expander}
+                      resourceId={item.id}
+                      onChange={handleChangeTime}
+                      onDuplicateTimeToRow={handleDuplicateTimeToRow}
+                      onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
+                      disabledCell={!customWorkingTime}
+                      daysOfWeek={daysOfWeek[currentWeek]}
+                      defaultWorkingTime={defaultWorkingTime[currentWeek]}
+                      withDots
+                    />
                   ))
                 }
               </div>
-            ))}
+            )
+          }
           </div>
+          { !modules?.manual_mode && (
+            <div className={classes.table__background}>
+              {backgroundArr.map((item) => (
+                <div key={`cell-background-${item.id}`} className={classes.table__background__row}>
+                  <div className={classes.table__background__row__resource} />
+                  {
+                    item.data.map((itemJ) => (
+                      <div key={itemJ.id} className={classes.table__background__row__cell} />
+                    ))
+                  }
+                </div>
+              ))}
+            </div>
+          )
+          }
         </>
-      <Footer
-        timesPanel={timesPanelFull}
-        daysOfWeek={daysOfWeek[currentWeek]}
-        withCost={withCost}
-      />
+      { !modules?.manual_mode && 
+        (<Footer
+          timesPanel={timesPanelFull}
+          daysOfWeek={daysOfWeek[currentWeek]}
+          withCost={withCost}
+        />)
+      }
     </div>
   );
 });

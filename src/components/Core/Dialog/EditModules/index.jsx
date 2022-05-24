@@ -19,6 +19,7 @@ const initialValues = {
   activity_log: false,
   schedule_simple: false,
   schedule_shift: false,
+  manual_mode: false,
   create_places: false,
   create_jobs: false,
   create_groups: false,
@@ -73,6 +74,7 @@ export default ({
           ...prevState,
           schedule_shift: checked,
           schedule_simple: false,
+          manual_mode: false,
           create_places: checked || prevState.create_places,
         }));
         break;
@@ -144,6 +146,15 @@ export default ({
                 label={t('Schedule with shift')}
                 name='schedule_shift'
               />
+              <div className={style.marginLeft}>
+                <Checkbox
+                  onChange={handleChange}
+                  checked={modules.manual_mode}
+                  disabled={!modules.schedule_shift}
+                  label={t('Manual Mode')}
+                  name='manual_mode'
+                />
+              </div>
               <Checkbox
                 onChange={handleChange}
                 checked={modules.activity_log}
