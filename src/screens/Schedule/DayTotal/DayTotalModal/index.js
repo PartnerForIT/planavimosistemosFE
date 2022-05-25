@@ -42,16 +42,18 @@ export default ({
           {
             nested && nested.map((item, index) => {
               return (
-                <ModalItem
-                  key={index}
-                  title={item.name}
-                  subTitle={item.job_type_name || `${item.employeesCount} employee`}
-                  cost={item.cost}
-                  time={item.time}
-                  nested={item.children}
-                  withCost={withCost}
-                  main
-                />
+              (item.cost*1 > 0 || item.time*1 > 0) && (
+                  <ModalItem
+                    key={index}
+                    title={item.name}
+                    subTitle={item.job_type_name || `${item.employeesCount} employee`}
+                    cost={item.cost}
+                    time={item.time}
+                    nested={item.children}
+                    withCost={withCost}
+                    main
+                  />
+                )
               );
             })
           }

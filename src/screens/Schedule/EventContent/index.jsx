@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
 import { compareAsc, format } from 'date-fns'
+import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
 import { TIMELINE } from '../../../const';
@@ -14,6 +15,7 @@ import classes from './EventContent.module.scss';
 import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
 import { padStart } from '@fullcalendar/react';
+import { companyModules } from '../../../store/company/selectors';
 
 export default ({
   id,
@@ -45,6 +47,7 @@ export default ({
 
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
+  const modules = useSelector(companyModules);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -281,24 +284,25 @@ export default ({
                   <div className={classes.eventContent__value}>
                     {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
                   </div>
-                  <Dropdown.ItemMenu
-                    title={t('Change Employee')}
-                    onClick={openChangeEmployee}
-                  />
+                  {/* Edgaras suggestion 2022-05-25 */}
+                  { !modules.manual_mode && (
+                      <Dropdown.ItemMenu
+                        title={t('Change Employee')}
+                        onClick={openChangeEmployee}
+                      />
+                    )
+                  } 
                   <Dropdown.ItemMenu
                     title={t('Change Working Time')}
-
                     onClick={openChangeWorkingTime}
                   />
-                  { empty_manual && (
+                  { !modules.manual_mode ? (
                       <Dropdown.ItemMenu
                         title={t('Empty Timeline')}
                         onClick={handleEmptyTimeline}
                         remove
                       />
-                    )
-                  }
-                  { !empty_manual && (
+                    ) : (
                       <Dropdown.ItemMenu
                         title={t('Delete Timeline')}
                         onClick={handleDeleteTimeline}

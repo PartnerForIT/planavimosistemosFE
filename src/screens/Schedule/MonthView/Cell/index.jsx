@@ -22,7 +22,7 @@ export default ({
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
     [classes.cell_today]: today,
-    [classes.cell_holiday]: h.date ? true : false,
+    //[classes.cell_holiday]: h.date ? true : false,
     [classes.cell_holiday_company]: h.company_work_time_id ? true : false,
     [classes.cell_holiday_government]: (h.date && !h.company_work_time_id) ? true : false,
   });
@@ -56,7 +56,7 @@ export default ({
 
   return (
     <div className={cellClasses} ref={refCell}>
-      {title}
+      {title != 0 ? title : ''}
       <HolidayIcon
         holidays={holiday}
         month={true}

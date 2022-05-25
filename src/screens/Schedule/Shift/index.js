@@ -318,6 +318,23 @@ export default () => {
       );
     }
 
+    const dataResources = resources.map((item) => {
+      let childrens = item.children.map((itemJ) => ({
+        id: itemJ.id,
+        employee_id: itemJ.employeeId,
+      }))
+
+      if (modules?.manual_mode) {
+        childrens = childrens.filter(i => i.employee_id)
+      }
+
+      return {
+        id: item.id,
+        job_type_id: item.jobTypeId,
+        children: childrens
+      }
+    });
+
     const data = {
       shift_info: {
         name: shiftName || values.shiftName,
@@ -331,14 +348,7 @@ export default () => {
         defaultTime: parseDefaultTime(defaultWorkingTime),
       },
       events: submitEvents,
-      resources: resources.map((item) => ({
-        id: item.id,
-        job_type_id: item.jobTypeId,
-        children: item.children.map((itemJ) => ({
-          id: itemJ.id,
-          employee_id: itemJ.employeeId,
-        })),
-      })),
+      resources: dataResources,
     };
 
     const existJob = data.resources.find(i => i.job_type_id);
