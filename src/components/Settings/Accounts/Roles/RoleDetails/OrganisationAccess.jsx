@@ -21,7 +21,7 @@ export default memo(({
 
     return false;
   };
-
+  
   return (
     <Content tooltip='Tooltip' title='Organisation access'>
       {
@@ -30,7 +30,7 @@ export default memo(({
             <React.Fragment key={key + i.toString()}>
               {
                 Object.keys(organisation[key].options).map((name) => {
-                  const id = permissionsIds[key][name] ?? 0;
+                  const id = permissionsIds[key] ? (permissionsIds[key][name] ?? 0) : 0;
                   return (
                     <StyledCheckbox
                       key={key + name}

@@ -30,6 +30,7 @@ import {
 } from '../../../../store/settings/actions';
 import AddEditItem from '../../../Core/Dialog/AddEditItem';
 import usePermissions from '../../../Core/usePermissions';
+import { companyModules } from '../../../../store/company/selectors';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -41,110 +42,6 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
   },
 }));
-
-const initialRoleAccess = {
-  // Access by Module
-  moduleAccess: {
-    logbook: {
-      options: {
-        edit_settings: 'Can edit Logbook settings',
-        edit_logs: 'Can edit entry logs',
-        delete_logs: 'Can delete entry logs',
-        earnings: 'Can see earnings (APP)',
-        profit: 'Can see earnings and profit',
-        costs: 'Can see costs',
-        requests: 'Get approval requests',
-        requests_in_place: 'Get approval requests in assigned place',
-      },
-    },
-    reports: {
-      options: {
-        costs: 'Can see costs',
-        earnings: 'Can see earnings',
-        profit: 'Can see profit',
-        generate: 'Can generate reports',
-        assigned_place: 'Reports only for assigned place',
-      },
-    },
-    events: {
-      options: {
-        receive_app: 'Receive notifications',
-      },
-    },
-    schedule: {
-      options: {
-        view: 'Can see Schedule',
-        assigned_place: 'Only assigned place view',
-      },
-    },
-  },
-
-  // Organization access
-  organisation: {
-    groups: {
-      options: {
-        create: 'Can create Groups',
-      },
-    },
-    roles: {
-      options: {
-        create: 'Can create Roles',
-      },
-    },
-    categories: {
-      options: {
-        create: 'Can create Categories',
-      },
-    },
-    events: {
-      options: {
-        create: 'Can create Events',
-      },
-    },
-    data: {
-      options: {
-        delete: 'Can delete entry data',
-      },
-    },
-    accounts: {
-      options: {
-        create: 'Can create New accounts',
-        delete: 'Can delete Accounts list',
-        see_and_edit: 'Can see & edit Accounts List',
-      },
-    },
-    activity_log: {
-      options: {
-        view: 'Can see Activity Log',
-      },
-    },
-    company: {
-      options: {
-        edit_settings: 'Can edit General Settings',
-      },
-    },
-    manager: {
-      options: {
-        mobile: 'Use Managers Mobile View',
-      },
-    },
-    app: {
-      options: {
-        manager: 'Managers view WEB'
-      }
-    },
-    kiosk: {
-      options: {
-        create: 'Can create Kiosks & PIN',
-      },
-    },
-    schedule: {
-      options: {
-        create_and_edit: 'Can create & edit Schedule',
-      },
-    },
-  },
-};
 
 const permissionsConfig = [
   {
@@ -206,7 +103,119 @@ export default () => {
   const [newRoleOpen, setNewRoleOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [defaultRoleAccess, setDefaultRoleAccess] = useState({});
+  const modules = useSelector(companyModules);
 
+  const initialRoleAccess = {
+    // Access by Module
+    moduleAccess: {
+      ...(modules.logbook && {
+        logbook: {
+          options: {
+            edit_settings: 'Can edit Logbook settings',
+            edit_logs: 'Can edit entry logs',
+            delete_logs: 'Can delete entry logs',
+            ...(modules.cost_earning && { earnings: 'Can see earnings (APP)' }),
+            ...(modules.cost_earning && { profit: 'Can see earnings and profit' }),
+            ...(modules.profitability && { costs: 'Can see costs' }),
+            requests: 'Get approval requests',
+            requests_in_place: 'Get approval requests in assigned place',
+          },
+        },
+      }),
+      ...(modules.reports && {
+        reports: {
+          options: {
+            ...(modules.cost_earning && { costs: 'Can see costs' }),
+            ...(modules.profitability && { earnings: 'Can see earnings' }),
+            ...(modules.profitability && { profit: 'Can see profit' }),
+            generate: 'Can generate reports',
+            assigned_place: 'Reports only for assigned place',
+          },
+        },
+      }),
+      ...(modules.events && {
+        events: {
+          options: {
+            receive_app: 'Receive notifications',
+          },
+        },
+      }),
+      ...(modules.schedule_shift && {
+        schedule: {
+          options: {
+            view: 'Can see Schedule',
+            assigned_place: 'Only assigned place view',
+          },
+        },
+      }),
+    },
+  
+    // Organization access
+    organisation: {
+      groups: {
+        options: {
+          ...(modules.create_groups && { create: 'Can create Groups' }),
+        },
+      },
+      roles: {
+        options: {
+          create: 'Can create Roles',
+        },
+      },
+      categories: {
+        options: {
+          create: 'Can create Categories',
+        },
+      },
+      events: {
+        options: {
+          ...(modules.events && { create: 'Can create Events' }),
+        },
+      },
+      data: {
+        options: {
+          delete: 'Can delete entry data',
+        },
+      },
+      accounts: {
+        options: {
+          create: 'Can create New accounts',
+          delete: 'Can delete Accounts list',
+          see_and_edit: 'Can see & edit Accounts List',
+        },
+      },
+      activity_log: {
+        options: {
+          view: 'Can see Activity Log',
+        },
+      },
+      company: {
+        options: {
+          edit_settings: 'Can edit General Settings',
+        },
+      },
+      manager: {
+        options: {
+          ...(modules.use_manager_mobile && { mobile: 'Use Managers Mobile View' }),
+        },
+      },
+      app: {
+        options: {
+          manager: 'Managers view WEB'
+        }
+      },
+      kiosk: {
+        options: {
+          ...(modules.kiosk && { create: 'Can create Kiosks & PIN' }),
+        },
+      },
+      schedule: {
+        options: {
+          ...(modules.schedule_shift && { create_and_edit: 'Can create & edit Schedule' }),
+        },
+      },
+    },
+  };
 
   const permissionsIds = useMemo(() => {
     // eslint-disable-next-line no-underscore-dangle
