@@ -41,6 +41,9 @@ export const getColorByStatus = (status) => {
     case 'work':
       color = '#009FFF';
       break;
+    case 'night':
+      color = '#000';
+      break;
     case 'Pending':
     case 'break':
       color = '#FF9D00';
@@ -68,6 +71,12 @@ export const getInfoCardColors = (type) => {
       theme = {
         text: '#ff9d00',
         background: 'rgba(253, 176, 51, 0.21)',
+      };
+      break;
+    case 'night':
+      theme = {
+        text: '#000',
+        background: '#C0D8F1',
       };
       break;
     default:

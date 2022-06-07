@@ -10,6 +10,7 @@ export default ({
   title,
   text,
   nested,
+  night_time,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,7 +31,15 @@ export default ({
     <div className={dayOfMonthClasses}>
       {
         statistic ? (
-          text
+          <>
+            { text }
+            { night_time && night_time != 0 && (
+                <span className={classes.dayOfMonth_night}>
+                {night_time} h
+                </span>
+              )
+            }
+          </>
         ) : (
           <>
             <button

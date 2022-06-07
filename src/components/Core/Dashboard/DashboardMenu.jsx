@@ -230,6 +230,11 @@ export default function DashboardMenu() {
             name: 'overtime',
             title: t('Overtime'),
           },
+          {
+            to: `/${companyId}/settings/logbook/additional-rates`,
+            name: 'additional-rates',
+            title: t('Additional rates'),
+          },
         ],
       });
     }

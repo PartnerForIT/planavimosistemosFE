@@ -76,6 +76,7 @@ const columns = [
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
+  { label: 'Night time, h', field: 'night_duration', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
   { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
@@ -139,7 +140,11 @@ const permissionsConfig = [
   {
     name: 'Shift_name',
     module: 'shift_name',
-  }
+  },
+  {
+    name: 'night_rates',
+    module: 'night_rates',
+  },
 ];
 
 export default () => {
@@ -342,6 +347,9 @@ export default () => {
         return false;
       }
       if (permissions.shift_name && column.field === 'shift_name') {
+        return false;
+      }
+      if (!permissions.night_rates && column.field === 'night_duration') {
         return false;
       }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
@@ -562,6 +570,7 @@ export default () => {
                   <Timeline
                     works={selectedItem.works}
                     breaks={selectedItem.breaks}
+                    night={selectedItem.night}
                     total={selectedItem.total_work_sec + selectedItem.total_break_sec}
                     startMinute={selectedItem.started_at}
                     startTime={selectedItem.start}
@@ -575,6 +584,18 @@ export default () => {
                     showRange
                   />
                   <Delimiter />
+                  {
+                    permissions.night_rates && (
+                      <>
+                        <InfoCard
+                          type='night'
+                          time={selectedItem}
+                          durationSec={selectedItem.total_night_sec}
+                        />
+                        <Delimiter />
+                      </>
+                    )
+                  }
                   <InfoCard
                     type='break'
                     time={selectedItem}

@@ -66,6 +66,10 @@ const permissionsConfig = [
     permission: 'schedule_create_and_edit',
   },
   {
+    name: 'additional-rates',
+    permission: 'rates_create_and_edit',
+  },
+  {
     name: 'schedule_module',
     permission: 'schedule_module_access',
   },
@@ -78,7 +82,6 @@ export default () => {
 
   useEffect(() => {
     const mainPath = `/${companyId}/settings`;
-
     if (permissions.accounts_see_and_edit) {
       history.push(`${mainPath}/accounts/accounts-list`);
     } else if (permissions.company_edit_settings) {
@@ -89,6 +92,8 @@ export default () => {
       history.push(`${mainPath}/accounts/grouping`);
     } else if (permissions.logbook && permissions.logbook_edit_settings) {
       history.push(`${mainPath}/logbook/journal`);
+    } else if (permissions.logbook && permissions.rates_create_and_edit) {
+      history.push(`${mainPath}/logbook/additional-rates`);
     } else if (permissions.kiosk) {
       history.push(`${mainPath}/kiosk/kiosk-list`);
     } else if (permissions.events) {

@@ -23,6 +23,7 @@ export default ({
   nested,
   withCost,
 }) => {
+  
   return (
     <ClickAwayListener onClickAway={onClose}>
       <div className={classNames(classes.dayTotalModal, 'dayTotalItemModal')}>
@@ -49,6 +50,7 @@ export default ({
                     subTitle={item.job_type_name || `${item.employeesCount} employee`}
                     cost={item.cost}
                     time={item.time}
+                    night_duration={item.night_duration}
                     nested={item.children}
                     withCost={withCost}
                     main

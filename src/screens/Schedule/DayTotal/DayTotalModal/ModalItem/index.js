@@ -10,6 +10,7 @@ const ModalItem = ({
   subTitle,
   cost,
   time,
+  night_duration,
   nested,
   avatar,
   main,
@@ -67,6 +68,12 @@ const ModalItem = ({
             </div>
             <div className={classes.modalItem__content__row__second}>
               {`${time} hours`}
+              { night_duration && night_duration != '0' && (
+                  <span className={classes.modalItem__content__night}>
+                    {`${night_duration} hours`}
+                  </span>
+                )
+              }
             </div>
           </div>
         </div>
@@ -101,6 +108,7 @@ const ModalItem = ({
               subTitle={item.job_type_name || `${item.employeesCount} employee`}
               cost={item.cost}
               time={item.time}
+              night_duration={item.night_duration}
               nested={item.children}
               avatar={item.avatar}
               childLevel={childLevel + 1}

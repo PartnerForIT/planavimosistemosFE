@@ -114,6 +114,31 @@
   }
 }
 
+.nighttimes {
+  .nightTime {
+    &:hover,
+    &.selected {
+      .timeStart {
+        background-color: #fff;
+        display: block;
+        left: -35px;
+        z-index: 1;
+      }
+
+      .timeEnd {
+        background-color: #fff;
+        display: block;
+        right: -35px;
+        z-index: 1;
+      }
+
+      .tooltip {
+        display: block;
+      }
+    }
+  }
+}
+
 .time {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;

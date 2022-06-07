@@ -29,6 +29,9 @@ const initialValues = {
   profitability: false,
   comments_photo: false,
   kiosk: false,
+  rates: false,
+  night_rates: false,
+  holiday_rates: false,
 };
 
 export default ({
@@ -220,6 +223,32 @@ export default ({
                 label={t('Can use Kiosk for identification')}
                 name='kiosk'
               />
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.rates}
+                label={t('Can use Additional Rates')}
+                name='rates'
+              />
+              {
+                modules.rates && (
+                  <div className={style.marginLeft}>
+                    <Checkbox
+                      onChange={handleChange}
+                      checked={modules.night_rates}
+                      disabled={!modules.rates}
+                      label={t('Night time rates')}
+                      name='night_rates'
+                    />
+                    <Checkbox
+                      onChange={handleChange}
+                      checked={modules.holiday_rates}
+                      disabled={!modules.rates}
+                      label={t('Holiday rates')}
+                      name='holiday_rates'
+                    />
+                  </div>
+                )
+              }
 
               <div className={style.buttonBlock}>
                 <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>

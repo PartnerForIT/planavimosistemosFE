@@ -23,6 +23,12 @@
     color: #1d88fc;
   }
 
+  &_night {
+    color: #fd9d27;
+    display: block;
+    border-top: 1px solid #fd9d27;
+  }
+
   &_holiday {
 
     &_company:after {

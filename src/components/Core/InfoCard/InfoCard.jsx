@@ -74,6 +74,8 @@ const InfoCard = ({
         return <PendingIcon className={classes.clockIcon} />;
       case 'break':
         return <PauseIcon className={classes.clockIcon} />;
+      case 'night':
+        return <PendingIcon className={classes.clockIcon} />;
       default:
         return null;
     }
@@ -86,6 +88,8 @@ const InfoCard = ({
         return 'Total hours';
       case 'break':
         return 'On break';
+      case 'night':
+        return 'Night time';
       default:
         return null;
     }
@@ -101,6 +105,7 @@ const InfoCard = ({
     switch (type) {
       case 'total':
       case 'break':
+      case 'night':
         return (
           <>
             <span className={styles.time}>{parseInt(durationArray[0], 10)}</span>

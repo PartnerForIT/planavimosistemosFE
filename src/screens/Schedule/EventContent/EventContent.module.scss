@@ -6,6 +6,30 @@
   visibility: hidden;
   $eventContent: &;
 
+  &__night_end {
+    position: absolute;
+    visibility: visible;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(135, 135, 135, 0.7);
+    width: 0;
+    z-index: -1;
+    border-radius: 0 4px 4px 0;
+  }
+
+  &__night_start {
+    position: absolute;
+    visibility: visible;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(135, 135, 135, 0.7);
+    width: 0;
+    z-index: -1;
+    border-radius: 4px 0 0 4px;
+  }
+
   &__time {
     visibility: visible;
   }

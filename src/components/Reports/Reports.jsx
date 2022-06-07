@@ -97,6 +97,10 @@ const permissionsConfig = [
     permission: 'reports_assigned_place',
     default: false,
   },
+  {
+    name: 'night_rates',
+    module: 'night_rates',
+  },
 ];
 const columnsWidth = {
   // user: 500,
@@ -373,6 +377,7 @@ export default () => {
       if (!costState.show_earnings && field === 'sallary') return false;
       if (!costState.show_profit && field === 'profit') return false;
       if (!permissions.jobs && field === 'jobType') return false;
+      if (!permissions.night_rates && field === 'night_duration') return false;
       return !(!costState.show_costs && field === 'cost');
     }));
   }, [activeReport, columns, costState.show_costs,

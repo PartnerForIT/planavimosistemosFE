@@ -10,6 +10,7 @@ import {
 import Progress from '../../components/Core/Progress';
 import Logbook from '../../components/Logbook/Logbook';
 import { getCompanyInfo, getOrganisationModules } from '../../store/company/actions';
+import { loadLogbookAdditionalRates } from '../../store/settings/actions';
 import { companyModulesLoading, isLoadingCompanySelector } from '../../store/company/selectors';
 import { userSelector } from '../../store/auth/selectors';
 
@@ -29,6 +30,7 @@ import KioskUsers from '../../components/Settings/Kiosk/KioskUsers';
 import SettingCategories from '../../components/Settings/Categories';
 import SettingJournal from '../../components/Settings/Logbook/Journal';
 import Overtime from '../../components/Settings/Logbook/Overtime';
+import AdditionalRates from '../../components/Settings/Logbook/AdditionalRates';
 import ActivityLog from '../../components/Settings/ActivityLog';
 import SettingDelete from '../../components/Settings/Delete';
 import SettingEvents from '../../components/Settings/Events';
@@ -51,7 +53,10 @@ const permissionsConfig = [
     name: 'logbook_edit_settings',
     permission: 'logbook_edit_settings',
   },
-
+  {
+    name: 'additional_rates',
+    permission: 'additional_rates',
+  },
   {
     name: 'activity_log',
     permission: 'activity_log_view',
@@ -138,6 +143,7 @@ export default () => {
     if (companyId) {
       dispatch(getCompanyInfo(companyId, true));
       dispatch(getOrganisationModules(companyId));
+      dispatch(loadLogbookAdditionalRates(companyId));
     }
   }, [companyId]);
   // useEffect(() => {
@@ -269,6 +275,11 @@ export default () => {
       {
         (permissions.logbook && permissions.logbook_edit_settings) && (
           <Route exact path='/:id/settings/logbook/overtime' component={Overtime} />
+        )
+      }
+      {
+        (permissions.logbook && permissions.additional_rates) && (
+          <Route exact path='/:id/settings/logbook/additional-rates' component={AdditionalRates} />
         )
       }
       {

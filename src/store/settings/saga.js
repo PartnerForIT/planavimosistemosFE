@@ -28,6 +28,8 @@ import {
   EDIT_LOGBOOK_JOURNAL,
   GET_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME,
+  GET_LOGBOOK_ADDITIONAL_RATES,
+  EDIT_LOGBOOK_ADDITIONAL_RATES,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
   CREATE_ACCOUNTS_SUBGROUP,
@@ -82,6 +84,7 @@ import {
   // editLogbookJournalSuccess,
   loadLogbookOvertimeSuccess,
   // editLogbookOvertimeSuccess,
+  loadLogbookAdditionalRatesSuccess,
   getAccountGroupsSuccess,
   createAccountGroupSuccess,
   createAccountGroupError,
@@ -663,6 +666,36 @@ function* patchLogbookOvertime(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar('An error occurred while creating the Overtime', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+
+function* loadAdditionalRatesData(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/logbook/additional-rates`, token());
+    yield put(loadLogbookAdditionalRatesSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* patchLogbookAdditionalRates(action) {
+  try {
+    yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/logbook/additional-rates/store`, action.data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    
+    yield put(addSnackbar('Edit Additional rates successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Additional rates', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -1479,6 +1512,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_JOURNAL, patchLogbookJournal);
   yield takeLeading(GET_LOGBOOK_OVERTIME, loadOvertimeData);
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
+  yield takeLeading(GET_LOGBOOK_ADDITIONAL_RATES, loadAdditionalRatesData);
+  yield takeLatest(EDIT_LOGBOOK_ADDITIONAL_RATES, patchLogbookAdditionalRates);
   yield takeLeading(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);

@@ -5,6 +5,11 @@
   max-width: 430px;
 }
 
+.additionalRatesBlock {
+  width: 100%;
+  max-width: 500px;
+}
+
 .generalBlock {
   display: flex;
   align-items: center;
@@ -28,6 +33,24 @@
   label {
     margin-right: 12px;
   }
+}
+
+.generalBlock7 {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+
+  label {
+    margin-right: 12px;
+    padding-bottom: 0;
+  }
+}
+
+.fromToInput {
+  width: 180px;
+  display: flex;
+  align-items: center;
 }
 
 .subCheckbox {

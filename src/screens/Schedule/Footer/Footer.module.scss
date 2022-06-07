@@ -47,6 +47,10 @@
 
         &__value {
           font-family: "Helvetica Neue Medium", sans-serif;
+
+          &_night {
+            color: #fd9d27;
+          }
         }
       }
     }

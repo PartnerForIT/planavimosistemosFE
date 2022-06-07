@@ -30,6 +30,9 @@ import {
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  GET_LOGBOOK_ADDITIONAL_RATES,
+  GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
@@ -112,6 +115,7 @@ const initialState = {
   security: {},
   journal: {},
   overtime: {},
+  additionalRates: {},
   skills: [],
   employees: {
     users: [],
@@ -452,6 +456,30 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         overtime: action.data,
+        error: null,
+      };
+    }
+    case GET_LOGBOOK_ADDITIONAL_RATES: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    }
+    case GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        additionalRates: action.data,
+        error: null,
+      };
+    }
+
+    case EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        additionalRates: action.data,
         error: null,
       };
     }

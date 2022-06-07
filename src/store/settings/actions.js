@@ -42,6 +42,10 @@ import {
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME,
   EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  GET_LOGBOOK_ADDITIONAL_RATES,
+  GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  EDIT_LOGBOOK_ADDITIONAL_RATES,
+  EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   CREATE_ACCOUNTS_GROUP,
@@ -449,6 +453,24 @@ export const editLogbookOvertime = (id, data) => ({
 });
 export const editLogbookOvertimeSuccess = (data) => ({
   type: EDIT_LOGBOOK_OVERTIME_SUCCESS,
+  data,
+});
+
+export const loadLogbookAdditionalRates = (id) => ({
+  type: GET_LOGBOOK_ADDITIONAL_RATES,
+  id,
+});
+export const loadLogbookAdditionalRatesSuccess = (data) => ({
+  type: GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  data,
+});
+export const editLogbookAdditionalRates = (id, data) => ({
+  type: EDIT_LOGBOOK_ADDITIONAL_RATES,
+  id,
+  data,
+});
+export const editLogbookAdditionalRatesSuccess = (data) => ({
+  type: EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
   data,
 });
 

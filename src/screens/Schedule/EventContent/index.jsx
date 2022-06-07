@@ -16,6 +16,7 @@ import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
 import { padStart } from '@fullcalendar/react';
 import { companyModules } from '../../../store/company/selectors';
+import { AdditionalRatesDataSelector } from '../../../store/settings/selectors';
 
 export default ({
   id,
@@ -43,15 +44,86 @@ export default ({
                   activeDrag,
                   unavailableEmployees
 }) => {
+
   const { t } = useTranslation();
 
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
   const modules = useSelector(companyModules);
+  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
 
   useEffect(() => {
     Tooltip.rebuild();
   });
+
+  const endOverlap = () => {
+    let result = 0
+    if (AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
+      const expl_start = AdditionalRates.night_time_time_start.split(':')
+      const expl_end = AdditionalRates.night_time_time_end.split(':')
+
+      if (expl_start.length >= 2 && expl_end.length >= 2) {
+          let night_start = moment(start).clone().set({"hour": expl_start[0]*1, "minute": expl_start[1]*1});
+          let night_end = moment(start).clone().add('days', 1).set({"hour": expl_end[0]*1, "minute": expl_end[1]*1});
+
+          const overlap = overlapInMinutes(moment(start), moment(end), night_start, night_end)/60;
+
+          if (overlap > 0) {
+            const duration = moment.duration(moment(end).diff(moment(start)));
+            const hours = duration.asHours();
+
+            result = overlap/hours*100;
+          }
+      }
+    }
+
+    return result
+  };
+
+  const startOverlap = () => {
+    let result = 0
+    
+    if (AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
+      const expl_start = AdditionalRates.night_time_time_start.split(':')
+      const expl_end = AdditionalRates.night_time_time_end.split(':')
+
+      if (expl_start.length >= 2 && expl_end.length >= 2) {
+          let night_start = moment(start).clone().subtract('days', 1).set({"hour": expl_start[0]*1, "minute": expl_start[1]*1});
+          let night_end = moment(start).clone().set({"hour": expl_end[0]*1, "minute": expl_end[1]*1});
+
+          const overlap = overlapInMinutes(moment(start), moment(end), night_start, night_end)/60;
+
+          if (overlap > 0) {
+            const duration = moment.duration(moment(end).diff(moment(start)));
+            const hours = duration.asHours();
+            
+            result = overlap/hours*100;
+          }
+      }
+    }
+
+    return result
+  };
+
+  const overlapInMinutes = (startDate1, endDate1, startDate2, endDate2) => {
+    // Figure out which is the later start time
+    let lastStart = startDate1.isSameOrAfter(startDate2) ? startDate1 : startDate2;
+
+    // Convert that to an integer
+    lastStart = lastStart.unix();
+
+    // Figure out which is the earlier end time
+    let firstEnd = endDate2.isSameOrAfter(endDate1) ? endDate1 : endDate2;
+    // Convert that to an integer
+    firstEnd = firstEnd.unix();
+
+    // Subtract the two, divide by 60 to convert seconds to minutes, and round down
+    let overlap = Math.floor( (firstEnd - lastStart) / 60 );
+
+    // If the answer is greater than 0 use it.
+    // If not, there is no overlap.
+    return overlap > 0 ? overlap : 0;
+  }
 
   const openChangeEmployee = () => {
     modalRef.current.open();
@@ -149,6 +221,20 @@ export default ({
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
+      { !activeDrag && endOverlap() > 0 && (
+          <div
+            className={classes.eventContent__night_end}
+            style={{ width: `${endOverlap()}%` }}
+          ></div>
+        )
+      }
+      { !activeDrag && startOverlap() > 0 && (
+          <div
+            className={classes.eventContent__night_start}
+            style={{ width: `${startOverlap()}%` }}
+          ></div>
+        )
+      }
       {
         !empty_manual && (
         (!!newEmployee?.name || empty)

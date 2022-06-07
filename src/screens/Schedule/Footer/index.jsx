@@ -40,6 +40,14 @@ export default ({
     return 0;
   }, [data.time]);
 
+  const night_duration = useMemo(() => {
+    if (timeline === TIMELINE.DAY) {
+      return timeToHours(data.night_duration);
+    }
+
+    return 0;
+  }, [data.night_duration]);
+
   useEffect(() => {
     if (Array.isArray(currencies) && !currencies.length && !settingsLoading) {
       dispatch(getCurrencies());
@@ -110,6 +118,18 @@ export default ({
               </span>
             </span>
             {
+              night_duration != 0 && (
+                <span className={classes.footer__total}>
+                  {`${t('Night Time')}: `}
+                  <span className={classes.footer__total__value}>
+                    <span className={classes.footer__total__value_night}>
+                      {`${night_duration} ${t('hours')}`}
+                    </span>
+                  </span>
+                </span>
+              )
+            }
+            {
               withCost && (
                 <span className={classes.footer__total}>
                   {`${t('Total Cost')}: `}
@@ -163,6 +183,11 @@ export default ({
                       ? item.id === 'totalTime'
                         ? `${data.total?.time ?? 0} h`
                         : `${data.total?.cost ?? 0 } ${currency}`
+                      : ''}
+                    night_time={item.statistic
+                      ? item.id === 'totalTime'
+                        ? data.total?.night_duration ?? ''
+                        : ''
                       : ''}
                     // title={data[item.id].title}
                   />

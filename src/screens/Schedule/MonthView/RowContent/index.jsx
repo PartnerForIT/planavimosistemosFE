@@ -27,11 +27,15 @@ const RowContent = ({
 
   let time = 0;
   let cost = 0;
-  const check = (statistic, id) => {
+  let night_duration = 0;
+  const check = (statistic, id, night = false) => {
     if (statistic && id === "totalTime"){
+      if (night) {
+        return night_duration
+      }
       return time
     }
-    if (statistic && id === "totalCost"){
+    if (statistic && id === "totalCost" && !night){
       return cost
     }
 
@@ -46,8 +50,8 @@ const RowContent = ({
                   if(index < item.id ){
                     time+=newFoundItem(item.title)?.hours ?? 0
                     cost+=newFoundItem(item.title)?.cost ?? 0
+                    night_duration+=newFoundItem(item.title)?.night_duration ?? 0
                   }
-
          return (
              <Cell
                 key={item.id}
@@ -55,6 +59,7 @@ const RowContent = ({
                 statistic={item.statistic}
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
+                night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
             />)
           }
           )

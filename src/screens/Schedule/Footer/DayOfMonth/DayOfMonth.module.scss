@@ -1,5 +1,6 @@
 .dayOfMonth {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   flex: 1;
@@ -29,5 +30,11 @@
     color: #8a949f;
     font-size: 12px;
     cursor: pointer;
+  }
+
+  &_night {
+    color: #fd9d27;
+    display: block;
+    border-top: 1px solid #fd9d27;
   }
 }

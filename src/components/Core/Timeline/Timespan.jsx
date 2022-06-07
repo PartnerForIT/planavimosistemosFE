@@ -13,7 +13,7 @@ const Timespan = ({
 
   const timespanClasses = classNames(
     styles.timespan,
-    { [styles.workTime]: type === 'work', [styles.breakTime]: type === 'break', [styles.selected]: selected },
+    { [styles.workTime]: type === 'work', [styles.breakTime]: type === 'break', [styles.nightTime]: type === 'night', [styles.selected]: selected },
   );
 
   return (

@@ -13,6 +13,7 @@ export default ({
   today,
   header,
   holiday,
+  night_duration,
 }) => {
   
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -48,6 +49,13 @@ export default ({
             className={classes.cell__content__text}
           >
             {title}
+            {
+              night_duration && night_duration > 0 && (
+                <span className={classes.cell_night}>
+                  {night_duration}
+                </span>
+              )
+            }
           </div>
         </div>
       </div>

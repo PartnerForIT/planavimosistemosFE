@@ -5,11 +5,12 @@ import { datetimeToSeconds } from '../../Helpers';
 import Timespan from './Timespan';
 
 const Timeline = ({
-  works, breaks, total, startMinute, withTimeBreaks = true, startTime, endTime,
+  works, breaks, night, total, startMinute, withTimeBreaks = true, startTime, endTime,
 }) => {
   const [workTimespans, setWorkTimespans] = useState([]);
   const [breakTimespans, setBreakTimespans] = useState([]);
-
+  const [nightTimespans, setNightTimespans] = useState([]);
+  
   const calculateTimespans = useCallback((arr) => {
     const arrayCopy = [...arr];
     return arrayCopy.map((span) => ({
@@ -22,7 +23,8 @@ const Timeline = ({
   useEffect(() => {
     setWorkTimespans(calculateTimespans(works));
     setBreakTimespans(calculateTimespans(breaks));
-  }, [works, breaks, startMinute, total, calculateTimespans]);
+    setNightTimespans(calculateTimespans(night));
+  }, [works, breaks, night, startMinute, total, calculateTimespans]);
 
   return (
     <div className={classNames(styles.timelineWrap, { [styles.timelineWrapWithBreaks]: withTimeBreaks && total > 0 })}>
@@ -49,6 +51,19 @@ const Timeline = ({
                 key={idx.toString()}
                 timespan={timespan}
                 type='break'
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))
+          }
+        </div>
+        <div className={styles.nighttimes}>
+          {
+            nightTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type='night'
                 withTimeBreaks={withTimeBreaks}
                 total={total}
               />
