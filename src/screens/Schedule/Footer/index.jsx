@@ -118,7 +118,7 @@ export default ({
               </span>
             </span>
             {
-              night_duration != 0 && (
+              night_duration && night_duration != '0' ? (
                 <span className={classes.footer__total}>
                   {`${t('Night Time')}: `}
                   <span className={classes.footer__total__value}>
@@ -127,7 +127,7 @@ export default ({
                     </span>
                   </span>
                 </span>
-              )
+              ) : ''
             }
             {
               withCost && (
