@@ -105,7 +105,7 @@ const ModalItem = ({
             return (<ModalItem
               key={index}
               title={item.name}
-              subTitle={item.job_type_name || `${item.employeesCount} employee`}
+              subTitle={item.skill_name || (item.job_type_name || `${item.employeesCount} employee`)}
               cost={item.cost}
               time={item.time}
               night_duration={item.night_duration}
