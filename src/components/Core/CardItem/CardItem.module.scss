@@ -98,6 +98,10 @@ $arrow-size: 21px;
     border-color: $blue-4;
     color: white;
 
+    .card_title {
+      color: #fff;
+    }
+
     & .card_edit,
     & .card_remove,
     & .card_actions {
