@@ -50,6 +50,7 @@ export default function CreateAccount({
 
   const create = (data) => {
     createAccount(data);
+    close();
   };
   useEffect(() => {
     if (closeStat === false) {

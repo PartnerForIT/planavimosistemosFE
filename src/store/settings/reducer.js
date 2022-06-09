@@ -625,14 +625,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
 
     case error(CREATE_EMPLOYEE):
-      console.log(action.data.response.data.message);
       return {
         ...state,
         errorCreatingEmployer: true,
       };
 
     case success(CREATE_EMPLOYEE):
-      console.log(action.data);
       return {
         ...state,
         errorCreatingEmployer: false,
@@ -667,6 +665,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         error: action.data,
       };
+
+    case CREATE_EMPLOYEE:
+      return { ...state, 
+          loading: true,
+          settingsLoading: true,
+        }
 
     case SEND_IMPORTED_EMPLOYEES:
       return { ...state, importLoading: true };
