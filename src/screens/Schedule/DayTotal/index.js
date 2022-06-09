@@ -9,6 +9,7 @@ import CurrencySign from "../../../components/shared/CurrencySign";
 export default ({
   employeesCount,
   hours,
+  night_time,
   money,
   photos,
   nested,
@@ -91,6 +92,12 @@ export default ({
             <div className={classes.dayTotal__content__statistic}>
               <div className={classes.dayTotal__content__statistic__hours}>
                 {`${hours} ${t('hours')}`}
+                { (night_time && night_time != 0) ? (
+                  <span className={classes.dayTotal_night}>
+                  {night_time} {t('hours')}
+                  </span>
+                ) : ''
+              }
               </div>
               {
                 withCost && (

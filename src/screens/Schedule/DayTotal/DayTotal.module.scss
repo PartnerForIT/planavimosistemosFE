@@ -14,6 +14,13 @@
     cursor: default;
   }
 
+  &_night {
+    color: #fd9d27;
+    display: block;
+    border-top: 1px solid #fd9d27;
+    text-align: right;
+  }
+
   &__empty {
     color: #7E8E95;
     display: flex;

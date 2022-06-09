@@ -150,6 +150,7 @@ export default ({
             empty={item - 1 >= 0 ? !data[item - 1]?.employeesCount : !data.total?.employeesCount}
             photos={item - 1 >= 0 ? (data[item - 1]?.photos ?? []) : (data.total?.photos ?? [])}
             hours={item - 1 >= 0 ? (data[item - 1]?.time ?? data.total?.time) : data.total?.time}
+            night_time={item - 1 >= 0 ? (data[item - 1]?.night_duration ?? data.total?.night_duration) : data.total?.night_duration}
             money={item - 1 >= 0 ? (data[item - 1]?.cost ?? data.total?.cost) : data.total?.cost}
             title={item - 1 >= 0 ? (data[item - 1]?.title) : (data.total?.title)}
             nested={item - 1 >= 0 ? (data[item - 1]?.children) : (data.total?.children)}
@@ -165,6 +166,7 @@ export default ({
               empty={!data.total?.employeesCount}
               photos={data.total?.photos ?? []}
               hours={data.total?.time ?? 0}
+              night_time={data.total?.night_duration ?? 0}
               money={data.total?.cost ?? 0}
               title={data.total?.title}
               nested={data.total?.children}
