@@ -308,7 +308,7 @@ export default () => {
     if (nextTimeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
-
+    
     dispatch(getSchedule({
       companyId,
       timeline: nextTimeline,
@@ -656,7 +656,7 @@ export default () => {
       setTimeline(TIMELINE.DAY);
       calendarApi.changeView(TIMELINE.DAY, date.format('YYYY-MM-DD'));
       fromDateRef.current = date;
-      handleGetSchedule({ fromDate: date });
+      handleGetSchedule({ nextTimeline: TIMELINE.DAY, fromDate: date });
     }
   };
   const renderWeekHeader = (info) => {
