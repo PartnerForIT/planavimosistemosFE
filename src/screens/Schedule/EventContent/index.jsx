@@ -221,14 +221,14 @@ export default ({
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
-      { !activeDrag && endOverlap() > 0 && (
+      { !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div
             className={classes.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
         )
       }
-      { !activeDrag && startOverlap() > 0 && (
+      { !activeDrag && !empty_manual && startOverlap() > 0 && (
           <div
             className={classes.eventContent__night_start}
             style={{ width: `${startOverlap()}%` }}
