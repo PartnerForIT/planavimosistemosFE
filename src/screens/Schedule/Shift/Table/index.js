@@ -484,7 +484,7 @@ export default forwardRef(({
         {
           ...prevState[foundIndex],
           children: prevState[foundIndex].children.map((item) => {
-            if (!item.title && items[currentItemIndex]) {
+            if ((!item.title || item.title == 'Empty') && items[currentItemIndex]) {
               currentItemIndex += 1;
               newData.push({
                 resourceId: `${prevState[foundIndex].id}-${items[currentItemIndex - 1]?.id}`,
@@ -496,6 +496,7 @@ export default forwardRef(({
                 title: items[currentItemIndex - 1].label,
                 photo: items[currentItemIndex - 1].photo,
                 id: `${prevState[foundIndex].id}-${items[currentItemIndex - 1]?.id}`,
+                empty: false,
               };
             }
 
