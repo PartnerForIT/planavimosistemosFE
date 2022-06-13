@@ -41,7 +41,7 @@ const LoginContainer = () => {
           history.push(roleId === 1 ? routes.ORG_LIST : `${companyId}/settings/`);
           setLoading(false);
         })
-        .catch(() => setLoading(false));
+        .catch(() => setTimeout(() => setLoading(false), 3000));
     } else {
       setLoading(false);
     }
