@@ -261,7 +261,7 @@ const Events = () => {
 
     setSelectedItem({
       ...selectedRow,
-      timestamp: moment(selectedRow.timestamp, 'YYYY, MMMM, DD HH:mm').format(`hh:mm ${formatDate}`),
+      timestamp: moment(selectedRow.timestamp).format(`hh:mm ${formatDate}`),
     });
   };
 
