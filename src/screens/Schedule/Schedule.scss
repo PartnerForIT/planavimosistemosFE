@@ -339,6 +339,12 @@
             border-color: #96DEED;
             background-color: rgba(72, 195, 224, 0.2);
           }
+
+
+          &:after,
+          &:before {
+            display: none;
+          }
         }
 
         /*

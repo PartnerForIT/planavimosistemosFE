@@ -911,8 +911,8 @@ export default () => {
                           snapDuration: '6:00',
                         },
                       }}
-                      slotMinTime={scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00'}
-                      slotMaxTime={workAtNightMode()}
+                      slotMinTime={timeline === TIMELINE.WEEK ? '00:00:00' : (scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00')}
+                      slotMaxTime={timeline === TIMELINE.WEEK ? '24:00:00' : workAtNightMode()}
                       resourceOrder='sort'
                       headerToolbar={false}
                       aspectRatio={1}
