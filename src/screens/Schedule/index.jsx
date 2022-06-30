@@ -554,9 +554,9 @@ export default () => {
       } else {
         start = moment(start).set({h: 8});
       }
-
-      if (time?.end) {
-        const [h, m] = time.end.split(':');
+      
+      if (time?.finish) {
+        const [h, m] = time.finish.split(':');
         end = moment(end).set({h: h*1, m: m*1});
       } else {
         end = moment(end).set({h: 17});
