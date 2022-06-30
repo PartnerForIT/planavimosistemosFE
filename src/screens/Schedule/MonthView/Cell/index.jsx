@@ -50,11 +50,11 @@ export default ({
           >
             {title}
             {
-              night_duration && night_duration > 0 && (
+              night_duration && night_duration > 0 ? (
                 <span className={classes.cell_night}>
                   {night_duration}
                 </span>
-              )
+              ) : ''
             }
           </div>
         </div>
