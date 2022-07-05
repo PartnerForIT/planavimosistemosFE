@@ -585,6 +585,12 @@ export default () => {
                     showRange
                   />
                   <Delimiter />
+                  <InfoCard
+                    type='working'
+                    time={selectedItem}
+                    durationSec={selectedItem.working_hours_sec}
+                  />
+                  <Delimiter />
                   {
                     permissions.night_rates && (
                       <>
