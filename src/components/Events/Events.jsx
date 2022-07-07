@@ -187,10 +187,10 @@ const Events = () => {
         ...item,
         label: item.name,
         type: item?.subgroups?.length ? 'group' : '',
-        items: item?.subgroups.map((itemJ) => ({
+        items: item?.subgroups?.length ? item?.subgroups.map((itemJ) => ({
           ...itemJ,
           label: itemJ.name,
-        })),
+        })) : [],
       }), []));
     }
   }, [selectGroups]);
