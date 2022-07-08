@@ -119,7 +119,6 @@ const permissionsConfig = [
   {
     name: 'logbook_delete_logs',
     permission: 'logbook_delete_logs',
-    module: 'use_approval_flow',
   },
   {
     name: 'use_approval_flow',
