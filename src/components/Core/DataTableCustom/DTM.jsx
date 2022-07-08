@@ -14,6 +14,7 @@ import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
+import ReactTooltip from 'react-tooltip';
 
 const useStyles = makeStyles({
   colorPrimary: {
@@ -173,6 +174,11 @@ export default function DataTable({
       role='table'
       aria-label='Destinations'
     >
+      <ReactTooltip
+        id='holiday'
+        className='schedule-screen__tooltip'
+        effect='solid'
+      />
       <Scrollbar
         className={scrollableContentClasses}
         style={{ height: `calc(100vh - ${verticalOffset} - 47px)` }}

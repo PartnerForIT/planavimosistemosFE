@@ -4,6 +4,8 @@ import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import Row from './Row';
 import TriangleIcon from '../../Icons/TriangleIcon';
+import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
+
 
 const Group = ({
   group, label, rows, columns, ids, titleColor = '#4d7499', fieldIcons, selectedItem, setSelectedItem,
@@ -50,7 +52,7 @@ const Group = ({
     styles.groupContainer,
     { [styles.groupContainerReports]: reports },
   );
-
+console.log(group);
   return (
     <div className={groupContainerClasses}>
       <div
@@ -108,7 +110,17 @@ const Group = ({
                     style={{ width, minWidth }}
                   >
                     <TriangleIcon className={iconClasses} fill={titleColor} />
-                    <span className={classNames(styles.groupLabelText)}>{label}</span>
+                    <span className={classNames(styles.groupLabelText)}>
+                      {label}
+                      {
+                        group.holiday && group.holiday.length ?
+                          <HolidayIcon
+                            holidays={group.holiday}
+                            inline={true}
+                          />
+                        : null
+                      }
+                    </span>
                   </span>
                 );
               }

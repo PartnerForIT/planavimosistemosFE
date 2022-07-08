@@ -177,6 +177,7 @@ const Events = () => {
         backgroundColor: 'rgba(250, 172, 46, 0.1)',
         titleColor: '#f59f13',
       }),
+      holiday: eventsParse[label][0]?.holiday,
       items: eventsParse[label],
     })));
   }, [events]);

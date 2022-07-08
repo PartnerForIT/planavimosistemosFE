@@ -9,6 +9,7 @@ import classes from './HolidayIcon.module.scss';
 const HolidayIcon = ({
   holidays,
   month,
+  inline,
 }) => {
   const { t } = useTranslation();
 
@@ -22,7 +23,7 @@ const HolidayIcon = ({
         <></>
     ) : (
       <div
-        className={classnames(classes.holiday_icon, month ? classes.month : '')}
+        className={classnames(classes.holiday_icon, month ? classes.month : '', inline ? classes.inline : '')}
         data-tip={holidayTip()}
         data-for='holiday'
         data-html={true}

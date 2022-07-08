@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 
+import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
+
 export default function SimpleTable({
   rows, columns, expanded, selectable, reports,
   columnsWidth,
@@ -22,7 +24,7 @@ export default function SimpleTable({
     styles.cell,
     { [styles.flexRowGlobalReports]: reports },
   );
-
+  
   return (
     <div
       className={simpleTableContainer}
@@ -76,6 +78,14 @@ export default function SimpleTable({
                       role='cell'
                     >
                       {row[column.field]}
+                      {
+                        column.field == 'date' && row.holiday && row.holiday.length ?
+                          <HolidayIcon
+                            holidays={row.holiday}
+                            inline={true}
+                          />
+                        : null
+                      }
                     </div>
                   );
                 })
