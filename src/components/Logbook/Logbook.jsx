@@ -78,6 +78,7 @@ const columns = [
   { label: 'Duration, h', field: 'duration', checked: true },
   { label: 'Working hours, h', field: 'working_hours', checked: true },
   { label: 'Break time, h', field: 'break_time', checked: true },
+  { label: 'Holiday time, h', field: 'holiday_time', checked: true },
   { label: 'Night time, h', field: 'night_duration', checked: true },
   { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
   { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },

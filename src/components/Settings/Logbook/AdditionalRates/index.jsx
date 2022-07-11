@@ -61,6 +61,7 @@ export default function AdditionalRates() {
     night_time_rate: 1.5,
     holiday: false,
     holiday_company: false,
+    ignore_holiday_night_time: false,
     holiday_type: 2,
     holiday_rate: 1.5,
     holiday_night_type: 2,

@@ -206,6 +206,22 @@ export default function Form({
                     width={40}
                   />
                 </div>
+
+                <div className={style.generalBlock3}>
+                  <Label text={t('Ignore night time during the Holidays')} />
+                  <Switch
+                    onChange={() => handleChangeCalculation('ignore_holiday_night_time')}
+                    offColor='#808F94'
+                    onColor='#0085FF'
+                    uncheckedIcon={false}
+                    checkedIcon={false}
+                    name='ignore_holiday_night_time'
+                    checked={!!AdditionalRatesData.ignore_holiday_night_time}
+                    height={21}
+                    width={40}
+                  />
+                </div>
+
                 <Label text={`${t('Rates during the work at holiday time increases the default rate')} :`} />
 
                 <div className={style.radioBlock}>
@@ -302,7 +318,8 @@ export default function Form({
         (permissions.rates && permissions.night_rates && permissions.holiday_rates) && (
           <>
             <div>
-              <div className={(!AdditionalRatesData.holiday || !AdditionalRatesData.night_time) ? style.disabledBlock : ''}>
+            
+              <div className={(!AdditionalRatesData.holiday || !AdditionalRatesData.night_time || !!AdditionalRatesData.ignore_holiday_night_time) ? style.disabledBlock : ''}>
                 <Label text={`${t('Rates during the work at holiday and night time increases the default rate')} :`} />
 
                 <div className={style.radioBlock}>
