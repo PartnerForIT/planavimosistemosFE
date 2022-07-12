@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
 import PendingIcon from '../../Icons/PendingIcon';
+import HolidayGovernmentIcon from '../../Icons/HolidayGovernmentIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 import {
   getInfoCardColors, timeToMinutes, minutesToString, dateToUCT,
@@ -64,6 +65,10 @@ const InfoCard = ({
         },
       },
     },
+
+    holidayIcon: {
+      marginRight: '3px',
+    },
   });
   const classes = useStyles();
 
@@ -74,6 +79,8 @@ const InfoCard = ({
         return <PendingIcon className={classes.clockIcon} />;
       case 'working':
         return <PendingIcon className={classes.clockIcon} />;
+      case 'holiday':
+        return <HolidayGovernmentIcon className={classes.holidayIcon} />;
       case 'break':
         return <PauseIcon className={classes.clockIcon} />;
       case 'night':
@@ -90,6 +97,8 @@ const InfoCard = ({
         return 'Total hours';
       case 'working':
         return 'Working hours';
+      case 'holiday':
+        return 'Holiday hours';
       case 'break':
         return 'On break';
       case 'night':
@@ -109,6 +118,7 @@ const InfoCard = ({
     switch (type) {
       case 'total':
       case 'working':
+      case 'holiday':
       case 'break':
       case 'night':
         return (

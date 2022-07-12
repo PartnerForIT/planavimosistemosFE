@@ -592,6 +592,12 @@ export default () => {
                     durationSec={selectedItem.working_hours_sec}
                   />
                   <Delimiter />
+                  <InfoCard
+                    type='holiday'
+                    time={selectedItem}
+                    durationSec={selectedItem.holiday_minutes*60}
+                  />
+                  <Delimiter />
                   {
                     permissions.night_rates && (
                       <>
