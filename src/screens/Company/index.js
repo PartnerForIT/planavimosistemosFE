@@ -278,7 +278,7 @@ export default () => {
         )
       }
       {
-        (permissions.logbook && permissions.additional_rates) && (
+        (permissions.logbook && permissions.logbook_edit_settings) && (
           <Route exact path='/:id/settings/logbook/additional-rates' component={AdditionalRates} />
         )
       }

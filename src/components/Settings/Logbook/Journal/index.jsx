@@ -149,7 +149,7 @@ export default function Journal() {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
     submit({ ...journalData, automatic_break: !journalData.automatic_break });
   };
-
+  
   return (
     <MaynLayout>
       <Dashboard>

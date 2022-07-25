@@ -33,6 +33,10 @@ const useStyles = makeStyles(() => ({
 
 const permissionsConfig = [
   {
+    name: 'logbook_settings',
+    permission: 'logbook_edit_settings',
+  },
+  {
     name: 'rates',
     module: 'rates',
   },
@@ -156,6 +160,7 @@ export default function AdditionalRates() {
                   handleInputChange={handleInputChange}
                   handleChangeCalculation={handleChangeCalculation}
                   AdditionalRatesData={AdditionalRatesData}
+                  readOnly={!permissions.logbook_settings}
                   permissions={permissions}
                 />
               )
