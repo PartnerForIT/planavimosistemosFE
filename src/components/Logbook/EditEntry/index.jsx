@@ -255,7 +255,7 @@ export default ({
       const startTimeInMinutes = (started[0] * 60 + +started[1]);
 
       if (endTimeInMinutes < startTimeInMinutes) {
-        nextValues.finished = timeParts[foundIndex].finished;
+        //nextValues.finished = timeParts[foundIndex].finished;
       }
     } else if (values.started) {
       const started = values.started.split(':');
@@ -265,7 +265,7 @@ export default ({
       const endTimeInMinutes = (finished[0] * 60 + +finished[1]);
 
       if (startTimeInMinutes > endTimeInMinutes) {
-        nextValues.started = timeParts[foundIndex].started;
+        //nextValues.started = timeParts[foundIndex].started;
       }
     }
 
@@ -304,7 +304,10 @@ export default ({
   };
   const handleClickSave = () => {
     const { works, breaks } = timeParts.reduce((acc, item) => {
-      acc[item.isWork ? 'works' : 'breaks'].push({
+      const timeStart = item.started.split(':');
+      const timeEnd = item.finished.split(':');
+      const nightTime = (timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1]);
+      let push = {
         ...item,
         started_at: moment(item.started_at)
           .set({
@@ -321,7 +324,13 @@ export default ({
           })
           .format('YYYY-MM-DD HH:mm:ss'),
         delete: item.isRemove ? 1 : 0,
-      });
+      };
+
+      if (nightTime) {
+        push.finished_at = moment(push.finished_at).set("date", moment(push.started_at).format('D')).add(1,'days').format('YYYY-MM-DD HH:mm:ss'); 
+      }
+
+      acc[item.isWork ? 'works' : 'breaks'].push(push);
 
       return acc;
     }, { works: [], breaks: [] });
@@ -352,9 +361,18 @@ export default ({
 
     timeParts.forEach((item) => {
       if (!item.isRemove) {
-        const finished = item.finished.split(':');
-        const started = item.started.split(':');
-        const totalTime = (finished[0] * 60 + +finished[1]) - (started[0] * 60 + +started[1]);
+        //const finished = item.finished.split(':');
+        //const started = item.started.split(':');
+        //const totalTime = (finished[0] * 60 + +finished[1]) - (started[0] * 60 + +started[1]);
+
+        let start = moment(item.started, "HH:mm");
+        let end = moment(item.finished, "HH:mm");
+        if( end.isBefore(start) ){
+          end.add(1, 'day');
+        }
+        const dur = moment.duration(end.diff(start))
+        const totalTime = dur.asMinutes();
+
 
         if (!body.fromTime) {
           body.fromTime = item.started;
