@@ -7,7 +7,9 @@ import classNames from 'classnames';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import Scrollbar from 'react-scrollbars-custom';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
@@ -115,8 +117,16 @@ const columnsWidth = {
   // profit: 130,
 };
 
+const useStyles = makeStyles({
+  colorPrimary: {
+    color: '#0087ff',
+  },
+});
+
 export default () => {
   const { getDateFormat } = useCompanyInfo();
+
+  const classes = useStyles();
 
   /* Reports data */
   const reportTabs = useRef(null);
@@ -183,6 +193,7 @@ export default () => {
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
+  
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
@@ -431,6 +442,8 @@ export default () => {
   };
 
   const downloadReport = (action, ext) => {
+    setLoading(true);
+
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
 
     const { startDate, endDate } = dateRange;
@@ -472,6 +485,7 @@ export default () => {
         document.body.appendChild(link);
         link.click();
         link.remove();
+        setLoading(false);
       }).catch();
     }
   };
@@ -657,20 +671,31 @@ export default () => {
                     </div>
                   </div>
                 ))
-                : (
-                  <div className={styles.emptyContainer}>
-                    <div className={styles.emptyContent}>
-                      <div>
-                        <ReportsIcon className={styles.reportsIcon} />
-                        <p className={styles.title}>NOTHING SELECTED</p>
-                        <p className={styles.description}>Please select an object or place to generate report</p>
+                : 
+                <div className={styles.emptyContainer}>
+                  {
+                    loading ? 
+                    (
+                      <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })}>
+                        <CircularProgress classes={{ colorPrimary: classes.colorPrimary }} />
                       </div>
-                      <div className={styles.arrowIcon}>
-                        <ArrowRightIcon />
-                      </div>
-                    </div>
-                  </div>
-                )
+                    ) 
+                    : (
+                      
+                        <div className={styles.emptyContent}>
+                          <div>
+                            <ReportsIcon className={styles.reportsIcon} />
+                            <p className={styles.title}>NOTHING SELECTED</p>
+                            <p className={styles.description}>Please select an object or place to generate report</p>
+                          </div>
+                          <div className={styles.arrowIcon}>
+                            <ArrowRightIcon />
+                          </div>
+                        </div>
+                      
+                    )
+                  }
+                </div>
             }
           </div>
         </div>

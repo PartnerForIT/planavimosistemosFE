@@ -18,6 +18,13 @@ $sidebar-border-radius: 12px;
   padding: 0 6px;
 }
 
+.avatar {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .appHeader {
   background-color: #fff;
   border: 1px solid rgba(226, 235, 244, 0.85);

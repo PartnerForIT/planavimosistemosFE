@@ -19,6 +19,28 @@
   min-height: calc(100% - 85px);
 }
 
+.overlay {
+  background: #fff;
+  border-radius: 12px;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  position: absolute;
+  padding: 0;
+  transition: opacity 0.2s;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlayActive {
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  display: flex;
+}
+
 .emptyContainer {
   background-color: #fff;
   box-shadow: 0 3px 16px rgba(226, 233, 237, 0.61);

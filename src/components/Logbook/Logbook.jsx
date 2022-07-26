@@ -473,6 +473,8 @@ export default () => {
   };
 
   const downloadReport = (action, ext) => {
+    setLoading(true);
+
     const { startDate, endDate } = dateRange;
 
     const employeesArr = checkedEmployees.map((emp) => emp.id);
@@ -501,6 +503,7 @@ export default () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
+      setLoading(false);
     }).catch();
   };
 
@@ -522,7 +525,7 @@ export default () => {
           <Button onClick={() => setIsOpenEditEntry(true)} inverse inline size='small'>
             {t('Edit')}
           </Button>
-          <img src={avatar} alt={selectedItem.employee} width='71' height='72' />
+          <img src={selectedItem.photo || avatar} className={styles.avatar} alt={selectedItem.employee} width='71' height='72' />
           <div className={styles.employeeName}>{selectedItem.employee}</div>
           <div className={styles.date}>
             {
