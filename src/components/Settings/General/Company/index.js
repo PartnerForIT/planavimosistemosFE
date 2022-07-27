@@ -136,10 +136,10 @@ export default function Company() {
   useEffect(() => {
     if (inputValues.country && countries.length) {
       const foundCountry = countries.find(({ code }) => code === inputValues.country);
-      console.log('UTC'.substring(4, 6));
+      setTimeZones(foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? []);
 
       //fix for DST
-      const tzs = foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? [];
+      /*const tzs = foundCountry?.timezones?.map((code) => ({ code, name: code })) ?? [];
       const moved_tzs = tzs.map((tz) => {
         if (moment().isDST()) {
           let hours = tz.code.substring(4, 6);
@@ -169,6 +169,7 @@ export default function Company() {
       });
 
       setTimeZones(moved_tzs);
+      */
       setCurrencies(foundCountry.currencies);
       if (foundCountry?.timezones?.[0] || foundCountry?.currencies?.[0]) {
         setInputValues((prevState) => ({
