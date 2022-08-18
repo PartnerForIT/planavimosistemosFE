@@ -79,7 +79,7 @@ export default function Company() {
       contact_person_email: company.contact_person_email || '',
       country: company.country,
       lang: company.lang || 'EN',
-      timezone: company.timezone || 'UTC±00:00',
+      timezone: company.timezone || '',
       date_format: company.date_format || 'DD MM YY',
       currency: company.currency || 'USD',
     }));

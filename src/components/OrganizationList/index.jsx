@@ -37,7 +37,8 @@ const columns = [
   { label: 'Suspended Date', field: 'suspended_at', checked: true },
   { label: 'Closed Data', field: 'deleted_at', checked: true },
   { label: 'Country', field: 'country', checked: true },
-  { label: 'Timezone', field: 'timezone', checked: true },
+  //{ label: 'Timezone', field: 'timezone', checked: true },
+  { label: 'Timezone', field: 'real_timezone', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -51,7 +52,8 @@ const columnsWidthArray = {
   suspended_at: 200,
   created_at: 200,
   country: 150,
-  timezone: 120,
+  //timezone: 120,
+  real_timezone: 120,
 };
 
 const page = {};
@@ -70,6 +72,7 @@ export default function OrganizationList() {
     contact_person_name: '',
     contact_person_email: '',
     timezone: 'UTC+00:00',
+    real_timezone: '',
   });
   const [organizations, SetOrganizations] = useState(3);
   const nameItems = useRef(null);
@@ -183,6 +186,7 @@ export default function OrganizationList() {
       contact_person_name: '',
       contact_person_email: '',
       timezone: 'UTC+00:00',
+      real_timezone: '',
     });
   };
   const handleCloseDeleteConfirm = () => {
@@ -197,8 +201,9 @@ export default function OrganizationList() {
       const selectCounry = countries.filter((item) => item.code === value);
       setInputValues({
         ...inputValues,
-        timezone: selectCounry[0].timezones[0],
+        //timezone: selectCounry[0].timezones[0],
         country: selectCounry[0].code,
+        real_timezone: selectCounry[0].timezones[0],
       });
     }
   };
@@ -213,6 +218,7 @@ export default function OrganizationList() {
       contact_person_name: '',
       contact_person_email: '',
       timezone: 'UTC+00:00',
+      real_timezone: '',
     });
     setOpen(false);
   };

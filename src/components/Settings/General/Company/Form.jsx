@@ -112,7 +112,7 @@ export default function CompaneForm({
           value={inputValues.timezone}
           options={timeZones}
           readOnly={readOnly}
-          placeholder='UTC±00:00'
+          placeholder='Select timezone'
         />
       </div>
       <div className={styles.formControl}>
