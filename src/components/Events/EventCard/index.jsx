@@ -339,7 +339,7 @@ export default ({
         {icon}
       </div>
       <span className={classes.container__title}>
-        {`${selectedItem.name} ${t('for')} ${t(title)}`}
+        {`${selectedItem.name}`}
       </span>
       <span className={classes.container__subTitle}>
         {t(subTitle)}

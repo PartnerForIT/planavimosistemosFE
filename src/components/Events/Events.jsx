@@ -255,14 +255,14 @@ const Events = () => {
     }
 
     const formatDate = getDateFormat({
-      'YY.MM.DD': 'yyyy, MMM, DD',
-      'DD.MM.YY': 'DD. MMM, yyyy',
-      'MM.DD.YY': 'MMM. DD, yyyy',
+      'YY.MM.DD': 'YYYY, MMMM, DD',
+      'DD.MM.YY': 'DD, MMMM, YYYY',
+      'MM.DD.YY': 'MMMM, DD, YYYY',
     });
-
+    
     setSelectedItem({
       ...selectedRow,
-      timestamp: moment(selectedRow.timestamp).format(`hh:mm ${formatDate}`),
+      timestamp: moment(selectedRow.timestamp, 'DD, MMMM, YYYY, hh:mm').format(`hh:mm ${formatDate}`),
     });
   };
 
