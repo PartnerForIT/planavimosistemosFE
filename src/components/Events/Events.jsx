@@ -149,8 +149,8 @@ const Events = () => {
     const eventsParse = events.reduce((acc, item) => {
       const nextItem = {
         ...item,
-        timestamp: moment(item.timestamp).format(`${formatDate2} hh:mm`),
-        time_string: moment(item.timestamp).format('DD/MM/YYYY | hh:mm'),
+        timestamp: moment(item.timestamp).format(`${formatDate2} HH:mm`),
+        time_string: moment(item.timestamp).format('DD/MM/YYYY | HH:mm'),
       };
       let time;
       if (!item.seen) {
@@ -262,7 +262,7 @@ const Events = () => {
     
     setSelectedItem({
       ...selectedRow,
-      timestamp: moment(selectedRow.timestamp, 'DD, MMMM, YYYY, hh:mm').format(`hh:mm ${formatDate}`),
+      timestamp: moment(selectedRow.timestamp, 'DD, MMMM, YYYY, HH:mm').format(`HH:mm ${formatDate}`),
     });
   };
 
