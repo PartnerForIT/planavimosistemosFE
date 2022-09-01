@@ -33,9 +33,19 @@ export default React.memo(({
       manager_email: values.manager_email.filter((item) => item !== email),
     });
   };
-
+  
   return (
     <Content tooltip='Tooltip' title='Event Action'>
+      { values.event_type_id == 9 || values.event_type_id == 10 ? (
+        <StyledCheckbox
+          label={t('Push notification in APP')}
+          id='notification_push'
+          onChange={handleChangeCheckbox}
+          checked={values.notification_push}
+          paddingRoot='5px 5px 5px 0px'
+        />
+        ) : null }
+
       <StyledCheckbox
         label={t('Notify in Application')}
         id='notification_app'

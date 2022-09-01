@@ -32,8 +32,29 @@ const timeMinutesOptions = [
     value: 1800,
     label: '30',
   },
+  {
+    value: 3600,
+    label: '60',
+  },
 ];
+
 const timeHoursOptions = [
+  {
+    value: 300,
+    label: '0:05',
+  },
+  {
+    value: 600,
+    label: '0:10',
+  },
+  {
+    value: 900,
+    label: '0:15',
+  },
+  {
+    value: 1800,
+    label: '0:30',
+  },
   {
     value: 3600,
     label: '1',
@@ -45,18 +66,6 @@ const timeHoursOptions = [
   {
     value: 10800,
     label: '3',
-  },
-  {
-    value: 14400,
-    label: '4',
-  },
-  {
-    value: 18000,
-    label: '5',
-  },
-  {
-    value: 21600,
-    label: '6',
   },
 ];
 const timeHours5Options = [
@@ -65,47 +74,51 @@ const timeHours5Options = [
     label: 'immediately',
   },
   {
+    value: 1800,
+    label: '00:30 minutes',
+  },
+  {
     value: 3600,
-    label: '1',
+    label: '1 hour',
   },
   {
     value: 7200,
-    label: '2',
+    label: '2 hours',
   },
   {
     value: 10800,
-    label: '3',
+    label: '3 hours',
   },
   {
     value: 14400,
-    label: '4',
+    label: '4 hours',
   },
   {
     value: 18000,
-    label: '5',
+    label: '5 hours',
   },
 ];
 const timeHours10Options = [
   ...timeHours5Options,
   {
     value: 21600,
-    label: '6',
+    label: '6 hours',
   },
   {
     value: 25200,
-    label: '7',
+    label: '7 hours',
   },
   {
     value: 28800,
-    label: '8',
+    label: '8 hours',
   },
   {
     value: 32400,
-    label: '9',
+    label: '9 hours',
   },
   {
     value: 21600,
-    label: '10',
+    label: '10 hours',
   },
 ];
 const timeWithMinutesOptions = [
