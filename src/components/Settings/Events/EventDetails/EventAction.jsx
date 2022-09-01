@@ -41,7 +41,7 @@ export default React.memo(({
           label={t('Push notification in APP')}
           id='notification_push'
           onChange={handleChangeCheckbox}
-          checked={values.notification_push}
+          checked={!!values.notification_push}
           paddingRoot='5px 5px 5px 0px'
         />
         ) : null }
@@ -50,7 +50,7 @@ export default React.memo(({
         label={t('Notify in Application')}
         id='notification_app'
         onChange={handleChangeCheckbox}
-        checked={values.notification_app}
+        checked={!!values.notification_app}
         paddingRoot='5px 5px 5px 0px'
       />
 
@@ -58,7 +58,7 @@ export default React.memo(({
         label={t('Notify by e-mail')}
         id='notification_email'
         onChange={handleChangeCheckbox}
-        checked={values.notification_email}
+        checked={!!values.notification_email}
         paddingRoot='5px 5px 5px 0px'
       />
       {

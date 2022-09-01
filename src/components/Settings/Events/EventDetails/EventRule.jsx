@@ -771,7 +771,7 @@ export default React.memo(({
               label={t('Reminder on specific time')}
               id='reminder_time'
               onChange={handleChangeRadioButton}
-              checked={values.reminder_time || 0}
+              checked={!!(values.reminder_time || 0)}
               borderRadius={50}
               paddingRoot='5px 5px 5px 0px'
             />
