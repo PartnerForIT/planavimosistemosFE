@@ -832,7 +832,7 @@ export default React.memo(({
               label={t('Reminder on specific time')}
               id='reminder_time'
               onChange={handleChangeRadioButton}
-              checked={values.reminder_time || true}
+              checked={!!(values.reminder_time || 0)}
               borderRadius={50}
               paddingRoot='5px 5px 5px 0px'
             />
@@ -847,7 +847,7 @@ export default React.memo(({
               onChange={handleChangeSelect}
               options={timeWithMinutesOptions}
               withoutCheckbox
-              disabled={!values.reminder_time || false}
+              disabled={!values.reminder_time}
             />
             <div className={classes.reminderTo__delimiter} />
             <StyledCheckbox
