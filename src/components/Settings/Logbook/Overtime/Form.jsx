@@ -22,6 +22,22 @@ const daylyWork = [
     code: '12',
     name: 'Over 12 hours',
   },
+  {
+    code: '14',
+    name: 'Over 14 hours',
+  },
+  {
+    code: '16',
+    name: 'Over 16 hours',
+  },
+  {
+    code: '18',
+    name: 'Over 18 hours',
+  },
+  {
+    code: '20',
+    name: 'Over 20 hours',
+  },
 ];
 const weeklyWork = [
   {
