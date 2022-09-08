@@ -12,6 +12,8 @@ import LateClockIn from '../../Icons/LateClockIn';
 import LateClockOut from '../../Icons/LateClockOut';
 import MissedClockIn from '../../Icons/MissedClockIn';
 import MissedClockOut from '../../Icons/MissedClockOut';
+import ReminderClockIn from '../../Icons/ReminderClockIn';
+import ReminderClockOut from '../../Icons/ReminderClockOut';
 import { EVENT_TYPE } from '../../../const';
 import classes from './EventCard.module.scss';
 
@@ -294,6 +296,11 @@ export default ({
           subTitle: 'Missing Clock In',
         };
       }
+      case EVENT_TYPE.REMINDER_TO_CLOCK_IN: {
+        return {
+          icon: <ReminderClockIn />,
+        };
+      }
       case EVENT_TYPE.EARLY_CLOCK_OUT: {
         return {
           icon: <EarlyClockOut />,
@@ -313,6 +320,11 @@ export default ({
           icon: <MissedClockOut />,
           title: 'Missing Out',
           subTitle: 'Missing Clock Out',
+        };
+      }
+      case EVENT_TYPE.REMINDER_TO_CLOCK_OUT: {
+        return {
+          icon: <ReminderClockOut />,
         };
       }
       case EVENT_TYPE.DAILY_OVERTIME_START: {
