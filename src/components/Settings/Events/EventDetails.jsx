@@ -71,7 +71,7 @@ function EventDetails({
     switch (id) {
       case 'reminder_time': {
         setValues((prevState) => {
-          onUpdateEvent({ type: prevState.reminder_settings ? 1 : 0  });
+          onUpdateEvent({ type: prevState.type*1 == 1 ? 0 : 1  });
           return {
             ...prevState,
             reminder_time: !prevState.reminder_time,
@@ -82,7 +82,7 @@ function EventDetails({
       }
       case 'reminder_settings': {
         setValues((prevState) => {
-          onUpdateEvent({ type: prevState.reminder_settings ? 0 : 1 });
+          onUpdateEvent({ type: prevState.type*1 == 1 ? 0 : 1  });
           return {
             ...prevState,
             reminder_settings: !prevState.reminder_settings,
