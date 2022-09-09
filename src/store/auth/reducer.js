@@ -22,7 +22,7 @@ export const reducer = (state = initialState, action) => {
     case success(REFRESH_TOKEN):
       localStorage.setItem('token', action.data.access_token);
       localStorage.setItem('user', JSON.stringify(action.data.user));
-      localStorage.setItem('expires_in', (new Date().getTime() + action.data.expires_in * 1000).toString());
+      localStorage.setItem('expires_in', action.data.expires_in*1 > 0 ? (new Date().getTime() + action.data.expires_in * 1000).toString() : 0);
       return {
         ...state, user: action.data.user, loading: false, isAuthorized: true,
       };
