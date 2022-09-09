@@ -156,7 +156,12 @@ const Events = () => {
       if (!item.seen) {
         time = 'seen';
       } else {
-        time = moment(item.date).format(`dddd, ${formatDate}`).toUpperCase();
+        const partFormat = getDateFormat({
+          'YY.MM.DD': 'YYYY. MMMM, DD',
+          'DD.MM.YY': 'DD. MMMM, YYYY',
+          'MM.DD.YY': 'MMMM. DD, YYYY',
+        });
+        time = moment(item.timestamp, 'YYYY-MM-DD HH:mm:ss').format(`dddd, ${partFormat}`).toUpperCase();
       }
 
       if (acc[time]) {
