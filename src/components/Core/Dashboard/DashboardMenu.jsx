@@ -142,6 +142,10 @@ const permissionsConfig = [
     name: 'schedule_module',
     permission: 'schedule_module_access',
   },
+  {
+    name: 'rates',
+    module: 'rates',
+  },
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -215,27 +219,32 @@ export default function DashboardMenu() {
     }
 
     if (permissions.logbook && permissions.logbook_edit_settings) {
+      let logbook_items = [
+        {
+          to: `/${companyId}/settings/logbook/journal`,
+          name: 'journal',
+          title: t('Journal'),
+        },
+        {
+          to: `/${companyId}/settings/logbook/overtime`,
+          name: 'overtime',
+          title: t('Overtime'),
+        },
+      ];
+
+      if (permissions.rates) {
+        logbook_items.push({
+          to: `/${companyId}/settings/logbook/additional-rates`,
+          name: 'additional-rates',
+          title: t('Additional rates'),
+        });
+      }
+
       nextMenuItems.push({
         icon: LogbookIcon,
         title: t('Logbook'),
         name: 'logbook',
-        items: [
-          {
-            to: `/${companyId}/settings/logbook/journal`,
-            name: 'journal',
-            title: t('Journal'),
-          },
-          {
-            to: `/${companyId}/settings/logbook/overtime`,
-            name: 'overtime',
-            title: t('Overtime'),
-          },
-          {
-            to: `/${companyId}/settings/logbook/additional-rates`,
-            name: 'additional-rates',
-            title: t('Additional rates'),
-          },
-        ],
+        items: logbook_items
       });
     }
 
