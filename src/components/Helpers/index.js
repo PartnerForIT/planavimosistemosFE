@@ -79,6 +79,24 @@ export const getInfoCardColors = (type) => {
         background: '#C0D8F1',
       };
       break;
+    case 'earning':
+      theme = {
+        text: '#3E4552',
+        background: 'rgba(62, 69, 82, 0.21)',
+      };
+      break;
+    case 'cost':
+      theme = {
+        text: '#FF633E',
+        background: 'rgba(255, 99, 62, 0.21)',
+      };
+      break;
+    case 'profit':
+      theme = {
+        text: '#57D05A',
+        background: 'rgba(87, 208, 90, 0.21)',
+      };
+      break;
     default:
       theme = {
         text: '#0085ff',

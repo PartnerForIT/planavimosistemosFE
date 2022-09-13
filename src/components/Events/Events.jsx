@@ -25,7 +25,7 @@ import { getEventsList, enterViewed, getEventView } from '../../store/events/act
 import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getPlaces } from '../../store/places/actions';
-// import usePermissions from '../Core/usePermissions';
+import usePermissions from '../Core/usePermissions';
 import EventCard from './EventCard';
 
 const columns = [
@@ -45,6 +45,13 @@ const columnsWidth = {
   place: 200,
   // timestamp: 140,
 };
+
+const permissionsConfig = [
+  {
+    name: 'create_groups',
+    module: 'create_groups',
+  },
+];
 
 // const permissionsConfig = [
 //   {
@@ -112,6 +119,7 @@ const Events = () => {
   const getAllEmployees = useSelector(employeesSelector);
   const selectGroups = useSelector(AccountGroupsSelector);
   const { id: companyId } = useParams();
+  const permissions = usePermissions(permissionsConfig);
   // const permissions = usePermissions(permissionsConfig);
 
   const sendRequest = useCallback(() => {
@@ -206,6 +214,17 @@ const Events = () => {
       setEmployees(getAllEmployees);
     }
   }, [getAllEmployees]);
+
+  useEffect(() => {
+    const allColumnsArray = columns.filter((column) => {
+      if (!permissions.create_groups && (column.field === 'group' || column.field === 'subgroup')) {
+        return false;
+      }
+      return true;
+    });
+
+    setColumnsArray(allColumnsArray);
+  }, [permissions, setColumnsArray]);
 
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));

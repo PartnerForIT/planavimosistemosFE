@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
+import CurrencySign from '../../shared/CurrencySign';
 import PendingIcon from '../../Icons/PendingIcon';
 import HolidayGovernmentIcon from '../../Icons/HolidayGovernmentIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
@@ -11,6 +12,17 @@ import {
 import PauseIcon from '../../Icons/PauseIcon';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
+import EarningIcon from '../../Icons/EarningIcon';
+import CostIcon from '../../Icons/CostIcon';
+import ProfitIcon from '../../Icons/ProfitIcon';
+
+const TextWithSign = ({ label }) => (
+  <>
+    {label}
+    {', '}
+    <CurrencySign />
+  </>
+);
 
 const InfoCard = ({
   type, label, text, icon, time, editable, onChange, durationSec, showRange,
@@ -69,6 +81,21 @@ const InfoCard = ({
     holidayIcon: {
       marginRight: '3px',
     },
+
+    earningIcon: {
+      width: '18px',
+      marginRight: '3px',
+    },
+
+    costIcon: {
+      width: '18px',
+      marginRight: '3px',
+    },
+
+    profitIcon: {
+      width: '18px',
+      marginRight: '3px',
+    }
   });
   const classes = useStyles();
 
@@ -85,6 +112,12 @@ const InfoCard = ({
         return <PauseIcon className={classes.clockIcon} />;
       case 'night':
         return <PendingIcon className={classes.clockIcon} />;
+      case 'earning':
+        return <EarningIcon className={classes.earningIcon} />;
+      case 'cost':
+        return <CostIcon className={classes.costIcon} />;
+      case 'profit':
+        return <ProfitIcon className={classes.profitIcon} />;
       default:
         return null;
     }
@@ -103,6 +136,12 @@ const InfoCard = ({
         return 'On break';
       case 'night':
         return 'Night time';
+      case 'earning':
+        return 'Earnings';
+      case 'cost':
+        return 'Cost';
+      case 'profit':
+        return 'Profit';
       default:
         return null;
     }
@@ -130,8 +169,12 @@ const InfoCard = ({
             <span className={styles.text}>min</span>
           </>
         );
+      case 'earning':
+        return <TextWithSign label={time.charge} />;
       case 'cost':
-        return <PauseIcon className={classes.clockIcon} />;
+        return <TextWithSign label={time.cost} />;
+      case 'profit':
+        return <TextWithSign label={time.profit} />;
       default:
         return <span className={styles.time}>{text}</span>;
     }
@@ -150,7 +193,7 @@ const InfoCard = ({
     setStart(format(dateToUCT(time.started_at), 'HH:mm'));
     setEnd(format(dateToUCT(time.finished_at), 'HH:mm'));
   };
-
+  
   return (
     <div
       className={styles.infoCard}

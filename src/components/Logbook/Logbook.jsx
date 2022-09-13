@@ -620,6 +620,40 @@ export default () => {
                   />
                   <Delimiter />
                   {
+                    (permissions.profit) && (
+                      <>
+                      <InfoCard
+                        type='earning'
+                        time={selectedItem}
+                      />
+                      <Delimiter />
+                      </>
+                    )
+                  }
+                  {
+                    (permissions.cost) && (
+                      <>
+                      <InfoCard
+                        type='cost'
+                        time={selectedItem}
+                      />
+                      <Delimiter />
+                      </>
+                    )
+                  }
+                  {
+                    (permissions.profit) && (
+                      <>
+                      <InfoCard
+                        type='profit'
+                        time={selectedItem}
+                      />
+                      <Delimiter />
+                      </>
+                    )
+                  }
+
+                  {
                     (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) && (
                       <CommentCard
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
