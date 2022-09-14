@@ -36,7 +36,7 @@ const RowContent = ({
       return time
     }
     if (statistic && id === "totalCost" && !night){
-      return cost
+      return cost*1
     }
 
     return ''
@@ -49,7 +49,7 @@ const RowContent = ({
           daysOfMonth.map((item, index) => {
                   if(index < item.id ){
                     time+=newFoundItem(item.title)?.hours ?? 0
-                    cost+=newFoundItem(item.title)?.cost ?? 0
+                    cost+=newFoundItem(item.title)?.cost ? newFoundItem(item.title)?.cost*1 : 0
                     night_duration+=newFoundItem(item.title)?.night_duration ?? 0
                   }
          return (
