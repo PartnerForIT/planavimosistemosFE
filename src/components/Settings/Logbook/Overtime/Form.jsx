@@ -124,6 +124,17 @@ export default function Form({
             disabled={readOnly}
           />
         </div>
+        { !!overtimeData.daily_overtime_enable ?
+          <div className={style.generalBlock2}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={!!overtimeData.ignore_daily_overtime_enable}
+              label={t('Ignore daily overtime for next clock in')}
+              name='ignore_daily_overtime_enable'
+              disabled={readOnly}
+            />
+          </div> : null
+        }
         <div className={style.generalBlock5}>
           <Select
             handleInputChange={handleInputChange}
