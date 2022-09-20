@@ -86,6 +86,34 @@ $sidebar-border-radius: 12px;
     font-size: 14px;
     font-weight: 500;
   }
+
+  .stopedBy {
+    color: #333945;
+    font-size: 13px;
+    background: #FFAC00;
+    border-radius: 12px;
+    height: 40px;
+    text-align: center;
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stopedIcon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+
+    g {
+      fill: #fff !important;
+      stroke: #FFAC00;
+    }
+
+    path {
+      fill: #333945 !important;
+    }
+  }
 }
 
 .empty {

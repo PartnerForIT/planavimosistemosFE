@@ -271,6 +271,20 @@ export default () => {
     }
   };
 
+  const stopedSelector = (stoped) => {
+    switch (stoped) {
+      case 'daily_overtime':
+        return 'Clock stopped by Daily Overtime';
+      case 'weekly_overtime':
+        return 'Clock stopped by Weekly Overtime';
+      case 'manager':
+        return 'Clock stopped by Manager';
+      default:
+        return '';
+    }
+  };
+
+
   useEffect(() => {
     dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
@@ -583,6 +597,17 @@ export default () => {
                     withTimeBreaks
                   />
                   <Delimiter />
+                  {
+                    selectedItem.stoped_by && (
+                      <>
+                        <div className={styles.stopedBy}>
+                          <PendingIcon className={styles.stopedIcon} />
+                          {stopedSelector(selectedItem.stoped_by)}
+                        </div>
+                        <Delimiter />
+                      </>
+                    )
+                  }
                   <InfoCard
                     type='total'
                     time={selectedItem}
