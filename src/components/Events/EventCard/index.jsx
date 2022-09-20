@@ -178,7 +178,7 @@ const EventInformation = ({
           items: [
             {
               label: t('Daily overtime rule'),
-              value: getTimeString(time[0]),
+              value: time[0]+' '+t('hours'),
             },
             {
               label: t('Worked today'),
@@ -251,8 +251,9 @@ const EventInformation = ({
          ${isOvertime ? classes.eventInformation__progressType_overtime : ''}`}
       >
         {
-          items.map((item) => (
+          items.map((item, index) => (
             <div
+              key={index}
               className={`${classes.eventInformation__progressType__item}
                 ${item.range ? classes.eventInformation__progressType__item_range : ''}`}
             >
