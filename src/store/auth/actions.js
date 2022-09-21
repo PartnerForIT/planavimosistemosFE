@@ -24,6 +24,9 @@ export const logout = () => ({
   request: {
     method: 'POST',
     url: '/auth/logout',
+    data: {
+      device: 'Web',
+    },
   },
   meta: {
     thunk: true,
