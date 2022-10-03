@@ -11,6 +11,7 @@ import Label from '../../Core/InputLabel';
 import SimpleSelect from '../../Core/SimpleSelect';
 import PendingIcon from '../../Icons/PendingIcon';
 import usePermissions from '../../Core/usePermissions';
+import Input from '../../Core/Input/Input';
 import TrashIcon from '../../Icons/TrashIcon';
 import RefreshArrow from '../../Icons/RefreshArrow';
 import PauseIcon from '../../Icons/PauseIcon';
@@ -76,19 +77,21 @@ const TimePart = ({
   const handleChangeTime = (e) => {
     switch (e.target.name) {
       case 'finished': {
-        if (finished[0] !== e.target.value[0] && e.target.value[0] === '2') {
-          handleChange({ [e.target.name]: '20:00' });
-        } else {
-          handleChange({ [e.target.name]: e.target.value });
-        }
+      //   if (finished[0] !== e.target.value[0] && e.target.value[0] === '2') {
+      //     handleChange({ [e.target.name]: '20:00' });
+      //   } else {
+      //     handleChange({ [e.target.name]: e.target.value });
+      //   }
+        handleChange({ [e.target.name]: e.target.value });
         break;
       }
       case 'started': {
-        if (started[0] !== e.target.value[0] && e.target.value[0] === '2') {
-          handleChange({ [e.target.name]: '20:00' });
-        } else {
-          handleChange({ [e.target.name]: e.target.value });
-        }
+        // if (started[0] !== e.target.value[0] && e.target.value[0] === '2') {
+        //   handleChange({ [e.target.name]: '20:00' });
+        // } else {
+        //   handleChange({ [e.target.name]: e.target.value });
+        // }
+        handleChange({ [e.target.name]: e.target.value });
         break;
       }
       default: break;
@@ -98,8 +101,8 @@ const TimePart = ({
     handleChange({ isRemove: !remove });
   };
 
-  const formatCharsStarted = useMemo(() => (started[0] === '2' ? '23:59' : '29:59'), [started]);
-  const formatCharsFinished = useMemo(() => (finished[0] === '2' ? '23:59' : '29:59'), [finished]);
+  //const formatCharsStarted = useMemo(() => (started[0] === '2' ? '23:59' : '29:59'), [started]);
+  //const formatCharsFinished = useMemo(() => (finished[0] === '2' ? '23:59' : '29:59'), [finished]);
 
   return (
     <div className={container}>
@@ -107,22 +110,20 @@ const TimePart = ({
         {label}
       </span>
       <div className={classes.timePart__container}>
-        <InputMask
-          mask={formatCharsStarted}
-          name='started'
-          maskChar='0'
-          formatChars={formatChars}
-          value={started}
-          onChange={handleChangeTime}
-        />
-        <InputMask
-          mask={formatCharsFinished}
-          name='finished'
-          maskChar='0'
-          formatChars={formatChars}
-          value={finished}
-          onChange={handleChangeTime}
-        />
+        <div className={classes.timePart__inputs}>
+          <Input
+            name='started'
+            type='datetime-local'
+            value={moment(started).format('YYYY-MM-DD HH:mm')}
+            onChange={handleChangeTime}
+          />
+          <Input
+            name='finished'
+            type='datetime-local'
+            value={moment(finished).format('YYYY-MM-DD HH:mm')}
+            onChange={handleChangeTime}
+          />
+        </div>
         <button onClick={handleClick} className={classes.timePart__container__button}>
           {
             remove
@@ -203,6 +204,13 @@ export default ({
   const allPlaces = useSelector(placesSelector);
 
   useEffect(() => {
+    if (!selectedItem.job_type_id && selectedItem.job_name) {
+      const findCurrent = allJobTypes.find(({ title }) => title === selectedItem.job_name);
+      if (findCurrent) {
+        selectedItem.job_type_id = findCurrent.id;
+      }
+    }
+    
     if (open) {
       setFormValues({
         job_type_id: selectedItem.job_type_id,
@@ -244,7 +252,15 @@ export default ({
     setFormValues(nextInputValues);
   };
   const handleChangeTimePart = (values) => {
-    const nextValues = { ...values };
+    let nextValues = { ...values };
+    if (nextValues['started']) {
+      nextValues['started_at'] = moment(nextValues['started']).format('YYYY-MM-DD HH:mm');
+      nextValues['started'] = moment(nextValues['started']).format('HH:mm');
+    }
+    if (nextValues['finished']) {
+      nextValues['finished_at'] = moment(nextValues['finished']).format('YYYY-MM-DD HH:mm');
+      nextValues['finished'] = moment(nextValues['finished']).format('HH:mm');
+    }
     const foundIndex = timeParts.findIndex((item) => (item.id === values.id));
 
     if (values.finished) {
@@ -493,8 +509,8 @@ export default ({
                 id={item.id}
                 label={`${item.isWork ? t('Work part') : t('Break part')} ${item.number}`}
                 orange={!item.isWork}
-                started={item.started}
-                finished={item.finished}
+                started={item.started_at}
+                finished={item.finished_at}
                 onChange={handleChangeTimePart}
                 remove={item.isRemove}
               />
