@@ -381,10 +381,10 @@ export default ({
         //const started = item.started.split(':');
         //const totalTime = (finished[0] * 60 + +finished[1]) - (started[0] * 60 + +started[1]);
 
-        let start = moment(item.started, "HH:mm");
-        let end = moment(item.finished, "HH:mm");
+        let start = moment(item.started_at);
+        let end = moment(item.finished_at);
         if( end.isBefore(start) ){
-          end.add(1, 'day');
+          //end.add(1, 'day');
         }
         const dur = moment.duration(end.diff(start))
         const totalTime = dur.asMinutes();
