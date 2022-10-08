@@ -22,6 +22,7 @@ const RowContent = ({
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee) {
       return {};
     }
+    
     return ev;
   }
 
@@ -36,7 +37,7 @@ const RowContent = ({
       return time
     }
     if (statistic && id === "totalCost" && !night){
-      return cost*1
+      return parseFloat(cost).toFixed(2);
     }
 
     return ''
