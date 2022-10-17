@@ -47,6 +47,7 @@
     display: inline-block;
     padding-top: 5px;
     line-height: 16px;
+    white-space: nowrap;
   }
 
   &::before {
@@ -88,6 +89,18 @@
     svg[data-name="logbook-icon"] {
       path {
         fill: $blue-2 !important;
+        stroke: $blue-2 !important;
+      }
+    }
+
+    g[data-name="Component 4 – 1"] {
+      path[data-name="Subtraction 15"] {
+        stroke: $blue-2 !important;
+        fill: $blue-2 !important;
+      }
+
+      g[data-name="Ellipse 8"],
+      g[data-name="Path 13770"] {
         stroke: $blue-2 !important;
       }
     }

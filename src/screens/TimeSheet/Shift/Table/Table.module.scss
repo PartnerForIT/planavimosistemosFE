@@ -1,0 +1,168 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  $table: &;
+
+  &__gray {
+    background: #fafbfc;
+    overflow: visible;
+  }
+
+  &__content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(300px, 0.142857143fr) minmax(#{7 * 140}px, 1fr) 36px;
+    z-index: 2;
+    position: relative;
+
+    &__resources {
+      &__cell {
+        display: flex;
+        height: 41px;
+        padding: 0 15px;
+        align-items: center;
+        background-color: #fafbfc;
+        position: relative;
+        $cell: &;
+
+        &_children :global(.section),
+        &_children :global(.sectionEmpty) {
+          position: relative;
+          font-family: Helvetica Neue, sans-serif;
+          margin-left: 15px;
+
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            background-color: #d0d6db;
+            left: -7px;
+          }
+
+          &::before {
+            height: 1px;
+            width: 7px;
+          }
+
+          &::after {
+            height: 41px;
+            width: 1px;
+            bottom: 15px;
+          }
+        }
+
+        &_main + &_children :global(.section)::after,
+        &_main + &_children :global(.sectionEmpty)::after {
+          height: 25px;
+        }
+      }
+    }
+
+    &__data__row {
+      display: grid;
+      height: 41px;
+      grid-template-columns: repeat(7, minmax(140px, 1fr));
+      border-top: 1px solid #d9dfe3;
+      //content-visibility: auto;
+      $row: &;
+
+      &:first-child{
+        border-top: none;
+      }
+
+      &__cell {
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid #d9dfe3;
+
+        &:last-child {
+          border-right: 1px solid #d9dfe3;
+        }
+
+        & > div {
+          max-width: 110px;
+        }
+      }
+
+      &_defaultWorkingTime {
+        background-color: #ebf3fa;
+      }
+
+      &_customWorkingTime {
+        background-color: #f5f7f8;
+      }
+
+      &_defaultWorkingTime #{$row}__cell:last-child,
+      &_customWorkingTime #{$row}__cell:last-child {
+        border-right: 1px solid #d9dfe3;
+      }
+    }
+  }
+
+  &__background {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 54px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    &__row {
+      height: 41px;
+      display: grid;
+      grid-template-columns: minmax(300px, 1fr) repeat(7, minmax(140px, 1fr)) 36px;
+      $row: &;
+
+      &__resource {
+        background-color: #fafbfc;
+      }
+
+      &__cell {
+        border-top: 1px solid #d9dfe3;
+        border-left: 1px solid #d9dfe3;
+
+        &:not(:nth-child(2)) {
+          border-left: 1px solid #d9dfe3;
+        }
+      }
+
+      & > *:last-child {
+        border-right: 1px solid #d9dfe3;
+      }
+    }
+  }
+}
+
+.scrollableContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+
+  & > :global(.ScrollbarsCustom-Wrapper) {
+    inset: 0 1px 0 0 !important;
+  }
+
+  &__scrollbarTrackY {
+    display: flex;
+    justify-content: center;
+    background-color: #fff !important;
+    width: 36px !important;
+    z-index: 4;
+    top: 0 !important;
+    padding: 10px 0 !important;
+
+    div {
+      width: 6px !important;
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
+    }
+  }
+}
+

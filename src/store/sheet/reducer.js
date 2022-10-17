@@ -1,0 +1,39 @@
+import { success, error } from 'redux-saga-requests';
+import {
+  GET_SHEET,
+  GET_SHEET_SUCCESS,
+  GET_SHEET_ERROR,
+} from './types';
+import {ADD_SNACKBAR} from "../organizationList/types";
+
+const initialState = {
+  schedule: null,
+  resources: null,
+  loading: false,
+};
+
+export const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_SHEET:
+      return { ...state, loading: true };
+    case success(GET_SHEET):
+      return {
+        ...state,
+        sheet: action.data,
+        resources: action.data.resources,
+        loading: false,
+      };
+    case GET_SHEET_ERROR:
+      return { ...state, loading: false };
+
+    case ADD_SNACKBAR:
+      return {
+        ...state,
+       loading: false
+      };
+
+    default: return state;
+  }
+};
+
+export default reducer;

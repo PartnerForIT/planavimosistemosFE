@@ -38,6 +38,10 @@ import {
   GET_LOGBOOK_JOURNAL_SUCCESS,
   EDIT_LOGBOOK_JOURNAL,
   EDIT_LOGBOOK_JOURNAL_SUCCESS,
+  GET_TIME_SHEET,
+  GET_TIME_SHEET_SUCCESS,
+  EDIT_TIME_SHEET,
+  EDIT_TIME_SHEET_SUCCESS,
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME,
@@ -127,6 +131,10 @@ import {
   GET_SETTINGS_SCHEDULE_SUCCESS,
   GET_SETTINGS_SCHEDULE_ERROR,
   POST_SETTINGS_SCHEDULE, EMPLOYEE_DROP_STATUS,
+
+  GET_SETTINGS_SHEET,
+  GET_SETTINGS_SHEET_SUCCESS,
+  GET_SETTINGS_SHEET_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -435,6 +443,26 @@ export const editLogbookJournal = (id, data) => ({
 });
 export const editLogbookJournalSuccess = (data) => ({
   type: EDIT_LOGBOOK_JOURNAL_SUCCESS,
+  data,
+});
+
+
+export const loadTimeSheet = (id) => ({
+  type: GET_TIME_SHEET,
+  id,
+});
+export const loadTimeSheetSuccess = (data) => ({
+  type: GET_TIME_SHEET_SUCCESS,
+  data,
+});
+
+export const editTimeSheet = (id, data) => ({
+  type: EDIT_TIME_SHEET,
+  id,
+  data,
+});
+export const editTimeSheetSuccess = (data) => ({
+  type: EDIT_TIME_SHEET_SUCCESS,
   data,
 });
 
@@ -791,4 +819,17 @@ export const postSchedule = (companyId, data) => ({
   type: POST_SETTINGS_SCHEDULE,
   companyId,
   data,
+});
+
+/* Sheet */
+export const getSheet = (companyId) => ({
+  type: GET_SETTINGS_SHEET,
+  companyId,
+});
+export const getSheetSuccess = (data) => ({
+  type: GET_SETTINGS_SHEET_SUCCESS,
+  data,
+});
+export const getSheetError = () => ({
+  type: GET_SETTINGS_SHEET_ERROR,
 });

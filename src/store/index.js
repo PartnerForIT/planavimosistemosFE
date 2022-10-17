@@ -22,6 +22,7 @@ import logbook from './logbook/reducer';
 import events from './events/reducer';
 import kiosks from './kiosks/reducer';
 import schedule from './schedule/reducer';
+import sheet from './sheet/reducer';
 import shiftTypes from './shiftsTypes/reducer';
 
 const loggerMiddleware = createLogger();
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   events,
   kiosks,
   schedule,
+  sheet,
   shiftTypes,
 });
 

@@ -33,6 +33,9 @@ import {
   GET_LOGBOOK_ADDITIONAL_RATES,
   GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
   EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  GET_TIME_SHEET,
+  GET_TIME_SHEET_SUCCESS,
+  EDIT_TIME_SHEET_SUCCESS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
@@ -116,6 +119,7 @@ const initialState = {
   journal: {},
   overtime: {},
   additionalRates: {},
+  timeSheet: {},
   skills: [],
   employees: {
     users: [],
@@ -433,6 +437,27 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         journal: action.data,
+      };
+    }
+    case GET_TIME_SHEET: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    }
+    case GET_TIME_SHEET_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        timeSheet: action.data,
+        error: null,
+      };
+    }
+    case EDIT_TIME_SHEET_SUCCESS: {
+      return {
+        ...state,
+        timeSheet: action.data,
       };
     }
     case GET_LOGBOOK_OVERTIME: {

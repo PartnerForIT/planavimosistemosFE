@@ -1,0 +1,116 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  flex: 1 0 50px;
+  color: #333945;
+  font-size: 12px;
+  font-family: 'Helvetica Neue Medium', sans-serif;
+  line-height: 16px;
+  text-align: center;
+  min-width: 0;
+  position: relative;
+  $cell: &;
+  background: #fff;
+
+  &_past {
+    // passing day
+    // past
+    color: #818f94;
+  }
+
+  &_today {
+    color: #1d88fc;
+  }
+
+  &_night {
+    color: #fd9d27;
+    display: block;
+    border-top: 1px solid #fd9d27;
+  }
+
+  &_holiday {
+
+    &_company:after {
+      content: '';
+      display: block;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: -10000px;
+      position: absolute;
+      background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #FD9D27 5px, #FD9D27 10px);
+      z-index: 2;
+      opacity: 0.1;
+    }
+
+    &_government:after {
+      content: '';
+      display: block;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: -10000px;
+      position: absolute;
+      background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #40c3e2 5px, #40c3e2 10px);
+      z-index: 2;
+      opacity: 0.1;
+    }
+  }
+
+  &_statistic {
+    flex: 1 0 80px;
+  }
+
+  &_article {
+    flex: 1 0 200px;
+    justify-content: flex-start;
+    padding: 0 15px;
+  }
+
+  &_header {
+    justify-content: center;
+    border-bottom: 1px solid #d9dfe3;
+    background: #fafbfc;
+  }
+
+  &_weekend {
+    background-color: #f9fbfc;
+  }
+
+  &__content {
+    position: relative;
+    pointer-events: none;
+    $content: &;
+
+    &__placeholder {
+      visibility: hidden;
+      position: absolute;
+    }
+  }
+
+  &_doesNotFit {
+    color: #1d88fc;
+
+    #{$cell} {
+      &__content {
+        z-index: 2;
+        pointer-events: auto;
+
+        &__tooltip {
+          background: #fff;
+          border-radius: 6px;
+        }
+
+        &__text {
+          overflow: hidden;
+          border-radius: 2px;
+          background-color: #edf7fa;
+          padding: 1px;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+}

@@ -80,6 +80,14 @@ const permissionsConfig = [
     name: 'activity_log',
     module: 'activity_log',
   },
+  {
+    name: 'time_sheet',
+    module: 'time_sheet',
+  },
+  {
+    name: 'integrations',
+    module: 'integrations',
+  },
 ];
 export default () => {
   const { id } = useParams();
@@ -119,6 +127,14 @@ export default () => {
             ...(modules.cost_earning && { costs: 'Can see costs' }),
             requests: 'Get approval requests',
             requests_in_place: 'Get approval requests in assigned place',
+          },
+        },
+      }),
+      ...(modules.time_sheet && {
+        time_sheet: {
+          options: {
+            ...(modules.cost_earning && { costs: 'Can see costs' }),
+            place: 'Time Sheets only for assigned place',
           },
         },
       }),
@@ -212,6 +228,11 @@ export default () => {
       schedule: {
         options: {
           ...(modules.schedule_shift && { create_and_edit: 'Can create & edit Schedule' }),
+        },
+      },
+      time_sheet: {
+        options: {
+          ...(modules.time_sheet && { edit_settings: 'Can edit Time Sheet settings' }),
         },
       },
     },

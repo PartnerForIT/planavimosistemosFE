@@ -13,6 +13,7 @@ import ScheduleIcon from '../../Icons/Schedule';
 import LogbookIcon from '../../Icons/LogbookIcon';
 import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
+import TimeSheetIcon from '../../Icons/TimeSheet';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import KioskIcon from '../../Icons/Kiosk';
@@ -145,6 +146,11 @@ const permissionsConfig = [
   {
     name: 'rates',
     module: 'rates',
+  },
+  {
+    name: 'time_sheet_edit_settings',
+    module: 'time_sheet',
+    permission: 'time_sheet_edit_settings',
   },
 ];
 export default function DashboardMenu() {
@@ -312,6 +318,15 @@ export default function DashboardMenu() {
         icon: CategoriesIcon,
         title: t('Categories'),
         name: 'categories',
+      });
+    }
+
+    if (permissions.time_sheet_edit_settings) {
+      nextMenuItems.push({
+        to: `/${companyId}/settings/time_sheet`,
+        icon: TimeSheetIcon,
+        title: t('Time Sheet'),
+        name: 'time_sheet',
       });
     }
 

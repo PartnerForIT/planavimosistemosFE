@@ -1,0 +1,35 @@
+.resourcesCell {
+  display: flex;
+  height: 41px;
+  min-height: 41px;
+  padding: 8px 15px;
+  align-items: center;
+  position: relative;
+  $resourcesCell: &;
+
+  &__content {
+    color: #333945;
+    background-color: #fff;
+    border: 1px solid #d0d6db;
+    position: relative;
+    flex: 1 1;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px 10px 50px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-size: 12px;
+    border-radius: 4px;
+    height: 100%;
+
+    &__avatar {
+      margin-right: 10px;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}

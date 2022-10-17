@@ -1,0 +1,99 @@
+.timeSheet-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 110px);
+  min-height: 435px;
+  box-sizing: border-box;
+  background-color: #edf4fa;
+  position: relative;
+  //position: relative;
+
+  &__header {
+    display: flex;
+    padding: 13px 15px;
+    border-radius: 12px;
+    background-color: #feffff;
+    border: 0.5px solid rgba(#e2ebf4, 0.85);
+    margin-bottom: 16px;
+    z-index: 4;
+
+    & > div {
+      margin-right: 10px;
+
+      &:nth-child(4) {
+        margin-left: 20px;
+        margin-right: 21px;
+      }
+    }
+
+    & > button {
+      margin-left: auto;
+    }
+  }
+
+  &__tooltip {
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    border: none !important;
+    opacity: 1 !important;
+    padding: 7px 14px !important;
+    color: #333945 !important;
+    font-family: Helvetica Neue, sans-serif !important;
+    font-size: 12px !important;
+    box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+
+    &::after {
+      border-top-color: #fff !important;
+    }
+
+    &::before {
+      border-left: 8px solid transparent !important;
+      border-right: 8px solid transparent !important;
+      margin-left: -8px !important;
+    }
+
+    &__past {
+      background-color: #D4F5FA !important;
+
+      &::after {
+        border-top-color: #D4F5FA !important;
+      }
+    }
+
+    &__empty {
+      background-color: #F5F7F8 !important;
+      color: #8F9EA4 !important;
+      border: 1px solid #8F9EA4 !important;
+
+      &::after {
+        border-top-color: #F5F7F8 !important;
+      }
+
+      &::before {
+        border-top-color: #8F9EA4 !important;
+      }
+    }
+
+    &__active {
+      border: 1px solid #1AA1FD !important;
+
+      &::before {
+        border-top-color: #1AA1FD !important;
+      }
+    }
+  }
+
+  &__overlay-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.2);
+    //border-radius: 12px;
+  }
+}

@@ -17,6 +17,8 @@ const initialValues = {
   events: false,
   reports: false,
   activity_log: false,
+  time_sheet: false,
+  integrations: false,
   schedule_simple: false,
   schedule_shift: false,
   manual_mode: false,
@@ -163,6 +165,18 @@ export default ({
                 checked={modules.activity_log}
                 label={t('Activity Log')}
                 name='activity_log'
+              />
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.time_sheet}
+                label={t('Time Sheet')}
+                name='time_sheet'
+              />
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.integrations}
+                label={t('Integrations')}
+                name='integrations'
               />
               <div className={style.buttonBlock} />
             </div>

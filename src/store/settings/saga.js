@@ -30,6 +30,8 @@ import {
   EDIT_LOGBOOK_OVERTIME,
   GET_LOGBOOK_ADDITIONAL_RATES,
   EDIT_LOGBOOK_ADDITIONAL_RATES,
+  GET_TIME_SHEET,
+  EDIT_TIME_SHEET,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
   CREATE_ACCOUNTS_SUBGROUP,
@@ -84,6 +86,7 @@ import {
   // editLogbookJournalSuccess,
   loadLogbookOvertimeSuccess,
   // editLogbookOvertimeSuccess,
+  loadTimeSheetSuccess,
   loadLogbookAdditionalRatesSuccess,
   getAccountGroupsSuccess,
   createAccountGroupSuccess,
@@ -696,6 +699,34 @@ function* patchLogbookAdditionalRates(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar('An error occurred while creating the Additional rates', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* loadTimeSheetData(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/time-sheet`, token());
+    yield put(loadTimeSheetSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* patchTimeSheet(action) {
+  try {
+    yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/time-sheet/store`, action.data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    // yield put(editTimeSheetSuccess(data));
+    yield put(addSnackbar('Edit Time Sheet successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while editing Time Sheet', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -1514,6 +1545,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_OVERTIME, patchLogbookOvertime);
   yield takeLeading(GET_LOGBOOK_ADDITIONAL_RATES, loadAdditionalRatesData);
   yield takeLatest(EDIT_LOGBOOK_ADDITIONAL_RATES, patchLogbookAdditionalRates);
+  yield takeLeading(GET_TIME_SHEET, loadTimeSheetData);
+  yield takeLatest(EDIT_TIME_SHEET, patchTimeSheet);
   yield takeLeading(GET_ACCOUNTS_GROUPS, loadAccountGroups);
   yield takeLatest(CREATE_ACCOUNTS_GROUP, createAccountGroup);
   yield takeLatest(CREATE_ACCOUNTS_SUBGROUP, createAccountSubgroup);

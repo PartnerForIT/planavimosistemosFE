@@ -1,0 +1,22 @@
+.timeSheet {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    margin-top: 5px;
+  
+    &__label {
+      display: flex;
+  
+      label {
+        margin-right: 23px;
+      }
+    }
+  }
+
+  .generalBlock {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: -9px;
+  }

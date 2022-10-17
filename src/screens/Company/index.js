@@ -17,6 +17,7 @@ import { userSelector } from '../../store/auth/selectors';
 import Events from '../../components/Events/Events';
 import Schedule from '../Schedule';
 import CreateShift from '../Schedule/Shift';
+import TimeSheet from '../TimeSheet';
 import Settings from '../../components/Settings';
 import SettingCompany from '../../components/Settings/General/Company';
 import SettingWorkTime from '../../components/Settings/General/WorkTime';
@@ -32,6 +33,7 @@ import SettingJournal from '../../components/Settings/Logbook/Journal';
 import Overtime from '../../components/Settings/Logbook/Overtime';
 import AdditionalRates from '../../components/Settings/Logbook/AdditionalRates';
 import ActivityLog from '../../components/Settings/ActivityLog';
+import TimeSheetSettings from '../../components/Settings/TimeSheet';
 import SettingDelete from '../../components/Settings/Delete';
 import SettingEvents from '../../components/Settings/Events';
 import Reports from '../../components/Reports/Reports';
@@ -126,6 +128,16 @@ const permissionsConfig = [
     module: 'reports',
     permission: 'reports_module_access',
   },
+  {
+    name: 'time_sheet_edit_settings',
+    module: 'time_sheet',
+    permission: 'time_sheet_edit_settings',
+  },
+  {
+    name: 'time_sheet_module',
+    module: 'time_sheet',
+    permission: 'time_sheet_module_access',
+  },
 ];
 
 export default () => {
@@ -194,6 +206,11 @@ export default () => {
       {
         permissions.events && (
           <Route exact path='/:id/events' component={Events} />
+        )
+      }
+      {
+        (permissions.time_sheet_module) && (
+          <Route exact path='/:id/time-sheet' component={TimeSheet} />
         )
       }
       {
@@ -285,6 +302,11 @@ export default () => {
       {
         permissions.activity_log && (
           <Route exact path='/:id/settings/activity-log' component={ActivityLog} />
+        )
+      }
+      {
+        permissions.time_sheet_edit_settings && (
+          <Route exact path='/:id/settings/time_sheet' component={TimeSheetSettings} />
         )
       }
       {

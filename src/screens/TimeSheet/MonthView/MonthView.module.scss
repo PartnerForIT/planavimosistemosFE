@@ -1,0 +1,141 @@
+.sheetmonthView {
+  flex-direction: column;
+  flex: 1;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+
+  &__header__data > *,
+  &__content__data__backgroundRow > * {
+    border-left: 1px solid #d9dfe3;
+
+    &:first-child {
+      border-left-color: transparent;
+    }
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: 1fr 3fr 36px;
+    height: 54px;
+    box-sizing: content-box;
+    border-bottom: 1px solid #d9dfe3;
+    background-color: #fafbfc;
+
+    & > *:first-child {
+      border-bottom: 1px solid #d9dfe3;
+      border-right: 1px solid #d9dfe3;
+    }
+
+    &__data {
+      display: flex;
+      overflow: hidden;
+    }
+
+    &__empty {
+      border-left: 1px solid #d9dfe3;
+      border-bottom: 1px solid #d9dfe3;
+    }
+  }
+
+  &__content {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 1fr 3fr 36px;
+
+    &__data {
+      display: flex;
+      flex-direction: column;
+      background-color: #fafbfc;
+      position: relative;
+      overflow: auto;
+
+      &__wrap {
+        margin: 8px 0;
+        background: #fafbfc;
+        min-height: 114px;
+
+        & > div:last-child > * {
+          border-bottom: 1px solid #d9dfe3;
+        }
+      }
+
+      &__tooltip {
+        background-color: #fff !important;
+        border-radius: 6px !important;
+        border: none !important;
+        opacity: 1 !important;
+        padding: 7px 14px !important;
+        color: #333945 !important;
+        font-family: Helvetica Neue, sans-serif !important;
+        font-size: 12px !important;
+        box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+
+        &::after {
+          border-top-color: #fff !important;
+        }
+      }
+
+      &__backgroundProgress {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        &__daysGoneBy {
+          background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
+          opacity: 0.2;
+        }
+
+        &__statistic {
+          display: flex;
+          flex: 4;
+          margin-right: -2px;
+        }
+      }
+
+      &__backgroundRow {
+        display: flex;
+        border-bottom: 1px solid #d9dfe3;
+        height: 41px;
+      }
+    }
+
+    &__srollPanel {
+      border-left: 1px solid #d9dfe3;
+      background-color: #fff;
+    }
+  }
+
+  .scrollableContent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: calc(100% - 54px) !important;
+
+    &:global(.trackYVisible .ScrollbarsCustom-Wrapper) {
+      inset: 0 1px 0 0 !important;
+    }
+
+    :global(.ScrollbarsCustom-Content) {
+      display: flex;
+    }
+
+    &__scrollbarTrackY {
+      display: flex;
+      justify-content: center;
+      background-color: #fff !important;
+      width: 35px !important;
+      z-index: 4;
+      top: 0 !important;
+      padding: 10px 0 !important;
+
+      div {
+        width: 6px !important;
+        background-color: #d5dde1 !important;
+        border-radius: 10px !important;
+      }
+    }
+  }
+}

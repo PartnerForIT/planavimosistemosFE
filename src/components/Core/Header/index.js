@@ -13,6 +13,7 @@ import LogbookIcon from '../../Icons/LogbookIcon';
 import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
 import EventsIcon from '../../Icons/Events';
+import TimeSheetIcon from '../../Icons/TimeSheet';
 import ScheduleIcon from '../../Icons/Schedule';
 import Grownu from '../../Icons/Grownu';
 import AvatarComponent from './Avatar';
@@ -128,6 +129,15 @@ const permissionsConfig = [
     name: 'schedule_module',
     permission: 'schedule_module_access',
   },
+  {
+    name: 'time_sheet_edit_settings',
+    module: 'time_sheet',
+    permission: 'time_sheet_edit_settings',
+  },
+  {
+    name: 'time_sheet_module',
+    permission: 'time_sheet_module_access',
+  },
 ];
 
 export default function ButtonAppBar({ logOut }) {
@@ -223,6 +233,14 @@ export default function ButtonAppBar({ logOut }) {
         to: `/${companyId}/reports`,
       });
     }
+    if (permissions.time_sheet_module) {
+      nextMenuItems.push({
+        Icon: TimeSheetIcon,
+        title: t('Time Sheet'),
+        name: 'time-sheet',
+        to: `/${companyId}/time-sheet`,
+      });
+    }
     if (permissions.schedule_shift || permissions.schedule_simple) {
       nextMenuItems.push({
         Icon: ScheduleIcon,
@@ -239,6 +257,7 @@ export default function ButtonAppBar({ logOut }) {
   const withSettingsButton = useMemo(() => (
     permissions.accounts_see_and_edit
     || permissions.company_edit_settings
+    || permissions.time_sheet_edit_settings
     || permissions.roles_create
     || permissions.groups
     || (permissions.logbook && permissions.logbook_edit_settings)

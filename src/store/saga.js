@@ -13,6 +13,7 @@ import EventsWatcher from './events/saga';
 import KiosksWatcher from './kiosks/saga';
 import CompanyWatcher from './company/saga';
 import ScheduleWatcher from './schedule/saga';
+import SheetWatcher from './sheet/saga';
 
 function onRequest(request) {
   // intercept a request here
@@ -44,6 +45,7 @@ export default function* rootSaga() {
     KiosksWatcher(),
     CompanyWatcher(),
     ScheduleWatcher(),
+    SheetWatcher(),
     createRequestInstance({
       onRequest,
       onError,

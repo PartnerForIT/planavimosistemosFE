@@ -1,0 +1,37 @@
+.button {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  min-width: 12px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  $button: &;
+
+  circle {
+    fill: #333945;
+  }
+
+  &_light {
+    background-color: rgba(#222431, 0.5);
+
+    circle {
+      fill: #fff;
+    }
+  }
+
+  &_active,
+  &:hover {
+    background-color: #222431;
+    visibility: visible;
+
+    circle {
+      fill: #fff;
+    }
+  }
+}
