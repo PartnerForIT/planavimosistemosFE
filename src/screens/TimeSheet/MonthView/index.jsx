@@ -187,7 +187,7 @@ export default ({
             <ResourcesBlock
               resources={resources}
               currentMonth={currentMonth}
-              height={43*((fields.length) > 3 ? (fields.length) : 3)}
+              height={(41*((fields.length) > 3 ? (fields.length) : 3)) + 7}
             />
             <div 
               ref={contentRef}

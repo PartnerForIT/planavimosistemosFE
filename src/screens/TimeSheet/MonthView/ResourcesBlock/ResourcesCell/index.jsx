@@ -1,7 +1,5 @@
 import React, {
 } from 'react';
-import classnames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import classes from './ResourcesCell.module.scss';
 import avatar from '../../../../../components/Icons/avatar.png';
@@ -11,7 +9,7 @@ const ResourceCell = ({
   skill,
   place,
   photo,
-  height = 43*3
+  height = (41*3)+7
 }) => {
 
   return (

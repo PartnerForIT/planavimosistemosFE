@@ -40,6 +40,11 @@ const permissionsConfig = [
     name: 'cost',
     module: 'cost_earning',
   },
+  {
+    name: 'time_sheet_costs',
+    module: 'time_sheet',
+    permission: 'time_sheet_costs',
+  },
 ];
 
 export default () => {
@@ -246,7 +251,7 @@ export default () => {
               sheet={sheet?.sheet}
               fields={sheet?.fields}
               onChangeMonth={handleGetSheet}
-              withCost={permissions.cost}
+              withCost={permissions.cost && permissions.time_sheet_costs}
             />
           )
         }
