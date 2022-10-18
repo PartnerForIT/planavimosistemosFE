@@ -145,6 +145,19 @@ export default ({
     window.addEventListener("wheel", handleScrolling);
   })
 
+  //fix for employee block height
+  const empHeight = {
+    0: 130,
+    1: 130,
+    2: 130,
+    3: 139,
+    4: 180,
+    5: 221,
+    6: 262,
+    7: 303,
+    8: 344,
+  }
+
   return (
     <>
       <div className={classes.sheetmonthView}>
@@ -187,7 +200,7 @@ export default ({
             <ResourcesBlock
               resources={resources}
               currentMonth={currentMonth}
-              height={(41*((fields.length) > 3 ? (fields.length) : 3)) + 7}
+              height={empHeight[fields.length]}
             />
             <div 
               ref={contentRef}
