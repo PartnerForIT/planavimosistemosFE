@@ -75,6 +75,11 @@ const permissionsConfig = [
     name: 'cost',
     module: 'cost_earning',
   },
+  {
+    name: 'schedule_cost',
+    module: 'schedule',
+    permission: 'schedule_cost',
+  },
 ];
 
 export default () => {
@@ -884,7 +889,7 @@ export default () => {
                     holidays={schedule?.holidays}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
-                    withCost={permissions.cost}
+                    withCost={permissions.cost && permissions.schedule_cost}
                   />
                 ) : (
                   <>
@@ -989,7 +994,7 @@ export default () => {
                     <Footer
                       timeline={timeline}
                       data={schedule.timesPanel}
-                      withCost={permissions.cost}
+                      withCost={permissions.cost && permissions.schedule_cost}
                     />
                   </>
                 )

@@ -104,6 +104,11 @@ const permissionsConfig = [
     name: 'cost',
     module: 'cost_earning',
   },
+  {
+    name: 'schedule_cost',
+    module: 'schedule',
+    permission: 'schedule_cost',
+  },
 ];
 
 export default () => {
@@ -589,7 +594,7 @@ export default () => {
             startShiftFrom={startShiftFrom}
             initialValues={initialValues}
             isCreate={isCreate}
-            withCost={permissions.cost}
+            withCost={permissions.cost && permissions.schedule_cost}
           />
         )
       }

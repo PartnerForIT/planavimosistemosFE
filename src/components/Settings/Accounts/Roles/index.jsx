@@ -161,6 +161,7 @@ export default () => {
           options: {
             view: 'Can see Schedule',
             assigned_place: 'Only assigned place view',
+            costs: 'Can see Costs',
           },
         },
       }),
