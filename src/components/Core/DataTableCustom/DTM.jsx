@@ -43,6 +43,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination = Function.prototype,
   selectedItem, setSelectedItem, reports,
   downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
+  settingsCustom,
   permissions = {},
   withCost,
   withProfit,
@@ -408,6 +409,7 @@ export default function DataTable({
                 {
                   showSettingsPopup && (
                     <div className={styles.settingsPopup}>
+                      {settingsCustom}
                       <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
                     </div>
                   )

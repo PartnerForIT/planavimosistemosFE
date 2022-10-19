@@ -19,6 +19,7 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
+import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import {
   workTimeSelector,
   totalSelector,
@@ -35,7 +36,8 @@ import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktim
 import { postLogbookEntry } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
-import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
+
+import { loadEmployeesAll, loadLogbookJournal, patchEmployeeLogbook } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
 import Timeline from '../Core/Timeline/Timeline';
 import { minutesToString } from '../Helpers';
@@ -57,6 +59,7 @@ import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 import EditEntry from './EditEntry';
 import styles from './Logbook.module.scss';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
+import it from 'date-fns/esm/locale/it/index.js';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -66,7 +69,7 @@ const TextWithSign = ({ label }) => (
   </>
 );
 
-const columns = [
+let columns = [
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'employee', checked: true },
   { label: 'Skill', field: 'skill', checked: true },
@@ -84,7 +87,7 @@ const columns = [
   { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
-const columnsWidth = {
+let columnsWidth = {
   status: 250,
   employee: 'auto',
   skill: 120,
@@ -191,6 +194,7 @@ export default () => {
   const [workTime, setWorkTime] = useState([]);
 
   const [total, setTotal] = useState({ sallary: 0, cost: 0, profit: 0 });
+  const [logbook_employee, setLogbookEmployee] = useState(!!user?.employee?.logbook_employee);
 
   useEffect(() => {
     const { cost: costEarning, profit: profitAccess } = permissions;
@@ -322,14 +326,9 @@ export default () => {
 
   useEffect(() => {
     if (Array.isArray(workTime)) {
-      setItemsArray(workTime.map((item) => {
-        let { items } = item;
-
-        if (items?.length) {
-          items = items
-            .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
-            .filter((it) => !sortStatus.some((status) => status === it.status));
-        }
+      if (logbook_employee) {
+        let newArrange = [];
+        let employeeDays = {};
 
         const partFormat = getDateFormat({
           'YY.MM.DD': 'YYYY. MMMM, DD',
@@ -337,16 +336,89 @@ export default () => {
           'MM.DD.YY': 'MMMM. DD, YYYY',
         });
 
-        return {
-          ...item,
-          label: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),
-          items,
-        };
-      }).filter(({ items }) => items.length));
-      setColumnsWidthArray(columnsWidth);
+        const timeToMinutes = (time) => {
+          const [hours, minutes] = time.split(':');
+          return Number(hours) * 60 + Number(minutes);
+        }
+
+        const minutesToTime = (minutes) => {
+          const hours = Math.floor(minutes / 60);
+          const min = minutes % 60;
+          return `${String(hours).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+        }
+
+        workTime.map((item) => {
+          let { items } = item;
+          items.map((it) => {
+            if (!employeeDays[it.employee_id]) {
+              employeeDays[it.employee_id] = []
+            }
+            employeeDays[it.employee_id].push(
+              {
+                ...it,
+                date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),
+              })
+
+            if (!newArrange.find((i) => i.employeeId === it.employee_id)) {
+              newArrange.push(
+                {
+                  ...item,
+                  employeeId: it.employee_id,
+                  label: it.employee
+                })
+            }
+          });
+        });
+
+        newArrange = newArrange.map((item) => {
+          return {
+            ...item,
+            duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.duration)*1; }, 0)),
+            working_hours: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.working_hours)*1; }, 0)),
+            break_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.break_time)*1; }, 0)),
+            holiday_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.holiday_time)*1; }, 0)),
+            night_duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.night_duration)*1; }, 0)),
+            cost: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.cost.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            charge: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.charge.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            profit: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.profit.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            items: [...employeeDays[item.employeeId]],
+          };
+        });
+
+        setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
+
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'date' : item.field } } ))
+        //setColumnsWidthArray({ ...columnsWidth, employee: 300 });
+      } else {
+        setItemsArray(workTime.map((item) => {
+          let { items } = item;
+
+          if (items?.length) {
+            items = items
+              .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
+              .filter((it) => !sortStatus.some((status) => status === it.status));
+          }
+
+          const partFormat = getDateFormat({
+            'YY.MM.DD': 'YYYY. MMMM, DD',
+            'DD.MM.YY': 'DD. MMMM, YYYY',
+            'MM.DD.YY': 'MMMM. DD, YYYY',
+          });
+          
+          return {
+            ...item,
+            label: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),
+            items,
+          };
+        }).filter(({ items }) => items.length));
+
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'employee' : item.field } } ))
+        //setColumnsWidthArray({ ...columnsWidth, employee: 'auto' });
+      }
+      
       setTotal(getTotal);
     }
-  }, [workTime, getTotal, sortStatus]);
+  }, [workTime, getTotal, sortStatus, logbook_employee]);
 
   useEffect(() => {
     const allColumnsArray = columns.filter((column) => {
@@ -460,6 +532,12 @@ export default () => {
     });
   };
 
+  const onChangeFilterEmployee = (value) => {
+    if (user.user && user.employee) {
+      setLogbookEmployee(value)
+      dispatch(patchEmployeeLogbook(user.user.company_id, user.employee.id, {logbook_employee: value}));
+    }
+  };
   const searchHandler = (term) => {
     setSearch(term);
     sendRequest({ search: term });
@@ -792,6 +870,19 @@ export default () => {
     );
   };
 
+  const settingsCustom = () => {
+
+    return (
+      <div className={styles.settingsCustom}>
+        <StyledCheckbox
+          label={t('Filter by Employee')}
+          checked={logbook_employee}
+          onChange={() => onChangeFilterEmployee(!logbook_employee)}
+        />
+      </div>
+    );
+  }
+
   const employToCheck = useCallback(({
     id,
     name,
@@ -866,7 +957,7 @@ export default () => {
             activePage={workTime?.current_page}
             itemsCountPerPage={workTime?.per_page}
             totalItemsCount={workTime?.total}
-            handlePagination={console.log}
+            //handlePagination={console.log}
             selectedItem={selectedItem}
             total={total}
             setSelectedItem={rowSelectionHandler}
@@ -879,6 +970,7 @@ export default () => {
             permissions={permissions}
             amount={total}
             white
+            settingsCustom={settingsCustom()}
           />
         </div>
 

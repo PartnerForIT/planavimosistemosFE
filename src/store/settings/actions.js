@@ -76,6 +76,9 @@ import {
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
   UPDATE_EMPLOYEE_SUCCESS,
+  UPDATE_EMPLOYEE_LOGBOOK,
+  UPDATE_EMPLOYEE_LOGBOOK_ERROR,
+  UPDATE_EMPLOYEE_LOGBOOK_SUCCESS,
   GET_CURRENCY,
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
@@ -361,6 +364,23 @@ export const patchEmployeeSuccess = (data) => ({
 
 export const patchEmployeeError = (data) => ({
   type: UPDATE_EMPLOYEE_ERROR,
+  data,
+});
+
+export const patchEmployeeLogbook = (id, employeeId, data) => ({
+  type: UPDATE_EMPLOYEE_LOGBOOK,
+  id,
+  employeeId,
+  data,
+});
+
+export const patchEmployeeLogbookSuccess = (data) => ({
+  type: UPDATE_EMPLOYEE_LOGBOOK_SUCCESS,
+  data,
+});
+
+export const patchEmployeeLogbookError = (data) => ({
+  type: UPDATE_EMPLOYEE_LOGBOOK_ERROR,
   data,
 });
 

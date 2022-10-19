@@ -79,6 +79,9 @@ import {
   UPDATE_EMPLOYEE,
   UPDATE_EMPLOYEE_ERROR,
   UPDATE_EMPLOYEE_SUCCESS,
+  UPDATE_EMPLOYEE_LOGBOOK,
+  UPDATE_EMPLOYEE_LOGBOOK_ERROR,
+  UPDATE_EMPLOYEE_LOGBOOK_SUCCESS,
   GET_CURRENCY_SUCCESS,
   DELETE_EMPLOYEE,
   DELETE_EMPLOYEE_SUCCESS,
@@ -336,6 +339,27 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
 
     case UPDATE_EMPLOYEE_ERROR:
+      return {
+        ...state,
+        employeesLoading: false,
+        error: action.data,
+      };
+
+    case UPDATE_EMPLOYEE_LOGBOOK:
+      return {
+        ...state,
+        employeesLoading: true,
+        error: null,
+      };
+
+    case UPDATE_EMPLOYEE_LOGBOOK_SUCCESS:
+      return {
+        ...state,
+        employee: { ...action.data },
+        employeesLoading: false,
+      };
+
+    case UPDATE_EMPLOYEE_LOGBOOK_ERROR:
       return {
         ...state,
         employeesLoading: false,

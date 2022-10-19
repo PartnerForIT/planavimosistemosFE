@@ -52,7 +52,7 @@ const Group = ({
     styles.groupContainer,
     { [styles.groupContainerReports]: reports },
   );
-console.log(group);
+
   return (
     <div className={groupContainerClasses}>
       <div

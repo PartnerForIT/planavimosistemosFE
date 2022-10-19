@@ -42,6 +42,7 @@ import {
   GET_SETTINGS_EMPLOYEES_ALL,
   GET_SETTINGS_EMPLOYEES_EDIT,
   UPDATE_EMPLOYEE,
+  UPDATE_EMPLOYEE_LOGBOOK,
   GET_CURRENCY,
   DELETE_EMPLOYEE,
   EMPLOYEE_ACTIONS,
@@ -112,6 +113,7 @@ import {
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
   patchEmployeeError,
+  patchEmployeeLogbookError,
   loadEmployeesAll,
   getCurrenciesSuccess,
   removeEmployeeError,
@@ -1074,6 +1076,23 @@ function* updateEmployee(action) {
   }
 }
 
+function* updateEmployeeLogbook(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.id}/employees/update-logbook/${action.employeeId}`,
+      action.data,
+      token(),
+    );
+    // }
+  } catch (e) {
+    yield put(patchEmployeeLogbookError(e));
+    yield put(addSnackbar('An error occurred while edit account', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* loadCurrencies() {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/currencies`, token());
@@ -1556,6 +1575,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(PATCH_ACCOUNTS_SUBGROUP, patchAccountGroup);
   yield takeLatest(GET_SETTINGS_EMPLOYEES_EDIT, getEmployeeEdit);
   yield takeLatest(UPDATE_EMPLOYEE, updateEmployee);
+  yield takeLatest(UPDATE_EMPLOYEE_LOGBOOK, updateEmployeeLogbook);
   yield takeLeading(GET_CURRENCY, loadCurrencies);
   yield takeLatest(DELETE_EMPLOYEE, deleteEmployee);
   yield takeLatest(EMPLOYEE_ACTIONS, setEmployeesActions);
