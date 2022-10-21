@@ -42,6 +42,10 @@ import {
   GET_TIME_SHEET_SUCCESS,
   EDIT_TIME_SHEET,
   EDIT_TIME_SHEET_SUCCESS,
+  GET_INTEGRATIONS,
+  GET_INTEGRATIONS_SUCCESS,
+  EDIT_INTEGRATIONS,
+  EDIT_INTEGRATIONS_SUCCESS,
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME,
@@ -138,6 +142,10 @@ import {
   GET_SETTINGS_SHEET,
   GET_SETTINGS_SHEET_SUCCESS,
   GET_SETTINGS_SHEET_ERROR,
+
+  GET_SETTINGS_INTEGRATION,
+  GET_SETTINGS_INTEGRATION_SUCCESS,
+  GET_SETTINGS_INTEGRATION_ERROR,
 } from './types';
 
 export const getSettingCompany = (id) => ({
@@ -483,6 +491,24 @@ export const editTimeSheet = (id, data) => ({
 });
 export const editTimeSheetSuccess = (data) => ({
   type: EDIT_TIME_SHEET_SUCCESS,
+  data,
+});
+
+export const loadIntegrations = (id) => ({
+  type: GET_INTEGRATIONS,
+  id,
+});
+export const loadIntegrationsSuccess = (data) => ({
+  type: GET_INTEGRATIONS_SUCCESS,
+  data,
+});
+export const editIntegrations = (id, data) => ({
+  type: EDIT_INTEGRATIONS,
+  id,
+  data,
+});
+export const editIntegrationsSuccess = (data) => ({
+  type: EDIT_INTEGRATIONS_SUCCESS,
   data,
 });
 
@@ -852,4 +878,17 @@ export const getSheetSuccess = (data) => ({
 });
 export const getSheetError = () => ({
   type: GET_SETTINGS_SHEET_ERROR,
+});
+
+/* Integration */
+export const getIntegration = (companyId) => ({
+  type: GET_SETTINGS_INTEGRATION,
+  companyId,
+});
+export const getIntegrationSuccess = (data) => ({
+  type: GET_SETTINGS_INTEGRATION_SUCCESS,
+  data,
+});
+export const getIntegrationError = () => ({
+  type: GET_SETTINGS_INTEGRATION_ERROR,
 });

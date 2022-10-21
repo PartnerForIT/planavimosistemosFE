@@ -3,6 +3,10 @@ import {
   GET_SHEET,
   GET_SHEET_SUCCESS,
   GET_SHEET_ERROR,
+
+  GET_INTEGRATION,
+  GET_INTEGRATION_SUCCESS,
+  GET_INTEGRATION_ERROR,
 } from './types';
 import {ADD_SNACKBAR} from "../organizationList/types";
 
@@ -24,6 +28,18 @@ export const reducer = (state = initialState, action) => {
         loading: false,
       };
     case GET_SHEET_ERROR:
+      return { ...state, loading: false };
+
+
+    case GET_INTEGRATION:
+      return { ...state, loading: true };
+    case success(GET_INTEGRATION):
+      return {
+        ...state,
+        //data: action.data,
+        loading: false,
+      };
+    case GET_INTEGRATION_ERROR:
       return { ...state, loading: false };
 
     case ADD_SNACKBAR:

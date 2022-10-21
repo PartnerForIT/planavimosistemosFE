@@ -23,6 +23,7 @@ export const activityLogSelector = (state) => state.settings.activity_log;
 export const deleteDataSelector = (state) => state.settings.deleteData;
 export const JournalDataSelector = (state) => state.settings.journal;
 export const TimeSheetDataSelector = (state) => state.settings.timeSheet;
+export const IntegrationsDataSelector = (state) => state.settings.integrations;
 export const OvertimeDataSelector = (state) => state.settings.overtime;
 export const AdditionalRatesDataSelector = (state) => state.settings.additionalRates;
 export const AccountGroupsSelector = (state) => state.settings.groups;

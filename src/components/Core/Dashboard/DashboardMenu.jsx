@@ -14,6 +14,7 @@ import LogbookIcon from '../../Icons/LogbookIcon';
 import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
 import TimeSheetIcon from '../../Icons/TimeSheet';
+import IntegrationsIcon from '../../Icons/IntegrationsIcon';
 import ActivityLogIcon from '../../Icons/ActivityLog';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import KioskIcon from '../../Icons/Kiosk';
@@ -151,6 +152,11 @@ const permissionsConfig = [
     name: 'time_sheet_edit_settings',
     module: 'time_sheet',
     permission: 'time_sheet_edit_settings',
+  },
+  {
+    name: 'integrations_edit_settings',
+    module: 'integrations',
+    permission: 'integrations_edit_settings',
   },
 ];
 export default function DashboardMenu() {
@@ -327,6 +333,15 @@ export default function DashboardMenu() {
         icon: TimeSheetIcon,
         title: t('Time Sheet'),
         name: 'time_sheet',
+      });
+    }
+
+    if (permissions.integrations_edit_settings) {
+      nextMenuItems.push({
+        to: `/${companyId}/settings/integrations`,
+        icon: IntegrationsIcon,
+        title: t('Intregrations'),
+        name: 'integrations',
       });
     }
 

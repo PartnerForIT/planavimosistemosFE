@@ -48,6 +48,7 @@ const columnsPlaces = [
 
 const columnsWidthArray = {
   name: 'auto',
+  external_id: 'auto',
   id: 'auto',
   cost: 'auto',
   earn: 'auto',
@@ -110,6 +111,7 @@ export default function TableBlock({
           return {
             ...foundPlace,
             title: foundPlace.name,
+            external_id: foundPlace.external_id,
           };
         }
         default: return '';
@@ -166,6 +168,9 @@ export default function TableBlock({
       }
       case 'places': {
         allColumnsArray = columnsPlaces;
+        if (permissions.integrations) {
+          allColumnsArray.push({ label: 'External ID', field: 'external_id', checked: true });
+        }
         break;
       }
       default: break;
@@ -257,8 +262,8 @@ export default function TableBlock({
     }, companyId, selectedItem));
     handleCloseItem();
   };
-  const updatePlace = (name) => {
-    dispatch(patchPlace({ name }, companyId, selectedItem));
+  const updatePlace = ({name, external_id}) => {
+    dispatch(patchPlace({ name, external_id }, companyId, selectedItem));
     handleCloseItem();
   };
 
@@ -318,8 +323,9 @@ export default function TableBlock({
         handleClose={handleCloseItem}
         title={t('Update Place name')}
         buttonTitle={t('Update Place Name')}
-        initialValue={selectedItemData?.title}
+        initialValues={selectedItemData}
         createPlace={updatePlace}
+        permissions={permissions}
       />
     </div>
   );

@@ -138,6 +138,13 @@ export default () => {
           },
         },
       }),
+      ...(modules.integrations && {
+        integrations: {
+          options: {
+            
+          },
+        },
+      }),
       ...(modules.reports && {
         reports: {
           options: {
@@ -234,6 +241,11 @@ export default () => {
       time_sheet: {
         options: {
           ...(modules.time_sheet && { edit_settings: 'Can edit Time Sheet settings' }),
+        },
+      },
+      integrations: {
+        options: {
+          ...(modules.integrations && { edit_settings: 'Can edit Integration settings' }),
         },
       },
     },

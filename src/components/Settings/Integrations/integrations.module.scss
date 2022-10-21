@@ -1,0 +1,79 @@
+.integrations {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    margin-top: 5px;
+  
+    &__label {
+      display: flex;
+  
+      label {
+        margin-right: 23px;
+      }
+    }
+  }
+
+  .integrationsBlock {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .generalBlock {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: -9px;
+  }
+
+  .generalBlock2 {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+
+  .generalBlock3 {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  
+    label {
+      margin-right: 12px;
+    }
+  }
+
+  .labelBlock {
+    display: flex;
+  
+    label {
+      margin-right: 20px;
+    }
+  
+    .label {
+      margin-left: 20px;
+      margin-right: 20px;
+      font-size: 14px;
+      color: #000;
+    }
+  }
+
+  .formLine {
+    width: 100%;
+    height: 1px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #e8eff6;
+  }
+
+  .separator {
+    height: 20px;
+    width: 100%;
+  }
+
+  .rivile {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }

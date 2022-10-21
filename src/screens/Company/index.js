@@ -34,6 +34,7 @@ import Overtime from '../../components/Settings/Logbook/Overtime';
 import AdditionalRates from '../../components/Settings/Logbook/AdditionalRates';
 import ActivityLog from '../../components/Settings/ActivityLog';
 import TimeSheetSettings from '../../components/Settings/TimeSheet';
+import IntegrationsSettings from '../../components/Settings/Integrations';
 import SettingDelete from '../../components/Settings/Delete';
 import SettingEvents from '../../components/Settings/Events';
 import Reports from '../../components/Reports/Reports';
@@ -137,6 +138,11 @@ const permissionsConfig = [
     name: 'time_sheet_module',
     module: 'time_sheet',
     permission: 'time_sheet_module_access',
+  },
+  {
+    name: 'integrations_edit_settings',
+    module: 'integrations',
+    permission: 'integrations_edit_settings',
   },
 ];
 
@@ -307,6 +313,11 @@ export default () => {
       {
         permissions.time_sheet_edit_settings && (
           <Route exact path='/:id/settings/time_sheet' component={TimeSheetSettings} />
+        )
+      }
+      {
+        permissions.integrations_edit_settings && (
+          <Route exact path='/:id/settings/integrations' component={IntegrationsSettings} />
         )
       }
       {

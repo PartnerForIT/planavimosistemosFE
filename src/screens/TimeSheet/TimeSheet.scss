@@ -25,10 +25,12 @@
         margin-right: 21px;
       }
     }
+  }
 
-    & > button {
-      margin-left: auto;
-    }
+  &__buttonArrow {
+    width: 0.8em !important;
+    height: 0.6em !important;
+    margin-right: 5px;
   }
 
   &__tooltip {

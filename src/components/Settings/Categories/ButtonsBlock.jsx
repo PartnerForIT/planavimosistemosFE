@@ -77,8 +77,8 @@ export default function ButtonBlock({
     dispatch(actionCreateJob({ title: name }, companyId));
     handleCloseItem();
   };
-  const createPlace = (name) => {
-    dispatch(actionCreatePlace({ name }, companyId));
+  const createPlace = ({name, external_id}) => {
+    dispatch(actionCreatePlace({ name, external_id }, companyId));
     handleCloseItem();
   };
 
@@ -132,6 +132,7 @@ export default function ButtonBlock({
         title={t('Create Place name')}
         buttonTitle={t('Create Place Name')}
         createPlace={createPlace}
+        permissions={permissions}
       />
     </div>
   );

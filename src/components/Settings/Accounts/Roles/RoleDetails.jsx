@@ -11,6 +11,7 @@ import Progress from '../../../Core/Progress';
 const categoriesNames = {
   logbook: 'Logbook',
   time_sheet: 'Time Sheet',
+  integrations: 'Integrations',
   reports: 'Reports',
   schedule: 'Schedule',
   events: 'Events',

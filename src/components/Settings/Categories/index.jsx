@@ -52,6 +52,10 @@ const permissionsConfig = [
     name: 'create_places',
     module: 'create_places',
   },
+  {
+    name: 'integrations',
+    module: 'integrations',
+  },
 ];
 export default function Categories() {
   const { id } = useParams();

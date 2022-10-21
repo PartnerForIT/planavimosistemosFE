@@ -9,26 +9,30 @@ import moment from 'moment';
 import cloneDeep from 'lodash';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSettingWorkTime } from '../../store/settings/actions';
 import { placesSelector } from '../../store/places/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
 import Progress from '../../components/Core/Progress';
+import FlatButton from '../../components/Core/FlatButton/FlatButton';
+import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import usePermissions from '../../components/Core/usePermissions';
 import { resourcesMock } from '../../const/mock';
 import { getEmployees } from '../../store/employees/actions';
 
 import {
   getSheet,
+  getIntegration,
+  downloadIntegration,
 } from '../../store/sheet/actions';
 import {
-  loadEmployeesAll,
+  loadEmployeesAll, loadIntegrations, getSettingWorkTime,
   getSheet as getsheetSetting,
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { sheetSelector, isLoadingSelector } from '../../store/sheet/selectors';
+import { IntegrationsDataSelector } from '../../store/settings/selectors';
 import { getPlaces } from '../../store/places/actions';
 import { getSkills } from '../../store/skills/actions';
 
@@ -45,11 +49,16 @@ const permissionsConfig = [
     module: 'time_sheet',
     permission: 'time_sheet_costs',
   },
+  {
+    name: 'integrations_module',
+    module: 'integrations',
+    permission: 'integrations_module_access',
+  },
 ];
 
 export default () => {
   const { t } = useTranslation();
-  const [filter, setFilter] = useState({ employers: [], places: [], skills: [] });
+  const [filter, setFilter] = useState({ employers: [], place: [], skills: [] });
   const places = useSelector(placesSelector);
   const skills = useSelector(skillsSelector);
   const fromDateRef = useRef(new Date());
@@ -61,6 +70,7 @@ export default () => {
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
+  const integrations = useSelector(IntegrationsDataSelector);
 
   const resources = useMemo(() => {
 
@@ -105,6 +115,42 @@ export default () => {
     return sheet?.resources;
 
   }, [filter, sheet?.resources]);
+
+  const downloadEIP = ({ fromDate = fromDateRef.current }) => {
+    let nextFromDate = moment(fromDate);
+    const data = {
+      integrationType: 'eip',
+      skillsArr: filter.skills.map(({id}) => id),
+      employeesArr: filter.employers.map(({id}) => id),
+      placesArr: filter.place.map(({id}) => id),
+    };
+
+
+    dispatch(downloadIntegration(companyId, nextFromDate.format('YYYY-MM-DD'), data)).then(({ data }) => {
+      const link = document.createElement('a');
+      console.log(data.file);
+      link.setAttribute('download', data.file);
+      link.setAttribute('target', '_blank');
+      link.href = `${data.path}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      //setLoading(false);
+    }).catch();
+
+
+    return
+    dispatch(getIntegration({
+      companyId,
+      fromDate: nextFromDate.format('YYYY-MM-DD'),
+      data: {
+        integrationType: 'eip',
+        skillsArr: filter.skills.map(({id}) => id),
+        employeesArr: filter.employers.map(({id}) => id),
+        placesArr: filter.place.map(({id}) => id),
+      }
+    }));
+  }
 
   const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
@@ -198,13 +244,14 @@ export default () => {
     dispatch(getSkills(companyId));
     dispatch(getEmployees(companyId));
     dispatch(getSettingWorkTime(companyId));
+    dispatch(loadIntegrations(companyId));
 
     dispatch(getSheet({
       companyId,
       fromDate: moment(new Date()).format('YYYY-MM-DD'),
       firstLoading: true,
     }));
-    dispatch(getsheetSetting(companyId));
+    //dispatch(getsheetSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
 
     return () => {
@@ -213,7 +260,7 @@ export default () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <MainLayout>
       <div className='timeSheet-screen'>
@@ -239,6 +286,11 @@ export default () => {
             onChange={onEmployeesSelectFilter}
             width='auto'
           />
+          { permissions.integrations_module && integrations.rivile && (
+            <FlatButton onClick={downloadEIP}>
+              <ArrowEIPIcon className='timeSheet-screen__buttonArrow' /> {t('.EIP')}
+            </FlatButton>
+          )}
         </div>
         {
           (!sheet) ? (

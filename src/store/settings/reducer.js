@@ -36,6 +36,9 @@ import {
   GET_TIME_SHEET,
   GET_TIME_SHEET_SUCCESS,
   EDIT_TIME_SHEET_SUCCESS,
+  GET_INTEGRATIONS,
+  GET_INTEGRATIONS_SUCCESS,
+  EDIT_INTEGRATIONS_SUCCESS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
@@ -123,6 +126,7 @@ const initialState = {
   overtime: {},
   additionalRates: {},
   timeSheet: {},
+  integrations: {},
   skills: [],
   employees: {
     users: [],
@@ -482,6 +486,27 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         timeSheet: action.data,
+      };
+    }
+    case GET_INTEGRATIONS: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    }
+    case GET_INTEGRATIONS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        integrations: action.data,
+        error: null,
+      };
+    }
+    case EDIT_INTEGRATIONS_SUCCESS: {
+      return {
+        ...state,
+        integrations: action.data,
       };
     }
     case GET_LOGBOOK_OVERTIME: {
