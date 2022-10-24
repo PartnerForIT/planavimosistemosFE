@@ -51,6 +51,7 @@ export default function Integrations() {
     rivile_overtime_hours: false,
     rivile_working_days: false,
     rivile_rest_days: false,
+
     rivile_worked_hours_code: '000000000001',
     rivile_break_hours_code: '000000000108',
     rivile_night_hours_code: '000000000101',
@@ -59,6 +60,9 @@ export default function Integrations() {
     rivile_working_days_code: 'D',
     rivile_rest_days_code: 'P',
     rivile_fraction_number: '',
+
+    rivile_use_object: false,
+    rivile_use_places_unit: false,
   });
 
   useEffect(() => {
@@ -81,6 +85,8 @@ export default function Integrations() {
       rivile_overtime_hours: payload.rivile_overtime_hours ? 1 : 0,
       rivile_working_days: payload.rivile_working_days ? 1 : 0,
       rivile_rest_days: payload.rivile_rest_days ? 1 : 0,
+      rivile_use_object: payload.rivile_use_object ? 1 : 0,
+      rivile_use_places_unit: payload.rivile_use_places_unit ? 1 : 0,
       rivile_worked_hours_code: payload.rivile_worked_hours_code ? payload.rivile_worked_hours_code : '',
       rivile_break_hours_code: payload.rivile_break_hours_code ? payload.rivile_break_hours_code : '',
       rivile_night_hours_code: payload.rivile_night_hours_code ? payload.rivile_night_hours_code : '',

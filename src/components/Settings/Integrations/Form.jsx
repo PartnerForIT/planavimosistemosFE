@@ -122,6 +122,36 @@ export default ({
               onChange={handleInputChange}
             />
           </div>
+
+          <div className={style.separator} />
+
+          <div className={style.generalBlock3}>
+            <Label text={t('Use Object/Set ID')} />
+            <Switch
+              onChange={(value) => { handleSystemChange(value, 'rivile_use_object') }}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              checked={integrationsData.rivile_use_object}
+              height={21}
+              width={40}
+            />
+          </div>
+
+          <div className={style.generalBlock3}>
+            <Label text={t('Use Unit from Places')} />
+            <Switch
+              onChange={(value) => { handleSystemChange(value, 'rivile_use_places_unit') }}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              checked={integrationsData.rivile_use_places_unit}
+              height={21}
+              width={40}
+            />
+          </div>
         </div>
         <div>
           <Label text={`${t('Hour code in Rivilé (12 symbols)')}`} />

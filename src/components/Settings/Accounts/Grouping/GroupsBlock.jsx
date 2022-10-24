@@ -7,7 +7,7 @@ import Tooltip from '../../../Core/Tooltip';
 import Button from '../../../Core/Button/Button';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import RemoveGroup from '../../../Core/Dialog/RemoveGroup';
-import AddEditItem from '../../../Core/Dialog/AddEditItem';
+import AddEditGroup from '../../../Core/Dialog/AddEditGroup';
 
 const columns = [
   {
@@ -33,6 +33,12 @@ const columns = [
     field: 'id',
     checked: true,
     minWidth: 80,
+  },
+  {
+    label: 'External ID',
+    field: 'external_id',
+    checked: true,
+    minWidth: 100,
   },
 ];
 
@@ -64,15 +70,16 @@ export default function GroupsBlock({
     return {};
   }, [editItemId, groups]);
 
-  const handleEditGroup = (name) => {
+  const handleEditGroup = ({name, external_id}) => {
     onEditGroup({
       name,
+      external_id,
       id: editItemId,
     });
     setEditVisible(false);
   };
-  const handleAddGroup = (name) => {
-    onAddGroup(name);
+  const handleAddGroup = ({name, external_id}) => {
+    onAddGroup({name, external_id});
     setVisible(false);
   };
   const handleRemoveGroup = () => {
@@ -128,7 +135,7 @@ export default function GroupsBlock({
         />
       </div>
       {/* add */}
-      <AddEditItem
+      <AddEditGroup
         open={visible}
         title={t('Create a new group')}
         buttonTitle={t('Create Group')}
@@ -136,8 +143,8 @@ export default function GroupsBlock({
         onSubmit={handleAddGroup}
       />
       {/* edit */}
-      <AddEditItem
-        initialValue={selectedItem.name}
+      <AddEditGroup
+        initialValues={selectedItem}
         open={editVisible}
         title={t('Edit group name')}
         buttonTitle={t('Save & Close')}

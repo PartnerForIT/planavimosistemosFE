@@ -90,6 +90,7 @@ let columns = [
 let columnsWidth = {
   status: 250,
   employee: 'auto',
+  date: 250,
   skill: 120,
   start: 100,
   end: 100,
@@ -356,7 +357,7 @@ export default () => {
             employeeDays[it.employee_id].push(
               {
                 ...it,
-                date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),
+                date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`),
               })
 
             if (!newArrange.find((i) => i.employeeId === it.employee_id)) {
@@ -388,7 +389,6 @@ export default () => {
         setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
 
         setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'date' : item.field } } ))
-        //setColumnsWidthArray({ ...columnsWidth, employee: 300 });
       } else {
         setItemsArray(workTime.map((item) => {
           let { items } = item;
@@ -413,9 +413,9 @@ export default () => {
         }).filter(({ items }) => items.length));
 
         setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'employee' : item.field } } ))
-        //setColumnsWidthArray({ ...columnsWidth, employee: 'auto' });
       }
-      
+     
+      setColumnsWidthArray({...columnsWidth});
       setTotal(getTotal);
     }
   }, [workTime, getTotal, sortStatus, logbook_employee]);

@@ -54,7 +54,7 @@ export default function Grouping() {
   const [selected, setSelected] = useState({});
   const [sort, setSort] = useState({});
   const [subSort, setSubSort] = useState({});
-  const addNewGroup = (name) => dispatch(createAccountGroup(companyId, { name }));
+  const addNewGroup = ({name, external_id}) => dispatch(createAccountGroup(companyId, { name, external_id }));
   const addNewSubgroup = (name) => dispatch(createAccountSubgroup(companyId, {
     name,
     parentGroupId: selected?.id,
