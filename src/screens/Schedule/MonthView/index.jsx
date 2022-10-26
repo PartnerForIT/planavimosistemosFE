@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
 import ReactTooltip from 'react-tooltip';
+import classNames from 'classnames';
 
 import ResourceAreaHeader from '../ResourceAreaHeader';
 import Footer from '../Footer';
@@ -249,7 +250,13 @@ export default ({
                   style={{ flex: flexBackground.past }}
                 />
                 <div style={{ flex: flexBackground.future }} />
-                <div className={classes.monthView__content__data__backgroundProgress__statistic} />
+                <div className={
+                  classNames(
+                    classes.monthView__content__data__backgroundProgress__statistic,
+                    {
+                      [classes.monthView__content__data__backgroundProgress__statistic__withCost]: withCost,
+                    },
+                  )} />
               </div>
             </div>
             <div className={classes.monthView__content__srollPanel} />
