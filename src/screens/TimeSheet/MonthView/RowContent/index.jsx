@@ -29,7 +29,7 @@ const RowContent = ({
   });
 
   const foundItem = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
     if (found && found[field]) {
       if (field == 'show_costs') {
         return <><CurrencySign />{parseFloat(found[field]).toFixed(2)}</>;
@@ -42,7 +42,7 @@ const RowContent = ({
   }
 
   const foundTime = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
     if (found && found[field]) {
       return found[field]*1;
     }
@@ -51,7 +51,7 @@ const RowContent = ({
   }
 
   const foundCost = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
     if (found && found[field+'_cost']) {
       return found[field+'_cost']*1;
     } else if (found && found[field] && field == 'show_costs') {
@@ -87,7 +87,7 @@ const RowContent = ({
   }
 
   const tooltipInner = (day) => {
-    const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1);
+    const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
     if (find) {
       return "From <strong>" + moment(find.start).format('HH:mm') + "</strong> To <strong>" + moment(find.end).format('HH:mm') + "</strong>";
     }

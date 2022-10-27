@@ -220,7 +220,7 @@ export default ({
               }
               {
                 resources.map((resource) => (
-                  <div key={resource.id} className={classes.sheetmonthView__content__data__wrap}>
+                  <div key={resource.id+'_'+resource.place_id} className={classes.sheetmonthView__content__data__wrap}>
                     {
                       resource ?
                         fields.map((item) => (
