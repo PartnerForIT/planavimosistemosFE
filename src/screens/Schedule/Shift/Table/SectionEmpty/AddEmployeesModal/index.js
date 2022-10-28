@@ -37,7 +37,7 @@ export default ({
 
   const filteredItems = useMemo(() => {
     if (searchValue) {
-      return allItems.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()));
+      return allItems.filter((item) => (item?.title && item.title.toLowerCase().includes(searchValue.toLowerCase())) || (item?.label && item.label.toLowerCase().includes(searchValue.toLowerCase())));
     }
 
     return allItems;

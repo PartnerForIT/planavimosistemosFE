@@ -483,7 +483,8 @@
           }
         }
 
-        &.fc-event-past {
+        &.fc-event-past,
+        &.disable-drag {
           button#dropdownButton {
             display: none;
           }
@@ -493,6 +494,12 @@
             &::before {
               display: none;
             }
+          }
+        }
+
+        &.disable-drag { 
+          .fc-event-resizer {
+            display: none !important;
           }
         }
       }

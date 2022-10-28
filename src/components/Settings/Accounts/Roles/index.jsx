@@ -166,6 +166,7 @@ export default () => {
       ...(modules.schedule_shift && {
         schedule: {
           options: {
+            edit: 'Can create & edit schedules',
             view: 'Can see Schedule',
             assigned_place: 'Only assigned place view',
             costs: 'Can see Costs',
@@ -235,7 +236,7 @@ export default () => {
       },
       schedule: {
         options: {
-          ...(modules.schedule_shift && { create_and_edit: 'Can create & edit Schedule' }),
+          ...(modules.schedule_shift && { create_and_edit: 'Can edit Schedule settings' }),
         },
       },
       time_sheet: {

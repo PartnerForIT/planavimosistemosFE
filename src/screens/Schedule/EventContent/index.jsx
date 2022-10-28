@@ -37,6 +37,7 @@ export default ({
   viewType,
   empty,
   empty_manual,
+  editPermissions,
                   addEmployee,
                   addTimeline,
                   dayNumber,
@@ -260,7 +261,7 @@ export default ({
           (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
 
             (empty_manual)
-            ? <span onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            ? (editPermissions && (<span onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={classes.eventContent__title} >
               {
                 (!!newEmployee?.name)

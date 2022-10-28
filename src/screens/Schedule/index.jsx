@@ -76,9 +76,14 @@ const permissionsConfig = [
     module: 'cost_earning',
   },
   {
-    name: 'schedule_cost',
-    module: 'schedule',
-    permission: 'schedule_cost',
+    name: 'schedule_costs',
+    module: 'schedule_shift',
+    permission: 'schedule_costs',
+  },
+  {
+    name: 'schedule_edit',
+    module: 'schedule_shift',
+    permission: 'schedule_edit',
   },
 ];
 
@@ -584,7 +589,7 @@ export default () => {
         oldEmployee={event.extendedProps.old_employee}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
-        withMenu={withMenu}
+        withMenu={withMenu && permissions.schedule_edit}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
@@ -594,6 +599,7 @@ export default () => {
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
+        editPermissions={permissions.schedule_edit}
         isCompleted={isCompleted}
         activeDrag={activeDrag == resourceInfo.id}
         unavailableEmployees={unEmployees}
@@ -604,6 +610,9 @@ export default () => {
     let classes = []
     if (info.event.extendedProps.empty_manual) {
       classes.push('is-empty-manual')
+    }
+    if (!permissions.schedule_edit) {
+      classes.push('disable-drag')
     }
 
     return classes;
@@ -623,7 +632,7 @@ export default () => {
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
         shiftId={shiftId}
-        withMenu={!!shiftId}
+        withMenu={!!shiftId && permissions.schedule_edit}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
@@ -871,9 +880,11 @@ export default () => {
           {/*  checked={isOnlyWorkingDays}*/}
           {/*  label={t('Show only working days')}*/}
           {/*/>*/}
-          <Button onClick={handleCreateNewShift}>
-            {t('Create new shift')}
-          </Button>
+          { permissions.schedule_edit && (
+            <Button onClick={handleCreateNewShift}>
+              {t('Create new shift')}
+            </Button> )
+          }
         </div>
         {
           (!schedule) ? (
@@ -889,7 +900,7 @@ export default () => {
                     holidays={schedule?.holidays}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
-                    withCost={permissions.cost && permissions.schedule_cost}
+                    withCost={permissions.cost && permissions.schedule_costs}
                   />
                 ) : (
                   <>
@@ -994,7 +1005,7 @@ export default () => {
                     <Footer
                       timeline={timeline}
                       data={schedule.timesPanel}
-                      withCost={permissions.cost && permissions.schedule_cost}
+                      withCost={permissions.cost && permissions.schedule_costs}
                     />
                   </>
                 )
