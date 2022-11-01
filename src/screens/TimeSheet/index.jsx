@@ -62,6 +62,7 @@ export default () => {
   const places = useSelector(placesSelector);
   const skills = useSelector(skillsSelector);
   const fromDateRef = useRef(new Date());
+  const [currentDate, setCurrentDate] = useState(fromDateRef.current);
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ export default () => {
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
+  
 
   const resources = useMemo(() => {
 
@@ -116,8 +118,8 @@ export default () => {
 
   }, [filter, sheet?.resources]);
 
-  const downloadEIP = ({ fromDate = fromDateRef.current }) => {
-    let nextFromDate = moment(fromDate);
+  const downloadEIP = () => {
+    let nextFromDate = moment(currentDate);
     const data = {
       integrationType: 'eip',
       skillsArr: filter.skills.map(({id}) => id),
@@ -154,7 +156,7 @@ export default () => {
 
   const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
-    
+    setCurrentDate(fromDate);
     dispatch(getSheet({
       companyId,
       fromDate: nextFromDate.format('YYYY-MM-DD'),
