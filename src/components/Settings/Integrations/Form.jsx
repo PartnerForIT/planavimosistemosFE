@@ -33,10 +33,11 @@ export default ({
       <Tooltip title='User Rivilé .EIP time sheet export' />
     </div>
 
+    <div className={style.formLine} />
+
     { integrationsData.rivile && (
 
       <>
-      <div className={style.formLine} />
 
       <div className={style.separator} />
 
@@ -212,7 +213,7 @@ export default ({
 
           <div className={style.separator} />
           <Label text={`${t('Day type marking in Rivilé')}`} />
-
+          <div className={style.separator} />
           <div className={style.generalBloc2k}>
             <Input
               value={integrationsData.rivile_working_days_code}
@@ -238,5 +239,82 @@ export default ({
       </div>
       </>
     )}
+
+    <div className={style.labelBlock}>
+      <Switch
+        onChange={(value) => { handleSystemChange(value, 'excel') }}
+        offColor='#808F94'
+        onColor='#0085FF'
+        uncheckedIcon={false}
+        checkedIcon={false}
+        name='excel'
+        checked={!!integrationsData.excel}
+        height={21}
+        width={40}
+      />
+      <div className={style.label}>{t('Use time sheet Excel export (total hours per employee)')}</div>
+      <Tooltip title='Use time sheet Excel export (total hours per employee)' />
+    </div>
+    
+    <div className={style.formLine} />
+
+    { integrationsData.excel && (
+
+      <>
+
+      <div className={style.separator} />
+
+      <div className={style.rivile}>
+        <div>
+          
+          <Label text={`${t('Select day type to use for Time Sheet')}`} />
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_rest_weekdays}
+              label={t('Working days')}
+              name='excel_rest_weekdays'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_rest_weekends}
+              label={t('Rest days')}
+              name='excel_rest_weekends'
+            />
+          </div>
+        </div>
+        <div>
+
+          <Label text={`${t('Day type marking for Excel')}`} />
+          <div className={style.separator} />
+          <div className={style.generalBloc2k}>
+            <Input
+              value={integrationsData.excel_rest_weekdays_code}
+              min='1'
+              max='2'
+              width={40}
+              name='excel_rest_weekdays_code'
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className={style.generalBlock2}>
+            <Input
+              value={integrationsData.excel_rest_weekends_code}
+              min='1'
+              max='2'
+              width={40}
+              name='excel_rest_weekends_code'
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+      </div>
+      </>
+      )}
   </div>
 );

@@ -17,6 +17,7 @@ import CustomSelect from '../../components/Core/Select/Select';
 import Progress from '../../components/Core/Progress';
 import FlatButton from '../../components/Core/FlatButton/FlatButton';
 import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
+import ExcelIcon from '../../components/Icons/ExcelIcon';
 import usePermissions from '../../components/Core/usePermissions';
 import { resourcesMock } from '../../const/mock';
 import { getEmployees } from '../../store/employees/actions';
@@ -118,10 +119,10 @@ export default () => {
 
   }, [filter, sheet?.resources]);
 
-  const downloadEIP = () => {
+  const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
     const data = {
-      integrationType: 'eip',
+      integrationType: type,
       skillsArr: filter.skills.map(({id}) => id),
       employeesArr: filter.employers.map(({id}) => id),
       placesArr: filter.place.map(({id}) => id),
@@ -139,19 +140,6 @@ export default () => {
       link.remove();
       //setLoading(false);
     }).catch();
-
-
-    return
-    dispatch(getIntegration({
-      companyId,
-      fromDate: nextFromDate.format('YYYY-MM-DD'),
-      data: {
-        integrationType: 'eip',
-        skillsArr: filter.skills.map(({id}) => id),
-        employeesArr: filter.employers.map(({id}) => id),
-        placesArr: filter.place.map(({id}) => id),
-      }
-    }));
   }
 
   const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
@@ -289,8 +277,14 @@ export default () => {
             width='auto'
           />
           { permissions.integrations_module && integrations.rivile && (
-            <FlatButton onClick={downloadEIP}>
+            <FlatButton onClick={() => downloadIntegrationFile('eip')} className='timeSheet-screen__buttonDownload'>
               <ArrowEIPIcon className='timeSheet-screen__buttonArrow' /> {t('.EIP')}
+            </FlatButton>
+          )}
+
+          { permissions.integrations_module && integrations.excel && (
+            <FlatButton onClick={() => downloadIntegrationFile('excel')} className='timeSheet-screen__buttonDownload'>
+              <ArrowEIPIcon className='timeSheet-screen__buttonArrow' /> <ExcelIcon />
             </FlatButton>
           )}
         </div>

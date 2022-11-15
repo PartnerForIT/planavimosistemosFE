@@ -28,7 +28,8 @@
 
     &__data {
       display: flex;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: visible;
     }
 
     &__empty {

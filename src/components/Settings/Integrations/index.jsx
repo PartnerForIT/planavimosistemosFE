@@ -43,6 +43,11 @@ export default function Integrations() {
   const integrations = useSelector(IntegrationsDataSelector);
 
   const [integrationsData, setIntegrationsData] = useState({
+    excel: false,
+    excel_rest_weekdays: false,
+    excel_rest_weekends: false,
+    excel_rest_weekdays_code: 'P',
+    excel_rest_weekends_code: 'V',
     rivile: false,
     rivile_worked_hours: false,
     rivile_break_hours: false,
@@ -77,6 +82,11 @@ export default function Integrations() {
 
   const submit = useCallback((payload) => {
     const data = {
+      excel: payload.excel ? 1 : 0,
+      excel_rest_weekdays: payload.excel_rest_weekdays ? 1 : 0,
+      excel_rest_weekends: payload.excel_rest_weekends ? 1 : 0,
+      excel_rest_weekdays_code: payload.excel_rest_weekdays_code ? payload.excel_rest_weekdays_code : '',
+      excel_rest_weekends_code: payload.excel_rest_weekends_code ? payload.excel_rest_weekends_code : '',
       rivile: payload.rivile ? 1 : 0,
       rivile_worked_hours: payload.rivile_worked_hours ? 1 : 0,
       rivile_break_hours: payload.rivile_break_hours ? 1 : 0,
