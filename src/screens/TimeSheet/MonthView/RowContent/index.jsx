@@ -117,6 +117,7 @@ const RowContent = ({
                 weekend={item.weekend}
                 tooltip={!item.statistic && field == 'total_hours' ? tooltipInner(item.id) : ''}
                 past={!item.statistic && pastDay >= item.id}
+                holiday={item.holiday}
             />)
             }
           )

@@ -68,10 +68,12 @@ export default ({
   return (
     <div className={cellClasses} ref={refCell}>
       {title != 0 ? title : ''}
-      <HolidayIcon
-        holidays={holiday}
-        month={true}
-      />
+      { header && (
+        <HolidayIcon
+          holidays={holiday}
+          month={true}
+        />
+      )}
     </div>
   );
 };
