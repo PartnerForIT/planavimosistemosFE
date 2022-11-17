@@ -405,11 +405,11 @@ export default ({
 
     body.totalWorkTime = {
       hours: Math.floor(body.totalWorkTime / 60),
-      minutes: body.totalWorkTime % 60,
+      minutes: Math.round(body.totalWorkTime % 60),
     };
     body.totalBreakTime = {
       hours: Math.floor(body.totalBreakTime / 60),
-      minutes: body.totalBreakTime % 60,
+      minutes: Math.round(body.totalBreakTime % 60),
     };
     return body;
   }, [timeParts]);
