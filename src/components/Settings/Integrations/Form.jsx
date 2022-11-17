@@ -33,8 +33,6 @@ export default ({
       <Tooltip title='User Rivilé .EIP time sheet export' />
     </div>
 
-    <div className={style.formLine} />
-
     { integrationsData.rivile && (
 
       <>
@@ -240,6 +238,8 @@ export default ({
       </>
     )}
 
+    <div className={style.formLine} />
+
     <div className={style.labelBlock}>
       <Switch
         onChange={(value) => { handleSystemChange(value, 'excel') }}
@@ -255,8 +255,6 @@ export default ({
       <div className={style.label}>{t('Use time sheet Excel export (total hours per employee)')}</div>
       <Tooltip title='Use time sheet Excel export (total hours per employee)' />
     </div>
-    
-    <div className={style.formLine} />
 
     { integrationsData.excel && (
 
@@ -273,7 +271,7 @@ export default ({
             <Checkbox
               onChange={handleInputChange}
               checked={integrationsData.excel_rest_weekdays}
-              label={t('Working days')}
+              label={t('Rest Days on weekdays')}
               name='excel_rest_weekdays'
             />
           </div>
@@ -282,7 +280,7 @@ export default ({
             <Checkbox
               onChange={handleInputChange}
               checked={integrationsData.excel_rest_weekends}
-              label={t('Rest days')}
+              label={t('Rest Days on weekends')}
               name='excel_rest_weekends'
             />
           </div>

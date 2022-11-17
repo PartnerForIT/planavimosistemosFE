@@ -54,5 +54,5 @@ function* getIntegration(action) {
 
 export default function* SheetWatcher() {
   yield takeLatest(GET_SHEET, getSheet);
-  yield takeLatest(GET_INTEGRATION, getIntegration);
+  //yield takeLatest(GET_INTEGRATION, getIntegration);
 }

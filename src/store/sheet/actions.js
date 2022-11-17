@@ -28,7 +28,7 @@ export const getSheetError = () => ({
   type: GET_SHEET_ERROR,
 });
 export const downloadIntegration = (companyId, fromDate, data) => ({
-  type: EIP,
+  type: GET_INTEGRATION,
   request: {
     method: 'POST',
     url: `/company/${companyId}/sheet/integration?from_date=${fromDate}`,
@@ -41,6 +41,7 @@ export const downloadIntegration = (companyId, fromDate, data) => ({
     thunk: true,
   },
 });
+/*
 export const getIntegration = ({
   companyId,
   fromDate,
@@ -51,6 +52,7 @@ export const getIntegration = ({
   fromDate,
   data,
 });
+*/
 export const getIntegrationSuccess = (data) => ({
   type: GET_INTEGRATION_SUCCESS,
   data,

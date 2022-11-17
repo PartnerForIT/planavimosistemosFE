@@ -131,7 +131,7 @@ export default () => {
 
     dispatch(downloadIntegration(companyId, nextFromDate.format('YYYY-MM-DD'), data)).then(({ data }) => {
       const link = document.createElement('a');
-      console.log(data.file);
+      //console.log(data.file);
       link.setAttribute('download', data.file);
       link.setAttribute('target', '_blank');
       link.href = `${data.path}`;

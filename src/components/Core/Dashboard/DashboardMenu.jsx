@@ -340,7 +340,7 @@ export default function DashboardMenu() {
       nextMenuItems.push({
         to: `/${companyId}/settings/integrations`,
         icon: IntegrationsIcon,
-        title: t('Intregrations'),
+        title: t('Integrations'),
         name: 'integrations',
       });
     }
