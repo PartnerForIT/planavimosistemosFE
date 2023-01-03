@@ -68,6 +68,11 @@ export default function Integrations() {
 
     rivile_use_object: false,
     rivile_use_places_unit: false,
+
+    iiko: false,
+    iiko_link: '',
+    iiko_key: '',
+    iiko_time: '05:00',
   });
 
   useEffect(() => {
@@ -105,6 +110,10 @@ export default function Integrations() {
       rivile_working_days_code: payload.rivile_working_days_code ? payload.rivile_working_days_code : '',
       rivile_rest_days_code: payload.rivile_rest_days_code ? payload.rivile_rest_days_code : '',
       rivile_fraction_number: payload.rivile_fraction_number ? payload.rivile_fraction_number : '',
+      iiko: payload.iiko ? 1 : 0,
+      iiko_link: payload.iiko_link ? payload.iiko_link : '',
+      iiko_key: payload.iiko_key ? payload.iiko_key : '',
+      iiko_time: payload.iiko_time ? payload.iiko_time : '05:00',
     };
     dispatch(editIntegrations(id, data));
   }, [dispatch, id]);

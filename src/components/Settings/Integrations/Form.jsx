@@ -6,6 +6,9 @@ import Label from '../../Core/InputLabel';
 import Checkbox from '../../Core/Checkbox/Checkbox2';
 import Switch from 'react-switch';
 import Input from '../../Core/Input/Input';
+import SimpleSelect from '../../Core/SimpleSelect';
+
+import { timeHoursArr } from '../../Helpers/time';
 
 export default ({
   t,
@@ -314,5 +317,75 @@ export default ({
       </div>
       </>
       )}
+
+    <div className={style.formLine} />
+
+    <div className={style.labelBlock}>
+      <Switch
+        onChange={(value) => { handleSystemChange(value, 'iiko') }}
+        offColor='#808F94'
+        onColor='#0085FF'
+        uncheckedIcon={false}
+        checkedIcon={false}
+        name='iiko'
+        checked={!!integrationsData.iiko}
+        height={21}
+        width={40}
+      />
+      <div className={style.label}>{t('Use "iiko" POS system for clock in instead of Kiosk')}</div>
+      <Tooltip title='Use "iiko" POS system for clock in instead of Kiosk' />
+    </div>
+
+    { integrationsData.iiko && (
+
+      <>
+
+      <div className={style.separator} />
+
+      <div className={style.iiko}>
+         
+        <Label text={`${t('Account custom server link')}`} />
+        <div className={style.generalBloc2k}>
+          <Input
+            value={integrationsData.iiko_link}
+            width={400}
+            name='iiko_link'
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className={style.separator} />
+
+        <Label text={`${t('API key')}`} />
+        <div className={style.generalBloc2k}>
+          <Input
+            value={integrationsData.iiko_key}
+            width={400}
+            name='iiko_key'
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className={style.separator} />
+
+        <div className={style.selectBlock}>
+          <div className={style.labelBlock}>
+            <Label text={`${t('Choose the connection time')}:`} />
+            <Tooltip title='Choose the connection time' />
+          </div>
+          <SimpleSelect
+            handleInputChange={handleInputChange}
+            name='iiko_time'
+            value={integrationsData.iiko_time}
+            options={timeHoursArr}
+            withoutSearch
+          />
+        </div>
+      </div>
+      </>
+    )}
+
+
+    <div className={style.formLine} />
   </div>
 );
