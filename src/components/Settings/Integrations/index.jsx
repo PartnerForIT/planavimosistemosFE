@@ -72,6 +72,7 @@ export default function Integrations() {
     iiko: false,
     iiko_link: '',
     iiko_key: '',
+    iiko_login: '',
     iiko_time: '05:00',
   });
 
@@ -112,6 +113,7 @@ export default function Integrations() {
       rivile_fraction_number: payload.rivile_fraction_number ? payload.rivile_fraction_number : '',
       iiko: payload.iiko ? 1 : 0,
       iiko_link: payload.iiko_link ? payload.iiko_link : '',
+      iiko_login: payload.iiko_login ? payload.iiko_login : '',
       iiko_key: payload.iiko_key ? payload.iiko_key : '',
       iiko_time: payload.iiko_time ? payload.iiko_time : '05:00',
     };

@@ -7,6 +7,7 @@ import Checkbox from '../../Core/Checkbox/Checkbox2';
 import Switch from 'react-switch';
 import Input from '../../Core/Input/Input';
 import SimpleSelect from '../../Core/SimpleSelect';
+import moment from 'moment';
 
 import { timeHoursArr } from '../../Helpers/time';
 
@@ -356,6 +357,18 @@ export default ({
 
         <div className={style.separator} />
 
+        <Label text={`${t('API login')}`} />
+        <div className={style.generalBloc2k}>
+          <Input
+            value={integrationsData.iiko_login}
+            width={400}
+            name='iiko_login'
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className={style.separator} />
+
         <Label text={`${t('API key')}`} />
         <div className={style.generalBloc2k}>
           <Input
@@ -381,6 +394,12 @@ export default ({
             withoutSearch
           />
         </div>
+
+        <div className={style.separator} />
+
+        { integrationsData.iiko_last_check && (
+        <div className={style.lastCheck}>{'Last successful import: '+moment(integrationsData.iiko_last_check).format('Y MM DD / HH:mm ')+' / '+integrationsData.iiko_imported_count+' employees work times were imported'}</div>
+        )}
       </div>
       </>
     )}
