@@ -46,6 +46,7 @@ export default ({
   handleChangeApproveFlow,
   handleChangeAutomaticApprove,
   handleChangeAutomaticBreak,
+  handleChangeAutomaticBreak2,
   permissions,
   readOnly,
 }) => (
@@ -315,6 +316,51 @@ export default ({
           readOnly={readOnly}
         />
       </div>
+      { journalData.automatic_break &&
+        (
+          <>
+            <Label text={t('Use second automatic lunch break')} />
+            <Switch
+              onChange={handleChangeAutomaticBreak2}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              name='approve_flow'
+              checked={journalData.automatic_break2}
+              height={21}
+              disabled={readOnly}
+              width={40}
+            />
+          </>
+        )
+      }
+      { journalData.automatic_break2 &&
+        (
+          <>
+            <div className={style.selectBlock}>
+              <Label text={t('Insert break automatically')} />
+              <Select
+                handleInputChange={handleInputChange}
+                name='workday_exceed2'
+                value={journalData.workday_exceed2}
+                options={breakArr}
+                readOnly={readOnly}
+              />
+            </div>
+            <div className={style.selectBlock}>
+              <Label text={t('Duration time')} />
+              <Select
+                handleInputChange={handleInputChange}
+                name='break_duration2'
+                value={journalData.break_duration2}
+                options={durationArr}
+                readOnly={readOnly}
+              />
+            </div>
+          </>
+        )
+      }
     </div>
   </div>
 );

@@ -78,6 +78,9 @@ export default function Journal() {
     automatic_break: false,
     workday_exceed: '4',
     break_duration: '30',
+    automatic_break2: false,
+    workday_exceed2: '8',
+    break_duration2: '60',
     end_day_comment: false,
     end_day_photo: false,
   });
@@ -98,10 +101,13 @@ export default function Journal() {
         automatic_approval: journal.automatic_approval !== 0,
         approved_at: journal.approved_at ? journal.approved_at : 'day',
         automatic_break: journal.automatic_break !== 0,
+        automatic_break2: journal.automatic_break2 !== 0,
         end_day_comment: journal.end_day_comment !== 0,
         end_day_photo: journal.end_day_photo !== 0,
         workday_exceed: journal.workday_exceed ? journal.workday_exceed : '4',
         break_duration: journal.break_duration ? journal.break_duration : '30',
+        workday_exceed2: journal.workday_exceed2 ? journal.workday_exceed2 : '8',
+        break_duration2: journal.break_duration2 ? journal.break_duration2 : '60',
       });
     }
   }, [journal]);
@@ -121,6 +127,9 @@ export default function Journal() {
       automatic_break: payload.automatic_break ? 1 : 0,
       workday_exceed: payload.workday_exceed,
       break_duration: payload.break_duration,
+      automatic_break2: payload.automatic_break2 ? 1 : 0,
+      workday_exceed2: payload.workday_exceed2,
+      break_duration2: payload.break_duration2,
     };
     dispatch(editLogbookJournal(id, data));
   }, [dispatch, id]);
@@ -149,6 +158,10 @@ export default function Journal() {
     setJournalData({ ...journalData, automatic_break: !journalData.automatic_break });
     submit({ ...journalData, automatic_break: !journalData.automatic_break });
   };
+  const handleChangeAutomaticBreak2 = () => {
+    setJournalData({ ...journalData, automatic_break2: !journalData.automatic_break2 });
+    submit({ ...journalData, automatic_break2: !journalData.automatic_break2 });
+  };
   
   return (
     <MaynLayout>
@@ -170,6 +183,7 @@ export default function Journal() {
                   handleChangeApproveFlow={handleChangeApproveFlow}
                   handleChangeAutomaticApprove={handleChangeAutomaticApprove}
                   handleChangeAutomaticBreak={handleChangeAutomaticBreak}
+                  handleChangeAutomaticBreak2={handleChangeAutomaticBreak2}
                   readOnly={!permissions.logbook_settings}
                   permissions={permissions}
                 />
