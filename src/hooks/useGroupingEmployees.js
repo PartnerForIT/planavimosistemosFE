@@ -67,6 +67,14 @@ export default (empList, employToCheck) => {
       }
       if (item.type && !Array.isArray(item.items)) {
         const { type, label, ...rest } = item;
+
+        //fix when not existed subgroup
+        if (item['subgroup_all']) {
+          return {
+            id: `sg_${key.toString()}`, type, label, items: [...mapObjToNamedGroup(item['subgroup_all'].items)],
+          };
+        }
+
         return {
           id: `sg_${key.toString()}`, type, label, items: [...mapObjToNamedGroup(rest)],
         };
