@@ -135,7 +135,8 @@ const permissionsConfig = [
     permission: 'time_sheet_edit_settings',
   },
   {
-    name: 'time_sheet_module',
+    name: 'time_sheet',
+    module: 'time_sheet',
     permission: 'time_sheet_module_access',
   },
 ];
@@ -233,7 +234,7 @@ export default function ButtonAppBar({ logOut }) {
         to: `/${companyId}/reports`,
       });
     }
-    if (permissions.time_sheet_module) {
+    if (permissions.time_sheet) {
       nextMenuItems.push({
         Icon: TimeSheetIcon,
         title: t('Time Sheet'),
