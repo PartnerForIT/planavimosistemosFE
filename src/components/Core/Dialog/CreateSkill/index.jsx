@@ -6,7 +6,6 @@ import Button from '../../Button/Button';
 import Input from '../../Input/Input';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
-import CurrencySign from "../../../shared/CurrencySign";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {currencySelector, settingCompanySelector, settingsLoadingSelector} from "../../../../store/settings/selectors";

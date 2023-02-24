@@ -9,7 +9,6 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import moment from 'moment';
-import Scrollbar from 'react-scrollbars-custom';
 import { useSelector } from 'react-redux';
 
 import TimeRangePicker from '../TimeRangePicker';

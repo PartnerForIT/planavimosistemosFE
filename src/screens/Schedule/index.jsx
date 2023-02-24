@@ -16,14 +16,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import ReactTooltip from 'react-tooltip';
-import classnames from 'classnames';
 import { getSettingWorkTime } from '../../store/settings/actions';
 
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
 import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
-import Checkbox from '../../components/Core/Checkbox/Checkbox2';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
 import MarkerButton from '../../components/Core/MarkerButton/MarkerButton';
@@ -52,7 +50,6 @@ import { settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
 import EventContent from './EventContent';
-import ChangeWorkingTime from './EventContent/ChangeWorkingTime';
 import MonthView from './MonthView';
 import ResourceAreaHeader from './ResourceAreaHeader';
 import ResourceItem from './ResourceItem';
@@ -65,9 +62,7 @@ import {
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
-import Dropdown from "../../components/Core/Dropdown/Dropdown";
-import {format, isFirstDayOfMonth} from "date-fns";
-import { TheatersRounded } from '@material-ui/icons';
+import {format} from "date-fns";
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
 
@@ -846,10 +841,13 @@ export default () => {
                     });
                   }
                 }
+
+                // hide mark when day have event
+                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 == employeeId && !e.empty_manual)) : false;
                 
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
-                    { marked ?
+                    { (marked && !exist_event) ?
                       <div className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> :  
                       ((child?.children) && renderSlotResourceItem(child?.children, markers, employeeId))
                     }
@@ -1016,7 +1014,7 @@ export default () => {
             onChange={handleChangeTimeline}
             value={timeline}
           />
-          { modules.manual_mode && (
+          { modules.manual_mode && permissions.schedule_edit && (
             <div>
               <MarkerButton
                 onClick={handleChangeMarkerActivation}

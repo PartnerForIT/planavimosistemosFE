@@ -89,7 +89,7 @@ export default ({
       const expl_end = AdditionalRates.night_time_time_end.split(':')
 
       if (expl_start.length >= 2 && expl_end.length >= 2) {
-          let night_start = moment(start).clone().subtract('days', 1).set({"hour": expl_start[0]*1, "minute": expl_start[1]*1});
+          let night_start = moment(start).clone().subtract(1, 'days').set({"hour": expl_start[0]*1, "minute": expl_start[1]*1});
           let night_end = moment(start).clone().set({"hour": expl_end[0]*1, "minute": expl_end[1]*1});
 
           const overlap = overlapInMinutes(moment(start), moment(end), night_start, night_end)/60;

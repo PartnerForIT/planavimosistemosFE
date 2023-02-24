@@ -9,7 +9,7 @@ export default ({
   onExited,
   maxWidth = 'md', ...props
 }) => (
-  <Dialog onClose={handleClose} maxWidth={maxWidth} onExited={onExited} open={open} {...props}>
+  <Dialog onClose={handleClose} maxWidth={maxWidth} open={open} {...props}>
     <div className={styles.dialogBlock}>
       <h4 className={styles.dialogTitle}>{title}</h4>
       <IconButton aria-label='close' className={styles.closeButton} onClick={handleClose}>
