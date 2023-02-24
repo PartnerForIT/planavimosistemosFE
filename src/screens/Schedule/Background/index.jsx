@@ -23,8 +23,8 @@ export default ({
         TIMES_PANEL.map((item, index) => (
           <Item
             key={index+'-'+item.id}
-            currentDay={item !== 'total' && day.clone().add('days', item - 1).isSame(currentDay, 'day')}
-            dayGoneBy={day.clone().add('days', item).isBefore(currentDay)}
+            currentDay={item !== 'total' && day.clone().add(item - 1, 'days').isSame(currentDay, 'day')}
+            dayGoneBy={day.clone().add(item, 'days').isBefore(currentDay)}
           />
         ))
       }

@@ -31,9 +31,12 @@ export default ({
   resources: externalResources,
   events,
   holidays,
+  markers,
   onChangeMonth,
   withCost,
   timesPanel,
+  markerActive,
+  handleMarker,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -64,20 +67,20 @@ export default ({
     });
   };
   const handleClickPrevMonth = () => {
-    const nextMonth = currentMonth.clone().add('months', -1);
+    const nextMonth = currentMonth.clone().add(-1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
   };
   const handleClickNextMonth = () => {
-    const nextMonth = currentMonth.clone().add('months', 1);
+    const nextMonth = currentMonth.clone().add(1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
   };
 
   const daysOfMonth = useMemo(() => {
-    const day = currentMonth.clone().add('days', -1);
+    const day = currentMonth.clone().add(-1, 'days');
     const arr = new Array(currentMonth.daysInMonth()).fill().map((_, index) => {
-      const dayNumber = day.add('days', 1).day();
+      const dayNumber = day.add(1, 'days').day();
       const currentDay = moment();
 
       return {
@@ -85,7 +88,8 @@ export default ({
         title: index + 1,
         weekend: dayNumber === 6 || dayNumber === 0,
         today: currentDay.isSame(day, 'day'),
-        holiday: holidays[index + 1] ? holidays[index + 1] : false
+        holiday: holidays[index + 1] ? holidays[index + 1] : false,
+        markers: markers.filter((marker) => day.isSame(moment(marker.date), 'day'))
       };
     });
     arr.push({
@@ -104,7 +108,7 @@ export default ({
 
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language, currentMonth, withCost, holidays]);
+  }, [i18n.language, currentMonth, withCost, holidays, markers]);
   const backgroundArr = useMemo(() => {
     const getCount = (items) => {
       if (!items?.length) {
@@ -154,6 +158,13 @@ export default ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalResources]);
 
+  const onHandleMarker = (employeeId, day) => {
+    if (employeeId && day) {
+      const date = currentMonth.clone().set('date', day);
+      handleMarker(employeeId, date);
+    }
+  };
+
   return (
     <>
       <div className={classes.monthView}>
@@ -189,6 +200,7 @@ export default ({
             <ResourcesBlock
               resources={resources}
               onExpander={handleExpander}
+              markerActive={markerActive}
               currentMonth={currentMonth}
             />
             <div className={classes.monthView__content__data}>
@@ -212,6 +224,8 @@ export default ({
                     resourceId={item.id}
                     resources={item.children}
                     expander={item.expander}
+                    markerActive={markerActive}
+                    handleMarker={onHandleMarker}
                     daysOfMonth={daysOfMonth}
                     events={events}
                     pastDay={flexBackground.past}

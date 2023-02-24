@@ -14,6 +14,9 @@ import {
   PUT_SHIFT_ERROR,
   RESET_SHIFT,
   DELETE_SHIFT,
+  PATCH_MARKER,
+  PATCH_MARKER_SUCCESS,
+  PATCH_MARKER_ERROR,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
@@ -27,6 +30,7 @@ const initialState = {
   events: null,
   loading: false,
   shift: null,
+  markers: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -39,6 +43,7 @@ export const reducer = (state = initialState, action) => {
         schedule: action.data,
         resources: action.data.resources,
         events: action.data.events,
+        markers: action.data.markers,
         loading: false,
       };
     case GET_SCHEDULE_ERROR:
@@ -56,6 +61,7 @@ export const reducer = (state = initialState, action) => {
 
     case GET_SHIFT:
     case DELETE_SHIFT:
+    case PATCH_MARKER:
     case PATCH_CHANGE_EMPLOYEE:
     case PATCH_CHANGE_TIMELINE:
     case PATCH_ADD_TIMELINE:
@@ -69,6 +75,10 @@ export const reducer = (state = initialState, action) => {
         ...state,
         loading: true,
       };
+    case PATCH_MARKER_SUCCESS:
+      return { ...state, markers: action.data, loading: false };
+    case PATCH_MARKER_ERROR:
+      return { ...state, loading: false };
     case GET_SHIFT_SUCCESS:
       return { ...state, shift: action.data, loading: false };
     case GET_SHIFT_ERROR:

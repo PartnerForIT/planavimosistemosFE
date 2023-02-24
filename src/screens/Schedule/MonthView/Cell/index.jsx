@@ -10,10 +10,13 @@ export default ({
   statistic,
   weekend,
   past,
+  marker,
   today,
   header,
   holiday,
   night_duration,
+  markerActive,
+  handleMarker,
 }) => {
   
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -22,6 +25,8 @@ export default ({
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
+    [classes.cell_marker]: marker,
+    [classes.cell_marker_active]: markerActive && !header,
     [classes.cell_today]: today,
     //[classes.cell_holiday]: h.date ? true : false,
     [classes.cell_holiday_company]: h.company_work_time_id ? true : false,
@@ -63,7 +68,7 @@ export default ({
   }
 
   return (
-    <div className={cellClasses} ref={refCell}>
+    <div className={cellClasses} ref={refCell} onClick={handleMarker}>
       {title != 0 ? title : ''}
       <HolidayIcon
         holidays={holiday}

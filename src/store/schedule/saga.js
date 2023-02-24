@@ -11,6 +11,7 @@ import {
   POST_SHIFT,
   GET_SHIFT,
   PUT_SHIFT,
+  PATCH_MARKER,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
@@ -21,6 +22,8 @@ import {
 import {
   getScheduleSuccess,
   getScheduleError,
+  patchMarkerSuccess,
+  patchMarkerError,
   postShiftSuccess,
   postShiftError,
   getShiftSuccess,
@@ -92,6 +95,25 @@ function* putShift(action) {
     yield put(putShiftSuccess(data));
   } catch (error) {
     yield put(putShiftError());
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchMarker(action) {
+  try {
+    const { data } = yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/marker`,
+      action.data,
+      getToken(),
+    );
+    
+    yield put(patchMarkerSuccess(data));
+
+  } catch (error) {
+    yield put(patchMarkerError());
     yield put(addSnackbar(error, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -214,6 +236,7 @@ export default function* ScheduleWatcher() {
   yield takeLatest(GET_SHIFT, getShift);
   yield takeLatest(POST_SHIFT, postShift);
   yield takeLatest(PUT_SHIFT, putShift);
+  yield takeLatest(PATCH_MARKER, patchMarker);
   yield takeLatest(PATCH_CHANGE_EMPLOYEE, patchChangeEmployee);
   yield takeLatest(PATCH_CHANGE_TIMELINE, patchChangeTimeline);
   yield takeLatest(PATCH_ADD_TIMELINE, patchAddTimeline);

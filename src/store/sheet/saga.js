@@ -8,7 +8,6 @@ import config from 'config';
 import axios from 'axios';
 import {
   GET_SHEET,
-  GET_INTEGRATION,
 } from './types';
 import {
   getSheetSuccess,

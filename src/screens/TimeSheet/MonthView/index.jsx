@@ -30,6 +30,7 @@ export default ({
   sheet,
   fields,
   holidays,
+  markers,
   onChangeMonth,
   withCost,
 }) => {
@@ -41,20 +42,20 @@ export default ({
   const headerRef = useRef(null);
   
   const handleClickPrevMonth = () => {
-    const nextMonth = currentMonth.clone().add('months', -1);
+    const nextMonth = currentMonth.clone().add(-1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
   };
   const handleClickNextMonth = () => {
-    const nextMonth = currentMonth.clone().add('months', 1);
+    const nextMonth = currentMonth.clone().add(1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
   };
 
   const daysOfMonth = useMemo(() => {
-    const day = currentMonth.clone().add('days', -1);
+    const day = currentMonth.clone().add(-1, 'days');
     const arr = new Array(currentMonth.daysInMonth()).fill().map((_, index) => {
-      const dayNumber = day.add('days', 1).day();
+      const dayNumber = day.add(1, 'days').day();
       const currentDay = moment();
 
       return {

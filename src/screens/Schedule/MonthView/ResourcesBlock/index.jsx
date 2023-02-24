@@ -6,6 +6,7 @@ import classes from './ResourcesBlock.module.scss';
 export default ({
   resources,
   onExpander,
+  markerActive,
 }) => {
   return (
     <div className={classes.resourcesBlock}>
@@ -17,6 +18,7 @@ export default ({
             items={item.children}
             expander={item.expander}
             onExpander={onExpander}
+            markerActive={markerActive}
             withExpander={!!item.children?.length}
             withNumberInput
             countChildren={item.children?.length}

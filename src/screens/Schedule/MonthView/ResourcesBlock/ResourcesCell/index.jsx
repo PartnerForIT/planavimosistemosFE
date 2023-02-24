@@ -23,6 +23,7 @@ const ResourceCell = ({
   withExpander,
   expander,
   onExpander,
+  markerActive,
   title,
   avatar,
   nestingLevel = 0,
@@ -58,8 +59,8 @@ const ResourceCell = ({
     <>
       <div className={rowClasses}>
         <div className={classes.resourcesCell__padding}>
-          {new Array(nestingLevel).fill().map(() => (
-            <div className={classes.resourcesCell__padding__item} />
+          {new Array(nestingLevel).fill().map((item, i) => (
+            <div key={i} className={classes.resourcesCell__padding__item} />
           ))}
         </div>
         <Section
@@ -67,7 +68,7 @@ const ResourceCell = ({
           avatar={avatar}
           onExpander={handleExpander}
           expander={expander}
-          withExpander={withExpander}
+          withExpander={withExpander && !markerActive}
           nestingLevel={nestingLevel}
           // withNumberInput={withNumberInput}
           // count={countChildren}
@@ -76,7 +77,7 @@ const ResourceCell = ({
         />
       </div>
       {
-        expander && items?.map((item, index) => (
+        (expander || markerActive) && items?.map((item, index) => (
           <ResourceCell
             key={index+'_'+nestingLevel}
             rowId={item.id}
@@ -87,6 +88,7 @@ const ResourceCell = ({
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={item.expander}
+            markerActive={markerActive}
             relatives={items}
             lastChild1={nestingLevel === 0 ? (index + 1 === items.length) : lastChild1}
             lastChild2={nestingLevel === 1 ? (index + 1 === items.length) : lastChild2}

@@ -7,7 +7,6 @@ import {
   GET_INTEGRATION_SUCCESS,
   GET_INTEGRATION_ERROR,
 
-  EIP,
 } from './types';
 
 export const getSheet = ({

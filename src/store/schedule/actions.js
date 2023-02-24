@@ -12,6 +12,9 @@ import {
   PUT_SHIFT_SUCCESS,
   PUT_SHIFT_ERROR,
   RESET_SHIFT,
+  PATCH_MARKER,
+  PATCH_MARKER_SUCCESS,
+  PATCH_MARKER_ERROR,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
@@ -92,6 +95,21 @@ export const putShiftSuccess = (data) => ({
 });
 export const putShiftError = () => ({
   type: PUT_SHIFT_ERROR,
+});
+export const patchMarker= ({
+  companyId,
+  data,
+}) => ({
+  type: PATCH_MARKER,
+  companyId,
+  data,
+});
+export const patchMarkerSuccess = (data) => ({
+  type: PATCH_MARKER_SUCCESS,
+  data,
+});
+export const patchMarkerError = () => ({
+  type: PATCH_MARKER_ERROR,
 });
 
 export const patchChangeEmployee = ({

@@ -26,6 +26,7 @@ import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Checkbox from '../../components/Core/Checkbox/Checkbox2';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
+import MarkerButton from '../../components/Core/MarkerButton/MarkerButton';
 import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
@@ -39,14 +40,14 @@ import {
   patchChangeTimeline,
   patchAddTimeline,
   patchChangeEmployee,
-  deleteShift, putShift, addTempemployee, 
+  deleteShift, putShift, addTempemployee, patchMarker,
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
   getSchedule as getscheduleSetting,
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
-import { scheduleSelector, isLoadingSelector } from '../../store/schedule/selectors';
+import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
@@ -65,7 +66,7 @@ import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
 import Dropdown from "../../components/Core/Dropdown/Dropdown";
-import {format} from "date-fns";
+import {format, isFirstDayOfMonth} from "date-fns";
 import { TheatersRounded } from '@material-ui/icons';
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
@@ -91,6 +92,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
+  const [markerActive, setMarkerActive] = useState(false);
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -101,6 +103,7 @@ export default () => {
   const jobTypes = useSelector(jobTypesSelector);
   const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
+  const markers = useSelector(markersSelector);
   const isLoading = useSelector(isLoadingSelector);
   const modules = useSelector(companyModules);
   const [filterData, setFilterData] = useState({});
@@ -326,6 +329,17 @@ export default () => {
     }));
   };
 
+  const handleMarker = (employeeId, date) => {
+    dispatch(patchMarker({
+      companyId,
+
+      data: {
+        employeeId,
+        date: date.format('YYYY-MM-DD'),
+      },
+    }));
+  };
+
   const onPlaceSelectFilter = (place) => {
     const arrChecked = place?.filter((i) => i.checked);
     setFilter((prevState) => ({
@@ -353,6 +367,9 @@ export default () => {
   useEffect(() => {
     filteringResource(filter);
   }, [filter]);
+  useEffect(() => {
+    
+  }, [markers]);
   const handleChangeTimeline = (value) => {
     setTimeline(value);
     
@@ -366,6 +383,9 @@ export default () => {
 
     handleGetSchedule(send);
   };
+  const handleChangeMarkerActivation = () => {
+    setMarkerActive(!markerActive);
+  }
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
   };
@@ -509,6 +529,7 @@ export default () => {
     */
   }
   const renderEventContent = ({ event, timeText, view }) => {
+
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
@@ -603,11 +624,12 @@ export default () => {
         isCompleted={isCompleted}
         activeDrag={activeDrag == resourceInfo.id}
         unavailableEmployees={unEmployees}
+        markers={markers}
       />
     );
   };
   const handleEventClassNames = (info) => {
-    let classes = []
+    let classes = [];
     if (info.event.extendedProps.empty_manual) {
       classes.push('is-empty-manual')
     }
@@ -753,6 +775,125 @@ export default () => {
     return result;
   };
 
+  const handeResourceLaneClassNames = (info) => {
+    let result = markerActive ? 'marker_activated' : '';
+    return result;
+  }
+
+  const handleSetupMarkersWidth = ({resource, el}) => {
+    //need to find better way for setup markers width
+    setupMarkersWidthitem(resources, markers);
+  }
+
+  const setupMarkersWidthitem = (item, markers) => {
+    item.map((child, index) => {
+      if (child?.children && child?.children.length) {
+        return setupMarkersWidthitem(child?.children, markers);
+      }
+
+      return markers.map((marked, i) => {
+        let left = false;
+        let width = false;
+        if (marked.date) {
+          const marks = document.querySelectorAll('.marked[data-mark^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
+          const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
+
+          if (date_header && marks) {
+            date_header.forEach((e, i) => {
+              left = left === false ? e.offsetLeft : left;
+              width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
+            });
+
+            if (left !== false && width !== false) {
+              marks.forEach((mark, i) => {
+                mark.style.left = left+1+'px';
+                mark.style.width = width+'px';
+              });
+            }
+          }
+          
+        }
+      });
+    })
+  };
+
+  const renderResourceLaneContent = ({resource}) => {
+    let current_markers = [];
+    if (markers) {
+      current_markers = markers.filter(m => m.employee_id*1 == resource.extendedProps.employeeId*1 );
+    }
+
+    return (
+      (resources) && renderSlotResourceItem(resources, current_markers, resource.extendedProps.employeeId)
+    );
+  };
+
+  const renderSlotResourceItem = (item, markers, employeeId) => {
+    return (
+      <>
+        { item.map((child, index) => {
+            let contains = [];
+            if (!markerActive) {
+              contains = markers.map((marked, i) => {
+                let left = false;
+                let width = false;
+                if (marked.date) {
+                  const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
+                  if (date_header) {
+                    date_header.forEach((e, i) => {
+                      left = left === false ? e.offsetLeft : left;
+                      width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
+                    });
+                  }
+                }
+                
+                return ( 
+                  <React.Fragment key={child.id+'__'+index+'_'+i}>
+                    { marked ?
+                      <div className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> :  
+                      ((child?.children) && renderSlotResourceItem(child?.children, markers, employeeId))
+                    }
+                  </React.Fragment>
+                )
+              });
+            }
+
+            if (markerActive && employeeId) {
+              const calendarApi = calendarRef.current?.getApi();
+              
+              if (calendarApi?.view?.currentEnd && calendarApi?.view?.currentStart) {
+
+                let currDate = moment(calendarApi?.view?.currentStart).subtract(1, 'days').startOf('day');
+                let lastDate = moment(calendarApi?.view?.currentEnd).startOf('day');
+                
+                while(currDate.isSameOrBefore(lastDate)) {
+                  currDate.add(1, 'days');
+
+                  let left = false;
+                  let width = false;
+                  const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+currDate.format('yyyy-MM-DD')+'"]');
+                  if (date_header) {
+                    date_header.forEach((e, i) => {
+                      left = left === false ? e.offsetLeft : left;
+                      width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
+                    });
+                  }
+
+                  const same = markers.find(m => moment(m.date).isSame(currDate, 'date'));
+                  const markDate = currDate.clone();
+
+                  contains.push(<div className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
+                }
+              }
+            }
+
+            return contains
+          })
+        }
+      </>
+    );
+  };
+
   useEffect(() => {
     dispatch(getEmployees(companyId));
     dispatch(getJobTypes(companyId));
@@ -875,6 +1016,14 @@ export default () => {
             onChange={handleChangeTimeline}
             value={timeline}
           />
+          { modules.manual_mode && (
+            <div>
+              <MarkerButton
+                onClick={handleChangeMarkerActivation}
+                on={markerActive}
+              />
+            </div>
+          )}
           {/*<Checkbox*/}
           {/*  onChange={handleChangeOnlyWorkingDays}*/}
           {/*  checked={isOnlyWorkingDays}*/}
@@ -898,6 +1047,9 @@ export default () => {
                     resources={Object.values(resources) || resourcesMock}
                     events={schedule.events}
                     holidays={schedule?.holidays}
+                    markers={markers}
+                    markerActive={markerActive}
+                    handleMarker={handleMarker}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
                     withCost={permissions.cost && permissions.schedule_costs}
@@ -949,6 +1101,9 @@ export default () => {
                       eventResizeStart={handleEventChangeStart}
                       eventResizeStop={handleEventChangeStop}
                       slotLaneClassNames={handeSlotLaneClassNames}
+                      resourceLaneDidMount={handleSetupMarkersWidth}
+                      resourceLaneContent={renderResourceLaneContent}
+                      resourceLaneClassNames={handeResourceLaneClassNames}
                       // nowIndicator
                     />
                     {

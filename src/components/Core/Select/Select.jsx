@@ -7,9 +7,7 @@ import Scrollbar from 'react-scrollbars-custom';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
-import Button from '../Button/Button';
 import styles from './Select.module.scss';
-import { IndeterminateCheckBox } from '@material-ui/icons';
 
 const initialItems = [];
 export default function CustomSelect({

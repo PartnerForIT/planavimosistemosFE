@@ -6,11 +6,14 @@ import classes from './RowContent.module.scss';
 
 const RowContent = ({
   resourceId,
+  employeeId,
   resources,
   events,
   daysOfMonth,
   expander,
+  markerActive,
   pastDay,
+  handleMarker,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -42,7 +45,15 @@ const RowContent = ({
 
     return ''
   }
-  
+
+  const checkMarked = (item) => {
+    if (!item.statistic && employeeId){
+      return item.markers.find(m => m.employee_id*1 == employeeId*1);
+    }
+
+    return false;
+  }
+
   return (
     <>
       <div className={classes.rowContent}>
@@ -60,6 +71,9 @@ const RowContent = ({
                 statistic={item.statistic}
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
+                marker={checkMarked(item)}
+                markerActive={markerActive && employeeId}
+                handleMarker={() => { handleMarker(employeeId, item.id) } }
                 night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
             />)
           }
@@ -67,13 +81,16 @@ const RowContent = ({
         }
       </div>
       {
-        expander && resources?.map((item) => (
+        (expander || markerActive) && resources?.map((item) => (
           <RowContent
             key={item.id}
             events={events}
+            employeeId={item.employeeId}
+            handleMarker={handleMarker}
             resourceId={item.id}
             resources={item.children}
             expander={item.expander}
+            markerActive={markerActive}
             daysOfMonth={daysOfMonth}
             pastDay={pastDay}
           />
