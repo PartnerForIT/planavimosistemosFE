@@ -72,7 +72,7 @@ const RowContent = ({
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
                 marker={checkMarked(item)}
-                markerActive={markerActive && employeeId}
+                markerActive={markerActive && employeeId && !item.statistic}
                 handleMarker={() => { handleMarker(employeeId, item.id) } }
                 night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
             />)

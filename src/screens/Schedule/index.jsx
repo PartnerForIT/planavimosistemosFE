@@ -844,12 +844,12 @@ export default () => {
 
                 // hide mark when day have event
                 const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 == employeeId && !e.empty_manual)) : false;
-                
+                console.log(marked,child, !exist_event);
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
-                    { (marked && !exist_event) ?
-                      <div className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> :  
-                      ((child?.children) && renderSlotResourceItem(child?.children, markers, employeeId))
+                    { (marked) ?
+                      (!exist_event ? <div className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
+                      ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
                     }
                   </React.Fragment>
                 )
@@ -1014,14 +1014,14 @@ export default () => {
             onChange={handleChangeTimeline}
             value={timeline}
           />
-          { modules.manual_mode && permissions.schedule_edit && (
+          { modules.manual_mode && permissions.schedule_edit ? (
             <div>
               <MarkerButton
                 onClick={handleChangeMarkerActivation}
                 on={markerActive}
               />
             </div>
-          )}
+          ) : null}
           {/*<Checkbox*/}
           {/*  onChange={handleChangeOnlyWorkingDays}*/}
           {/*  checked={isOnlyWorkingDays}*/}
