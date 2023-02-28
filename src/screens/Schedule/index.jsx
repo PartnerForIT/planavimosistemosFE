@@ -844,7 +844,7 @@ export default () => {
 
                 // hide mark when day have event
                 const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 == employeeId && !e.empty_manual)) : false;
-                console.log(marked,child, !exist_event);
+                
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
                     { (marked) ?

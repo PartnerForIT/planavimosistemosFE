@@ -21,7 +21,7 @@ const MarkerButton = ({
     <button
       className={classes}
       onClick={onClick}
-      data-tip={"Marking/Highlighting tool can be used in any view. <br> People who don't have permission to add markings, <br> will see them anyways. To place it just enter into <br> edit state and press on the cell in the employee row. <br> To remove it, hover again over the cell and you will <br> see the removable red mark. Click to remove. <br> Remove from edit state by clicking tool icon."}
+      data-tip={"Marking/Highlighting tool can be used in any view. <br> People who don't have permission to add markings, <br> will see them anyways. To place it just enter into <br> edit state and press on the cell in the employee row. <br> To remove it, hover again over the cell and you will <br> see the removable red mark. Click to remove. <br> To exit from edit state just click tool icon again."}
       data-for='marker'
       data-html={true}
     >
