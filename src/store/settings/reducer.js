@@ -18,6 +18,10 @@ import {
   CREATE_SKILL_SUCCESS,
   GET_PLACE,
   GET_PLACE_SUCCESS,
+  GET_COMPANY_SHIFT,
+  GET_COMPANY_SHIFT_SUCCESS,
+  GET_COMPANY_JOB_TYPE,
+  GET_COMPANY_JOB_TYPE_SUCCESS,
   GET_SETTINGS_EMPLOYEES,
   GET_SETTINGS_EMPLOYEES_SUCCESS,
   GET_ACTIVITY_LOG,
@@ -136,6 +140,7 @@ const initialState = {
   activity_log: [],
   deleteData: [],
   places: [],
+  shifts: [],
   loading: false,
   employeeLoading: false,
   error: null,
@@ -301,6 +306,34 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         places: action.data,
+      };
+    }
+    case GET_COMPANY_SHIFT: {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    }
+    case GET_COMPANY_SHIFT_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        shifts: action.data.shifts,
+      };
+    }
+    case GET_COMPANY_JOB_TYPE: {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    }
+    case GET_COMPANY_JOB_TYPE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        job_types: action.data,
       };
     }
     case GET_SETTINGS_EMPLOYEES:

@@ -155,6 +155,10 @@
     &_three {
       grid-template-columns: 1fr 1fr 1fr;
     }
+
+    &_margin {
+      margin-bottom: 25px;
+    }
   }
 
   .left {

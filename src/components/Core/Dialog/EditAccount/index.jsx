@@ -62,6 +62,10 @@ const permissionsConfig = [
     name: 'profit',
     module: 'profitability',
   },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+  },
 ];
 export default function EditAccount({
   title,
@@ -72,6 +76,8 @@ export default function EditAccount({
   skills = [],
   groups = [],
   places = [],
+  shifts = [],
+  job_types = [],
   onSubmit = Function.prototype,
   handleClose: externalHandleClose,
 }) {
@@ -124,7 +130,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, cost, charge, skills, place,
+        name, surname, phone, speciality_id, external_id, cost, charge, skills, place, shift_id, job_type_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups,
       } = employee;
@@ -135,6 +141,8 @@ export default function EditAccount({
         phone,
         speciality_id,
         external_id,
+        shift_id,
+        job_type_id,
         cost,
         charge,
         avatar,
@@ -162,6 +170,16 @@ export default function EditAccount({
     const sub = selectedGroup.subgroups?.map(({ id, name }) => ({ id, name })).slice() ?? [];
     return sub;
   }, [groups, user.group]);
+
+  const shiftsOptions = useMemo(() => {
+    const shft = shifts?.filter(e => !user.place || user.place == e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
+    return shft;
+  }, [shifts, user, t]);
+
+  const jobTypesOptions = useMemo(() => {
+    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id == user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    return jt;
+  }, [job_types, user, shifts, t]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -201,6 +219,43 @@ export default function EditAccount({
           }
 
           return prevState;
+        }
+        case 'place': {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
+          if (prevState.shift_id) {
+            const foundShift = shifts.find(({ id }) => id === prevState.shift_id);
+            if (foundShift && foundShift.place_id != value) {
+              delete nextValues.shift_id;
+            }
+          }
+
+          if (prevState.job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.shift_id)) {
+              delete nextValues.job_type_id;
+            }
+          }
+
+          return nextValues;
+        }
+        case 'shift_id': {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
+          if (prevState.job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+              delete nextValues.job_type_id;
+            }
+          }
+
+          return nextValues;
         }
 
         default: {
@@ -304,6 +359,7 @@ export default function EditAccount({
 
   const formClasses = classnames(style.form, {
     [style.form_three]: (permissions.groups || permissions.places),
+    [style.form_margin]: true,
   });
 
   const handleExited = () => {
@@ -496,6 +552,40 @@ export default function EditAccount({
                                 placeholder={t('Select a place')}
                                 name='place'
                                 handleInput={handleInput}
+                              />
+                            </div>
+                          )
+                        }
+
+                        {
+                          permissions.schedule_shift && (
+                            <div className={classes.formItem}>
+                              <Label htmlFor='shift_id' text={t('Assign to shift')} />
+                              <AddEditSelectOptions
+                                id='shift_id'
+                                options={shiftsOptions}
+                                user={user}
+                                placeholder={t('Select a shift')}
+                                name='shift_id'
+                                handleInput={handleInput}
+                                disabled={!shiftsOptions.length}
+                              />
+                            </div>
+                          )
+                        }
+
+                        {
+                          permissions.schedule_shift && (
+                            <div className={classes.formItem}>
+                              <Label htmlFor='job_type_id' text={t('Assign to Job Type')} />
+                              <AddEditSelectOptions
+                                id='job_type_id'
+                                options={jobTypesOptions}
+                                user={user}
+                                placeholder={t('Select a job type')}
+                                name='job_type_id'
+                                handleInput={handleInput}
+                                disabled={!jobTypesOptions.length || !user.shift_id}
                               />
                             </div>
                           )

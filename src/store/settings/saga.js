@@ -19,6 +19,8 @@ import {
   CREATE_JOB,
   CREATE_PLACE,
   GET_PLACE,
+  GET_COMPANY_SHIFT,
+  GET_COMPANY_JOB_TYPE,
   GET_ACTIVITY_LOG,
   GET_SETTINGS_EMPLOYEES,
   FILTER_ACTIVITY_LOG,
@@ -82,6 +84,8 @@ import {
   loadSkillsSuccess,
   createSkillSuccess,
   loadPlaceSuccess,
+  loadShiftSuccess,
+  loadJobTypeSuccess,
   loadActivityLogSuccess,
   loadEmployeesSuccess,
   loadDeleteDataSuccess,
@@ -521,6 +525,24 @@ function* loadCompanyPLace(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/places`, token());
     yield put(loadPlaceSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadCompanyShift(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/shifts`, token());
+    yield put(loadShiftSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadCompanyJobType(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/job-types`, token());
+    yield put(loadJobTypeSuccess(data));
   } catch (e) {
     console.log(e);
   }
@@ -1582,6 +1604,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
   yield takeLeading(GET_PLACE, loadCompanyPLace);
+  yield takeLeading(GET_COMPANY_SHIFT, loadCompanyShift);
+  yield takeLeading(GET_COMPANY_JOB_TYPE, loadCompanyJobType);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
   yield takeLeading(GET_SETTINGS_EMPLOYEES, loadEmployee);
   yield takeLeading(GET_SETTINGS_EMPLOYEES_ALL, loadEmployee);

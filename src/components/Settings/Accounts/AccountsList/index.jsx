@@ -25,7 +25,7 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
-  AccountGroupsSelector, placesSelector, securityCompanySelector, importedEmployees, importLoadingSelector,
+  AccountGroupsSelector, placesSelector, shiftsSelector, jobTypesSelector, securityCompanySelector, importedEmployees, importLoadingSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
 import DataTable from '../../../Core/DataTableCustom/OLT';
@@ -35,6 +35,8 @@ import {
   loadEmployeesAll,
   loadEmployeesEdit,
   loadPlace,
+  loadShift,
+  loadJobType,
   loadSkills,
   patchEmployee,
   sendImportedEmployeesSuccess,
@@ -153,6 +155,10 @@ const permissionsConfig = [
     name: 'profit',
     module: 'profitability',
   },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+  },
 ];
 export default function AccountsList() {
   const { id } = useParams();
@@ -171,6 +177,8 @@ export default function AccountsList() {
   const skills = useSelector(categoriesSkillsSelector);
   const groups = useSelector(AccountGroupsSelector);
   const places = useSelector(placesSelector);
+  const shifts = useSelector(shiftsSelector);
+  const job_types = useSelector(jobTypesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
@@ -263,6 +271,8 @@ export default function AccountsList() {
       // dispatch(loadSkills(id));
       dispatch(getAccountGroups(id));
       dispatch(loadPlace(id));
+      dispatch(loadShift(id));
+      dispatch(loadJobType(id));
       dispatch(getSecurityCompany(id));
     }
   }, [dispatch, editVisible, id, newVisible]);
@@ -272,6 +282,9 @@ export default function AccountsList() {
 
     allColumnsArray = allColumnsArray.filter((column) => {
       if (!permissions.places && column.field === 'place') {
+        return false;
+      }
+      if (!permissions.schedule_shift && (column.field === 'shift_id' || column.field === 'job_type_id')) {
         return false;
       }
       if (!permissions.create_groups && (column.field === 'groups' || column.field === 'subgroup')) {
@@ -477,6 +490,8 @@ export default function AccountsList() {
             skills={skills}
             groups={groups}
             places={places}
+            shifts={shifts}
+            job_types={job_types}
             security={security}
             createAccount={createAccount}
             firstUser={!employees.length}
@@ -496,6 +511,8 @@ export default function AccountsList() {
             skills={skills}
             groups={groups}
             places={places}
+            shifts={shifts}
+            job_types={job_types}
             onSubmit={updateEmployee}
           />
           <DeleteEmployee
@@ -525,6 +542,8 @@ export default function AccountsList() {
                 dispatch(loadSkills(id));
                 dispatch(getAccountGroups(id));
                 dispatch(loadPlace(id));
+                dispatch(loadShift(id));
+                dispatch(loadJobType(id));
               }
             }}
             imported={imported}

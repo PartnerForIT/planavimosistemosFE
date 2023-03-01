@@ -35,6 +35,14 @@ const permissionsConfig = [
     name: 'profit',
     module: 'profitability',
   },
+  {
+    name: 'profit',
+    module: 'profitability',
+  },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+  },
 ];
 const SecondStep = ({
   user,
@@ -44,6 +52,8 @@ const SecondStep = ({
   skills,
   groups,
   places,
+  shifts,
+  job_types,
   previousStep,
 }) => {
   const dispatch = useDispatch();
@@ -100,6 +110,16 @@ const SecondStep = ({
     })) ?? [];
     return sks;
   }, [skills, t]);
+
+  const shiftsOptions = useMemo(() => {
+    const shft = shifts?.filter(e => !user.place || user.place == e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
+    return shft;
+  }, [shifts, user, t]);
+
+  const jobTypesOptions = useMemo(() => {
+    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id == user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    return jt;
+  }, [job_types, user, shifts, t]);
 
   const nextWithValidate = () => {
     const setError = ({
@@ -268,6 +288,39 @@ const SecondStep = ({
                       placeholder={t('Select a place')}
                       name='place'
                       handleInput={handleInput}
+                    />
+                  </div>
+                )
+              }
+
+              {
+                permissions.schedule_shift && (
+                  <div className={style.formItem}>
+                    <Label htmlFor='shift_id' text={t('Assign to Shift')} />
+                    <AddEditSelectOptions
+                      id='shift_id'
+                      options={shiftsOptions}
+                      user={user}
+                      placeholder={t('Select a shift')}
+                      name='shift_id'
+                      handleInput={handleInput}
+                    />
+                  </div>
+                )
+              }
+
+              {
+                permissions.schedule_shift && (
+                  <div className={style.formItem}>
+                    <Label htmlFor='job_type_id' text={t('Assign to Job Type')} />
+                    <AddEditSelectOptions
+                      id='job_type_id'
+                      options={jobTypesOptions}
+                      user={user}
+                      placeholder={t('Select a job type')}
+                      name='job_type_id'
+                      handleInput={handleInput}
+                      disabled={!jobTypesOptions.length || !user.shift_id}
                     />
                   </div>
                 )

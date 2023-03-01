@@ -15,6 +15,8 @@ export default function CreateAccount({
   skills,
   groups,
   places,
+  shifts,
+  job_types,
   security,
   createAccount,
   firstUser,
@@ -31,6 +33,8 @@ export default function CreateAccount({
     cost: null,
     charge: null,
     place: null,
+    shift_id: null,
+    job_type_id: null,
     password: '',
   };
   const [step, setStep] = useState(1);
@@ -65,6 +69,45 @@ export default function CreateAccount({
 
     setUser((prevState) => {
       if (name !== 'group') {
+        if (name == 'place') {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
+          if (prevState.shift_id) {
+            const foundShift = shifts.find(({ id }) => id === prevState.shift_id);
+            if (foundShift && foundShift.place_id != value) {
+              delete nextValues.shift_id;
+            }
+          }
+
+          if (prevState.job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.shift_id)) {
+              delete nextValues.job_type_id;
+            }
+          }
+
+          return nextValues;
+        }
+        
+        if (name == 'shift_id') {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
+          if (prevState.job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+              delete nextValues.job_type_id;
+            }
+          }
+
+          return nextValues;
+        }
+
         return {
           ...prevState,
           [name]: value,
@@ -105,6 +148,8 @@ export default function CreateAccount({
           skills={skills}
           groups={groups}
           places={places}
+          shifts={shifts}
+          job_types={job_types}
           setUser={setUser}
           security={security}
           create={create}

@@ -26,6 +26,10 @@ import {
   CREATE_PLACE,
   GET_PLACE,
   GET_PLACE_SUCCESS,
+  GET_COMPANY_SHIFT,
+  GET_COMPANY_SHIFT_SUCCESS,
+  GET_COMPANY_JOB_TYPE,
+  GET_COMPANY_JOB_TYPE_SUCCESS,
   GET_ACTIVITY_LOG,
   GET_ACTIVITY_LOG_SUCCESS,
   GET_SETTINGS_EMPLOYEES,
@@ -313,6 +317,24 @@ export const loadPlace = (id) => ({
 });
 export const loadPlaceSuccess = (data) => ({
   type: GET_PLACE_SUCCESS,
+  data,
+});
+
+export const loadShift = (id) => ({
+  type: GET_COMPANY_SHIFT,
+  id,
+});
+export const loadShiftSuccess = (data) => ({
+  type: GET_COMPANY_SHIFT_SUCCESS,
+  data,
+});
+
+export const loadJobType = (id) => ({
+  type: GET_COMPANY_JOB_TYPE,
+  id,
+});
+export const loadJobTypeSuccess = (data) => ({
+  type: GET_COMPANY_JOB_TYPE_SUCCESS,
   data,
 });
 
