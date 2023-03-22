@@ -59,6 +59,8 @@ const TimePart = ({
   label,
   remove,
   orange,
+  prev,
+  next,
   started,
   finished,
   onChange,
@@ -82,6 +84,11 @@ const TimePart = ({
       //   } else {
       //     handleChange({ [e.target.name]: e.target.value });
       //   }
+
+        if (moment(started).isSameOrAfter(moment(e.target.value))) {
+          e.target.value = started
+        }
+
         handleChange({ [e.target.name]: e.target.value });
         break;
       }
@@ -91,6 +98,10 @@ const TimePart = ({
         // } else {
         //   handleChange({ [e.target.name]: e.target.value });
         // }
+        if (moment(e.target.value).isSameOrAfter(moment(finished))) {
+          e.target.value = finished
+        }
+
         handleChange({ [e.target.name]: e.target.value });
         break;
       }
@@ -114,12 +125,14 @@ const TimePart = ({
           <Input
             name='started'
             type='datetime-local'
+            max={moment(finished).format('YYYY-MM-DDTHH:mm')}
             value={moment(started).format('YYYY-MM-DD HH:mm')}
             onChange={handleChangeTime}
           />
           <Input
             name='finished'
             type='datetime-local'
+            min={moment(started).format('YYYY-MM-DDTHH:mm')}
             value={moment(finished).format('YYYY-MM-DD HH:mm')}
             onChange={handleChangeTime}
           />
@@ -503,12 +516,14 @@ export default ({
             icon={<PauseIcon className={classes.pauseIcon} />}
           />
           {
-            timeParts.map((item) => (
+            timeParts.map((item, index) => (
               <TimePart
                 key={item.id}
                 id={item.id}
                 label={`${item.isWork ? t('Work part') : t('Break part')} ${item.number}`}
                 orange={!item.isWork}
+                next={timeParts[index+1] ? timeParts[index+1].started_at : false}
+                prev={timeParts[index-1] ? timeParts[index-1].finished_at : false}
                 started={item.started_at}
                 finished={item.finished_at}
                 onChange={handleChangeTimePart}
