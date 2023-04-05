@@ -85,10 +85,6 @@ const TimePart = ({
       //     handleChange({ [e.target.name]: e.target.value });
       //   }
 
-        if (moment(started).isSameOrAfter(moment(e.target.value))) {
-          e.target.value = started
-        }
-
         handleChange({ [e.target.name]: e.target.value });
         break;
       }
@@ -98,6 +94,24 @@ const TimePart = ({
         // } else {
         //   handleChange({ [e.target.name]: e.target.value });
         // }
+
+        handleChange({ [e.target.name]: e.target.value });
+        break;
+      }
+      default: break;
+    }
+  };
+  const handleBlurTime = (e) => {
+    switch (e.target.name) {
+      case 'finished': {
+        if (moment(started).isSameOrAfter(moment(e.target.value))) {
+          e.target.value = started
+        }
+
+        handleChange({ [e.target.name]: e.target.value });
+        break;
+      }
+      case 'started': {
         if (moment(e.target.value).isSameOrAfter(moment(finished))) {
           e.target.value = finished
         }
@@ -128,6 +142,7 @@ const TimePart = ({
             max={moment(finished).format('YYYY-MM-DDTHH:mm')}
             value={moment(started).format('YYYY-MM-DD HH:mm')}
             onChange={handleChangeTime}
+            onBlur={handleBlurTime}
           />
           <Input
             name='finished'
@@ -135,6 +150,7 @@ const TimePart = ({
             min={moment(started).format('YYYY-MM-DDTHH:mm')}
             value={moment(finished).format('YYYY-MM-DD HH:mm')}
             onChange={handleChangeTime}
+            onBlur={handleBlurTime}
           />
         </div>
         <button onClick={handleClick} className={classes.timePart__container__button}>
