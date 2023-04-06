@@ -43,6 +43,7 @@ import {
   GET_INTEGRATIONS,
   GET_INTEGRATIONS_SUCCESS,
   EDIT_INTEGRATIONS_SUCCESS,
+  IMPORT_IIKO_RESULT,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
@@ -590,6 +591,12 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
       };
     }
+    case IMPORT_IIKO_RESULT:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+      };
     case GET_ACCOUNTS_GROUPS:
       return {
         ...state,

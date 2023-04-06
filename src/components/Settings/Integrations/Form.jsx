@@ -7,6 +7,7 @@ import Checkbox from '../../Core/Checkbox/Checkbox2';
 import Switch from 'react-switch';
 import Input from '../../Core/Input/Input';
 import SimpleSelect from '../../Core/SimpleSelect';
+import Button from '../../Core/Button/Button';
 import moment from 'moment';
 
 import { timeHoursArr } from '../../Helpers/time';
@@ -17,6 +18,9 @@ export default ({
   handleInputChange,
   handleSystemChange,
   integrationsData,
+  iiko_import_date,
+  setIikoImportDate,
+  importIikoData
 }) => (
 
   <div className={style.integrationsBlock}>
@@ -400,6 +404,30 @@ export default ({
         { integrationsData.iiko_last_check && (
         <div className={style.lastCheck}>{'Last successful import: '+moment(integrationsData.iiko_last_check).format('Y MM DD / HH:mm ')+' / '+integrationsData.iiko_imported_count+' employees work times were imported'}</div>
         )}
+
+        <div className={style.separator} />
+
+        <div className={style.generalBloc2k}>
+          <div className={style.labelBlock}>
+            <Label text={`${t('Manual import')}`} />
+          </div>
+          <div className={style.manualImport}>
+            <Input
+              width={200}
+              type='date'
+              value={iiko_import_date}
+              placeholder={t('Select date')}
+              onChange={(e) => setIikoImportDate(e.target.value)}
+            />
+            <Button
+              size='normal'
+              onClick={() => importIikoData()}
+              disabled={!iiko_import_date}
+            >
+              {t('Manual import')}
+            </Button>
+          </div>
+        </div>
       </div>
       </>
     )}

@@ -50,6 +50,8 @@ import {
   GET_INTEGRATIONS_SUCCESS,
   EDIT_INTEGRATIONS,
   EDIT_INTEGRATIONS_SUCCESS,
+  IMPORT_IIKO,
+  IMPORT_IIKO_RESULT,
   GET_LOGBOOK_OVERTIME,
   GET_LOGBOOK_OVERTIME_SUCCESS,
   EDIT_LOGBOOK_OVERTIME,
@@ -531,6 +533,23 @@ export const editIntegrations = (id, data) => ({
 });
 export const editIntegrationsSuccess = (data) => ({
   type: EDIT_INTEGRATIONS_SUCCESS,
+  data,
+});
+export const importIiko = (id, data) => ({
+  type: IMPORT_IIKO,
+  request: {
+    method: 'POST',
+    url: `/company/${id}/integrations/import_iiko`,
+    data: {
+      date: data,
+    },
+    responseType: 'application/json',
+  },
+  id,
+  data,
+});
+export const importIikoResult = (data) => ({
+  type: IMPORT_IIKO_RESULT,
   data,
 });
 

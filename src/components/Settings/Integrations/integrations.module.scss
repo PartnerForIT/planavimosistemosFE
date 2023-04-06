@@ -44,6 +44,15 @@
     }
   }
 
+  .manualImport {
+    display: flex;
+    align-items: center;
+
+    > button {
+      margin-left: 20px;
+    }
+  }
+
   .labelBlock {
     display: flex;
   

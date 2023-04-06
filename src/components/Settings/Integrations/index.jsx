@@ -11,13 +11,15 @@ import TitleBlock from '../../Core/TitleBlock';
 import Dashboard from '../../Core/Dashboard';
 import IntegrationsIcon from '../../Icons/IntegrationsIcon';
 import Progress from '../../Core/Progress';
+import ImportIikoDialog from '../../Core/Dialog/ImportIikoDialog';
 import Form from './Form';
 import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, IntegrationsDataSelector,
 } from '../../../store/settings/selectors';
-import { loadIntegrations, editIntegrations } from '../../../store/settings/actions';
+import { loadIntegrations, editIntegrations, importIiko } from '../../../store/settings/actions';
 import styles from './integrations.module.scss';
+import companyServicesInfoSelector from 'store/services/selectors';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -35,6 +37,12 @@ export default function Integrations() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [iiko_import_date, setIikoImportDate] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [result, setResult] = useState(false);
+  const [resultText, setResultText] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -135,6 +143,35 @@ export default function Integrations() {
     setIntegrationsData({ ...integrationsData, [system]: !integrationsData[system] });
     submit({ ...integrationsData, [system]: !integrationsData[system] });
   }
+
+  const importIikoData = () => {
+    setResultText(false)
+    setResult(false)
+    setOpenDialog(true)
+  }
+
+  const cancelImportIiko = () => {
+    setOpenDialog(false)
+  };
+
+  const submitImportIiko = () => {
+    setLoading(true);
+    dispatch(importIiko(id, iiko_import_date)).then(({data}) => {
+      if (data.success) {
+        setResult(data.import)
+        if (data.import) {
+          setResultText(data.count + ' ' + t('employees work times were imported'))
+        } else {
+          setResultText(t('Nothing to import'))
+        }
+      } else {
+        setResult(false)
+        setResultText(t('Date not closed'))
+      }
+      setLoading(false)
+    })
+    .catch(() => setTimeout(() => setLoading(false), 3000));
+  };
   
   return (
     <MaynLayout>
@@ -154,6 +191,9 @@ export default function Integrations() {
                   handleInputChange={handleInputChange}
                   handleSystemChange={handleSystemChange}
                   integrationsData={integrationsData}
+                  iiko_import_date={iiko_import_date}
+                  setIikoImportDate={setIikoImportDate}
+                  importIikoData={importIikoData}
                 />
               )
           }
@@ -169,6 +209,19 @@ export default function Integrations() {
           open={isSnackbar}
           message={textSnackbar}
           key='rigth'
+        />
+        <ImportIikoDialog
+          open={openDialog}
+          handleClose={cancelImportIiko}
+          title={t('Import this date?')}
+          buttonTitle2={t('Cancel')}
+          buttonTitle={t('Import')}
+          date={iiko_import_date}
+          submitImportIiko={submitImportIiko}
+          cancelImportIiko={cancelImportIiko}
+          loading={loading}
+          result={result}
+          resultText={resultText}
         />
       </Dashboard>
     </MaynLayout>
