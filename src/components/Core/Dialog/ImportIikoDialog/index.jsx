@@ -53,14 +53,17 @@ export default function ImportIikoDialog({
           )
         }
       </div>
-      <div className={style.buttonsBlock}>
-        <Button onClick={() => cancelImportIiko()} cancel size='big'>
-          {buttonTitle2}
-        </Button>
-        <Button onClick={() => submitImportIiko()} size='big'>
-          {buttonTitle}
-        </Button>
-      </div>
+      { resultText == '' && (
+        <div className={style.buttonsBlock}>
+          <Button onClick={() => cancelImportIiko()} cancel size='big'>
+            {buttonTitle2}
+          </Button>
+          <Button onClick={() => submitImportIiko()} size='big'>
+            {buttonTitle}
+          </Button>
+        </div>
+        )
+      }
     </Dialog>
   );
 }
