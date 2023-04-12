@@ -27,12 +27,9 @@ export const minutesToString = (totalMinutes) => {
   return `${hours}:${minutes}`;
 };
 
-export const datetimeToMinutes = (datetime) => getHours(dateToUCT(datetime)) * 60
-  + getMinutes(dateToUCT(datetime));
+export const datetimeToMinutes = (datetime) => new Date(datetime).getTime() / 1000 / 60;
 
-export const datetimeToSeconds = (datetime) => getHours(dateToUCT(datetime)) * 60 * 60
-  + getMinutes(dateToUCT(datetime)) * 60
-  + getSeconds(dateToUCT(datetime));
+export const datetimeToSeconds = (datetime) => new Date(datetime).getTime() / 1000;
 
 export const getColorByStatus = (status) => {
   let color = '';
