@@ -120,7 +120,7 @@ export default ({
       <div className={styles.buttonSaveBlock}>
         <Button
           disabled={!(formValues.repeatPinCode && formValues.pinCode && !errors.repeatPinCode)}
-          onClick={() => onSubmit(formValues)}
+          onClick={() => { onSubmit(formValues); handleExited() }}
           fillWidth
           size='big'
         >

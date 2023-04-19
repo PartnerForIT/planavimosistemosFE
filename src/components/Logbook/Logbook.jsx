@@ -338,6 +338,7 @@ export default () => {
         });
 
         const timeToMinutes = (time) => {
+          if (!time) return 0;
           const [hours, minutes] = time.split(':');
           return Number(hours) * 60 + Number(minutes);
         }

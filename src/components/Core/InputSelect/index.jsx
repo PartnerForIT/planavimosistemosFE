@@ -131,7 +131,7 @@ export default ({
             onChange={handleSearchChange}
             readOnly={!open || withoutSearch}
             id={id}
-            labelId={labelId}
+            labelid={labelId}
           />
         </div>
 
