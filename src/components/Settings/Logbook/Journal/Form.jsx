@@ -16,6 +16,7 @@ import CurrencySign from "../../../shared/CurrencySign";
 const breakArr = [
   { code: '4', name: 'if workday exceeds 4:30 hours' },
   { code: '6', name: 'if workday exceeds 6 hours' },
+  { code: '7', name: 'if workday exceeds 7 hours' },
   { code: '8', name: 'if workday exceeds 8 hours' },
   { code: '9', name: 'if workday exceeds 9 hours' },
   { code: '14', name: 'if workday exceeds 14 hours' },
