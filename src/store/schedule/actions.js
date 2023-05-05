@@ -23,6 +23,9 @@ import {
   DELETE_SHIFT,
   ADD_TEMP_EMPLOYEE,
   ADD_TEMP_EMPLOYEE_SUCCESS,
+
+  DOWNLOAD_SCHEDULE,
+  
 } from './types';
 
 export const getSchedule = ({
@@ -191,4 +194,19 @@ export const deleteShift = ({ companyId, id, body }) => ({
 
 export const resetShift = () => ({
   type: RESET_SHIFT,
+});
+
+export const downloadSchedule = (companyId, fromDate, type, data) => ({
+  type: DOWNLOAD_SCHEDULE,
+  request: {
+    method: 'POST',
+    url: `/company/${companyId}/shift/download?type=${type}&from_date=${fromDate}`,
+    data: {
+      ...data,
+    },
+    responseType: 'application/json',
+  },
+  meta: {
+    thunk: true,
+  },
 });

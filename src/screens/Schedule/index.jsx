@@ -25,6 +25,9 @@ import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
 import MarkerButton from '../../components/Core/MarkerButton/MarkerButton';
+import FlatButton from '../../components/Core/FlatButton/FlatButton';
+import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
+import ExcelIcon from '../../components/Icons/ExcelIcon';
 import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
@@ -38,7 +41,7 @@ import {
   patchChangeTimeline,
   patchAddTimeline,
   patchChangeEmployee,
-  deleteShift, putShift, addTempemployee, patchMarker,
+  deleteShift, putShift, addTempemployee, patchMarker, downloadSchedule
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
@@ -946,6 +949,33 @@ export default () => {
     return '24:00:00';
   };
 
+  const downloadScheduleFile = (type) => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+
+    const data = {
+      downloadType: type,
+      shiftTypeArr: filter?.shiftType.map(({id}) => id),
+      employeesArr: filter?.employers.map(({id}) => id),
+      placesArr: filter?.place.map(({id}) => id),
+    };
+
+
+    dispatch(downloadSchedule(companyId, nextFromDate.format('YYYY-MM-DD'), timeline, data)).then(({ data }) => {
+      const link = document.createElement('a');
+      //console.log(data.file);
+      link.setAttribute('download', data.file);
+      link.setAttribute('target', '_blank');
+      link.href = `${data.path}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      //setLoading(false);
+    }).catch();
+  }
+
   const unavailableEmployees = () => {
     
     const selectedEvent  = schedule?.events.find(e => e.id == tempEventID);
@@ -1022,6 +1052,13 @@ export default () => {
               />
             </div>
           ) : null}
+
+          { timeline == TIMELINE.MONTH ? (
+            <FlatButton onClick={() => downloadScheduleFile('excel')} className='schedule-screen__buttonDownload'>
+              <ArrowEIPIcon className='schedule-screen__buttonArrow' /> <ExcelIcon />
+            </FlatButton>
+          ) : null}
+
           {/*<Checkbox*/}
           {/*  onChange={handleChangeOnlyWorkingDays}*/}
           {/*  checked={isOnlyWorkingDays}*/}

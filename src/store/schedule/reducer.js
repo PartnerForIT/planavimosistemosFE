@@ -20,6 +20,9 @@ import {
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
+  DOWNLOAD_SCHEDULE,
+  DOWNLOAD_SCHEDULE_SUCCESS,
+  DOWNLOAD_SCHEDULE_ERROR,
   DELETE_TIMELINE, EMPTY_TIMELINE, ADD_TEMP_EMPLOYEE, ADD_TEMP_EMPLOYEE_SUCCESS,
 } from './types';
 import {ADD_SNACKBAR} from "../organizationList/types";
@@ -86,6 +89,17 @@ export const reducer = (state = initialState, action) => {
 
     case RESET_SHIFT:
       return { ...state, shift: null };
+
+    case DOWNLOAD_SCHEDULE:
+      return { ...state, loading: true };
+    case success(DOWNLOAD_SCHEDULE):
+      return {
+        ...state,
+        //data: action.data,
+        loading: false,
+      };
+    case DOWNLOAD_SCHEDULE_ERROR:
+      return { ...state, loading: false };
 
     case ADD_TEMP_EMPLOYEE:
       return {...state}

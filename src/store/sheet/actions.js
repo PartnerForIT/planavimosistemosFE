@@ -40,6 +40,7 @@ export const downloadIntegration = (companyId, fromDate, data) => ({
     thunk: true,
   },
 });
+
 /*
 export const getIntegration = ({
   companyId,
