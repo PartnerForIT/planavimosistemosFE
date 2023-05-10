@@ -223,7 +223,7 @@ function* patchUpdatePinCode(action) {
     yield put(patchUpdatePinCodeSuccess(action.employeeId, action.data));
   } catch (e) {
     yield put(patchUpdatePinCodeError());
-    yield put(addSnackbar(e, 'error'));
+    yield put(addSnackbar('Pin-code already exist', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -240,7 +240,7 @@ function* patchUpdatePinCodes(action) {
     yield put(patchUpdatePinCodesSuccess(data));
   } catch (e) {
     yield put(patchUpdatePinCodesError());
-    yield put(addSnackbar(e, 'error'));
+    yield put(addSnackbar('Pin-code already exist', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -256,7 +256,7 @@ function* getPinCodeGenerate(action) {
     yield put(getPinCodeGenerateSuccess(data));
   } catch (e) {
     yield put(getPinCodeGenerateError());
-    yield put(addSnackbar(e, 'error'));
+    yield put(addSnackbar('Something went wrong', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
