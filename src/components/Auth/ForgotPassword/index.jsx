@@ -101,7 +101,8 @@ const ForgotPassword = () => {
             !sent
               ? (
                 <Button
-                  disabled={error || !email || loading}
+                  loading={loading}
+                  disabled={error || !email}
                   onClick={onSubmit}
                   size='big'
                 >

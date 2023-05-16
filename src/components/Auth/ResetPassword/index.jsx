@@ -106,7 +106,7 @@ export default () => {
       }
     });
   };
-  if (loading) {
+  if (!Object.keys(security).length && loading) {
     return (
       <BackgroundWrapper className={classes.root}>
 
@@ -187,7 +187,8 @@ export default () => {
           </div>
           <div className={classes.buttonBlock}>
             <Button
-              disabled={matchError || error || loading}
+              loading={loading}
+              disabled={matchError || error}
               onClick={onSubmit}
               size='big'
             >

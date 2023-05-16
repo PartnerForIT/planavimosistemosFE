@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, UNLOCK_ACCOUNT, UNLOCK_USER,
+  GET_INFO, CONFIRM_PASSWORD, CLEAR_SERVICES, UNLOCK_ACCOUNT, UNLOCK_USER, SET_NEW_PASSWORD, RESET_PASSWORD,
 } from './types';
 
 const initialState = {
@@ -13,6 +13,24 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_PASSWORD:
+      return { ...state, loading: true };
+
+    case success(RESET_PASSWORD):
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case SET_NEW_PASSWORD:
+      return { ...state, loading: true };
+
+    case success(SET_NEW_PASSWORD):
+      return {
+        ...state,
+        loading: false,
+      };
+
     case GET_INFO:
       return { ...state, error: null, loading: true };
 
