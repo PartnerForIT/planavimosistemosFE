@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
 import { setNewPassword, getCompanyInfo } from '../../../store/services/actions';
@@ -106,8 +106,35 @@ export default () => {
       }
     });
   };
+  if (loading) {
+    return (
+      <BackgroundWrapper className={classes.root}>
+
+      </BackgroundWrapper>
+    )
+  }
   if (!Object.keys(security).length && !loading) {
-    return <Page404 />;
+    //return <Page404 />;
+    return (
+      <BackgroundWrapper className={classes.root}>
+        <Card className={classes.card}>
+          <Logo />
+          <div className={classes.description}>
+            <p>
+              {`${t('Oops! It seems that this link is no longer valid or has already been used to change the password. To initiate the process again, please click on the ‘Forgot Password?’ button below.')}`}
+            </p>
+          </div>
+          <div className={classes.buttonBlock}>
+            <Link
+              className={classes.forgotLink}
+              to='/forgot-password'
+            >
+              {t('Forgot Password?')}
+            </Link>
+          </div>
+        </Card>
+      </BackgroundWrapper>
+    )
   }
   return (
     <BackgroundWrapper className={classes.root}>

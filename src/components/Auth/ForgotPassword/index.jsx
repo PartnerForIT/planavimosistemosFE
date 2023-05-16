@@ -103,6 +103,7 @@ const ForgotPassword = () => {
                 <Button
                   disabled={error || !email || loading}
                   onClick={onSubmit}
+                  size='big'
                 >
                   {t('Reset password')}
                 </Button>
