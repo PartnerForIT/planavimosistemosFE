@@ -6,6 +6,17 @@
   visibility: hidden;
   $eventContent: &;
 
+  &__invisible,
+  &__invisible:hover {
+    position: absolute;
+    left: 50%;
+    background: transparent;
+
+    svg {
+      display: none;
+    }
+  }
+
   &__night_end {
     position: absolute;
     visibility: visible;

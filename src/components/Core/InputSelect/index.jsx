@@ -43,6 +43,7 @@ export default ({
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const contentBox = useRef(null);
+  const scrollBar = useRef(null);
 
   const handleCheckboxChange = useCallback((item, nextValue) => {
     onChange({
@@ -105,6 +106,10 @@ export default ({
           : (Math.trunc(menuPlacementHeight / 36) * 36);
         contentBox.current.style.minHeight = `${minHeight}px`;
 
+        if (scrollBar.current) {
+          scrollBar.current.scrollTo(0, options.findIndex(obj => obj[valueKey] == value) * 36 - (minHeight/2-18));
+        }
+
         if (menuPlacement === 'top') {
           contentBox.current.classList.add('input-select__content-box_top');
         }
@@ -154,6 +159,7 @@ export default ({
                   />
                 ),
               }}
+              ref={scrollBar}
             >
               {
                 optionsDisplayed.map((data) => (

@@ -120,6 +120,7 @@ export default () => {
         logbook: {
           options: {
             edit_settings: 'Can edit Logbook settings',
+            add_logs: 'Can create new entries',
             edit_logs: 'Can edit entry logs',
             delete_logs: 'Can delete entry logs',
             ...(modules.cost_earning && { earnings: 'Can see earnings (APP)' }),

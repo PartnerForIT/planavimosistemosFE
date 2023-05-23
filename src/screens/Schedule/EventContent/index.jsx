@@ -50,6 +50,7 @@ export default ({
 
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
+  const modalAddRef = useRef(null);
   const modules = useSelector(companyModules);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
 
@@ -126,6 +127,18 @@ export default ({
     return overlap > 0 ? overlap : 0;
   }
 
+  useEffect(() => {
+    if (content == 'addWorkingTime') {
+      if (modalAddRef.current) {
+        modalAddRef.current.open();
+      }
+    } else {
+      if (modalAddRef.current) {
+        modalAddRef.current.close();
+      }
+    }
+  }, [content]);
+
   const openChangeEmployee = () => {
     modalRef.current.open();
     setContent('changeEmployee');
@@ -137,6 +150,9 @@ export default ({
     setContent('addWorkingTime');
   };
   const handleCancel = () => {
+    if (modalAddRef.current) {
+      modalAddRef.current.close();
+    }
     setContent('menu');
   };
   const handleDeleteTimeline = () => {
@@ -293,15 +309,22 @@ export default ({
       }
       {
         content === 'addWorkingTime' && (
-          <AddWorkingTime
-            onClose={() => setContent('menu')}
-            photo={photo}
-            jobTypeName={jobTypeName}
-            employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-            start={start}
-            end={end}
-            onChangeTime={handleAddWorkingTime}
-          />
+          <Dropdown
+            cancel={content !== 'menu'}
+            onCancel={() => setContent('menu')}
+            ref={modalAddRef}
+            buttonClass={classes.eventContent__invisible}
+          >
+            <AddWorkingTime
+              onClose={() => setContent('menu')}
+              photo={photo}
+              jobTypeName={jobTypeName}
+              employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+              start={start}
+              end={end}
+              onChangeTime={handleAddWorkingTime}
+            />
+          </Dropdown>
         )
       }
       {

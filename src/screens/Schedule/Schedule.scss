@@ -368,6 +368,10 @@
           &.fc-event-resizing .active-drag#dropdownButton {
             visibility: visible;
           }
+
+          &:not(.fc-event-resizing) .active-drag span:first-child {
+            display: none;
+          }
         }
 
         &.fc-timeline-event.fc-event-past {
@@ -949,6 +953,7 @@
   top: 0;
   height: 100%;
   cursor: pointer;
+  
   &:hover{
     border-color: rgb(72, 195, 224);
     background-color: rgba(72, 195, 224, 0.5);

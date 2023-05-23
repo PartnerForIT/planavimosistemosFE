@@ -55,6 +55,8 @@ export default memo(({
   const { t } = useTranslation();
   const buttonRef = useRef(null);
   const contentBoxRef = useRef(null);
+  const startScrollRef = useRef(null);
+  const endScrollRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -134,6 +136,16 @@ export default memo(({
         const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
         const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
         const menuPlacementVertical = (offsetBottom - heightContent) > 0 ? 'bottom' : 'top';
+
+        //fixes for center scroll
+        if (startScrollRef.current) {
+          startScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code == time?.start) * 36 - 54);
+        }
+
+        //fixes for center scroll
+        if (endScrollRef.current) {
+          endScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code == time?.end) * 36 - 54);
+        }
 
         if (menuPlacementVertical === 'top') {
           contentBoxRef.current.classList.add(classes.timeRangeColor__modal_top);
@@ -227,6 +239,7 @@ export default memo(({
                       <Scrollbar
                         noScrollX
                         trackYProps={trackYProps}
+                        ref={startScrollRef}
                       >
                         {timeArr.map((item) => (
                           <ButtonTime
@@ -241,6 +254,7 @@ export default memo(({
                       <Scrollbar
                         noScrollX
                         trackYProps={trackYProps}
+                        ref={endScrollRef}
                       >
                         {timeArr.map((item) => (
                           <ButtonTime

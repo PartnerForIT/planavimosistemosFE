@@ -33,7 +33,7 @@ import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 // import { getEmployees } from '../../store/employees/actions';
-import { postLogbookEntry } from '../../store/logbook/actions';
+import { postLogbookEntry, postLogbookAddEntry } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
 
@@ -57,6 +57,7 @@ import usePermissions from '../Core/usePermissions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import EditEntry from './EditEntry';
+import AddEntry from './AddEntry';
 import styles from './Logbook.module.scss';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
 import it from 'date-fns/esm/locale/it/index.js';
@@ -126,6 +127,10 @@ const permissionsConfig = [
     permission: 'logbook_delete_logs',
   },
   {
+    name: 'logbook_add_logs',
+    permission: 'logbook_add_logs',
+  },
+  {
     name: 'use_approval_flow',
     module: 'use_approval_flow',
   },
@@ -177,6 +182,7 @@ export default () => {
   const [search, setSearch] = useState('');
   // const [employees, setEmployees] = useState([]);
   const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
+  const [isOpenAddEntry, setIsOpenAddEntry] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
@@ -512,7 +518,7 @@ export default () => {
   };
 
   const rowSelectionHandler = (selectedRow) => {
-    setSelectedItem(selectedRow);
+    setSelectedItem(selectedItem?.id == selectedRow?.id ? null : selectedRow);
   };
 
   const onSkillsSelectChange = (selectedSkills) => {
@@ -603,6 +609,11 @@ export default () => {
   const handleClickSaveEntry = (data) => {
     dispatch(postLogbookEntry(companyId, data, sendRequest));
     setIsOpenEditEntry(false);
+  };
+
+  const handleClickAddEntry = (data) => {
+    dispatch(postLogbookAddEntry(companyId, data, sendRequest));
+    setIsOpenAddEntry(false);
   };
 
   const EmployeeInfo = () => {
@@ -899,7 +910,7 @@ export default () => {
     <MaynLayout>
       <div className={styles.container}>
         <div className={styles.leftContent}>
-          <header className={styles.appHeader}>
+          <header onClick={() => setSelectedItem(null)} className={styles.appHeader}>
             <DRP initRange={dateRange} onChange={setDateRange} />
             <div className={styles.hideOn660}>
               <Delimiter />
@@ -990,8 +1001,21 @@ export default () => {
                   <div className={styles.empty}>
                     <TableIcon />
                     <div className={styles.empty__text}>
-                      Select any entry to get a detailed editable info
+                      Select any entry to get a detailed editable info or add an entry manually
                     </div>
+                    { permissions.logbook_add_logs && (
+                        <Button onClick={() => setIsOpenAddEntry(true)}>
+                          {t('Add entry')}
+                        </Button>
+                      )
+                    }
+                    <AddEntry
+                      open={isOpenAddEntry}
+                      handleClose={() => setIsOpenAddEntry(false)}
+                      onClickSave={handleClickAddEntry}
+                    />
+
+
                   </div>
                 )
           }

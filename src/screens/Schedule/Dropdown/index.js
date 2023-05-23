@@ -48,6 +48,11 @@ const Dropdown = forwardRef(({
         setIsOpen(true);
       }
     },
+    close: () => {
+      if (isOpen) {
+        setIsOpen(false);
+      }
+    },
   }));
 
   const handleClick = () => {
