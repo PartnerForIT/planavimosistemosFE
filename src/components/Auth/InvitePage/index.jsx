@@ -52,12 +52,11 @@ const InvitePage = () => {
     const fieldId = e.target.name;
     const text = e.target.value;
     setMatchError(false);
-    if (text.trim()) {
-      setValues((prevState) => ({
-        ...prevState,
-        [fieldId]: text,
-      }));
-    }
+
+    setValues((prevState) => ({
+      ...prevState,
+      [fieldId]: text,
+    }));
   };
 
   const validateOnBlur = () => {
