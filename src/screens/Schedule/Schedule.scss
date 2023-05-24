@@ -333,6 +333,10 @@
     padding: 4px 0;
     box-sizing: border-box;
 
+    .fc-timeline-events .fc-timeline-event-harness:nth-last-child(2) {
+      display: none;
+    }
+
     .fc-timeline-event-harness {
 
       &:hover {
@@ -367,10 +371,6 @@
           &:hover div#dropdownButton,
           &.fc-event-resizing .active-drag#dropdownButton {
             visibility: visible;
-          }
-
-          &:not(.fc-event-resizing) .active-drag span:first-child {
-            display: none;
           }
         }
 
