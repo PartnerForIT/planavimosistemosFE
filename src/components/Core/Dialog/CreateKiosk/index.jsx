@@ -36,6 +36,11 @@ export default ({
     setFormValues(initialFormValues);
     setIsEdit(false);
   };
+  const onClose = () => {
+    setFormValues(initialFormValues);
+    handleClose();
+
+  };
 
   useEffect(() => {
     if (!isEmpty(initialValues)) {
@@ -68,7 +73,7 @@ export default ({
 
   return (
     <Dialog
-      handleClose={handleClose}
+      handleClose={onClose}
       onExited={handleExited}
       open={open}
       title={isEdit ? t('Edit kiosk') : t('New kiosk')}

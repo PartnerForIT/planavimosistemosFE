@@ -31,6 +31,10 @@ export default ({
   const handleExited = () => {
     setFormValues(initialFormValues);
   };
+  const onClose = () => {
+    handleExited();
+    handleClose();
+  };
 
   useEffect(() => {
     if (initialValues) {
@@ -62,7 +66,7 @@ export default ({
   }, [formValues, security]);
 
   return (
-    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
+    <Dialog handleClose={onClose} onExited={handleExited} open={open} title={title}>
       <div className={styles.formControl}>
         <Label text={t('Current password')} htmlFor='current_password' />
         <Input

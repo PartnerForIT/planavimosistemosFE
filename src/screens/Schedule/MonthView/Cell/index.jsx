@@ -25,7 +25,7 @@ export default ({
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
-    [classes.cell_marker]: marker,
+    [classes.cell_marker]: marker && !title,
     [classes.cell_marker_active]: markerActive && !header,
     [classes.cell_today]: today,
     //[classes.cell_holiday]: h.date ? true : false,

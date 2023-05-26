@@ -26,6 +26,11 @@ export default function CreatePlace({
     setFormValues(initialFormValues);
 
   };
+  const onClose = () => {
+    setFormValues(initialFormValues);
+    handleClose();
+
+  };
   useEffect(() => {
     if (initialValues) {
       setFormValues({
@@ -35,7 +40,7 @@ export default function CreatePlace({
   }, [initialValues]);
 
   return (
-    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
+    <Dialog handleClose={onClose} onExited={handleExited} open={open} title={title}>
       <div className={style.formControl}>
         <Label text={t('Place name')} htmlFor='place' />
         <Input

@@ -365,9 +365,13 @@ export default function EditAccount({
   const handleExited = () => {
     setUser({});
   };
+  const onClose = () => {
+    handleExited();
+    handleClose();
+  };
 
   return (
-    <Dialog handleClose={handleClose} onExited={handleExited} open={!!open} title={title}>
+    <Dialog handleClose={onClose} onExited={handleExited} open={!!open} title={title}>
       <div className={style.edit}>
 
         {

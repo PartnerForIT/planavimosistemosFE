@@ -31,6 +31,11 @@ export default ({
     setFormValues(initialFormValues);
 
   };
+  const onClose = () => {
+    setFormValues(initialFormValues);
+    handleClose();
+
+  };
   useEffect(() => {
     if (initialValues) {
       setFormValues({
@@ -41,7 +46,7 @@ export default ({
 
   return (
     <Dialog
-      handleClose={handleClose}
+      handleClose={onClose}
       onExited={handleExited}
       open={open}
       title={title}

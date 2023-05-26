@@ -26,10 +26,15 @@ export default ({
   const handleExited = () => {
     setValue('');
   };
+  const onClose = () => {
+    setValue('');
+    handleClose();
+
+  };
 
   return (
     <Dialog
-      handleClose={handleClose}
+      handleClose={onClose}
       onExited={handleExited}
       open={open}
       title={title}
