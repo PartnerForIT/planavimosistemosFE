@@ -28,6 +28,7 @@ import {
 import {
   employeesSelector,
   JournalDataSelector,
+  AdditionalRatesDataSelector,
 } from '../../store/settings/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
 import { userSelector } from '../../store/auth/selectors';
@@ -170,6 +171,7 @@ export default () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [loading, setLoading] = useState(null);
+  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   // const [page, setPage] = useState(1);
 
   const [dateRange, setDateRange] = useState({
@@ -447,6 +449,12 @@ export default () => {
       if (!permissions.night_rates && column.field === 'night_duration') {
         return false;
       }
+      if (column.field === 'night_duration' || column.field === 'holiday_time') {
+        if (!AdditionalRates.holiday && !AdditionalRates.night_time) {
+        } else {
+          return false;
+        }
+      }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         return false;
       }
@@ -710,14 +718,20 @@ export default () => {
                     durationSec={selectedItem.working_hours_sec}
                   />
                   <Delimiter />
-                  <InfoCard
-                    type='holiday'
-                    time={selectedItem}
-                    durationSec={selectedItem.holiday_minutes*60}
-                  />
-                  <Delimiter />
                   {
-                    permissions.night_rates && (
+                    (!AdditionalRates.holiday && !AdditionalRates.night_time) && (
+                      <>
+                        <InfoCard
+                          type='holiday'
+                          time={selectedItem}
+                          durationSec={selectedItem.holiday_minutes*60}
+                        />
+                        <Delimiter />
+                      </>
+                    )
+                  }
+                  {
+                    (!AdditionalRates.holiday && !AdditionalRates.night_time && permissions.night_rates) && (
                       <>
                         <InfoCard
                           type='night'

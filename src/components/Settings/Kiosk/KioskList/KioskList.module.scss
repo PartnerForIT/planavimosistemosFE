@@ -53,6 +53,17 @@
 .footer {
   position: relative;
   margin-left: -9px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  > div:last-child {
+    border-left: 1px solid #edf4fa;
+    margin-left: 20px;
+    padding-left: 20px;
+  }
 
   &__loader {
     position: absolute;

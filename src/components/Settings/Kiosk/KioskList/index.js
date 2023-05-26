@@ -80,7 +80,7 @@ export default () => {
   const [deleteKioskVisible, setDeleteKioskVisible] = useState(false);
   const [viewPasswordVisible, setViewPasswordVisible] = useState(false);
   const [createEditKioskVisible, setCreateEditKioskVisible] = useState(false);
-  const [settingsValues, setSettingsValues] = useState({ take_in: false, take_out: false });
+  const [settingsValues, setSettingsValues] = useState({ take_in: false, take_out: false, disable_break: false, disable_cost: false });
   const [filterPlace, setFilterPlace] = useState('allPlaces');
 
   const columns = useMemo(() => [
@@ -163,7 +163,7 @@ export default () => {
     setSettingsValues((prevState) => {
       dispatch(postSettingsPhotoTake(
         companyId,
-        id === 'take_in' ? 'in' : 'out',
+        id === ('disable_break' || 'disable_cost') ? id : (id === 'take_in' ? 'in' : 'out'),
         !prevState[id] ? 'on' : 'off',
       ));
       return {
@@ -210,6 +210,8 @@ export default () => {
       setSettingsValues({
         take_in: !!settingsPhotoTake.take_in,
         take_out: !!settingsPhotoTake.take_out,
+        disable_break: !!settingsPhotoTake.disable_break,
+        disable_cost: !!settingsPhotoTake.disable_cost,
       });
     }
   }, [settingsPhotoTake]);
@@ -262,7 +264,7 @@ export default () => {
             onSort={(field, asc) => sorting(kiosks, { field, asc })}
             handlePagination={Function.prototype}
             selectedItem=''
-            verticalOffset='420px'
+            verticalOffset='70vh'
             simpleTable
             withoutFilterColumns
             hoverActions
@@ -272,26 +274,41 @@ export default () => {
             grey
           />
           <div className={styles.footer}>
-            {console.log('settingsValues.take_in', settingsValues.take_in)}
-            <StyledCheckbox
-              id='take_in'
-              label={t('Request photo to be taken on Clock In through the Kiosk')}
-              checked={settingsValues.take_in}
-              onChange={handleChangeCheckbox}
-            />
-            <StyledCheckbox
-              id='take_out'
-              label={t('Request photo to be taken on Clock Out through the Kiosk')}
-              checked={settingsValues.take_out}
-              onChange={handleChangeCheckbox}
-            />
-            {
-              settingsPhotoTakeLoading && (
-                <div className={styles.footer__loader}>
-                  <Progress />
-                </div>
-              )
-            }
+            <div>
+              <StyledCheckbox
+                id='take_in'
+                label={t('Request photo to be taken on Clock In through the Kiosk')}
+                checked={settingsValues.take_in}
+                onChange={handleChangeCheckbox}
+              />
+              <StyledCheckbox
+                id='take_out'
+                label={t('Request photo to be taken on Clock Out through the Kiosk')}
+                checked={settingsValues.take_out}
+                onChange={handleChangeCheckbox}
+              />
+              {
+                settingsPhotoTakeLoading && (
+                  <div className={styles.footer__loader}>
+                    <Progress />
+                  </div>
+                )
+              }
+            </div>
+            <div>
+              <StyledCheckbox
+                id='disable_break'
+                label={t('Disable Break In Kiosk')}
+                checked={settingsValues.disable_break}
+                onChange={handleChangeCheckbox}
+              />
+              <StyledCheckbox
+                id='disable_cost'
+                label={t('Disable Costs In Kiosk (Finishing Job Screen)')}
+                checked={settingsValues.disable_cost}
+                onChange={handleChangeCheckbox}
+              />
+            </div>
           </div>
           <DialogEditPasswordKiosk
             open={viewPasswordVisible}

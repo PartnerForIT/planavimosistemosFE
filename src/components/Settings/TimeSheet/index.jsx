@@ -14,7 +14,7 @@ import Progress from '../../Core/Progress';
 import Form from './Form';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, TimeSheetDataSelector,
+  snackbarType, snackbarText, TimeSheetDataSelector, AdditionalRatesDataSelector,
 } from '../../../store/settings/selectors';
 import { loadTimeSheet, editTimeSheet } from '../../../store/settings/actions';
 import styles from './timesheet.module.scss';
@@ -41,6 +41,7 @@ export default function TimeSheet() {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const timesheet = useSelector(TimeSheetDataSelector);
+  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
 
   const [timeSheetData, setTimeSheetData] = useState({
     total_hours: false,
@@ -105,6 +106,7 @@ export default function TimeSheet() {
                   style={styles}
                   handleInputChange={handleInputChange}
                   timeSheetData={timeSheetData}
+                  AdditionalRates={AdditionalRates}
                 />
               )
           }

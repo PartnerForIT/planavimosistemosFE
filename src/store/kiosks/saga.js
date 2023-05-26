@@ -57,7 +57,7 @@ function* getKiosks(action) {
   try {
     const { data } = yield call(
       axios.get,
-      `${config.api.url}/company/${action.companyId}/kiosk/${action.placeId ? `?place_ids=[${action.placeId}]` : ''}`,
+      `${config.api.url}/company/${action.companyId}/kiosk${action.placeId ? `?place_ids=[${action.placeId}]` : ''}`,
       getToken(),
     );
     yield put(getKiosksSuccess(data));

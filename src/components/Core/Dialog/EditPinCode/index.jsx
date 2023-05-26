@@ -35,12 +35,18 @@ export default ({
   const onGeneratePinCode = () => {
     generatePinCode();
   };
+  const onClose = () => {
+    setFormValues(initialFormValues);
+    handleClose();
+  }
 
   useEffect(() => {
     if (initialValues) {
       setFormValues({
         ...initialValues,
       });
+    } else {
+      setFormValues(initialFormValues);
     }
   }, [initialValues]);
   useEffect(() => {
@@ -65,7 +71,7 @@ export default ({
   }, [formValues]);
 
   return (
-    <Dialog handleClose={handleClose} onExited={handleExited} open={open} title={title}>
+    <Dialog handleClose={onClose} onExited={handleExited} open={open} title={title}>
       <div className={styles.formControl}>
         <Label text={t('Current PIN')} htmlFor='current_pin_code' />
         <Input

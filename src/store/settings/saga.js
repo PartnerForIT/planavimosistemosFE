@@ -97,6 +97,7 @@ import {
   loadTimeSheetSuccess,
   loadIntegrationsSuccess,
   loadLogbookAdditionalRatesSuccess,
+  editLogbookAdditionalRatesSuccess,
   getAccountGroupsSuccess,
   importIikoResult,
   createAccountGroupSuccess,
@@ -715,7 +716,7 @@ function* loadAdditionalRatesData(action) {
 
 function* patchLogbookAdditionalRates(action) {
   try {
-    yield call(axios.patch,
+    const { data } = yield call(axios.patch,
       `${config.api.url}/company/${action.id}/logbook/additional-rates/store`, action.data,
       {
         headers: {
@@ -723,6 +724,7 @@ function* patchLogbookAdditionalRates(action) {
         },
       });
     
+    yield put(editLogbookAdditionalRatesSuccess(data));
     yield put(addSnackbar('Edit Additional rates successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());

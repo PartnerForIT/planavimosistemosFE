@@ -10,6 +10,7 @@ export default ({
   style,
   handleInputChange,
   timeSheetData,
+  AdditionalRates,
 }) => (
 
   <div className={style.timeSheetBlock}>
@@ -44,24 +45,29 @@ export default ({
         name='break_hours'
       />
     </div>
+    {
+      !(!AdditionalRates.holiday && !AdditionalRates.night_time) && (
+        <>
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={timeSheetData.night_hours}
+              label={t('Night Work Hours')}
+              name='night_hours'
+            />
+          </div>
 
-    <div className={style.generalBlock}>
-      <Checkbox
-        onChange={handleInputChange}
-        checked={timeSheetData.night_hours}
-        label={t('Night Work Hours')}
-        name='night_hours'
-      />
-    </div>
-
-    <div className={style.generalBlock}>
-      <Checkbox
-        onChange={handleInputChange}
-        checked={timeSheetData.holiday_hours}
-        label={t('Work on Bank Holiday Hours')}
-        name='holiday_hours'
-      />
-    </div>
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={timeSheetData.holiday_hours}
+              label={t('Work on Bank Holiday Hours')}
+              name='holiday_hours'
+            />
+          </div>
+        </>
+      )
+    }
 
     <div className={style.generalBlock}>
       <Checkbox
