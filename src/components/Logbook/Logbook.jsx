@@ -449,11 +449,11 @@ export default () => {
       if (!permissions.night_rates && column.field === 'night_duration') {
         return false;
       }
-      if (column.field === 'night_duration' || column.field === 'holiday_time') {
-        if (!AdditionalRates.holiday && !AdditionalRates.night_time) {
-        } else {
-          return false;
-        }
+      if (!AdditionalRates.holiday && column.field === 'holiday_time') {
+        return false;
+      }
+      if (!AdditionalRates.night_time && column.field === 'night_duration') {
+        return false;
       }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         return false;
@@ -719,7 +719,7 @@ export default () => {
                   />
                   <Delimiter />
                   {
-                    (!AdditionalRates.holiday && !AdditionalRates.night_time) && (
+                    (AdditionalRates.holiday) && (
                       <>
                         <InfoCard
                           type='holiday'
@@ -731,7 +731,7 @@ export default () => {
                     )
                   }
                   {
-                    (!AdditionalRates.holiday && !AdditionalRates.night_time && permissions.night_rates) && (
+                    (AdditionalRates.night_time && permissions.night_rates) && (
                       <>
                         <InfoCard
                           type='night'
