@@ -51,9 +51,10 @@
 
 .workAtNight {
   display: flex;
+  margin-bottom: 10px;
 
   label {
-    margin-right: 67px;
+    min-width: 200px;
     font-family: "Helvetica Neue Bold", sans-serif;
   }
 }

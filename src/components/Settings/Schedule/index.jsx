@@ -99,11 +99,6 @@ export default function ActivityLog() {
       }
     }
   };
-  const handleChangeSwitch = (checked) => {
-    handleSetInputValues({
-      working_at_night: checked,
-    });
-  };
 
   return (
     <MaynLayout>
@@ -142,7 +137,7 @@ export default function ActivityLog() {
                   <div className={styles.workAtNight}>
                     <Label text={t('Work at night')} />
                     <Switch
-                      onChange={handleChangeSwitch}
+                      onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
                       offColor='#808F94'
                       onColor='#0085FF'
                       uncheckedIcon={false}
@@ -165,6 +160,46 @@ export default function ActivityLog() {
                       options={timeHoursArr}
                       withoutSearch
                       fullWidth
+                    />
+                  </div>
+                  <div className={styles.hr} />
+                  <div className={styles.workAtNight}>
+                    <Label text={t('Show place timeline')} />
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ place_timeline: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.place_timeline}
+                      height={21}
+                      width={40}
+                    />
+                  </div>
+                  <div className={styles.workAtNight}>
+                    <Label text={t('Show shift timeline')} />
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ shift_timeline: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.shift_timeline}
+                      height={21}
+                      width={40}
+                    />
+                  </div>
+                  <div className={styles.workAtNight}>
+                    <Label text={t('Show job type timeline')} />
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ job_timeline: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.job_timeline}
+                      height={21}
+                      width={40}
                     />
                   </div>
                 </>

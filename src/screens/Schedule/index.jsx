@@ -591,7 +591,7 @@ export default () => {
         end = moment(end).set({h: 17});
       }
     }
-    
+
     return (
       <EventContent
         id={event.id}
