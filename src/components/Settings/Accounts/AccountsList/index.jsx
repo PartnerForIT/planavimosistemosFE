@@ -125,7 +125,7 @@ const columnsWidthArray = {
   place: 150,
   skills: 200,
   role: 150,
-  email: 200,
+  email: 300,
   groups: 150,
   subgroup: 150,
 };
