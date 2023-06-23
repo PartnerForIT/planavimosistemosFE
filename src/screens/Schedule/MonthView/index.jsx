@@ -159,7 +159,7 @@ export default ({
   }, [externalResources]);
 
   const onHandleMarker = (employeeId, day) => {
-    if (employeeId && day) {
+    if (employeeId && day && markerActive) {
       const date = currentMonth.clone().set('date', day);
       handleMarker(employeeId, date);
     }
@@ -240,6 +240,11 @@ export default ({
               <ReactTooltip
                 id='holiday'
                 className={classes.monthView__content__data__tooltip}
+                effect='solid'
+              />
+              <ReactTooltip
+                id='user_marker'
+                className={classes.monthView__content__data__tooltip__marker}
                 effect='solid'
               />
               {backgroundArr.map((item) => (

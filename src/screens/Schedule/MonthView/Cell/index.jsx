@@ -34,7 +34,7 @@ export default ({
   });
 
   const refCell = useRef();
-
+  
   useEffect(() => {
     if (!header && title) {
       if (refCell.current.scrollWidth >= refCell.current.offsetWidth) {
@@ -68,7 +68,7 @@ export default ({
   }
 
   return (
-    <div className={cellClasses} ref={refCell} onClick={handleMarker}>
+    <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
       {title != 0 ? title : ''}
       <HolidayIcon
         holidays={holiday}

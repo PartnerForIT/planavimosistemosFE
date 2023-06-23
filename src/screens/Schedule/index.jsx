@@ -851,7 +851,7 @@ export default () => {
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
                     { (marked) ?
-                      (!exist_event ? <div className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
+                      (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
                       ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
                     }
                   </React.Fragment>
@@ -883,7 +883,7 @@ export default () => {
                   const same = markers.find(m => moment(m.date).isSame(currDate, 'date'));
                   const markDate = currDate.clone();
 
-                  contains.push(<div className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
+                  contains.push(<div data-for='user_marker' data-tip={same ? same.comment : ''} className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
                 }
               }
             }
@@ -1173,6 +1173,11 @@ export default () => {
                     <ReactTooltip
                       id='holiday'
                       className='schedule-screen__tooltip'
+                      effect='solid'
+                    />
+                    <ReactTooltip
+                      id='user_marker'
+                      className='schedule-screen__tooltip schedule-screen__tooltip__marker'
                       effect='solid'
                     />
                     <DialogDeleteShift

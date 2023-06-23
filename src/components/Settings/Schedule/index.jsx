@@ -202,6 +202,20 @@ export default function ActivityLog() {
                       width={40}
                     />
                   </div>
+                  <div className={styles.hr} />
+                  <div className={styles.workAtNight}>
+                    <Label text={t('Use request day off mobile')} />
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ request_dayoff: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.request_dayoff}
+                      height={21}
+                      width={40}
+                    />
+                  </div>
                 </>
               )
           }
