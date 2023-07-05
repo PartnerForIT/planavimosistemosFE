@@ -163,7 +163,7 @@ export default () => {
     setSettingsValues((prevState) => {
       dispatch(postSettingsPhotoTake(
         companyId,
-        id === ('disable_break' || 'disable_cost') ? id : (id === 'take_in' ? 'in' : 'out'),
+        (id === 'disable_break' || id === 'disable_cost') ? id : (id === 'take_in' ? 'in' : 'out'),
         !prevState[id] ? 'on' : 'off',
       ));
       return {
