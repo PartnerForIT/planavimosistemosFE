@@ -1222,6 +1222,7 @@ function* createEmployee(action) {
       `${config.api.url}/company/${companyId}/employees/store`,
       {
         ...rest,
+        place_id: place,
         company_id: companyId,
       }, token());
 
