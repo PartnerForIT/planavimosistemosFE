@@ -4,7 +4,7 @@ import styles from './Input.module.scss';
 
 const Input = ({
   disabled, placeholder, icon, type, width, height,
-  min, max, fullWidth, underlined, iconLeft, error, light, ...props
+  min, max, fullWidth, underlined, iconLeft, error, light, value='', ...props
 }) => {
   const classes = classNames(
     styles.input,
@@ -35,6 +35,7 @@ const Input = ({
         max={max || ''}
         placeholder={placeholder}
         disabled={disabled}
+        value={value}
         {...props}
       />
     </div>

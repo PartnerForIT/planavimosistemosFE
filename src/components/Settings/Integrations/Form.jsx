@@ -292,6 +292,60 @@ export default ({
               name='excel_rest_weekends'
             />
           </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_work_hours}
+              label={t('Work Hours')}
+              name='excel_work_hours'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_break_hours}
+              label={t('Break Hours')}
+              name='excel_break_hours'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_night_work_hours}
+              label={t('Night Work Hours')}
+              name='excel_night_work_hours'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_holiday_hours}
+              label={t('Bank Holiday Hours')}
+              name='excel_holiday_hours'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_overtime_hours}
+              label={t('Overtime Hours')}
+              name='excel_overtime_hours'
+            />
+          </div>
+
+          <div className={style.generalBlock}>
+            <Checkbox
+              onChange={handleInputChange}
+              checked={integrationsData.excel_cost}
+              label={t('Cost')}
+              name='excel_cost'
+            />
+          </div>
         </div>
         <div>
 

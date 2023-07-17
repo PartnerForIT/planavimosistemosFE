@@ -25,6 +25,7 @@ import {
   employeesLoadingSelector,
   employeeSelector,
   categoriesSkillsSelector,
+  rolesSelector,
   AccountGroupsSelector, placesSelector, shiftsSelector, jobTypesSelector, securityCompanySelector, importedEmployees, importLoadingSelector,
 } from '../../../../store/settings/selectors';
 import Filter from './Filter';
@@ -38,6 +39,7 @@ import {
   loadShift,
   loadJobType,
   loadSkills,
+  getRoles,
   patchEmployee,
   sendImportedEmployeesSuccess,
   setEmployeesActions,
@@ -179,6 +181,7 @@ export default function AccountsList() {
   const places = useSelector(placesSelector);
   const shifts = useSelector(shiftsSelector);
   const job_types = useSelector(jobTypesSelector);
+  const roles = useSelector(rolesSelector);
   const security = useSelector(securityCompanySelector);
   const imported = useSelector(importedEmployees);
   const importLoading = useSelector(importLoadingSelector);
@@ -250,6 +253,7 @@ export default function AccountsList() {
   useEffect(() => {
     dispatch(loadEmployeesAll(id));
     dispatch(loadSkills(id));
+    dispatch(getRoles(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -491,6 +495,7 @@ export default function AccountsList() {
             groups={groups}
             places={places}
             shifts={shifts}
+            roles={roles}
             job_types={job_types}
             security={security}
             createAccount={createAccount}
@@ -512,6 +517,7 @@ export default function AccountsList() {
             groups={groups}
             places={places}
             shifts={shifts}
+            roles={roles}
             job_types={job_types}
             onSubmit={updateEmployee}
           />

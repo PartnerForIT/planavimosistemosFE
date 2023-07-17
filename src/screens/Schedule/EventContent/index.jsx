@@ -21,6 +21,7 @@ import { AdditionalRatesDataSelector } from '../../../store/settings/selectors';
 export default ({
   id,
   shiftId,
+  employeeId,
   title,
   photo,
   jobTypeName,
@@ -43,7 +44,8 @@ export default ({
                   dayNumber,
                   isCompleted,
                   activeDrag,
-                  unavailableEmployees
+                  unavailableEmployees,
+                  markers
 }) => {
 
   const { t } = useTranslation();
@@ -228,6 +230,11 @@ export default ({
     }
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const markerComment = () => {
+    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id == employeeId && e.user_request);
+    return current ? current.comment : false;
+  }
   
   return (
     <div
@@ -277,14 +284,14 @@ export default ({
           (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
 
             (empty_manual)
-            ? (editPermissions && (<span onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+            ? (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={classes.eventContent__title} >
               {
                 (!!newEmployee?.name)
 
                   ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
                     :(employeeName === 'Empty' || empty)
-                    ?<span onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
               }
             </span>

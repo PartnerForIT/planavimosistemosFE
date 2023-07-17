@@ -13,11 +13,10 @@ const initialItems = [];
 export default function CustomSelect({
   items = initialItems,
   placeholder,
-  buttonLabel,
   onChange = Function.prototype,
-  onFilter,
   width = '100%',
   type = 'items',
+  fullWidth,
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -123,6 +122,7 @@ export default function CustomSelect({
 
   const wrapperClasses = classNames(styles.inputWrapper, {
     [styles.inputWrapperOpened]: open,
+    [styles.inputWrapperfullWidth]: fullWidth,
   });
   const customSelectClasses = classNames(styles.customSelect, {
     [styles.customSelectOpened]: open,

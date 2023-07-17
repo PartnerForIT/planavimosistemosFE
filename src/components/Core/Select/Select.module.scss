@@ -35,6 +35,10 @@
   }
 }
 
+.inputWrapperfullWidth {
+  max-width: 100%;
+}
+
 .inputWrapperOpened::before {
   transform: rotate(0deg);
 }

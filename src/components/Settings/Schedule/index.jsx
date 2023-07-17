@@ -51,6 +51,7 @@ export default function ActivityLog() {
 
   const [inputValues, setInputValues] = useState({
     clock_in_restriction: false,
+    work_night_excel: false,
   });
 
   const isSnackbar = useSelector(isShowSnackbar);
@@ -142,7 +143,7 @@ export default function ActivityLog() {
                       onColor='#0085FF'
                       uncheckedIcon={false}
                       checkedIcon={false}
-                      checked={inputValues.working_at_night}
+                      checked={inputValues.working_at_night || false}
                       height={21}
                       width={40}
                     />
@@ -171,7 +172,7 @@ export default function ActivityLog() {
                       onColor='#0085FF'
                       uncheckedIcon={false}
                       checkedIcon={false}
-                      checked={inputValues.place_timeline}
+                      checked={inputValues.place_timeline || false}
                       height={21}
                       width={40}
                     />
@@ -184,7 +185,7 @@ export default function ActivityLog() {
                       onColor='#0085FF'
                       uncheckedIcon={false}
                       checkedIcon={false}
-                      checked={inputValues.shift_timeline}
+                      checked={inputValues.shift_timeline || false}
                       height={21}
                       width={40}
                     />
@@ -197,7 +198,7 @@ export default function ActivityLog() {
                       onColor='#0085FF'
                       uncheckedIcon={false}
                       checkedIcon={false}
-                      checked={inputValues.job_timeline}
+                      checked={inputValues.job_timeline || false}
                       height={21}
                       width={40}
                     />
@@ -211,10 +212,19 @@ export default function ActivityLog() {
                       onColor='#0085FF'
                       uncheckedIcon={false}
                       checkedIcon={false}
-                      checked={inputValues.request_dayoff}
+                      checked={inputValues.request_dayoff || false}
                       height={21}
                       width={40}
                     />
+                  </div>
+                  <div className={styles.hr} />
+                  <div className={styles.clockIn}>
+                    <Checkbox
+                        onChange={handleChangeInput}
+                        checked={inputValues.work_night_excel}
+                        label={t('Show Work and Night time hours in Export Excel')}
+                        name='work_night_excel'
+                      />
                   </div>
                 </>
               )

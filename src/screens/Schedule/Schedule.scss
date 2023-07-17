@@ -185,7 +185,7 @@
 
     &.marked {
       background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(59,59,59, 0.3) 5px, rgba(59,59,59, 0.3) 10px);
-      z-index: 4;
+      //z-index: 4;
     }
 
     &.marker_active:hover {

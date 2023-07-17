@@ -89,7 +89,7 @@ export default ({
         />
       </div>
       <div className={styles.formControl}>
-        <Label text={t('Assign to place')} htmlFor='place_id' />
+        <Label text={t('Will work at this place')} htmlFor='place_id' />
         <InputSelect
           id='country-select'
           labelId='country-select'

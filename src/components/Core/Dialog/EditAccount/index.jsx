@@ -78,6 +78,7 @@ export default function EditAccount({
   places = [],
   shifts = [],
   job_types = [],
+  roles = [],
   onSubmit = Function.prototype,
   handleClose: externalHandleClose,
 }) {
@@ -130,7 +131,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, cost, charge, skills, place, shift_id, job_type_id,
+        name, surname, phone, speciality_id, external_id, cost, charge, skills, place, shift_id, job_type_id, role_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups,
       } = employee;
@@ -143,6 +144,7 @@ export default function EditAccount({
         external_id,
         shift_id,
         job_type_id,
+        role_id,
         cost,
         charge,
         avatar,
@@ -163,6 +165,11 @@ export default function EditAccount({
     const sks = skills?.map(({ id, name }) => ({ id, name })) ?? [];
     return sks;
   }, [skills, t]);
+
+  const rolesOptions = useMemo(() => {
+    const rls = roles?.map(({ id, name }) => ({ id, name })) ?? [];
+    return rls;
+  }, [roles, t]);
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
@@ -442,6 +449,19 @@ export default function EditAccount({
                   </div>
 
                   <div className={style.center}>
+                    
+                  <div className={classes.formItem}>
+                      <Label text={t('Roles')} htmlFor='roles' />
+                      <AddEditSelectOptions
+                        id='roles'
+                        options={rolesOptions}
+                        user={user}
+                        name='role_id'
+                        handleInput={handleInput}
+                        placeholder={t('Select a roles')}
+                      />
+                    </div>
+
                     <div className={classes.formItem}>
                       <Button inline inverse onClick={() => setSkillOpen(true)}>
                         {`+${t('new skill')}`}
@@ -548,7 +568,7 @@ export default function EditAccount({
                         {
                           permissions.places && (
                             <div className={classes.formItem}>
-                              <Label htmlFor='place' text={t('Assign to place')} />
+                              <Label htmlFor='place' text={t('Will work at this place')} />
                               <AddEditSelectOptions
                                 id='place'
                                 options={places}
@@ -564,7 +584,7 @@ export default function EditAccount({
                         {
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
-                              <Label htmlFor='shift_id' text={t('Assign to shift')} />
+                              <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
                               <AddEditSelectOptions
                                 id='shift_id'
                                 options={shiftsOptions}
@@ -572,7 +592,7 @@ export default function EditAccount({
                                 placeholder={t('Select a shift')}
                                 name='shift_id'
                                 handleInput={handleInput}
-                                disabled={!shiftsOptions.length}
+                                disabled={!shiftsOptions.length || !user.place}
                               />
                             </div>
                           )
@@ -581,7 +601,7 @@ export default function EditAccount({
                         {
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
-                              <Label htmlFor='job_type_id' text={t('Assign to Job Type')} />
+                              <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
                               <AddEditSelectOptions
                                 id='job_type_id'
                                 options={jobTypesOptions}

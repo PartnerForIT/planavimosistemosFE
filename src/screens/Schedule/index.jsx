@@ -596,7 +596,7 @@ export default () => {
       <EventContent
         id={event.id}
         shiftId={shiftId}
-        resourceId={resourceInfo.id}
+        employeeId={resourceInfo?.extendedProps?.employeeId}
         title={event.title}
         employeeName={employeeName}
         timeText={timeText}
@@ -795,6 +795,7 @@ export default () => {
         if (marked.date) {
           const marks = document.querySelectorAll('.marked[data-mark^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
           const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
+
 
           if (date_header && marks) {
             date_header.forEach((e, i) => {

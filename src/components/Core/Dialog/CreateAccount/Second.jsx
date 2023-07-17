@@ -54,8 +54,10 @@ const SecondStep = ({
   places,
   shifts,
   job_types,
+  roles,
   previousStep,
 }) => {
+  
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
@@ -110,6 +112,11 @@ const SecondStep = ({
     })) ?? [];
     return sks;
   }, [skills, t]);
+
+  const rolesOptions = useMemo(() => {
+    const rls = roles?.map(({ id, name }) => ({ id, name })) ?? [];
+    return rls;
+  }, [roles, t]);
 
   const shiftsOptions = useMemo(() => {
     const shft = shifts?.filter(e => !user.place || user.place == e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
@@ -178,6 +185,17 @@ const SecondStep = ({
         </div>
 
         <div className={rowTwoClasses}>
+          <div className={classnames(style.skill, style.formItem)}>
+            <Label text={t('Role')} htmlFor='role' />
+            <AddEditSelectOptions
+              id='role'
+              options={rolesOptions}
+              user={user}
+              name='role_id'
+              handleInput={handleInput}
+            />
+          </div>
+
           <div className={classnames(style.skill, style.formItem)}>
             <Button inline inverse onClick={() => setSkillOpen(true)}>
               {`+${t('new skill')}`}
@@ -280,7 +298,7 @@ const SecondStep = ({
               {
                 permissions.create_places && (
                   <div className={style.formItem}>
-                    <Label htmlFor='place' text={t('Assign to place')} />
+                    <Label htmlFor='place' text={t('Will work at this place')} />
                     <AddEditSelectOptions
                       id='place'
                       options={places}
@@ -296,7 +314,7 @@ const SecondStep = ({
               {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='shift_id' text={t('Assign to Shift')} />
+                    <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
                     <AddEditSelectOptions
                       id='shift_id'
                       options={shiftsOptions}
@@ -304,6 +322,7 @@ const SecondStep = ({
                       placeholder={t('Select a shift')}
                       name='shift_id'
                       handleInput={handleInput}
+                      disabled={!shiftsOptions.length || !user.place}
                     />
                   </div>
                 )
@@ -312,7 +331,7 @@ const SecondStep = ({
               {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='job_type_id' text={t('Assign to Job Type')} />
+                    <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
                     <AddEditSelectOptions
                       id='job_type_id'
                       options={jobTypesOptions}

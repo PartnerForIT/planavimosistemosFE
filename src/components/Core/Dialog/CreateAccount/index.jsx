@@ -17,6 +17,7 @@ export default function CreateAccount({
   places,
   shifts,
   job_types,
+  roles,
   security,
   createAccount,
   firstUser,
@@ -34,9 +35,11 @@ export default function CreateAccount({
     charge: null,
     place: null,
     shift_id: null,
+    role_id: null,
     job_type_id: null,
     password: '',
   };
+  
   const [step, setStep] = useState(1);
 
   const [user, setUser] = useState(initialUser);
@@ -110,6 +113,7 @@ export default function CreateAccount({
 
         return {
           ...prevState,
+          role_id: (roles.find(r => r.default)?.id || null),
           [name]: value,
         };
       }
@@ -117,6 +121,7 @@ export default function CreateAccount({
         subgroup: $,
         ...rest
       } = prevState;
+      
       return {
         ...rest,
         [name]: value,
@@ -149,6 +154,7 @@ export default function CreateAccount({
           groups={groups}
           places={places}
           shifts={shifts}
+          roles={roles}
           job_types={job_types}
           setUser={setUser}
           security={security}
