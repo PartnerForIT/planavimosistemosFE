@@ -78,6 +78,14 @@ const Row = ({
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
+    'Stopped by System': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
+    'Stopped by Manager': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
   };
 
   const selectRow = (selectedRow) => {

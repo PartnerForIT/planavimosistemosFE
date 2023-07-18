@@ -90,7 +90,7 @@ let columns = [
   { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
 ];
 let columnsWidth = {
-  status: 250,
+  status: 280,
   employee: 'auto',
   date: 250,
   skill: 120,
@@ -257,20 +257,40 @@ export default () => {
         icon: <ApprovedIcon />,
         onClick: (status) => sorting(status),
       },
+      (permissions.use_approval_flow && journal.approve_flow) ?
       {
         value: 'Suspended',
         icon: <SuspendedIcon />,
+        onClick: (status) => sorting(status),
+      } : {},
+      {
+        value: 'Stopped by System',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
+      {
+        value: 'Stopped by Manager',
+        hideTop: true,
+        icon: <PendingIcon />,
         onClick: (status) => sorting(status),
       },
     ],
   };
 
-  const statusSelector = (status) => {
+  const statusSelector = (status, stoped) => {
     switch (status) {
       case 0:
         return 'Pending';
-      case 1:
+      case 1: {
+        if (stoped == 'daily_overtime' || stoped == 'weekly_overtime') {
+          return 'Stopped by System';
+        } else if (stoped == 'manager') {
+          return 'Stopped by Manager';
+        }
+        
         return 'Approved';
+      }
       case 2:
         return 'Suspended';
       case 'approve':
@@ -404,7 +424,7 @@ export default () => {
 
           if (items?.length) {
             items = items
-              .map((it) => ({ ...it, status: statusSelector(it.works[0].status) }))
+              .map((it) => ({ ...it, status: statusSelector(it.works[0].status, it?.stoped_by) }))
               .filter((it) => !sortStatus.some((status) => status === it.status));
           }
 
@@ -456,7 +476,7 @@ export default () => {
         return false;
       }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
-        return false;
+        //return false;
       }
       return true;
     });

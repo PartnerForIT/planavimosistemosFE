@@ -258,24 +258,27 @@ export default function DataTable({
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => (
-                            <React.Fragment key={icon.value}>
-                              {
-                               statusClickable
-                                 ? (
-                                   <button
-                                     className={classNames(styles.iconButton,
-                                       sortStatus.some((i) => i === icon.value) ? styles.deselect : '')}
-                                     onClick={(e) => {
-                                       e.stopPropagation();
-                                       icon.onClick(icon.value);
-                                     }}
-                                   >
-                                     {icon.icon}
-                                   </button>
-                                 )
-                                 : icon.icon
-                              }
-                            </React.Fragment>
+                            ( !icon.hideTop ?
+                                <React.Fragment key={icon.value}>
+                                  {
+                                  statusClickable
+                                    ? (
+                                      <button
+                                        className={classNames(styles.iconButton,
+                                          sortStatus.some((i) => i === icon.value) ? styles.deselect : '')}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          icon.onClick(icon.value);
+                                        }}
+                                      >
+                                        {icon.icon}
+                                      </button>
+                                    )
+                                    : icon.icon
+                                  }
+                                </React.Fragment>
+                              : null
+                            )
                           ))
                         }
                       </div>
