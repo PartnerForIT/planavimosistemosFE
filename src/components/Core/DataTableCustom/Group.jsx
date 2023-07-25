@@ -5,6 +5,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import Row from './Row';
 import TriangleIcon from '../../Icons/TriangleIcon';
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
+import WarningCircleIcon from 'components/Icons/WarningCircleIcon';
 
 
 const Group = ({
@@ -103,6 +104,7 @@ const Group = ({
               }
 
               if (idx === 0) {
+
                 return (
                   <span
                     key={idx.toString()}
@@ -120,6 +122,13 @@ const Group = ({
                           />
                         : null
                       }
+                      {
+                        group.warning ?
+                          <WarningCircleIcon
+                          />
+                        : null
+                      }
+
                     </span>
                   </span>
                 );

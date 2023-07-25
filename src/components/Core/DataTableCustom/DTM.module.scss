@@ -258,6 +258,7 @@ header {
   }
 
   .groupLabelText {
+    display: flex;
     user-select: none;
     //color: #4d7499;
     text-transform: uppercase;

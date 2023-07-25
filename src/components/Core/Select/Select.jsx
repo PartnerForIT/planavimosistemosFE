@@ -128,7 +128,7 @@ export default function CustomSelect({
     [styles.customSelectOpened]: open,
   });
 
-  const generateLabel = () => (checkedItems.length === 1 ? (checkedItems[0].label || checkedItems[0].title)
+  const generateLabel = () => (checkedItems.length === 1 ? (checkedItems[0].label || checkedItems[0].title || checkedItems[0].name)
     : `${checkedItems.filter((e) => e.type !== 'group').length} ${type} selected`);
 
   return (

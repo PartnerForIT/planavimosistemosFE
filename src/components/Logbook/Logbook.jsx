@@ -383,10 +383,12 @@ export default () => {
             if (!employeeDays[it.employee_id]) {
               employeeDays[it.employee_id] = []
             }
+
             employeeDays[it.employee_id].push(
               {
                 ...it,
                 date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`),
+                status: statusSelector(it.works[0].status, it?.stoped_by),
               })
 
             if (!newArrange.find((i) => i.employeeId === it.employee_id)) {
@@ -417,7 +419,7 @@ export default () => {
 
         setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
 
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'date' : item.field } } ))
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'date' : item.field, label: (item.label == 'Employee') ? 'Date' : item.label } } ))
       } else {
         setItemsArray(workTime.map((item) => {
           let { items } = item;
@@ -441,7 +443,7 @@ export default () => {
           };
         }).filter(({ items }) => items.length));
 
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'employee' : item.field } } ))
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Date') ? 'employee' : item.field, label: (item.label == 'Date') ? 'Employee' : item.label } } ))
       }
      
       setColumnsWidthArray({...columnsWidth});
