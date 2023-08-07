@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState, useMemo,
+  useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback
 } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -14,6 +14,8 @@ import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
 import StyledCheckbox from '../Checkbox/Checkbox';
+import debounce from 'lodash.debounce';
+
 
 const useStyles = makeStyles({
   colorPrimary: {
@@ -166,17 +168,16 @@ export default function DataTable({
     },
   );
 
-  const onScroll = useMemo(() => {
-    if (hoverActions) {
-      return (e) => {
+  const onScroll = useCallback(
+    debounce((e) => {
+      if (hoverActions) {
         if (e.scrollLeft <= e.contentScrollWidth - e.clientWidth) {
           document.documentElement.style.setProperty(`--scroll-left-${id}`, `${e.scrollLeft}px`);
         }
-      };
-    }
-
-    return undefined;
-  }, [hoverActions, id]);
+      }
+    }, 200), 
+    [hoverActions, id]
+  );
 
   return (
     <div
