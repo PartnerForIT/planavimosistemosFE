@@ -159,6 +159,7 @@ export default () => {
                   day: indexDay,
                   start: '8:00',
                   end: '17:00',
+                  not_work: true,
                 };
               }
               return {

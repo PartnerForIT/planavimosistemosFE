@@ -184,6 +184,7 @@ const RowContent = ({
   resources,
   onDuplicateTimeToRow,
   onDuplicateTimeToColumn,
+  onNotWorkToday,
   expander,
   onChange,
   resourceId,
@@ -213,6 +214,13 @@ const RowContent = ({
     });
   }, [resourceId, onDuplicateTimeToColumn]);
 
+  const handleNotWorkToday = useCallback((values) => {
+    onNotWorkToday({
+      ...values,
+      resourceId,
+    });
+  }, [resourceId, onNotWorkToday]);
+
   const foundItem = useMemo(() => items.find((item) => resourceId === item.resourceId), [items]);
 
   return (
@@ -234,6 +242,7 @@ const RowContent = ({
                     fullName={title}
                     onDuplicateTimeToRow={handleDuplicateTimeToRow}
                     onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
+                    onNotWorkToday={handleNotWorkToday}
                     disabled={disabledCell}
                   />
                 )
@@ -251,6 +260,7 @@ const RowContent = ({
             resourceId={item.id}
             onDuplicateTimeToRow={onDuplicateTimeToRow}
             onDuplicateTimeToColumn={onDuplicateTimeToColumn}
+            onNotWorkToday={onNotWorkToday}
             title={item.title}
             avatar={item.photo}
             withDots={withDots}
@@ -400,6 +410,23 @@ export default forwardRef(({
             ...item.data.slice(cellIndex + 1),
           ],
         };
+      }),
+    }));
+  };
+  const handleNotWorkToday = ({ time, cellId, resourceId}) => {
+    const cellIndex = cellId;
+    setData((prevState) => ({
+      ...prevState,
+      [currentWeek]: prevState[currentWeek].map((item) => {
+        if (!item.data[cellIndex] || resourceId != item.resourceId) {
+          return item;
+        }
+
+        let newItem = {...item};
+
+        newItem.data[cellIndex].time.not_work = newItem.data[cellIndex].time.not_work ? false : true;
+
+        return newItem
       }),
     }));
   };
@@ -626,6 +653,7 @@ export default forwardRef(({
             ...nextState,
           };
         });
+
       }
     },
     updateStartDay: (startDay) => {
@@ -847,7 +875,7 @@ export default forwardRef(({
     return resShift;
 
   }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
-
+  
   return (
     <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
       { !modules?.manual_mode && (
@@ -918,6 +946,7 @@ export default forwardRef(({
                       onChange={handleChangeTime}
                       onDuplicateTimeToRow={handleDuplicateTimeToRow}
                       onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
+                      onNotWorkToday={handleNotWorkToday}
                       disabledCell={!customWorkingTime}
                       daysOfWeek={daysOfWeek[currentWeek]}
                       defaultWorkingTime={defaultWorkingTime[currentWeek]}

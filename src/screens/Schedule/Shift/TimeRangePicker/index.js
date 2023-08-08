@@ -51,6 +51,7 @@ export default memo(({
   fullName,
   onDuplicateTimeToRow,
   onDuplicateTimeToColumn,
+  onNotWorkToday,
 }) => {
   const { t } = useTranslation();
   const buttonRef = useRef(null);
@@ -111,6 +112,11 @@ export default memo(({
     handleCloseModal();
   };
 
+  const handleNotWork = () => {
+    onNotWorkToday({ time: value, cellId });
+    handleCloseModal();
+  };
+
   useEffect(() => {
     if (isOpenMenu) {
       try {
@@ -159,25 +165,28 @@ export default memo(({
   return (
     <ClickAwayListener onClickAway={handleCloseModal}>
       <div className={timeRangeColorClasses}>
-        <button
-          className={classes.timeRangeColor__button}
-          onClick={handleClickOpenModal}
-          ref={buttonRef}
-          disabled={disabled}
-          disabled-text={t('To change the time, you must enable the custom time')}
-        >
-          <span>{value.start}</span>
-          <span>–</span>
-          <span>{value.end}</span>
-          {
-            nightTime && (
-              <div
-                className={classes.timeRangeColor__button__nightTime}
-                data-title={t('Night Time')}
-              />
-            )
-          }
-        </button>
+        { !value.not_work && (
+          <button
+            className={classes.timeRangeColor__button}
+            onClick={handleClickOpenModal}
+            ref={buttonRef}
+            disabled={disabled}
+            disabled-text={t('To change the time, you must enable the custom time')}
+          >
+            <span>{value.start}</span>
+            <span>–</span>
+            <span>{value.end}</span>
+            {
+              nightTime && (
+                <div
+                  className={classes.timeRangeColor__button__nightTime}
+                  data-title={t('Night Time')}
+                />
+              )
+            }
+          </button>
+          )
+        }
         {
           (!disabled && withDots) && (
             <button
@@ -220,6 +229,12 @@ export default memo(({
                       onClick={handleDuplicateTimeToColumn}
                     >
                       {t('Duplicate the time to columns')}
+                    </button>
+                    <button
+                      className={classes.timeRangeColor__modal__item}
+                      onClick={handleNotWork}
+                    >
+                      {value.not_work ? t('Work today') : t('Not work today')}
                     </button>
                   </>
                 ) : (
