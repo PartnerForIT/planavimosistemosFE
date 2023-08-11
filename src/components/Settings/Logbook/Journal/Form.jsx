@@ -19,6 +19,8 @@ const breakArr = [
   { code: '7', name: 'if workday exceeds 7 hours' },
   { code: '8', name: 'if workday exceeds 8 hours' },
   { code: '9', name: 'if workday exceeds 9 hours' },
+  { code: '10', name: 'if workday exceeds 10 hours' },
+  { code: '11', name: 'if workday exceeds 11 hours' },
   { code: '14', name: 'if workday exceeds 14 hours' },
 ];
 
