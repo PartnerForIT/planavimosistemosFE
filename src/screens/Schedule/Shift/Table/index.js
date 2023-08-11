@@ -415,20 +415,31 @@ export default forwardRef(({
   };
   const handleNotWorkToday = ({ time, cellId, resourceId}) => {
     const cellIndex = cellId;
-    setData((prevState) => ({
-      ...prevState,
-      [currentWeek]: prevState[currentWeek].map((item) => {
+    setData((prevState) => {
+      
+      const mweek = prevState[currentWeek].map((item, index) => {
+
         if (!item.data[cellIndex] || resourceId != item.resourceId) {
           return item;
         }
+        return {
+          ...item,
+          data: item.data.map(c => (
+            {
+              ...c,
+              time: {
+                ...c.time,
+                not_work: !c.time.not_work
+              }
+            }
+          )),
+        }
+      })
 
-        let newItem = {...item};
-
-        newItem.data[cellIndex].time.not_work = newItem.data[cellIndex].time.not_work ? false : true;
-
-        return newItem
-      }),
-    }));
+      return {
+      ...prevState,
+      [currentWeek]: mweek
+    }});
   };
   const handleChangeWeek = (_, checked, event) => {
     const { name } = event.target;
