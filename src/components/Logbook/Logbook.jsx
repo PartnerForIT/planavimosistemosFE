@@ -352,7 +352,7 @@ export default () => {
       setCheckedItems([]);
       setSelectedItem(null);
     });
-  }, [checkedEmployees, checkedSkills, companyId, dateRange, dispatch, search]);
+  }, [checkedEmployees, checkedSkills, checkedPlaces, companyId, dateRange, dispatch, search]);
 
   useEffect(() => {
     sendRequest();
