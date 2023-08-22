@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
 import moment from 'moment';
+import { userSelector } from '../../../store/auth/selectors';
 
 import Dialog from '../../Core/Dialog';
 import Label from '../../Core/InputLabel';
@@ -156,6 +157,10 @@ const permissionsConfig = [
     name: 'jobs',
     module: 'create_jobs',
   },
+  {
+    name: 'app_manager',
+    permission: 'app_manager',
+  },
 ];
 export default ({
   handleClose,
@@ -170,14 +175,14 @@ export default ({
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
   const { users: allEmployees } = useSelector(employeesSelector);
+  const user = useSelector(userSelector);
 
   useEffect(() => {
-    
     if (open) {
       setFormValues({
         job_type_id: null,
         place_id: null,
-        employee_id: null,
+        employee_id: user?.employee?.id || null,
       });
       setTimeParts(
         [
@@ -383,22 +388,26 @@ export default ({
         }}
       >
         <div className={classes.addEntry}>
-          <div className={classes.addEntry__formControl}>
-            <div className={classes.addEntry__formControl__labelBlock}>
-              <Label text={t('Employee')} htmlFor='employee' />
-            </div>
-            <SimpleSelect
-              handleInputChange={handleInputChange}
-              name='employee_id'
-              fullWidth
-              value={formValues.employee_id}
-              options={employees}
-              valueKey='id'
-              labelKey='name'
-              require
-            />
-          </div>
-
+          
+          {
+            permissions.app_manager && (
+              <div className={classes.addEntry__formControl}>
+                <div className={classes.addEntry__formControl__labelBlock}>
+                  <Label text={t('Employee')} htmlFor='employee' />
+                </div>
+                <SimpleSelect
+                  handleInputChange={handleInputChange}
+                  name='employee_id'
+                  fullWidth
+                  value={formValues.employee_id}
+                  options={employees}
+                  valueKey='id'
+                  labelKey='name'
+                  require
+                />
+              </div>
+            )
+          }
           {
             permissions.jobs && !!allJobTypes.length && (
               <div className={classes.addEntry__formControl}>

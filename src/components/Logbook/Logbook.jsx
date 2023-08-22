@@ -31,6 +31,7 @@ import {
   AdditionalRatesDataSelector,
 } from '../../store/settings/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
+import { placesSelector } from '../../store/places/selectors';
 import { userSelector } from '../../store/auth/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 // import { getEmployees } from '../../store/employees/actions';
@@ -179,6 +180,8 @@ export default () => {
     endDate: endOfWeek(new Date()),
   });
 
+  const [places, setPlaces] = useState([]);
+  const [checkedPlaces, setCheckedPlaces] = useState([]);
   const [skills, setSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
   const [search, setSearch] = useState('');
@@ -195,6 +198,7 @@ export default () => {
   const { users: employees } = useSelector(employeesSelector);
   const getTotal = useSelector(totalSelector);
   const selectSkills = useSelector(skillsSelector);
+  const selectPlaces = useSelector(placesSelector);
   const user = useSelector(userSelector);
   const journal = useSelector(JournalDataSelector);
   const { id: companyId } = useParams();
@@ -334,6 +338,7 @@ export default () => {
 
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     const skillsArr = checkedSkills.map((emp) => emp.id);
+    const placesArr = checkedPlaces.map((emp) => emp.id);
 
     dispatch(getWorkTime(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : '',
@@ -341,6 +346,7 @@ export default () => {
       search,
       employeesArr,
       skillsArr,
+      placesArr,
       ...props,
     })).then(() => {
       setCheckedItems([]);
@@ -496,6 +502,12 @@ export default () => {
     }
   }, [selectSkills]);
 
+  useEffect(() => {
+    if (Array.isArray(selectPlaces)) {
+      setPlaces(selectPlaces);
+    }
+  }, [selectPlaces]);
+
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
     const setCheckedToAll = (state) => {
@@ -549,6 +561,13 @@ export default () => {
 
   const rowSelectionHandler = (selectedRow) => {
     setSelectedItem(selectedItem?.id == selectedRow?.id ? null : selectedRow);
+  };
+
+  const onPlacesSelectChange = (checkedPlaces) => {
+    setCheckedPlaces(checkedPlaces);
+  };
+  const onPlacesSelectFilter = () => {
+    sendRequest({ places: checkedPlaces.map((item) => item.id) });
   };
 
   const onSkillsSelectChange = (selectedSkills) => {
@@ -960,6 +979,19 @@ export default () => {
                 onKeyPress={(e) => e.key === 'Enter' && applyHandler()}
               />
             </div>
+            <div className={styles.hideOn936}>
+              <Delimiter />
+              <CustomSelect
+                placeholder={t('All places')}
+                buttonLabel={t('Filter')}
+                items={places ?? []}
+                onFilter={onPlacesSelectFilter}
+                onChange={onPlacesSelectChange}
+                width='auto'
+                type='places'
+              />
+            </div>
+
             <div className={styles.hideOn750}>
               <Delimiter />
               <CustomSelect
