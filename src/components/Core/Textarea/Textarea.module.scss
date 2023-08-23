@@ -1,0 +1,55 @@
+@import "../../Core/variables";
+
+@mixin placeholder($color: 'white') {
+  &::-webkit-textarea-placeholder {
+    /* Edge */
+    color: $color;
+  }
+
+  &:-ms-textarea-placeholder {
+    /* Internet Explorer 10-11 */
+    color: $color;
+  }
+
+  &::placeholder {
+    color: $color;
+  }
+}
+
+.textareaWrapper {
+  position: relative;
+  width: 100%;
+  min-width: 70px;
+  background-color: #f5f9fc;
+  border-radius: 13px;
+  padding: 6px 13px;
+}
+
+.label {
+  font-size: 14px;
+  font-family: 'Helvetica Neue Bold', sans-serif;
+  color: #808f94;
+  margin-bottom: 1px;
+}
+
+.textarea,
+%textarea {
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: $input-text-color;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 15px;
+  padding: 6px 0;
+  outline: none;
+  margin: 0;
+  resize: none;
+
+  @include placeholder($input-placeholder-color);
+}
+
+.error {
+  border-color: $red;
+  color: red;
+}

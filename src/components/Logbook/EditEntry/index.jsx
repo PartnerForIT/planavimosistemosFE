@@ -10,6 +10,7 @@ import Dialog from '../../Core/Dialog';
 import Label from '../../Core/InputLabel';
 import SimpleSelect from '../../Core/SimpleSelect';
 import PendingIcon from '../../Icons/PendingIcon';
+import Textarea from '../../Core/Textarea/Textarea';
 import usePermissions from '../../Core/usePermissions';
 import Input from '../../Core/Input/Input';
 import TrashIcon from '../../Icons/TrashIcon';
@@ -17,6 +18,7 @@ import RefreshArrow from '../../Icons/RefreshArrow';
 import PauseIcon from '../../Icons/PauseIcon';
 import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { placesSelector } from '../../../store/places/selectors';
+import { JournalDataSelector } from '../../../store/settings/selectors';
 import classes from './EditEntry.module.scss';
 
 const formatChars = {
@@ -217,6 +219,14 @@ const permissionsConfig = [
     name: 'jobs',
     module: 'create_jobs',
   },
+  {
+    name: 'app_manager',
+    permission: 'app_manager',
+  },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
 ];
 export default ({
   handleClose,
@@ -231,6 +241,7 @@ export default ({
 
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
+  const journal = useSelector(JournalDataSelector);
 
   useEffect(() => {
     if (!selectedItem.job_type_id && selectedItem.job_name) {
@@ -244,6 +255,7 @@ export default ({
       setFormValues({
         job_type_id: selectedItem.job_type_id,
         place_id: selectedItem.place_id,
+        comment: (selectedItem.comments && selectedItem.comments[0] ? selectedItem.comments[0].comment : ''),
       });
       setTimeParts(
         [
@@ -546,6 +558,17 @@ export default ({
                 remove={item.isRemove}
               />
             ))
+          }
+          {
+            permissions.comments_photo && journal.end_day_comment && (
+              <Textarea
+                label={t('Comment')}
+                placeholder={t('Add new comment here')}
+                onChange={handleInputChange}
+                name='comment'
+                value={formValues.comment}
+              />
+            )
           }
         </div>
       </Scrollbar>

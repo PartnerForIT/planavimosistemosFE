@@ -9,10 +9,11 @@ import { userSelector } from '../../../store/auth/selectors';
 import Dialog from '../../Core/Dialog';
 import Label from '../../Core/InputLabel';
 import SimpleSelect from '../../Core/SimpleSelect';
+import Textarea from '../../Core/Textarea/Textarea';
 import PendingIcon from '../../Icons/PendingIcon';
 import usePermissions from '../../Core/usePermissions';
 import Input from '../../Core/Input/Input';
-import { employeesSelector } from '../../../store/settings/selectors';
+import { employeesSelector, JournalDataSelector } from '../../../store/settings/selectors';
 import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { placesSelector } from '../../../store/places/selectors';
 import classes from './AddEntry.module.scss';
@@ -161,6 +162,10 @@ const permissionsConfig = [
     name: 'app_manager',
     permission: 'app_manager',
   },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
 ];
 export default ({
   handleClose,
@@ -175,6 +180,7 @@ export default ({
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
   const { users: allEmployees } = useSelector(employeesSelector);
+  const journal = useSelector(JournalDataSelector);
   const user = useSelector(userSelector);
 
   useEffect(() => {
@@ -183,6 +189,7 @@ export default ({
         job_type_id: null,
         place_id: null,
         employee_id: user?.employee?.id || null,
+        comment: '',
       });
       setTimeParts(
         [
@@ -478,6 +485,17 @@ export default ({
                 onChange={handleChangeTimePart}
               />
             ))
+          }
+          {
+            permissions.comments_photo && journal.end_day_comment && (
+              <Textarea
+                label={t('Comment')}
+                placeholder={t('Add new comment here')}
+                onChange={handleInputChange}
+                name='comment'
+                value={formValues.comment}
+              />
+            )
           }
         </div>
       </Scrollbar>
