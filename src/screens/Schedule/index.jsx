@@ -592,6 +592,8 @@ export default () => {
       }
     }
 
+    console.log({...event.extendedProps});
+
     return (
       <EventContent
         id={event.id}
@@ -606,6 +608,12 @@ export default () => {
         empty_manual={event.extendedProps.empty_manual}
         newEmployee={event.extendedProps.new_employee}
         oldEmployee={event.extendedProps.old_employee}
+        cost={event.extendedProps.cost}
+        night_minutes={event.extendedProps.night_minutes}
+        work_minutes={event.extendedProps.work_minutes}
+        minutes={event.extendedProps.minutes}
+        costPermission={permissions.cost && permissions.schedule_costs}
+        nightPermission={true}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && permissions.schedule_edit}

@@ -26,6 +26,12 @@ export default ({
   photo,
   jobTypeName,
   employeeName,
+  cost,
+  night_minutes,
+  work_minutes,
+  minutes,
+  costPermission,
+  nightPermission,
   withMenu,
   onChangeEmployee,
   onChangeWorkingTime,
@@ -235,12 +241,35 @@ export default ({
     const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id == employeeId && e.user_request);
     return current ? current.comment : false;
   }
+
+  const convertMinutesToHoursAndMinutes = function(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    
+    // Format the result as "hh:mm"
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+    
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  const tooltipContent = () => {
+    return (
+      `<div class="timeline-tooltip">From <b>${moment(start).format('HH:mm')}</b> to <b>${moment(end).format('HH:mm')}</b><br/>
+      Total Hours <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
+      + (nightPermission ? `<br />Work hours <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
+      + (nightPermission ? `<br />Night hours <b>${convertMinutesToHoursAndMinutes(night_minutes)}</b>` : ``)
+      + (costPermission ? `<br />Cost <b>${cost}$</b>` : ``)
+      + `</div>`
+    )
+  }
   
   return (
     <div
       className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
       data-for={tooltipType()}
-      data-tip={activeDrag || empty_manual ? null : title}
+      data-html={true}
+      data-tip={activeDrag || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
       id='dropdownButton'
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
@@ -259,7 +288,7 @@ export default ({
           ></div>
         )
       }
-      {
+      {/* {
         !empty_manual && (
         (!!newEmployee?.name || empty)
           ? (newEmployee?.photo === null || empty)
@@ -278,7 +307,7 @@ export default ({
        
         )
         )
-      }
+      } */}
       {
         
           (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
@@ -287,12 +316,21 @@ export default ({
             ? (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={classes.eventContent__title} >
               {
+                // (!!newEmployee?.name)
+
+                //   ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                //     :(employeeName === 'Empty' || empty)
+                //     ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                //     :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+
                 (!!newEmployee?.name)
 
-                  ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                  ? <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
                     :(employeeName === 'Empty' || empty)
                     ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
+                    :<>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
+
+                
               }
             </span>
           
