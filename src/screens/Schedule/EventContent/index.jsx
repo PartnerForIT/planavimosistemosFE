@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
@@ -12,11 +12,13 @@ import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import classes from './EventContent.module.scss';
-import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
+//import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
-import { padStart } from '@fullcalendar/react';
+//import { padStart } from '@fullcalendar/react';
 import { companyModules } from '../../../store/company/selectors';
-import { AdditionalRatesDataSelector } from '../../../store/settings/selectors';
+import { AdditionalRatesDataSelector,
+  currencySelector,
+  settingCompanySelector } from '../../../store/settings/selectors';
 
 export default ({
   id,
@@ -61,6 +63,8 @@ export default ({
   const modalAddRef = useRef(null);
   const modules = useSelector(companyModules);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  const currencies = useSelector(currencySelector);
+  const company = useSelector(settingCompanySelector);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -253,13 +257,25 @@ export default ({
     return `${formattedHours}:${formattedMinutes}`;
   }
 
+  const currency = useMemo(
+    () => {
+      if (Array.isArray(currencies)) {
+        return currencies
+          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+      }
+
+      return '';
+    },
+    [company.currency, currencies],
+  );
+
   const tooltipContent = () => {
     return (
       `<div class="timeline-tooltip">From <b>${moment(start).format('HH:mm')}</b> to <b>${moment(end).format('HH:mm')}</b><br/>
       Total Hours <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
       + (nightPermission ? `<br />Work hours <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
-      + (nightPermission ? `<br />Night hours <b>${convertMinutesToHoursAndMinutes(night_minutes)}</b>` : ``)
-      + (costPermission ? `<br />Cost <b>${cost}$</b>` : ``)
+      + (nightPermission ? `<br />Night hours <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
+      + (costPermission ? `<br />Cost <b>${cost}${currency}</b>` : ``)
       + `</div>`
     )
   }

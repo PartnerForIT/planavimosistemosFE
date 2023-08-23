@@ -592,8 +592,6 @@ export default () => {
       }
     }
 
-    console.log({...event.extendedProps});
-
     return (
       <EventContent
         id={event.id}
