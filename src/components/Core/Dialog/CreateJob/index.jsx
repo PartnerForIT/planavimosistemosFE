@@ -16,8 +16,10 @@ export default function CreateJob({
   useEffect(() => {
     if (initialValue) {
       setJobName(initialValue);
+    } else {
+      setJobName('');
     }
-  }, [initialValue]);
+  }, [initialValue, open]);
 
   const handleExited = () => {
     setJobName('');

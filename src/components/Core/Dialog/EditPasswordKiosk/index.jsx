@@ -41,8 +41,12 @@ export default ({
       setFormValues({
         ...initialValues,
       });
+    } else {
+      setFormValues({
+        ...initialFormValues,
+      });
     }
-  }, [initialValues]);
+  }, [initialValues, open]);
 
   const errors = useMemo(() => {
     const nextErrors = {};

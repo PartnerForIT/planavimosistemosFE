@@ -36,8 +36,12 @@ export default function CreatePlace({
       setFormValues({
         ...initialValues,
       });
+    } else {
+      setFormValues({
+        ...initialFormValues,
+      });
     }
-  }, [initialValues]);
+  }, [initialValues, open]);
 
   return (
     <Dialog handleClose={onClose} onExited={handleExited} open={open} title={title}>

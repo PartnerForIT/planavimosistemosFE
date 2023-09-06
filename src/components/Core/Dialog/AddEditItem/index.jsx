@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import Input from '../../Input/Input';
@@ -31,6 +31,14 @@ export default ({
     handleClose();
 
   };
+
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+    } else {
+      setValue('');
+    }
+  }, [initialValue, open]);
 
   return (
     <Dialog

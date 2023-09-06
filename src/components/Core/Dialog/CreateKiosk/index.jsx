@@ -49,8 +49,10 @@ export default ({
         ...initialValues,
       }));
       setIsEdit(true);
+    } else {
+      setFormValues(initialFormValues);
     }
-  }, [initialValues]);
+  }, [initialValues, open]);
 
   const errors = useMemo(() => {
     const nextErrors = {};

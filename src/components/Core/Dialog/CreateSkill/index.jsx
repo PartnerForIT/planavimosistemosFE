@@ -45,14 +45,19 @@ export default function CreateSkill({
     handleClose();
 
   };
+
   useEffect(() => {
     if (initialValues) {
       setFormValues({
         ...initialValues,
         use_rates: Boolean(initialValues.use_rates),
       });
+    } else {
+      setFormValues({
+        ...initialFormValues,
+      });
     }
-  }, [initialValues]);
+  }, [initialValues, open]);
 
   const dispatch = useDispatch();
 
