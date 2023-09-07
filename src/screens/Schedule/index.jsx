@@ -319,9 +319,12 @@ export default () => {
     if (nextTimeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
-    
+
     dispatch(getSchedule({
       companyId,
+      shiftTypeArr: filter?.shiftType.map(({id}) => id),
+      employeesArr: filter?.employers.map(({id}) => id),
+      placesArr: filter?.place.map(({id}) => id),
       timeline: nextTimeline,
       fromDate: nextFromDate.format('YYYY-MM-DD'),
     }));

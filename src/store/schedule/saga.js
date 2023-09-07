@@ -39,7 +39,7 @@ function* getSchedule(action) {
   try {
     const { data } = yield call(
       axios.get,
-      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}&from_date=${action.fromDate}`,
+      `${config.api.url}/company/${action.companyId}/shift?type=${action.timeline}&from_date=${action.fromDate}&shiftTypeArr=${action.shiftTypeArr}&employeesArr=${action.employeesArr}&placesArr=${action.placesArr}`,
       getToken(),
     );
     yield put(getScheduleSuccess(data));

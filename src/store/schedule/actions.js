@@ -30,12 +30,18 @@ import {
 
 export const getSchedule = ({
   companyId,
+  shiftTypeArr = '',
+  employeesArr = '',
+  placesArr = '',
   timeline,
   fromDate,
   firstLoading,
 }) => ({
   type: GET_SCHEDULE,
   companyId,
+  shiftTypeArr,
+  employeesArr,
+  placesArr,
   timeline,
   fromDate,
   firstLoading,
