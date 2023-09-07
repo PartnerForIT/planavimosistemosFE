@@ -51,6 +51,7 @@ export default ({
       setIsEdit(true);
     } else {
       setFormValues(initialFormValues);
+      setIsEdit(false);
     }
   }, [initialValues, open]);
 

@@ -244,7 +244,7 @@ export default () => {
               />
             </div>
             <Button
-              onClick={() => setCreateEditKioskVisible(true)}
+              onClick={() => { setSelectedItemId(''); setCreateEditKioskVisible(true) }}
               white
               fillWidth
               size='big'
