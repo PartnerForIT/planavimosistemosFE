@@ -35,6 +35,7 @@ export default ({
   onChangeMonth,
   withCost,
   timesPanel,
+  accumulatedHours,
   markerActive,
   handleMarker,
 }) => {
@@ -202,6 +203,7 @@ export default ({
               onExpander={handleExpander}
               markerActive={markerActive}
               currentMonth={currentMonth}
+              accumulatedHours={accumulatedHours}
             />
             <div className={classes.monthView__content__data}>
               {
@@ -245,6 +247,11 @@ export default ({
               <ReactTooltip
                 id='user_marker'
                 className={classes.monthView__content__data__tooltip__marker}
+                effect='solid'
+              />
+              <ReactTooltip
+                id='demand_hours'
+                className={classes.monthView__content__data__tooltip}
                 effect='solid'
               />
               {backgroundArr.map((item) => (

@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 
 import style from './CreateAccount.module.scss';
@@ -17,6 +17,12 @@ import Input from '../../Input/Input';
 import NextStepButton from './NextStepButton';
 import UserCard from './UserCard';
 import usePermissions from '../../usePermissions';
+import {
+  getSchedule,
+} from '../../../../store/settings/actions';
+import {
+  scheduleSelector,
+} from '../../../../store/settings/selectors';
 
 const permissionsConfig = [
   {
@@ -62,9 +68,15 @@ const SecondStep = ({
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
 
+  const schedule = useSelector(scheduleSelector);
+
   const [skillOpen, setSkillOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    dispatch(getSchedule(companyId));
+  }, [dispatch, companyId]);
 
   useEffect(() => {
     if (_.isEmpty(errors) && ready) {
@@ -250,6 +262,22 @@ const SecondStep = ({
                   value={user.charge ?? ''}
                   placeholder={t('How much you charge per h')}
                   fullWidth
+                  onChange={handleInput}
+                />
+              </div>
+            )
+          }
+          {
+            permissions.schedule_shift && schedule.use_accumulated && (
+              <div className={style.formItem}>
+                <Label
+                  htmlFor='hours_demand'
+                  text={t('Monthly Hours Demand')}
+                />
+                <Input
+                  name='hours_demand'
+                  value={user.hours_demand ?? ''}
+                  placeholder={t('Enter hours threshold')}
                   onChange={handleInput}
                 />
               </div>

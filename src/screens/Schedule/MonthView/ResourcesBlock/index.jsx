@@ -7,6 +7,7 @@ export default ({
   resources,
   onExpander,
   markerActive,
+  accumulatedHours,
 }) => {
   return (
     <div className={classes.resourcesBlock}>
@@ -19,6 +20,7 @@ export default ({
             expander={item.expander}
             onExpander={onExpander}
             markerActive={markerActive}
+            accumulatedHours={accumulatedHours}
             withExpander={!!item.children?.length}
             withNumberInput
             countChildren={item.children?.length}

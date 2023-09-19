@@ -43,6 +43,40 @@
   }
 }
 
+.accumalated {
+  display: flex;
+  align-items: center;
+  color: #333945;
+  font-size: 15px;
+
+  & > div {
+    min-width: 30px;
+
+    input[type=number] {
+      width: 30px;
+      max-width: 30px;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 10px 5px;
+      margin-left: 15px;
+      margin-right: 9px;
+      -moz-appearance: textfield;
+
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.accumalated_select {
+  width: 220px;
+  margin-left: 15px;
+}
+
 .hr {
   height: 1px;
   background: #e8eff6;
@@ -51,10 +85,10 @@
 
 .workAtNight {
   display: flex;
+  gap: 20px;
   margin-bottom: 10px;
 
   label {
-    min-width: 200px;
     font-family: "Helvetica Neue Bold", sans-serif;
   }
 }

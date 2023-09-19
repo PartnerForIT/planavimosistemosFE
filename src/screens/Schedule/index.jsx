@@ -653,6 +653,7 @@ export default () => {
       shiftId,
       employeeId,
       employeesCount,
+      hours_demand,
     } = resource.extendedProps;
     const realCount = employeesCount;
 
@@ -660,6 +661,7 @@ export default () => {
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
+        accumulatedHours={schedule.accumulatedHours[employeeId] || []}
         shiftId={shiftId}
         withMenu={!!shiftId && permissions.schedule_edit}
         employeeId={employeeId}
@@ -1089,6 +1091,7 @@ export default () => {
                     resources={Object.values(resources) || resourcesMock}
                     events={schedule.events}
                     holidays={schedule?.holidays}
+                    accumulatedHours={schedule?.accumulatedHours}
                     markers={markers}
                     markerActive={markerActive}
                     handleMarker={handleMarker}
@@ -1185,6 +1188,11 @@ export default () => {
                     <ReactTooltip
                       id='user_marker'
                       className='schedule-screen__tooltip schedule-screen__tooltip__marker'
+                      effect='solid'
+                    />
+                    <ReactTooltip
+                      id='demand_hours'
+                      className='schedule-screen__tooltip schedule-screen__tooltip__demand'
                       effect='solid'
                     />
                     <DialogDeleteShift

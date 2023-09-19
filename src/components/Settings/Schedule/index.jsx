@@ -10,6 +10,7 @@ import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
 import TitleBlock from '../../Core/TitleBlock';
 import Dashboard from '../../Core/Dashboard';
+import Select from '../../Core/SimpleSelect';
 import Schedule2Icon from '../../Icons/Schedule2';
 import Progress from '../../Core/Progress';
 import {
@@ -31,6 +32,21 @@ import Tooltip from '../../Core/Tooltip';
 import Checkbox from '../../Core/Checkbox/Checkbox2';
 import SimpleSelect from '../../Core/SimpleSelect';
 import styles from './schedule.module.scss';
+
+const monthArr = [
+  { code: 1, name: 'January' },
+  { code: 2, name: 'February' },
+  { code: 3, name: 'March' },
+  { code: 4, name: 'April' },
+  { code: 5, name: 'May' },
+  { code: 6, name: 'June' },
+  { code: 7, name: 'July' },
+  { code: 8, name: 'August' },
+  { code: 9, name: 'September' },
+  { code: 10, name: 'October' },
+  { code: 11, name: 'November' },
+  { code: 12, name: 'December' },
+];
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -79,12 +95,14 @@ export default function ActivityLog() {
     dispatch(postSchedule(companyId, data));
   };
   const handleChangeInput = (event) => {
-    const {
+    let {
       name,
       value,
       checked,
       type,
     } = event.target;
+
+    value = (name == 'accumulated_months' && value && [1,2,3,4,6].includes(value)) ? 1 : value;
 
     switch (type) {
       case 'checkbox': {
@@ -136,7 +154,6 @@ export default function ActivityLog() {
                   </div>
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
-                    <Label text={t('Work at night')} />
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
                       offColor='#808F94'
@@ -147,6 +164,7 @@ export default function ActivityLog() {
                       height={21}
                       width={40}
                     />
+                    <Label text={t('Work at night')} />
                   </div>
                   <div className={styles.dayStart}>
                     <div className={styles.dayStart__label}>
@@ -165,7 +183,6 @@ export default function ActivityLog() {
                   </div>
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
-                    <Label text={t('Show place timeline')} />
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ place_timeline: checked }); }}
                       offColor='#808F94'
@@ -176,9 +193,9 @@ export default function ActivityLog() {
                       height={21}
                       width={40}
                     />
+                    <Label text={t('Show place timeline')} />
                   </div>
                   <div className={styles.workAtNight}>
-                    <Label text={t('Show shift timeline')} />
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ shift_timeline: checked }); }}
                       offColor='#808F94'
@@ -189,9 +206,9 @@ export default function ActivityLog() {
                       height={21}
                       width={40}
                     />
+                    <Label text={t('Show shift timeline')} />
                   </div>
                   <div className={styles.workAtNight}>
-                    <Label text={t('Show job type timeline')} />
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ job_timeline: checked }); }}
                       offColor='#808F94'
@@ -202,10 +219,10 @@ export default function ActivityLog() {
                       height={21}
                       width={40}
                     />
+                    <Label text={t('Show job type timeline')} />
                   </div>
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
-                    <Label text={t('Use request day off mobile')} />
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ request_dayoff: checked }); }}
                       offColor='#808F94'
@@ -216,7 +233,51 @@ export default function ActivityLog() {
                       height={21}
                       width={40}
                     />
+                    <Label text={t('Use request day off mobile')} />
                   </div>
+                  <div className={styles.hr} />
+                  <div className={styles.workAtNight}>
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ use_accumulated: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.use_accumulated || false}
+                      height={21}
+                      width={40}
+                    />
+                    <Label text={t('Use accumulated hours calculation')} />
+                  </div>
+                  { inputValues.use_accumulated && (
+                    <div className={styles.accumalated}>
+                      {t('Calculate')}
+                      <Input
+                        value={inputValues.accumulated_months}
+                        name='accumulated_months'
+                        type='number'
+                        placeholder='0'
+                        min='1'
+                        max='12'
+                        onChange={handleChangeInput}
+                      />
+                      {t('months accumulated hours')}
+                    </div>
+                  )
+                  }
+                  { inputValues.use_accumulated && (
+                    <div className={styles.accumalated}>
+                      {t('Period starts from the first day of this month')}
+                      <Select
+                        handleInputChange={handleChangeInput}
+                        name='accumulated_start'
+                        value={inputValues.accumulated_start}
+                        options={monthArr}
+                        className={styles.accumalated_select}
+                      />
+                    </div>
+                  )
+                  }
                   <div className={styles.hr} />
                   <div className={styles.clockIn}>
                     <Checkbox

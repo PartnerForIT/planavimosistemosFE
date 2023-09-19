@@ -28,6 +28,7 @@ export default function CreateAccount({
     name: '',
     surname: '',
     external_id: null,
+    hours_demand: '',
     skill: null,
     subgroup: null,
     group: null,

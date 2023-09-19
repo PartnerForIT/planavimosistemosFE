@@ -1,11 +1,11 @@
 import classnames from 'classnames';
 import React, {
-  useEffect, useMemo, useState,
+  useEffect, useMemo, useState
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import _ from 'lodash';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DropzoneDialog } from 'material-ui-dropzone';
 import Dialog from '../index';
 import Button from '../../Button/Button';
@@ -23,6 +23,12 @@ import classes from './EditAccount.module.scss';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
+import {
+  getSchedule,
+} from '../../../../store/settings/actions';
+import {
+  scheduleSelector,
+} from '../../../../store/settings/selectors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +93,8 @@ export default function EditAccount({
   const styles = useStyles();
   const permissions = usePermissions(permissionsConfig);
 
+  const schedule = useSelector(scheduleSelector);
+
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
@@ -96,6 +104,10 @@ export default function EditAccount({
   const [errors, setErrors] = useState({});
 
   const [skillName, setSkillName] = useState(defaultSkill);
+
+  useEffect(() => {
+    dispatch(getSchedule(companyId));
+  }, [dispatch, companyId]);
 
   const handleClose = (payload) => {
     externalHandleClose(payload);
@@ -131,7 +143,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, cost, charge, skills, place, shift_id, job_type_id, role_id,
+        name, surname, phone, speciality_id, external_id, hours_demand, cost, charge, skills, place, shift_id, job_type_id, role_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups,
       } = employee;
@@ -142,6 +154,7 @@ export default function EditAccount({
         phone,
         speciality_id,
         external_id,
+        hours_demand,
         shift_id,
         job_type_id,
         role_id,
@@ -519,6 +532,22 @@ export default function EditAccount({
                           />
                         </div>
                       )
+                    }
+                    {
+                     permissions.schedule_shift && schedule.use_accumulated && (
+                       <div className={classes.formItem}>
+                         <Label
+                           htmlFor='hours_demand'
+                           text={t('Monthly Hours Demand')}
+                         />
+                         <Input
+                           name='hours_demand'
+                           value={user.hours_demand ?? ''}
+                           placeholder={t('Enter hours threshold')}
+                           onChange={handleInput}
+                         />
+                       </div>
+                     )
                     }
                   </div>
 

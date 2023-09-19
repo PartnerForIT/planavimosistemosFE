@@ -31,6 +31,8 @@ const ResourceCell = ({
   lastChild2 = false,
   isEmpty = false,
   employeesCount,
+  employeeId,
+  accumulatedHours,
 }) => {
   const { t } = useTranslation();
 
@@ -55,6 +57,7 @@ const ResourceCell = ({
   // const handleDelete = useCallback(() => {
   //   onDelete({ rowId, parentRowId });
   // }, [rowId, parentRowId]);
+  
   return (
     <>
       <div className={rowClasses}>
@@ -67,6 +70,8 @@ const ResourceCell = ({
           title={`${title} ${employeesCount ? `(${employeesCount})` : ''}`}
           avatar={avatar}
           onExpander={handleExpander}
+          accumulatedHours={employeeId && accumulatedHours && accumulatedHours[employeeId] ? accumulatedHours[employeeId] : []}
+          employeeId={employeeId}
           expander={expander}
           withExpander={withExpander && !markerActive}
           nestingLevel={nestingLevel}
@@ -83,11 +88,13 @@ const ResourceCell = ({
             rowId={item.id}
             title={item.title}
             avatar={item.photo}
+            employeeId={item.employeeId}
             items={item.children}
             employeesCount={item.employeesCount}
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={item.expander}
+            accumulatedHours={accumulatedHours}
             markerActive={markerActive}
             relatives={items}
             lastChild1={nestingLevel === 0 ? (index + 1 === items.length) : lastChild1}

@@ -8,6 +8,10 @@ import Dots from '../../../../../components/Icons/Dots';
 import InputNumber from '../InputNumber';
 import classes from './Section.module.scss';
 
+import moment from 'moment';
+
+import useCompanyInfo from '../../../../../hooks/useCompanyInfo';
+
 export default ({
   title,
   avatar,
@@ -20,8 +24,25 @@ export default ({
   onDelete,
   withMenu,
   nestingLevel = 1,
+  employeeId,
+  accumulatedHours,
 }) => {
   const { t } = useTranslation();
+  const { getDateFormat } = useCompanyInfo();
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
+  });
+  const demandClasses = classnames(
+    classes.section__demand,
+    {
+      [classes.section__demand_red]: accumulatedHours?.totalHours && !accumulatedHours?.actualHours,
+      [classes.section__demand_gray]: !accumulatedHours?.totalHours,
+      [classes.section__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours <= accumulatedHours?.totalHours,
+      [classes.section__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
+    },
+  );
 
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const buttonRef = useRef(null);
@@ -36,6 +57,37 @@ export default ({
   };
   const handleClickOpenMenu = () => {
     setIsOpenMenu((prevState) => !prevState);
+  };
+
+  const demandTip = () => {
+    return `
+      <table>
+        <tr>
+          <td>
+              <b>${ t('Period') }:</b>
+          </td>
+          <td>
+            ${moment(accumulatedHours?.startPeriod).format(formatDate)} - ${moment(accumulatedHours?.endPeriod).format(formatDate)}
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <b>${ t('Actual time') }:</b>
+          </td>
+          <td>
+            ${accumulatedHours?.actualHours} hours
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <b>${ t('Target time') }:</b>
+          </td>
+          <td>
+            ${accumulatedHours?.totalHours} hours
+          </td>
+        </tr>
+      </table>
+    `
   };
 
   useEffect(() => {
@@ -87,6 +139,17 @@ export default ({
                 />
               )
             }
+          </div>
+        )
+      }
+      {
+        accumulatedHours?.startPeriod && employeeId && (
+          <div
+            data-for='demand_hours'
+            data-tip={demandTip()}
+            data-html={true}
+            className={demandClasses}>
+              {accumulatedHours?.actualHours}/{accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'}
           </div>
         )
       }
