@@ -37,9 +37,9 @@ export default ({
   const demandClasses = classnames(
     classes.section__demand,
     {
-      [classes.section__demand_red]: accumulatedHours?.totalHours && !accumulatedHours?.actualHours,
-      [classes.section__demand_gray]: !accumulatedHours?.totalHours,
-      [classes.section__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours <= accumulatedHours?.totalHours,
+      [classes.section__demand_red]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours < accumulatedHours?.totalHours,
+      [classes.section__demand_gray]: !accumulatedHours?.totalHours && !accumulatedHours?.totalHours,
+      [classes.section__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours == accumulatedHours?.totalHours,
       [classes.section__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
     },
   );
@@ -149,7 +149,11 @@ export default ({
             data-tip={demandTip()}
             data-html={true}
             className={demandClasses}>
-              {accumulatedHours?.actualHours}/{accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'}
+              {
+                !accumulatedHours?.actualHours && !accumulatedHours?.totalHours ?
+                ('n/a') :
+                (accumulatedHours?.actualHours+'/'+(accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'))
+              }
           </div>
         )
       }
