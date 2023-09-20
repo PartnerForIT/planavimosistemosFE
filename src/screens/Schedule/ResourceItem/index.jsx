@@ -28,7 +28,7 @@ export default ({
     classes.resourceItem__demand,
     {
       [classes.resourceItem__demand_red]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours < accumulatedHours?.totalHours,
-      [classes.resourceItem__demand_gray]: !accumulatedHours?.totalHours && !accumulatedHours?.totalHours,
+      [classes.resourceItem__demand_gray]: !accumulatedHours?.totalHours || !accumulatedHours?.actualHours,
       [classes.resourceItem__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours == accumulatedHours?.totalHours,
       [classes.resourceItem__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
     },
@@ -73,7 +73,7 @@ export default ({
             : title
       }
       {
-        employeeId && (
+        accumulatedHours?.startPeriod && employeeId && (
           <div
             data-for='demand_hours'
             data-tip={demandTip()}
