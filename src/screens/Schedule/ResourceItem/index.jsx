@@ -64,7 +64,7 @@ export default ({
       </table>
     `
   };
-
+  
   return (
     <>
       {
@@ -73,7 +73,7 @@ export default ({
             : title
       }
       {
-        accumulatedHours?.startPeriod && employeeId && (
+        employeeId && (
           <div
             data-for='demand_hours'
             data-tip={demandTip()}

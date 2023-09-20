@@ -143,7 +143,7 @@ export default ({
         )
       }
       {
-        accumulatedHours?.startPeriod && employeeId && (
+        employeeId && (
           <div
             data-for='demand_hours'
             data-tip={demandTip()}

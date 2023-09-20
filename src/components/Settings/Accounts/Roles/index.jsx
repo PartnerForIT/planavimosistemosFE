@@ -170,6 +170,7 @@ export default () => {
             edit: 'Can create & edit schedules',
             view: 'Can see Schedule',
             assigned_place: 'Only assigned place view',
+            see_all_employees: 'Can see all employees',
             costs: 'Can see Costs',
           },
         },

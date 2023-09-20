@@ -52,6 +52,9 @@ import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
 import usePermissions from '../../../Core/usePermissions';
 import useCompanyInfo from '../../../../hooks/useCompanyInfo';
+import {
+  scheduleSelector,
+} from '../../../../store/settings/selectors';
 
 import styles from './accounts.module.scss';
 
@@ -109,6 +112,7 @@ const columns = [
     cellRenderer: ({ profitability }) => profitability.cost,
     checked: true,
   },
+  { label: 'Monthly hours', field: 'hours_demand', checked: true },
   {
     label: <LabelWithCurrencySign text='Charge/h/' />,
     field: 'sallary',
@@ -189,6 +193,7 @@ export default function AccountsList() {
   const [columnsArray, setColumnsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [importVisible, setImportVisible] = useState(false);
+  const schedule = useSelector(scheduleSelector);
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
@@ -300,11 +305,14 @@ export default function AccountsList() {
       if (!permissions.profit && (column.field === 'charge' || column.field === 'sallary')) {
         return false;
       }
+      if ((!permissions.schedule_shift || !schedule.use_accumulated) && column.field === 'hours_demand') {
+        return false;
+      }
       return true;
     });
 
     setColumnsArray(allColumnsArray);
-  }, [permissions]);
+  }, [permissions, schedule]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible([employeeId]);
