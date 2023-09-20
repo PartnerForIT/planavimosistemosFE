@@ -75,7 +75,7 @@ export default ({
               <b>${ t('Actual time') }:</b>
           </td>
           <td>
-            ${accumulatedHours?.actualHours} hours
+            ${accumulatedHours?.actualHours || 0} hours
           </td>
         </tr>
         <tr>
@@ -83,7 +83,7 @@ export default ({
               <b>${ t('Target time') }:</b>
           </td>
           <td>
-            ${accumulatedHours?.totalHours} hours
+            ${accumulatedHours?.totalHours || 0} hours
           </td>
         </tr>
       </table>
@@ -152,7 +152,7 @@ export default ({
               {
                 !accumulatedHours?.actualHours && !accumulatedHours?.totalHours ?
                 ('n/a') :
-                (accumulatedHours?.actualHours+'/'+(accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'))
+                ((accumulatedHours?.actualHours ? accumulatedHours?.actualHours : '-')+'/'+(accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'))
               }
           </div>
         )
