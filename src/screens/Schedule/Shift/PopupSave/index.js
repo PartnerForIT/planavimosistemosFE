@@ -68,9 +68,9 @@ export default ({
   };
   const handleSaveShift = () => {
     if (
-        (type == 'enterShiftName' && values.shiftName)
-        || (type == 'selectPlace' && (values.placeName || values.placeId))
-        || (type == 'enterShiftNameAndPlace' && values.shiftName && (values.placeName || values.placeId))) {
+        (type === 'enterShiftName' && values.shiftName)
+        || (type === 'selectPlace' && (values.placeName || values.placeId))
+        || (type === 'enterShiftNameAndPlace' && values.shiftName && (values.placeName || values.placeId))) {
       onSaveShift(values);
     }
   };

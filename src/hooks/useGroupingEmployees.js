@@ -22,14 +22,14 @@ export default (empList, employToCheck) => {
       const groupId = group_id ? ('group_' + group_id) : 'group_all';
       const subGroupId = subgroup_id ? ('subgroup_' + subgroup_id) : 'subgroup_all';
 
-      if( _temp2[groupId] == undefined) {
+      if( _temp2[groupId] === undefined) {
         _temp2[groupId] = {
           type:'group',
           label: groups
         }
       }
 
-      if(_temp2[groupId][subGroupId] == undefined) {
+      if(_temp2[groupId][subGroupId] === undefined) {
         _temp2[groupId][subGroupId] = {
           type: 'group',
           label: subgroups,

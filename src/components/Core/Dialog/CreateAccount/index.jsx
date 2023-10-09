@@ -73,7 +73,7 @@ export default function CreateAccount({
 
     setUser((prevState) => {
       if (name !== 'group') {
-        if (name == 'place') {
+        if (name === 'place') {
           const nextValues = {
             ...prevState,
             [name]: value,
@@ -81,14 +81,14 @@ export default function CreateAccount({
 
           if (prevState.shift_id) {
             const foundShift = shifts.find(({ id }) => id === prevState.shift_id);
-            if (foundShift && foundShift.place_id != value) {
+            if (foundShift && foundShift.place_id !== value) {
               delete nextValues.shift_id;
             }
           }
 
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.shift_id)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id === nextValues?.shift_id)) {
               delete nextValues.job_type_id;
             }
           }
@@ -96,7 +96,7 @@ export default function CreateAccount({
           return nextValues;
         }
         
-        if (name == 'shift_id') {
+        if (name === 'shift_id') {
           const nextValues = {
             ...prevState,
             [name]: value,
@@ -104,7 +104,7 @@ export default function CreateAccount({
 
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id === value)) {
               delete nextValues.job_type_id;
             }
           }

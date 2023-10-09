@@ -36,7 +36,7 @@ export default function ImportIikoDialog({
                 </p>
               </div>
               <div className={styles.result}>
-                { resultText != '' && (
+                { resultText !== '' && (
                   result ? (
                       <p className={styles.success}>
                         {resultText}
@@ -53,7 +53,7 @@ export default function ImportIikoDialog({
           )
         }
       </div>
-      { resultText == '' && (
+      { resultText === '' && (
         <div className={style.buttonsBlock}>
           <Button onClick={() => cancelImportIiko()} cancel size='big'>
             {buttonTitle2}

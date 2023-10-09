@@ -140,7 +140,7 @@ export default ({
   }
 
   useEffect(() => {
-    if (content == 'addWorkingTime') {
+    if (content === 'addWorkingTime') {
       if (modalAddRef.current) {
         modalAddRef.current.open();
       }
@@ -225,7 +225,7 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if (!newEmployee?.name && (employeeName == 'Empty' || empty)) {
+    } else if (!newEmployee?.name && (employeeName === 'Empty' || empty)) {
       type += '_empty';
     }
       
@@ -235,14 +235,14 @@ export default ({
 
   const dayEndCheck = () => {
       if (isCompleted) {
-        return `${classes.eventContent} ${classes.dayEnd} ${(content == 'addWorkingTime' ? classes.eventContent__time : '')}`
-      } else return `${classes.eventContent} ${(content == 'addWorkingTime' ? classes.eventContent__time : '')}`
+        return `${classes.eventContent} ${classes.dayEnd} ${(content === 'addWorkingTime' ? classes.eventContent__time : '')}`
+      } else return `${classes.eventContent} ${(content === 'addWorkingTime' ? classes.eventContent__time : '')}`
     }
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const markerComment = () => {
-    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id == employeeId && e.user_request);
+    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request);
     return current ? current.comment : false;
   }
 

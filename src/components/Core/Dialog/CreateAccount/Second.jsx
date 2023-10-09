@@ -94,7 +94,7 @@ const SecondStep = ({
       name,
     })) ?? [];
     return grps;
-  }, [groups, t]);
+  }, [groups]);
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
     const selectedGroup = groups.find((group) => group.id === parseInt(user.group, 10)) ?? {};
@@ -107,7 +107,7 @@ const SecondStep = ({
     }))
       .slice() ?? [];
     return sub;
-  }, [groups, t, user.group]);
+  }, [groups, user.group]);
 
   const createNewSkill = (data) => {
     dispatch(createSkill(data, companyId));
@@ -128,17 +128,17 @@ const SecondStep = ({
   const rolesOptions = useMemo(() => {
     const rls = roles?.map(({ id, name }) => ({ id, name })) ?? [];
     return rls;
-  }, [roles, t]);
+  }, [roles]);
 
   const shiftsOptions = useMemo(() => {
-    const shft = shifts?.filter(e => !user.place || user.place == e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
+    const shft = shifts?.filter(e => !user.place || user.place === e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
     return shft;
-  }, [shifts, user, t]);
+  }, [shifts, user]);
 
   const jobTypesOptions = useMemo(() => {
-    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id == user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id === user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
     return jt;
-  }, [job_types, user, shifts, t]);
+  }, [job_types, user, shifts]);
 
   const nextWithValidate = () => {
     const setError = ({

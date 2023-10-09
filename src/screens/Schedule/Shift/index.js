@@ -623,7 +623,7 @@ export default () => {
         saveErrorModal && (
           <ErrorModal 
             header={`${t('Missing Schedule Data')}`}
-            text={saveErrorModal == 'job' ? `${t('None of work places has been created')}` : `${t('Please choose employee')}`}
+            text={saveErrorModal === 'job' ? `${t('None of work places has been created')}` : `${t('Please choose employee')}`}
             onClose={() => { setSaveErrorModal(false) }}
           />
         )

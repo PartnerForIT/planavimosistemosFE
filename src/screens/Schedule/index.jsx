@@ -24,7 +24,7 @@ import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
-import MarkerButton from '../../components/Core/MarkerButton/MarkerButton';
+import ToolsButton from '../../components/Core/ToolsButton/ToolsButton';
 import FlatButton from '../../components/Core/FlatButton/FlatButton';
 import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import ExcelIcon from '../../components/Icons/ExcelIcon';
@@ -32,7 +32,6 @@ import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
-import { companyModules } from '../../store/company/selectors';
 
 import {
   getSchedule,
@@ -41,11 +40,12 @@ import {
   patchChangeTimeline,
   patchAddTimeline,
   patchChangeEmployee,
-  deleteShift, putShift, addTempemployee, patchMarker, downloadSchedule
+  deleteShift, addTempemployee, patchMarker, downloadSchedule
 } from '../../store/schedule/actions';
 import {
   loadEmployeesAll,
   getSchedule as getscheduleSetting,
+  postSchedule as postScheduleSetting,
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
@@ -65,7 +65,6 @@ import {
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
-import {format} from "date-fns";
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
 
@@ -90,7 +89,7 @@ export default () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.DAY);
-  const [markerActive, setMarkerActive] = useState(false);
+  const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -103,20 +102,15 @@ export default () => {
   const schedule = useSelector(scheduleSelector);
   const markers = useSelector(markersSelector);
   const isLoading = useSelector(isLoadingSelector);
-  const modules = useSelector(companyModules);
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
   const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
   const [tempShiftID,setTempShiftID] = useState(0)
-  const [tempJobTypeID,setTempJobTypeID] = useState(0)
-  const [tempEmployeeID,setTempEmployeeID] = useState(0)
   const [activeDrag,setActiveDrag] = useState('')
   const [tempEventID,setTempEventID] = useState(0)
-  const [dayCheckData,setDayCheckData] = useState(0)
   const [openDialog,setOpenDialog] = useState(false)
   const [deletedShiftName,setDeletedShiftName] = useState('')
-  const today = format(new Date(), 'dd')
   const workTime = useSelector(settingWorkTime);
 
   const handleDialog = () => {
@@ -181,7 +175,7 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
           }
-          if (item.employee_type == 3|| item.employee_type == 2 || item.empty_event) {
+          if (item.employee_type === 3|| item.employee_type === 2 || item.empty_event) {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
@@ -227,7 +221,7 @@ export default () => {
           for (let j in resources) {
             if (resources[j].children) {
               for (let k in resources[j].children) {
-                if (shifts[i].id == resources[j].children[k].shiftId) {
+                if (shifts[i].id === resources[j].children[k].shiftId) {
                   let add = false;
                   if (resources[j].children[k].children) {
                     for (let m in resources[j].children[k].children) {
@@ -371,6 +365,11 @@ export default () => {
   useEffect(() => {
     
   }, [markers]);
+  useEffect(() => {
+    if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
+      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
+    }
+  }, [scheduleSettings]);
   const handleChangeTimeline = (value) => {
     setTimeline(value);
     
@@ -384,8 +383,15 @@ export default () => {
 
     handleGetSchedule(send);
   };
-  const handleChangeMarkerActivation = () => {
-    setMarkerActive(!markerActive);
+  const handleChangeTool = async (event) => {
+    const { name, checked } = event.target;
+    setToolsActive({ ...toolsActive, [name]: checked })
+
+    if (name === 'start_finish') {
+      await dispatch(postScheduleSetting(companyId, { ...toolsActive, [name]: checked }));
+      dispatch(getscheduleSetting(companyId));
+      handleGetSchedule({ nextTimeline: timeline });
+    }
   }
   const handleCreateNewShift = () => {
     history.push(`/${companyId}/schedule/shift/create`);
@@ -408,13 +414,13 @@ export default () => {
       classes.push('fc-datagrid-cell-shift');
     } else if (props.job_type_id) {
       classes.push('fc-datagrid-cell-job-type');
-    } else if (props.employeeId || props.employeeId == 0) {
+    } else if (props.employeeId || props.employeeId === 0) {
       classes.push('fc-datagrid-cell-employee');
     }
     if (props.lastJobType) {
       classes.push('fc-datagrid-cell-last-job-type');
     }
-    if (props.employee_type == 3 || props.employee_type == 2){
+    if (props.employee_type === 3 || props.employee_type === 2){
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
@@ -500,10 +506,8 @@ export default () => {
     }));
   };
   const addTempEmployees =  (shiftId,employeeId,jobTypeId,eventId) => {
-     setmodalAddTempEmployee(data => !data)
-      setTempShiftID(shiftId)
-    setTempEmployeeID(employeeId)
-    setTempJobTypeID(jobTypeId)
+    setmodalAddTempEmployee(data => !data)
+    setTempShiftID(shiftId)
     setTempEventID(eventId)
   }
 
@@ -557,7 +561,7 @@ export default () => {
     isCompleted = event?._def?.extendedProps?.is_completed
 
     let unEmployees = []
-    const selectedEvent  = schedule?.events.find(e => e.resourceId == resourceInfo.id && dayNumber == e.day_number);
+    const selectedEvent  = schedule?.events.find(e => e.resourceId === resourceInfo.id && dayNumber === e.day_number);
     
     if (selectedEvent) {
       const allEmployees  = schedule?.events.filter(e => e.empty_employee === false
@@ -629,7 +633,7 @@ export default () => {
         endDay={endDay}
         editPermissions={permissions.schedule_edit}
         isCompleted={isCompleted}
-        activeDrag={activeDrag == resourceInfo.id}
+        activeDrag={activeDrag === resourceInfo.id}
         unavailableEmployees={unEmployees}
         markers={markers}
       />
@@ -785,7 +789,7 @@ export default () => {
   };
 
   const handeResourceLaneClassNames = (info) => {
-    let result = markerActive ? 'marker_activated' : '';
+    let result = toolsActive['marking'] ? 'marker_activated' : '';
     return result;
   }
 
@@ -843,7 +847,7 @@ export default () => {
       <>
         { item.map((child, index) => {
             let contains = [];
-            if (!markerActive) {
+            if (!toolsActive['marking']) {
               contains = markers.map((marked, i) => {
                 let left = false;
                 let width = false;
@@ -871,7 +875,7 @@ export default () => {
               });
             }
 
-            if (markerActive && employeeId) {
+            if (toolsActive['marking'] && employeeId) {
               const calendarApi = calendarRef.current?.getApi();
               
               if (calendarApi?.view?.currentEnd && calendarApi?.view?.currentStart) {
@@ -1053,14 +1057,10 @@ export default () => {
             onChange={handleChangeTimeline}
             value={timeline}
           />
-          { modules.manual_mode && permissions.schedule_edit ? (
-            <div>
-              <MarkerButton
-                onClick={handleChangeMarkerActivation}
-                on={markerActive}
-              />
-            </div>
-          ) : null}
+          <ToolsButton
+            handleInputChange={handleChangeTool}
+            values={toolsActive}
+          />
 
           { timeline == TIMELINE.MONTH ? (
             <FlatButton onClick={() => downloadScheduleFile('excel')} className='schedule-screen__buttonDownload'>
@@ -1093,11 +1093,12 @@ export default () => {
                     holidays={schedule?.holidays}
                     accumulatedHours={schedule?.accumulatedHours}
                     markers={markers}
-                    markerActive={markerActive}
+                    markerActive={toolsActive['marking']}
                     handleMarker={handleMarker}
                     onChangeMonth={handleGetSchedule}
                     timesPanel={schedule.timesPanel}
                     withCost={permissions.cost && permissions.schedule_costs}
+                    scheduleSettings={scheduleSettings}
                   />
                 ) : (
                   <>
@@ -1130,7 +1131,7 @@ export default () => {
                       headerToolbar={false}
                       aspectRatio={1}
                       height='100%'
-                      agendaEventMinHeight={90}
+                      //agendaEventMinHeight={90}
                       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
                       resources={resources}
                       events={schedule.events}

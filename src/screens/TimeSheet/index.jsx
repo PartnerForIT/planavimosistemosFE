@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import cloneDeep from 'lodash';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { placesSelector } from '../../store/places/selectors';
@@ -24,12 +23,10 @@ import { getEmployees } from '../../store/employees/actions';
 
 import {
   getSheet,
-  getIntegration,
   downloadIntegration,
 } from '../../store/sheet/actions';
 import {
   loadEmployeesAll, loadIntegrations, getSettingWorkTime,
-  getSheet as getsheetSetting,
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { sheetSelector, isLoadingSelector } from '../../store/sheet/selectors';
@@ -70,7 +67,7 @@ export default () => {
   const employees = useSelector(employeesSelector);
   const sheet = useSelector(sheetSelector);
   const isLoading = useSelector(isLoadingSelector);
-  const [filterData, setFilterData] = useState({});
+  //const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
   
@@ -87,6 +84,8 @@ export default () => {
             if (shiftEl.id === i.skill_id) {
               checkSkill = true;
             }
+
+            return shiftEl;
           });
         }
           
@@ -97,6 +96,8 @@ export default () => {
             if (placeEL.id === i.place_id) {
               checkPlace = true;
             }
+
+            return placeEL;
           });
         }
             
@@ -176,58 +177,58 @@ export default () => {
     }));
   };
 
-  const filteringResource = (data) => {
-    if (sheet?.resources) {
-      handleGetSheet({ fromDate: fromDateRef.current });
-      const copyObject = [...sheet.resources];
-      const a = copyObject.filter((i) => {
+  // const filteringResource = (data) => {
+  //   if (sheet?.resources) {
+  //     handleGetSheet({ fromDate: fromDateRef.current });
+  //     const copyObject = [...sheet.resources];
+  //     const a = copyObject.filter((i) => {
         
-        let checkSkill = true;
-        if (data?.skills?.length) {
-          checkSkill = false;
-          data.skills.map((shiftEl) => {
-            if (shiftEl.id === i.skill_id) {
-              checkSkill = true;
-            }
-          });
-        }
+  //       let checkSkill = true;
+  //       if (data?.skills?.length) {
+  //         checkSkill = false;
+  //         data.skills.map((shiftEl) => {
+  //           if (shiftEl.id === i.skill_id) {
+  //             checkSkill = true;
+  //           }
+  //         });
+  //       }
           
-        let checkPlace = true;
-        if (data?.place?.length) {
-          checkPlace = false;
-          data.place.map((placeEL) => {
-            if (placeEL.id === i.place_id) {
-              checkPlace = true;
-            }
-          });
-        }
+  //       let checkPlace = true;
+  //       if (data?.place?.length) {
+  //         checkPlace = false;
+  //         data.place.map((placeEL) => {
+  //           if (placeEL.id === i.place_id) {
+  //             checkPlace = true;
+  //           }
+  //         });
+  //       }
             
-        let checkEmployer = true;
-        if (data?.employers?.length) {
-          checkEmployer = false;
-          data.employers.map((employer) => {
-            if (employer.id === i.employeeId) {
-              checkEmployer = true;
-            }
-          });
-        }
+  //       let checkEmployer = true;
+  //       if (data?.employers?.length) {
+  //         checkEmployer = false;
+  //         data.employers.map((employer) => {
+  //           if (employer.id === i.employeeId) {
+  //             checkEmployer = true;
+  //           }
+  //         });
+  //       }
 
-        return checkSkill && checkPlace && checkEmployer;
+  //       return checkSkill && checkPlace && checkEmployer;
             
-      });
+  //     });
 
-      if (data?.employers?.length || data?.place?.length || data?.skills?.length) {
-        setFilterData(a);
-      }
-      else{
-        setFilterData({});
-      }
-    }
-  };
+  //     if (data?.employers?.length || data?.place?.length || data?.skills?.length) {
+  //       setFilterData(a);
+  //     }
+  //     else{
+  //       setFilterData({});
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    //filteringResource(filter);
-  }, [filter]);
+  // useEffect(() => {
+  //   filteringResource(filter);
+  // }, [filter]);
   
   useEffect(() => {
     dispatch(getPlaces(companyId));

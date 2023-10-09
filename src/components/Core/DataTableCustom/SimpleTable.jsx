@@ -79,7 +79,7 @@ export default function SimpleTable({
                     >
                       {row[column.field]}
                       {
-                        column.field == 'date' && row.holiday && row.holiday.length ?
+                        column.field === 'date' && row.holiday && row.holiday.length ?
                           <HolidayIcon
                             holidays={row.holiday}
                             inline={true}

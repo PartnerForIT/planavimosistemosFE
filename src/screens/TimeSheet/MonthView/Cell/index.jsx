@@ -67,7 +67,7 @@ export default ({
 
   return (
     <div className={cellClasses} ref={refCell}>
-      {title != 0 ? title : ''}
+      {title !== 0 ? title : ''}
       { header && (
         <HolidayIcon
           holidays={holiday}

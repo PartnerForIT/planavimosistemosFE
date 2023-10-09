@@ -29,12 +29,12 @@ const RowContent = ({
   });
 
   const foundItem = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);
     if (found && found[field]) {
-      if (field == 'show_costs') {
+      if (field === 'show_costs') {
         return <><CurrencySign />{parseFloat(found[field]).toFixed(2)}</>;
       } else {
-        return field != 'working_days' ? timeConvert(found[field]) : found[field];
+        return field !== 'working_days' ? timeConvert(found[field]) : found[field];
       }
     }
 
@@ -42,7 +42,7 @@ const RowContent = ({
   }
 
   const foundTime = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);
     if (found && found[field]) {
       return found[field]*1;
     }
@@ -51,10 +51,10 @@ const RowContent = ({
   }
 
   const foundCost = (day) => {
-    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
+    const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);
     if (found && found[field+'_cost']) {
       return found[field+'_cost']*1;
-    } else if (found && found[field] && field == 'show_costs') {
+    } else if (found && found[field] && field === 'show_costs') {
       return found[field]*1;
     }
 
@@ -72,8 +72,8 @@ const RowContent = ({
   let time = 0;
   let cost = 0;
   const check = (statistic, id) => {
-    if (statistic && id === "totalTime" && field != 'show_costs'){
-      return time > 0 ? (field != 'working_days' ? timeConvert(time) : time) : '';
+    if (statistic && id === "totalTime" && field !== 'show_costs'){
+      return time > 0 ? (field !== 'working_days' ? timeConvert(time) : time) : '';
     }
     if (statistic && id === "totalCost"){
       return cost > 0 ? <><CurrencySign />{parseFloat(cost).toFixed(2)}</> : '';
@@ -87,7 +87,7 @@ const RowContent = ({
   }
 
   const tooltipInner = (day) => {
-    const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 == day*1 && resource.place_id === item.place_id);
+    const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);
     if (find) {
       return "From <strong>" + moment(find.start).format('HH:mm') + "</strong> To <strong>" + moment(find.end).format('HH:mm') + "</strong>";
     }
@@ -115,7 +115,7 @@ const RowContent = ({
                 title={parsedTitle(item)}
                 statistic={item.statistic}
                 weekend={item.weekend}
-                tooltip={!item.statistic && field == 'total_hours' ? tooltipInner(item.id) : ''}
+                tooltip={!item.statistic && field === 'total_hours' ? tooltipInner(item.id) : ''}
                 past={!item.statistic && pastDay >= item.id}
                 holiday={item.holiday}
             />)

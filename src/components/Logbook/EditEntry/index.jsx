@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import Scrollbar from 'react-scrollbars-custom';
 import moment from 'moment';
-import InputMask from 'react-input-mask';
 
 import Dialog from '../../Core/Dialog';
 import Label from '../../Core/InputLabel';
@@ -21,12 +20,12 @@ import { placesSelector } from '../../../store/places/selectors';
 import { JournalDataSelector } from '../../../store/settings/selectors';
 import classes from './EditEntry.module.scss';
 
-const formatChars = {
-  2: '[0-2]',
-  3: '[0-3]',
-  5: '[0-5]',
-  9: '[0-9]',
-};
+// const formatChars = {
+//   2: '[0-2]',
+//   3: '[0-3]',
+//   5: '[0-5]',
+//   9: '[0-9]',
+// };
 
 const MiniCardInfo = ({
   icon,

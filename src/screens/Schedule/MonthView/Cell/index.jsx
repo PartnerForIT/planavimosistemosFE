@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import ReactTooltip from 'react-tooltip';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 
 import classes from './Cell.module.scss';
 
 export default ({
   title,
+  startFinish,
   statistic,
   weekend,
   past,
@@ -17,6 +17,7 @@ export default ({
   night_duration,
   markerActive,
   handleMarker,
+  scheduleSettings,
 }) => {
   
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -31,6 +32,7 @@ export default ({
     //[classes.cell_holiday]: h.date ? true : false,
     [classes.cell_holiday_company]: h.company_work_time_id ? true : false,
     [classes.cell_holiday_government]: (h.date && !h.company_work_time_id) ? true : false,
+    [classes.cell_start_finish]: (scheduleSettings?.start_finish && startFinish),
   });
 
   const refCell = useRef();
@@ -53,9 +55,9 @@ export default ({
             data-tip={`${title} hours`}
             className={classes.cell__content__text}
           >
-            {title}
+            {scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', ' ') : title}
             {
-              night_duration && night_duration > 0 ? (
+              night_duration && night_duration > 0 && !scheduleSettings?.start_finish ? (
                 <span className={classes.cell_night}>
                   {night_duration}
                 </span>

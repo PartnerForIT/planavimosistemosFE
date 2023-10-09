@@ -24,7 +24,7 @@ export default ({
   const contentBoxRef = useRef(null);
 
   const total = useMemo(() => relatives.reduce((acc, item) => {
-    if (!item.title || item.title == 'Empty') {
+    if (!item.title || item.title === 'Empty') {
       return acc + 1;
     }
 

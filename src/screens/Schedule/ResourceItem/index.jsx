@@ -29,7 +29,7 @@ export default ({
     {
       [classes.resourceItem__demand_red]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours < accumulatedHours?.totalHours,
       [classes.resourceItem__demand_gray]: !accumulatedHours?.totalHours || !accumulatedHours?.actualHours,
-      [classes.resourceItem__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours == accumulatedHours?.totalHours,
+      [classes.resourceItem__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours === accumulatedHours?.totalHours,
       [classes.resourceItem__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
     },
   );

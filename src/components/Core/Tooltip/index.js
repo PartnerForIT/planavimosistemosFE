@@ -35,10 +35,10 @@ function BootstrapTooltip(props) {
   return <Tooltip placement='right' arrow classes={classes} {...props} />;
 }
 
-export default function TooltipStyled({ title }) {
+export default function TooltipStyled({ title, placement }) {
   const classes = useStyles();
   return (
-    <BootstrapTooltip title={title}>
+    <BootstrapTooltip title={title} placement={placement}>
       <div className={classes.block}>
         <span>?</span>
       </div>

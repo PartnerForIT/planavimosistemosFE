@@ -9,6 +9,7 @@ export default ({ src = LogoClockIn, ...props }) => {
         loading='lazy'
         width='54px'
         height='54px'
+        alt=''
         {...props}
       />
     </>

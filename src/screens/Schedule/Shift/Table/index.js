@@ -521,7 +521,7 @@ export default forwardRef(({
         {
           ...prevState[foundIndex],
           children: prevState[foundIndex].children.map((item) => {
-            if ((!item.title || item.title == 'Empty') && items[currentItemIndex]) {
+            if ((!item.title || item.title === 'Empty') && items[currentItemIndex]) {
               currentItemIndex += 1;
               newData.push({
                 resourceId: `${prevState[foundIndex].id}-${items[currentItemIndex - 1]?.id}`,
@@ -574,7 +574,7 @@ export default forwardRef(({
         return prevState;
       } else {
         const foundEmptyLastIndex = prevState[foundIndex].children
-          .reduce((acc, curr, index) => ((!curr.title || curr.title == 'Empty') ? index : acc), 0);
+          .reduce((acc, curr, index) => ((!curr.title || curr.title === 'Empty') ? index : acc), 0);
         children = [
           ...prevState[foundIndex].children.slice(0, foundEmptyLastIndex),
           ...prevState[foundIndex].children.slice(foundEmptyLastIndex + 1),

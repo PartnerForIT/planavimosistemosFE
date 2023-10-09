@@ -102,7 +102,7 @@ export default function ActivityLog() {
       type,
     } = event.target;
 
-    value = (name == 'accumulated_months' && value && [1,2,3,4,6].includes(value)) ? 1 : value;
+    value = (name === 'accumulated_months' && value && [1,2,3,4,6].includes(value)) ? 1 : value;
 
     switch (type) {
       case 'checkbox': {

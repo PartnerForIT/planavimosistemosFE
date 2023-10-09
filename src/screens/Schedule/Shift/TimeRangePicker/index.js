@@ -145,12 +145,12 @@ export default memo(({
 
         //fixes for center scroll
         if (startScrollRef.current) {
-          startScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code == time?.start) * 36 - 54);
+          startScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code === time?.start) * 36 - 54);
         }
 
         //fixes for center scroll
         if (endScrollRef.current) {
-          endScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code == time?.end) * 36 - 54);
+          endScrollRef.current.scrollTo(0, timeArr.findIndex(obj => obj?.code === time?.end) * 36 - 54);
         }
 
         if (menuPlacementVertical === 'top') {

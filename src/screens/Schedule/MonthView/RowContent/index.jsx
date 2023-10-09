@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 
 import Cell from '../Cell';
@@ -14,21 +14,21 @@ const RowContent = ({
   markerActive,
   pastDay,
   handleMarker,
+  scheduleSettings,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
   });
-  const foundItem = useMemo(() => events.find((item) => resourceId === item.resourceId), [events, resourceId]);
 
   const newFoundItem = (day) => {
-    const ev = events.find((item) => resourceId === item.resourceId && item.day_number*1 == day*1);
+    const ev = events.find((item) => resourceId === item.resourceId && item.day_number*1 === day*1);
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee) {
       return {};
     }
     
     return ev;
   }
-
+  
   let time = 0;
   let cost = 0;
   let night_duration = 0;
@@ -48,7 +48,7 @@ const RowContent = ({
 
   const checkMarked = (item) => {
     if (!item.statistic && employeeId){
-      return item.markers.find(m => m.employee_id*1 == employeeId*1);
+      return item.markers.find(m => m.employee_id*1 === employeeId*1);
     }
 
     return false;
@@ -68,6 +68,7 @@ const RowContent = ({
              <Cell
                 key={item.id}
                 title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title)?.hours ?? '')}
+                startFinish={item.statistic || !employeeId ? '' : (newFoundItem(item.title)?.title ?? '')}
                 statistic={item.statistic}
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
@@ -75,6 +76,7 @@ const RowContent = ({
                 markerActive={markerActive && employeeId && !item.statistic}
                 handleMarker={() => { handleMarker(employeeId, item.id) } }
                 night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
+                scheduleSettings={scheduleSettings}
             />)
           }
           )
@@ -93,6 +95,7 @@ const RowContent = ({
             markerActive={markerActive}
             daysOfMonth={daysOfMonth}
             pastDay={pastDay}
+            scheduleSettings={scheduleSettings}
           />
         ))
       }

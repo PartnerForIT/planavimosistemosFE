@@ -137,7 +137,7 @@ export default ({
   useEffect(() => {
 
     const handleScrolling = (event) => {
-      if(contentRef !== null && headerRef !== null && headerRef.current && contentRef.current && headerRef.current.scrollLeft != contentRef.current.scrollLeft) {
+      if(contentRef !== null && headerRef !== null && headerRef.current && contentRef.current && headerRef.current.scrollLeft !== contentRef.current.scrollLeft) {
         headerRef.current.scrollLeft = contentRef.current.scrollLeft;
       }
     }

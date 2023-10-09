@@ -38,9 +38,20 @@ export default ({
   accumulatedHours,
   markerActive,
   handleMarker,
+  scheduleSettings,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
+  const [resourcesExpanders, setResourcesExpanders] = useState(() => {
+    const storedValue = localStorage.getItem('resourcesExpanders');
+    return storedValue ? JSON.parse(storedValue) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('resourcesExpanders', JSON.stringify(resourcesExpanders));
+  }, [resourcesExpanders]);
+
+
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   
   const handleExpander = ({ rowId }) => {
@@ -66,6 +77,31 @@ export default ({
       };
       return changeExpander(prevState);
     });
+
+    const changeExpander = (items) => {
+      if (!items?.length) {
+        return undefined;
+      }
+
+      return items.map((item) => {
+        if (item.id === rowId) {
+          return {
+            id: item.id,
+            expander: !item.expander,
+          };
+        }
+
+        return {
+          id: item.id,
+          expander: item.expander,
+          children: changeExpander(item.children),
+        };
+      });
+    };
+
+    const expander = changeExpander(resources);
+
+    setResourcesExpanders(expander);
   };
   const handleClickPrevMonth = () => {
     const nextMonth = currentMonth.clone().add(-1, 'months');
@@ -154,7 +190,33 @@ export default ({
   }, [currentMonth]);
 
   useEffect(() => {
-    setResources(externalResources);
+    const mergeExpander = (obj1, obj2) => {
+      if (obj1.id === obj2.id) {
+        if (obj2.expander !== undefined) {
+          obj1.expander = obj2.expander;
+        }
+        if (obj1.children && obj2.children) {
+          obj1.children = obj1.children.map(child1 => {
+            const child2 = obj2.children.find(obj => obj.id === child1.id);
+            if (child2) {
+              return mergeExpander(child1, child2);
+            }
+            return child1;
+          });
+        }
+      }
+      return obj1;
+    }
+
+    const newResources = externalResources.map(obj1 => {
+      const obj2 = resourcesExpanders.find(obj => obj.id === obj1.id);
+      if (obj2) {
+        return mergeExpander(obj1, obj2);
+      }
+      return obj1;
+    });
+    
+    setResources(newResources);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalResources]);
@@ -231,6 +293,7 @@ export default ({
                     daysOfMonth={daysOfMonth}
                     events={events}
                     pastDay={flexBackground.past}
+                    scheduleSettings={scheduleSettings}
                   />
                 ))
               }
