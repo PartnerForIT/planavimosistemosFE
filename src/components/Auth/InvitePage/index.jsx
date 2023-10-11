@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { clearServices, confirmPassword, getInviteInfo } from '../../../store/services/actions';
+import { confirmPassword, getInviteInfo } from '../../../store/services/actions';
 import companyServicesInfoSelector from '../../../store/services/selectors';
 import styles from '../Login.module.scss';
 import BackgroundWrapper from '../BackgroundWrapper';

@@ -55,7 +55,7 @@ export default ({
             data-tip={`${title} hours`}
             className={classes.cell__content__text}
           >
-            {scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', ' ') : title}
+            <span dangerouslySetInnerHTML={{ __html: scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', '<br />') : title }} />
             {
               night_duration && night_duration > 0 && !scheduleSettings?.start_finish ? (
                 <span className={classes.cell_night}>

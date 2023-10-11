@@ -62,7 +62,6 @@ import EditEntry from './EditEntry';
 import AddEntry from './AddEntry';
 import styles from './Logbook.module.scss';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
-import it from 'date-fns/esm/locale/it/index.js';
 
 const TextWithSign = ({ label }) => (
   <>
@@ -287,9 +286,9 @@ export default () => {
       case 0:
         return 'Pending';
       case 1: {
-        if (stoped == 'daily_overtime' || stoped == 'weekly_overtime') {
+        if (stoped === 'daily_overtime' || stoped === 'weekly_overtime') {
           return 'Stopped by System';
-        } else if (stoped == 'manager') {
+        } else if (stoped === 'manager') {
           return 'Stopped by Manager';
         }
         
@@ -405,7 +404,11 @@ export default () => {
                   label: it.employee
                 })
             }
+
+            return it;
           });
+
+          return item;
         });
 
         newArrange = newArrange.map((item) => {
@@ -425,7 +428,7 @@ export default () => {
 
         setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
 
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Employee') ? 'date' : item.field, label: (item.label == 'Employee') ? 'Date' : item.label } } ))
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Employee') ? 'date' : item.field, label: (item.label === 'Employee') ? 'Date' : item.label } } ))
       } else {
         setItemsArray(workTime.map((item) => {
           let { items } = item;
@@ -449,7 +452,7 @@ export default () => {
           };
         }).filter(({ items }) => items.length));
 
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label == 'Date') ? 'employee' : item.field, label: (item.label == 'Date') ? 'Employee' : item.label } } ))
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Date') ? 'employee' : item.field, label: (item.label === 'Date') ? 'Employee' : item.label } } ))
       }
      
       setColumnsWidthArray({...columnsWidth});
@@ -560,7 +563,7 @@ export default () => {
   };
 
   const rowSelectionHandler = (selectedRow) => {
-    setSelectedItem(selectedItem?.id == selectedRow?.id ? null : selectedRow);
+    setSelectedItem(selectedItem?.id === selectedRow?.id ? null : selectedRow);
   };
 
   const onPlacesSelectChange = (checkedPlaces) => {

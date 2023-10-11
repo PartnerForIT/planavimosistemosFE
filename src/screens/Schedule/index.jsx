@@ -585,10 +585,10 @@ export default () => {
     isCompleted = event?._def?.extendedProps?.is_completed
 
     let unEmployees = []
-    const selectedEvent  = schedule?.events.find(e => e.resourceId === resourceInfo.id && dayNumber === e.day_number);
+    const selectedEvent  = events.find(e => e.resourceId === resourceInfo.id && dayNumber === e.day_number);
     
     if (selectedEvent) {
-      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false
+      const allEmployees  = events.filter(e => e.empty_employee === false
                                                       && e.resourceId.indexOf(shiftId+'-') == 0
                                                       && selectedEvent.day_number == e.day_number);
                                                       //&& selectedEvent.start == e.start
@@ -714,7 +714,7 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     };
 
-    const holiday = (view.type == 'day' && schedule?.holidays) ? schedule?.holidays[view.getCurrentData().currentDate.getDate()] : false;
+    const holiday = (view.type === 'day' && schedule?.holidays) ? schedule?.holidays[view.getCurrentData().currentDate.getDate()] : false;
     
     return (
       <ResourceAreaHeader
@@ -860,7 +860,7 @@ export default () => {
   const renderResourceLaneContent = ({resource}) => {
     let current_markers = [];
     if (markers) {
-      current_markers = markers.filter(m => m.employee_id*1 == resource.extendedProps.employeeId*1 );
+      current_markers = markers.filter(m => m.employee_id*1 === resource.extendedProps.employeeId*1 );
     }
 
     return (
@@ -888,7 +888,7 @@ export default () => {
                 }
 
                 // hide mark when day have event
-                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 == employeeId && !e.empty_manual)) : false;
+                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
                 
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
@@ -1088,7 +1088,7 @@ export default () => {
             values={toolsActive}
           />
 
-          { timeline == TIMELINE.MONTH ? (
+          { timeline === TIMELINE.MONTH ? (
             <FlatButton onClick={() => downloadScheduleFile('excel')} className='schedule-screen__buttonDownload'>
               <ArrowEIPIcon className='schedule-screen__buttonArrow' /> <ExcelIcon />
             </FlatButton>

@@ -19,7 +19,6 @@ import {
 } from '../../../store/settings/selectors';
 import { loadIntegrations, editIntegrations, importIiko } from '../../../store/settings/actions';
 import styles from './integrations.module.scss';
-import companyServicesInfoSelector from 'store/services/selectors';
 
 const useStyles = makeStyles(() => ({
   error: {

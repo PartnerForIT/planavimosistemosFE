@@ -337,7 +337,6 @@ export default forwardRef(({
   const [daysOfWeek, setDaysOfWeek] = useState(daysOfWeekInitial);
   const [defaultWorkingTime, setDefaultWorkingTime] = useState({ 0: [] });
   const [currentWeek, setCurrentWeek] = useState(0);
-  const scrollContainerRef = useRef(null);
   const contentRef = useRef(null);
   const modules = useSelector(companyModules);
 
@@ -570,7 +569,7 @@ export default forwardRef(({
             id: prevState[foundIndex].children.length,
           },
         ];
-      } else if (prevState[foundIndex].children.every((item) => item.title && item.title != 'Empty')) {
+      } else if (prevState[foundIndex].children.every((item) => item.title && item.title !== 'Empty')) {
         return prevState;
       } else {
         const foundEmptyLastIndex = prevState[foundIndex].children
