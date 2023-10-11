@@ -150,6 +150,7 @@ export default () => {
           // Set color
           let eventBackgroundColor = item.color;
           let eventBorderColor = item.color;
+          let lineColor = false;
 
           if (item.place_id){
             eventBorderColor = COLORS_JOB_TYPE[colorType][217];
@@ -179,11 +180,18 @@ export default () => {
             eventBorderColor = COLORS_JOB_TYPE[colorType][216];
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
+
+          if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+            lineColor = eventBackgroundColor;
+            eventBorderColor = 'transparent';
+            eventBackgroundColor = 'transparent';
+          }
           
           const nextItem = {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
+            lineColor,
             eventDurationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
@@ -211,6 +219,22 @@ export default () => {
     // schedule.resources
     return schedule?.resources;
   }, [filterData, schedule?.resources]);
+
+  const events = useMemo(() => {
+    if (schedule?.events && scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+      //make fake time for remove_timelines
+      return schedule?.events.map((e) => {
+        return {
+          ...e,
+          realStart: e.start,
+          realEnd: e.end,
+          start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          end: e.empty_manual ? e.end : moment(e.end).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        }
+      });
+    }
+    return schedule?.events;
+  }, [filterData, schedule?.events]);
 
   const filteredShifts = () => {
 
@@ -387,7 +411,7 @@ export default () => {
     const { name, checked } = event.target;
     setToolsActive({ ...toolsActive, [name]: checked })
 
-    if (name === 'start_finish') {
+    if (name === 'start_finish' || name ==='remove_timelines') {
       await dispatch(postScheduleSetting(companyId, { ...toolsActive, [name]: checked }));
       dispatch(getscheduleSetting(companyId));
       handleGetSchedule({ nextTimeline: timeline });
@@ -538,7 +562,7 @@ export default () => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
-    let placeId;
+    //let placeId;
     let employee_Id;
     let jobTypeId;
     let withMenu = false;
@@ -578,9 +602,9 @@ export default () => {
         return e.employee_id*1;
       });
     }
-
-    let start = event.start;
-    let end = event.end;
+    
+    let start = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent.realStart) ? selectedEvent.realStart : event.start;
+    let end = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent.realEnd) ? selectedEvent.realEnd : event.end;
 
     if (event.extendedProps.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
       const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());
@@ -636,6 +660,8 @@ export default () => {
         activeDrag={activeDrag === resourceInfo.id}
         unavailableEmployees={unEmployees}
         markers={markers}
+        removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
+        lineColor={resourceInfo?.extendedProps?.lineColor}
       />
     );
   };
@@ -1134,7 +1160,7 @@ export default () => {
                       //agendaEventMinHeight={90}
                       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
                       resources={resources}
-                      events={schedule.events}
+                      events={events}
                       eventStartEditable={false}
                       eventDurationEditable={timeline === TIMELINE.DAY}
                       eventContent={renderEventContent}

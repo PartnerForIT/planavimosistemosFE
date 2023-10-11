@@ -381,7 +381,9 @@ export default () => {
   };
   const handleChangeStartDay = (value) => {
     setStartShiftFrom(value);
-    tableRef.current.updateStartDay(value);
+    if (tableRef?.current) {
+      tableRef.current.updateStartDay(value);
+    }
   };
 
   const saveChangesRoute = () =>{

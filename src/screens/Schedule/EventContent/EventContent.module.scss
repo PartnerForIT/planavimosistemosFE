@@ -41,6 +41,21 @@
     border-radius: 4px 0 0 4px;
   }
 
+  &__removeTimelines {
+    .eventContent__night_end,
+    .eventContent__night_start {
+      display: none;
+    }
+  }
+
+  &__line {
+    width: 3px;
+    height: 35px;
+    margin-right: 5px;
+    visibility: visible;
+    border-radius: 3px;
+  }
+
   &__time {
     visibility: visible;
   }
@@ -54,7 +69,7 @@
 
   &__title {
     font-size: 12px;
-    line-height: 14px;
+    line-height: 15px;
     font-family: Helvetica Neue, sans-serif;
     color: #333945;
     width: 100%;
@@ -133,4 +148,8 @@
 .dayGoneBe{
   background: transparent;
   opacity: 1;
+}
+
+.testOne {
+  background: red;
 }

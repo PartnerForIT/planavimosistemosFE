@@ -93,13 +93,13 @@ const ToolsButton = ({
                 <Checkbox
                   onChange={handleInputChange}
                   checked={values['remove_timelines']}
-                  label={t('Remove timelines in view mode')}
+                  label={t('Remove timelines in week view')}
                   name='remove_timelines'
                 />
                 <div className={styles.tooltipBlock}>
                   <Tooltip
                     placement='bottom'
-                    title="Remove timelines in view mode"
+                    title="Remove timelines in week view"
                   />
                 </div>
               </div>

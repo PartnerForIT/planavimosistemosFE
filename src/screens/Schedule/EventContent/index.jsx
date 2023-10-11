@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
-import { compareAsc, format } from 'date-fns'
+import { format } from 'date-fns'
 import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
@@ -11,7 +11,7 @@ import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
-import classes from './EventContent.module.scss';
+import styles from './EventContent.module.scss';
 //import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
 //import { padStart } from '@fullcalendar/react';
@@ -24,7 +24,7 @@ export default ({
   id,
   shiftId,
   employeeId,
-  title,
+  //title,
   photo,
   jobTypeName,
   employeeName,
@@ -47,13 +47,15 @@ export default ({
   empty,
   empty_manual,
   editPermissions,
-                  addEmployee,
-                  addTimeline,
-                  dayNumber,
-                  isCompleted,
-                  activeDrag,
-                  unavailableEmployees,
-                  markers
+  addEmployee,
+  addTimeline,
+  //dayNumber,
+  isCompleted,
+  activeDrag,
+  unavailableEmployees,
+  markers,
+  removeTimelines,
+  lineColor,
 }) => {
 
   const { t } = useTranslation();
@@ -69,6 +71,17 @@ export default ({
   useEffect(() => {
     Tooltip.rebuild();
   });
+
+  const classes = classNames(
+    styles.eventContent,
+    {
+      [styles.dayEnd]: isCompleted,
+      [styles.eventContent__time]: content === 'addWorkingTime',
+      [styles.activeDrag]: activeDrag,
+      ['activeDrag']: activeDrag,
+      [styles.eventContent__removeTimelines]: removeTimelines,
+    },
+  );
 
   const endOverlap = () => {
     let result = 0
@@ -231,13 +244,7 @@ export default ({
       
     return type;
   }
- const today = format(new Date(), 'dd')
 
-  const dayEndCheck = () => {
-      if (isCompleted) {
-        return `${classes.eventContent} ${classes.dayEnd} ${(content === 'addWorkingTime' ? classes.eventContent__time : '')}`
-      } else return `${classes.eventContent} ${(content === 'addWorkingTime' ? classes.eventContent__time : '')}`
-    }
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -282,7 +289,7 @@ export default ({
   
   return (
     <div
-      className={classNames(dayEndCheck(), activeDrag ? 'active-drag' : '')}
+      className={classes}
       data-for={tooltipType()}
       data-html={true}
       data-tip={activeDrag || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
@@ -292,14 +299,14 @@ export default ({
     >
       { !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div
-            className={classes.eventContent__night_end}
+            className={styles.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
         )
       }
       { !activeDrag && !empty_manual && startOverlap() > 0 && (
           <div
-            className={classes.eventContent__night_start}
+            className={styles.eventContent__night_start}
             style={{ width: `${startOverlap()}%` }}
           ></div>
         )
@@ -312,25 +319,28 @@ export default ({
             :<img
                     alt='avatar'
                     src={newEmployee?.photo}
-                    className={classes.eventContent__avatar}
+                    className={styles.eventContent__avatar}
                 />
             :photo && (
             <img
                 alt='avatar'
                 src={photo}
-                className={classes.eventContent__avatar}
+                className={styles.eventContent__avatar}
             />
        
         )
         )
       } */}
+      { removeTimelines && !empty_manual && (
+          <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
+        )
+      }
       {
-        
           (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
 
             (empty_manual)
             ? (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-            : <span className={classes.eventContent__title} >
+            : <span className={styles.eventContent__title} >
               {
                 // (!!newEmployee?.name)
 
@@ -353,7 +363,7 @@ export default ({
         )
       }
 
-      <div className={classes.eventContent__leftSpace} />
+      <div className={styles.eventContent__leftSpace} />
       {
         newEmployee?.name !== oldEmployee?.name && (
           <ReplacedEmployee
@@ -374,7 +384,7 @@ export default ({
             cancel={content !== 'menu'}
             onCancel={() => setContent('menu')}
             ref={modalAddRef}
-            buttonClass={classes.eventContent__invisible}
+            buttonClass={styles.eventContent__invisible}
           >
             <AddWorkingTime
               onClose={() => setContent('menu')}
@@ -422,7 +432,7 @@ export default ({
             {
               content === 'menu' && (
                 <>
-                  <div className={classes.eventContent__userInfo}>
+                  <div className={styles.eventContent__userInfo}>
                     {
                       (!!newEmployee?.name || empty)
                         ? (newEmployee?.photo === null || empty)
@@ -430,29 +440,29 @@ export default ({
                           :<img
                                   alt='avatar'
                                   src={newEmployee?.photo}
-                                  className={classes.eventContent__userInfo__avatar}
+                                  className={styles.eventContent__userInfo__avatar}
                               />
                           :photo && (
                           <img
                               alt='avatar'
                               src={photo}
-                              className={classes.eventContent__userInfo__avatar}
+                              className={styles.eventContent__userInfo__avatar}
                           />
                       )
                     }
-                    <div className={classes.eventContent__userInfo__right}>
-                      <div className={classes.eventContent__userInfo__right__fullName}>
+                    <div className={styles.eventContent__userInfo__right}>
+                      <div className={styles.eventContent__userInfo__right__fullName}>
                         {newEmployee?.name ? newEmployee?.name : employeeName}
                       </div>
-                      <div className={classes.eventContent__userInfo__right__jobType}>
+                      <div className={styles.eventContent__userInfo__right__jobType}>
                         {jobTypeName}
                       </div>
                     </div>
                   </div>
-                  <div className={classes.eventContent__label}>
+                  <div className={styles.eventContent__label}>
                     {t('Working Time')}
                   </div>
-                  <div className={classes.eventContent__value}>
+                  <div className={styles.eventContent__value}>
                     {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
                   </div>
                   {/* Edgaras suggestion 2022-05-25 */}
@@ -484,10 +494,10 @@ export default ({
                 </>
               )
             }
-            <div className={classes.eventContent__space} />
+            <div className={styles.eventContent__space} />
           </Dropdown>
         ) : (
-          <div className={classes.eventContent__rightSpace} />
+          <div className={styles.eventContent__rightSpace} />
         )
       }
     </div>
