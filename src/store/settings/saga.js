@@ -9,6 +9,7 @@ import {
   PATCH_SETTINGS_COMPANY,
   GET_SETTINGS_WORK_TIME,
   PATCH_WORK_TIME,
+  GET_WORKING_DAYS,
   GET_HOLIDAYS,
   ADD_HOLIDAY,
   DELETE_HOLIDAY,
@@ -36,7 +37,6 @@ import {
   EDIT_TIME_SHEET,
   GET_INTEGRATIONS,
   EDIT_INTEGRATIONS,
-  IMPORT_IIKO,
   GET_ACCOUNTS_GROUPS,
   CREATE_ACCOUNTS_GROUP,
   CREATE_ACCOUNTS_SUBGROUP,
@@ -77,6 +77,7 @@ import {
   addSnackbar,
   dismissSnackbar,
   getSettingWorkTimeSuccess,
+  getWorkingDaysSuccess,
   getHolidaysSuccess,
   addHolidaySuccess,
   deleteHolidaySuccess,
@@ -99,7 +100,6 @@ import {
   loadLogbookAdditionalRatesSuccess,
   editLogbookAdditionalRatesSuccess,
   getAccountGroupsSuccess,
-  importIikoResult,
   createAccountGroupSuccess,
   createAccountGroupError,
   removeAccountGroupSuccess,
@@ -204,7 +204,7 @@ function* loadSettingsWorkTime(action) {
 
 function* editSettingsWorkTime(action) {
   try {
-    const { data: { week_start, week_start_time, work_days } } = action;
+    const { data: { week_start, week_start_time, working_hours, work_days } } = action;
 
     // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.post,
@@ -213,6 +213,7 @@ function* editSettingsWorkTime(action) {
         data: {
           week_start,
           week_start_time,
+          working_hours,
           work_days,
         },
         ...token(),
@@ -225,6 +226,15 @@ function* editSettingsWorkTime(action) {
     yield put(addSnackbar('Work time edited error', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
+  }
+}
+
+function* getWorkingDays(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/get-working-days/${action.year}`, token());
+    yield put(getWorkingDaysSuccess(data));
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -1598,6 +1608,7 @@ export default function* SettingsWatcher() {
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLeading(GET_SETTINGS_WORK_TIME, loadSettingsWorkTime);
+  yield takeLeading(GET_WORKING_DAYS, getWorkingDays);
   yield takeLeading(GET_HOLIDAYS, getHolidays);
   yield takeLatest(PATCH_WORK_TIME, editSettingsWorkTime);
   yield takeLatest(ADD_HOLIDAY, addCompanyHoliday);

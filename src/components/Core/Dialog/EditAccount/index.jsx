@@ -534,7 +534,7 @@ export default function EditAccount({
                       )
                     }
                     {
-                     permissions.schedule_shift && schedule.use_accumulated && (
+                     permissions.schedule_shift && schedule.use_accumulated && !schedule.accumulated_from_country && (
                        <div className={classes.formItem}>
                          <Label
                            htmlFor='hours_demand'

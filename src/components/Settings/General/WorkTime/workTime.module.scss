@@ -11,8 +11,83 @@
   max-width: 430px;
 }
 
+.workingDays {
+  width: 100%;
+  max-width: 430px;
+}
+
+.settingsBlock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+  label {
+    padding-right: 10px;
+    padding-bottom: 2px;
+  }
+
+  .innerText {
+    font-size: 14px;
+    padding-right: 10px;
+
+    &:last-child {
+      padding-left: 10px;
+    }
+  }
+}
+
+.workingHoursBlock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+
+  label {
+    padding-right: 10px;
+    padding-bottom: 2px;
+  }
+
+  .innerText {
+    font-size: 14px;
+    padding-right: 10px;
+    white-space: nowrap;
+
+    &:first-child {
+      min-width: 100px;
+    }
+
+    &:last-child {
+      padding-left: 10px;
+    }
+  }
+}
+
+.workingHoursInput {
+  width: 50px;
+  margin-right: 10px;
+
+  > div {
+    min-width: 50px;
+
+    input {
+      text-align: center;
+    }
+  }
+}
+
 .labelBlock {
   display: flex;
+
+  label {
+    margin-right: 20px;
+  }
+}
+
+.labelBlockWD {
+  display: flex;
+  min-width: 250px;
 
   label {
     margin-right: 20px;
@@ -127,6 +202,14 @@
 
 .formLine {
   width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #e8eff6;
+}
+
+.formLineShort {
+  width: 50%;
   height: 1px;
   margin-top: 20px;
   margin-bottom: 20px;

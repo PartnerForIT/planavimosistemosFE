@@ -250,6 +250,17 @@ export default function ActivityLog() {
                     <Label text={t('Use accumulated hours calculation')} />
                   </div>
                   { inputValues.use_accumulated && (
+                    <div className={styles.clockIn}>
+                      <Checkbox
+                          onChange={handleChangeInput}
+                          checked={inputValues.accumulated_from_country}
+                          label={t('Use target hours for the period from the country working days')}
+                          name='accumulated_from_country'
+                        />
+                    </div>
+                  )
+                  }
+                  { inputValues.use_accumulated && (
                     <div className={styles.accumalated}>
                       {t('Calculate')}
                       <Input

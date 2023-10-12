@@ -19,6 +19,7 @@ import Progress from '../../../Core/Progress';
 import Holidays from './holidays';
 import StartWeek from './StartWeek';
 import WorkingTime from './WorkingTime';
+import WorkingDays from './WorkingDays';
 import styles from './workTime.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -40,10 +41,12 @@ export default function WorkTime() {
   const [inputValues, setInputValues] = useState({
     week_start: '',
     week_start_time: '',
+    working_hours: 8,
   });
 
   const [startTime, setStartTime] = useState({});
   const [year, setYear] = useState(new Date().getFullYear());
+  const [yearWorkingDays, setYearWorkingDays] = useState(new Date().getFullYear());
 
   const [days, setDays] = useState({
     monday: false,
@@ -73,6 +76,7 @@ export default function WorkTime() {
 
   const [nationalHolidays, setNationalHolidays] = useState([]);
   const [companyHolidays, setCompanyHolidays] = useState([]);
+  const [workingDays, setWorkingDays] = useState([]);
 
   useEffect(() => {
     const holidays = workTime.work_time?.holidays ?? [];
@@ -89,10 +93,18 @@ export default function WorkTime() {
   }, [workTime, year]);
 
   useEffect(() => {
+    const { working_days = [] } = workTime;
+    if (working_days.month) {
+      setWorkingDays(working_days);
+    }
+  }, [workTime, yearWorkingDays]);
+
+  useEffect(() => {
     setInputValues({
 
       week_start: workTime.work_time?.week_start ?? '1',
       week_start_time: workTime.work_time?.week_start_time ?? '08:00',
+      working_hours:  workTime.work_time?.working_hours ?? '8',
     });
     if (workTime.work_time && Object.keys(workTime.work_time).length > 0) {
       setDays({
@@ -137,6 +149,7 @@ export default function WorkTime() {
     const data = {
       week_start: payload.inputValues.week_start,
       week_start_time: payload.inputValues.week_start_time,
+      working_hours:  payload.inputValues.working_hours,
       work_days: [...daysData],
     };
     dispatch(patchWorkTime(data, params.id));
@@ -197,6 +210,15 @@ export default function WorkTime() {
                     handleChangeDays={handleChangeDays}
                     startTime={startTime}
                     handleChangeStartTime={handleChangeStartTime}
+                  />
+                  <WorkingDays
+                    styles={styles}
+                    inputValues={inputValues}
+                    workingDays={workingDays}
+                    companyId={params.id}
+                    year={yearWorkingDays}
+                    setYear={setYearWorkingDays}
+                    setWorkingHours={handleInputChange}
                   />
                   <Holidays
                     styles={styles}

@@ -305,7 +305,7 @@ export default function AccountsList() {
       if (!permissions.profit && (column.field === 'charge' || column.field === 'sallary')) {
         return false;
       }
-      if ((!permissions.schedule_shift || !schedule.use_accumulated) && column.field === 'hours_demand') {
+      if ((!permissions.schedule_shift || !schedule.use_accumulated || schedule.accumulated_from_country) && column.field === 'hours_demand') {
         return false;
       }
       return true;

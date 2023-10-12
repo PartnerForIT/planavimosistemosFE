@@ -268,7 +268,7 @@ const SecondStep = ({
             )
           }
           {
-            permissions.schedule_shift && schedule.use_accumulated && (
+            permissions.schedule_shift && schedule.use_accumulated && !schedule.accumulated_from_country && (
               <div className={style.formItem}>
                 <Label
                   htmlFor='hours_demand'
