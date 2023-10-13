@@ -39,7 +39,10 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SCHEDULE:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        //schedule: null,
+        loading: true };
     case success(GET_SCHEDULE):
       return {
         ...state,

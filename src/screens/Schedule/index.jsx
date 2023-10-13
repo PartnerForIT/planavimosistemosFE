@@ -643,6 +643,7 @@ export default () => {
         oldEmployee={event.extendedProps.old_employee}
         cost={event.extendedProps.cost}
         night_minutes={event.extendedProps.night_minutes}
+        break_minutes={event.extendedProps.break_minutes}
         work_minutes={event.extendedProps.work_minutes}
         minutes={event.extendedProps.minutes}
         costPermission={permissions.cost && permissions.schedule_costs}
@@ -977,7 +978,7 @@ export default () => {
         if (timeline === TIMELINE.WEEK) {
           setTimeout(() => {
             const container = document.getElementsByClassName('fc-timeline-slots');
-            const rows = container[0].firstChild.children[1].children[0].children;
+            const rows = container?.[0]?.firstChild?.children?.[1]?.children?.[0]?.children;
             updateWidthCell(rows);
           });
         }

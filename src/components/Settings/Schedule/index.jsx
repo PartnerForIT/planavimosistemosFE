@@ -184,6 +184,20 @@ export default function ActivityLog() {
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
                     <Switch
+                      onChange={(checked) => { handleSetInputValues({ deduct_break: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.deduct_break || false}
+                      height={21}
+                      width={40}
+                    />
+                    <Label text={t('Deduct automatic break time in Schedule module')} />
+                  </div>
+                  <div className={styles.hr} />
+                  <div className={styles.workAtNight}>
+                    <Switch
                       onChange={(checked) => { handleSetInputValues({ place_timeline: checked }); }}
                       offColor='#808F94'
                       onColor='#0085FF'

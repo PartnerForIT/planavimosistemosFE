@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
-import { format } from 'date-fns'
 import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
@@ -18,6 +17,7 @@ import classNames from 'classnames';
 import { companyModules } from '../../../store/company/selectors';
 import { AdditionalRatesDataSelector,
   currencySelector,
+  scheduleSelector,
   settingCompanySelector } from '../../../store/settings/selectors';
 
 export default ({
@@ -30,6 +30,7 @@ export default ({
   employeeName,
   cost,
   night_minutes,
+  break_minutes,
   work_minutes,
   minutes,
   costPermission,
@@ -67,6 +68,7 @@ export default ({
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
+  const schedule = useSelector(scheduleSelector);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -281,6 +283,7 @@ export default ({
       `<div class="timeline-tooltip">From <b>${moment(start).format('HH:mm')}</b> to <b>${moment(end).format('HH:mm')}</b><br/>
       Total Hours <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
       + (nightPermission ? `<br />Work hours <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
+      + (schedule.deduct_break ? `<br />Break hours <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
       + (nightPermission ? `<br />Night hours <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
       + (costPermission ? `<br />Cost <b>${cost}${currency}</b>` : ``)
       + `</div>`
