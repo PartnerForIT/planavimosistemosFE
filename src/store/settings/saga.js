@@ -204,7 +204,7 @@ function* loadSettingsWorkTime(action) {
 
 function* editSettingsWorkTime(action) {
   try {
-    const { data: { week_start, week_start_time, working_hours, work_days } } = action;
+    const { data: { week_start, week_start_time, working_hours, hour_before_holiday, work_days } } = action;
 
     // eslint-disable-next-line no-unused-vars
     const { data } = yield call(axios.post,
@@ -214,6 +214,7 @@ function* editSettingsWorkTime(action) {
           week_start,
           week_start_time,
           working_hours,
+          hour_before_holiday,
           work_days,
         },
         ...token(),

@@ -228,8 +228,8 @@ export default () => {
           ...e,
           realStart: e.start,
           realEnd: e.end,
-          start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          end: e.empty_manual ? e.end : moment(e.end).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          start: e.empty_manual === true ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          end: e.empty_manual === true ? e.end : moment(e.end).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         }
       });
     }
@@ -407,14 +407,18 @@ export default () => {
 
     handleGetSchedule(send);
   };
-  const handleChangeTool = async (event) => {
+  const handleChangeTool = (event) => {
     const { name, checked } = event.target;
     setToolsActive({ ...toolsActive, [name]: checked })
 
     if (name === 'start_finish' || name ==='remove_timelines') {
-      await dispatch(postScheduleSetting(companyId, { ...toolsActive, [name]: checked }));
-      dispatch(getscheduleSetting(companyId));
-      handleGetSchedule({ nextTimeline: timeline });
+      dispatch(postScheduleSetting(companyId, { ...toolsActive, [name]: checked }));
+      setTimeout(() => {
+        dispatch(getscheduleSetting(companyId));
+        if ((name ==='remove_timelines' && timeline === TIMELINE.WEEK) || (name === 'start_finish' && timeline === TIMELINE.MONTH )) {
+          handleGetSchedule({ nextTimeline: timeline });
+        }
+      }, 1000);
     }
   }
   const handleCreateNewShift = () => {
@@ -579,13 +583,13 @@ export default () => {
       shiftId = resourceInfo.extendedProps.shift_id ? resourceInfo.extendedProps.shift_id : shiftId
       jobTypeId = resourceInfo.extendedProps.job_type_id
       endDay = event.endStr
-      dayNumber = event._def.extendedProps.day_number
     }
     
+    dayNumber = event._def.extendedProps.day_number || event.extendedProps.day_number
     isCompleted = event?._def?.extendedProps?.is_completed
 
     let unEmployees = []
-    const selectedEvent  = events.find(e => e.resourceId === resourceInfo.id && dayNumber === e.day_number);
+    const selectedEvent  = events.find(e => e.resourceId+'' === resourceInfo.id+'' && dayNumber === e.day_number);
     
     if (selectedEvent) {
       const allEmployees  = events.filter(e => e.empty_employee === false
@@ -603,8 +607,8 @@ export default () => {
       });
     }
     
-    let start = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent.realStart) ? selectedEvent.realStart : event.start;
-    let end = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent.realEnd) ? selectedEvent.realEnd : event.end;
+    let start = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent?.realStart) ? selectedEvent?.realStart : event.start;
+    let end = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent?.realEnd) ? selectedEvent?.realEnd : event.end;
 
     if (event.extendedProps.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
       const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());

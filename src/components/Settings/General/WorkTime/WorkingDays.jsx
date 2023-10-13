@@ -7,6 +7,7 @@ import { getWorkingDays } from '../../../../store/settings/actions';
 import ArrowLeftButton from '../../../Icons/ArrowLeftButton';
 import ArrowRightButton from '../../../Icons/ArrowRightButton';
 import Input from '../../../Core/Input/Input';
+import Checkbox from '../../../Core/Checkbox/Checkbox2';
 
 export default function WorkingDays({
   styles, inputValues, workingDays, setWorkingHours, companyId, setYear = () => ({}), year = '',
@@ -22,6 +23,11 @@ export default function WorkingDays({
 
   const workingHoursChangeHandler = (e) => {
     setWorkingHours(e);
+    setTimeout(() => dispatch(getWorkingDays(companyId, year)), 500);
+  };
+
+  const hourBeforeHolidayChangeHandler = (e) => {
+    setWorkingHours({target: {name: 'hour_before_holiday', value: e.target.checked}});
     setTimeout(() => dispatch(getWorkingDays(companyId, year)), 500);
   };
 
@@ -57,6 +63,14 @@ export default function WorkingDays({
         </div>
       </div>
 
+      <div className={styles.settingsBlock2}>
+        <Checkbox
+          onChange={hourBeforeHolidayChangeHandler}
+          checked={!!inputValues.hour_before_holiday}
+          label={t('Calculate -1 hour for the working day before holiday day')}
+          name='hour_before_holiday'
+        />
+      </div>
       <div className={styles.settingsBlock}>
         <div className={styles.innerText}>{t('Work Hours per day')}</div>
         <Input
@@ -84,7 +98,7 @@ export default function WorkingDays({
           t("December")
         ], (name, index) => (
       
-        <div className={styles.workingHoursBlock}>
+        <div className={styles.workingHoursBlock} key={index+'m'}>
           <div className={styles.innerText}>{name}</div>
           <div className={styles.workingHoursInput}>
             <Input
@@ -126,7 +140,7 @@ export default function WorkingDays({
           t("Q4"),
         ], (name, index) => (
       
-        <div className={styles.workingHoursBlock}>
+        <div className={styles.workingHoursBlock} key={index+'q'}>
           <div className={styles.innerText}>{name}</div>
           <div className={styles.workingHoursInput}>
             <Input

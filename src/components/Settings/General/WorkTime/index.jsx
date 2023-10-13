@@ -42,6 +42,7 @@ export default function WorkTime() {
     week_start: '',
     week_start_time: '',
     working_hours: 8,
+    hour_before_holiday: false,
   });
 
   const [startTime, setStartTime] = useState({});
@@ -104,7 +105,8 @@ export default function WorkTime() {
 
       week_start: workTime.work_time?.week_start ?? '1',
       week_start_time: workTime.work_time?.week_start_time ?? '08:00',
-      working_hours:  workTime.work_time?.working_hours ?? '8',
+      working_hours: workTime.work_time?.working_hours ?? '8',
+      hour_before_holiday:  workTime.work_time?.hour_before_holiday ?? false,
     });
     if (workTime.work_time && Object.keys(workTime.work_time).length > 0) {
       setDays({
@@ -149,7 +151,8 @@ export default function WorkTime() {
     const data = {
       week_start: payload.inputValues.week_start,
       week_start_time: payload.inputValues.week_start_time,
-      working_hours:  payload.inputValues.working_hours,
+      working_hours: payload.inputValues.working_hours,
+      hour_before_holiday: payload.inputValues.hour_before_holiday,
       work_days: [...daysData],
     };
     dispatch(patchWorkTime(data, params.id));
