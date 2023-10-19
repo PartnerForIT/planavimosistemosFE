@@ -83,6 +83,10 @@ const permissionsConfig = [
     module: 'schedule_shift',
     permission: 'schedule_edit',
   },
+  {
+    name: 'night_rates',
+    module: 'night_rates',
+  },
 ];
 
 export default () => {
@@ -657,7 +661,7 @@ export default () => {
         work_minutes={event.extendedProps.work_minutes}
         minutes={event.extendedProps.minutes}
         costPermission={permissions.cost && permissions.schedule_costs}
-        nightPermission={true}
+        nightPermission={permissions.night_rates}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && permissions.schedule_edit}

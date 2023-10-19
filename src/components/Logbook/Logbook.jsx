@@ -477,13 +477,10 @@ export default () => {
       if (permissions.shift_name && column.field === 'shift_name') {
         return false;
       }
-      if (!permissions.night_rates && column.field === 'night_duration') {
-        return false;
-      }
       if (!AdditionalRates.holiday && column.field === 'holiday_time') {
         return false;
       }
-      if (!AdditionalRates.night_time && column.field === 'night_duration') {
+      if ((!AdditionalRates.night_time || !permissions.night_rates) && column.field === 'night_duration') {
         return false;
       }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {

@@ -19,6 +19,14 @@ import { AdditionalRatesDataSelector,
   currencySelector,
   scheduleSelector,
   settingCompanySelector } from '../../../store/settings/selectors';
+import usePermissions from '../../../components/Core/usePermissions';
+
+const permissionsConfig = [
+  {
+    name: 'night_rates',
+    module: 'night_rates',
+  },
+];
 
 export default ({
   id,
@@ -69,6 +77,7 @@ export default ({
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
   const schedule = useSelector(scheduleSelector);
+  const permissions = usePermissions(permissionsConfig);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -87,7 +96,7 @@ export default ({
 
   const endOverlap = () => {
     let result = 0
-    if (AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
+    if (permissions.night_rates && AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
       const expl_start = AdditionalRates.night_time_time_start.split(':')
       const expl_end = AdditionalRates.night_time_time_end.split(':')
 
@@ -112,7 +121,7 @@ export default ({
   const startOverlap = () => {
     let result = 0
     
-    if (AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
+    if (permissions.night_rates && AdditionalRates.night_time && AdditionalRates.night_time_time_start && AdditionalRates.night_time_time_end) {    
       const expl_start = AdditionalRates.night_time_time_start.split(':')
       const expl_end = AdditionalRates.night_time_time_end.split(':')
 
