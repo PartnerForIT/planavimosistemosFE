@@ -131,11 +131,7 @@ export default () => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
           const customTime = upCustomTime || item.custom_time;
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
-          //const currentEvent = schedule?.events.find(i => i.resourceId == item.id);
-
-          //console.log(schedule?.events, item, currentEvent, upCustomTime);
-
-          
+      
 
           if (item.shiftId) {
             item.count = item.count || 0;
@@ -229,10 +225,24 @@ export default () => {
           realStart: e.start,
           realEnd: e.end,
           start: e.empty_manual === true ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          end: e.empty_manual === true ? e.end : moment(e.end).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          end: e.empty_manual === true ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         }
       });
     }
+
+
+    //UGLY fix for prevent times overlap when have timline from one day to another
+    if (schedule?.events && timeline === TIMELINE.DAY) {
+      return schedule?.events.map((e) => {
+
+        if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
+          return {};
+        }
+
+        return {...e};
+      });
+    }
+
     return schedule?.events;
   }, [filterData, schedule?.events]);
 
@@ -1025,9 +1035,9 @@ export default () => {
 
   const unavailableEmployees = () => {
     
-    const selectedEvent  = schedule?.events.find(e => e.id == tempEventID);
+    const selectedEvent  = events.find(e => e.id == tempEventID);
     if (selectedEvent) {
-      const allEmployees  = schedule?.events.filter(e => e.empty_employee === false
+      const allEmployees  = events.filter(e => e.empty_employee === false
                                                       && e.resourceId.indexOf(tempShiftID+'-') == 0
                                                       && selectedEvent.day_number == e.day_number);
 

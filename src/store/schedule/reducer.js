@@ -41,7 +41,8 @@ export const reducer = (state = initialState, action) => {
     case GET_SCHEDULE:
       return {
         ...state,
-        //schedule: null,
+        schedule: state.schedule ? {...state.schedule, events: []} : null,
+        events: null,
         loading: true };
     case success(GET_SCHEDULE):
       return {
