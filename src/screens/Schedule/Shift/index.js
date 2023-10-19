@@ -481,8 +481,25 @@ export default () => {
         handleChangeStartDay(moment());
       } else if (shift) {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
+        const days = workTime.work_time.work_days?.days ?? [];
+
         const defaultTime = new Array(4).fill().reduce((acc, _, index) => {
           acc[index] = weekMock.map((item, indexDay) => {
+
+            //take default one for now
+            const foundItemDefault = days.find((itemJ) => (itemJ.day === indexDay+1));
+
+            if (foundItemDefault) {
+              return {
+                id: `defaultWorkingTime-${indexDay}`,
+                time: {
+                  day: indexDay,
+                  start: foundItemDefault.start,
+                  end: foundItemDefault.finish,
+                },
+              };
+            }
+
             const foundItem = shift.defaultTime[index]?.find((itemJ) => (itemJ.day_of_week === indexDay));
 
             if (foundItem) {

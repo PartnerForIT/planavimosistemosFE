@@ -421,14 +421,15 @@ export default forwardRef(({
         if (!item.data[cellIndex] || resourceId != item.resourceId) {
           return item;
         }
+
         return {
           ...item,
-          data: item.data.map(c => (
+          data: item.data.map((c, i) => (
             {
               ...c,
               time: {
                 ...c.time,
-                not_work: !c.time.not_work
+                not_work: i === cellIndex ? !c.time.not_work : c.time.not_work
               }
             }
           )),
