@@ -209,7 +209,7 @@ export default () => {
       return [];
     };
     if (filterData[0] && (filter.employers.length || filter.place.length || filter.shiftType.length)) {
-      return updateChildren(filterData);
+      //return updateChildren(filterData);
     }
 
     if (schedule?.resources) {

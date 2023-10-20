@@ -141,7 +141,7 @@ export default memo(({
         const buttonBounding = buttonRef.current.getBoundingClientRect();
         const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
         const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
-        const menuPlacementVertical = (offsetBottom - heightContent) > 0 ? 'bottom' : 'top';
+        const menuPlacementVertical = (offsetBottom - heightContent) > 50 ? 'bottom' : 'top';
 
         //fixes for center scroll
         if (startScrollRef.current) {
@@ -160,7 +160,23 @@ export default memo(({
         console.error(e);
       }
     }
-  }, [isOpen]);
+
+    if (isOpenMenu) {
+      try {
+        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
+        const buttonBounding = buttonRef.current.getBoundingClientRect();
+        const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
+        const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
+        const menuPlacementVertical = (offsetBottom - heightContent) > 50 ? 'bottom' : 'top';
+
+        if (menuPlacementVertical === 'top') {
+          contentBoxRef.current.classList.add(classes.timeRangeColor__modal_top);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isOpen, isOpenMenu]);
 
   return (
     <ClickAwayListener onClickAway={handleCloseModal}>
