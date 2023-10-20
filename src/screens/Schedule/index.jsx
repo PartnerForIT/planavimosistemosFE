@@ -1083,6 +1083,7 @@ export default () => {
             items={employees}
             onChange={onEmployeesSelectFilter}
             width='auto'
+            withSearch={true}
           />
           <ButtonGroupToggle
             buttons={[

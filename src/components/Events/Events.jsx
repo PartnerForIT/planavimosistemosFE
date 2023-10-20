@@ -345,6 +345,7 @@ const Events = () => {
                 onChange={onEmployeesSelectChange}
                 width='auto'
                 type='employees'
+                withSearch={true}
               />
             </div>
             <div className={styles.hideOn936}>

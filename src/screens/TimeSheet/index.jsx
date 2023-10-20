@@ -276,6 +276,7 @@ export default () => {
             items={employees}
             onChange={onEmployeesSelectFilter}
             width='auto'
+            withSearch={true}
           />
           { permissions.integrations_module && integrations.rivile && (
             <FlatButton onClick={() => downloadIntegrationFile('eip')} className='timeSheet-screen__buttonDownload'>

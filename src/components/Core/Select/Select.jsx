@@ -7,6 +7,8 @@ import Scrollbar from 'react-scrollbars-custom';
 import Dropdown from '../Dropdown/Dropdown';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
+import SearchIcon from '../../Icons/SearchIcon';
+import Input from '../Input/Input';
 import styles from './Select.module.scss';
 
 const initialItems = [];
@@ -17,18 +19,20 @@ export default function CustomSelect({
   width = '100%',
   type = 'items',
   fullWidth,
+  withSearch,
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const checkedItemsArray = [];
     const stat = { checked: 0, unchecked: 0, total: 0 };
 
     const setCheckedToAll = (array = []) => {
-      const arrayCopy = array.length ? [...array] : items;
+      const arrayCopy = array.length ? [...array] : [];
 
       return arrayCopy.map((item) => {
           if (!item.disabled) {
@@ -48,11 +52,19 @@ export default function CustomSelect({
         });
     };
 
-    setItemsArray(setCheckedToAll(items));
+    const filterData = () => {
+      if (!search) return items;
+
+      const arrayCopy = [...items];
+      return arrayCopy.filter((item) => (item.label || item.title || item.name).toLowerCase().includes(search.toLowerCase()));
+    };
+
+    setItemsArray(setCheckedToAll(filterData()));
     setCheckedItems(checkedItemsArray);
     setItemsStat({ ...stat });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items]);
+  }, [items, search]);
+
   useEffect(() => {
     setItemsStat({
       ...itemsStat,
@@ -120,6 +132,14 @@ export default function CustomSelect({
     // });
   }, [itemsArray, itemsStat, onChange]);
 
+  const handleInputChange = (event) => {
+    let {
+      value,
+    } = event.target;
+
+    setSearch(value);
+  };
+
   const wrapperClasses = classNames(styles.inputWrapper, {
     [styles.inputWrapperOpened]: open,
     [styles.inputWrapperfullWidth]: fullWidth,
@@ -151,6 +171,16 @@ export default function CustomSelect({
 
         {open ? (
           <div className={classNames(styles.contentBox)}>
+            {withSearch && (
+              <Input
+                icon={<SearchIcon />}
+                placeholder='Search'
+                value={search}
+                name='search'
+                onChange={handleInputChange}
+                fullWidth
+              />
+            )}
             <CheckboxGroup
               selectAll={selectAll}
               itemsStat={itemsStat}

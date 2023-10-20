@@ -166,6 +166,8 @@ export default () => {
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
 
+  const [search, setSearch] = useState({place: '', employee: '', type: '', skill: ''});
+
   const [totalStat, setTotalStat] = useState({
     cost: 0,
     sallary: 0,
@@ -495,10 +497,16 @@ export default () => {
     }
   };
 
-  const handleInputChange = (term, items, setter) => {
+  const handleInputChange = (e, items, setter) => {
+    let {
+      value,
+      name
+    } = e.target;
+
+    setSearch({...search, [name]: value});
     const filterData = () => {
       const arrayCopy = [...items];
-      return arrayCopy.filter((item) => item.label.toLowerCase().includes(term.toLowerCase()));
+      return arrayCopy.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()));
     };
     setter(filterData);
   };
@@ -758,7 +766,9 @@ export default () => {
                     <Input
                       icon={<SearchIcon />}
                       placeholder='Search by places'
-                      onChange={(e) => handleInputChange(e.target.value, places, setFilteredPlaces)}
+                      value={search.place}
+                      name='place'
+                      onChange={(e) => handleInputChange(e, places, setFilteredPlaces)}
                       fullWidth
                     />
                     <div className={styles.checkboxGroupWrapper}>
@@ -773,7 +783,9 @@ export default () => {
                   <Input
                     icon={<SearchIcon />}
                     placeholder='Search by employees'
-                    onChange={(e) => handleInputChange(e.target.value, employees, setFilteredEmployees)}
+                    value={search.employee}
+                    name='employee'
+                    onChange={(e) => handleInputChange(e, employees, setFilteredEmployees)}
                     fullWidth
                   />
                   <div className={styles.checkboxGroupWrapper}>
@@ -791,7 +803,9 @@ export default () => {
                     <Input
                       icon={<SearchIcon />}
                       placeholder='Search by job types'
-                      onChange={(e) => handleInputChange(e.target.value, jobTypes, setFilteredJobTypes)}
+                      value={search.type}
+                      name='type'
+                      onChange={(e) => handleInputChange(e, jobTypes, setFilteredJobTypes)}
                       fullWidth
                     />
                     <div className={styles.checkboxGroupWrapper}>
@@ -809,7 +823,9 @@ export default () => {
                   <Input
                     icon={<SearchIcon />}
                     placeholder='Search by skills'
-                    onChange={(e) => handleInputChange(e.target.value, skills, setFilteredSkills)}
+                    value={search.skill}
+                    name='skill'
+                    onChange={(e) => handleInputChange(e, skills, setFilteredSkills)}
                     fullWidth
                   />
                   <div className={styles.checkboxGroupWrapper}>
