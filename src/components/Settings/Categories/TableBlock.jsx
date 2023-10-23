@@ -11,6 +11,7 @@ import DeleteItem from '../../Core/Dialog/DeleteItem';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
+import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
 import {
   patchPlace,
   deletePlace,
@@ -39,11 +40,13 @@ const columns = [
 const columnsJobs = [
   { label: 'Title', field: 'title', checked: true },
   { label: 'ID', field: 'id', checked: true },
+  { label: 'Break Times', field: 'breaks', checked: true },
 ];
 
 const columnsPlaces = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'ID', field: 'id', checked: true },
+  { label: 'External ID', field: 'external_id', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -52,6 +55,7 @@ const columnsWidthArray = {
   id: 'auto',
   cost: 'auto',
   earn: 'auto',
+  breaks: 'auto',
 };
 
 const page = {};
@@ -65,6 +69,7 @@ export default function TableBlock({
   selectedCategory,
   loading,
   companyId,
+  scheduleSettings,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -73,6 +78,8 @@ export default function TableBlock({
   const [selectedItem, setSelectedItem] = useState(null);
   const [isEditItem, setIsEditItem] = useState(false);
   const [isDeleteItem, setIsDeleteItem] = useState(false);
+  const [isEditBreak, setIsEditBreak] = useState(false);
+  
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
 
@@ -163,14 +170,21 @@ export default function TableBlock({
         break;
       }
       case 'jobs': {
-        allColumnsArray = columnsJobs;
+        allColumnsArray = columnsJobs.filter((column) => {
+          if ((!scheduleSettings.deduct_break || !scheduleSettings.break_from_job) && column.field === 'breaks') {
+            return false;
+          }
+          return true;
+        });
         break;
       }
       case 'places': {
-        allColumnsArray = columnsPlaces;
-        if (permissions.integrations) {
-          allColumnsArray.push({ label: 'External ID', field: 'external_id', checked: true });
-        }
+        allColumnsArray = columnsPlaces.filter((column) => {
+          if (!permissions.integrations && column.field === 'external_id') {
+            return false;
+          }
+          return true;
+        });
         break;
       }
       default: break;
@@ -266,6 +280,18 @@ export default function TableBlock({
     dispatch(patchPlace({ name, external_id }, companyId, selectedItem));
     handleCloseItem();
   };
+  const onEditBreak = (id) => {
+    setSelectedItem(id);
+    setIsEditBreak(id);
+  };
+  const handleCloseBreak = () => {
+    setSelectedItem(null);
+    setIsEditBreak(false);
+  }
+  const onCreateBreak = (values) => {
+    dispatch(patchJob({ breaks: values }, companyId, selectedItem));
+    handleCloseBreak();
+  }
 
   return (
     <div className={style.categoryPage__Table}>
@@ -292,6 +318,7 @@ export default function TableBlock({
         loading={loading}
         editRow={onEditItem}
         removeRow={onDeleteItem}
+        onEditBreak={onEditBreak}
         grey
       />
       <DeleteItem
@@ -326,6 +353,14 @@ export default function TableBlock({
         initialValues={selectedItemData}
         createPlace={updatePlace}
         permissions={permissions}
+      />
+      <DialogCreateBreak
+        open={!!isEditBreak}
+        handleClose={handleCloseBreak}
+        title={t('Break Time')}
+        buttonTitle={t('Change Time')}
+        initialValues={[]}
+        createBreak={onCreateBreak}
       />
     </div>
   );

@@ -17,7 +17,7 @@ const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  withoutRightPanel = false, tableRef = null,
+  withoutRightPanel = false, tableRef = null, onEditBreak,
   withoutShitCode,
 }) => {
   const selected = useMemo(() => {
@@ -212,12 +212,22 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
-                  {
-                    row[column.field] !== 'tableActions'
-                      && (column.cellRenderer ? column.cellRenderer(row) : row[column.field])
-                  }
-                </span>
+                {column.field !== 'breaks' && (
+                  <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
+                    {
+                      row[column.field] !== 'tableActions'
+                        && (column.cellRenderer ? column.cellRenderer(row) : row[column.field])
+                    }
+                  </span>
+                )}
+                {/* bor job breaks section */}
+                {(column.field === 'breaks' && onEditBreak) 
+                  && (
+                    row[column.field] && row[column.field].length ? 
+                    <span className={styles.existedBreak} onClick={() => onEditBreak(row.id)}>{row[column.field].map((item) => `${item.start.slice(0, 5)} - ${item.end.slice(0, 5)}`).join("; ")}</span> :
+                    <span className={styles.addBreak} onClick={() => onEditBreak(row.id)}>+</span>
+                  )
+                }
                 {/* icon statys */}
                 {(statysIcon && column.field === 'status' && (width === 80 || 80 - 35))
                   && (

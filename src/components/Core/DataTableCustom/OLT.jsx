@@ -35,6 +35,7 @@ export default function DataTable({
   all = false, setAll = () => ({}), statusIcon = true,
   accountList = false,
   withoutShitCode,
+  onEditBreak,
 }) {
   const [tableData, setTableData] = useState(data);
   const [, setAllSelected] = useState({ checked: 0, total: 0 });
@@ -313,6 +314,7 @@ export default function DataTable({
                 colored={colored}
                 tableRef={tableRef}
                 withoutShitCode={withoutShitCode}
+                onEditBreak={onEditBreak}
               />
             )) : null
           }

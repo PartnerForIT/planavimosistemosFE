@@ -195,6 +195,17 @@ export default function ActivityLog() {
                     />
                     <Label text={t('Deduct automatic break time in Schedule module')} />
                   </div>
+                  { inputValues.deduct_break && (
+                    <div className={styles.clockIn}>
+                      <Checkbox
+                          onChange={handleChangeInput}
+                          checked={inputValues.break_from_job}
+                          label={t('Use employees Break Times from the Job Types')}
+                          name='break_from_job'
+                        />
+                    </div>
+                  )
+                  }
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
                     <Switch

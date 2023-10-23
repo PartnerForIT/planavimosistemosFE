@@ -11,11 +11,11 @@ import CategoriesIcon from '../../Icons/Categories2';
 import Progress from '../../Core/Progress';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, categoriesSkillsSelector,
+  snackbarType, snackbarText, categoriesSkillsSelector, scheduleSelector
 } from '../../../store/settings/selectors';
 import { jobTypesSelector, loadingJobTypeSelector } from '../../../store/jobTypes/selectors';
 import { placesSelector, loadingPlaceSelector } from '../../../store/places/selectors';
-import { loadSkills } from '../../../store/settings/actions';
+import { loadSkills, getSchedule } from '../../../store/settings/actions';
 import { getJobTypes } from '../../../store/jobTypes/actions';
 import { getPlaces } from '../../../store/places/actions';
 import ButtonBlock from './ButtonsBlock';
@@ -69,6 +69,7 @@ export default function Categories() {
     dispatch(loadSkills(id));
     dispatch(getJobTypes(id));
     dispatch(getPlaces(id));
+    dispatch(getSchedule(id));
   }, [dispatch, id]);
 
   const isLoadind = useSelector(isLoadingSelector);
@@ -80,6 +81,7 @@ export default function Categories() {
   const allPlaces = useSelector(placesSelector);
   const isLoadingJobTypes = useSelector(loadingJobTypeSelector);
   const isLoadingPlaces = useSelector(loadingPlaceSelector);
+  const scheduleSettings = useSelector(scheduleSelector);
 
   return (
     <MaynLayout>
@@ -110,6 +112,7 @@ export default function Categories() {
                     selectedCategory={selectedCategory}
                     loading={isLoadingJobTypes || isLoadingPlaces}
                     companyId={id}
+                    scheduleSettings={scheduleSettings}
                   />
                 </div>
               )

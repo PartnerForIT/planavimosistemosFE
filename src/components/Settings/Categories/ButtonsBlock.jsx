@@ -89,8 +89,9 @@ export default function ButtonBlock({
         <Tooltip title='Select Category' />
       </div>
       {
-        buttons.map((button) => (
+        buttons.map((button, index) => (
           <Button
+            key={index+'-button'}
             onClick={button.onClick}
             inverse={button.inverse}
             fillWidth
