@@ -359,7 +359,7 @@ export default function TableBlock({
         handleClose={handleCloseBreak}
         title={t('Break Time')}
         buttonTitle={t('Change Time')}
-        initialValues={[]}
+        initialValues={selectedItemData.breaks}
         createBreak={onCreateBreak}
       />
     </div>

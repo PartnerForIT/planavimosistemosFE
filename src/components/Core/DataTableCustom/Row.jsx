@@ -224,7 +224,7 @@ const Row = ({
                 {(column.field === 'breaks' && onEditBreak) 
                   && (
                     row[column.field] && row[column.field].length ? 
-                    <span className={styles.existedBreak} onClick={() => onEditBreak(row.id)}>{row[column.field].map((item) => `${item.start.slice(0, 5)} - ${item.end.slice(0, 5)}`).join("; ")}</span> :
+                    <span className={styles.existedBreak} onClick={() => onEditBreak(row.id)}>{row[column.field].map((item) => `${item.start} - ${item.end}`).join("; ")}</span> :
                     <span className={styles.addBreak} onClick={() => onEditBreak(row.id)}>+</span>
                   )
                 }
