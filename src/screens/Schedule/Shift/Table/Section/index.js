@@ -96,14 +96,14 @@ export default ({
         const buttonBounding = buttonRef.current.getBoundingClientRect();
         const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
         const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
-        const offsetBottom = parentBounding.height - buttonBounding.top - buttonBounding.height - 30;
+        const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
 
-        const menuPlacement = ((offsetBottom - heightContent) > 0) ? 'bottom' : 'top';
+        const menuPlacement = ((offsetBottom - heightContent) > 50) ? 'bottom' : 'top';
 
         const newClasses = [];
 
         if (menuPlacement === 'top') {
-          newClasses.push(classes.section__modal_top);
+          newClasses.push(classes.section__menu__modal_top);
         }
 
         if (newClasses.length) {
@@ -173,6 +173,7 @@ export default ({
               <button
                 className={classes.section__menu__button}
                 onClick={handleClickOpenMenu}
+                ref={buttonRef}
               >
                 <Dots />
               </button>

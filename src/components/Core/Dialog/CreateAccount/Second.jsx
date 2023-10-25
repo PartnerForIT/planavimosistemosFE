@@ -372,6 +372,40 @@ const SecondStep = ({
                   </div>
                 )
               }
+
+{
+                permissions.schedule_shift && (
+                  <div className={style.formItem}>
+                    <Label htmlFor='assign_shift_id' text={t('Assign to Shift')} />
+                    <AddEditSelectOptions
+                      id='assign_shift_id'
+                      options={shiftsOptions}
+                      user={user}
+                      placeholder={t('Select a shift')}
+                      name='assign_shift_id'
+                      handleInput={handleInput}
+                      disabled={!shiftsOptions.length || !user.place}
+                    />
+                  </div>
+                )
+              }
+
+              {
+                permissions.schedule_shift && (
+                  <div className={style.formItem}>
+                    <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
+                    <AddEditSelectOptions
+                      id='assign_job_type_id'
+                      options={jobTypesOptions}
+                      user={user}
+                      placeholder={t('Select a job type')}
+                      name='assign_job_type_id'
+                      handleInput={handleInput}
+                      disabled={!jobTypesOptions.length || !user.assign_shift_id}
+                    />
+                  </div>
+                )
+              }
             </div>
           )
         }
