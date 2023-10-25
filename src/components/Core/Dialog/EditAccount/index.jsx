@@ -143,7 +143,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, hours_demand, cost, charge, skills, place, shift_id, job_type_id, role_id,
+        name, surname, phone, speciality_id, external_id, hours_demand, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups,
       } = employee;
@@ -157,6 +157,8 @@ export default function EditAccount({
         hours_demand,
         shift_id,
         job_type_id,
+        assign_shift_id,
+        assign_job_type_id,
         role_id,
         cost,
         charge,
@@ -198,6 +200,11 @@ export default function EditAccount({
 
   const jobTypesOptions = useMemo(() => {
     const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id == user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    return jt;
+  }, [job_types, user, shifts, t]);
+
+  const assignjobTypesOptions = useMemo(() => {
+    const jt = job_types?.filter(e => user.assign_shift_id && e?.shifts.find(s => s.id == user.assign_shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
     return jt;
   }, [job_types, user, shifts, t]);
 
@@ -253,10 +260,24 @@ export default function EditAccount({
             }
           }
 
+          if (prevState.assign_shift_id) {
+            const foundShift = shifts.find(({ id }) => id === prevState.assign_shift_id);
+            if (foundShift && foundShift.place_id != value) {
+              delete nextValues.assign_shift_id;
+            }
+          }
+
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
             if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.shift_id)) {
               delete nextValues.job_type_id;
+            }
+          }
+
+          if (prevState.assign_job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.assign_shift_id)) {
+              delete nextValues.assign_job_type_id;
             }
           }
 
@@ -272,6 +293,13 @@ export default function EditAccount({
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
             if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
               delete nextValues.job_type_id;
+            }
+          }
+
+          if (prevState.assign_job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+              delete nextValues.assign_job_type_id;
             }
           }
 
@@ -667,12 +695,12 @@ export default function EditAccount({
                               <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
                               <AddEditSelectOptions
                                 id='assign_job_type_id'
-                                options={jobTypesOptions}
+                                options={assignjobTypesOptions}
                                 user={user}
                                 placeholder={t('Select a job type')}
                                 name='assign_job_type_id'
                                 handleInput={handleInput}
-                                disabled={!jobTypesOptions.length || !user.assign_shift_id}
+                                disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
                               />
                             </div>
                           )

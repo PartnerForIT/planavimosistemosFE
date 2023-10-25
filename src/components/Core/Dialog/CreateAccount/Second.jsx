@@ -140,6 +140,11 @@ const SecondStep = ({
     return jt;
   }, [job_types, user, shifts]);
 
+  const assignjobTypesOptions = useMemo(() => {
+    const jt = job_types?.filter(e => user.assign_shift_id && e?.shifts.find(s => s.id === user.assign_shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    return jt;
+  }, [job_types, user, shifts]);
+
   const nextWithValidate = () => {
     const setError = ({
       name,
@@ -396,12 +401,12 @@ const SecondStep = ({
                     <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
                     <AddEditSelectOptions
                       id='assign_job_type_id'
-                      options={jobTypesOptions}
+                      options={assignjobTypesOptions}
                       user={user}
                       placeholder={t('Select a job type')}
                       name='assign_job_type_id'
                       handleInput={handleInput}
-                      disabled={!jobTypesOptions.length || !user.assign_shift_id}
+                      disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
                     />
                   </div>
                 )

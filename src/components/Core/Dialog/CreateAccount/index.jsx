@@ -38,6 +38,8 @@ export default function CreateAccount({
     shift_id: null,
     role_id: null,
     job_type_id: null,
+    assign_shift_id: null,
+    assign_job_type_id: null,
     password: '',
   };
   
@@ -86,10 +88,24 @@ export default function CreateAccount({
             }
           }
 
+          if (prevState.assign_shift_id) {
+            const foundShift = shifts.find(({ id }) => id === prevState.assign_shift_id);
+            if (foundShift && foundShift.place_id !== value) {
+              delete nextValues.assign_shift_id;
+            }
+          }
+
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
             if (foundJT && !foundJT?.shifts.find(s => s.id === nextValues?.shift_id)) {
               delete nextValues.job_type_id;
+            }
+          }
+
+          if (prevState.assign_job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id === nextValues?.assign_shift_id)) {
+              delete nextValues.assign_job_type_id;
             }
           }
 
@@ -106,6 +122,13 @@ export default function CreateAccount({
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
             if (foundJT && !foundJT?.shifts.find(s => s.id === value)) {
               delete nextValues.job_type_id;
+            }
+          }
+
+          if (prevState.assign_job_type_id) {
+            const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
+            if (foundJT && !foundJT?.shifts.find(s => s.id === value)) {
+              delete nextValues.assign_job_type_id;
             }
           }
 
