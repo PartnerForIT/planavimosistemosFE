@@ -2,17 +2,27 @@ import i18n from 'i18next';
 import detector from 'i18next-browser-languagedetector';
 import backend from 'i18next-xhr-backend';
 import { initReactI18next } from 'react-i18next';
+import translationEN from './translations/en.json';
+import translationLT from './translations/lt.json';
 
 i18n
   .use(detector)
   .use(backend)
   .use(initReactI18next)
   .init({
-    lng: 'en',
-    fallbackLng: 'en',
+    lng: localStorage.getItem('i18nextLng') || 'en',
+    fallbackLng: localStorage.getItem('i18nextLng') || 'en',
     keySeparator: false, // we do not use keys in form messages.welcome
     interpolation: {
       escapeValue: false, // react already safes from xss
+    },
+    resources: {
+      en: {
+        translation: translationEN
+      },
+      lt: {
+        translation: translationLT
+      }
     },
     detection: {
       // order and from where user language should be detected
@@ -26,7 +36,7 @@ i18n
       lookupFromSubdomainIndex: 0,
 
       // cache user language on
-      caches: ['localStorage', 'cookie'],
+      //caches: ['localStorage', 'cookie'],
       excludeCacheFor: ['cimode'], // languages to not persist (cookie, localStorage)
       htmlTag: document.documentElement,
     },
@@ -35,5 +45,3 @@ i18n
       useSuspense: false,
     },
   });
-
-export default i18n;

@@ -1,6 +1,8 @@
 import {
   GET_SETTINGS_COMPANY,
   GET_SETTINGS_COMPANY_SUCCESS,
+  PATCH_LANG_SETTINGS_COMPANY,
+  PATCH_LANG_SETTINGS_COMPANY_SUCCESS,
   PATCH_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY_SUCCESS,
   ADD_SETTING_SNACKBAR,
@@ -166,6 +168,16 @@ export const getSettingCompanySuccess = (data) => ({
   data,
 });
 
+
+export const editLangSettingCompany = (data, id) => ({
+  type: PATCH_LANG_SETTINGS_COMPANY,
+  data,
+  id,
+});
+export const editLangSettingCompanySuccess = (data) => ({
+  type: PATCH_LANG_SETTINGS_COMPANY_SUCCESS,
+  data,
+});
 export const editSettingCompany = (data, id) => ({
   type: PATCH_SETTINGS_COMPANY,
   data,

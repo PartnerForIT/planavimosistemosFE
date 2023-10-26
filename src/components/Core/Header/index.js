@@ -21,7 +21,7 @@ import styles from './header.module.scss';
 import MenuDialog from '../Dialog/MenuDialog';
 import EditPassword from '../Dialog/EditPassword';
 import SupportTicket from '../Dialog/SupportTicket';
-import { changePassword, editSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
+import { changePassword, editLangSettingCompany, getSecurityCompany } from '../../../store/settings/actions';
 import { postSupportTicket, doneSupportTicket } from '../../../store/company/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import usePermissions from '../usePermissions';
@@ -174,7 +174,7 @@ export default function ButtonAppBar({ logOut }) {
     editHandleClose();
   };
   const changeLanguage = (data) => {
-    dispatch(editSettingCompany({ lang: data.toUpperCase() }, companyId));
+    dispatch(editLangSettingCompany({ lang: data.toUpperCase() }, companyId));
   };
   const handleSubmit = (description) => {
     dispatch(postSupportTicket({

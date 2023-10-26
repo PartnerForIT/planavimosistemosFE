@@ -62,14 +62,23 @@ function MenuDialog({
     }
   };
 
-  useEffect(() => {
-    if (expanded && language !== localStorage.getItem('i18nextLng')) {
-      localStorage.setItem('i18nextLng', language);
-      changeLanguage(language);
-      handleClose();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language, expanded]);
+  const onChangeLanguage = (language) => {
+    localStorage.setItem('i18nextLng', language);
+    changeLanguage(language);
+    setLanguage(language);
+    handleClose();
+    window.location.reload();
+  }
+
+  // useEffect(() => {
+  //   if (expanded && language !== localStorage.getItem('i18nextLng')) {
+  //     localStorage.setItem('i18nextLng', language);
+  //     changeLanguage(language);
+  //     setLanguage(language);
+  //     handleClose();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [language, expanded]);
 
   const passwordClick = () => {
     editPassword();
@@ -125,7 +134,7 @@ function MenuDialog({
           expanded={expanded}
           setExpanded={setExpanded}
           language={language}
-          setLanguage={setLanguage}
+          setLanguage={onChangeLanguage}
         />
       </MenuItem>
       <div className={classes.menu__hr} />

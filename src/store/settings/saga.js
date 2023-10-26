@@ -6,6 +6,7 @@ import config from 'config';
 import axios from 'axios';
 import {
   GET_SETTINGS_COMPANY,
+  PATCH_LANG_SETTINGS_COMPANY,
   PATCH_SETTINGS_COMPANY,
   GET_SETTINGS_WORK_TIME,
   PATCH_WORK_TIME,
@@ -164,6 +165,32 @@ function* loadSettingsCompany(action) {
     yield put(getSettingCompanySuccess(data));
   } catch (error) {
     console.log(error);
+  }
+}
+
+function* editLangSettingsCompany(action) {
+  try {
+    yield call(axios.patch, `${config.api.url}/company/${action.id}/update-lang`, action.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    const companyInfo = yield select((state) => state.company.companyInfo);
+    if (companyInfo.date_format !== action.data.date_format) {
+      yield put(updateCompanyInfo({
+        date_format: action.data.date_format,
+      }));
+    }
+
+    // yield put(getSettingCompanySuccess(data));
+    yield put(addSnackbar('Company language changed', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('Company edit error', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   }
 }
 
@@ -1607,6 +1634,7 @@ export default function* SettingsWatcher() {
   yield takeLeading(PATCH_SKILL, patchSkill);
   yield takeLeading(DELETE_SKILL, deleteSkill);
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
+  yield takeLatest(PATCH_LANG_SETTINGS_COMPANY, editLangSettingsCompany);
   yield takeLatest(PATCH_SETTINGS_COMPANY, editSettingsCompany);
   yield takeLeading(GET_SETTINGS_WORK_TIME, loadSettingsWorkTime);
   yield takeLeading(GET_WORKING_DAYS, getWorkingDays);
