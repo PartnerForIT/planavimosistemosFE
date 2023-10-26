@@ -125,6 +125,15 @@ export default function CreateAccount({
             }
           }
 
+          return nextValues;
+        }
+
+        if (name === 'assign_shift_id') {
+          const nextValues = {
+            ...prevState,
+            [name]: value,
+          };
+
           if (prevState.assign_job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
             if (foundJT && !foundJT?.shifts.find(s => s.id === value)) {
