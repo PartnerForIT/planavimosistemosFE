@@ -60,6 +60,7 @@ import Background from './Background';
 import Footer from './Footer';
 import './Schedule.scss';
 import {
+  AdditionalRatesDataSelector,
   scheduleSelector as scheduleSettingSelector,
 } from '../../store/settings/selectors';
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
@@ -116,6 +117,7 @@ export default () => {
   const [openDialog,setOpenDialog] = useState(false)
   const [deletedShiftName,setDeletedShiftName] = useState('')
   const workTime = useSelector(settingWorkTime);
+  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
 
   const handleDialog = () => {
     setOpenDialog(false);
@@ -661,7 +663,7 @@ export default () => {
         work_minutes={event.extendedProps.work_minutes}
         minutes={event.extendedProps.minutes}
         costPermission={permissions.cost && permissions.schedule_costs}
-        nightPermission={permissions.night_rates}
+        nightPermission={permissions.night_rates && AdditionalRates.night_time}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && permissions.schedule_edit}
