@@ -390,7 +390,6 @@ const SecondStep = ({
                       name='assign_shift_id'
                       handleInput={handleInput}
                       disabled={!shiftsOptions.length || !user.place}
-                      wrong={user.assign_shift_id && !user.assign_job_type_id}
                     />
                   </div>
                 )
@@ -408,6 +407,7 @@ const SecondStep = ({
                       name='assign_job_type_id'
                       handleInput={handleInput}
                       disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
+                      wrong={user.assign_shift_id && !user.assign_job_type_id}
                     />
                   </div>
                 )
