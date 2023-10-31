@@ -458,29 +458,56 @@ export default forwardRef(({
     }));
   };
   const handleChangeTime = ({ time, resourceId, cellId }) => {
+    const cellIndex = cellId;
     setData((prevState) => {
-      const foundIndex = prevState[currentWeek].findIndex((item) => item.resourceId === resourceId);
-      const cellIndex = cellId;
+      
+      const mweek = prevState[currentWeek].map((item, index) => {
+
+        if (!item.data[cellIndex] || resourceId != item.resourceId) {
+          return item;
+        }
+
+        return {
+          ...item,
+          data: item.data.map((c, i) => (
+            {
+              ...c,
+              time: {
+                ...time,
+                not_work: c.time.not_work
+              }
+            }
+          )),
+        }
+      })
 
       return {
-        ...prevState,
-        [currentWeek]: [
-          ...prevState[currentWeek].slice(0, foundIndex),
-          {
-            ...prevState[currentWeek][foundIndex],
-            data: [
-              ...prevState[currentWeek][foundIndex].data.slice(0, cellIndex),
-              {
-                ...prevState[currentWeek][foundIndex].data[cellIndex],
-                time,
-              },
-              ...prevState[currentWeek][foundIndex].data.slice(cellIndex + 1),
-            ],
-          },
-          ...prevState[currentWeek].slice(foundIndex + 1),
-        ],
-      };
-    });
+      ...prevState,
+      [currentWeek]: mweek
+    }});
+
+    // setData((prevState) => {
+    //   const foundIndex = prevState[currentWeek].findIndex((item) => item.resourceId === resourceId);
+    //   const cellIndex = cellId;
+    //   return {
+    //     ...prevState,
+    //     [currentWeek]: [
+    //       ...prevState[currentWeek].slice(0, foundIndex),
+    //       {
+    //         ...prevState[currentWeek][foundIndex],
+    //         data: [
+    //           ...prevState[currentWeek][foundIndex].data.slice(0, cellIndex),
+    //           {
+    //             ...prevState[currentWeek][foundIndex].data[cellIndex],
+    //             time,
+    //           },
+    //           ...prevState[currentWeek][foundIndex].data.slice(cellIndex + 1),
+    //         ],
+    //       },
+    //       ...prevState[currentWeek].slice(foundIndex + 1),
+    //     ],
+    //   };
+    // });
   };
   const handleChangeDefaultTime = ({ time, cellId }) => {
     const cellIndex = cellId;
