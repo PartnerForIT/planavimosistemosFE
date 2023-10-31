@@ -390,6 +390,7 @@ const SecondStep = ({
                       name='assign_shift_id'
                       handleInput={handleInput}
                       disabled={!shiftsOptions.length || !user.place}
+                      wrong={user.assign_shift_id && !user.assign_job_type_id}
                     />
                   </div>
                 )
@@ -438,7 +439,11 @@ const SecondStep = ({
         >
           {t('Back')}
         </Button>
-        <NextStepButton className={style.nextButton} onClick={nextWithValidate} />
+        <NextStepButton
+          className={style.nextButton}
+          onClick={nextWithValidate}
+          disabled={user.assign_shift_id && !user.assign_job_type_id}
+        />
       </div>
     </>
   );

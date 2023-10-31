@@ -693,6 +693,7 @@ export default function EditAccount({
                                 name='assign_shift_id'
                                 handleInput={handleInput}
                                 disabled={!shiftsOptions.length || !user.place}
+                                wrong={user.assign_shift_id && !user.assign_job_type_id}
                               />
                             </div>
                           )
@@ -723,6 +724,7 @@ export default function EditAccount({
                   <Button
                     onClick={handleSubmit}
                     size='big'
+                    disabled={user.assign_shift_id && !user.assign_job_type_id}
                   >
                     {t('Save an close')}
                   </Button>

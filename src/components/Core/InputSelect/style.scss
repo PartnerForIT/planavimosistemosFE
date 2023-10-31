@@ -98,6 +98,12 @@
     opacity: 0.8;
   }
 
+  &_wrong {
+    input {
+      border-color: #fd0d1b;
+    }
+  }
+
   &_small {
     & .input-select {
       &__control {

@@ -36,6 +36,7 @@ export default ({
   labelId,
   className,
   small,
+  wrong,
   withoutCheckbox = false,
   withoutSearch = false,
 }) => {
@@ -63,6 +64,7 @@ export default ({
     {
       'input-select_open': open,
       'input-select_disabled': disabled,
+      'input-select_wrong': wrong,
       'input-select_small': small,
       [className]: className,
     },
