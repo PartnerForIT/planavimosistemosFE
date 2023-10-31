@@ -364,6 +364,11 @@ export default () => {
     }));
   };
 
+  const handleChangeMonth = (data) => {
+    fromDateRef.current = data.fromDate;
+    handleGetSchedule({ fromDate: fromDateRef.current });
+  }
+
   const handleMarker = (employeeId, date) => {
     dispatch(patchMarker({
       companyId,
@@ -413,13 +418,14 @@ export default () => {
   const handleChangeTimeline = (value) => {
     setTimeline(value);
     
-    const calendarApi = calendarRef.current?.getApi();
+    //const calendarApi = calendarRef.current?.getApi();
     let send = { nextTimeline: value };
 
-    if (!calendarApi?.view?.getCurrentData()?.currentDate)
-    {
+    //if (!calendarApi?.view?.getCurrentData()?.currentDate)
+    //{
       send.fromDate = moment(new Date()).format('YYYY-MM-DD');
-    }
+      fromDateRef.current = moment(new Date());
+    //}
 
     handleGetSchedule(send);
   };
@@ -1014,6 +1020,7 @@ export default () => {
 
   const downloadScheduleFile = (type) => {
     let nextFromDate = moment(fromDateRef.current);
+
     if (timeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
@@ -1143,7 +1150,7 @@ export default () => {
                     markers={markers}
                     markerActive={toolsActive['marking']}
                     handleMarker={handleMarker}
-                    onChangeMonth={handleGetSchedule}
+                    onChangeMonth={handleChangeMonth}
                     timesPanel={schedule.timesPanel}
                     withCost={permissions.cost && permissions.schedule_costs}
                     scheduleSettings={scheduleSettings}
