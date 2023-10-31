@@ -481,6 +481,7 @@ export default () => {
         handleChangeStartDay(moment());
       } else if (shift) {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
+        handleChangeStartDay(moment(shift.shift_info.date_start));
         const days = workTime.work_time.work_days?.days ?? [];
 
         const defaultTime = new Array(4).fill().reduce((acc, _, index) => {
@@ -532,8 +533,6 @@ export default () => {
         }
         // todo после ухода с экрана, нужно не забыть зачистить шифт,
         //  так как по этому условию будет подходить старый шифт
-
-        handleChangeStartDay(moment(initialValues.shift_info.date_start));
       }
     }
   }, [workTime, shift]);
