@@ -675,15 +675,15 @@ export default forwardRef(({
           const nextState = {};
 
           // eslint-disable-next-line prefer-destructuring
-          nextState[1] = prevState[0];
+          nextState[1] = prevState[1] ? [...prevState[1]] : [...prevState[0]];
 
           if ((countOfWeeks - 1) > 1) {
             // eslint-disable-next-line prefer-destructuring
-            nextState[2] = prevState[0];
+            nextState[2] = prevState[2] ? [...prevState[2]] : [...prevState[0]];
           }
           if ((countOfWeeks - 1) > 2) {
             // eslint-disable-next-line prefer-destructuring
-            nextState[3] = prevState[0];
+            nextState[3] = prevState[3] ? [...prevState[3]] : [...prevState[0]];
           }
 
           return {
