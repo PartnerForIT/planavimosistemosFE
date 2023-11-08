@@ -260,12 +260,12 @@ export default () => {
         icon: <ApprovedIcon />,
         onClick: (status) => sorting(status),
       },
-      (permissions.use_approval_flow && journal.approve_flow) ?
+      //(permissions.use_approval_flow && journal.approve_flow) ?
       {
         value: 'Suspended',
         icon: <SuspendedIcon />,
         onClick: (status) => sorting(status),
-      } : {},
+      },// : {},
       {
         value: 'Stopped by System',
         hideTop: true,
