@@ -78,7 +78,7 @@ const Users = React.memo(({
   };
 
   return (
-    <Content tooltip='Tooltip' title='Users within this role'>
+    <Content tooltip='Tooltip' title='Users within this event'>
       <Input
         icon={<SearchIcon />}
         placeholder='Search by employees'

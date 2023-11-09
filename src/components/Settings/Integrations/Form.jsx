@@ -37,8 +37,8 @@ export default ({
         height={21}
         width={40}
       />
-      <div className={style.label}>{t('User Rivilé .EIP time sheet export')}</div>
-      <Tooltip title='User Rivilé .EIP time sheet export' />
+      <div className={style.label}>{t('Use Rivilė .EIP time sheet export')}</div>
+      <Tooltip title={t('Use Rivilė .EIP time sheet export')} />
     </div>
 
     { integrationsData.rivile && (
@@ -49,7 +49,7 @@ export default ({
 
       <div className={style.rivile}>
         <div>
-          <Label text={`${t('Select hours to use for Rivilé')}`} />
+          <Label text={`${t('Select hours to use for Rivilė')}`} />
 
           <div className={style.generalBlock}>
             <Checkbox
@@ -161,7 +161,7 @@ export default ({
           </div>
         </div>
         <div>
-          <Label text={`${t('Hour code in Rivilé (12 symbols)')}`} />
+          <Label text={`${t('Hour code in Rivilė (12 symbols)')}`} />
           <div className={style.generalBlock2}>
             <Input
               value={integrationsData.rivile_worked_hours_code}
@@ -218,7 +218,7 @@ export default ({
           </div>
 
           <div className={style.separator} />
-          <Label text={`${t('Day type marking in Rivilé')}`} />
+          <Label text={`${t('Day type marking in Rivilė')}`} />
           <div className={style.separator} />
           <div className={style.generalBloc2k}>
             <Input
@@ -478,7 +478,7 @@ export default ({
               onClick={() => importIikoData()}
               disabled={!iiko_import_date}
             >
-              {t('Manual import')}
+              {t('Manual Import')}
             </Button>
           </div>
         </div>

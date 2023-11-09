@@ -30,6 +30,12 @@ $form-inner-width: 900px;
   }
 }
 
+.labelSpan {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
 .newAccount {
   margin-top: 50px;
   width: 100%;

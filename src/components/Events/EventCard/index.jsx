@@ -373,7 +373,7 @@ export default ({
           <UserIcon
             className={classes.container__employeeHabbits__icon}
           />
-          {t('Employee Habbits')}
+          {t('Employee Habits')}
         </div>
         <span className={classes.container__employeeHabbits__subTitle}>
           {t('Total times of this event')}

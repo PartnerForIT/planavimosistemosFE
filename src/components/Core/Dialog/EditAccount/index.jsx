@@ -681,7 +681,7 @@ export default function EditAccount({
                           )
                         }
 
-{
+                        {/* {
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
                               <Label htmlFor='assign_shift_id' text={t('Assign to shift')} />
@@ -714,7 +714,7 @@ export default function EditAccount({
                               />
                             </div>
                           )
-                        }
+                        } */}
                       </div>
                     )
                   }

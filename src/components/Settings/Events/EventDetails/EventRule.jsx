@@ -720,7 +720,7 @@ export default React.memo(({
         values.event_type_id === EVENT_TYPE.WEEKLY_OVERTIME_START && (
           <>
             <div className={classes.eventRule__content}>
-              {t('Then weekly overtime starts, notify after')}
+              {t('When weekly overtime starts, notify after')}
               {' '}
               <InputSelect
                 name='time'
@@ -744,7 +744,7 @@ export default React.memo(({
         values.event_type_id === EVENT_TYPE.DAILY_OVERTIME_START && (
           <>
             <div className={classes.eventRule__content}>
-              {t('Then daily overtime starts, notify after')}
+              {t('When daily overtime starts, notify after')}
               {' '}
               <InputSelect
                 name='time'

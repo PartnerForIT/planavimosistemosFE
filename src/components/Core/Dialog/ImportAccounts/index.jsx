@@ -398,7 +398,7 @@ export default function ImportAccounts({
         }
         {/* import CSV */}
         <div className={style.formControl}>
-          <Label htmlFor='text' text={t('Company name')} />
+          <Label htmlFor='text' text={t('File name')} />
           <div className={classes.import}>
             <Input type='text' fullWidth disabled value={fileName} />
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}

@@ -9,6 +9,7 @@ import _ from 'lodash';
 import style from './CreateAccount.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
+import Tooltip from '../../../Core/Tooltip';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
@@ -347,7 +348,10 @@ const SecondStep = ({
               {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
+                    <span className={style.labelSpan}>
+                      <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
+                      <Tooltip title={t("First you need to select an assigned place for this employee. Secondary you can choose in which Shift inside that Place he will see and plan. This user can see all employees and also control and edit the schedule for them. It is possible to set the Job Type which he can control. In this way he will have less responsabilities. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
+                    </span>
                     <AddEditSelectOptions
                       id='shift_id'
                       options={shiftsOptions}
@@ -364,7 +368,10 @@ const SecondStep = ({
               {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
+                    <span className={style.labelSpan}>
+                      <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
+                      <Tooltip title={t("In order to assign the job type as the main responsability for this person you should first select a Place and assign the Shift. Only then you can assign the Job Type of that specific Shift. This user will gain control over the users in that Job Type and he can see all the employees in Schedule module under this Job Type. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
+                    </span>
                     <AddEditSelectOptions
                       id='job_type_id'
                       options={jobTypesOptions}
@@ -378,10 +385,13 @@ const SecondStep = ({
                 )
               }
 
-{
+              {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='assign_shift_id' text={t('Assign to Shift')} />
+                    <span className={style.labelSpan}>
+                      <Label htmlFor='assign_shift_id' text={t('Assign to Shift')} />
+                      <Tooltip title={t("Quick assignation as a worker to the schedule module structure. First you have to assign to Place and then to Shift and Job type. All other changes of changing and removing from the Shift and it's Job type has to be done via Schedule module, you will not find edit here.")} />
+                    </span>
                     <AddEditSelectOptions
                       id='assign_shift_id'
                       options={shiftsOptions}
@@ -398,7 +408,10 @@ const SecondStep = ({
               {
                 permissions.schedule_shift && (
                   <div className={style.formItem}>
-                    <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
+                    <span className={style.labelSpan}>
+                      <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
+                      <Tooltip title={t("Assign Job Type is possible if you already selected a Place and a Shift. Choosing the right Job Type will assign the worker to the initial structure of his Scheduled work. All other changes has to be done via Schedule module. You will not find edit here in the Edit Account section.")} />
+                    </span>
                     <AddEditSelectOptions
                       id='assign_job_type_id'
                       options={assignjobTypesOptions}

@@ -20,7 +20,7 @@ export default function AddHolidays({
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      <Label text={t('Name')} htmlFor='name' />
+      <Label text={t('Name_nn')} htmlFor='name' />
       <Input
         placeholder={`${t('Enter holiday name')}`}
         value={name}

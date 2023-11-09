@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import { useTranslation } from 'react-i18next';
 
 import MainLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -37,6 +38,7 @@ export default function WorkTime() {
   const params = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const [inputValues, setInputValues] = useState({
     week_start: '',
@@ -191,7 +193,7 @@ export default function WorkTime() {
     <MainLayout>
       <Dashboard>
         <TitleBlock
-          title='Work Time'
+          title={t('Work Time')}
         >
           <WorkTimeIcon />
         </TitleBlock>
