@@ -176,7 +176,7 @@ const Row = ({
           columns.map((column, idx) => {
             let IconComponent = null;
             if (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length) {
-              const fieldIcon = fieldIcons[column.field].filter((icon) => icon.value === row[column.field])[0].value;
+              const fieldIcon = fieldIcons[column.field].filter((icon) => icon.value === row[column.field])[0]?.value;
               IconComponent = Components[fieldIcon];
             }
             let width = '';
