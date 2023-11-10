@@ -69,19 +69,19 @@ export default function Filter({
           options={[
             {
               value: 4,
-              label: `All Users ${stats.accounts ?? ''}`,
+              label: `${t('All Users')} ${stats.accounts ?? ''}`,
             },
             {
               value: 1,
-              label: `Active ${stats.active ?? ''}`,
+              label: `${t('Active')} ${stats.active ?? ''}`,
             },
             {
               value: 0,
-              label: `Suspended ${stats.suspended ?? ''}`,
+              label: `${t('Suspended')} ${stats.suspended ?? ''}`,
             },
             {
               value: 3,
-              label: `Blocked ${stats.blocked ?? ''}`,
+              label: `${t('Blocked')} ${stats.blocked ?? ''}`,
             },
           ]}
         />
@@ -91,7 +91,7 @@ export default function Filter({
         <p>
           {checkedItems.length || (selectedItem.id ? '1' : '0')}
           {' '}
-          USERS SELECTED
+          {t('USERS SELECTED')}
         </p>
         {stats?.blocked >= 1 && unblockVisible()
         && (

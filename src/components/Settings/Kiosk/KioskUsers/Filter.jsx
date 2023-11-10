@@ -27,15 +27,15 @@ export default function Filter({
           options={[
             {
               value: null,
-              label: `All Users ${stats.total ?? ''}`,
+              label: `${t('All Users')} ${stats.total ?? ''}`,
             },
             {
               value: 1,
-              label: `Yes ${stats.yes ?? ''}`,
+              label: `${t('Yes')} ${stats.yes ?? ''}`,
             },
             {
               value: 0,
-              label: `No ${stats.no ?? ''}`,
+              label: `${t('No')} ${stats.no ?? ''}`,
             },
           ]}
         />
@@ -45,7 +45,7 @@ export default function Filter({
         <p>
           {checkedItems.length}
           {' '}
-          USERS SELECTED:
+          {t('USERS SELECTED')}:
         </p>
 
         <Button
