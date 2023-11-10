@@ -10,6 +10,7 @@ import style from './CreateAccount.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
 import Tooltip from '../../../Core/Tooltip';
+import ReactTooltip from 'react-tooltip';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
 import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
@@ -352,15 +353,20 @@ const SecondStep = ({
                       <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
                       <Tooltip title={t("First you need to select an assigned place for this employee. Secondary you can choose in which Shift inside that Place he will see and plan. This user can see all employees and also control and edit the schedule for them. It is possible to set the Job Type which he can control. In this way he will have less responsabilities. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
                     </span>
-                    <AddEditSelectOptions
-                      id='shift_id'
-                      options={shiftsOptions}
-                      user={user}
-                      placeholder={t('Select a shift')}
-                      name='shift_id'
-                      handleInput={handleInput}
-                      disabled={!shiftsOptions.length || !user.place}
-                    />
+                    <div
+                      data-for='selectdisabled'
+                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                    >
+                      <AddEditSelectOptions
+                        id='shift_id'
+                        options={shiftsOptions}
+                        user={user}
+                        placeholder={t('Select a shift')}
+                        name='shift_id'
+                        handleInput={handleInput}
+                        disabled={!shiftsOptions.length || !user.place}
+                      />
+                    </div>
                   </div>
                 )
               }
@@ -372,15 +378,20 @@ const SecondStep = ({
                       <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
                       <Tooltip title={t("In order to assign the job type as the main responsability for this person you should first select a Place and assign the Shift. Only then you can assign the Job Type of that specific Shift. This user will gain control over the users in that Job Type and he can see all the employees in Schedule module under this Job Type. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
                     </span>
-                    <AddEditSelectOptions
-                      id='job_type_id'
-                      options={jobTypesOptions}
-                      user={user}
-                      placeholder={t('Select a job type')}
-                      name='job_type_id'
-                      handleInput={handleInput}
-                      disabled={!jobTypesOptions.length || !user.shift_id}
-                    />
+                    <div
+                      data-for='selectdisabled'
+                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                    >
+                      <AddEditSelectOptions
+                        id='job_type_id'
+                        options={jobTypesOptions}
+                        user={user}
+                        placeholder={t('Select a job type')}
+                        name='job_type_id'
+                        handleInput={handleInput}
+                        disabled={!jobTypesOptions.length || !user.shift_id}
+                      />
+                    </div>
                   </div>
                 )
               }
@@ -392,15 +403,20 @@ const SecondStep = ({
                       <Label htmlFor='assign_shift_id' text={t('Assign to Shift')} />
                       <Tooltip title={t("Quick assignation as a worker to the schedule module structure. First you have to assign to Place and then to Shift and Job type. All other changes of changing and removing from the Shift and it's Job type has to be done via Schedule module, you will not find edit here.")} />
                     </span>
-                    <AddEditSelectOptions
-                      id='assign_shift_id'
-                      options={shiftsOptions}
-                      user={user}
-                      placeholder={t('Select a shift')}
-                      name='assign_shift_id'
-                      handleInput={handleInput}
-                      disabled={!shiftsOptions.length || !user.place}
-                    />
+                    <div
+                      data-for='selectdisabled'
+                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                    >
+                      <AddEditSelectOptions
+                        id='assign_shift_id'
+                        options={shiftsOptions}
+                        user={user}
+                        placeholder={t('Select a shift')}
+                        name='assign_shift_id'
+                        handleInput={handleInput}
+                        disabled={!shiftsOptions.length || !user.place}
+                      />
+                    </div>
                   </div>
                 )
               }
@@ -412,16 +428,21 @@ const SecondStep = ({
                       <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
                       <Tooltip title={t("Assign Job Type is possible if you already selected a Place and a Shift. Choosing the right Job Type will assign the worker to the initial structure of his Scheduled work. All other changes has to be done via Schedule module. You will not find edit here in the Edit Account section.")} />
                     </span>
-                    <AddEditSelectOptions
-                      id='assign_job_type_id'
-                      options={assignjobTypesOptions}
-                      user={user}
-                      placeholder={t('Select a job type')}
-                      name='assign_job_type_id'
-                      handleInput={handleInput}
-                      disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
-                      wrong={user.assign_shift_id && !user.assign_job_type_id}
-                    />
+                    <div
+                      data-for='selectdisabled'
+                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                    >
+                      <AddEditSelectOptions
+                        id='assign_job_type_id'
+                        options={assignjobTypesOptions}
+                        user={user}
+                        placeholder={t('Select a job type')}
+                        name='assign_job_type_id'
+                        handleInput={handleInput}
+                        disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
+                        wrong={user.assign_shift_id && !user.assign_job_type_id}
+                      />
+                    </div>
                   </div>
                 )
               }
@@ -438,6 +459,12 @@ const SecondStep = ({
           buttonTitle={t('Create new skill')}
           createSkill={createNewSkill}
           permissions={permissions}
+        />
+        <ReactTooltip
+          id='selectdisabled'
+          className={style.selectdisabled__tooltip}
+          effect='solid'
+          placement='bottom'
         />
       </div>
 

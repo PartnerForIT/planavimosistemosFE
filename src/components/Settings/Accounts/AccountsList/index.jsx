@@ -46,7 +46,7 @@ import {
 } from '../../../../store/settings/actions';
 import CreateAccount from '../../../Core/Dialog/CreateAccount';
 import EditAccount from '../../../Core/Dialog/EditAccount';
-import CurrencySign from '../../../shared/CurrencySign';
+import LabelWithCurrencySign from '../../../shared/LabelWithCurrencySign';
 import DeleteEmployee from '../../../Core/Dialog/DeleteEmployee';
 import ChangeEmplStatus from '../../../Core/Dialog/ChangeEmplStatus';
 import ImportAccounts from '../../../Core/Dialog/ImportAccounts';
@@ -68,13 +68,6 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
   },
 }));
-
-const LabelWithCurrencySign = ({ text }) => (
-  <>
-    {text}
-    <CurrencySign />
-  </>
-);
 
 const NameWithAvatar = (row) => (
   <div className={styles.cellNameWithAvatar}>

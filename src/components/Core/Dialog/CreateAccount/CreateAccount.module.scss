@@ -70,6 +70,16 @@ $form-inner-width: 900px;
   }
 }
 
+.selectdisabled__tooltip {
+  background-color: #F7F7B4 !important;
+  color: black !important;
+
+  &::after,
+  &::before {
+    border-top-color: #F7F7B4 !important;
+  }
+}
+
 .buttons {
   display: flex;
   align-items: center;

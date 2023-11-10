@@ -1,6 +1,7 @@
 import React, {
   useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -37,6 +38,7 @@ export default function DataTable({
   withoutShitCode,
   onEditBreak,
 }) {
+  const { t } = useTranslation();
   const [tableData, setTableData] = useState(data);
   const [, setAllSelected] = useState({ checked: 0, total: 0 });
   const [sortOptionsAsc, setSortOptionsAsc] = useState({});
@@ -269,7 +271,7 @@ export default function DataTable({
                         onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field], column)}
                       >
                         <div className={classNames(styles.flexCenter)}>
-                          {column.label}
+                          {typeof column.label === 'string' ? t(column.label) : column.label}
                         </div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
