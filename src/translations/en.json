@@ -8,5 +8,7 @@
         "saturday": "Saturday",
         "sunday": "Sunday",
         "May_short": "May",
-        "Name_nn": "Name"
+        "Name_nn": "Name",
+
+        "if workday exceeds 4.30 hours": "if workday exceeds 4:30 hours"
 }

@@ -458,6 +458,7 @@ export default forwardRef(({
     }));
   };
   const handleChangeTime = ({ time, resourceId, cellId }) => {
+    
     const cellIndex = cellId;
     setData((prevState) => {
       
@@ -469,15 +470,16 @@ export default forwardRef(({
 
         return {
           ...item,
-          data: item.data.map((c, i) => (
-            {
+          data: item.data.map((c, i) => {
+
+            return i === cellIndex ? {
               ...c,
               time: {
                 ...time,
                 not_work: c.time.not_work
               }
-            }
-          )),
+            } : {...c}
+          }),
         }
       })
 

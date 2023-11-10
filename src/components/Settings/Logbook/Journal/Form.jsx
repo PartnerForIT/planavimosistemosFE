@@ -14,7 +14,7 @@ import Select from '../../../Core/SimpleSelect';
 import CurrencySign from "../../../shared/CurrencySign";
 
 const breakArr = [
-  { code: '4', name: 'if workday exceeds 4:30 hours' },
+  { code: '4', name: 'if workday exceeds 4.30 hours' },
   { code: '6', name: 'if workday exceeds 6 hours' },
   { code: '7', name: 'if workday exceeds 7 hours' },
   { code: '8', name: 'if workday exceeds 8 hours' },
@@ -343,7 +343,7 @@ export default ({
                 handleInputChange={handleInputChange}
                 name='workday_exceed2'
                 value={journalData.workday_exceed2}
-                options={breakArr}
+                options={breakArr.map((item) => { return {...item, name: t(item.name)}})}
                 readOnly={readOnly}
               />
             </div>
@@ -353,7 +353,7 @@ export default ({
                 handleInputChange={handleInputChange}
                 name='break_duration2'
                 value={journalData.break_duration2}
-                options={durationArr}
+                options={durationArr.map((item) => { return {...item, name: t(item.name)}})}
                 readOnly={readOnly}
               />
             </div>
