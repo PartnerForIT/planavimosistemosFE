@@ -263,6 +263,7 @@ export default () => {
       //(permissions.use_approval_flow && journal.approve_flow) ?
       {
         value: 'Suspended',
+        hideTop: !(permissions.use_approval_flow && journal.approve_flow),
         icon: <SuspendedIcon />,
         onClick: (status) => sorting(status),
       },// : {},
