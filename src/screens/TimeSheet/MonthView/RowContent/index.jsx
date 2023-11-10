@@ -2,6 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import CurrencySign from '../../../../components/shared/CurrencySign';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 import Cell from '../Cell';
 import classes from './RowContent.module.scss';
@@ -24,6 +25,8 @@ const RowContent = ({
   daysOfMonth,
   pastDay,
 }) => {
+  const { t } = useTranslation();
+  
   useEffect(() => {
     ReactTooltip.rebuild();
   });
@@ -100,7 +103,7 @@ const RowContent = ({
       <div className={classes.rowContent}>
         <Cell
           key={0}
-          title={typeNames[field]}
+          title={t(typeNames[field])}
           article={true}
         />
         {

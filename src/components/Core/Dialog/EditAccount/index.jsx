@@ -438,7 +438,7 @@ export default function EditAccount({
               <>
                 <div className={style.avatarBlock}>
                   <img src={user.avatar ?? avatar_default} className={styles.large} alt='Account logo' />
-                  <Button size='big' inverse onClick={() => setDownloadOpen(true)}>Upload</Button>
+                  <Button size='big' inverse onClick={() => setDownloadOpen(true)}>{t('Upload')}</Button>
                 </div>
 
                 <form className={formClasses}>

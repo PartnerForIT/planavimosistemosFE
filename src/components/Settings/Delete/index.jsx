@@ -100,7 +100,7 @@ export default function AccountsList() {
     <MaynLayout>
       <Dashboard withoutScroll>
         <TitleBlock
-          title='Delete Data'
+          title={t('Delete Data')}
         >
           <DeleteIcon />
         </TitleBlock>

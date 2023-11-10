@@ -93,7 +93,7 @@ export default function TimeSheet() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Time Sheet'
+          title={t('Time Sheet')}
         >
           <TimeSheetIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
         </TitleBlock>

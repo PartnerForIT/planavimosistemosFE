@@ -2,6 +2,7 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import Content from './Content';
@@ -17,6 +18,7 @@ const Users = React.memo(({
   roleEmployeesEdit,
   readOnly,
 }) => {
+  const { t } = useTranslation();
   const employToCheck = useCallback(({
     id = 0,
     name,
@@ -87,12 +89,12 @@ const Users = React.memo(({
   };
 
   return (
-    <Content tooltip='Tooltip' title='Users within this role'>
+    <Content tooltip='Tooltip' title={t('Users within this role')}>
       <>
-        <div className={classes.sidebarTitle}>Employees</div>
+        <div className={classes.sidebarTitle}>{t('Employees')}</div>
         <Input
           icon={<SearchIcon />}
-          placeholder='Search by employees'
+          placeholder={t('Search by employees')}
           onChange={(e) => handleInputChange(e.target.value)}
           fullWidth
           value={search}

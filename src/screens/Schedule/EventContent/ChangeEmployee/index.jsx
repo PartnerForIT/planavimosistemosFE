@@ -83,7 +83,7 @@ export default ({
       </div>
       <Input
         icon={<SearchIcon />}
-        placeholder='Search by employees'
+        placeholder={t('Search by employees')}
         onChange={handleInputChange}
         value={searchValue}
         fullWidth

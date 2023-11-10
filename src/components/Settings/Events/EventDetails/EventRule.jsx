@@ -533,7 +533,7 @@ export default React.memo(({
   };
 
   return (
-    <Content title='Event Rule' tooltip='Tooltip' scroll={false}>
+    <Content title={t('Event Rule')} tooltip='Tooltip' scroll={false}>
       <InputSelect
         name='event_type_id'
         value={values.event_type_id}
@@ -564,7 +564,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -593,7 +593,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -622,7 +622,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -651,7 +651,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -680,7 +680,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -709,7 +709,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 small
               />
             </div>
@@ -816,7 +816,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 disabled={!values.reminder_settings}
                 small
               />
@@ -877,7 +877,7 @@ export default React.memo(({
                 name='based_at'
                 value={values.based_at || afterWorkOptions[0].value}
                 onChange={handleChangeSelect}
-                options={afterWorkOptions}
+                options={afterWorkOptions.map((item) => { return {...item, label: t(item.label)}})}
                 disabled={!values.reminder_settings}
                 small
               />

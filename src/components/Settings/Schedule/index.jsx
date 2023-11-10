@@ -33,21 +33,6 @@ import Checkbox from '../../Core/Checkbox/Checkbox2';
 import SimpleSelect from '../../Core/SimpleSelect';
 import styles from './schedule.module.scss';
 
-const monthArr = [
-  { code: 1, name: 'January' },
-  { code: 2, name: 'February' },
-  { code: 3, name: 'March' },
-  { code: 4, name: 'April' },
-  { code: 5, name: 'May' },
-  { code: 6, name: 'June' },
-  { code: 7, name: 'July' },
-  { code: 8, name: 'August' },
-  { code: 9, name: 'September' },
-  { code: 10, name: 'October' },
-  { code: 11, name: 'November' },
-  { code: 12, name: 'December' },
-];
-
 const useStyles = makeStyles(() => ({
   error: {
     background: '#de4343',
@@ -64,6 +49,21 @@ export default function ActivityLog() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const monthArr = [
+    { code: 1, name: t('January') },
+    { code: 2, name: t('February') },
+    { code: 3, name: t('March') },
+    { code: 4, name: t('April') },
+    { code: 5, name: t('May') },
+    { code: 6, name: t('June') },
+    { code: 7, name: t('July') },
+    { code: 8, name: t('August') },
+    { code: 9, name: t('September') },
+    { code: 10, name: t('October') },
+    { code: 11, name: t('November') },
+    { code: 12, name: t('December') },
+  ];
 
   const [inputValues, setInputValues] = useState({
     clock_in_restriction: false,
@@ -122,7 +122,7 @@ export default function ActivityLog() {
   return (
     <MaynLayout>
       <Dashboard>
-        <TitleBlock title='Schedule'>
+        <TitleBlock title={t('Schedule')}>
           <Schedule2Icon className={styles.icon} />
         </TitleBlock>
         <PageLayout>
@@ -132,7 +132,7 @@ export default function ActivityLog() {
                 <>
                   <div className={styles.clockInRestriction}>
                     <Label text={t('Clock in restriction')} />
-                    <Tooltip title='Clock in restriction' />
+                    <Tooltip title={t('Clock in restriction')} />
                   </div>
                   <div className={styles.clockIn}>
                     <Checkbox
@@ -169,9 +169,10 @@ export default function ActivityLog() {
                   <div className={styles.dayStart}>
                     <div className={styles.dayStart__label}>
                       <Label text={`${t('Schedule Day View starts')}:`} />
-                      <Tooltip title='Schedule Day View starts' />
+                      <Tooltip title={t('Schedule Day View starts')} />
                     </div>
                     <SimpleSelect
+                      className={styles.dayStart__select}
                       readOnly={!inputValues.working_at_night}
                       handleInputChange={handleChangeInput}
                       name='time_view_stats'

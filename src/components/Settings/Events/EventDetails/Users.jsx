@@ -2,6 +2,7 @@
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import Content from './Content';
 import SearchIcon from '../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapper';
@@ -14,6 +15,7 @@ const Users = React.memo(({
   activeEvent,
   roleEmployeesEdit,
 }) => {
+  const { t } = useTranslation();
   const employToCheck = useCallback(({
     id,
     name,
@@ -78,10 +80,10 @@ const Users = React.memo(({
   };
 
   return (
-    <Content tooltip='Tooltip' title='Users within this event'>
+    <Content tooltip='Tooltip' title={t('Users within this event')}>
       <Input
         icon={<SearchIcon />}
-        placeholder='Search by employees'
+        placeholder={t('Search by employees')}
         onChange={(e) => handleInputChange(e.target.value)}
         fullWidth
         value={search}

@@ -24,7 +24,7 @@ export default function passwordSetting({
           disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
-          <Tooltip title='Do not send password via email' />
+          <Tooltip title={t('Do not send password via email')} />
         </div>
       </div>
       <div className={style.settingsBlock}>
@@ -45,7 +45,7 @@ export default function passwordSetting({
           readOnly={readOnly}
         />
         <div className={style.tooltipBlock}>
-          <Tooltip title='Minimum password lenght' />
+          <Tooltip title={t('Minimum password lenght')} />
         </div>
       </div>
       <div className={style.settingsBlock}>
@@ -57,7 +57,7 @@ export default function passwordSetting({
           disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
-          <Tooltip title='Require Numbers' />
+          <Tooltip title={t('Require Numbers')} />
         </div>
       </div>
       <div className={style.settingsBlock}>
@@ -69,7 +69,7 @@ export default function passwordSetting({
           disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
-          <Tooltip title='Require special characters' />
+          <Tooltip title={t('Require special characters')} />
         </div>
       </div>
       <div className={style.settingsBlock}>
@@ -81,16 +81,16 @@ export default function passwordSetting({
           disabled={readOnly}
         />
         <div className={style.tooltipBlock}>
-          <Tooltip title='Require uppercase letters' />
+          <Tooltip title={t('Require uppercase letters')} />
         </div>
       </div>
       <div className={style.formLine} />
       <div className={style.settingsBlock2}>
         <Label text={t('Monitoring')} />
-        <Tooltip title='Notify administrators of locked account by e-mail' />
+        <Tooltip title={t('Notify administrators of locked account by e-mail')} />
       </div>
       <div className={style.settingsBlock2}>
-        <div className={style.innerText}>Lock account after</div>
+        <div className={style.innerText}>{t('Lock account after')}</div>
         <Input
           value={login_attempts}
           name='min'
@@ -101,7 +101,7 @@ export default function passwordSetting({
           onChange={(e) => setLogin_attempts(e.target.value)}
           readOnly={readOnly}
         />
-        <div className={style.innerText}>failed attempts</div>
+        <div className={style.innerText}>{t('failed attempts')}</div>
       </div>
       <div className={style.settingsBlock}>
         <Checkbox

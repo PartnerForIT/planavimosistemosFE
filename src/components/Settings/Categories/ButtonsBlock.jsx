@@ -86,7 +86,7 @@ export default function ButtonBlock({
     <div className={style.categoryPage__Button}>
       <div className={style.labelBlock}>
         <Label text={t('Select Category')} htmlFor='new_skill' />
-        <Tooltip title='Select Category' />
+        <Tooltip title={t('Select Category')} />
       </div>
       {
         buttons.map((button, index) => (

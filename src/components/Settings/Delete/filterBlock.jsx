@@ -24,13 +24,13 @@ export default function FilterDelete({
             <SimpleSelect
               handleInputChange={handleInputChange}
               name='employee'
-              placeholder='Select employee'
+              placeholder={t('Select employee')}
               value={inputValues.employee}
               options={employees}
               valueKey='id'
               labelKey='fullName'
             />
-            <Tooltip title='Select Employee' />
+            <Tooltip title={t('Select Employee')} />
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function FilterDelete({
         onClick={() => setOpenDialog(true)}
         disabled={inputValues.employee === ''
         || Object.keys(inputValues.from).length === 0
-        || inputValues.employee === 'Select employee'}
+        || inputValues.employee === t('Select employee')}
       >
         {t('Delete data')}
       </Button>

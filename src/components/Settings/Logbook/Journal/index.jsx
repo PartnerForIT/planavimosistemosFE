@@ -167,7 +167,7 @@ export default function Journal() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Journal'
+          title={t('Journal')}
         >
           <JournalIcon />
         </TitleBlock>

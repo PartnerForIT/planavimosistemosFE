@@ -104,7 +104,7 @@ function Events() {
               : (
                 <EventsBlock
                   events={events}
-                  eventsTypes={eventsTypes}
+                  eventsTypes={eventsTypes ? eventsTypes.map((item) => { return {...item, name: t(item.name)}}) : eventsTypes}
                   activeEvent={activeEvent}
                   setActiveEvent={setActiveEvent}
                   createNewEvent={() => setNewEventOpen(true)}

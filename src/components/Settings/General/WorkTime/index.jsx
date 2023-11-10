@@ -204,7 +204,9 @@ export default function WorkTime() {
                 <>
                   <StartWeek
                     styles={styles}
-                    days={workTime.days}
+                    days={workTime.days.map((item) => {
+                      return {...item, name: t(item.name)};
+                    })}
                     workTime={workTime.work_time}
                     handleInputChange={handleInputChange}
                     inputValues={inputValues}

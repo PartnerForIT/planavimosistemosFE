@@ -47,7 +47,7 @@ export default () => {
             {t('Unblock Account')}
           </Button>
           {/* eslint-disable-next-line max-len */}
-          <SupportTicket title='Account Unblock process succesfully' className={classes.dialogWrapper} open={open} onExited={() => { history.push('/'); }}>
+          <SupportTicket title={t('Account Unblock process succesfully')} className={classes.dialogWrapper} open={open} onExited={() => { history.push('/'); }}>
             <div>
               <div className={classes.dialogUnderTitle}>
                 Users unblocked and noticed

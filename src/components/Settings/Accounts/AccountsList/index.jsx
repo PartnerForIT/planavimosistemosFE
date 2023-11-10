@@ -240,10 +240,15 @@ export default function AccountsList() {
         total,
         ...rest
       } = stats;
-      return {
-        accounts: total,
-        ...rest,
+      let newOne = {
+        [t('accounts')]: total
       };
+      
+      for (let k in rest) {
+        newOne[t(k)] = rest[k];
+      }
+
+      return newOne;
     }
     return {};
   }, [stats]);
@@ -426,7 +431,7 @@ export default function AccountsList() {
           info={userStats}
           TitleButtonNew={permissions.accounts_create ? t('New account') : ''}
           TitleButtonImport={permissions.accounts_create ? t('Import Accounts') : ''}
-          tooltip={t('Accounts List')}
+          tooltip={t('Accounts list')}
           handleButtonImport={() => setImportVisible(true)}
           handleButtonNew={() => setNewVisible(true)}
         >

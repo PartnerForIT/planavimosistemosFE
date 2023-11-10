@@ -279,9 +279,9 @@ export default function OrganizationList() {
   return (
     <MaynLayout>
       <TitleBlock
-        title='Organization list'
+        title={t('Organization list')}
         info={stats}
-        TitleButtonNew='New Organisation'
+        TitleButtonNew={t('New Organisation')}
         handleButtonNew={handleClickOpen}
       >
         <PeopleIcon />
@@ -299,7 +299,7 @@ export default function OrganizationList() {
         <AddNewOrganization
           open={open}
           handleClose={handleClose}
-          title='Add new organization'
+          title={t('Add new organization')}
           inputValues={inputValues}
           countries={countries}
           handleInputChange={handleInputChange}

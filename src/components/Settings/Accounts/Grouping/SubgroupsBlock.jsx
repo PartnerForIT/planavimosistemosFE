@@ -71,7 +71,7 @@ export default function SubgroupsBlock({
     <div className={style.categoryBlock}>
       <div className={style.labelBLock}>
         <Label text={t('Sub-groups')} htmlFor='' />
-        <Tooltip title='Select Sub-group' />
+        <Tooltip title={t('Select Sub-group')} />
         <div className={style.right}>
           <Button
             onClick={() => setVisible(true)}
@@ -131,7 +131,7 @@ export default function SubgroupsBlock({
         title={t('Delete Sub-group?')}
         open={removeVisible}
         handleClose={handleClose}
-        buttonTitle='Delete'
+        buttonTitle={t('Delete')}
         name={selectedItem.name}
         remove={handleRemoveSubgroup}
       />

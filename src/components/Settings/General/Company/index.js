@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -19,7 +20,6 @@ import {
 } from '../../../../store/settings/selectors';
 import { countriesSelector } from '../../../../store/organizationList/selectors';
 import styles from './company.module.scss';
-import moment from 'moment';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -36,6 +36,7 @@ export default function Company() {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const [open, SetOpen] = useState(false);
   const [file, setFile] = useState(null);
@@ -189,7 +190,7 @@ export default function Company() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Company'
+          title={t('Company')}
         >
           <CompanyIcon />
         </TitleBlock>

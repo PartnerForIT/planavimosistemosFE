@@ -1070,7 +1070,7 @@ export default () => {
                   <div className={styles.empty}>
                     <TableIcon />
                     <div className={styles.empty__text}>
-                      Select any entry to get a detailed editable info or add an entry manually
+                      {t('Select any entry to get a detailed editable info or add an entry manually')}
                     </div>
                     { permissions.logbook_add_logs && (
                         <Button onClick={() => setIsOpenAddEntry(true)}>

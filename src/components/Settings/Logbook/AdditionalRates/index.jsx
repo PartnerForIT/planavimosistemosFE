@@ -146,7 +146,7 @@ export default function AdditionalRates() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Additional rates'
+          title={t('Additional rates')}
         >
           <JournalIcon />
         </TitleBlock>

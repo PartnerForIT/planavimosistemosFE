@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import MaynLayout from '../Core/MainLayout';
 import TitleBlock from '../Core/TitleBlock';
 import PeopleIcon from '../Icons/2Peple';
@@ -11,6 +12,7 @@ import styles from './Overview.module.scss';
 
 export default function Overview() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch(getOverview());
@@ -21,7 +23,7 @@ export default function Overview() {
   return (
     <MaynLayout>
       <TitleBlock
-        title='Overview'
+        title={t('Overview')}
       >
         <PeopleIcon />
       </TitleBlock>
@@ -30,10 +32,10 @@ export default function Overview() {
         {users
           && (
           <div className={styles.overview__inner}>
-            <OverviewInfoBlock text='Total users' number={users.total_users} />
-            <OverviewInfoBlock text='Users logged in' number={users.online_users} />
-            <OverviewInfoBlock text='Total active users' number={users.active_users} />
-            <OverviewInfoBlock text='Users clocked in' number={users.clocked_in_users} />
+            <OverviewInfoBlock text={t('Total users')} number={users.total_users} />
+            <OverviewInfoBlock text={t('Users logged in')} number={users.online_users} />
+            <OverviewInfoBlock text={t('Total active users')} number={users.active_users} />
+            <OverviewInfoBlock text={t('Users clocked in')} number={users.clocked_in_users} />
           </div>
           )}
         {isLoading && <Progress />}

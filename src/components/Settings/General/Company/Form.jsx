@@ -25,7 +25,7 @@ export default function CompaneForm({
           <>
             <div className={styles.labelBlock}>
               <Label text={t('Company logo')} htmlFor='logo' />
-              <Tooltip title='Add Company Logo' />
+              <Tooltip title={t('Add Company Logo')} />
             </div>
             <Button inverse onClick={() => handleOpen()}>
               {t('Upload Logo')}
@@ -48,7 +48,7 @@ export default function CompaneForm({
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
           <Label text={t('Contact persons')} htmlFor='contact_person_name' />
-          <Tooltip title='Contact persons' />
+          <Tooltip title={t('Contact persons')} />
         </div>
         <Input
           placeholder={`${t('Enter your company name')}...`}

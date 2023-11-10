@@ -140,7 +140,7 @@ export default function Form({
             handleInputChange={handleInputChange}
             name='daily_overtime'
             value={overtimeData.daily_overtime ?? daylyWork[0].code}
-            options={daylyWork}
+            options={daylyWork.map((item) => { return {...item, name: t(item.name)}})}
             readOnly={readOnly}
           />
         </div>
@@ -158,7 +158,7 @@ export default function Form({
             handleInputChange={handleInputChange}
             name='weekly_overtime'
             value={overtimeData.weekly_overtime ?? weeklyWork[0].code}
-            options={weeklyWork}
+            options={weeklyWork.map((item) => { return {...item, name: t(item.name)}})}
             readOnly={readOnly}
           />
         </div>
@@ -176,7 +176,7 @@ export default function Form({
             handleInputChange={handleInputChange}
             name='saturday_overtime'
             value={overtimeData.saturday_overtime ?? saturdayWork[0].code}
-            options={saturdayWork}
+            options={saturdayWork.map((item) => { return {...item, name: t(item.name)}})}
             readOnly={readOnly}
           />
         </div>
@@ -194,7 +194,7 @@ export default function Form({
             handleInputChange={handleInputChange}
             name='sunday_overtime'
             value={overtimeData.sunday_overtime ?? saturdayWork[0].code}
-            options={saturdayWork}
+            options={saturdayWork.map((item) => { return {...item, name: t(item.name)}})}
             readOnly={readOnly}
           />
         </div>

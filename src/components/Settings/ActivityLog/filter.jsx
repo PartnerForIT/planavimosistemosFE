@@ -23,7 +23,7 @@ export default function filterActivity({
           <SimpleSelect
             handleInputChange={handleInputChange}
             name='employee'
-            placeholder='Select employee'
+            placeholder={t('Select employee')}
             value={inputValues.employee}
             options={employees}
             valueKey='id'
@@ -38,7 +38,7 @@ export default function filterActivity({
           <SimpleSelect
             handleInputChange={handleInputChange}
             name='place'
-            placeholder='Select Place'
+            placeholder={t('Select Place')}
             value={inputValues.place}
             options={places}
             valueKey='id'

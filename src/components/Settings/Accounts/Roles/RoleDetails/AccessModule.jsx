@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Content from './Content';
 import OptionsCheckBoxGroup from './OptionsCheckboxGroup';
@@ -11,8 +12,12 @@ export default React.memo(({
   onChangeHandler,
   permissionsIds,
   readOnly,
-}) => (
-  <Content title='Access by module' tooltip='Tooltip'>
+}) => {
+
+  const { t } = useTranslation();
+
+  return (
+    <Content title={t('Access by module')} tooltip='Tooltip'>
     {
       Object.keys(roleAccess.moduleAccess).map((key) => (
         <OptionsCheckBoxGroup
@@ -32,5 +37,6 @@ export default React.memo(({
         />
       ))
     }
-  </Content>
-));
+    </Content>
+  )
+});

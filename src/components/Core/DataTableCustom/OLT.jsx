@@ -347,7 +347,7 @@ export default function DataTable({
             totalDuration && (
               <p className={footerTitleClasses}>
                 {
-                  'Overall worktime: '
+                  t('Overall worktime')+': '
                 }
                 <span className={classNames(styles.totals, styles.blue, styles.bold)}>{totalDuration}</span>
               </p>

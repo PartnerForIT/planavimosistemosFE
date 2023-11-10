@@ -71,7 +71,7 @@ export default ({
           />
           <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
-            title='Cost hourly rate, entry field, and currency symbol based on general settings currency settings'
+            title={t('Cost hourly rate, entry field, and currency symbol based on general settings currency settings')}
           />
         </div>
       )
@@ -91,7 +91,7 @@ export default ({
           />
           <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
-            title='Charge hourly rate, entry field, and currency symbol based on general settings currency settings'
+            title={t('Charge hourly rate, entry field, and currency symbol based on general settings currency settings')}
           />
         </div>
       )
@@ -196,8 +196,7 @@ export default ({
             />
             <div className={style.tooltipBlock}>
               <Tooltip
-                title='Use approve flow on/off - enable the verification flow of the logbook entries,
-                      managers can approve or suspend each logbook entry which comes from the employees.)'
+                title={('Use approve flow on/off - enable the verification flow of the logbook entries, managers can approve or suspend each logbook entry which comes from the employees.)')}
               />
             </div>
           </div>
@@ -220,10 +219,7 @@ export default ({
               />
               <div className={style.tooltipBlock}>
                 <Tooltip
-                  title='Use automatic approve flow, this possibility to turn on/off is
-                possible only then approve flow is turned on. Automatically approve
-                all entries based on the settings at the end of each day, each
-                week, each month. (a week is based by general settings week starts)'
+                  title={('Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)')}
                 />
               </div>
             </div>
@@ -238,11 +234,11 @@ export default ({
                       onChange={handleInputChange}
                       value='day'
                       name='approved_at'
-                      label='Each day'
+                      label={t('Each day')}
                       inputProps={{ 'aria-label': 'Each day' }}
                     />
                   )}
-                  label='Each day'
+                  label={t('Each day')}
                 />
 
                 <FormControlLabel
@@ -253,11 +249,11 @@ export default ({
                       onChange={handleInputChange}
                       value='week'
                       name='approved_at'
-                      label='Each day'
+                      label={t('Each day')}
                       inputProps={{ 'aria-label': 'Each week' }}
                     />
                   )}
-                  label='Each week'
+                  label={t('Each week')}
                 />
 
                 <FormControlLabel
@@ -271,7 +267,7 @@ export default ({
                       inputProps={{ 'aria-label': 'Each month' }}
                     />
                   )}
-                  label='Each month'
+                  label={t('Each month')}
                 />
               </div>
             </div>
@@ -305,7 +301,7 @@ export default ({
           handleInputChange={handleInputChange}
           name='workday_exceed'
           value={journalData.workday_exceed}
-          options={breakArr}
+          options={breakArr.map((item) => { return {...item, name: t(item.name)}})}
           readOnly={readOnly}
         />
       </div>
@@ -315,7 +311,7 @@ export default ({
           handleInputChange={handleInputChange}
           name='break_duration'
           value={journalData.break_duration}
-          options={durationArr}
+          options={durationArr.map((item) => { return {...item, name: t(item.name)}})}
           readOnly={readOnly}
         />
       </div>

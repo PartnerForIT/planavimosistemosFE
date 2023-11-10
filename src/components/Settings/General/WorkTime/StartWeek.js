@@ -15,7 +15,7 @@ export default function StartWork({
         <div className={styles.startWeek__inner}>
           <div className={styles.labelBlock}>
             <Label text={t('Week Start')} />
-            <Tooltip title='Day of the beginning of the week' />
+            <Tooltip title={t('Day of the beginning of the week')} />
           </div>
           <SimpleSelect
             handleInputChange={handleInputChange}

@@ -127,7 +127,7 @@ export default function Overtime() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Overtime'
+          title={t('Overtime')}
         >
           <OvertimeIcon />
         </TitleBlock>

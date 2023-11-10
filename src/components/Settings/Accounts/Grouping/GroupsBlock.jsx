@@ -105,7 +105,7 @@ export default function GroupsBlock({
     <div className={style.categoryBlock}>
       <div className={style.labelBLock}>
         <Label text={t('Groups')} htmlFor='' />
-        <Tooltip title='Select Group' />
+        <Tooltip title={t('Select Group')} />
         <div className={style.right}>
           <Button onClick={() => setVisible(true)} inverse inline size='small'>
             {`+ ${t('add new group')}`}
@@ -155,7 +155,7 @@ export default function GroupsBlock({
         title={t('Delete Group?')}
         open={removeVisible}
         handleClose={handleClose}
-        buttonTitle='Delete'
+        buttonTitle={t('Delete')}
         name={selectedItem.name}
         remove={handleRemoveGroup}
       />

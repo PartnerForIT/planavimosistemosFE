@@ -96,8 +96,11 @@
 .dayStart {
   display: flex;
   flex-direction: column;
-  width: 210px;
   margin-top: 5px;
+
+  &__select {
+    width: 210px;
+  }
 
   &__label {
     display: flex;

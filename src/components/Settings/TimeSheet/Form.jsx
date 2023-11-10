@@ -16,7 +16,7 @@ export default ({
   <div className={style.timeSheetBlock}>
     <div className={style.timeSheet__label}>
       <Label text={`${t('Select hours types to show in Time Sheet')}`} />
-      <Tooltip title='Selecting or deselecting the value will control the data you would like to see in the Time Sheet for all users who are using this module. If deselected - such data row will be excluded from the module.' />
+      <Tooltip title={t('Selecting or deselecting the value will control the data you would like to see in the Time Sheet for all users who are using this module. If deselected - such data row will be excluded from the module.')} />
     </div>
 
     <div className={style.generalBlock}>

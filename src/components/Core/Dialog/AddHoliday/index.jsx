@@ -36,7 +36,7 @@ export default function AddHolidays({
           format='yyyy-MM-DD'
           margin='normal'
           id='date-picker-inline'
-          label='Date'
+          label={t('Date')}
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{

@@ -56,7 +56,7 @@ export default function Holidays({
       <div className={styles.labelButtonBlock}>
         <div className={styles.labelBlock}>
           <Label text={t('Holidays')} />
-          <Tooltip title='Add new Holidays' />
+          <Tooltip title={t('Add new Holidays')} />
         </div>
 
         {/* year */}

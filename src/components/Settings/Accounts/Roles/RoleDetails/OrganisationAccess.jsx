@@ -23,7 +23,7 @@ export default memo(({
   };
   
   return (
-    <Content tooltip='Tooltip' title='Organisation access'>
+    <Content tooltip='Tooltip' title={t('Organisation access')}>
       {
         Object.keys(organisation)
           .map((key, i) => (

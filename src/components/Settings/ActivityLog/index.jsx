@@ -68,7 +68,7 @@ export default function ActivityLog() {
     const data = {
       date_from: inputValues.from.startDate ? moment(inputValues.from.startDate).format('YYYY-MM-DD') : null,
       date_to: inputValues.from.endDate ? moment(inputValues.from.endDate).format('YYYY-MM-DD') : null,
-      user_id: inputValues.employee !== 'Select employee' ? inputValues.employee : null,
+      user_id: inputValues.employee !== t('Select employee') ? inputValues.employee : null,
       place_id: inputValues.place !== 'select' ? inputValues.place : null,
     };
     dispatch(filterActivityLog(id, data));
@@ -101,7 +101,7 @@ export default function ActivityLog() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Activity Log'
+          title={t('Activity Log')}
         >
           <ActivityLogIcon viewBox='0 0 26 11' fill='rgba(226,235,244,0.85)' />
         </TitleBlock>

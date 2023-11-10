@@ -378,7 +378,7 @@ const Events = () => {
                 <div className={styles.empty}>
                   <TableIcon />
                   <div className={styles.empty__text}>
-                    Select any entry to get a detailed editable info
+                    {t('Select any entry to get a detailed editable info')}
                   </div>
                 </div>
               )

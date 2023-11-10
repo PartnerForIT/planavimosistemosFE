@@ -159,7 +159,7 @@ export default function Sesurity() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Security'
+          title={t('Security')}
         >
           <SecurityIcon />
         </TitleBlock>
@@ -180,7 +180,7 @@ export default function Sesurity() {
                       width={40}
                     />
                     <div className={styles.label}>{t('Invitation link via e-mail')}</div>
-                    <Tooltip title='Invitation link via e-mail' />
+                    <Tooltip title={t('Invitation link via e-mail')} />
                   </div>
                   <div className={styles.formLine} />
                   <PasswordSetting

@@ -17,7 +17,7 @@ export default function WorkingTime({
       <div className={styles.startWeek}>
         <div className={styles.labelBlock}>
           <Label text={t('Working Time')} />
-          <Tooltip title='Working Time' />
+          <Tooltip title={t('Working Time')} />
         </div>
         {Object.keys(days).map((item, index) => (
           <div key={item + index.toString()} className={styles.workigTime__inner}>

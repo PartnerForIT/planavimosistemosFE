@@ -30,7 +30,8 @@
 
     "//Settings//General //Company": "",
 
-        "Company": "Įmonė",   
+        "Company": "Įmonė",
+        "Add Company Logo": "Įkelti Įmonės Logotipą",
         "Company logo": "Įmonės logotipas",
         "Upload Logo": "Įkelti Logotipą",
         "Company name": "Įmonės logotipas",
@@ -130,13 +131,14 @@
             
     "//Settings//Accounts//Accounts list": "",
 
-            "Accounts list": "Paskyrų sąrašas",  
+            "Accounts list": "Paskyrų sąrašas",
             "Account list": "Paskyrų sąrašas",   
             "accounts": "paskyrų",
             "active": "aktyvių",
             "suspended": "suspenduotų",
             "blocked": "užblokuotų",
             "All users": "Viso vartotojų",
+            "All Users": "Viso vartotojų",
             "Active": "Aktyvus",
             "Blocked": "Užblokuoti",
             "New account": "Nauja paskyra",
@@ -160,7 +162,7 @@
 
             "Role": "Rolė",
             "Skill": "Specialybė",
-            "+new skill": "+nauja specialybė",
+            "new skill": "nauja specialybė",
             "Cost, Hourly rate": "Savikaina, Valandinis",
             "How much new user cost/h": "Kiek kainuoja/val",
             "Charge, Hourly rate": "Įkainis, Valandinis",

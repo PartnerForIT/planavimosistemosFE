@@ -261,7 +261,7 @@ export default ({
         width={40}
       />
       <div className={style.label}>{t('Use time sheet Excel export (total hours per employee)')}</div>
-      <Tooltip title='Use time sheet Excel export (total hours per employee)' />
+      <Tooltip title={t('Use time sheet Excel export (total hours per employee)')} />
     </div>
 
     { integrationsData.excel && (
@@ -392,7 +392,7 @@ export default ({
         width={40}
       />
       <div className={style.label}>{t('Use "iiko" POS system for clock in instead of Kiosk')}</div>
-      <Tooltip title='Use "iiko" POS system for clock in instead of Kiosk' />
+      <Tooltip title={t('Use "iiko" POS system for clock in instead of Kiosk')} />
     </div>
 
     { integrationsData.iiko && (
@@ -442,7 +442,7 @@ export default ({
         <div className={style.selectBlock}>
           <div className={style.labelBlock}>
             <Label text={`${t('Choose the connection time')}:`} />
-            <Tooltip title='Choose the connection time' />
+            <Tooltip title={t('Choose the connection time')} />
           </div>
           <SimpleSelect
             handleInputChange={handleInputChange}

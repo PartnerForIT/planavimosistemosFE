@@ -675,8 +675,8 @@ export default () => {
                     <div className={styles.emptyContent}>
                       <div>
                         <ReportsIcon className={styles.reportsIcon} />
-                        <p className={styles.title}>NOTHING FOUND</p>
-                        <p className={styles.description}>Please select an object or place to generate report</p>
+                        <p className={styles.title}>{t('NOTHING FOUND')}</p>
+                        <p className={styles.description}>{t('Please select an object or place to generate report')}</p>
                       </div>
                       <div className={styles.arrowIcon}>
                         <ArrowRightIcon />
@@ -698,8 +698,8 @@ export default () => {
                         <div className={styles.emptyContent}>
                           <div>
                             <ReportsIcon className={styles.reportsIcon} />
-                            <p className={styles.title}>NOTHING SELECTED</p>
-                            <p className={styles.description}>Please select an object or place to generate report</p>
+                            <p className={styles.title}>{t('NOTHING SELECTED')}</p>
+                            <p className={styles.description}>{t('Please select an object or place to generate report')}</p>
                           </div>
                           <div className={styles.arrowIcon}>
                             <ArrowRightIcon />
@@ -721,7 +721,7 @@ export default () => {
               Generate Report
             </div>
             <div className={sidebarContentClasses}>
-              <div className={styles.sidebarTitle}>Report period</div>
+              <div className={styles.sidebarTitle}>{t('Report period')}</div>
               <DRP
                 initRange={dateRange}
                 onChange={setDateRange}
@@ -765,7 +765,7 @@ export default () => {
                     <div className={styles.sidebarTitle}>Places</div>
                     <Input
                       icon={<SearchIcon />}
-                      placeholder='Search by places'
+                      placeholder={t('Search by places')}
                       value={search.place}
                       name='place'
                       onChange={(e) => handleInputChange(e, places, setFilteredPlaces)}
@@ -782,7 +782,7 @@ export default () => {
                   <div className={styles.sidebarTitle}>Employees</div>
                   <Input
                     icon={<SearchIcon />}
-                    placeholder='Search by employees'
+                    placeholder={t('Search by employees')}
                     value={search.employee}
                     name='employee'
                     onChange={(e) => handleInputChange(e, employees, setFilteredEmployees)}
@@ -802,7 +802,7 @@ export default () => {
                     <div className={styles.sidebarTitle}>Job types</div>
                     <Input
                       icon={<SearchIcon />}
-                      placeholder='Search by job types'
+                      placeholder={t('Search by job types')}
                       value={search.type}
                       name='type'
                       onChange={(e) => handleInputChange(e, jobTypes, setFilteredJobTypes)}
@@ -822,7 +822,7 @@ export default () => {
                   <div className={styles.sidebarTitle}>Skills</div>
                   <Input
                     icon={<SearchIcon />}
-                    placeholder='Search by skills'
+                    placeholder={t('Search by skills')}
                     value={search.skill}
                     name='skill'
                     onChange={(e) => handleInputChange(e, skills, setFilteredSkills)}

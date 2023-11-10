@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
 import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
@@ -62,6 +63,7 @@ export default function Categories() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const permissions = usePermissions(permissionsConfig);
+  const { t } = useTranslation();
 
   const [selectedCategory, setSelectedCategory] = useState('skills');
 
@@ -87,7 +89,7 @@ export default function Categories() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Categories'
+          title={t('Categories')}
         >
           <CategoriesIcon />
         </TitleBlock>

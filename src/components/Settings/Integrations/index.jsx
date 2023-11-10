@@ -188,7 +188,7 @@ export default function Integrations() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title='Integrations'
+          title={t('Integrations')}
         >
           <IntegrationsIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
         </TitleBlock>

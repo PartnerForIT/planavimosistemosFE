@@ -279,22 +279,22 @@ export default ({
       case EVENT_TYPE.EARLY_CLOCK_IN: {
         return {
           icon: <EarlyClockIn />,
-          title: 'Clock In',
-          subTitle: 'Early Clock In',
+          title: t('Clock In'),
+          subTitle: t('Early Clock In'),
         };
       }
       case EVENT_TYPE.LATE_CLOCK_IN: {
         return {
           icon: <LateClockIn />,
-          title: 'Late In',
-          subTitle: 'Late Clock In',
+          title: t('Late In'),
+          subTitle: t('Late Clock In'),
         };
       }
       case EVENT_TYPE.MISSING_CLOCK_IN: {
         return {
           icon: <MissedClockIn />,
-          title: 'Missing In',
-          subTitle: 'Missing Clock In',
+          title: t('Missing In'),
+          subTitle: t('Missing Clock In'),
         };
       }
       case EVENT_TYPE.REMINDER_TO_CLOCK_IN: {
@@ -305,22 +305,22 @@ export default ({
       case EVENT_TYPE.EARLY_CLOCK_OUT: {
         return {
           icon: <EarlyClockOut />,
-          title: 'Early Out',
-          subTitle: 'Early Clock Out',
+          title: t('Early Out'),
+          subTitle: t('Early Clock Out'),
         };
       }
       case EVENT_TYPE.LATE_CLOCK_OUT: {
         return {
           icon: <LateClockOut />,
-          title: 'Late Out',
-          subTitle: 'Late Clock Out',
+          title: t('Late Out'),
+          subTitle: t('Late Clock Out'),
         };
       }
       case EVENT_TYPE.MISSING_CLOCK_OUT: {
         return {
           icon: <MissedClockOut />,
-          title: 'Missing Out',
-          subTitle: 'Missing Clock Out',
+          title: t('Missing Out'),
+          subTitle: t('Missing Clock Out'),
         };
       }
       case EVENT_TYPE.REMINDER_TO_CLOCK_OUT: {
@@ -331,15 +331,15 @@ export default ({
       case EVENT_TYPE.DAILY_OVERTIME_START: {
         return {
           icon: <DailyOvertime />,
-          title: 'daily over',
-          subTitle: 'Daily overtime start',
+          title: t('daily over'),
+          subTitle: t('Daily overtime start'),
         };
       }
       case EVENT_TYPE.WEEKLY_OVERTIME_START: {
         return {
           icon: <WeeklyOvertime />,
-          title: 'weekly over',
-          subTitle: 'Weekly overtime start',
+          title: t('weekly over'),
+          subTitle: t('Weekly overtime start'),
         };
       }
       default: return {};

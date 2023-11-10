@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Pagination from 'react-js-pagination';
@@ -58,6 +59,7 @@ export default function DataTable({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [totalCustomWidthColumns, setTotalCustomWidthColumns] = useState(0);
   const [totalCustomColumns, setTotalCustomColumns] = useState(0);
+  const { t } = useTranslation();
 
   const classes = useStyles();
 
@@ -345,7 +347,7 @@ export default function DataTable({
         {
           total && (
             <FooterTitle
-              title='Overall: '
+              title={t('Overall')+': '}
               wrapperClassNames={`${footerTitleClasses} ${styles.footerTitle_first}`}
               amountColorClassName={styles.blue}
               amount={total.duration}
