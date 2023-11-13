@@ -65,13 +65,7 @@ const ToolsButton = ({
                 <div className={styles.tooltipBlock}>
                   <Tooltip
                     placement='bottom'
-                    title="Marking/Highlighting tool can be used in any view.
-                          People who don't have permission to add markings,
-                          will see them anyways. To place it just enter into 
-                          edit state and press on the cell in the employee row. 
-                          To remove it, hover again over the cell and you will 
-                          see the removable red mark. Click to remove. 
-                          To exit from edit state just click tool icon again."
+                    title={t("Marking/Highlighting tool can be used in any view. People who don't have permission to add markings, will see them anyways. To place it just enter into edit state and press on the cell in the employee row. To remove it, hover again over the cell and you will see the removable red mark. Click to remove. To exit from edit state just click tool icon again.")}
                   />
                 </div>
               </div> ) : null}
@@ -85,7 +79,7 @@ const ToolsButton = ({
                 <div className={styles.tooltipBlock}>
                   <Tooltip
                     placement='bottom'
-                    title="Show start/finish in month view"
+                    title={t('Show start/finish in month view')}
                   />
                 </div>
               </div>
@@ -99,7 +93,7 @@ const ToolsButton = ({
                 <div className={styles.tooltipBlock}>
                   <Tooltip
                     placement='bottom'
-                    title="Remove timelines in week view"
+                    title={t('Remove timelines in week view')}
                   />
                 </div>
               </div>

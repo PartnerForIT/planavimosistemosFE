@@ -119,7 +119,7 @@ export default ({
           <div className={styles.formControl}>
             <Label text={t('Create a password')} htmlFor='password' />
             <Input
-              placeholder={t('Enter password')}
+              placeholder={t('Enter Password')}
               value={formValues.password}
               name='password'
               fullWidth

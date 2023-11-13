@@ -391,7 +391,7 @@ export default function DataTable({
                     {
                       showSettingsPopup && (
                         <div className={styles.settingsPopup}>
-                          <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+                          <CheckboxGroupRaw items={columns.map((item) => { return {...item, label: typeof item.label === 'string' ? t(item.label) : item.label}})} onChange={columnsChangeHandler} />
                         </div>
                       )
                     }

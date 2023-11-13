@@ -1205,6 +1205,7 @@ export default () => {
                       resourceLaneDidMount={handleSetupMarkersWidth}
                       resourceLaneContent={renderResourceLaneContent}
                       resourceLaneClassNames={handeResourceLaneClassNames}
+                      locale={localStorage.getItem('i18nextLng') || 'en'}
                       // nowIndicator
                     />
                     {

@@ -15,7 +15,7 @@ import { loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import MainLayout from '../Core/MainLayout';
-import CurrencySign from '../shared/CurrencySign';
+import LabelWithCurrencySignComa from '../shared/LabelWithCurrencySignComa';
 import styles from './Reports.module.scss';
 import DRP from '../Core/DRP/DRP';
 import Button from '../Core/Button/Button';
@@ -48,18 +48,10 @@ import { getSkills } from '../../store/skills/actions';
 import usePermissions from '../Core/usePermissions';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
 
-const TextWithSign = ({ label }) => (
-  <>
-    {label}
-    {', '}
-    <CurrencySign />
-  </>
-);
-
 const profitabilityColumns = [
-  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
-  { label: <TextWithSign label='Earnings' />, field: 'sallary', checked: true },
-  { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
+  { label: <LabelWithCurrencySignComa label='Cost' />, field: 'cost', checked: true },
+  { label: <LabelWithCurrencySignComa label='Earnings' />, field: 'sallary', checked: true },
+  { label: <LabelWithCurrencySignComa label='Profit' />, field: 'profit', checked: true },
 ];
 
 const permissionsConfig = [
@@ -718,7 +710,7 @@ export default () => {
             <div className={styles.header}>
               <InfoIcon />
               <Delimiter />
-              Generate Report
+              {t('Generate Report')}
             </div>
             <div className={sidebarContentClasses}>
               <div className={styles.sidebarTitle}>{t('Report period')}</div>
@@ -762,7 +754,7 @@ export default () => {
               {
                 (permissions.places && !permissions.reports_assigned_place) && (
                   <>
-                    <div className={styles.sidebarTitle}>Places</div>
+                    <div className={styles.sidebarTitle}>{t('Places')}</div>
                     <Input
                       icon={<SearchIcon />}
                       placeholder={t('Search by places')}
@@ -779,7 +771,7 @@ export default () => {
               }
               {
                 <>
-                  <div className={styles.sidebarTitle}>Employees</div>
+                  <div className={styles.sidebarTitle}>{t('Employees')}</div>
                   <Input
                     icon={<SearchIcon />}
                     placeholder={t('Search by employees')}
@@ -799,7 +791,7 @@ export default () => {
               {
                 permissions.jobs && (
                   <>
-                    <div className={styles.sidebarTitle}>Job types</div>
+                    <div className={styles.sidebarTitle}>{t('Job types')}</div>
                     <Input
                       icon={<SearchIcon />}
                       placeholder={t('Search by job types')}
@@ -819,7 +811,7 @@ export default () => {
               }
               {
                 <>
-                  <div className={styles.sidebarTitle}>Skills</div>
+                  <div className={styles.sidebarTitle}>{t('Skills')}</div>
                   <Input
                     icon={<SearchIcon />}
                     placeholder={t('Search by skills')}

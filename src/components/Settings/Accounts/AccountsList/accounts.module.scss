@@ -22,7 +22,7 @@
 
     button {
       margin: 5px 0 5px 8px;
-      width: 96px;
+      min-width: 100px;
 
       &:nth-of-type(1) {
         margin-left: 14px;

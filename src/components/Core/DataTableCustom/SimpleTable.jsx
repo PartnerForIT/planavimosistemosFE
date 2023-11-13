@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 
@@ -8,6 +9,8 @@ export default function SimpleTable({
   rows, columns, expanded, selectable, reports,
   columnsWidth,
 }) {
+  const { t } = useTranslation();
+  
   const simpleTableContainer = classNames(
     styles.simpleTableContainer,
     { [styles.simpleTableContainerHidden]: !expanded, [styles.simpleTableContainerShown]: expanded },
@@ -52,7 +55,7 @@ export default function SimpleTable({
                 style={{ width, minWidth }}
                 role='columnheader'
               >
-                {column.label}
+                {typeof column.label === 'string' ? t(column.label) : column.label}
               </div>
             );
           })

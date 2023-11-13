@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 
 import MaynLayout from '../Core/MainLayout';
-import CurrencySign from '../shared/CurrencySign';
+import LabelWithCurrencySignComa from '../shared/LabelWithCurrencySignComa';
 import DRP from '../Core/DRP/DRP';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
@@ -63,14 +63,6 @@ import AddEntry from './AddEntry';
 import styles from './Logbook.module.scss';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
 
-const TextWithSign = ({ label }) => (
-  <>
-    {label}
-    {', '}
-    <CurrencySign />
-  </>
-);
-
 let columns = [
   { label: 'Status', field: 'status', checked: true },
   { label: 'Employee', field: 'employee', checked: true },
@@ -85,9 +77,9 @@ let columns = [
   { label: 'Break time, h', field: 'break_time', checked: true },
   { label: 'Holiday time, h', field: 'holiday_time', checked: true },
   { label: 'Night time, h', field: 'night_duration', checked: true },
-  { label: <TextWithSign label='Cost' />, field: 'cost', checked: true },
-  { label: <TextWithSign label='Earnings' />, field: 'charge', checked: true },
-  { label: <TextWithSign label='Profit' />, field: 'profit', checked: true },
+  { label: <LabelWithCurrencySignComa label='Cost' />, field: 'cost', checked: true },
+  { label: <LabelWithCurrencySignComa label='Earnings' />, field: 'charge', checked: true },
+  { label: <LabelWithCurrencySignComa label='Profit' />, field: 'profit', checked: true },
 ];
 let columnsWidth = {
   status: 280,

@@ -132,7 +132,7 @@ export default function CompaneForm({
       <div className={styles.formControl}>
         <div className={styles.labelBlock}>
           <Label text={t('Currency')} htmlFor='currency' />
-          <Tooltip title={t('Date format')} />
+          <Tooltip title={t('Currency')} />
         </div>
         <SimpleSelect
           handleInputChange={handleInputChange}

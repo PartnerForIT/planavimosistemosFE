@@ -289,12 +289,12 @@ export default ({
 
   const tooltipContent = () => {
     return (
-      `<div class="timeline-tooltip">From <b>${moment(start).format('HH:mm')}</b> to <b>${moment(end).format('HH:mm')}</b><br/>
-      Total Hours <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
-      + (nightPermission ? `<br />Work hours <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
-      + (schedule.deduct_break ? `<br />Break hours <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
-      + (nightPermission ? `<br />Night hours <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
-      + (costPermission ? `<br />Cost <b>${cost}${currency}</b>` : ``)
+      `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(end).format('HH:mm')}</b><br/>
+      ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
+      + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
+      + (schedule.deduct_break ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
+      + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
+      + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
       + `</div>`
     )
   }

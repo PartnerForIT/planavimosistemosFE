@@ -377,7 +377,7 @@
             "Request photo to be taken on Clock Out through the Kiosk": "Prašyti nuotraukos kai darbuotojas Išsiregistruoja iš Kiosko",
             "Disable Break In Kiosk": "Išjungti Poilsio mygtuką Kioske",
             "Disable Costs In Kiosk (Finishing Job Screen)": "Išjungti uždarbo rodyma Kioske (darbo pabaigos suvestinė)",
-            "Kiosk settings - in order to apply these Kiosk settings please re-login in your tablet within Grownu Mobile APP with the correct Kiosk admin user and password": "Kiosko nustatymai - atlikus šiuos Kiosko funkcionalumo nustatymuas, yra būtina atlikti persijungimo žingsnius Grownu Mobilioje Aplikacijoje Jūsų planšetėje su taisiklingu Kiosko administratoriaus vartotoju bei slaptažodžiu.",
+            "Kiosk settings - in order to apply these Kiosk settings please re-login in your tablet within Grownu Mobile APP with the correct Kiosk admin user and password.": "Kiosko nustatymai - atlikus šiuos Kiosko funkcionalumo nustatymuas, yra būtina atlikti persijungimo žingsnius Grownu Mobilioje Aplikacijoje Jūsų planšetėje su taisiklingu Kiosko administratoriaus vartotoju bei slaptažodžiu.",
     
     
     "//Settings//Kiosk//Kiosk users": "",
@@ -611,6 +611,7 @@
         "PENDING": "LAUKIAMA", 
         "Event Name": "Įvykio Pavadinimas",
         "Employee Name": "Darbuotojas",
+        "Employee name": "Darbuotojas",
         "Sub-Group": "Sub-Grupė",
         "Timestamp": "Laiko Žyma",
         "Event Information": "Įvykio Informacija",
@@ -644,8 +645,10 @@
         "Work date": "Darbo data",
         "Duration": "Trukmė",
         "Night time": "Naktinis laikas",
+        "Night Time": "Naktinis Laikas",
         "Employees": "Darbuotojai",
         "Job type": "Darbo tipas",
+        "Job Type": "Darbo Tipas",
     
     "//Time Sheet//Everything in Time Sheets module table and around": "",
 
@@ -779,6 +782,7 @@
             "Delete job?": "Pašalinti darbą?",
             "Update skill": "Atnaujinti specialybę",
             "Skill Name": "Specialybės Pavadinimas",
+            "Skill name": "Specialybės pavadinimas",
             "Use Rates": "Naudoti Tarifus",
             "New skill": "Nauja specialybė",
             "Enter Skill name": "Įvesti Specialybės pavadinimą",  
@@ -793,5 +797,26 @@
             "Create new place": "Sukurti naują vietą",
             "Create Place name": "Sukurti Vietos pavadinimą",
             "Enter Place name": "Įvesti Vietos pavadinimą",
-            "Create Place Name": "Sukurti Vietos Pavadinimą"
+            "Create Place Name": "Sukurti Vietos Pavadinimą",
+
+"//New ones": "",
+
+        "users assigned to this event": "Vartotojų priskirta šiam įvykiui",
+        "Create new skill": "Vartotojų priskirta šiam įvykiui",
+        "Places": "Vietos",
+        "Search by places": "Paieška pagal vietas",
+        "Job types": "Darbo tipai",
+        "Skills": "Specialybės",
+        "Work Hours": "Darbo Valandos",
+        "Bank Holiday Hours": "Švenčių Valandos",
+        "All job types": "Visi darbo tipai",
+        "All shifts": "Visos pamainos",
+        "Actual time": "Suplanuotos valandos",
+        "Target time": "Reikalingos valandos",
+        "Period": "Periodas",
+        "Create Holiday": "Sukurti Šventė",
+        "Re-enter password": "Pakartokite slaptažodį",
+        "New kiosk": "Naujas kioskas",
+        "Create a password": "Sukurti slaptažodį",
+        "Enter hours threshold": "Įvesti valandų poreikį"
 }

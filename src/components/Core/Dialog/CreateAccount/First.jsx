@@ -129,7 +129,7 @@ const FirstStep = ({
                   <PlaceholderAvatar className={style.avatar} />
                 )
               }
-              <Button inverse fillWidth size='medium' onClick={() => setUploadVisible(true)}>Upload</Button>
+              <Button inverse fillWidth size='medium' onClick={() => setUploadVisible(true)}>{t('Upload')}</Button>
             </div>
             <DropzoneDialog
               open={uploadVisible}

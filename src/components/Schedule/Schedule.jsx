@@ -262,6 +262,7 @@ export default () => {
           viewDidMount={handleViewDidMount}
           resourceLabelClassNames={handleResourceLabelClassNames}
           resourceLabelContent={renderResourceLabelContent}
+          locale={localStorage.getItem('i18nextLng') || 'en'}
           // loading={(prop) => console.log('prop', prop)}
         />
         <div className='schedule-screen__footer'>

@@ -114,7 +114,7 @@ export default function CreateSkill({
               />
             </div>
             <div className={style.formControl}>
-              <Label text={t(`Cost, Hourly rate,${currency}`)} htmlFor='cost' />
+              <Label text={t(`Cost, Hourly rate`)+', '+currency} htmlFor='cost' />
               <Input
                 placeholder={`${t('How much new user cost/h')}`}
                 value={formValues.cost}

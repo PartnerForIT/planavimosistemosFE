@@ -224,7 +224,7 @@ export default ({
               </div>
             </div>
             <div className={(readOnly || !journalData.automatic_approval) ? style.disabledBlock : ''}>
-              <Label text={`${t('Entries approved automatically at the end of')} :`} />
+              <Label text={`${t('Entries approved automatically at the end of:')}`} />
               <div className={style.generalBlock4}>
                 <FormControlLabel
                   value='approved_at'

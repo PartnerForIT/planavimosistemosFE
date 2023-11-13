@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -14,6 +15,7 @@ const Group = ({
   totalCustomColumns, totalCustomWidthColumns,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useTranslation();
 
   const detailsClasses = classNames(
     styles.details,
@@ -113,7 +115,7 @@ const Group = ({
                   >
                     <TriangleIcon className={iconClasses} fill={titleColor} />
                     <span className={classNames(styles.groupLabelText)}>
-                      {label}
+                      {typeof label === 'string' ? t(label) : label}
                       {
                         group.holiday && group.holiday.length ?
                           <HolidayIcon
@@ -140,7 +142,7 @@ const Group = ({
                   style={{ width, minWidth, padding: '0 1px!important' }}
                   role='cell'
                 >
-                  { column.field === 'duration' && <span className={styles.total}>Total:&nbsp;</span> }
+                  { column.field === 'duration' && <span className={styles.total}>{t('Total')}:&nbsp;</span> }
                   <span className={classNames(styles.totals,
                     column.field === 'duration' && styles.blue,
                     column.field === 'cost' && styles.red,

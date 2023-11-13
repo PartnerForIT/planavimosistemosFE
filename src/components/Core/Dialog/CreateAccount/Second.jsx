@@ -355,7 +355,7 @@ const SecondStep = ({
                     </span>
                     <div
                       data-for='selectdisabled'
-                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                      data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                     >
                       <AddEditSelectOptions
                         id='shift_id'
@@ -380,7 +380,7 @@ const SecondStep = ({
                     </span>
                     <div
                       data-for='selectdisabled'
-                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                      data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                     >
                       <AddEditSelectOptions
                         id='job_type_id'
@@ -405,7 +405,7 @@ const SecondStep = ({
                     </span>
                     <div
                       data-for='selectdisabled'
-                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                      data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                     >
                       <AddEditSelectOptions
                         id='assign_shift_id'
@@ -430,7 +430,7 @@ const SecondStep = ({
                     </span>
                     <div
                       data-for='selectdisabled'
-                      data-tip={(!shiftsOptions.length || !user.place) ? "Please select a place first" : undefined}
+                      data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                     >
                       <AddEditSelectOptions
                         id='assign_job_type_id'

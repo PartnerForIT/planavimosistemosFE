@@ -246,9 +246,9 @@ export default () => {
         <TitleBlock
           title={t('Kiosk users')}
           info={{
-            Users: kiosksUsers?.stats?.total,
-            Yes: kiosksUsers?.stats?.yes,
-            No: kiosksUsers?.stats?.no,
+            [t('Users')]: kiosksUsers?.stats?.total,
+            [t('Yes')]: kiosksUsers?.stats?.yes,
+            [t('No')]: kiosksUsers?.stats?.no,
           }}
           tooltip={t('Kiosk users')}
         >

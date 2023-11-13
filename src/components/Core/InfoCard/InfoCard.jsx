@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 import styles from './InfoCard.module.scss';
-import CurrencySign from '../../shared/CurrencySign';
+import LabelWithCurrencySignComa from '../../shared/LabelWithCurrencySignComa';
 import PendingIcon from '../../Icons/PendingIcon';
 import HolidayGovernmentIcon from '../../Icons/HolidayGovernmentIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
@@ -15,14 +15,6 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import EarningIcon from '../../Icons/EarningIcon';
 import CostIcon from '../../Icons/CostIcon';
 import ProfitIcon from '../../Icons/ProfitIcon';
-
-const TextWithSign = ({ label }) => (
-  <>
-    {label}
-    {', '}
-    <CurrencySign />
-  </>
-);
 
 const InfoCard = ({
   type, label, text, icon, time, editable, onChange, durationSec, showRange,
@@ -170,11 +162,11 @@ const InfoCard = ({
           </>
         );
       case 'earning':
-        return <TextWithSign label={time.charge} />;
+        return <LabelWithCurrencySignComa label={time.charge} />;
       case 'cost':
-        return <TextWithSign label={time.cost} />;
+        return <LabelWithCurrencySignComa label={time.cost} />;
       case 'profit':
-        return <TextWithSign label={time.profit} />;
+        return <LabelWithCurrencySignComa label={time.profit} />;
       default:
         return <span className={styles.time}>{text}</span>;
     }

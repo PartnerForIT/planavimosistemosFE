@@ -26,3 +26,13 @@ $padding-size: 25px;
 small.error {
   color: $red-600;
 }
+
+.selectdisabled__tooltip {
+  background-color: #F7F7B4 !important;
+  color: black !important;
+
+  &::after,
+  &::before {
+    border-top-color: #F7F7B4 !important;
+  }
+}

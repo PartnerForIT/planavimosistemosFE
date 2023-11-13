@@ -23,6 +23,7 @@ import classes from './EditAccount.module.scss';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
+import ReactTooltip from 'react-tooltip';
 import {
   getSchedule,
 } from '../../../../store/settings/actions';
@@ -651,15 +652,20 @@ export default function EditAccount({
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
                               <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
-                              <AddEditSelectOptions
-                                id='shift_id'
-                                options={shiftsOptions}
-                                user={user}
-                                placeholder={t('Select a shift')}
-                                name='shift_id'
-                                handleInput={handleInput}
-                                disabled={!shiftsOptions.length || !user.place}
-                              />
+                              <div
+                                data-for='selectdisabled'
+                                data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
+                              >
+                                <AddEditSelectOptions
+                                  id='shift_id'
+                                  options={shiftsOptions}
+                                  user={user}
+                                  placeholder={t('Select a shift')}
+                                  name='shift_id'
+                                  handleInput={handleInput}
+                                  disabled={!shiftsOptions.length || !user.place}
+                                />
+                              </div>
                             </div>
                           )
                         }
@@ -668,15 +674,20 @@ export default function EditAccount({
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
                               <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
-                              <AddEditSelectOptions
-                                id='job_type_id'
-                                options={jobTypesOptions}
-                                user={user}
-                                placeholder={t('Select a job type')}
-                                name='job_type_id'
-                                handleInput={handleInput}
-                                disabled={!jobTypesOptions.length || !user.shift_id}
-                              />
+                              <div
+                                data-for='selectdisabled'
+                                data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
+                              >
+                                <AddEditSelectOptions
+                                  id='job_type_id'
+                                  options={jobTypesOptions}
+                                  user={user}
+                                  placeholder={t('Select a job type')}
+                                  name='job_type_id'
+                                  handleInput={handleInput}
+                                  disabled={!jobTypesOptions.length || !user.shift_id}
+                                />
+                              </div>
                             </div>
                           )
                         }
@@ -718,6 +729,12 @@ export default function EditAccount({
                       </div>
                     )
                   }
+                  <ReactTooltip
+                    id='selectdisabled'
+                    className={classes.selectdisabled__tooltip}
+                    effect='solid'
+                    placement='bottom'
+                  />
                 </form>
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>

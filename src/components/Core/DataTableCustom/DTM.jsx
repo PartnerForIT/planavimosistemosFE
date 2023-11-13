@@ -7,7 +7,7 @@ import Pagination from 'react-js-pagination';
 import Scrollbar from 'react-scrollbars-custom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import CurrencySign from '../../shared/CurrencySign';
+import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import Group from './Group';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -22,13 +22,6 @@ const useStyles = makeStyles({
     color: '#0087ff',
   },
 });
-
-const TextWithSign = ({ label }) => (
-  <>
-    <CurrencySign />
-    {label}
-  </>
-);
 
 const FooterTitle = ({
   wrapperClassNames = '', title = '', amountColorClassName = '', amount,
@@ -256,7 +249,7 @@ export default function DataTable({
                         className={sortBlockClasses}
                         onClick={() => sortable && sort(column.field, sortOptionsAsc[column.field])}
                       >
-                        <div className={classNames(styles.flexCenter)}>{column.label}</div>
+                        <div className={classNames(styles.flexCenter)}>{typeof column.label === 'string' ? t(column.label) : column.label}</div>
                         {
                           (fieldIcons && fieldIcons[column.field] && fieldIcons[column.field].length)
                           && fieldIcons[column.field].map((icon) => (
@@ -359,7 +352,7 @@ export default function DataTable({
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.red}
-              amount={<TextWithSign label={total.cost} />}
+              amount={<LabelWithCurrencySign text={total.cost} />}
             />
           )
         }
@@ -367,7 +360,7 @@ export default function DataTable({
           (withSallary || (permissions.cost && permissions.profit && !!sallary)) && (
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
-              amount={<TextWithSign label={total.sallary} />}
+              amount={<LabelWithCurrencySign text={total.sallary} />}
             />
           )
         }
@@ -376,7 +369,7 @@ export default function DataTable({
             <FooterTitle
               wrapperClassNames={footerTitleCosts}
               amountColorClassName={styles.green}
-              amount={<TextWithSign label={total.profit} />}
+              amount={<LabelWithCurrencySign text={total.profit} />}
             />
           )
         }
@@ -415,7 +408,7 @@ export default function DataTable({
                   showSettingsPopup && (
                     <div className={styles.settingsPopup}>
                       {settingsCustom}
-                      <CheckboxGroupRaw items={columns} onChange={columnsChangeHandler} />
+                      <CheckboxGroupRaw items={columns.map((item) => { return {...item, label: typeof item.label === 'string' ? t(item.label) : item.label}})} onChange={columnsChangeHandler} />
                     </div>
                   )
                 }
