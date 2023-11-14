@@ -802,7 +802,7 @@
 "//New ones": "",
 
         "users assigned to this event": "Vartotojų priskirta šiam įvykiui",
-        "Create new skill": "Vartotojų priskirta šiam įvykiui",
+        "Create new skill": "Sukurti naują specialybę",
         "Places": "Vietos",
         "Search by places": "Paieška pagal vietas",
         "Job types": "Darbo tipai",
@@ -818,5 +818,6 @@
         "Re-enter password": "Pakartokite slaptažodį",
         "New kiosk": "Naujas kioskas",
         "Create a password": "Sukurti slaptažodį",
-        "Enter hours threshold": "Įvesti valandų poreikį"
+        "Enter hours threshold": "Įvesti valandų poreikį",
+        "Create Kiosk": "Sukurti Kioską"
 }

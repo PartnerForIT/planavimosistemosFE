@@ -742,7 +742,7 @@ export default () => {
     };
 
     const holiday = (view.type === 'day' && schedule?.holidays) ? schedule?.holidays[view.getCurrentData().currentDate.getDate()] : false;
-    
+
     return (
       <ResourceAreaHeader
         title={view.title}
