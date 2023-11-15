@@ -200,6 +200,16 @@ export default () => {
   const [total, setTotal] = useState({ sallary: 0, cost: 0, profit: 0 });
   const [logbook_employee, setLogbookEmployee] = useState(!!user?.employee?.logbook_employee);
 
+  moment.updateLocale('lt', {
+    weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
+    months: [
+      "Sausis", "Vasaris", "Kovas", "Balandis", "Gegužė", "Birželis", "Liepa", "Rugpjūtis", "Rugsėjis", "Spalis", "Lapkritis", "Gruodis"
+    ],
+    // Add any additional locale settings as needed
+  });
+
+  moment.locale(localStorage.getItem('i18nextLng') || 'en');
+
   useEffect(() => {
     const { cost: costEarning, profit: profitAccess } = permissions;
 
@@ -437,7 +447,7 @@ export default () => {
             'DD.MM.YY': 'DD. MMMM, YYYY',
             'MM.DD.YY': 'MMMM. DD, YYYY',
           });
-          
+
           return {
             ...item,
             label: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),

@@ -71,7 +71,7 @@ export default ({
           />
           <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
-            title={t('Cost hourly rate, entry field, and currency symbol based on general settings currency settings')}
+            title={t("Please enter hourly rate, how much does this cost for your employee to work one hour. From your side it will show as costs, but for the employee it will show as earnings. Set this rate here is the highest level, since it will apply to all employees if they don't have individual rate set, or if he is not assigned to the specific skill which has also individual skill rate. Priority level: 1) Individual employee rate (individual employee for whom it is) 2) Individual skill rate (all employees who has this skill) 3) Global skill rate (all employees)")}
           />
         </div>
       )
@@ -91,7 +91,7 @@ export default ({
           />
           <div className={style.labelText2}><CurrencySign/></div>
           <Tooltip
-            title={t('Charge hourly rate, entry field, and currency symbol based on general settings currency settings')}
+            title={t("Please enter hourly rate, how much does your company earn for your employee to work one hour. You will see it as earnings and the system will accumulate the profit (Earnings - Cost = Profit). Set this rate here is the highest global level, since it will apply to all employees if they don't have individual rate set, or if he is not assigned to the specific skill which has also individual skill rate. Priority level: 1) Individual employee rate (individual employee for whom it is) 2) Individual skill rate (all employees who has this skill) 3) Global skill rate (all employees)")}
           />
         </div>
       )
@@ -196,7 +196,7 @@ export default ({
             />
             <div className={style.tooltipBlock}>
               <Tooltip
-                title={('Use approve flow on/off - enable the verification flow of the logbook entries, managers can approve or suspend each logbook entry which comes from the employees.)')}
+                title={t("Turning on the approve flow - enables the verification flow of all registered work entries. Users who has a role which lets them to approve the registered work entries, will have possibility to Approve or Suspend the entries. All entries appears in the Logbook with status Awaiting approval. These entries will not appear in Reports or Time Sheet till it is not approved. Entires which has state Approved will appear in the Logbook and TimeSheets. Approval can be done via Mobile Phone as well (need Managers Mobile View role enabled for the user)")}
               />
             </div>
           </div>
@@ -219,12 +219,12 @@ export default ({
               />
               <div className={style.tooltipBlock}>
                 <Tooltip
-                  title={('Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)')}
+                  title={t("Using automatic approval flow, enables the account to set the timeframe, just in case managers who are responsible for the logbook entry approvals have not done their work, haven't reviewed the entries, but you need to get the reports and pay employee salaries based on what is registered, then auto approval feature will help you do that. Feel free to choose the most suitable time when such auto approval should be processed")}
                 />
               </div>
             </div>
             <div className={(readOnly || !journalData.automatic_approval) ? style.disabledBlock : ''}>
-              <Label text={`${t('Entries approved automatically at the end of:')}`} />
+              <Label text={`${t('Entries approved automatically at the end of')}:`} />
               <div className={style.generalBlock4}>
                 <FormControlLabel
                   value='approved_at'

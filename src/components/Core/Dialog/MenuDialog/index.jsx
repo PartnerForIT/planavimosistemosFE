@@ -8,6 +8,7 @@ import LockIcon from '../../../Icons/LockIcon';
 import LogOutIcon from '../../../Icons/LogOutIcon';
 import LanguageDropdown from './LanguageDropdown';
 import { onKeyDown } from '../../../Helpers';
+import moment from 'moment';
 
 const paperStyle = {
   transform: 'translateY(45px)',

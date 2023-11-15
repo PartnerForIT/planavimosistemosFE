@@ -12,6 +12,7 @@ i18n
   .init({
     lng: localStorage.getItem('i18nextLng') || 'en',
     fallbackLng: localStorage.getItem('i18nextLng') || 'en',
+    nsSeparator: false,
     keySeparator: false, // we do not use keys in form messages.welcome
     interpolation: {
       escapeValue: false, // react already safes from xss

@@ -18,11 +18,16 @@ import SheetWatcher from './sheet/saga';
 function onRequest(request) {
   // intercept a request here
   request.url = config.api.url + request.url;
+  request.headers = {};
+
   if (localStorage.getItem('token')) {
-    request.headers = {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    };
+    request.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
   }
+
+  if (localStorage.getItem('i18nextLng')) {
+    request.headers['Accept-Language'] = localStorage.getItem('i18nextLng');
+  }
+
   return request;
 }
 

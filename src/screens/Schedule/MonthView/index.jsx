@@ -233,7 +233,7 @@ export default ({
       <div className={classes.monthView}>
         <div className={classes.monthView__header}>
           <ResourceAreaHeader
-            title={currentMonth.format('MMMM yyyy')}
+            title={`${t(currentMonth.format('MMMM'))} ${currentMonth.format('yyyy')}`}
             onClickPrev={handleClickPrevMonth}
             onClickNext={handleClickNextMonth}
           />

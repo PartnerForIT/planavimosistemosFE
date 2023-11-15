@@ -130,7 +130,7 @@ export default function CreateSkill({
       {
         permissions.profit && (
           <div className={style.formControl}>
-            <Label text={t(`Charge, Hourly rate,${currency}`)} htmlFor='earn' />
+            <Label text={t(`Charge, Hourly rate`)+','+currency} htmlFor='earn' />
             <Input
               placeholder={`${t('How much you charge per h')}`}
               value={formValues.earn}

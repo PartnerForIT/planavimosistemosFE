@@ -293,10 +293,12 @@
             "On each work end, photo is required.": "Kiekvieno darbo pabaigoje, reikalinga nuotrauka",
             "Merge daily entries to one": "Sulieti dienos įrašus į vieną",
             "Use approve flow": "Naudoti patvirtinimų srautą",
-            "Use approve flow on/off - enable the verification flow of the logbook entries, managers can approve or suspend each logbook entry which comes from the employees.)": "",
+            "Please enter hourly rate, how much does this cost for your employee to work one hour. From your side it will show as costs, but for the employee it will show as earnings. Set this rate here is the highest level, since it will apply to all employees if they don't have individual rate set, or if he is not assigned to the specific skill which has also individual skill rate. Priority level: 1) Individual employee rate (individual employee for whom it is) 2) Individual skill rate (all employees who has this skill) 3) Global skill rate (all employees)": "Įveskite valandinį įkainį, kiek kainuoja viena valanda Jūsų darbuotojo. Iš vadovų pusės tai bus rodoma kaip išlaidos, o darbuotojui – kaip uždarbis. Nustačius šį įkainį šioje vietoje, jis bus taikomas visiems darbuotojams, jei jiems nėra nustatytas individualus įkainis arba jei jis nėra priskirtas prie tam tikros specialybės, kuris taip pat turi individualų specialybės valandinį įkainį. Prioriteto lygis: 1) Individualus darbuotojo tarifas (priskirtas atitinkamam darbuotojui) 2) Individualus specialybės įkainis (visiems darbuotojams, turintiems tam tikrą specialybę ir nustatytą tarifą) 3) Globalus valandinis įkainis (taikoma visiems organizacijos darbuotojams, kurie neturi specialybės su įkainiu arba individualaus vartotojo įkainio)",
+            "Please enter hourly rate, how much does your company earn for your employee to work one hour. You will see it as earnings and the system will accumulate the profit (Earnings - Cost = Profit). Set this rate here is the highest global level, since it will apply to all employees if they don't have individual rate set, or if he is not assigned to the specific skill which has also individual skill rate. Priority level: 1) Individual employee rate (individual employee for whom it is) 2) Individual skill rate (all employees who has this skill) 3) Global skill rate (all employees)": "Įveskite valandinį įkainį, kiek Jums uždirba viena valanda Jūsų darbuotojo. Sistemoje bus rodoma kaip uždarbis ir bus apskaičiuotas pelningumas. Uždarbis - Išlaidos = Pelnas. Nustačius šį įkainį šioje vietoje, jis bus taikomas visiems darbuotojams, jei jiems nėra nustatytas individualus įkainis arba jei jis nėra priskirtas prie tam tikros specialybės, kuris taip pat turi individualų specialybės valandinį uždarbio įkainį. Prioriteto lygis: 1) Individualus darbuotojo tarifas (priskirtas atitinkamam darbuotojui) 2) Individualus specialybės įkainis (visiems darbuotojams, turintiems tam tikrą specialybę ir priskirtą tarifą) 3) Globalus valandinis įkainis (taikoma visiems organizacijos darbuotojams, kurie neturi specialybės su įkainiu arba individualaus vartotojo įkainio)",
+            "Turning on the approve flow - enables the verification flow of all registered work entries. Users who has a role which lets them to approve the registered work entries, will have possibility to Approve or Suspend the entries. All entries appears in the Logbook with status Awaiting approval. These entries will not appear in Reports or Time Sheet till it is not approved. Entires which has state Approved will appear in the Logbook and TimeSheets. Approval can be done via Mobile Phone as well (need Managers Mobile View role enabled for the user)": "Įjungus patvirtinimo srautą – įjungiamas visų registruotų darbo įrašų patvirtinimo srautas. Vartotojai, turintys rolę, leidžiančią patvirtinti registruotus darbo įrašus, turės galimybę patvirtinti arba sustabdyti įrašus Žiniaraščio modulyje. Visi įrašai rodomi Žiniaraštyje su būsena Laukiama patvirtinimo. Šie įrašai nebus rodomi Ataskaitose arba Laiko Apskaitos Tabelyje, kol jie nebus patvirtinti. Visi registruoti darbo laikų įrašai, kurių būsena Patvirtinta, bus rodoma Ataskaitose ir Darbo Laiko Apskaitos Tabelyje. Patvirtinimas gali būti atliktas ir mobiliuoju telefonu (vartotojui turi būti įjungta speciali rolė leidžianti tai daryti)",
+            "Using automatic approval flow, enables the account to set the timeframe, just in case managers who are responsible for the logbook entry approvals have not done their work, haven't reviewed the entries, but you need to get the reports and pay employee salaries based on what is registered, then auto approval feature will help you do that. Feel free to choose the most suitable time when such auto approval should be processed": "Naudojant automatinį patvirtinimo srautą, paskyroje galima nustatyti terminą, ir tai išnaudoti tuo atveju, jei vadovai, atsakingi už Žiniaraščio registruotų darbo laiko įrašų patvirtinimus, neatliko savo darbo, neperžiūrėjo įrašų, bet jums reikia gauti Ataskaitas ir mokėti darbuotojams atlyginimus nepaisant kontrolės kas užregistruota, tada automatinio patvirtinimo funkcija padės tai padaryti. Pasirinkite tinkamiausią laiką, kada toks automatinis patvirtinimas turėtų būti tvarkomas, ir visi registruoti darbo laiko įrašai bus patvirtinti automatiškai.",
             "Use automatic approval": "Naudoti automatintį patvirtinimą",
-            "Use automatic approve flow, this possibility to turn on/off is possible only then approve flow is turned on. Automatically approve all entries based on the settings at the end of each day, each week, each month. (a week is based by general settings week starts)": "",
-            "Entries approved automatically at the end of:": "Įrašai yra automatiškai patvirtinami pabaigoje:", 
+            "Entries approved automatically at the end of": "Įrašai yra automatiškai patvirtinami pabaigoje", 
             "Each day": "Kiekvienos dienos", 
             "Each week": "Kiekvienos savaitės", 
             "Each month": "Kiekvieno mėnesio", 
@@ -495,7 +497,7 @@
     "//Settings//Activity Log": "",
 
             "From": "Nuo",       
-            "To": "Iki", 
+            "To": "Iki",
             "Start Date": "Pradžios Data", 
             "End Date": "Pabaigos Data",
             "Employee": "Darbuotojas", 
@@ -519,6 +521,7 @@
             "Total Hours": "Viso Valandų",
             "Worked Hours": "Darbo Valandų", 
             "Break Hours": "Poilsio Valandų",
+            "Break hours": "Poilsio valandų",
             "Night Work Hours": "Naktinių Valandų", 
             "Work on Bank Holiday Hours": "Šventinių Valandų",
             "Overtime Hours": "Viršvalandžių",
@@ -808,6 +811,7 @@
         "Job types": "Darbo tipai",
         "Skills": "Specialybės",
         "Work Hours": "Darbo Valandos",
+        "Work hours": "Darbo valandos",
         "Bank Holiday Hours": "Švenčių Valandos",
         "All job types": "Visi darbo tipai",
         "All shifts": "Visos pamainos",
@@ -819,5 +823,6 @@
         "New kiosk": "Naujas kioskas",
         "Create a password": "Sukurti slaptažodį",
         "Enter hours threshold": "Įvesti valandų poreikį",
-        "Create Kiosk": "Sukurti Kioską"
+        "Create Kiosk": "Sukurti Kioską",
+        "Night hours": "Naktinės valandos"
 }
