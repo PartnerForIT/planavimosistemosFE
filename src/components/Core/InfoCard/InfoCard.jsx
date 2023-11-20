@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import styles from './InfoCard.module.scss';
 import LabelWithCurrencySignComa from '../../shared/LabelWithCurrencySignComa';
 import PendingIcon from '../../Icons/PendingIcon';
@@ -19,6 +20,7 @@ import ProfitIcon from '../../Icons/ProfitIcon';
 const InfoCard = ({
   type, label, text, icon, time, editable, onChange, durationSec, showRange,
 }) => {
+  const { t } = useTranslation();
   const [start, setStart] = useState(time && time.started_at
     ? format(dateToUCT(time.started_at), 'HH:mm') : '00:00');
   const [end, setEnd] = useState(time && time.finished_at
@@ -119,21 +121,21 @@ const InfoCard = ({
     if (label) return label;
     switch (type) {
       case 'total':
-        return 'Total hours';
+        return t('Total hours');
       case 'working':
-        return 'Working hours';
+        return t('Working hours');
       case 'holiday':
-        return 'Holiday hours';
+        return t('Holiday hours');
       case 'break':
-        return 'On break';
+        return t('On break');
       case 'night':
-        return 'Night time';
+        return t('Night time');
       case 'earning':
-        return 'Earnings';
+        return t('Earnings');
       case 'cost':
-        return 'Cost';
+        return t('Cost');
       case 'profit':
-        return 'Profit';
+        return t('Profit');
       default:
         return null;
     }

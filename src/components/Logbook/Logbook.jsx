@@ -694,8 +694,9 @@ export default () => {
               // )
             }
             {
+              `${t(moment(selectedItem.works[0].started_at).format('ddd'))}, `+
               moment(selectedItem.works[0].started_at)
-                .format(`ddd, ${getDateFormat({
+                .format(`${getDateFormat({
                   'YY.MM.DD': 'YYYY, MMMM, DD',
                   'DD.MM.YY': 'DD, MMMM, YYYY',
                   'MM.DD.YY': 'MMMM, DD, YYYY',
@@ -825,14 +826,13 @@ export default () => {
                       </>
                     )
                   }
-
                   {
-                    (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) && (
+                    (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) ? (
                       <CommentCard
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
                         comment={selectedItem.comments[0].comment}
                       />
-                    )
+                    ) : null
                   }
                   {
                     selectedItem.kiosk_photo && (
@@ -892,7 +892,7 @@ export default () => {
         <div className={styles.header}>
           <InfoIcon />
           <Delimiter />
-          Multiple entries selection
+          {t('Multiple entries selection')}
         </div>
         <div className={styles.content}>
           <div className={styles.topBlock}>
@@ -902,7 +902,7 @@ export default () => {
               {checkedItems.length === 1 ? 'entry' : 'entries'}
             </div>
             <div className={styles.entryDescription}>
-              selected
+              {t('selected')}
             </div>
           </div>
           <div className={styles.bottomBlock}>
@@ -911,7 +911,7 @@ export default () => {
               {minutesToString(checkedItems.map((item) => item.net_duration).reduce((a, b) => a + b))}
             </div>
             <div className={styles.entryDescription}>
-              Total Hours
+              {t('Total Hours')}
             </div>
           </div>
         </div>

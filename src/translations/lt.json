@@ -105,6 +105,7 @@
             "Year": "Metai",
             "working days": "darbo dienos", 
             "working hours": "darbo valandos",       
+            "Working hours": "Darbo valandos",
             "free days": "nedarbo dienos", 
             "holiday days": "šventinės dienos", 
             "Holidays": "Šventės", 
@@ -824,5 +825,12 @@
         "Create a password": "Sukurti slaptažodį",
         "Enter hours threshold": "Įvesti valandų poreikį",
         "Create Kiosk": "Sukurti Kioską",
-        "Night hours": "Naktinės valandos"
+        "Night hours": "Naktinės valandos",
+        "Charge/h/": "Įkainis/val/",
+        "Change Employee": "Darbuotojo Keitimas",
+        "Empty Timeline": "Atšaukti Darbuotoją",
+        "Change Time": "Pakeisti Laiką",
+        "Finish": "Pabaiga",        
+        "Select a skill": "Pasirinkti specialybę",
+        "Holiday hours": "Šventinės val."
 }

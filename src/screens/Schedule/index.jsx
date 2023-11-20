@@ -741,11 +741,16 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     };
 
+    const inputDate = moment(view.getCurrentData().currentDate);
+    const startOfWeek = inputDate.clone().startOf('isoWeek');
+    const endOfWeek = inputDate.clone().endOf('isoWeek');
+
     const holiday = (view.type === 'day' && schedule?.holidays) ? schedule?.holidays[view.getCurrentData().currentDate.getDate()] : false;
+    const title = (view.type === 'day') ? `${t(inputDate.format('dddd'))}, ${t(inputDate.format('MMMM'))}${inputDate.format(' D, YYYY')}` : `${t(startOfWeek.format('MMM'))} ${startOfWeek.format('D')} – ${endOfWeek.format('D, YYYY')}`;
 
     return (
       <ResourceAreaHeader
-        title={view.title}
+        title={title}
         holiday={holiday}
         onClickPrev={handleClickPrev}
         onClickNext={handleClickNext}
@@ -770,7 +775,7 @@ export default () => {
         onClick={() => { handleClickDay(date) }}
       >
         <span className='schedule-enter-day'>{t('Enter')}</span>
-        {date.format('ddd, DD')}
+        {t(date.format('ddd'))+date.format(', DD')}
         <HolidayIcon
           holidays={holiday}
           month={true}

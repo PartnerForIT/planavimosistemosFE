@@ -6,12 +6,12 @@ import { useDispatch } from 'react-redux';
 
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
-import CurrencySign from '../../shared/CurrencySign';
 import DeleteItem from '../../Core/Dialog/DeleteItem';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
+import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import {
   patchPlace,
   deletePlace,
@@ -21,20 +21,11 @@ import {
   deleteSkill,
 } from '../../../store/settings/actions';
 
-const LabelWithCurrencySign = ({ title, tail }) => (
-  <>
-    {title}
-    {' '}
-    <CurrencySign />
-    {tail}
-  </>
-);
-
 const columns = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'ID', field: 'id', checked: true },
-  { label: <LabelWithCurrencySign title='Cost' tail='/h' />, field: 'cost', checked: true },
-  { label: <LabelWithCurrencySign title='Charge' tail='/h' />, field: 'earn', checked: true },
+  { label: <LabelWithCurrencySign text='Cost' tail='/h' />, field: 'cost', checked: true },
+  { label: <LabelWithCurrencySign text='Charge' tail='/h' />, field: 'earn', checked: true },
 ];
 
 const columnsJobs = [

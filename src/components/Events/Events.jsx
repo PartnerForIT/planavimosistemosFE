@@ -181,7 +181,7 @@ const Events = () => {
       ...(label !== 'seen' ? {
         label,
       } : {
-        label: `PENDING (${eventsParse[label].length})`,
+        label: `${t('PENDING')} (${eventsParse[label].length})`,
         backgroundColor: 'rgba(250, 172, 46, 0.1)',
         titleColor: '#f59f13',
       }),
