@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import ChevronIcon from '../../../../../components/Icons/Chevron';
@@ -17,6 +18,7 @@ const ModalItem = ({
   childLevel = 0,
   withCost = false,
 }) => {
+  const { t } = useTranslation();
   const [isExtended, setIsExtended] = useState(true);
   const dots = useMemo(() => new Array(childLevel - (childLevel > 0 ? 1 : 0))
     .fill()
@@ -67,10 +69,10 @@ const ModalItem = ({
               {subTitle}
             </div>
             <div className={classes.modalItem__content__row__second}>
-              {`${time} hours`}
+              {`${time} ${t('hours')}`}
               { night_duration && night_duration !== '0' ? (
                   <span className={classes.modalItem__content__night}>
-                    {`${night_duration} hours`}
+                    {`${night_duration} ${t('hours')}`}
                   </span>
                 ) : ''
               }
@@ -105,7 +107,7 @@ const ModalItem = ({
             return (<ModalItem
               key={index}
               title={item.name}
-              subTitle={item.skill_name || (item.job_type_name || `${item.employeesCount} employee`)}
+              subTitle={item.skill_name || (item.job_type_name || `${item.employeesCount} ${t('employee')}`)}
               cost={item.cost}
               time={item.time}
               night_duration={item.night_duration}

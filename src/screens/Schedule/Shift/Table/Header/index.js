@@ -41,7 +41,7 @@ export default ({
               [classes.header__cell_disabled]: item.disabled,
             })}
           >
-            {item.label}
+            {t(item.label)}
             <Checkbox
               name={`${item.id}`}
               checked={!item.disabled && item.checked}

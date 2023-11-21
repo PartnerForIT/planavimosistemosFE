@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CloseIcon from '@material-ui/icons/Close';
 import Scrollbar from 'react-scrollbars-custom';
@@ -23,7 +24,7 @@ export default ({
   nested,
   withCost,
 }) => {
-  
+  const { t } = useTranslation();
   return (
     <ClickAwayListener onClickAway={onClose}>
       <div className={classNames(classes.dayTotalModal, 'dayTotalItemModal')}>
@@ -47,7 +48,7 @@ export default ({
                   <ModalItem
                     key={index}
                     title={item.name}
-                    subTitle={item.skill_name || (item.job_type_name || `${item.employeesCount} employee`)}
+                    subTitle={item.skill_name || (item.job_type_name || `${item.employeesCount} ${t('employee')}`)}
                     cost={item.cost}
                     time={item.time}
                     night_duration={item.night_duration}

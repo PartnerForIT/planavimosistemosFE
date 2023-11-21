@@ -576,7 +576,7 @@ export default () => {
             onChange={handleChangeNumberOfWeeks}
             value={numberOfWeeks}
             label={`${t('Make shift for')}:`}
-            options={makeShiftForOptions}
+            options={makeShiftForOptions.map(item => { return {...item, label: t(item.label)}})}
           />
           <DatePicker
             label={`${t('Start Shift From')}:`}

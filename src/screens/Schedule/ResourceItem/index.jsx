@@ -50,7 +50,7 @@ export default ({
               <b>${ t('Actual time') }:</b>
           </td>
           <td>
-            ${accumulatedHours?.actualHours || 0} hours
+            ${accumulatedHours?.actualHours || 0} ${t('hours')}
           </td>
         </tr>
         <tr>
@@ -58,7 +58,7 @@ export default ({
               <b>${ t('Target time') }:</b>
           </td>
           <td>
-            ${accumulatedHours?.totalHours || 0} hours
+            ${accumulatedHours?.totalHours || 0} ${t('hours')}
           </td>
         </tr>
       </table>

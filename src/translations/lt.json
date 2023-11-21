@@ -34,7 +34,7 @@
         "Add Company Logo": "Įkelti Įmonės Logotipą",
         "Company logo": "Įmonės logotipas",
         "Upload Logo": "Įkelti Logotipą",
-        "Company name": "Įmonės logotipas",
+        "Company name": "Įmonės pavadinimas",
         "Enter your company name": "Įveskite įmonės pavadinimą",
         "Contact persons": "Kontaktinis asmuo",
         "Contact persons name": "Kontaktinio asmens pilnas vardas",
@@ -705,7 +705,7 @@
         "Two weeks": "Dviem savaitėm", 
         "Three weeks": "Trim savaitėm",
         "Four weeks": "Keturiom savaitėm", 
-        "Start Shift From:": "Pradėti Pamainą Nuo", 
+        "Start Shift From": "Pradėti Pamainą Nuo", 
         "Duplicate the time to rows": "Dublikuoti laiką per eilutę",
         "Duplicate the time to columns": "Dublikuoti laiką per stulpelį",
     
@@ -832,5 +832,16 @@
         "Change Time": "Pakeisti Laiką",
         "Finish": "Pabaiga",        
         "Select a skill": "Pasirinkti specialybę",
-        "Holiday hours": "Šventinės val."
+        "Holiday hours": "Šventinės val.",
+        "Charge": "Įkainis",
+        "Break Time": "Poilsio Laikas",
+        "for the user": "vartotojui",
+        "work hours has been deleted.": "valandomis buvo ištrynti.",
+        "entries will be imported": "įrašų(ai) bus įkelti",
+        "from": "iš",
+        "entries has been imported": "įrašų(ai) buvo įkelti",
+        "Import accounts": "Importuoti paskyras",
+        "Not work today": "Šią dieną nedirba",
+        "Work today": "Šią dieną dirba",
+        "Save Shift": "Išsaugoti Pamainą"
 }

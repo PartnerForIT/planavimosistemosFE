@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 
@@ -20,6 +21,7 @@ export default ({
   scheduleSettings,
 }) => {
   
+  const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
 
   const cellClasses = classnames(classes.cell, {
@@ -52,7 +54,7 @@ export default ({
         <div className={classes.cell__content} data-title={title}>
           <div
             data-for='title'
-            data-tip={`${title} hours`}
+            data-tip={`${title} ${t('hours')}`}
             className={classes.cell__content__text}
           >
             <span dangerouslySetInnerHTML={{ __html: scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', '<br />') : title }} />

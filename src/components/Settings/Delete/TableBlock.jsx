@@ -46,6 +46,19 @@ export default function DeleteDataTable({
     return name[0] ? `${name[0].name} ${name[0].surname}` : '';
   }, [employees]);
 
+  moment.updateLocale('lt', {
+    weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
+    months: [
+      "Sausis", "Vasaris", "Kovas", "Balandis", "Gegužė", "Birželis", "Liepa", "Rugpjūtis", "Rugsėjis", "Spalis", "Lapkritis", "Gruodis"
+    ],
+    monthsShort: [
+      "Sau", "Vas", "Kov", "Bal", "Geg", "Bir", "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"
+    ],
+    // Add any additional locale settings as needed
+  });
+
+  moment.locale(localStorage.getItem('i18nextLng') || 'en');
+
   useEffect(() => {
     setDataArray(deleteData.length
       ? deleteData.map((item) => ({
