@@ -15,6 +15,7 @@ import style from '../Dialog.module.scss';
 import avatar_default from '../../../Icons/avatar.png';
 import Progress from '../../Progress';
 import DialogCreateSkill from '../CreateSkill';
+import Tooltip from '../../../Core/Tooltip';
 import { createSkill } from '../../../../store/settings/actions';
 import { imageResize } from '../../../Helpers';
 import CurrencySign from '../../../shared/CurrencySign';
@@ -146,7 +147,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, hours_demand, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
         // eslint-disable-next-line no-shadow
-        avatar, groups, subgroups,
+        avatar, groups, subgroups, em_status,
       } = employee;
       setUser({
         email,
@@ -168,6 +169,7 @@ export default function EditAccount({
         subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
+        em_status: em_status ? em_status.toFixed(2) : '1.00',
       });
     }
   }, [employee, groups, skills]);
@@ -324,6 +326,31 @@ export default function EditAccount({
         }
       }
     });
+  };
+
+  const handleInputStatus = (e) => {
+    const {value} = e.target;
+    setUser((prevState) => {
+      return {...prevState,
+        em_status: value,
+      }
+    })
+  }
+
+  const handleBlurStatus = () => {
+    let value = parseFloat(user.em_status);
+
+    if (isNaN(value) || value < 0.01) {
+      value = 0.01;
+    } else if (value > 1.5) {
+      value = 1.5;
+    }
+
+    setUser((prevState) => {
+      return {...prevState,
+        em_status: value.toFixed(2),
+      }
+    })
   };
 
   useEffect(() => {
@@ -494,6 +521,23 @@ export default function EditAccount({
                         placeholder={t('New user external id')}
                         value={user.external_id ?? ''}
                         onChange={handleInput}
+                      />
+                    </div>
+
+                    <div className={classes.formItem}>
+                      <span className={classes.labelSpan}>
+                        <Label htmlFor='em_status' text={t('Employment status')} />
+                        <Tooltip title={t("Employment status describes how is he employed in the company. Does he take responsability in this organization as working full time = 1.00 or half time = 0.50. Possible value in this field is from 0.01 to maximum 1.50 working time. This field also used for accumulated hours calculation in the Schedule module. By default all employees gets full time entry value - 1.00.")} />
+                      </span>
+                      <Input
+                        name='em_status'
+                        placeholder={t('Employment status')}
+                        value={user.em_status ?? '1.00'}
+                        onChange={handleInputStatus}
+                        onBlur={handleBlurStatus}
+                        step="0.01"
+                        min="0.01"
+                        max="1.5"
                       />
                     </div>
 

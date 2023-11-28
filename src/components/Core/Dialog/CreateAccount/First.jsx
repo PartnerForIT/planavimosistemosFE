@@ -12,6 +12,7 @@ import Button from '../../Button/Button';
 import { imageResize } from '../../../Helpers';
 import Label from '../../InputLabel';
 import Input from '../../Input/Input';
+import Tooltip from '../../../Core/Tooltip';
 import NextStepButton from './NextStepButton';
 import { validateEmail } from '../../../Helpers/emailValidation';
 
@@ -111,6 +112,23 @@ const FirstStep = ({
     }
   };
 
+  const handleInputStatus = (e) => {
+    const {value} = e.target;
+    handleInput({target: {name: 'em_status', value: value}});
+  }
+
+  const handleBlurStatus = () => {
+    let value = parseFloat(user.em_status);
+
+    if (isNaN(value) || value < 0.01) {
+      value = 0.01;
+    } else if (value > 1.5) {
+      value = 1.5;
+    }
+
+    handleInput({target: {name: 'em_status', value: value.toFixed(2)}});
+  };
+
   useEffect(() => {
     if (_.isEmpty(errors) && ready) {
       nextStep();
@@ -197,6 +215,23 @@ const FirstStep = ({
                 placeholder={t('New user external id')}
                 value={user.external_id ?? ''}
                 onChange={handleInput}
+              />
+            </div>
+
+            <div className={style.formItem}>
+              <span className={style.labelSpan}>
+                <Label htmlFor='em_status' text={t('Employment status')} />
+                <Tooltip title={t("Employment status describes how is he employed in the company. Does he take responsability in this organization as working full time = 1.00 or half time = 0.50. Possible value in this field is from 0.01 to maximum 1.50 working time. This field also used for accumulated hours calculation in the Schedule module. By default all employees gets full time entry value - 1.00.")} />
+              </span>
+              <Input
+                name='em_status'
+                placeholder={t('Employment status')}
+                value={user.em_status ?? '1.00'}
+                onChange={handleInputStatus}
+                onBlur={handleBlurStatus}
+                step="0.01"
+                min="0.01"
+                max="1.5"
               />
             </div>
 

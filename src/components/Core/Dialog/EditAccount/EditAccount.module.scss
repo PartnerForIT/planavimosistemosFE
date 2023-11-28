@@ -27,6 +27,17 @@ small.error {
   color: $red-600;
 }
 
+.labelSpan {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  label + div {
+    width: 18px;
+    margin: 0;
+  }
+}
+
 .selectdisabled__tooltip {
   background-color: #F7F7B4 !important;
   color: black !important;

@@ -843,5 +843,8 @@
         "Import accounts": "Importuoti paskyras",
         "Not work today": "Šią dieną nedirba",
         "Work today": "Šią dieną dirba",
-        "Save Shift": "Išsaugoti Pamainą"
+        "Save Shift": "Išsaugoti Pamainą",
+        "Employment status": "Etatas",
+        "Employment status describes how is he employed in the company. Does he take responsability in this organization as working full time = 1.00 or half time = 0.50. Possible value in this field is from 0.01 to maximum 1.50 working time. This field also used for accumulated hours calculation in the Schedule module. By default all employees gets full time entry value - 1.00.": "Etato laukelis nustatomas norint įvesti darbuotojo darbo etatą. Reikšmė 1.00 būtų lygi pilnam etatui. Reikšmė 1.5 būtų lygi pusantro etato, ir t.t. Šis laukas taip pat naudojamas apskaičiuoti suminę darbo laiko apskaitą Tvarkaraščio modulyje pagal turimą etatą kiekvienam darbuotojui individualiai. Numatyta reikšmė kiekvienam darbuotojai visada bus pilnas etatas - 1.00.",
+        "Use “Employee status” in order to calculate correct work load demand in schedule": "Skaičiuoti suminę darbo laiko apskaitą planavime pagal darbuotojo individualų priskirta “Etatą”"
 }

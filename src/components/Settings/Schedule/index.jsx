@@ -315,6 +315,17 @@ export default function ActivityLog() {
                     </div>
                   )
                   }
+                  { inputValues.use_accumulated && (
+                    <div className={styles.clockIn}>
+                      <Checkbox
+                          onChange={handleChangeInput}
+                          checked={inputValues.use_em_status}
+                          label={t('Use “Employee status” in order to calculate correct work load demand in schedule')}
+                          name='use_em_status'
+                        />
+                    </div>
+                  )
+                  }
                   <div className={styles.hr} />
                   <div className={styles.clockIn}>
                     <Checkbox

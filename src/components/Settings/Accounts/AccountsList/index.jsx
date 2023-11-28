@@ -92,6 +92,7 @@ const columns = [
     checked: true,
     cellRenderer: NameWithAvatar,
   },
+  { label: 'Employment status', field: 'em_status', checked: true },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Role', field: 'role', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
