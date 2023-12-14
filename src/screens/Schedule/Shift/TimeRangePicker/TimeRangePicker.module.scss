@@ -21,6 +21,13 @@
     font-size: 14px;
     cursor: pointer;
 
+    .timeRangeColor_copyTool & {
+      background-color: #14121F;
+      border-color: #14121F;
+      color: #ACABB4;
+      width: 110px;
+    }
+
     &__nightTime {
       position: absolute;
       top: 3px;
@@ -119,10 +126,19 @@
     box-sizing: border-box;
     z-index: 5;
 
+    .timeRangeColor_copyTool & {
+      background-color: #312B4C;
+      border-color: #312B4C;
+    }
+
     &__title {
       font-size: 14px;
       font-family: "Helvetica Neue Medium", sans-serif;
       color: #333945;
+
+      .timeRangeColor_copyTool & {
+        color: #fff;
+      }
     }
 
     &__labels {
@@ -136,6 +152,10 @@
       span {
         width: 77px;
       }
+
+      .timeRangeColor_copyTool & {
+        color: #9995a5;
+      }
     }
 
     &__content {
@@ -145,12 +165,20 @@
       border: 1px solid #d0dfef;
       overflow: hidden;
 
+      .timeRangeColor_copyTool & {
+        border-color: #474260;
+      }
+
       :global(.ScrollbarsCustom-Content) {
         padding: 6px 3px !important;
       }
 
       & > div:first-child {
         border-right: 1px solid #d0dfef;
+
+        .timeRangeColor_copyTool & {
+          border-color: #474260;
+        }
       }
     }
 
@@ -162,12 +190,22 @@
       button {
         width: 68px;
 
+        .timeRangeColor_copyTool & {
+          background-color: #E5E9ED;
+          color: #333945;
+        }
+
         &:first-child {
           background-color: #e5e9ed;
           color: #333945;
           margin-right: 6px;
           padding: 0;
           text-align: center;
+
+          .timeRangeColor_copyTool & {
+            background-color: #474260;
+            color: #fff;
+          }
         }
       }
     }
@@ -270,8 +308,17 @@
   border-radius: 4px;
   box-sizing: border-box;
 
+  .timeRangeColor_copyTool & {
+    background-color: #312B4C;
+    color: #fff;
+  }
+
   &_selected {
     background-color: #d9f4f9;
+
+    .timeRangeColor_copyTool & {
+      background-color: #474260;
+    }
   }
 }
 
@@ -286,5 +333,9 @@
     background-color: #d5dde1 !important;
     border-radius: 10px !important;
     //height: 47px !important;
+
+    .timeRangeColor_copyTool & {
+      background-color: #474260;
+    }
   }
 }

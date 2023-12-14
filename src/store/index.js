@@ -23,6 +23,7 @@ import events from './events/reducer';
 import kiosks from './kiosks/reducer';
 import schedule from './schedule/reducer';
 import sheet from './sheet/reducer';
+import copyTool from './copyTool/reducer';
 import shiftTypes from './shiftsTypes/reducer';
 
 const loggerMiddleware = createLogger();
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   kiosks,
   schedule,
   sheet,
+  copyTool,
   shiftTypes,
 });
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import Dialog from '../index';
 import Button from '../../Button/Button';
 import style from '../Dialog.module.scss';

@@ -1,7 +1,6 @@
-import { success, error } from 'redux-saga-requests';
+import { success } from 'redux-saga-requests';
 import {
   GET_SCHEDULE,
-  GET_SCHEDULE_SUCCESS,
   GET_SCHEDULE_ERROR,
   POST_SHIFT,
   POST_SHIFT_SUCCESS,
@@ -21,9 +20,10 @@ import {
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
   DOWNLOAD_SCHEDULE,
-  DOWNLOAD_SCHEDULE_SUCCESS,
+  SET_LOADER,
+  
   DOWNLOAD_SCHEDULE_ERROR,
-  DELETE_TIMELINE, EMPTY_TIMELINE, ADD_TEMP_EMPLOYEE, ADD_TEMP_EMPLOYEE_SUCCESS,
+  DELETE_TIMELINE, EMPTY_TIMELINE, ADD_TEMP_EMPLOYEE,
 } from './types';
 import {ADD_SNACKBAR} from "../organizationList/types";
 
@@ -38,6 +38,10 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_LOADER:
+      return {
+        ...state,
+        loading: true };
     case GET_SCHEDULE:
       return {
         ...state,

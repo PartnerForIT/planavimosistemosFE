@@ -32,6 +32,7 @@ export default ({
   id,
   shiftId,
   employeeId,
+  resourceId,
   //title,
   photo,
   jobTypeName,
@@ -53,6 +54,7 @@ export default ({
   start,
   end,
   viewType,
+  copy_event,
   empty,
   empty_manual,
   editPermissions,
@@ -65,6 +67,9 @@ export default ({
   markers,
   removeTimelines,
   lineColor,
+  handleCopyTool,
+  copyTool,
+  handleAddHistory
 }) => {
 
   const { t } = useTranslation();
@@ -182,8 +187,18 @@ export default ({
   const openChangeWorkingTime = () => {
     setContent('changeWorkingTime');
   };
+  const openCopyMode = () => {
+    if (modalAddRef.current) {
+      modalAddRef.current.close();
+    }
+    setContent('menu');
+    handleCopyTool({start, end});
+  };
   const openAddWorkingTime = () => {
     setContent('addWorkingTime');
+  };
+  const copyEvent = () => {
+    handleAddHistory({resourceId: resourceId, start: moment(start).format('YYYY-MM-DD'), end: moment(start).format('YYYY-MM-DD')});
   };
   const handleCancel = () => {
     if (modalAddRef.current) {
@@ -304,19 +319,19 @@ export default ({
       className={classes}
       data-for={tooltipType()}
       data-html={true}
-      data-tip={activeDrag || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
+      data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
       id='dropdownButton'
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
-      { !activeDrag && !empty_manual && endOverlap() > 0 && (
+      { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div
             className={styles.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
         )
       }
-      { !activeDrag && !empty_manual && startOverlap() > 0 && (
+      { !copy_event && !activeDrag && !empty_manual && startOverlap() > 0 && (
           <div
             className={styles.eventContent__night_start}
             style={{ width: `${startOverlap()}%` }}
@@ -343,7 +358,7 @@ export default ({
         )
         )
       } */}
-      { removeTimelines && !empty_manual && (
+      { !copy_event && removeTimelines && !empty_manual && (
           <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
         )
       }
@@ -351,16 +366,14 @@ export default ({
           (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
 
             (empty_manual)
-            ? (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+            ? (copyTool)
+              ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span>
+              : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={styles.eventContent__title} >
               {
-                // (!!newEmployee?.name)
-
-                //   ?`${newEmployee?.name} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-                //     :(employeeName === 'Empty' || empty)
-                //     ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                //     :`${employeeName} · ${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`
-
+                copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+              }
+              {
                 (!!newEmployee?.name)
 
                   ? <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
@@ -377,7 +390,7 @@ export default ({
 
       <div className={styles.eventContent__leftSpace} />
       {
-        newEmployee?.name !== oldEmployee?.name && (
+        !copy_event && newEmployee?.name !== oldEmployee?.name && (
           <ReplacedEmployee
             newEmployee={newEmployee}
             oldEmployee={oldEmployee}
@@ -411,7 +424,7 @@ export default ({
         )
       }
       {
-        withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
+        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -489,6 +502,13 @@ export default ({
                     title={t('Change Working Time')}
                     onClick={openChangeWorkingTime}
                   />
+                  { modules.manual_mode ? (
+                    <Dropdown.ItemMenu
+                      title={t('Run Copy Mode')}
+                      onClick={openCopyMode}
+                    />
+                    ) : null
+                  }
                   { !modules.manual_mode ? (
                       <Dropdown.ItemMenu
                         title={t('Empty Timeline')}

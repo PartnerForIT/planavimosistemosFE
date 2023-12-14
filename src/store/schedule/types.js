@@ -48,3 +48,5 @@ export const EMPTY_TIMELINE_ERROR = 'EMPTY_TIMELINE_ERROR';
 export const DELETE_SHIFT = 'DELETE_SHIFT';
 
 export const RESET_SHIFT = 'RESET_SHIFT';
+
+export const SET_LOADER = 'SET_LOADER';

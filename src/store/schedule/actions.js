@@ -23,7 +23,7 @@ import {
   DELETE_SHIFT,
   ADD_TEMP_EMPLOYEE,
   ADD_TEMP_EMPLOYEE_SUCCESS,
-
+  SET_LOADER,
   DOWNLOAD_SCHEDULE,
   
 } from './types';
@@ -77,6 +77,9 @@ export const postShiftSuccess = () => ({
 });
 export const postShiftError = () => ({
   type: POST_SHIFT_ERROR,
+});
+export const setLoader = () => ({
+  type: SET_LOADER,
 });
 
 export const getShift = ({ companyId, shiftId }) => ({

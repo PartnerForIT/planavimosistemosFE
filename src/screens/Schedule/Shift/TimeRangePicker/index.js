@@ -52,6 +52,7 @@ export default memo(({
   onDuplicateTimeToRow,
   onDuplicateTimeToColumn,
   onNotWorkToday,
+  inCopyTool,
 }) => {
   const { t } = useTranslation();
   const buttonRef = useRef(null);
@@ -71,6 +72,7 @@ export default memo(({
 
   const timeRangeColorClasses = classNames(classes.timeRangeColor, {
     [classes.timeRangeColor_openMenu]: isOpenMenu,
+    [classes.timeRangeColor_copyTool]: inCopyTool,
   });
 
   const handleClickOpenModal = () => {
@@ -183,6 +185,8 @@ export default memo(({
       <div className={timeRangeColorClasses}>
         { !value.not_work && (
           <button
+            data-for="tip"
+            data-tip={inCopyTool ? t('Click to change time') : false}
             className={classes.timeRangeColor__button}
             onClick={handleClickOpenModal}
             ref={buttonRef}

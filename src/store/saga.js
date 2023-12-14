@@ -13,6 +13,7 @@ import EventsWatcher from './events/saga';
 import KiosksWatcher from './kiosks/saga';
 import CompanyWatcher from './company/saga';
 import ScheduleWatcher from './schedule/saga';
+import CopyToolWatcher from './copyTool/saga';
 import SheetWatcher from './sheet/saga';
 
 function onRequest(request) {
@@ -51,6 +52,7 @@ export default function* rootSaga() {
     KiosksWatcher(),
     CompanyWatcher(),
     ScheduleWatcher(),
+    CopyToolWatcher(),
     SheetWatcher(),
     createRequestInstance({
       onRequest,

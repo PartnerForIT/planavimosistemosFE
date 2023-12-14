@@ -49,6 +49,7 @@ import {
 } from '../../store/settings/actions';
 import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
+import { copyToolHistorySelector } from '../../store/copyTool/selectors';
 import { settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
@@ -58,6 +59,7 @@ import ResourceAreaHeader from './ResourceAreaHeader';
 import ResourceItem from './ResourceItem';
 import Background from './Background';
 import Footer from './Footer';
+import CopyTool from './CopyTool';
 import './Schedule.scss';
 import {
   AdditionalRatesDataSelector,
@@ -99,12 +101,14 @@ export default () => {
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
+  const copyToolRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
   const employees = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
   const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
+  const copyToolHistory = useSelector(copyToolHistorySelector);
   const markers = useSelector(markersSelector);
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
@@ -113,6 +117,8 @@ export default () => {
   const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
   const [tempShiftID,setTempShiftID] = useState(0)
   const [activeDrag,setActiveDrag] = useState('')
+  const [copyTool,setCopyTool] = useState(false)
+  const [copyToolTime,setCopyToolTime] = useState({})
   const [tempEventID,setTempEventID] = useState(0)
   const [openDialog,setOpenDialog] = useState(false)
   const [deletedShiftName,setDeletedShiftName] = useState('')
@@ -223,9 +229,10 @@ export default () => {
   }, [filterData, schedule?.resources]);
 
   const events = useMemo(() => {
+    let result = [];
     if (schedule?.events && scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
       //make fake time for remove_timelines
-      return schedule?.events.map((e) => {
+      result = schedule?.events.map((e) => {
         return {
           ...e,
           realStart: e.start,
@@ -239,7 +246,7 @@ export default () => {
 
     //UGLY fix for prevent times overlap when have timline from one day to another
     if (schedule?.events && timeline === TIMELINE.DAY) {
-      return schedule?.events.map((e) => {
+      result = schedule?.events.map((e) => {
 
         if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
           return {};
@@ -249,8 +256,26 @@ export default () => {
       });
     }
 
-    return schedule?.events;
-  }, [filterData, schedule?.events]);
+    result = result.length ? result : (schedule?.events || []);
+
+    return [
+      ...result.filter((resultItem) => {
+        return !copyToolHistory.some((historyItem) => {
+          return (
+            resultItem.start <= historyItem.end &&
+            resultItem.end >= historyItem.start &&
+            resultItem.resourceId == historyItem.resourceId
+          );
+        });
+      }),
+      ...copyToolHistory.map((e) => {
+        return {
+          ...e,
+          copy_event: true,
+        };
+      }),
+    ];
+  }, [filterData, schedule?.events, copyToolHistory]);
 
   const filteredShifts = () => {
 
@@ -583,6 +608,13 @@ export default () => {
     }));
     */
   }
+  const handleCopyTool = (time) => {
+    setCopyToolTime(time)
+    setCopyTool(!copyTool);
+  }
+  const handleAddHistory = (data) => {
+    copyToolRef.current.addHistory(data);
+  }
   const renderEventContent = ({ event, timeText, view }) => {
 
     const resourceInfo = event.getResources()[0];
@@ -659,6 +691,8 @@ export default () => {
         timeText={timeText}
         start={start}
         end={end}
+        resourceId={resourceInfo.id}
+        copy_event={event.extendedProps.copy_event}
         empty={event.extendedProps.empty_event}
         empty_manual={event.extendedProps.empty_manual}
         newEmployee={event.extendedProps.new_employee}
@@ -672,12 +706,15 @@ export default () => {
         nightPermission={permissions.night_rates && AdditionalRates.night_time}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
-        withMenu={withMenu && permissions.schedule_edit}
+        withMenu={withMenu && !copyTool && permissions.schedule_edit}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
         onEmptyTimeline={handleEmptyTimeline}
+        handleCopyTool={handleCopyTool}
+        handleAddHistory={handleAddHistory}
+        copyTool={copyTool}
         modalAddTempEmployee={modalAddTempEmployee}
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         addTimeline={handleAddWorkingTime}
@@ -697,7 +734,7 @@ export default () => {
     if (info.event.extendedProps.empty_manual) {
       classes.push('is-empty-manual')
     }
-    if (!permissions.schedule_edit) {
+    if (!permissions.schedule_edit || copyTool || info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
 
@@ -1099,28 +1136,47 @@ export default () => {
             width='auto'
             withSearch={true}
           />
-          <ButtonGroupToggle
-            buttons={[
-              {
-                label: t('Day'),
-                id: TIMELINE.DAY,
-              },
-              {
-                label: t('Week'),
-                id: TIMELINE.WEEK,
-              },
-              {
-                label: t('Month'),
-                id: TIMELINE.MONTH,
-              },
-            ]}
-            onChange={handleChangeTimeline}
-            value={timeline}
-          />
-          <ToolsButton
-            handleInputChange={handleChangeTool}
-            values={toolsActive}
-          />
+          { !copyTool ? 
+              <ButtonGroupToggle
+                buttons={[
+                  {
+                    label: t('Day'),
+                    id: TIMELINE.DAY,
+                  },
+                  {
+                    label: t('Week'),
+                    id: TIMELINE.WEEK,
+                  },
+                  {
+                    label: t('Month'),
+                    id: TIMELINE.MONTH,
+                  },
+                ]}
+                onChange={handleChangeTimeline}
+                value={timeline}
+              />
+              :
+            <ButtonGroupToggle
+              buttons={[
+                {
+                  label: t('Day'),
+                  id: TIMELINE.DAY,
+                },
+                {
+                  label: t('Week'),
+                  id: TIMELINE.WEEK,
+                },
+              ]}
+              onChange={handleChangeTimeline}
+              value={timeline}
+            />
+          }
+          { !copyTool && (
+            <ToolsButton
+              handleInputChange={handleChangeTool}
+              values={toolsActive}
+            />
+          )}
 
           { timeline === TIMELINE.MONTH ? (
             <FlatButton onClick={() => downloadScheduleFile('excel')} className='schedule-screen__buttonDownload'>
@@ -1133,7 +1189,7 @@ export default () => {
           {/*  checked={isOnlyWorkingDays}*/}
           {/*  label={t('Show only working days')}*/}
           {/*/>*/}
-          { permissions.schedule_edit && (
+          { !copyTool && permissions.schedule_edit && (
             <Button onClick={handleCreateNewShift}>
               {t('Create new shift')}
             </Button> )
@@ -1290,6 +1346,17 @@ export default () => {
             <div className='schedule-screen__overlay-loading'>
               <Progress/>
             </div>
+          )
+        }
+        {
+          (copyTool) && (
+            <CopyTool
+              ref={copyToolRef}
+              start={copyToolTime.start || null}
+              end={copyToolTime.end || null}
+              onClose={handleCopyTool}
+              getBodyForGetSchedule={getBodyForGetSchedule}
+            />
           )
         }
         <div/>

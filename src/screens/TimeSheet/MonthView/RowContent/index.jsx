@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import CurrencySign from '../../../../components/shared/CurrencySign';
 import moment from 'moment';
