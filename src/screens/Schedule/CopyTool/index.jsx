@@ -34,26 +34,26 @@ export default forwardRef(({
     start: moment(start).format('HH:mm'),
     end: moment(end).format('HH:mm'),
   });
-  let dragStart = { x: 0, y: 0 };
-  let current = { x: 530, y: 200 };
+  // let dragStart = { x: 0, y: 0 };
+  // let current = { x: 530, y: 200 };
 
   const history = useSelector(copyToolHistorySelector);
   const rollback = useSelector(copyToolRollbackSelector);
 
-  const handleDragStart = (e) => {
-    const offsetX = e.clientX - current.x;
-    const offsetY = e.clientY - current.y;
-    dragStart = { x: offsetX, y: offsetY };
-  };
+  // const handleDragStart = (e) => {
+  //   const offsetX = e.clientX - current.x;
+  //   const offsetY = e.clientY - current.y;
+  //   dragStart = { x: offsetX, y: offsetY };
+  // };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    const offsetX = e.clientX - dragStart.x;
-    const offsetY = e.clientY - dragStart.y;
-    cont.current.style.left = offsetX + 'px';
-    cont.current.style.top = offsetY + 'px';
-    current = { x: offsetX, y: offsetY };
-  };
+  // const handleDragOver = (e) => {
+  //   e.preventDefault();
+  //   const offsetX = e.clientX - dragStart.x;
+  //   const offsetY = e.clientY - dragStart.y;
+  //   cont.current.style.left = offsetX + 'px';
+  //   cont.current.style.top = offsetY + 'px';
+  //   current = { x: offsetX, y: offsetY };
+  // };
 
   const handleChangeTime = (values) => {
     setTime(values.time);
@@ -91,16 +91,17 @@ export default forwardRef(({
   return (
     <>
       <div className={classes.copyTool_overflow_top}></div>
+      <div className={classes.copyTool_overflow_bottom}></div>
       <div
         ref={cont}
         className={containerClasses}
-        style={{
-          left: '530px',
-          top: '200px',
-        }}
-        draggable
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
+        // style={{
+        //   left: '530px',
+        //   top: '200px',
+        // }}
+        // draggable
+        // onDragStart={handleDragStart}
+        // onDragOver={handleDragOver}
       >
         { tooltipHint && (
           <div className={classes.copyTool_tooltip}>

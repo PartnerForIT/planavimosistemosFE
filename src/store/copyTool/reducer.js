@@ -32,11 +32,11 @@ const reducer = (state = initialState, action) => {
       return state;
     case FORWARD_HISTORY:
       if (state.rollback.length > 0) {
-        const firstItem = state.rollback[0];
+        const lastItem = state.rollback[state.rollback.length - 1];
         return {
           ...state,
-          history: [...state.history, firstItem],
-          rollback: state.rollback.slice(1),
+          history: [...state.history, lastItem],
+          rollback: state.rollback.slice(0, -1),
         };
       }
       return state;
