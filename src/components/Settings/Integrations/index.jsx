@@ -40,7 +40,7 @@ export default function Integrations() {
   const [iiko_import_date, setIikoImportDate] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [result, setResult] = useState(false);
-  const [resultText, setResultText] = useState(false);
+  const [resultText, setResultText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const isLoadind = useSelector(isLoadingSelector);
@@ -156,7 +156,7 @@ export default function Integrations() {
   }
 
   const importIikoData = () => {
-    setResultText(false)
+    setResultText('')
     setResult(false)
     setOpenDialog(true)
   }
