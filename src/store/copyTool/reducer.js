@@ -15,7 +15,8 @@ const reducer = (state = initialState, action) => {
           return !(
             resultItem.start <= action.payload.end &&
             resultItem.end >= action.payload.start &&
-            resultItem.resourceId == action.payload.resourceId
+            resultItem.resourceId == action.payload.resourceId &&
+            (!action.payload.day || (action.payload.day && resultItem.day == action.payload.day))
           );
         }), action.payload],
         rollback: [],

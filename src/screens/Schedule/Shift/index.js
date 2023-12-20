@@ -28,6 +28,7 @@ import {
   resetShift,
 } from '../../../store/schedule/actions';
 import { placesSelector } from '../../../store/places/selectors';
+import { copyToolHistorySelector } from '../../../store/copyTool/selectors';
 import { settingWorkTime, isLoadingSelector } from '../../../store/settings/selectors';
 import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { employeesSelector } from '../../../store/employees/selectors';
@@ -37,6 +38,7 @@ import { COLORS_SHIFT } from '../../../const';
 import ErrorModal from 'components/Core/Dialog/ErrorModal';
 import { companyModules } from '../../../store/company/selectors';
 
+import CopyTool from './../CopyTool';
 import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
 import ButtonsField from './ButtonsField';
@@ -136,6 +138,10 @@ export default () => {
   const permissions = usePermissions(permissionsConfig);
   const history = useHistory();
   const modules = useSelector(companyModules);
+  const copyToolRef = useRef();
+  const copyToolHistory = useSelector(copyToolHistorySelector);
+  const [copyTool,setCopyTool] = useState(false)
+  const [copyToolTime,setCopyToolTime] = useState({})
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -223,7 +229,7 @@ export default () => {
             empty: itemJ.empty,
           })),
         })),
-        data,
+        data: data,
       };
     }
 
@@ -249,6 +255,13 @@ export default () => {
       setSaveChanges(false);
     }
   };
+  const handleCopyTool = (time) => {
+    setCopyToolTime(time)
+    setCopyTool(!copyTool);
+  }
+  const handleAddHistory = (data) => {
+    copyToolRef.current.addHistory(data);
+  }
   const handleSaveShift = (values = {}) => {
     const {
       events,
@@ -398,6 +411,11 @@ export default () => {
       setSaveChanges(true);
     }
   };
+  const handleCopyToolSave = (data) => {
+    if (tableRef?.current) {
+      tableRef.current.updateData(data);
+    }
+  }
 
   useEffect(() => {
     dispatch(getPlaces(companyId)).then(({ data }) => {
@@ -614,6 +632,9 @@ export default () => {
             initialValues={initialValues}
             isCreate={isCreate}
             withCost={permissions.cost && permissions.schedule_costs}
+            handleCopyTool={handleCopyTool}
+            handleAddHistory={handleAddHistory}
+            copyTool={copyTool}
           />
         )
       }
@@ -643,6 +664,18 @@ export default () => {
             header={`${t('Missing Schedule Data')}`}
             text={saveErrorModal === 'job' ? `${t('None of work places has been created')}` : `${t('Please choose employee')}`}
             onClose={() => { setSaveErrorModal(false) }}
+          />
+        )
+      }
+      {
+        (copyTool) && (
+          <CopyTool
+            ref={copyToolRef}
+            start={copyToolTime.start || null}
+            end={copyToolTime.end || null}
+            onClose={handleCopyTool}
+            shiftEdit={true}
+            onSave={handleCopyToolSave}
           />
         )
       }

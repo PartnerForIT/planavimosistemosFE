@@ -20,6 +20,7 @@ import Section from './Section';
 import DefaultShiftTime from './DefaultShiftTime';
 import classes from './Table.module.scss';
 import { companyModules } from '../../../../store/company/selectors';
+import { copyToolHistorySelector } from '../../../../store/copyTool/selectors';
 
 /*
 data: [
@@ -194,6 +195,9 @@ const RowContent = ({
   disabledCell,
   daysOfWeek,
   defaultWorkingTime,
+  handleCopyTool,
+  handleAddHistory,
+  copyTool
 }) => {
   const handleChangeTime = useCallback((values) => {
     onChange({
@@ -234,6 +238,7 @@ const RowContent = ({
                   <TimeRangePicker
                     value={itemJ.time}
                     cellId={indexJ}
+                    resourceId={resourceId}
                     onChange={handleChangeTime}
                     // disabled={disabledCell}
                     withDots={withDots}
@@ -244,6 +249,9 @@ const RowContent = ({
                     onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
                     onNotWorkToday={handleNotWorkToday}
                     disabled={disabledCell}
+                    handleCopyTool={handleCopyTool}
+                    handleAddHistory={handleAddHistory}
+                    copyTool={copyTool}
                   />
                 )
               }
@@ -268,6 +276,9 @@ const RowContent = ({
             daysOfWeek={daysOfWeek}
             disabledCell={disabledCell}
             defaultWorkingTime={defaultWorkingTime}
+            handleCopyTool={handleCopyTool}
+            handleAddHistory={handleAddHistory}
+            copyTool={copyTool}
           />
         ))
       }
@@ -331,6 +342,9 @@ export default forwardRef(({
     resources: [],
     timesPanel: initialTimesPanel,
   },
+  handleCopyTool,
+  handleAddHistory,
+  copyTool,
 }, ref) => {
   const [data, setData] = useState(initialValues.data);
   const [resources, setResources] = useState(initialValues.resources);
@@ -339,6 +353,7 @@ export default forwardRef(({
   const [currentWeek, setCurrentWeek] = useState(0);
   const contentRef = useRef(null);
   const modules = useSelector(companyModules);
+  const copyToolHistory = useSelector(copyToolHistorySelector);
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
@@ -720,7 +735,67 @@ export default forwardRef(({
 
       setDefaultWorkingTime(defaultTime);
     },
+    updateData: (copyData) => {
+      if (!copyData) return;
+
+      let firstObj = JSON.parse(JSON.stringify(data));
+      const secondObj = [...copyData];
+      
+      for (let i in firstObj) {
+        const entry = firstObj[i];
+
+        for (let j in entry) {
+          const resourceId = entry[j].resourceId;
+
+          secondObj.forEach(updateEntry => {
+            if (updateEntry.resourceId === resourceId) {
+              const day = updateEntry.day;
+              entry[j].data.forEach(dataEntry => {
+                  if (dataEntry.time && dataEntry.time.day === day) {
+                    firstObj[i][j].data[day].time.not_work = false;
+                    firstObj[i][j].data[day].time.start = moment(updateEntry.start).format('HH:mm');
+                    firstObj[i][j].data[day].time.end = moment(updateEntry.end).format('HH:mm');
+                  }
+              });
+            }
+          });
+        }
+      }
+      
+      setData(firstObj);
+    }
   }));
+
+  const mergedData = useMemo(() => {
+    if (!data || !copyToolHistory) return data;
+
+    let firstObj = JSON.parse(JSON.stringify(data));
+    const secondObj = [...copyToolHistory];
+    
+    for (let i in firstObj) {
+      const entry = firstObj[i];
+
+      for (let j in entry) {
+        const resourceId = entry[j].resourceId;
+
+        secondObj.forEach(updateEntry => {
+          if (updateEntry.resourceId === resourceId) {
+            const day = updateEntry.day;
+            entry[j].data.forEach(dataEntry => {
+                if (dataEntry.time && dataEntry.time.day === day) {
+                  firstObj[i][j].data[day].time.not_work = false;
+                  firstObj[i][j].data[day].time.start = moment(updateEntry.start).format('HH:mm');
+                  firstObj[i][j].data[day].time.end = moment(updateEntry.end).format('HH:mm');
+                }
+            });
+          }
+        });
+      }
+    }
+
+    return firstObj;
+
+  }, [data, copyToolHistory]);
 
   const jobTypes = useMemo(() => allJobTypes
     .filter((item) => !resources
@@ -742,7 +817,7 @@ export default forwardRef(({
             const children = jobType.children.reduce((accK, employee) => {
               if (employee.title) {
                 const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
-                const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
+                const foundData = mergedData[week] ? mergedData[week].find((itemD) => itemD.resourceId === employee.id) : false;
                 const foundEmployeeInsideJob = foundEmployee ? jobType.children.find((itemE) => itemE.employeeId === foundEmployee.id && !itemE.empty) : false;
                 if (foundEmployee && foundData && foundEmployeeInsideJob) {
                   accK.push({
@@ -790,7 +865,7 @@ export default forwardRef(({
                 if (employee.title) {
                   if (daysOfWeek[week][indexDay]?.checked && !daysOfWeek[week][indexDay]?.disabled) {
                     const foundEmployee = employees.find((itemE) => itemE.id === employee.employeeId);
-                    const foundData = data[week] ? data[week].find((itemD) => itemD.resourceId === employee.id) : false;
+                    const foundData = mergedData[week] ? mergedData[week].find((itemD) => itemD.resourceId === employee.id) : false;
                     const foundEmployeeInsideJob = foundEmployee ? jobType.children.find((itemE) => itemE.employeeId === foundEmployee.id && !itemE.empty) : false;
                     if (foundData && foundEmployee && foundEmployeeInsideJob) {
                       const timeStart = foundData.data[indexDay].time.start.split(':');
@@ -891,7 +966,7 @@ export default forwardRef(({
 
       return acc;
     }, {});
-  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
+  }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
 
   const { t } = useTranslation();
   const timesPanelFull = useMemo(() => {
@@ -914,7 +989,7 @@ export default forwardRef(({
 
     return resShift;
 
-  }, [startShiftFrom, employees, resources, data, numberOfWeeks, daysOfWeek, currentWeek]);
+  }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
   
   return (
     <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
@@ -979,7 +1054,7 @@ export default forwardRef(({
                     <RowContent
                       key={`${currentWeek}-${item.id}`}
                       title={item.title}
-                      items={data[currentWeek]}
+                      items={mergedData[currentWeek]}
                       resources={item.children}
                       expander={item.expander}
                       resourceId={item.id}
@@ -991,6 +1066,9 @@ export default forwardRef(({
                       daysOfWeek={daysOfWeek[currentWeek]}
                       defaultWorkingTime={defaultWorkingTime[currentWeek]}
                       withDots
+                      handleCopyTool={handleCopyTool}
+                      handleAddHistory={handleAddHistory}
+                      copyTool={copyTool}
                     />
                   ))
                 }

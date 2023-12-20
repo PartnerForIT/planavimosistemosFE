@@ -1032,6 +1032,36 @@
     visibility: visible;
   }
 }
+.copy-add-schedule {
+  visibility: hidden;
+  background-color: #d9f4f9;
+  width: auto;
+  height: auto;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 12px;
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #48C3E0;
+  border: 1px solid #40C3E2;
+  border-radius: 4px;
+
+  &:hover {
+    visibility: visible;
+    border-color: #40C3E2;
+    background-color: #d9f4f9;
+  }
+
+  .timeRangeColor:hover & {
+    visibility: visible;
+  }
+}
 .cell {
   &_holiday {
     overflow: hidden;

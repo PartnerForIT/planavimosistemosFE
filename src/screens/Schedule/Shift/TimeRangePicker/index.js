@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import { timeArr } from '../../../../components/Helpers/time';
 import getOverflowParent from '../../../../helpers/getOverflowParent';
@@ -42,6 +43,7 @@ const trackYProps = {
 
 export default memo(({
   cellId,
+  resourceId,
   value,
   onChange,
   disabled,
@@ -53,6 +55,9 @@ export default memo(({
   onDuplicateTimeToColumn,
   onNotWorkToday,
   inCopyTool,
+  handleCopyTool,
+  handleAddHistory,
+  copyTool
 }) => {
   const { t } = useTranslation();
   const buttonRef = useRef(null);
@@ -73,6 +78,7 @@ export default memo(({
   const timeRangeColorClasses = classNames(classes.timeRangeColor, {
     [classes.timeRangeColor_openMenu]: isOpenMenu,
     [classes.timeRangeColor_copyTool]: inCopyTool,
+    ['timeRangeColor']: true,
   });
 
   const handleClickOpenModal = () => {
@@ -118,6 +124,13 @@ export default memo(({
     onNotWorkToday({ time: value, cellId });
     handleCloseModal();
   };
+  const openCopyMode = () => {
+    handleCloseModal();
+    handleCopyTool({start: time.start, end: time.end});
+  };
+  const copyEvent = () => {
+    handleAddHistory({resourceId: resourceId, day: cellId, start: moment(time.date).format('YYYY-MM-DD'), end: moment(time.date).format('YYYY-MM-DD')});
+  };
 
   useEffect(() => {
     if (isOpenMenu) {
@@ -139,11 +152,16 @@ export default memo(({
   useEffect(() => {
     if (isOpen) {
       try {
-        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
-        const buttonBounding = buttonRef.current.getBoundingClientRect();
-        const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
-        const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
-        const menuPlacementVertical = (offsetBottom - heightContent) > 50 ? 'bottom' : 'top';
+        
+        let menuPlacementVertical = 'top';
+
+        if (!inCopyTool) {
+          const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
+          const buttonBounding = buttonRef.current.getBoundingClientRect();
+          const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
+          const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
+          menuPlacementVertical = (offsetBottom - heightContent) > 50 ? 'bottom' : 'top';
+        }
 
         //fixes for center scroll
         if (startScrollRef.current) {
@@ -183,9 +201,10 @@ export default memo(({
   return (
     <ClickAwayListener onClickAway={handleCloseModal}>
       <div className={timeRangeColorClasses}>
+        { copyTool && <span onClick={copyEvent} className={'copy-add-schedule'}>{t('Paste the Time')}</span> }
         { !value.not_work && (
           <button
-            data-for="tip"
+            data-for={inCopyTool ? "copy-tip" : null}
             data-tip={inCopyTool ? t('Click to change time') : false}
             className={classes.timeRangeColor__button}
             onClick={handleClickOpenModal}
@@ -208,7 +227,7 @@ export default memo(({
           )
         }
         {
-          (!disabled && withDots) && (
+          (!disabled && withDots && !copyTool) && (
             <button
               className={classes.timeRangeColor__dots}
               onClick={handleClickOpenMenu}
@@ -238,6 +257,12 @@ export default memo(({
                         </div>
                       </div>
                     </div>
+                    <button
+                      className={classes.timeRangeColor__modal__item}
+                      onClick={openCopyMode}
+                    >
+                      {t('Run Copy Mode')}
+                    </button>
                     <button
                       className={classes.timeRangeColor__modal__item}
                       onClick={handleDuplicateTimeToRow}

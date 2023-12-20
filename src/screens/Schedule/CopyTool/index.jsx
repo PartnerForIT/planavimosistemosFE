@@ -18,6 +18,8 @@ export default forwardRef(({
   end,
   getBodyForGetSchedule,
   onClose,
+  onSave,
+  shiftEdit
 }, ref) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -31,29 +33,12 @@ export default forwardRef(({
   }));
 
   const [time, setTime] = useState({
-    start: moment(start).format('HH:mm'),
-    end: moment(end).format('HH:mm'),
+    start: shiftEdit ? start : moment(start).format('HH:mm'),
+    end: shiftEdit ? end : moment(end).format('HH:mm'),
   });
-  // let dragStart = { x: 0, y: 0 };
-  // let current = { x: 530, y: 200 };
 
   const history = useSelector(copyToolHistorySelector);
   const rollback = useSelector(copyToolRollbackSelector);
-
-  // const handleDragStart = (e) => {
-  //   const offsetX = e.clientX - current.x;
-  //   const offsetY = e.clientY - current.y;
-  //   dragStart = { x: offsetX, y: offsetY };
-  // };
-
-  // const handleDragOver = (e) => {
-  //   e.preventDefault();
-  //   const offsetX = e.clientX - dragStart.x;
-  //   const offsetY = e.clientY - dragStart.y;
-  //   cont.current.style.left = offsetX + 'px';
-  //   cont.current.style.top = offsetY + 'px';
-  //   current = { x: offsetX, y: offsetY };
-  // };
 
   const handleChangeTime = (values) => {
     setTime(values.time);
@@ -71,12 +56,19 @@ export default forwardRef(({
     dispatch(removeHistory());
   }
   const handleSave = () => {
-    dispatch(setLoader());
-    dispatch(addTimelines({
-      companyId,
-      data: history,
-      body: getBodyForGetSchedule(),
-    }));
+    if (shiftEdit) {
+      if (onSave) {
+        onSave(history);
+      }
+    } else {
+      dispatch(setLoader());
+      dispatch(addTimelines({
+        companyId,
+        data: history,
+        body: getBodyForGetSchedule(),
+      }));
+    }
+
     handleDeleteChanges();
     onClose();
   }
@@ -91,7 +83,8 @@ export default forwardRef(({
   return (
     <>
       <div className={classes.copyTool_overflow_top}></div>
-      <div className={classes.copyTool_overflow_bottom}></div>
+      { ! shiftEdit && <div className={classes.copyTool_overflow_bottom}></div> }
+      { shiftEdit && <div className={classes.copyTool_overflow_middle}></div> }
       <div
         ref={cont}
         className={containerClasses}
@@ -124,23 +117,23 @@ export default forwardRef(({
           <div className={classes.copyTool_btns}>
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_back}
-              data-for="tip"
+              data-for="copy-tip"
               data-tip={t('Step Back')}
               disabled={history.length === 0}
               onClick={handleBack}
             />
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_forward}
-              data-for="tip"
+              data-for="copy-tip"
               data-tip={t('Step Forward')}
               disabled={rollback.length === 0}
               onClick={handleForward}
             />
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_delete}
-              data-for="tip"
+              data-for="copy-tip"
               data-tip={t('Delete Changes')}
-              disabled={history.length === 0}
+              disabled={history.length === 0 && rollback.length === 0}
               onClick={handleDeleteChanges}
             />
           </div>
@@ -150,7 +143,7 @@ export default forwardRef(({
           >{t('Save & Exit')}</button>
         </div>
         <Tooltip
-          id="tip"
+          id="copy-tip"
           className={classes.copyTool_tip}
           effect='solid'
         />

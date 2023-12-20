@@ -17,6 +17,16 @@
             z-index: 100000;
         }
 
+        &_middle {
+            position: absolute;
+            background-color: rgba(0,0,0,0.2);
+            top: 71px;
+            right: 0;
+            left: 0;
+            height: 161px;
+            z-index: 100000;
+        }
+
         &_bottom {
             position: fixed;
             background-color: rgba(0,0,0,0.2);
@@ -45,6 +55,7 @@
             font-size: 12px;
             padding: 5px 40px 5px 15px;
             position: relative;
+            white-space: nowrap;
         }
 
         &_close {
