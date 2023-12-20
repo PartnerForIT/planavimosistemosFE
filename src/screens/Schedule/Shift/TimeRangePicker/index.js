@@ -49,6 +49,7 @@ export default memo(({
   disabled,
   withDots,
   jobTypeName,
+  currentWeek,
   avatar,
   fullName,
   onDuplicateTimeToRow,
@@ -129,7 +130,7 @@ export default memo(({
     handleCopyTool({start: time.start, end: time.end});
   };
   const copyEvent = () => {
-    handleAddHistory({resourceId: resourceId, day: cellId, start: moment(time.date).format('YYYY-MM-DD'), end: moment(time.date).format('YYYY-MM-DD')});
+    handleAddHistory({resourceId: resourceId, currentWeek: currentWeek, day: cellId, start: moment(time.date).format('YYYY-MM-DD'), end: moment(time.date).format('YYYY-MM-DD')});
   };
 
   useEffect(() => {

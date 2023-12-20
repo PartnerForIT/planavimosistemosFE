@@ -195,6 +195,7 @@ const RowContent = ({
   disabledCell,
   daysOfWeek,
   defaultWorkingTime,
+  currentWeek,
   handleCopyTool,
   handleAddHistory,
   copyTool
@@ -243,6 +244,7 @@ const RowContent = ({
                     // disabled={disabledCell}
                     withDots={withDots}
                     // jobTypeName={jobType}
+                    currentWeek={currentWeek}
                     avatar={avatar}
                     fullName={title}
                     onDuplicateTimeToRow={handleDuplicateTimeToRow}
@@ -269,6 +271,7 @@ const RowContent = ({
             onDuplicateTimeToRow={onDuplicateTimeToRow}
             onDuplicateTimeToColumn={onDuplicateTimeToColumn}
             onNotWorkToday={onNotWorkToday}
+            currentWeek={currentWeek}
             title={item.title}
             avatar={item.photo}
             withDots={withDots}
@@ -677,6 +680,34 @@ export default forwardRef(({
     });
   };
 
+  const mergeObjects = (obj1, obj2) => {
+    let firstObj = JSON.parse(JSON.stringify(obj1));
+    const secondObj = [...obj2];
+    for (let i in firstObj) {
+      const entry = firstObj[i];
+
+      for (let j in entry) {
+        const resourceId = entry[j].resourceId;
+
+        secondObj.forEach(updateEntry => {
+          if (updateEntry.resourceId === resourceId && i*1 === updateEntry.currentWeek*1) {
+            const day = updateEntry.day;
+            entry[j].data.forEach(dataEntry => {
+                if (dataEntry.time && dataEntry.time.day === day) {
+                  firstObj[i][j].data[day].time.not_work = false;
+                  firstObj[i][j].data[day].time.start = moment(updateEntry.start).format('HH:mm');
+                  firstObj[i][j].data[day].time.end = moment(updateEntry.end).format('HH:mm');
+                }
+            });
+          }
+        });
+      }
+    }
+
+    return firstObj;
+
+  }
+
   useImperativeHandle(ref, () => ({
     events: data,
     resources,
@@ -737,63 +768,15 @@ export default forwardRef(({
     },
     updateData: (copyData) => {
       if (!copyData) return;
-
-      let firstObj = JSON.parse(JSON.stringify(data));
-      const secondObj = [...copyData];
       
-      for (let i in firstObj) {
-        const entry = firstObj[i];
-
-        for (let j in entry) {
-          const resourceId = entry[j].resourceId;
-
-          secondObj.forEach(updateEntry => {
-            if (updateEntry.resourceId === resourceId) {
-              const day = updateEntry.day;
-              entry[j].data.forEach(dataEntry => {
-                  if (dataEntry.time && dataEntry.time.day === day) {
-                    firstObj[i][j].data[day].time.not_work = false;
-                    firstObj[i][j].data[day].time.start = moment(updateEntry.start).format('HH:mm');
-                    firstObj[i][j].data[day].time.end = moment(updateEntry.end).format('HH:mm');
-                  }
-              });
-            }
-          });
-        }
-      }
-      
-      setData(firstObj);
+      setData(mergeObjects(data, copyData));
     }
   }));
 
   const mergedData = useMemo(() => {
     if (!data || !copyToolHistory) return data;
 
-    let firstObj = JSON.parse(JSON.stringify(data));
-    const secondObj = [...copyToolHistory];
-    
-    for (let i in firstObj) {
-      const entry = firstObj[i];
-
-      for (let j in entry) {
-        const resourceId = entry[j].resourceId;
-
-        secondObj.forEach(updateEntry => {
-          if (updateEntry.resourceId === resourceId) {
-            const day = updateEntry.day;
-            entry[j].data.forEach(dataEntry => {
-                if (dataEntry.time && dataEntry.time.day === day) {
-                  firstObj[i][j].data[day].time.not_work = false;
-                  firstObj[i][j].data[day].time.start = moment(updateEntry.start).format('HH:mm');
-                  firstObj[i][j].data[day].time.end = moment(updateEntry.end).format('HH:mm');
-                }
-            });
-          }
-        });
-      }
-    }
-
-    return firstObj;
+    return mergeObjects(data, copyToolHistory);
 
   }, [data, copyToolHistory]);
 
@@ -1058,6 +1041,7 @@ export default forwardRef(({
                       resources={item.children}
                       expander={item.expander}
                       resourceId={item.id}
+                      currentWeek={currentWeek}
                       onChange={handleChangeTime}
                       onDuplicateTimeToRow={handleDuplicateTimeToRow}
                       onDuplicateTimeToColumn={handleDuplicateTimeToColumn}
