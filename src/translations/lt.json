@@ -854,5 +854,6 @@
         "Step Back": "Žingsnis Atgal",
         "Step Forward": "Žingsnis į Priekį",
         "Delete Changes": "Pašalinti Pakeitimus",
-        "Save & Exit": "Išsaugoti ir Uždaryti"
+        "Save & Exit": "Išsaugoti ir Uždaryti",
+        "Import this date?": "Importuoti šią dieną?"
 }
