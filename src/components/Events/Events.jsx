@@ -17,12 +17,14 @@ import Button from '../Core/Button/Button';
 import DataTable from '../Core/DataTableCustom/DTM';
 import TableIcon from '../Icons/TableIcon';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
-import { employeesSelector } from '../../store/employees/selectors';
-import { AccountGroupsSelector } from '../../store/settings/selectors';
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+//import { employeesSelector } from '../../store/employees/selectors';
+import { employeesSelector, AccountGroupsSelector } from '../../store/settings/selectors';
 import { eventsSelector, eventsLoadingSelector } from '../../store/events/selectors';
 import { getAccountGroups } from '../../store/settings/actions';
 import { getEventsList, enterViewed, getEventView } from '../../store/events/actions';
-import { getEmployees } from '../../store/employees/actions';
+//import { getEmployees } from '../../store/employees/actions';
+import { loadEmployeesAll } from '../../store/settings/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
@@ -108,7 +110,8 @@ const Events = () => {
   const [groups, setGroups] = useState([]);
   const [checkedGroups, setCheckedGroups] = useState([]);
   const [search, setSearch] = useState('');
-  const [employees, setEmployees] = useState([]);
+  //const [employees, setEmployees] = useState([]);
+  const { users: employees } = useSelector(employeesSelector);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
@@ -116,11 +119,23 @@ const Events = () => {
   const dispatch = useDispatch();
   const eventsLoading = useSelector(eventsLoadingSelector);
   const events = useSelector(eventsSelector);
-  const getAllEmployees = useSelector(employeesSelector);
+  //const getAllEmployees = useSelector(employeesSelector);
   const selectGroups = useSelector(AccountGroupsSelector);
   const { id: companyId } = useParams();
   const permissions = usePermissions(permissionsConfig);
   // const permissions = usePermissions(permissionsConfig);
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  console.log(employees);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const sendRequest = useCallback(() => {
     const { startDate, endDate } = dateRange;
@@ -136,7 +151,7 @@ const Events = () => {
   useEffect(() => {
     dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
-    dispatch(getEmployees(companyId));
+    dispatch(loadEmployeesAll(companyId));
     dispatch(getAccountGroups(companyId));
     sendRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,11 +219,11 @@ const Events = () => {
     }
   }, [selectGroups]);
 
-  useEffect(() => {
-    if (Array.isArray(getAllEmployees)) {
-      setEmployees(getAllEmployees);
-    }
-  }, [getAllEmployees]);
+  // useEffect(() => {
+  //   if (Array.isArray(getAllEmployees)) {
+  //     setEmployees(getAllEmployees);
+  //   }
+  // }, [getAllEmployees]);
 
   useEffect(() => {
     const allColumnsArray = columns.filter((column) => {
@@ -340,7 +355,7 @@ const Events = () => {
               <CustomSelect
                 placeholder={t('All employees')}
                 buttonLabel={t('Filter')}
-                items={employees ?? []}
+                items={allSortedEmployees ?? []}
                 onFilter={onEmployeesSelectFilter}
                 onChange={onEmployeesSelectChange}
                 width='auto'

@@ -1,5 +1,6 @@
 import React, {
   useState,
+  useCallback,
   useEffect,
   useRef,
   useMemo,
@@ -19,7 +20,7 @@ import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import ExcelIcon from '../../components/Icons/ExcelIcon';
 import usePermissions from '../../components/Core/usePermissions';
 import { resourcesMock } from '../../const/mock';
-import { getEmployees } from '../../store/employees/actions';
+//import { getEmployees } from '../../store/employees/actions';
 
 import {
   getSheet,
@@ -28,11 +29,13 @@ import {
 import {
   loadEmployeesAll, loadIntegrations, getSettingWorkTime,
 } from '../../store/settings/actions';
-import { employeesSelector } from '../../store/employees/selectors';
+//import { employeesSelector } from '../../store/employees/selectors';
+import { employeesSelector } from '../../store/settings/selectors';
 import { sheetSelector, isLoadingSelector } from '../../store/sheet/selectors';
 import { IntegrationsDataSelector } from '../../store/settings/selectors';
 import { getPlaces } from '../../store/places/actions';
 import { getSkills } from '../../store/skills/actions';
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import MonthView from './MonthView';
 import './TimeSheet.scss';
@@ -64,12 +67,24 @@ export default () => {
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-  const employees = useSelector(employeesSelector);
+  //const employees = useSelector(employeesSelector);
+  const { users: employees } = useSelector(employeesSelector);
   const sheet = useSelector(sheetSelector);
   const isLoading = useSelector(isLoadingSelector);
   //const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
   
 
   const resources = useMemo(() => {
@@ -233,7 +248,7 @@ export default () => {
   useEffect(() => {
     dispatch(getPlaces(companyId));
     dispatch(getSkills(companyId));
-    dispatch(getEmployees(companyId));
+    //dispatch(getEmployees(companyId));
     dispatch(getSettingWorkTime(companyId));
     dispatch(loadIntegrations(companyId));
 
@@ -273,7 +288,7 @@ export default () => {
           <CustomSelect
             placeholder={t('All employees')}
             buttonLabel={t('Filter')}
-            items={employees}
+            items={allSortedEmployees ?? []}
             onChange={onEmployeesSelectFilter}
             width='auto'
             withSearch={true}

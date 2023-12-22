@@ -1,5 +1,6 @@
 import React, {
   useState,
+  useCallback,
   useEffect,
   useRef,
   useMemo,
@@ -32,6 +33,7 @@ import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import {
   getSchedule,
@@ -47,10 +49,10 @@ import {
   getSchedule as getscheduleSetting,
   postSchedule as postScheduleSetting,
 } from '../../store/settings/actions';
-import { employeesSelector } from '../../store/employees/selectors';
+//import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { copyToolHistorySelector } from '../../store/copyTool/selectors';
-import { settingWorkTime } from '../../store/settings/selectors';
+import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
 import EventContent from './EventContent';
@@ -103,7 +105,8 @@ export default () => {
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-  const employees = useSelector(employeesSelector);
+  //const employees = useSelector(employeesSelector);
+  const { users: employees } = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
   const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
@@ -124,6 +127,17 @@ export default () => {
   const [deletedShiftName,setDeletedShiftName] = useState('')
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const handleDialog = () => {
     setOpenDialog(false);
@@ -1131,7 +1145,7 @@ export default () => {
           <CustomSelect
             placeholder={t('All employees')}
             buttonLabel={t('Filter')}
-            items={employees}
+            items={allSortedEmployees ?? []}
             onChange={onEmployeesSelectFilter}
             width='auto'
             withSearch={true}

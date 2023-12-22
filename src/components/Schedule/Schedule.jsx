@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import momentPlugin from '@fullcalendar/moment';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+//import moment from 'moment';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,13 +13,15 @@ import CustomSelect from '../Core/Select/Select';
 import Button from '../Core/Button/Button';
 import ButtonGroupToggle from '../Core/ButtonGroupToggle';
 import Checkbox from '../Core/Checkbox/Checkbox2';
-import Progress from '../Core/Progress';
+//import Progress from '../Core/Progress';
 import { getSkills } from '../../store/skills/actions';
-import { getEmployees } from '../../store/employees/actions';
+//import { getEmployees } from '../../store/employees/actions';
+import { employeesSelector } from '../../store/settings/selectors';
 import { getSchedule } from '../../store/schedule/actions';
-import { employeesSelector } from '../../store/employees/selectors';
+//import { employeesSelector } from '../../store/employees/selectors';
 import { skillsSelector } from '../../store/skills/selectors';
-import { resourcesSelector, eventsSelector, isLoadingSelector } from '../../store/schedule/selectors';
+import { resourcesSelector, eventsSelector } from '../../store/schedule/selectors';
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 import './Schedule.scss';
 
 export default () => {
@@ -32,11 +34,23 @@ export default () => {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
 
-  const employees = useSelector(employeesSelector);
+  //const employees = useSelector(employeesSelector);
+  const { users: employees } = useSelector(employeesSelector);
   const skills = useSelector(skillsSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  //const isLoading = useSelector(isLoadingSelector);
   const resources = useSelector(resourcesSelector);
   const events = useSelector(eventsSelector);
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   // const onSkillsSelectChange = (selectedSkills) => {
   //   setFilter((prevState) => ({
@@ -194,7 +208,7 @@ export default () => {
           <CustomSelect
             placeholder={t('All employees')}
             buttonLabel={t('Filter')}
-            items={employees}
+            items={allSortedEmployees ?? []}
             onFilter={onEmployeesSelectFilter}
             // onChange={onEmployeesSelectChange}
             width='auto'
