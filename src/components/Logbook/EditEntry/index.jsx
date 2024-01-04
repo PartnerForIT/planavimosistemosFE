@@ -348,7 +348,6 @@ export default ({
         nextValues.started = timeParts[foundIndex - 1].finished;
       }
     }
-
     setTimeParts((prevValues) => [
       ...prevValues.slice(0, foundIndex),
       {
@@ -365,14 +364,14 @@ export default ({
       const nightTime = (timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1]);
       let push = {
         ...item,
-        started_at: moment(item.started_at)
+        started_at: moment(item.started_at, 'YYYY-MM-DD HH:mm')
           .set({
             h: item.started.split(':')[0],
             m: item.started.split(':')[1],
             s: 0,
           })
           .format('YYYY-MM-DD HH:mm:ss'),
-        finished_at: moment(item.finished_at)
+        finished_at: moment(item.finished_at, 'YYYY-MM-DD HH:mm')
           .set({
             h: item.finished.split(':')[0],
             m: item.finished.split(':')[1],
@@ -382,8 +381,8 @@ export default ({
         delete: item.isRemove ? 1 : 0,
       };
 
-      if (nightTime) {
-        push.finished_at = moment(push.finished_at).set("date", moment(push.started_at).format('D')).add(1,'days').format('YYYY-MM-DD HH:mm:ss'); 
+      if (nightTime && moment(push.finished_at, 'YYYY-MM-DD HH:mm:ss').isBefore(moment(push.started_at, 'YYYY-MM-DD HH:mm:ss'))) {
+        push.finished_at = moment(push.finished_at, 'YYYY-MM-DD HH:mm:ss').set("date", moment(push.started_at, 'YYYY-MM-DD HH:mm:ss').format('D')).add(1,'days').format('YYYY-MM-DD HH:mm:ss'); 
       }
 
       acc[item.isWork ? 'works' : 'breaks'].push(push);
