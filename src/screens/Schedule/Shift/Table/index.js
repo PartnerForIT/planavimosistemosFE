@@ -590,6 +590,7 @@ export default forwardRef(({
         ...prevState.slice(foundIndex + 1),
       ];
     });
+
     setData((prevState) => Object.keys(prevState).reduce((acc, item) => {
       if ((+item + 1) <= numberOfWeeks) {
         acc[item] = [
@@ -723,15 +724,15 @@ export default forwardRef(({
           const nextState = {};
 
           // eslint-disable-next-line prefer-destructuring
-          nextState[1] = prevState[1] ? [...prevState[1]] : [...prevState[0]];
+          nextState[1] = prevState[1].length ? [...prevState[1]] : [...prevState[0]];
 
           if ((countOfWeeks - 1) > 1) {
             // eslint-disable-next-line prefer-destructuring
-            nextState[2] = prevState[2] ? [...prevState[2]] : [...prevState[0]];
+            nextState[2] = prevState[2].length ? [...prevState[2]] : [...prevState[0]];
           }
           if ((countOfWeeks - 1) > 2) {
             // eslint-disable-next-line prefer-destructuring
-            nextState[3] = prevState[3] ? [...prevState[3]] : [...prevState[0]];
+            nextState[3] = prevState[3].length ? [...prevState[3]] : [...prevState[0]];
           }
 
           return {
@@ -739,7 +740,6 @@ export default forwardRef(({
             ...nextState,
           };
         });
-
       }
     },
     updateStartDay: (startDay) => {
@@ -973,7 +973,7 @@ export default forwardRef(({
     return resShift;
 
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
-  
+  console.log('mergedData', mergedData, numberOfWeeks);
   return (
     <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
       { !modules?.manual_mode && (

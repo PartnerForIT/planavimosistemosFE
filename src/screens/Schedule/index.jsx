@@ -1137,7 +1137,7 @@ export default () => {
           <CustomSelect
             placeholder={t('All shifts')}
             buttonLabel={t('Filter')}
-            items={filteredShifts()}
+            items={shiftsTypes?.shiftTypes}
             onChange={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'

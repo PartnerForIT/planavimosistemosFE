@@ -480,7 +480,7 @@ export default () => {
             id: `defaultWorkingTime-${index}`,
             time: {
               day: index,
-              start: '8:00',
+              start: '08:00',
               end: '17:00',
             },
           };
