@@ -226,13 +226,13 @@ const RowContent = ({
     });
   }, [resourceId, onNotWorkToday]);
 
-  const foundItem = useMemo(() => items.find((item) => resourceId === item.resourceId), [items]);
+  const foundItem = useMemo(() => items ? items.find((item) => resourceId === item.resourceId) : {}, [items]);
 
   return (
     <>
       <div className={classes.table__content__data__row}>
         {
-          foundItem?.data.map((itemJ, indexJ) => (
+          foundItem?.data?.map((itemJ, indexJ) => (
             <div key={itemJ.id} className={classes.table__content__data__row__cell}>
               {
                 itemJ?.time?.start && daysOfWeek[indexJ].checked && !daysOfWeek[indexJ].disabled && (

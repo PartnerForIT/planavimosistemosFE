@@ -163,7 +163,7 @@ export default () => {
               } else {
                 time = {
                   day: indexDay,
-                  start: '8:00',
+                  start: '08:00',
                   end: '17:00',
                   not_work: true,
                 };
@@ -198,7 +198,7 @@ export default () => {
                     day.time.start = foundItem.start;
                     day.time.end = foundItem.end;
                   } else {
-                    day.time.start = '8:00';
+                    day.time.start = '08:00';
                     day.time.end = '17:00';
                   }
 
@@ -536,7 +536,7 @@ export default () => {
               id: `defaultWorkingTime-${indexDay}`,
               time: {
                 day: indexDay,
-                start: '8:00',
+                start: '08:00',
                 end: '17:00',
               },
             };
