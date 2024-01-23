@@ -418,6 +418,11 @@ export default () => {
   }
 
   useEffect(() => {
+
+    if (history.action === 'POP') {
+      window.location.href = `/${companyId}/schedule`;
+    }
+
     dispatch(getPlaces(companyId)).then(({ data }) => {
       if (!data.length) {
         setSaveChanges('create_place');
@@ -430,12 +435,14 @@ export default () => {
     if (!isCreate) {
       dispatch(getShift({ companyId, shiftId }));
     }
-
+    
     return () => {
       dispatch(resetShift());
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
   useEffect(() => {
     if (initialValues) {
       setShiftName(initialValues.shift_info.name);

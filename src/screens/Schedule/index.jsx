@@ -527,6 +527,9 @@ export default () => {
       companyId,
       timeline,
       fromDate: nextFromDate.format('YYYY-MM-DD'),
+      shiftTypeArr: filter?.shiftType.map(({id}) => id),
+      employeesArr: filter?.employers.map(({id}) => id),
+      placesArr: filter?.place.map(({id}) => id),
     };
   };
   const handleDeleteShift = (shiftId) => {
