@@ -28,7 +28,7 @@ import {
   resetShift,
 } from '../../../store/schedule/actions';
 import { placesSelector } from '../../../store/places/selectors';
-import { copyToolHistorySelector } from '../../../store/copyTool/selectors';
+//import { copyToolHistorySelector } from '../../../store/copyTool/selectors';
 import { settingWorkTime, isLoadingSelector } from '../../../store/settings/selectors';
 import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { employeesSelector } from '../../../store/employees/selectors';
@@ -139,7 +139,7 @@ export default () => {
   const history = useHistory();
   const modules = useSelector(companyModules);
   const copyToolRef = useRef();
-  const copyToolHistory = useSelector(copyToolHistorySelector);
+  //const copyToolHistory = useSelector(copyToolHistorySelector);
   const [copyTool,setCopyTool] = useState(false)
   const [copyToolTime,setCopyToolTime] = useState({})
 

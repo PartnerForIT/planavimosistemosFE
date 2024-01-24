@@ -18,7 +18,7 @@ import { companyModules } from '../../../store/company/selectors';
 import { AdditionalRatesDataSelector,
   currencySelector,
   scheduleSelector,
-  settingCompanySelector } from '../../../store/settings/selectors';
+  settingCompanySelector, IntegrationsDataSelector } from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
 
 const permissionsConfig = [
@@ -83,6 +83,7 @@ export default ({
   const company = useSelector(settingCompanySelector);
   const schedule = useSelector(scheduleSelector);
   const permissions = usePermissions(permissionsConfig);
+  const integrations = useSelector(IntegrationsDataSelector);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -315,7 +316,7 @@ export default ({
       `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(end).format('HH:mm')}</b><br/>
       ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
       + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
-      + (schedule.deduct_break ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
+      + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
       + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
       + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
       + `</div>`

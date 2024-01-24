@@ -48,6 +48,7 @@ import {
   loadEmployeesAll,
   getSchedule as getscheduleSetting,
   postSchedule as postScheduleSetting,
+  loadIntegrations,
 } from '../../store/settings/actions';
 //import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
@@ -1038,6 +1039,7 @@ export default () => {
     dispatch(getscheduleSetting(companyId));
     dispatch(loadEmployeesAll(companyId));
     dispatch(getShiftTypes(companyId));
+    dispatch(loadIntegrations(companyId));
 
     return () => {
       // eslint-disable-next-line no-unused-expressions
