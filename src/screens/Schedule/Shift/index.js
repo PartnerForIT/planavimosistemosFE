@@ -44,6 +44,7 @@ import DatePicker from './DatePicker';
 import ButtonsField from './ButtonsField';
 import Table from './Table';
 import classes from './Shift.module.scss';
+import { de } from 'date-fns/locale';
 
 const makeShiftForOptions = [
   {
@@ -150,35 +151,80 @@ export default () => {
   const initialValues = useMemo(() => {
     if (shift && !isCreate) {
       const sevenDays = new Array(7).fill();
-      const parseEvents = (prevEvents) => Object.keys(prevEvents)
+      const parseEvents = (prevEvents, defaultJobTime) => Object.keys(prevEvents)
         .reduce((acc, week) => {
-          acc[week] = prevEvents[week].map((event) => ({
-            ...event,
-            data: sevenDays.map((item, indexDay) => {
-              const foundItem = event.data.find((itemJ) => itemJ.day === indexDay);
 
-              let time;
-              if (foundItem) {
-                time = foundItem;
-              } else {
-                time = {
-                  day: indexDay,
-                  start: '08:00',
-                  end: '17:00',
-                  not_work: false,
-                };
+          acc[week] = prevEvents[week].map((event) => {
+              if (!defaultJobTime[week]) defaultJobTime[week] = [];
+
+              if (!defaultJobTime[week].find((item) => item.resourceId.toString() === event.resourceId.split('-')[0])) {
+                defaultJobTime[week].push({
+                  resourceId: event.resourceId.split('-')[0],
+                  data: [],
+                })
               }
+
               return {
-                id: `${indexDay}`,
-                time,
-              };
-            }),
-          }));
+                ...event,
+                data: sevenDays.map((item, indexDay) => {
+                  const foundItem = event.data.find((itemJ) => itemJ.day === indexDay);
+
+                  let time;
+                  if (foundItem) {
+                    time = foundItem;
+                  } else {
+                    time = {
+                      day: indexDay,
+                      start: '08:00',
+                      end: '17:00',
+                      not_work: false,
+                    };
+                  }
+                  return {
+                    id: `${indexDay}`,
+                    time,
+                  };
+                }),
+              }
+            }
+          );
+          
+          if (defaultJobTime[week]) {
+            defaultJobTime[week] = defaultJobTime[week].map(defaultJob => {
+              acc[week].unshift({
+                ...defaultJob,
+                job: true,
+                data: sevenDays.map((item, indexDay) => {
+                  const foundItem = defaultJob.data.find((itemJ) => itemJ.day === indexDay);
+
+                  let time;
+                  if (foundItem) {
+                    time = foundItem;
+                  } else {
+                    time = {
+                      day: indexDay,
+                      start: '08:00',
+                      end: '17:00',
+                      not_work: false,
+                    };
+                  }
+                  return {
+                    id: `${indexDay}`,
+                    time,
+                  };
+                }),
+              });
+
+              return defaultJob;
+            });
+          }
+
           return acc;
         }, {});
       let data;
       if (shift.shift_info.custom_time) {
-        data = parseEvents(shift.events)
+        data = parseEvents(shift.events, shift.defaultJobTime)
+       
       } else {
         data = new Array(shift.shift_info.week_count).fill().reduce((acc, _, indexWeek) => {
           acc[indexWeek] = shift.resources.reduce((accJ, item) => {

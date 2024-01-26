@@ -226,7 +226,8 @@ const RowContent = ({
     });
   }, [resourceId, onNotWorkToday]);
 
-  const foundItem = useMemo(() => items ? items.find((item) => resourceId === item.resourceId) : {}, [items]);
+  const foundItem = useMemo(() => items ? items.find((item) => resourceId.toString() === item.resourceId.toString()) : {}, [items]);
+  //console.log('foundItem', foundItem, items, resourceId);
 
   return (
     <>
@@ -235,7 +236,7 @@ const RowContent = ({
           foundItem?.data?.map((itemJ, indexJ) => (
             <div key={itemJ.id} className={classes.table__content__data__row__cell}>
               {
-                itemJ?.time?.start && daysOfWeek[indexJ].checked && !daysOfWeek[indexJ].disabled && (
+                itemJ?.time?.start && daysOfWeek[indexJ].checked && !daysOfWeek[indexJ].disabled && !(foundItem.job && copyTool) && (
                   <TimeRangePicker
                     value={itemJ.time}
                     cellId={indexJ}
@@ -482,7 +483,7 @@ export default forwardRef(({
       
       const mweek = prevState[currentWeek].map((item, index) => {
 
-        if (!item.data[cellIndex] || resourceId != item.resourceId) {
+        if (!item.data[cellIndex] || (resourceId.toString() != item.resourceId.toString() && item.resourceId.toString().indexOf(resourceId+'-') !== 0)){
           return item;
         }
 
@@ -547,16 +548,42 @@ export default forwardRef(({
     handleDuplicateTimeToColumn({ time, cellId });
   };
   const handleSubmitAddJobTypes = (addJobTypes) => {
+
+    const newData = [];
+
     setResources((prevState) => [
       ...prevState,
-      ...addJobTypes.map((item) => ({
-        title: item.title,
-        jobTypeId: item.id,
-        expander: true,
-        id: item.id,
-        children: new Array(item.value || 1).fill().map((_, index) => ({ id: `${item.id}-${index}` })),
-      })),
+      ...addJobTypes.map((item) => {
+
+        newData.push({
+          resourceId: `${item.id}`,
+          job: true,
+        });
+
+        return {
+          title: item.title,
+          jobTypeId: item.id,
+          expander: true,
+          id: item.id,
+          children: new Array(item.value || 1).fill().map((_, index) => ({ id: `${item.id}-${index}` })),
+      }}),
     ]);
+
+    setData((prevState) => Object.keys(prevState).reduce((acc, item) => {
+      if ((+item + 1) <= numberOfWeeks) {
+        acc[item] = [
+          ...prevState[item],
+          ...newData.map((itemJ) => ({
+            ...itemJ,
+            data: defaultWorkingTime[item],
+          })),
+        ];
+      } else {
+        acc[item] = prevState[item];
+      }
+
+      return acc;
+    }, {}));
   };
   const handleSubmitAddEmployees = useCallback(({ parentRowId, items }) => {
     let currentItemIndex = 0;
@@ -593,12 +620,17 @@ export default forwardRef(({
 
     setData((prevState) => Object.keys(prevState).reduce((acc, item) => {
       if ((+item + 1) <= numberOfWeeks) {
+        
         acc[item] = [
           ...prevState[item],
-          ...newData.map((itemJ) => ({
-            ...itemJ,
-            data: defaultWorkingTime[item],
-          })),
+          ...newData.map((itemJ) => {
+            const findJob = prevState[item].find(i => i.resourceId.toString() === itemJ.resourceId.split('-')[0]);
+
+            return {
+              ...itemJ,
+              data: findJob ? findJob.data : defaultWorkingTime[item],
+            }
+          }),
         ];
       } else {
         acc[item] = prevState[item];
@@ -973,7 +1005,8 @@ export default forwardRef(({
     return resShift;
 
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
-  console.log('mergedData', mergedData, numberOfWeeks);
+  //console.log('mergedData', mergedData, numberOfWeeks);
+  //console.log('resources', resources);
   return (
     <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
       { !modules?.manual_mode && (
