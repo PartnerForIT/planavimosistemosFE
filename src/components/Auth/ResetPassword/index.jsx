@@ -18,7 +18,6 @@ import Input from '../../Core/Input/Input';
 import LockLoginIcon from '../../Icons/LockLoginIcon';
 import Logo from '../../Logo';
 import classes from './ResetPassword.module.scss';
-import Page404 from '../../404/index';
 import { login } from '../../../store/auth/actions';
 import routes from '../../../config/routes';
 

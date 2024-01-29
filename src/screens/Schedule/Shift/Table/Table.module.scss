@@ -89,12 +89,30 @@
         }
       }
 
+      &:not(.table__content__data__row_customWorkingTime):not(.table__content__data__row_jobWorkingTime):hover {
+        .table__content__data__row__cell {
+          background-color: #fafbfc;
+        }
+      }
+
       &_defaultWorkingTime {
         background-color: #ebf3fa;
       }
 
       &_customWorkingTime {
         background-color: #f5f7f8;
+
+        .table__content__data__row__cell {
+          background-color: #EBF3FA;
+        }
+      }
+
+      &_jobWorkingTime {
+        background-color: #EDF0F2;
+
+        .table__content__data__row__cell {
+          background-color: #EDF0F2;
+        }
       }
 
       &_defaultWorkingTime #{$row}__cell:last-child,

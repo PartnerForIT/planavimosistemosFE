@@ -229,9 +229,13 @@ const RowContent = ({
   const foundItem = useMemo(() => items ? items.find((item) => resourceId.toString() === item.resourceId.toString()) : {}, [items]);
   //console.log('foundItem', foundItem, items, resourceId);
 
+  const rowClasses = classnames(classes.table__content__data__row, {
+    [classes.table__content__data__row_jobWorkingTime]: foundItem && foundItem.job,
+  });
+
   return (
     <>
-      <div className={classes.table__content__data__row}>
+      <div className={rowClasses}>
         {
           foundItem?.data?.map((itemJ, indexJ) => (
             <div key={itemJ.id} className={classes.table__content__data__row__cell}>
@@ -723,7 +727,7 @@ export default forwardRef(({
         const resourceId = entry[j].resourceId;
 
         secondObj.forEach(updateEntry => {
-          if (updateEntry.resourceId === resourceId && i*1 === updateEntry.currentWeek*1) {
+          if (updateEntry.resourceId.toString() === resourceId.toString() && i*1 === updateEntry.currentWeek*1) {
             const day = updateEntry.day;
             entry[j].data.forEach(dataEntry => {
                 if (dataEntry.time && dataEntry.time.day === day) {

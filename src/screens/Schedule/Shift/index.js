@@ -44,7 +44,6 @@ import DatePicker from './DatePicker';
 import ButtonsField from './ButtonsField';
 import Table from './Table';
 import classes from './Shift.module.scss';
-import { de } from 'date-fns/locale';
 
 const makeShiftForOptions = [
   {
@@ -427,7 +426,7 @@ export default () => {
       }
 
       //tmp fix, need set in to (.then), when request come back.
-      setTimeout(() => saveChangesRoute(), 1000);
+      setTimeout(() => { saveChangesRoute() }, 2000);
 
       setSaveChanges('');
     } else {
