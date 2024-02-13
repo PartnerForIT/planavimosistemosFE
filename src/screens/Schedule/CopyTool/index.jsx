@@ -28,7 +28,12 @@ export default forwardRef(({
 
   useImperativeHandle(ref, () => ({
     addHistory: (data) => {
-      dispatch(addToHistory({...data, start: data.start+' '+time.start+':00', end: data.end+' '+time.end+':00'}));
+      let endDate = moment(data.end, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      if (moment(time.start, 'HH:mm').isAfter(moment(time.end, 'HH:mm'))) {
+        endDate = moment(data.end, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
+      }
+
+      dispatch(addToHistory({...data, start: data.start+' '+time.start+':00', end: endDate+' '+time.end+':00'}));
     },
   }));
 
