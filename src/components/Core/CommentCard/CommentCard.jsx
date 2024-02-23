@@ -27,10 +27,11 @@ export default function CommentCard({
             withDownloadButton
           >
             <Item
-              original="https://placekitten.com/1024/768?image=1"
+              original={photo}
               thumbnail={photo}
               width={width}
               height={height}
+              target="_blank"
             >
               {({ ref, open }) => (
                 <img className={styles.commentCard__image} ref={ref} onClick={open} src={photo} alt='comment' />
