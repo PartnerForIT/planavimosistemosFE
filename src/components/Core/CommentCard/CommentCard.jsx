@@ -18,11 +18,13 @@ export default function CommentCard({
       </div>
       {
         photo && (
-          <img
-            className={styles.commentCard__image}
-            src={photo}
-            alt='comment'
-          />
+          <a href={photo} traget="_blank">
+            <img
+              className={styles.commentCard__image}
+              src={photo}
+              alt='comment'
+            />
+          </a>
         )
       }
       {
