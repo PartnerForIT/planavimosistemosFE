@@ -4,9 +4,14 @@ import { useTranslation } from 'react-i18next';
 import CommentIcon from '../../Icons/CommentIcon';
 import styles from './CommentCard.module.scss';
 
+import 'photoswipe/dist/photoswipe.css'
+import { Gallery, Item } from 'react-photoswipe-gallery'
+
 export default function CommentCard({
   photo,
   comment,
+  width,
+  height
 }) {
   const { t } = useTranslation();
 
@@ -18,13 +23,20 @@ export default function CommentCard({
       </div>
       {
         photo && (
-          <a href={photo} traget="_blank">
-            <img
-              className={styles.commentCard__image}
-              src={photo}
-              alt='comment'
-            />
-          </a>
+          <Gallery
+            withDownloadButton
+          >
+            <Item
+              original="https://placekitten.com/1024/768?image=1"
+              thumbnail={photo}
+              width={width}
+              height={height}
+            >
+              {({ ref, open }) => (
+                <img className={styles.commentCard__image} ref={ref} onClick={open} src={photo} alt='comment' />
+              )}
+            </Item>
+          </Gallery>
         )
       }
       {
