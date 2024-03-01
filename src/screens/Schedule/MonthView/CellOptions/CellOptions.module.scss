@@ -121,6 +121,10 @@
     border-radius: 2px;
     border-style: solid;
     border-width: 1px;
+    right: 0px;
+    width: auto;
+    bottom: 0px;
+    height: auto;
 
     &::before {
       justify-content: center;
@@ -137,8 +141,9 @@
   line-height: 12px !important;
 
   &.event {
-    right: -2px !important;
-    left: -2px !important;
+    right: -3px !important;
+    left: -1px !important;
+
   }
   
   &:hover {
@@ -146,6 +151,10 @@
     border-style: solid;
     border-width: 1px;
     visibility: visible;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
 
     &::before {
       justify-content: center;
