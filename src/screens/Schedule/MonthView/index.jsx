@@ -49,7 +49,7 @@ export default ({
   handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
-  addTempEmployees
+  addTempEmployees,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -204,6 +204,8 @@ export default ({
       if (obj1.id === obj2.id) {
         if (obj2.expander !== undefined) {
           obj1.expander = obj2.expander;
+        }else{
+          obj1.expander = true;
         }
         if (obj1.children && obj2.children) {
           obj1.children = obj1.children.map(child1 => {
@@ -222,8 +224,9 @@ export default ({
       const obj2 = resourcesExpanders.find(obj => obj.id === obj1.id);
       if (obj2) {
         return mergeExpander(obj1, obj2);
+      } else {
+        return mergeExpander(obj1, {...obj1});
       }
-      return obj1;
     });
     
     setResources(newResources);
