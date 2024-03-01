@@ -1155,26 +1155,7 @@ export default () => {
             width='auto'
             withSearch={true}
           />
-          { !copyTool ? 
-              <ButtonGroupToggle
-                buttons={[
-                  {
-                    label: t('Day'),
-                    id: TIMELINE.DAY,
-                  },
-                  {
-                    label: t('Week'),
-                    id: TIMELINE.WEEK,
-                  },
-                  {
-                    label: t('Month'),
-                    id: TIMELINE.MONTH,
-                  },
-                ]}
-                onChange={handleChangeTimeline}
-                value={timeline}
-              />
-              :
+          { 
             <ButtonGroupToggle
               buttons={[
                 {
@@ -1184,6 +1165,10 @@ export default () => {
                 {
                   label: t('Week'),
                   id: TIMELINE.WEEK,
+                },
+                {
+                  label: t('Month'),
+                  id: TIMELINE.MONTH,
                 },
               ]}
               onChange={handleChangeTimeline}
@@ -1224,7 +1209,7 @@ export default () => {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
                     resources={Object.values(resources) || resourcesMock}
-                    events={schedule.events}
+                    events={events}
                     holidays={schedule?.holidays}
                     accumulatedHours={schedule?.accumulatedHours}
                     markers={markers}
@@ -1233,7 +1218,18 @@ export default () => {
                     onChangeMonth={handleChangeMonth}
                     timesPanel={schedule.timesPanel}
                     withCost={permissions.cost && permissions.schedule_costs}
+                    permissions={permissions}
                     scheduleSettings={scheduleSettings}
+                    copyTool={copyTool}
+                    workTime={workTime}
+                    handleChangeEmployee={handleChangeEmployee}
+                    handleChangeWorkingTime={handleChangeWorkingTime}
+                    handleDeleteTimeline={handleDeleteTimeline}
+                    handleEmptyTimeline={handleEmptyTimeline}
+                    handleAddWorkingTime={handleAddWorkingTime}
+                    handleCopyTool={handleCopyTool}
+                    handleAddHistory={handleAddHistory}
+                    addTempEmployees={addTempEmployees}
                   />
                 ) : (
                   <>

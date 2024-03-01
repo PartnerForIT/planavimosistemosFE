@@ -39,6 +39,17 @@ export default ({
   markerActive,
   handleMarker,
   scheduleSettings,
+  copyTool,
+  workTime,
+  permissions,
+  handleChangeEmployee,
+  handleChangeWorkingTime,
+  handleDeleteTimeline,
+  handleEmptyTimeline,
+  handleAddWorkingTime,
+  handleCopyTool,
+  handleAddHistory,
+  addTempEmployees
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -50,7 +61,6 @@ export default ({
   useEffect(() => {
     localStorage.setItem('resourcesExpanders', JSON.stringify(resourcesExpanders));
   }, [resourcesExpanders]);
-
 
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   
@@ -294,6 +304,18 @@ export default ({
                     events={events}
                     pastDay={flexBackground.past}
                     scheduleSettings={scheduleSettings}
+                    copyTool={copyTool}
+                    workTime={workTime}
+                    permissions={permissions}
+                    markers={markers}
+                    handleChangeEmployee={handleChangeEmployee}
+                    handleChangeWorkingTime={handleChangeWorkingTime}
+                    handleDeleteTimeline={handleDeleteTimeline}
+                    handleEmptyTimeline={handleEmptyTimeline}
+                    handleAddWorkingTime={handleAddWorkingTime}
+                    handleCopyTool={handleCopyTool}
+                    handleAddHistory={handleAddHistory}
+                    addTempEmployees={addTempEmployees}
                   />
                 ))
               }

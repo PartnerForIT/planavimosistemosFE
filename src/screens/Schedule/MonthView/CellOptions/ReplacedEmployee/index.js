@@ -1,13 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import RefreshArrows from '../../../../components/Icons/RefreshArrows';
-//import UserIcon from '../../../../components/Icons/UserIcon';
-import Button from '../../../../components/Core/Button/Button';
-import Content from '../../Dropdown/Content';
+import RefreshArrows from '../../../../../components/Icons/RefreshArrows';
+import Button from '../../../../../components/Core/Button/Button';
+import Content from '../../../Dropdown/Content';
 import classes from './ReplacedEmployee.module.scss';
-//import PlaceholderAvatarIcon from "../../../../components/Icons/PlaceholderAvatar";
-import SchedudlePlaceholderAvatarIcon from "../../../../components/Icons/SchedudlePlaceholderAvatar";
+import SchedudlePlaceholderAvatarIcon from "../../../../../components/Icons/SchedudlePlaceholderAvatar";
 
 export default ({
   newEmployee,

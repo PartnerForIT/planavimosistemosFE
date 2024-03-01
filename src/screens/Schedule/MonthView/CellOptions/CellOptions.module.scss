@@ -1,10 +1,22 @@
-.eventContent {
+.cellOptions {
   align-items: center;
   flex: 1;
   padding: 6px;
   display: flex;
   visibility: hidden;
-  $eventContent: &;
+  position: absolute;
+  right: -20px;
+  top: 0;
+  z-index: 100;
+  
+  $cellOptions: &;
+
+  &__withoutMenu {
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+  }
 
   &__invisible,
   &__invisible:hover {
@@ -15,45 +27,6 @@
     svg {
       display: none;
     }
-  }
-
-  &__night_end {
-    position: absolute;
-    visibility: visible;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(135, 135, 135, 0.7);
-    width: 0;
-    z-index: -1;
-    border-radius: 0 4px 4px 0;
-  }
-
-  &__night_start {
-    position: absolute;
-    visibility: visible;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(135, 135, 135, 0.7);
-    width: 0;
-    z-index: -1;
-    border-radius: 4px 0 0 4px;
-  }
-
-  &__removeTimelines {
-    .eventContent__night_end,
-    .eventContent__night_start {
-      display: none;
-    }
-  }
-
-  &__line {
-    width: 3px;
-    height: 35px;
-    margin-right: 5px;
-    visibility: visible;
-    border-radius: 3px;
   }
 
   &__time {
@@ -74,10 +47,6 @@
     color: #333945;
     width: 100%;
     visibility: visible;
-  }
-
-  &__leftSpace {
-    margin-left: auto;
   }
 
   &__userInfo {
@@ -134,8 +103,8 @@
     margin-top: -7px;
   }
 
-  &__rightSpace {
-    width: 12px;
+  &:hover .copyAdd {
+    visibility: visible;
   }
 }
 .dayEnd{
@@ -145,7 +114,45 @@
   overflow: hidden;
 }
 
-.dayGoneBe{
-  background: transparent;
-  opacity: 1;
+.emptyAdd {
+  pointer-events: all;
+  
+  &:hover {
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+
+    &::before {
+      justify-content: center;
+      margin: -4px 0 0 -1px !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: auto !important;
+    }
+  }
+}
+
+.copyAdd {
+  pointer-events: all;
+  line-height: 12px !important;
+
+  &.event {
+    right: -2px !important;
+    left: -2px !important;
+  }
+  
+  &:hover {
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    visibility: visible;
+
+    &::before {
+      justify-content: center;
+      margin: -4px 0 0 -1px !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: auto !important;
+    }
+  }
 }

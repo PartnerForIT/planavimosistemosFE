@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
+import moment from 'moment';
 
 import Cell from '../Cell';
 import classes from './RowContent.module.scss';
@@ -15,15 +16,34 @@ const RowContent = ({
   pastDay,
   handleMarker,
   scheduleSettings,
+  currentResource,
+  copyTool,
+  workTime,
+  resource,
+  permissions,
+  markers,
+  handleChangeEmployee,
+  handleChangeWorkingTime,
+  handleDeleteTimeline,
+  handleEmptyTimeline,
+  handleAddWorkingTime,
+  handleCopyTool,
+  handleAddHistory,
+  addTempEmployees,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
   });
 
   const newFoundItem = (day) => {
-    const ev = events.find((item) => resourceId === item.resourceId && item.day_number*1 === day*1);
-    if (ev?.old_employee && ev?.new_employee && ev?.empty_employee) {
+    const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
+    if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
       return {};
+    }
+
+    if (ev?.copy_event) {
+      ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
+      ev.hours = Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10;
     }
     
     return ev;
@@ -53,7 +73,7 @@ const RowContent = ({
 
     return false;
   }
-
+  
   return (
     <>
       <div className={classes.rowContent}>
@@ -66,10 +86,13 @@ const RowContent = ({
                   }
          return (
              <Cell
+                event={newFoundItem(item.title)}
+                currentDay={index+1}
                 key={item.id}
                 title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title)?.hours ?? '')}
                 startFinish={item.statistic || !employeeId ? '' : (newFoundItem(item.title)?.title ?? '')}
                 statistic={item.statistic}
+                borderColor={currentResource?.eventBorderColor}
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
                 marker={checkMarked(item)}
@@ -77,6 +100,20 @@ const RowContent = ({
                 handleMarker={() => { handleMarker(employeeId, item.id) } }
                 night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
                 scheduleSettings={scheduleSettings}
+                copyTool={copyTool}
+                workTime={workTime}
+                resource={resource}
+                permissions={permissions}
+                events={events}
+                markers={markers}
+                handleChangeEmployee={handleChangeEmployee}
+                handleChangeWorkingTime={handleChangeWorkingTime}
+                handleDeleteTimeline={handleDeleteTimeline}
+                handleEmptyTimeline={handleEmptyTimeline}
+                handleAddWorkingTime={handleAddWorkingTime}
+                handleCopyTool={handleCopyTool}
+                handleAddHistory={handleAddHistory}
+                addTempEmployees={addTempEmployees}
             />)
           }
           )
@@ -90,12 +127,26 @@ const RowContent = ({
             employeeId={item.employeeId}
             handleMarker={handleMarker}
             resourceId={item.id}
+            resource={item}
             resources={item.children}
             expander={item.expander}
+            currentResource={item}
             markerActive={markerActive}
             daysOfMonth={daysOfMonth}
             pastDay={pastDay}
             scheduleSettings={scheduleSettings}
+            copyTool={copyTool}
+            workTime={workTime}
+            permissions={permissions}
+            markers={markers}
+            handleChangeEmployee={handleChangeEmployee}
+            handleChangeWorkingTime={handleChangeWorkingTime}
+            handleDeleteTimeline={handleDeleteTimeline}
+            handleEmptyTimeline={handleEmptyTimeline}
+            handleAddWorkingTime={handleAddWorkingTime}
+            handleCopyTool={handleCopyTool}
+            handleAddHistory={handleAddHistory}
+            addTempEmployees={addTempEmployees}
           />
         ))
       }

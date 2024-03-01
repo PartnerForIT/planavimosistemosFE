@@ -1006,8 +1006,8 @@
   font-size: 12px;
   
   &:hover{
-    border-color: #40C3E233;
-    background-color: #40C3E2;
+    border-color: #40C3E2;
+    background-color: #40C3E233;
   }
 }
 .copy-add.event{
@@ -1112,4 +1112,8 @@
   strong {
     color: #fd9d27;
   }
+}
+
+.monthCell:hover #dropdownButton {
+  visibility: visible;
 }
