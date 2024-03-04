@@ -50,6 +50,7 @@ export default ({
   handleCopyTool,
   handleAddHistory,
   addTempEmployees,
+  handleChangeTimeline,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -241,6 +242,13 @@ export default ({
     }
   };
 
+  const onClickDay = (day) => {
+    if (day) {
+      const date = currentMonth.clone().set('date', day);
+      handleChangeTimeline(TIMELINE.DAY, date);
+    }
+  }
+
   return (
     <>
       <div className={classes.monthView}>
@@ -260,6 +268,7 @@ export default ({
                   past={!item.statistic && flexBackground.past >= item.id}
                   today={item.today}
                   holiday={item.holiday}
+                  handleMarker={() => { onClickDay(item.title) }}
                   header
                 />
               ))

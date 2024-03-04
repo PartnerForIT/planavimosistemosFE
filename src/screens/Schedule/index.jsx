@@ -455,7 +455,7 @@ export default () => {
       setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
     }
   }, [scheduleSettings]);
-  const handleChangeTimeline = (value) => {
+  const handleChangeTimeline = (value, date) => {
     setTimeline(value);
     
     //const calendarApi = calendarRef.current?.getApi();
@@ -463,11 +463,21 @@ export default () => {
 
     //if (!calendarApi?.view?.getCurrentData()?.currentDate)
     //{
-      send.fromDate = moment(new Date()).format('YYYY-MM-DD');
-      fromDateRef.current = moment(new Date());
+      send.fromDate = date ? date.format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD');
+      fromDateRef.current = date ? date : moment(new Date());
     //}
 
     handleGetSchedule(send);
+
+    if (date) {
+      //UGLY fix todo in feature
+      setTimeout(() => {
+        const calendarApi = calendarRef.current?.getApi();
+        if (calendarApi) {
+          calendarApi.changeView(TIMELINE.DAY, date.format('YYYY-MM-DD'));
+        }
+      }, 100);
+    }
   };
   const handleChangeTool = (event) => {
     const { name, checked } = event.target;
@@ -1230,6 +1240,7 @@ export default () => {
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
                     addTempEmployees={addTempEmployees}
+                    handleChangeTimeline={handleChangeTimeline}
                   />
                 ) : (
                   <>
