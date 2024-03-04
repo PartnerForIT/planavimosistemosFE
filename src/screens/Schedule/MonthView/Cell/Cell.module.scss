@@ -27,6 +27,27 @@
     color: #1d88fc;
   }
 
+  &_header {
+    cursor: pointer;
+
+    span {
+      display: none;
+      position: absolute;
+      top: 5px;
+      right: 0;
+      left: 0;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #1d88fc;
+
+      span {
+        display: block;
+      }
+    }
+  }
+
   &_night {
     display: block;
     flex-direction: row !important;
@@ -77,6 +98,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  
+    #{$cell}_night {
+      border-left: none;
+      border-top: 1px solid transparent;
+      border-color: #DB894F !important;
+      color: #DB894F;
+      padding: 0 !important;
+      text-align: center;
     }
   }
 

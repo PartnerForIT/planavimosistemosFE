@@ -70,6 +70,7 @@ export default ({
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
+    [classes.cell_header]: header && !markerActive,
     [classes.cell_marker]: marker && !title,
     [classes.cell_marker_active]: markerActive && !header,
     [classes.cell_today]: today,
@@ -165,12 +166,26 @@ export default ({
     )
   }
 
+  const tooltipType = () => {
+    let type = 'time';
+
+    if (start && end && moment().isBetween(start, end)) {
+      type += '_active';
+    } else if (isCompleted) {
+      type += '_past';
+    } else if (!event?.new_employee?.name && (employeeName === 'Empty' || event?.empty_event)) {
+      type += '_empty';
+    }
+      
+    return type;
+  }
+
   if (!header) {
     return (
       <div className={cellClasses} ref={refCell}>
         <div className={classes.cell__content} data-title={title ? title : null}>
           <div
-            data-for='title'
+            data-for={tooltipType()}
             data-html={true}
             data-tip={title && !copyTool ? tooltipContent() : null}
             className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
@@ -182,12 +197,12 @@ export default ({
             {
               title && night_duration && night_duration > 0 ? (
                 <span className={classes.cell_night}>
-                  <MoonIcon />{night_duration}h
+                  { !statistic && <MoonIcon /> } {night_duration}h
                 </span>
               ) : null
             }
 
-            { !statistic && 
+            { !statistic &&
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}
@@ -228,6 +243,7 @@ export default ({
 
   return (
     <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
+      <span>{t('Go')}</span>
       {title != 0 ? title : ''}
       <HolidayIcon
         holidays={holiday}

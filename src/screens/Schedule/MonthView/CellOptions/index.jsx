@@ -11,7 +11,6 @@ import ChangeEmployee from './ChangeEmployee';
 import styles from './CellOptions.module.scss';
 import classNames from 'classnames';
 import { companyModules } from '../../../../store/company/selectors';
-import { set } from 'lodash';
 
 export default ({
   id,
@@ -227,7 +226,7 @@ export default ({
         )
       }
       {
-        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
+        !isCompleted && !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

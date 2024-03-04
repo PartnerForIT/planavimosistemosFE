@@ -1304,26 +1304,6 @@ export default () => {
                           />
                           : ''
                     }
-                    <Tooltip
-                      id='time'
-                      className='schedule-screen__tooltip'
-                      effect='solid'
-                    />
-                    <Tooltip
-                      id='time_active'
-                      className='schedule-screen__tooltip schedule-screen__tooltip__active'
-                      effect='solid'
-                    />
-                    <Tooltip
-                      id='time_past'
-                      className='schedule-screen__tooltip schedule-screen__tooltip__past'
-                      effect='solid'
-                    />
-                    <Tooltip
-                      id='time_empty'
-                      className='schedule-screen__tooltip schedule-screen__tooltip__empty'
-                      effect='solid'
-                    />
                     <ReactTooltip
                       id='holiday'
                       className='schedule-screen__tooltip'
@@ -1367,6 +1347,26 @@ export default () => {
             </>
           )
         }
+        <Tooltip
+          id='time'
+          className='schedule-screen__tooltip'
+          effect='solid'
+        />
+        <Tooltip
+          id='time_active'
+          className='schedule-screen__tooltip schedule-screen__tooltip__active'
+          effect='solid'
+        />
+        <Tooltip
+          id='time_past'
+          className='schedule-screen__tooltip schedule-screen__tooltip__past'
+          effect='solid'
+        />
+        <Tooltip
+          id='time_empty'
+          className='schedule-screen__tooltip schedule-screen__tooltip__empty'
+          effect='solid'
+        />
         {
           (isLoading) && (
             <div className='schedule-screen__overlay-loading'>
