@@ -187,7 +187,7 @@ export default ({
               ) : null
             }
 
-            { 
+            { !statistic && 
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}

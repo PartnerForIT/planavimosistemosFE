@@ -55,9 +55,9 @@ const RowContent = ({
   const check = (statistic, id, night = false) => {
     if (statistic && id === "totalTime"){
       if (night) {
-        return night_duration
+        return Math.round(night_duration*100)/100;
       }
-      return time
+      return Math.round(time*100)/100;
     }
     if (statistic && id === "totalCost" && !night){
       return parseFloat(cost).toFixed(2);
