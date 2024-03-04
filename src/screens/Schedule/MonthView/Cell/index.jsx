@@ -197,7 +197,7 @@ export default ({
             {
               title && night_duration && night_duration > 0 ? (
                 <span className={classes.cell_night}>
-                  { !statistic && <MoonIcon /> } {night_duration}h
+                  {night_duration}h
                 </span>
               ) : null
             }
