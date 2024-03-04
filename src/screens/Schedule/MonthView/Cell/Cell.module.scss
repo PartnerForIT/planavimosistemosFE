@@ -163,6 +163,7 @@
         align-items: flex-start !important;
         justify-content: flex-start !important;
         flex-direction: column;
+        height: 100%;
 
         #{$cell}_day {
           border-radius: 0 !important;

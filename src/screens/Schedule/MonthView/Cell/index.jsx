@@ -82,14 +82,14 @@ export default ({
 
   const refCell = useRef();
   
-  useEffect(() => {
-    if (!header && title) {
-      if (refCell.current.scrollWidth >= refCell.current.offsetWidth) {
-        refCell.current.classList.add(classes.cell_doesNotFit);
-        refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth}px`;
-      }
-    }
-  }, [title]);
+  // useEffect(() => {
+  //   if (!header && title) {
+  //     if (refCell.current.scrollWidth >= refCell.current.offsetWidth) {
+  //       refCell.current.classList.add(classes.cell_doesNotFit);
+  //       refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth}px`;
+  //     }
+  //   }
+  // }, [title]);
 
   let start = event ? moment(event.start) : null;
   let end = event ? moment(event.end) : null;
