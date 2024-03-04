@@ -169,14 +169,13 @@ export default ({
     >
       {
           employeeName && (
-
             (empty_manual)
             ? (copyTool)
               ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
               : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={styles.cellOptions__title} >
               {
-                copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
+                copyTool && !withMenu && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
               }
               {
                 (!!newEmployee?.name)
