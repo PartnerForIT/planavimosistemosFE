@@ -86,7 +86,7 @@ export default ({
     if (!header && title) {
       if (refCell.current.scrollWidth >= refCell.current.offsetWidth) {
         refCell.current.classList.add(classes.cell_doesNotFit);
-        refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth - 4}px`;
+        refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth - 2}px`;
       }
     }
   }, [title]);
