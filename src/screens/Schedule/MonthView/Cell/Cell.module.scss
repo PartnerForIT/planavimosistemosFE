@@ -154,6 +154,9 @@
 
     &__text {
 
+      z-index: 2;
+      pointer-events: auto;
+
       &_time {
         font-size: 11px;
         line-height: 12px;
@@ -164,6 +167,7 @@
         justify-content: flex-start !important;
         flex-direction: column;
         height: 100%;
+        overflow: hidden;
 
         #{$cell}_day {
           border-radius: 0 !important;
