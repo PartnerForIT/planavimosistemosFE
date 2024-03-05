@@ -695,7 +695,10 @@ export default function EditAccount({
                         {
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
-                              <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
+                              <span className={classes.labelSpan}>
+                                <Label htmlFor='shift_id' text={t('Control and plan in the Shift')} />
+                                <Tooltip title={t("First you need to select an assigned place for this employee. Secondary you can choose in which Shift inside that Place he will see and plan. This user can see all employees and also control and edit the schedule for them. It is possible to set the Job Type which he can control. In this way he will have less responsabilities. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
+                              </span>
                               <div
                                 data-for='selectdisabled'
                                 data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
@@ -717,7 +720,10 @@ export default function EditAccount({
                         {
                           permissions.schedule_shift && (
                             <div className={classes.formItem}>
-                              <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
+                              <span className={classes.labelSpan}>
+                                <Label htmlFor='job_type_id' text={t('Control and plan in the Job Type')} />
+                                <Tooltip title={t("In order to assign the job type as the main responsability for this person you should first select a Place and assign the Shift. Only then you can assign the Job Type of that specific Shift. This user will gain control over the users in that Job Type and he can see all the employees in Schedule module under this Job Type. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
+                              </span>
                               <div
                                 data-for='selectdisabled'
                                 data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}

@@ -80,7 +80,7 @@ export default ({
       return placeholder
     }
 
-    return options.find((option) => option[valueKey] == value)?.[labelKey] || placeholder;
+    return options.find((option) => option[valueKey] == value)?.[labelKey] || '';//placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placeholder, open, options, value, searchValue, withoutSearch]);
   const optionsDisplayed = useMemo(() => {
