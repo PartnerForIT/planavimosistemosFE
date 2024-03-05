@@ -1,12 +1,7 @@
 import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
   useCallback,
 } from 'react';
 import classnames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import classes from './ResourcesCell.module.scss';
 import Section from '../../../Shift/Table/Section';
@@ -34,7 +29,6 @@ const ResourceCell = ({
   employeeId,
   accumulatedHours,
 }) => {
-  const { t } = useTranslation();
 
   const rowClasses = classnames(classes.resourcesCell, {
     [classes.resourcesCell_lastChild1]: lastChild1 && nestingLevel > 1,

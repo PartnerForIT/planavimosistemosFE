@@ -258,7 +258,6 @@ export default () => {
       });
     }
 
-
     //UGLY fix for prevent times overlap when have timline from one day to another
     if (schedule?.events && timeline === TIMELINE.DAY) {
       result = schedule?.events.map((e) => {
@@ -291,6 +290,21 @@ export default () => {
       }),
     ];
   }, [filterData, schedule?.events, copyToolHistory]);
+
+  const accumulatedHours = useMemo(() => {
+    let accumulatedHours = schedule?.accumulatedHours || {};
+    if (accumulatedHours && events && copyToolHistory) {
+      //console.log(copyToolHistory);
+      // for (var employeeId in accumulatedHours) {
+      //   let employeeEvents = copyToolHistory.filter((e) => e.resourceId.split('-')[2] && e.resourceId.split('-')[2] === employeeId);
+      //   if (employeeEvents && employeeEvents.length > 0) {  
+      //     accumulatedHours[employeeId].actualHours += employeeEvents.reduce((accumulator, currentValue) => accumulator + currentValue.hours, 0);
+      //   } 
+      // }
+    }
+
+    return accumulatedHours;
+  }, [events]);
 
   const filteredShifts = () => {
 
@@ -783,7 +797,7 @@ export default () => {
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
-        accumulatedHours={schedule.accumulatedHours[employeeId] || []}
+        accumulatedHours={schedule?.accumulatedHours[employeeId] || []}
         shiftId={shiftId}
         withMenu={!!shiftId && permissions.schedule_edit}
         employeeId={employeeId}
@@ -1221,7 +1235,7 @@ export default () => {
                     resources={Object.values(resources) || resourcesMock}
                     events={events}
                     holidays={schedule?.holidays}
-                    accumulatedHours={schedule?.accumulatedHours}
+                    accumulatedHours={accumulatedHours}
                     markers={markers}
                     markerActive={toolsActive['marking']}
                     handleMarker={handleMarker}
