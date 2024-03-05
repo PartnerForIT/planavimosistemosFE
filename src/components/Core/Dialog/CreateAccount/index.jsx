@@ -146,7 +146,7 @@ export default function CreateAccount({
 
         return {
           ...prevState,
-          //role_id: (roles.find(r => r.default)?.id || null),
+          role_id: prevState.role_id || ((roles ? roles.find(r => r.default)?.id : null) || null),
           [name]: value,
         };
       }
