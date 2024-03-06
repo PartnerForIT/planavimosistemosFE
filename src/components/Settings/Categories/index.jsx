@@ -15,8 +15,9 @@ import {
   snackbarType, snackbarText, categoriesSkillsSelector, scheduleSelector
 } from '../../../store/settings/selectors';
 import { jobTypesSelector, loadingJobTypeSelector } from '../../../store/jobTypes/selectors';
+import { AccountGroupsSelector } from '../../../store/settings/selectors';
 import { placesSelector, loadingPlaceSelector } from '../../../store/places/selectors';
-import { loadSkills, getSchedule } from '../../../store/settings/actions';
+import { loadSkills, getSchedule, getAccountGroups } from '../../../store/settings/actions';
 import { getJobTypes } from '../../../store/jobTypes/actions';
 import { getPlaces } from '../../../store/places/actions';
 import ButtonBlock from './ButtonsBlock';
@@ -57,12 +58,18 @@ const permissionsConfig = [
     name: 'integrations',
     module: 'integrations',
   },
+  {
+    name: 'create_groups',
+    module: 'create_groups',
+  },
 ];
 export default function Categories() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
   const permissions = usePermissions(permissionsConfig);
+  const selectGroups = useSelector(AccountGroupsSelector);
+  const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
 
   const [selectedCategory, setSelectedCategory] = useState('skills');
@@ -72,6 +79,7 @@ export default function Categories() {
     dispatch(getJobTypes(id));
     dispatch(getPlaces(id));
     dispatch(getSchedule(id));
+    dispatch(getAccountGroups(id));
   }, [dispatch, id]);
 
   const isLoadind = useSelector(isLoadingSelector);
@@ -84,6 +92,20 @@ export default function Categories() {
   const isLoadingJobTypes = useSelector(loadingJobTypeSelector);
   const isLoadingPlaces = useSelector(loadingPlaceSelector);
   const scheduleSettings = useSelector(scheduleSelector);
+
+  useEffect(() => {
+    if (Array.isArray(selectGroups)) {
+      setGroups(selectGroups.map((item) => ({
+        ...item,
+        label: item.name,
+        type: item?.subgroups?.length ? 'group' : '',
+        items: item?.subgroups?.length ? item?.subgroups.map((itemJ) => ({
+          ...itemJ,
+          label: itemJ.name,
+        })) : [],
+      }), []));
+    }
+  }, [selectGroups]);
 
   return (
     <MaynLayout>
@@ -115,6 +137,7 @@ export default function Categories() {
                     loading={isLoadingJobTypes || isLoadingPlaces}
                     companyId={id}
                     scheduleSettings={scheduleSettings}
+                    groups={groups}
                   />
                 </div>
               )

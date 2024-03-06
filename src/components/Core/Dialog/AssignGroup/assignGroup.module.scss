@@ -1,0 +1,75 @@
+.assignGroup {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 15px;
+    box-sizing: border-box;
+
+    &__close {
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      color: #d9dfe3;
+    }
+  
+    &__title {
+      font-size: 14px;
+      font-family: 'Helvetica Neue Medium', sans-serif;
+      color: black;
+      line-height: 17px;
+
+      > svg {
+        position: absolute;
+        top: 10px;
+        width: 20px;
+        height: 20px;
+        right: 10px;
+        color: #808f94;
+        cursor: pointer;
+      }
+    }
+  
+    &__form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    &__groups {
+      display: flex;
+      margin-top: 10px;
+      margin-bottom: 12px;
+      min-width: 230px;
+      justify-content: space-between;
+      align-items: center;
+
+      > div > div {
+        max-width: none;
+      }
+    }
+    &__button {
+        border: 1px solid #0085ff;
+        border-radius: 6px;
+        background-color: #ECF4FA;
+        text-align: center;
+        line-height: 40px;
+        min-height: 40px;
+        margin-bottom: 16px;
+        cursor: pointer;
+    }
+
+    &__removeButton {
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      margin-left: 16px;
+    }
+
+    &__removeIcon {
+        width: 20px !important;
+        height: 20px !important;
+        cursor: pointer;
+    }
+}
+  

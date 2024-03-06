@@ -50,7 +50,6 @@ import {
   postSchedule as postScheduleSetting,
   loadIntegrations,
 } from '../../store/settings/actions';
-//import { employeesSelector } from '../../store/employees/selectors';
 import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { copyToolHistorySelector } from '../../store/copyTool/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
@@ -245,51 +244,44 @@ export default () => {
 
   const events = useMemo(() => {
     let result = [];
-    if (schedule?.events && scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
-      //make fake time for remove_timelines
-      result = schedule?.events.map((e) => {
-        return {
+  
+    if (schedule?.events) {
+      if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+        // Make fake time for remove_timelines
+        result = schedule.events.map((e) => ({
           ...e,
           realStart: e.start,
           realEnd: e.end,
-          start: e.empty_manual === true ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          end: e.empty_manual === true ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        }
-      });
+          start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        }));
+      } else if (timeline === TIMELINE.DAY) {
+        result = schedule.events.filter((e) => {
+          if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
+            return false;
+          }
+          return true;
+        });
+      } else {
+        result = schedule.events;
+      }
     }
-
-    //UGLY fix for prevent times overlap when have timline from one day to another
-    if (schedule?.events && timeline === TIMELINE.DAY) {
-      result = schedule?.events.map((e) => {
-
-        if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
-          return {};
-        }
-
-        return {...e};
-      });
-    }
-
-    result = result.length ? result : (schedule?.events || []);
-
+  
     return [
       ...result.filter((resultItem) => {
-        return !copyToolHistory.some((historyItem) => {
-          return (
-            resultItem.start <= historyItem.end &&
-            resultItem.end >= historyItem.start &&
-            resultItem.resourceId == historyItem.resourceId
-          );
-        });
+        return !copyToolHistory.some((historyItem) => (
+          resultItem.start <= historyItem.end &&
+          resultItem.end >= historyItem.start &&
+          resultItem.resourceId == historyItem.resourceId
+        ));
       }),
-      ...copyToolHistory.map((e) => {
-        return {
-          ...e,
-          copy_event: true,
-        };
-      }),
+      ...copyToolHistory.map((e) => ({
+        ...e,
+        copy_event: true,
+      })),
     ];
   }, [filterData, schedule?.events, copyToolHistory]);
+  
 
   const accumulatedHours = useMemo(() => {
     let accumulatedHours = schedule?.accumulatedHours || {};
@@ -305,52 +297,6 @@ export default () => {
 
     return accumulatedHours;
   }, [events]);
-
-  const filteredShifts = () => {
-
-    const updateShifts = (shifts) => {
-      let filteredShiftsPreview = [];
-      if (shifts) {
-        for (let i in shifts || []) {
-          for (let j in resources) {
-            if (resources[j].children) {
-              for (let k in resources[j].children) {
-                if (shifts[i].id === resources[j].children[k].shiftId) {
-                  let add = false;
-                  if (resources[j].children[k].children) {
-                    for (let m in resources[j].children[k].children) {
-                      if (resources[j].children[k].children[m].children) {
-                        for (let n in resources[j].children[k].children[m].children) {
-                          add = true;
-                        }
-                      }
-                    }
-                  }
-      
-                  if (add) {
-                    filteredShiftsPreview.push({...shifts[i]});
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      return filteredShiftsPreview;
-    };
-    
-    if (filterData[0] && (filter.employers.length || filter.place.length)) {
-      return updateShifts(shiftsTypes?.shiftTypes);
-    }
-  
-    if (shiftsTypes?.shiftTypes) {
-      return shiftsTypes?.shiftTypes;
-    }
-
-    return shiftsTypes?.shiftTypes;
-
-  };
 
   const filteringResource = (data) => {
     if (schedule?.resources) {

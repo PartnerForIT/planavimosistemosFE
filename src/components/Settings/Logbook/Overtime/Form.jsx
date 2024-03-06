@@ -15,6 +15,10 @@ const daylyWork = [
     name: 'Over 8 hours',
   },
   {
+    code: '9',
+    name: 'Over 9 hours',
+  },
+  {
     code: '10',
     name: 'Over 10 hours',
   },

@@ -134,7 +134,6 @@ const Events = () => {
     label: `${name} ${surname}`,
     // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
   }), []);
-  console.log(employees);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const sendRequest = useCallback(() => {

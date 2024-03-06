@@ -12,12 +12,13 @@ import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
+import { sub } from 'date-fns';
 
 const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  withoutRightPanel = false, tableRef = null, onEditBreak,
+  withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup,
   withoutShitCode,
 }) => {
   const selected = useMemo(() => {
@@ -99,6 +100,28 @@ const Row = ({
         && !(colored.success && row.success)) {
       onSelect(id, checked, e);
     }
+  };
+
+  const displaySubgroupsWithGroup = (subgroups, groups) => {
+    let result = '';
+    groups.forEach((item) => {
+      result += `${item.name}`;
+      const subgroupsInner = subgroups.filter((subgroup) => subgroup.parent_group_id === item.id);
+      if (subgroupsInner.length) {
+        result += " / "+subgroupsInner.map((subgroup) => `${subgroup.name}`).join(" / ").trim();
+      }
+      result += "; ";
+    });
+
+    subgroups.forEach((item) => {
+      if (!groups.find((group) => group.id === item.parent_group_id)) {
+        result += `${item?.parent_group?.name} / ${item.name} `;
+        result += "; ";
+      };
+    });
+
+
+    return result.trim('; ');
   };
 
   const rowRef = useRef(null);
@@ -212,7 +235,7 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                {column.field !== 'breaks' && (
+                {column.field !== 'breaks' && column.field !== 'place_groups' && (
                   <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                     {
                       row[column.field] !== 'tableActions'
@@ -226,6 +249,16 @@ const Row = ({
                     row[column.field] && row[column.field].length ? 
                     <span className={styles.existedBreak} onClick={() => onEditBreak(row.id)}>{row[column.field].map((item) => `${item.start} - ${item.end}`).join("; ")}</span> :
                     <span className={styles.addBreak} onClick={() => onEditBreak(row.id)}>+</span>
+                  )
+                }
+                {/* bor groups section */}
+                {(column.field === 'place_groups' && onOpenAssignGroup) 
+                  && (
+                    ((row['groups'] && row['groups'].length) || (row['subgroups'] && row['subgroups'].length)) ? 
+                    <span className={styles.existedBreak} onClick={() => onOpenAssignGroup(row.id)}>
+                      {displaySubgroupsWithGroup(row['subgroups'], row['groups'])}
+                    </span> :
+                    <span className={styles.addBreak} onClick={() => onOpenAssignGroup(row.id)}>+</span>
                   )
                 }
                 {/* icon statys */}

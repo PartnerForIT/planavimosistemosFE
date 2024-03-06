@@ -37,6 +37,7 @@ export default function DataTable({
   accountList = false,
   withoutShitCode,
   onEditBreak,
+  onOpenAssignGroup,
 }) {
   const { t } = useTranslation();
   const [tableData, setTableData] = useState(data);
@@ -317,6 +318,7 @@ export default function DataTable({
                 tableRef={tableRef}
                 withoutShitCode={withoutShitCode}
                 onEditBreak={onEditBreak}
+                onOpenAssignGroup={onOpenAssignGroup}
               />
             )) : null
           }

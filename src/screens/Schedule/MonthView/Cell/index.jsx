@@ -188,6 +188,7 @@ export default ({
             data-for={tooltipType()}
             data-html={true}
             data-tip={title && !copyTool ? tooltipContent() : null}
+            onClick={handleMarker}
             className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
           >
             { title ? (
@@ -202,7 +203,7 @@ export default ({
               ) : null
             }
 
-            { !statistic &&
+            { !statistic && !markerActive &&
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}

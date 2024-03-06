@@ -9,6 +9,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import SearchIcon from '../../Icons/SearchIcon';
 import Input from '../Input/Input';
+import Button from '../Button/Button';
 import styles from './Select.module.scss';
 
 const initialItems = [];
@@ -20,6 +21,7 @@ export default function CustomSelect({
   type = 'items',
   fullWidth,
   withSearch,
+  confirmButton,
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -235,6 +237,13 @@ export default function CustomSelect({
                 }
               </Scrollbar>
             </CheckboxGroup>
+            {
+              confirmButton && (
+                <Button onClick={() => setOpen(false)} fillWidth size='big'>
+                  {confirmButton}
+                </Button>
+              )
+            }
           </div>
         ) : null}
       </div>

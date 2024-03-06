@@ -11,6 +11,7 @@ import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
+import DialogAssignGroup from '../../Core/Dialog/AssignGroup';
 import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import {
   patchPlace,
@@ -37,6 +38,7 @@ const columnsJobs = [
 const columnsPlaces = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'ID', field: 'id', checked: true },
+  { label: 'Assigned to Group/Subgroup', field: 'place_groups', checked: true },
   { label: 'External ID', field: 'external_id', checked: true },
 ];
 
@@ -47,6 +49,7 @@ const columnsWidthArray = {
   cost: 'auto',
   earn: 'auto',
   breaks: 'auto',
+  groups: 'auto',
 };
 
 const page = {};
@@ -61,6 +64,7 @@ export default function TableBlock({
   loading,
   companyId,
   scheduleSettings,
+  groups,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -70,6 +74,7 @@ export default function TableBlock({
   const [isEditItem, setIsEditItem] = useState(false);
   const [isDeleteItem, setIsDeleteItem] = useState(false);
   const [isEditBreak, setIsEditBreak] = useState(false);
+  const [isAssignGroup, setIsAssignGroup] = useState(false);
   
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -172,6 +177,9 @@ export default function TableBlock({
       case 'places': {
         allColumnsArray = columnsPlaces.filter((column) => {
           if (!permissions.integrations && column.field === 'external_id') {
+            return false;
+          }
+          if ((!permissions.create_groups || !groups?.length) && column.field === 'place_groups') {
             return false;
           }
           return true;
@@ -284,6 +292,19 @@ export default function TableBlock({
     handleCloseBreak();
   }
 
+  const onOpenAssignGroup = (id) => {
+    setSelectedItem(id);
+    setIsAssignGroup(id);
+  };
+  const handleCloseAssignGroup = () => {
+    setSelectedItem(null);
+    setIsAssignGroup(false);
+  }
+  const onAssignGroup = (values) => {
+    dispatch(patchPlace({ groups: values?.groups || [] }, companyId, selectedItem));
+    handleCloseAssignGroup();
+  }
+
   return (
     <div className={style.categoryPage__Table}>
       <Label text={t('Select Category')} htmlFor='' />
@@ -310,6 +331,7 @@ export default function TableBlock({
         editRow={onEditItem}
         removeRow={onDeleteItem}
         onEditBreak={onEditBreak}
+        onOpenAssignGroup={onOpenAssignGroup}
         grey
       />
       <DeleteItem
@@ -352,6 +374,15 @@ export default function TableBlock({
         buttonTitle={t('Change Time')}
         initialValues={selectedItemData.breaks}
         createBreak={onCreateBreak}
+      />
+      <DialogAssignGroup
+        open={!!isAssignGroup}
+        handleClose={handleCloseAssignGroup}
+        title={t('Assign to Group/Subgroup')}
+        buttonTitle={t('Assign')}
+        initialValues={selectedItemData}
+        groups={groups}
+        assignGroup={onAssignGroup}
       />
     </div>
   );
