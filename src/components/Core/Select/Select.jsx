@@ -190,6 +190,7 @@ export default function CustomSelect({
               <Scrollbar
                 className={styles.scrollableContent}
                 removeTracksWhenNotUsed
+                noScrollX={true}
                 trackXProps={{
                   renderer: ({ elementRef, ...restProps }) => (
                     <span

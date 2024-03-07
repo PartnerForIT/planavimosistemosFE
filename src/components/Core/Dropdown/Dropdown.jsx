@@ -29,8 +29,9 @@ const useStyles = makeStyles({
 
   summary: {
     minHeight: '35px',
-    paddingLeft: '3px',
-    paddingRight: 12,
+    paddingLeft: '0',
+    paddingRight: 0,
+    justifyContent: 'flex-start',
 
     '&::after': {
       content: "''",
@@ -46,6 +47,7 @@ const useStyles = makeStyles({
 
   summaryContent: {
     margin: '0 !important',
+    flexGrow: 0,
   },
 
   summaryExpanded: {
@@ -179,6 +181,7 @@ export default function Dropdown({
           aria-label='Acknowledge'
           onClick={(event) => event.stopPropagation()}
           onFocus={(event) => event.stopPropagation()}
+          className={styles.checkboxLabel}
           control={(
             <StyledCheckbox
               onChange={() => {
