@@ -51,6 +51,8 @@ export default ({
   handleAddHistory,
   addTempEmployees,
   handleChangeTimeline,
+  onEditShift,
+  onDeleteShift,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -288,6 +290,8 @@ export default ({
               markerActive={markerActive}
               currentMonth={currentMonth}
               accumulatedHours={accumulatedHours}
+              onEditShift={onEditShift}
+              onDeleteShift={onDeleteShift}
             />
             <div className={classes.monthView__content__data}>
               {

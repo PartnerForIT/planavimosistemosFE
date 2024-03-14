@@ -1201,6 +1201,8 @@ export default () => {
                     handleAddHistory={handleAddHistory}
                     addTempEmployees={addTempEmployees}
                     handleChangeTimeline={handleChangeTimeline}
+                    onEditShift={(shiftId) => handleEditShift(shiftId)}
+                    onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
                   />
                 ) : (
                   <>
@@ -1279,16 +1281,6 @@ export default () => {
                       className='schedule-screen__tooltip schedule-screen__tooltip__demand'
                       effect='solid'
                     />
-                    <DialogDeleteShift
-                      open={openDialog}
-                      handleClose={handleDialog}
-                      title={t('Delete Shift?')}
-                      buttonTitle2={t('Cancel')}
-                      buttonTitle={t('Delete')}
-                      shiftName={deletedShiftName}
-                      submitDeleteShift={() => handleDeleteShift(openDialog)}
-                      cancelDelete={cancelDelete}
-                    />
                     {
                       timeline === TIMELINE.WEEK && (
                         <Background
@@ -1307,6 +1299,16 @@ export default () => {
             </>
           )
         }
+        <DialogDeleteShift
+          open={openDialog}
+          handleClose={handleDialog}
+          title={t('Delete Shift?')}
+          buttonTitle2={t('Cancel')}
+          buttonTitle={t('Delete')}
+          shiftName={deletedShiftName}
+          submitDeleteShift={() => handleDeleteShift(openDialog)}
+          cancelDelete={cancelDelete}
+        />
         <Tooltip
           id='time'
           className='schedule-screen__tooltip'

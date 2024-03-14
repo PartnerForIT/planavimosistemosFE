@@ -21,6 +21,7 @@ const ResourceCell = ({
   markerActive,
   title,
   avatar,
+  shiftId,
   nestingLevel = 0,
   lastChild1 = false,
   lastChild2 = false,
@@ -28,6 +29,8 @@ const ResourceCell = ({
   employeesCount,
   employeeId,
   accumulatedHours,
+  onEditShift,
+  onDeleteShift,
 }) => {
 
   const rowClasses = classnames(classes.resourcesCell, {
@@ -69,6 +72,9 @@ const ResourceCell = ({
           expander={expander}
           withExpander={withExpander && !markerActive}
           nestingLevel={nestingLevel}
+          withMenu={nestingLevel === 1}
+          onEditShift={() => { onEditShift(shiftId) }}
+          onDeleteShift={() => { onDeleteShift(shiftId, title) }}
           // withNumberInput={withNumberInput}
           // count={countChildren}
           // onChangeNumber={handleChangeNumber}
@@ -85,6 +91,7 @@ const ResourceCell = ({
             employeeId={item.employeeId}
             items={item.children}
             employeesCount={item.employeesCount}
+            shiftId={item.shiftId}
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={item.expander}
@@ -95,6 +102,8 @@ const ResourceCell = ({
             lastChild2={nestingLevel === 1 ? (index + 1 === items.length) : lastChild2}
             nestingLevel={nestingLevel + 1}
             isEmpty={item.empty}
+            onEditShift={ onEditShift }
+            onDeleteShift={ onDeleteShift }
             // lastChild={index + 1 === items.length}
             // employees={employees}
             // onSubmit={onSubmit}
