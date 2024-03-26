@@ -12,13 +12,12 @@ import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
-import { sub } from 'date-fns';
 
 const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup,
+  withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onEditAddress,
   withoutShitCode,
 }) => {
   const selected = useMemo(() => {
@@ -235,7 +234,7 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                {column.field !== 'breaks' && column.field !== 'place_groups' && (
+                {column.field !== 'breaks' && column.field !== 'place_groups' && column.field !== 'place_address' && (
                   <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                     {
                       row[column.field] !== 'tableActions'
@@ -243,7 +242,7 @@ const Row = ({
                     }
                   </span>
                 )}
-                {/* bor job breaks section */}
+                {/* for job breaks section */}
                 {(column.field === 'breaks' && onEditBreak) 
                   && (
                     row[column.field] && row[column.field].length ? 
@@ -251,7 +250,7 @@ const Row = ({
                     <span className={styles.addBreak} onClick={() => onEditBreak(row.id)}>+</span>
                   )
                 }
-                {/* bor groups section */}
+                {/* for groups section */}
                 {(column.field === 'place_groups' && onOpenAssignGroup) 
                   && (
                     ((row['groups'] && row['groups'].length) || (row['subgroups'] && row['subgroups'].length)) ? 
@@ -259,6 +258,14 @@ const Row = ({
                       {displaySubgroupsWithGroup(row['subgroups'], row['groups'])}
                     </span> :
                     <span className={styles.addBreak} onClick={() => onOpenAssignGroup(row.id)}>+</span>
+                  )
+                }
+                {/* for groups section */}
+                {(column.field === 'place_address' && onEditAddress)
+                  && (
+                    row['address'] ? 
+                    <span className={styles.existedBreak} onClick={() => onEditAddress(row.id)}>{row['address']}</span> :
+                    <span className={styles.addBreak} onClick={() => onEditAddress(row.id)}>+</span>
                   )
                 }
                 {/* icon statys */}

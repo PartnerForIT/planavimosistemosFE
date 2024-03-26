@@ -856,5 +856,16 @@
         "Step Forward": "Žingsnis į Priekį",
         "Delete Changes": "Pašalinti Pakeitimus",
         "Save & Exit": "Išsaugoti ir Uždaryti",
-        "Import this date?": "Importuoti šią dieną?"
+        "Import this date?": "Importuoti šią dieną?",
+
+
+        "Geolocation": "Geolokacija",
+        "Assign Geolocation": "Priskirti Geolokaciją",
+        "Enter address": "Įveskite adresą",
+        "Enter radius": "Įveskite spindulį",
+        "Fit to screen": "Priartinti",
+        "Location": "Vieta",
+        "Pick location": "Pasirinkite vietą",
+        "Remove address": "Pašalinti adresą",
+        "Search address": "Ieškoti adreso"
 }

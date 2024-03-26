@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-
 import DataTable from '../../Core/DataTableCustom/OLT';
 import Label from '../../Core/InputLabel';
 import DeleteItem from '../../Core/Dialog/DeleteItem';
@@ -11,6 +10,7 @@ import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
+import DialogCreateAddress from '../../Core/Dialog/CreateAddress';
 import DialogAssignGroup from '../../Core/Dialog/AssignGroup';
 import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import {
@@ -39,6 +39,7 @@ const columnsPlaces = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'ID', field: 'id', checked: true },
   { label: 'Assigned to Group/Subgroup', field: 'place_groups', checked: true },
+  { label: 'Geolocation', field: 'place_address', checked: true },
   { label: 'External ID', field: 'external_id', checked: true },
 ];
 
@@ -74,6 +75,7 @@ export default function TableBlock({
   const [isEditItem, setIsEditItem] = useState(false);
   const [isDeleteItem, setIsDeleteItem] = useState(false);
   const [isEditBreak, setIsEditBreak] = useState(false);
+  const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAssignGroup, setIsAssignGroup] = useState(false);
   
   const [dataArray, setDataArray] = useState([]);
@@ -292,6 +294,24 @@ export default function TableBlock({
     handleCloseBreak();
   }
 
+  const onEditAddress = (id) => {
+    setSelectedItem(id);
+    setIsEditAddress(id);
+  }
+  const handleCloseAddress = () => {
+    setSelectedItem(null);
+    setIsEditAddress(false);
+  }
+  const onCreateAddress = (values) => {
+    let post = {address: '', coordinates: '', radius: ''};
+    if (values.address) post = { ...post, address: values.address };
+    if (values.coordinates) post = { ...post, coordinates: values.coordinates };
+    if (values.radius) post = { ...post, radius: values.radius };
+
+    dispatch(patchPlace({ ...post  }, companyId, selectedItem));
+    setIsEditAddress();
+  }
+
   const onOpenAssignGroup = (id) => {
     setSelectedItem(id);
     setIsAssignGroup(id);
@@ -331,6 +351,7 @@ export default function TableBlock({
         editRow={onEditItem}
         removeRow={onDeleteItem}
         onEditBreak={onEditBreak}
+        onEditAddress={onEditAddress}
         onOpenAssignGroup={onOpenAssignGroup}
         grey
       />
@@ -383,6 +404,14 @@ export default function TableBlock({
         initialValues={selectedItemData}
         groups={groups}
         assignGroup={onAssignGroup}
+      />
+      <DialogCreateAddress
+        open={!!isEditAddress}
+        handleClose={handleCloseAddress}
+        title={t('Assign Geolocation')}
+        buttonTitle={t('Assign Geolocation')}
+        initialValues={selectedItemData}
+        createAddress={onCreateAddress}
       />
     </div>
   );

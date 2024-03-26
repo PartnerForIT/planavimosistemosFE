@@ -146,6 +146,15 @@
   }
 }
 
+.likeinp {
+  @extend %medium;
+
+  height: 36px;
+  min-height: 36px;
+  min-width: 100px;
+  padding: 8px 24px;
+}
+
 .normal {
   line-height: 10px;
   font-family: "Helvetica Neue Medium", sans-serif;

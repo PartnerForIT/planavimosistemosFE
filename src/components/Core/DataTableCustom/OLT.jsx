@@ -38,6 +38,7 @@ export default function DataTable({
   withoutShitCode,
   onEditBreak,
   onOpenAssignGroup,
+  onEditAddress,
 }) {
   const { t } = useTranslation();
   const [tableData, setTableData] = useState(data);
@@ -318,6 +319,7 @@ export default function DataTable({
                 tableRef={tableRef}
                 withoutShitCode={withoutShitCode}
                 onEditBreak={onEditBreak}
+                onEditAddress={onEditAddress}
                 onOpenAssignGroup={onOpenAssignGroup}
               />
             )) : null
