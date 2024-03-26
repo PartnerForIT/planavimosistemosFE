@@ -67,8 +67,8 @@ export default function AssignGroup({
       setFormValues({
         ...initialValues,
         groups: [
-          ...initialValues?.groups.map((group) => { return {...group, checked: true} }),
-          ...initialValues?.subgroups.map((group) => { return {...group, checked: true} }),
+          ...(initialValues?.groups?.map((group) => ({ ...group, checked: true })) || []),
+          ...(initialValues?.subgroups?.map((group) => ({ ...group, checked: true })) || []),
         ],
       });
     } else {

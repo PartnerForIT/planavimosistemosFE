@@ -131,8 +131,15 @@ export default () => {
     return {};
   }, [kiosksUsers, selectedItemId]);
   const employees = useMemo(() => {
+    
     if (kiosksUsers?.employees) {
-      return kiosksUsers.employees.map((item) => {
+      let employeesArray = Array.isArray(kiosksUsers.employees) ? kiosksUsers.employees : [kiosksUsers.employees];
+      if (Array.isArray(kiosksUsers.employees)) {
+          employeesArray = kiosksUsers.employees;
+      } else if (typeof kiosksUsers.employees === 'object') {
+          employeesArray = Object.values(kiosksUsers.employees);
+      }
+      return employeesArray.map((item) => {
         const {
           name,
           surname,
