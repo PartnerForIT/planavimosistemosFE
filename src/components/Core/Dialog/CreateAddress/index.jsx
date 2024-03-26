@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../Button/Button';
 import FlatButton from '../../FlatButton/FlatButton';
@@ -54,7 +54,7 @@ export default function CreateAddress({
   const {
     placePredictions,
     getPlacePredictions,
-    isPlacePredictionsLoading,
+    //isPlacePredictionsLoading,
   } = useGoogle({
     apiKey: config.google.key,
   });
@@ -131,7 +131,7 @@ export default function CreateAddress({
     setCurrentZoom(7);
   };
 
-  const fetchCoordinates = async (setZoom) => {
+  const fetchCoordinates = useCallback(async (setZoom) => {
     try {
       const response = await fromAddress(formValues.address);
       const { lat, lng } = response.results[0].geometry.location;
@@ -145,10 +145,10 @@ export default function CreateAddress({
     } catch (error) {
       console.error('Error fetching coordinates:', error);
     }
-  };
+  });
 
   const getBoundsZoomLevel = (bounds, mapDim) => {
-    const WORLD_DIM = { height: 256, width: 256 };
+    const WORLD_DIM = { height: 520, width: 1000 };
     const ZOOM_MAX = 21;
 
     const latRad = (lat) => {
@@ -160,6 +160,8 @@ export default function CreateAddress({
     const zoom = (mapPx, worldPx, fraction) => {
         return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
     };
+
+    if (!bounds?.northeast || !bounds?.southwest) return 17;
 
     const ne = bounds.northeast;
     const sw = bounds.southwest;
@@ -224,7 +226,8 @@ export default function CreateAddress({
 
   }, [initialValues, open]);
   
-  const MyMap = withScriptjs(withGoogleMap(props =>
+  const MyMap = withScriptjs(withGoogleMap(props => {
+    return (
     <GoogleMap
       ref={mapRef}
       defaultZoom={initData.zoom}
@@ -235,7 +238,8 @@ export default function CreateAddress({
     >
         {props.children}
     </GoogleMap>
-  ));
+    );
+  }));
 
   return (
     <Dialog onClose={onClose} open={open} PaperProps={{
@@ -259,7 +263,7 @@ export default function CreateAddress({
                 onSearch={searchAddress}
                 onCancel={() => getPlacePredictions({ input: '' })}
                 onSelect={onSelectAddress}
-                onChange={(e) => setFormValues({ ...formValues, address: e.target.value })}
+                onChange={useCallback((e) => setFormValues({ ...formValues, address: e.target.value }))}
                 onClear={onClear}
                 onClickItem={(name) => { setFormValues({ ...formValues, address: name }) }}
                 onFit={onFit}
@@ -322,6 +326,12 @@ export default function CreateAddress({
         </div>
         <Tooltip
           id='google_marker'
+          className='schedule-screen__tooltip__black'
+          effect='solid'
+          placement='bottom'
+        />
+        <Tooltip
+          id='google_marker_button'
           className='schedule-screen__tooltip__black'
           effect='solid'
           placement='bottom'

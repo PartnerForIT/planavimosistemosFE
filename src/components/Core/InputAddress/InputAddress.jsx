@@ -92,6 +92,14 @@ const InputAddress = ({
                   <PointMapIcon />
                 </span>
               )}
+              { selected !== false && (
+                <Tooltip
+                  id='google_marker_button'
+                  className='schedule-screen__tooltip__black'
+                  effect='solid'
+                  placement='bottom'
+                />
+              )}
             </div>
             <div>
               <span onClick={() => { onCancel(); setSelected(false); }} className={styles.predictions__cancel}>
@@ -105,15 +113,10 @@ const InputAddress = ({
                 </span>
               )}
             </div>
+            
           </div>
         </div>
       )}
-      <Tooltip
-        id='google_marker_button'
-        className='schedule-screen__tooltip__black'
-        effect='solid'
-        placement='bottom'
-      />
     </div>
   );
 };
