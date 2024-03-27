@@ -23,6 +23,7 @@ import { countriesSelector } from '../../../../store/organizationList/selectors'
 import {
   setKey,
   fromAddress,
+  fromLatLng,
 } from "react-geocode";
 import { withGoogleMap, GoogleMap, withScriptjs, Marker, Circle } from "react-google-maps";
 import useGoogle from "react-google-autocomplete/lib/usePlacesAutocompleteService";
@@ -50,7 +51,6 @@ export default function CreateAddress({
   const countries = useSelector(countriesSelector);
   const company = useSelector(settingCompanySelector);
   const mapRef = useRef(null);
-  let center = { lat: 0, lng: 0 };
 
   const {
     placePredictions,
@@ -88,26 +88,30 @@ export default function CreateAddress({
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
-    setFormValues({ ...formValues, coordinates: `${lat},${lng}` });
+    //setFormValues({ ...formValues, coordinates: `${lat},${lng}`});
+    setDragMarker(false);
+    getAddressFromMarker(lat, lng);
   };
 
   const onMarkerDragEnd = (event) => {
-    let newLat = event.latLng.lat(),
-        newLng = event.latLng.lng();
+    let lat = event.latLng.lat(),
+        lng = event.latLng.lng();
 
-    setFormValues({ ...formValues, coordinates: `${newLat},${newLng}`})
+    //setFormValues({ ...formValues, coordinates: `${lat},${lng}`})
+    setDragMarker(false);
+    getAddressFromMarker(lat, lng);
+  };
 
-    // fromLatLng(newLat, newLng).then(
-    //     response => {
-    //         const address = response.results[0].formatted_address;
-    //         if (!formValues.address) {
-    //           //setFormValues({ ...formValues, address: address })
-    //         }
-    //     },
-    //     error => {
-    //       console.error(error);
-    //     }
-    // );
+  const getAddressFromMarker = (lat, lng) => {
+    fromLatLng(lat, lng).then(
+        response => {
+            const address = response.results[0].formatted_address;
+            setFormValues({ ...formValues, address: address, coordinates: `${lat},${lng}` });
+        },
+        error => {
+          console.error(error);
+        }
+    );
   };
 
   const onFit = () => {
@@ -289,7 +293,7 @@ export default function CreateAddress({
                 <Input
                   placeholder={t('Enter radius')}
                   value={formValues.radius}
-                  width='120px'
+                  width='130px'
                   onChange={(e) => setFormValues({ ...formValues, radius: e.target.value })}
                 />
                 { formValues.radius && <span>m</span> }
