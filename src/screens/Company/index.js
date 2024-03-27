@@ -32,6 +32,7 @@ import SettingCategories from '../../components/Settings/Categories';
 import SettingJournal from '../../components/Settings/Logbook/Journal';
 import Overtime from '../../components/Settings/Logbook/Overtime';
 import AdditionalRates from '../../components/Settings/Logbook/AdditionalRates';
+import Clock from '../../components/Settings/Logbook/Clock';
 import ActivityLog from '../../components/Settings/ActivityLog';
 import TimeSheetSettings from '../../components/Settings/TimeSheet';
 import IntegrationsSettings from '../../components/Settings/Integrations';
@@ -303,6 +304,11 @@ export default () => {
       {
         (permissions.logbook && permissions.logbook_edit_settings) && (
           <Route exact path='/:id/settings/logbook/additional-rates' component={AdditionalRates} />
+        )
+      }
+      {
+        (permissions.logbook && permissions.logbook_edit_settings) && (
+          <Route exact path='/:id/settings/logbook/clock' component={Clock} />
         )
       }
       {

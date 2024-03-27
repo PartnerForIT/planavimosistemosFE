@@ -10,6 +10,11 @@
   max-width: 500px;
 }
 
+.clockBlock {
+  width: 100%;
+  max-width: 800px;
+}
+
 .generalBlock {
   display: flex;
   align-items: center;
@@ -32,6 +37,16 @@
 
   label {
     margin-right: 12px;
+  }
+}
+
+.generalBlock6 {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+
+  label {
+    font-family: "Helvetica Neue Bold", sans-serif;
   }
 }
 

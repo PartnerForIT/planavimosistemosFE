@@ -243,7 +243,7 @@ export default function DashboardMenu() {
           title: t('Overtime'),
         },
       ];
-
+      
       if (permissions.rates) {
         logbook_items.push({
           to: `/${companyId}/settings/logbook/additional-rates`,
@@ -252,6 +252,12 @@ export default function DashboardMenu() {
         });
       }
 
+      logbook_items.push({
+        to: `/${companyId}/settings/logbook/clock`,
+        name: 'clock',
+        title: t('Clock'),
+      });
+      
       nextMenuItems.push({
         icon: LogbookIcon,
         title: t('Logbook'),

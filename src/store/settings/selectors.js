@@ -28,6 +28,7 @@ export const TimeSheetDataSelector = (state) => state.settings.timeSheet;
 export const IntegrationsDataSelector = (state) => state.settings.integrations;
 export const OvertimeDataSelector = (state) => state.settings.overtime;
 export const AdditionalRatesDataSelector = (state) => state.settings.additionalRates;
+export const ClockDataSelector = (state) => state.settings.clock;
 export const AccountGroupsSelector = (state) => state.settings.groups;
 export const groupsLoadingSelector = (state) => state.settings.groupLoading;
 export const subGroupsLoadingSelector = (state) => state.settings.subgroupLoading;

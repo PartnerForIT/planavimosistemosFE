@@ -8,13 +8,13 @@ import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
-import JournalIcon from '../../../Icons/JournalIcon';
+import WorkTimeIcon from '../../../Icons/WorkTime';
 import Progress from '../../../Core/Progress';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, AdditionalRatesDataSelector,
+  snackbarType, snackbarText, ClockDataSelector,
 } from '../../../../store/settings/selectors';
-import { editLogbookAdditionalRates, loadLogbookAdditionalRates } from '../../../../store/settings/actions';
+import { editLogbookClock, loadLogbookClock } from '../../../../store/settings/actions';
 import Form from './Form';
 import usePermissions from '../../../Core/usePermissions';
 
@@ -36,71 +36,44 @@ const permissionsConfig = [
     name: 'logbook_settings',
     permission: 'logbook_edit_settings',
   },
-  {
-    name: 'rates',
-    module: 'rates',
-  },
-  {
-    name: 'night_rates',
-    module: 'night_rates',
-  },
-  {
-    name: 'holiday_rates',
-    module: 'holiday_rates',
-  },
 ];
 
-export default function AdditionalRates() {
+export default function Clock() {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
   const permissions = usePermissions(permissionsConfig);
 
-  const [AdditionalRatesData, setAdditionalRatesData] = useState({
-    night_time: false,
-    night_time_time_start: '22:00',
-    night_time_time_end: '06:00',
-    night_time_type: 2,
-    night_time_rate: 1.5,
-    holiday: false,
-    holiday_company: false,
-    ignore_holiday_night_time: false,
-    holiday_type: 2,
-    holiday_rate: 1.5,
-    holiday_night_type: 2,
-    holiday_night_rate: 1.5,
+  const [ClockData, setClockData] = useState({
+    mobile_break_time: false,
+    geolocation_restriction_clock_in: false,
+    geolocation_restriction_clock_out: false,
   });
 
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  const Clock = useSelector(ClockDataSelector);
 
   useEffect(() => {
     if (id) {
-      dispatch(loadLogbookAdditionalRates(id));
+      dispatch(loadLogbookClock(id));
     }
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (Object.keys(AdditionalRates).length) {
-      setAdditionalRatesData({ ...AdditionalRates });
+    if (Object.keys(Clock).length) {
+      setClockData({ ...Clock });
     }
-  }, [AdditionalRates]);
+  }, [Clock]);
 
   const submit = useCallback((payload) => {
-    const holiday_rate = document.querySelector('[name=\'holiday_rate\']:not(:disabled)')?.value ?? '';
-    const night_time_rate = document.querySelector('[name=\'night_time_rate\']:not(:disabled)')?.value ?? '';
-    const holiday_night_rate = document.querySelector('[name=\'holiday_night_rate\']:not(:disabled)')?.value ?? '';
     const data = {
       ...payload,
-      holiday_rate: holiday_rate,
-      night_time_rate: night_time_rate,
-      holiday_night_rate: holiday_night_rate,
     };
-    dispatch(editLogbookAdditionalRates(id, data));
+    dispatch(editLogbookClock(id, data));
   }, [dispatch, id]);
 
   const handleInputChange = (event) => {
@@ -111,34 +84,34 @@ export default function AdditionalRates() {
     } = event.target;
     console.log('change', event);
     if (type === 'checkbox') {
-      setAdditionalRatesData({
-        ...AdditionalRatesData,
-        [name]: !AdditionalRatesData[name],
+      setClockData({
+        ...ClockData,
+        [name]: !ClockData[name],
       });
       submit({
-        ...AdditionalRatesData,
-        [name]: !AdditionalRatesData[name],
+        ...ClockData,
+        [name]: !ClockData[name],
       });
     } else {
-      setAdditionalRatesData({
-        ...AdditionalRatesData,
+      setClockData({
+        ...ClockData,
         [name]: value,
       });
       submit({
-        ...AdditionalRatesData,
+        ...ClockData,
         [name]: value,
       });
     }
   };
 
   const handleChangeCalculation = (name) => {
-    setAdditionalRatesData({
-      ...AdditionalRatesData,
-      [name]: !AdditionalRatesData[name],
+    setClockData({
+      ...ClockData,
+      [name]: !ClockData[name],
     });
     submit({
-      ...AdditionalRatesData,
-      [name]: !AdditionalRatesData[name],
+      ...ClockData,
+      [name]: !ClockData[name],
     });
   };
 
@@ -146,9 +119,9 @@ export default function AdditionalRates() {
     <MaynLayout>
       <Dashboard>
         <TitleBlock
-          title={t('Additional rates')}
+          title={t('Clock')}
         >
-          <JournalIcon />
+          <WorkTimeIcon />
         </TitleBlock>
         <PageLayout>
           {
@@ -159,7 +132,7 @@ export default function AdditionalRates() {
                   style={styles}
                   handleInputChange={handleInputChange}
                   handleChangeCalculation={handleChangeCalculation}
-                  AdditionalRatesData={AdditionalRatesData}
+                  ClockData={ClockData}
                   readOnly={!permissions.logbook_settings}
                   permissions={permissions}
                 />

@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import getOverflowParent from '../../../../../helpers/getOverflowParent';
+import Dots from '../../../../../components/Icons/Dots';
 import Dropdown from '../../../Dropdown';
 import InputNumber from '../InputNumber';
 import classes from './Section.module.scss';
@@ -20,7 +22,9 @@ export default ({
   withNumberInput,
   count,
   onChangeNumber,
+  onDelete,
   withMenu,
+  withMenuEdit,
   nestingLevel = 1,
   employeeId,
   accumulatedHours,
@@ -43,6 +47,13 @@ export default ({
       [classes.section__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
     },
   );
+
+  const handleCloseModal = () => {
+    setIsOpenMenu(false);
+  };
+  const handleClickOpenMenu = () => {
+    setIsOpenMenu((prevState) => !prevState);
+  };
 
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const buttonRef = useRef(null);
@@ -82,6 +93,31 @@ export default ({
       </table>
     `
   };
+
+  useEffect(() => {
+    if (isOpenMenu) {
+      try {
+        const buttonBounding = buttonRef.current.getBoundingClientRect();
+        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
+        const { height: heightContent } = contentBoxRef.current.getBoundingClientRect();
+        const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
+
+        const menuPlacement = ((offsetBottom - heightContent) > 50) ? 'bottom' : 'top';
+
+        const newClasses = [];
+
+        if (menuPlacement === 'top') {
+          newClasses.push(classes.section__menu__modal_top);
+        }
+
+        if (newClasses.length) {
+          contentBoxRef.current.classList.add(...newClasses);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isOpenMenu]);
 
   return (
     <div style={{ backgroundColor: `${nestingLevel === 0 ? 'lightgray' : 'inherit'}` }} className={sectionClass}>
@@ -151,6 +187,36 @@ export default ({
             />
             <div className={classes.section__space} />
           </Dropdown>
+        )
+      }
+      {
+        withMenuEdit && (
+          <ClickAwayListener onClickAway={handleCloseModal}>
+            <div className={classes.section__menu}>
+              <button
+                className={classes.section__menu__button}
+                onClick={handleClickOpenMenu}
+                ref={buttonRef}
+              >
+                <Dots />
+              </button>
+              {
+                (isOpenMenu) && (
+                  <div className={classes.section__menu__modal} ref={contentBoxRef}>
+                    <div className={classes.section__menu__modal__title}>
+                      {title}
+                    </div>
+                    <button
+                      className={classes.section__menu__modal__item}
+                      onClick={onDelete}
+                    >
+                      {t('Delete')}
+                    </button>
+                  </div>
+                )
+              }
+            </div>
+          </ClickAwayListener>
         )
       }
     </div>

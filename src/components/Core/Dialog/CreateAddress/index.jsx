@@ -46,10 +46,11 @@ export default function CreateAddress({
   const [formValues, setFormValues] = useState(initialFormValues);
   const [dragMarker, setDragMarker] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(false);
-  const [initData, setInitData] = useState({lat: 0, lng: 0, zoom: 7});
+  const [initData, setInitData] = useState({lat: 0, lng: 0, center_lat: 0, center_lng: 0, zoom: 3});
   const countries = useSelector(countriesSelector);
   const company = useSelector(settingCompanySelector);
   const mapRef = useRef(null);
+  let center = { lat: 0, lng: 0 };
 
   const {
     placePredictions,
@@ -142,6 +143,7 @@ export default function CreateAddress({
       }
 
       setFormValues({ ...formValues, coordinates });
+      setInitData({...initData, center_lat: lat, center_lng: lng });
     } catch (error) {
       console.error('Error fetching coordinates:', error);
     }
@@ -187,10 +189,19 @@ export default function CreateAddress({
     try {
       const response = await fromAddress(address);
       const {lat, lng} = response.results[0].geometry.location;
-      setInitData({ lat, lng, zoom: 7 });
-      if (setZoom) {
+      if (initialValues.coordinates) {
+        setInitData({ ...initData, lat: parseFloat(initialValues.coordinates.split(',')[0]), lng: parseFloat(initialValues.coordinates.split(',')[1]), center_lat: parseFloat(initialValues.coordinates.split(',')[0]), center_lng: parseFloat(initialValues.coordinates.split(',')[1]) });
+      } else {
+        setInitData({ lat, lng, center_lat: lat, center_lng: lng, zoom: 7 });
+      }
+
+      if (setZoom && !initialValues.coordinates) {
         const zoom = getBoundsZoomLevel(response.results[0].geometry.bounds, { height: 520, width: 1040 });
-        setCurrentZoom(zoom);
+        setCurrentZoom(zoom);  
+      } else if (initialValues.coordinates) {
+        setCurrentZoom(17);
+      } else {
+        setCurrentZoom(7);
       }
     } catch (error) {
       console.error('Error fetching coordinates:', error);
@@ -198,7 +209,8 @@ export default function CreateAddress({
   };
   
   useEffect(() => {
-    if (company && countries.length && open && initData.lat === 0 && initData.lng === 0 && !initialValues.address) {
+    
+    if (company && countries.length && open && !initialValues.address && initialValues?.id != formValues?.id) {
       const foundCountry = countries.find(({ code }) => code === company.country);
       if (foundCountry) {
         initCoords(foundCountry?.name);
@@ -220,10 +232,6 @@ export default function CreateAddress({
       });
     }
 
-    if (initialValues.coordinates) {
-      setCurrentZoom(17);
-    }
-
   }, [initialValues, open]);
   
   const MyMap = withScriptjs(withGoogleMap(props => {
@@ -232,9 +240,10 @@ export default function CreateAddress({
       ref={mapRef}
       defaultZoom={initData.zoom}
       zoom={currentZoom ? currentZoom : initData.zoom}
-      defaultCenter={currentCoordinates() ? currentCoordinates() : {lat: initData.lat, lng: initData.lng}}
+      defaultCenter={{lat: initData.center_lat, lng: initData.center_lng}}
       onClick={onMapClick}
       onZoomChanged={() => { setCurrentZoom(mapRef.current.getZoom()); }}
+      onDragEnd={() => { setInitData({...initData, center_lat: mapRef.current.getCenter().lat(), center_lng: mapRef.current.getCenter().lng()}); }}
     >
         {props.children}
     </GoogleMap>
@@ -301,7 +310,7 @@ export default function CreateAddress({
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `520px` }} />}
                 mapElement={<div style={{ height: `100%` }} />}
-                center={currentCoordinates() ? currentCoordinates() : {lat: initData.lat, lng: initData.lng}}
+                center={{lat: initData.center_lat, lng: initData.center_lng}}
             >
               {
                 formValues.coordinates && currentCoordinates() &&

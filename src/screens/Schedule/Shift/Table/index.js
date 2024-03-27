@@ -144,7 +144,8 @@ const ResourcesCell = ({
               count={countChildren}
               onChangeNumber={handleChangeNumber}
               onDelete={handleDelete}
-              withMenu
+              withMenu={false}
+              withMenuEdit
             />
           ) : (
             <SectionEmpty

@@ -64,6 +64,10 @@ import {
   GET_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
   EDIT_LOGBOOK_ADDITIONAL_RATES,
   EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  GET_LOGBOOK_CLOCK,
+  GET_LOGBOOK_CLOCK_SUCCESS,
+  EDIT_LOGBOOK_CLOCK,
+  EDIT_LOGBOOK_CLOCK_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   CREATE_ACCOUNTS_GROUP,
@@ -609,6 +613,24 @@ export const editLogbookAdditionalRates = (id, data) => ({
 });
 export const editLogbookAdditionalRatesSuccess = (data) => ({
   type: EDIT_LOGBOOK_ADDITIONAL_RATES_SUCCESS,
+  data,
+});
+
+export const loadLogbookClock = (id) => ({
+  type: GET_LOGBOOK_CLOCK,
+  id,
+});
+export const loadLogbookClockSuccess = (data) => ({
+  type: GET_LOGBOOK_CLOCK_SUCCESS,
+  data,
+});
+export const editLogbookClock = (id, data) => ({
+  type: EDIT_LOGBOOK_CLOCK,
+  id,
+  data,
+});
+export const editLogbookClockSuccess = (data) => ({
+  type: EDIT_LOGBOOK_CLOCK_SUCCESS,
   data,
 });
 

@@ -867,5 +867,9 @@
         "Location": "Vieta",
         "Pick location": "Pasirinkite vietą",
         "Remove address": "Pašalinti adresą",
-        "Search address": "Ieškoti adreso"
+        "Search address": "Ieškoti adreso",
+        "Clock": "Laikrodis",
+        "Enable Break Time in Mobile APP session": "Aktyvuoti Poilsio mygtuką Mobilioje Apilkacijoje",
+        "Use a Geolocation restriction for Clock In if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą įsiregistravimo į darbą metu, jeigu Vieta turi nustatytą geolokaciją",
+        "Use a Geolocation restriction for Clock Out if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą išsiregistravimo iš darbo metu, jeigu Vieta turi nustatytą geolokaciją"
 }
