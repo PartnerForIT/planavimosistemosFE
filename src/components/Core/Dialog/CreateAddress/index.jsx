@@ -46,11 +46,16 @@ export default function CreateAddress({
   const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(initialFormValues);
   const [dragMarker, setDragMarker] = useState(false);
-  const [currentZoom, setCurrentZoom] = useState(false);
+  //const [currentZoom, setCurrentZoom] = useState(false);
   const [initData, setInitData] = useState({lat: 0, lng: 0, center_lat: 0, center_lng: 0, zoom: 3});
   const countries = useSelector(countriesSelector);
   const company = useSelector(settingCompanySelector);
   const mapRef = useRef(null);
+  const currentDataRef = useRef({
+    zoom: 3,
+    lat: 0,
+    lng: 0,
+  });
 
   const {
     placePredictions,
@@ -76,6 +81,12 @@ export default function CreateAddress({
     handleClose();
 
   };
+  const setCurrentZoom = (zoom) => {
+    currentDataRef.current.zoom = zoom;
+    if (mapRef?.current?.setZoom) {
+      mapRef.current.setZoom(zoom);
+    }
+  };
 
   const currentCoordinates = () => {
     if (!formValues.coordinates) return false;
@@ -88,7 +99,7 @@ export default function CreateAddress({
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
-    //setFormValues({ ...formValues, coordinates: `${lat},${lng}`});
+    
     setDragMarker(false);
     getAddressFromMarker(lat, lng);
   };
@@ -97,7 +108,6 @@ export default function CreateAddress({
     let lat = event.latLng.lat(),
         lng = event.latLng.lng();
 
-    //setFormValues({ ...formValues, coordinates: `${lat},${lng}`})
     setDragMarker(false);
     getAddressFromMarker(lat, lng);
   };
@@ -126,8 +136,6 @@ export default function CreateAddress({
   const onSelectAddress = (address) => {
     getPlacePredictions({ input: '' });
     setFormValues({ ...formValues, address });
-    //fetchCoordinates();
-    //setCurrentZoom(17);
   };
 
   const onClear = () => {
@@ -191,6 +199,8 @@ export default function CreateAddress({
 
   const initCoords = async (address, setZoom) => {
     try {
+      currentDataRef.current.lat = 0;
+      currentDataRef.current.lng = 0;
       const response = await fromAddress(address);
       const {lat, lng} = response.results[0].geometry.location;
       if (initialValues.coordinates) {
@@ -243,11 +253,12 @@ export default function CreateAddress({
     <GoogleMap
       ref={mapRef}
       defaultZoom={initData.zoom}
-      zoom={currentZoom ? currentZoom : initData.zoom}
-      defaultCenter={{lat: initData.center_lat, lng: initData.center_lng}}
+      zoom={currentDataRef.current.zoom ? currentDataRef.current.zoom : initData.zoom}
+      defaultCenter={{lat: currentDataRef.current.lat != 0 ? currentDataRef.current.lat : initData.center_lat, lng: currentDataRef.current.lng != 0 ? currentDataRef.current.lng : initData.center_lng}}
       onClick={onMapClick}
-      onZoomChanged={() => { setCurrentZoom(mapRef.current.getZoom()); }}
-      onDragEnd={() => { setInitData({...initData, center_lat: mapRef.current.getCenter().lat(), center_lng: mapRef.current.getCenter().lng()}); }}
+      onZoomChanged={() => { currentDataRef.current.zoom = mapRef.current.getZoom(); }}
+      //onDragEnd={() => { setInitData({...initData, center_lat: mapRef.current.getCenter().lat(), center_lng: mapRef.current.getCenter().lng()}); }}
+      onDragEnd={() => { currentDataRef.current.lat = mapRef.current.getCenter().lat(); currentDataRef.current.lng = mapRef.current.getCenter().lng(); }}
     >
         {props.children}
     </GoogleMap>

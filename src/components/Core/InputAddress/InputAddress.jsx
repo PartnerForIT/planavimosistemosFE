@@ -61,7 +61,7 @@ const InputAddress = ({
           <div className={styles.predictions__list}>
             {places.map(({ description }, index) => (
               <div
-                key={description}
+                key={index+'result'}
                 onClick={() => { setSelected(index); onClickItem(description); }}
                 className={classNames(styles.predictions__item, {[styles.predictions__item__selected]: selected === index})}
               >

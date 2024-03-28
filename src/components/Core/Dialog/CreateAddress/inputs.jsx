@@ -55,14 +55,14 @@ export default function Inputs({
         <InputAddress
           placeholder={t('Enter address')}
           value={formValues.address}
-          onSearch={searchAddress}
+          onSearch={() => { searchAddress(formValues.address) }}
           onCancel={() => getPlacePredictions({ input: '' })}
           onSelect={onSelectAddress}
           onChange={useCallback((e) => setFormValues({ ...formValues, address: e.target.value }))}
           onClear={onClear}
           onClickItem={(name) => { setFormValues({ ...formValues, address: name }) }}
-          onFit={onFit}
-          onPoint={onPoint}
+          onFit={() => { onFit(formValues.address) }}
+          onPoint={() => { onFit(formValues.address) }}
           places={placePredictions}
           width={'480px'}
         />
@@ -76,7 +76,7 @@ export default function Inputs({
             placeholder={t('Enter radius')}
             value={formValues.radius}
             width='120px'
-            onChange={(e) => { setFormValues({ ...formValues, radius: e.target.value }); setRadius(e.target.value); }}
+            onChange={(e) => { setFormValues({ ...formValues, radius: e.target.value }); setRadius({...formValues}, e.target.value); }}
           />
           { formValues.radius && <span>m</span> }
         </div>
