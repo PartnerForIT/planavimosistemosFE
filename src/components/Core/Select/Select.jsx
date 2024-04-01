@@ -11,6 +11,7 @@ import SearchIcon from '../../Icons/SearchIcon';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
+import { useTranslation } from 'react-i18next';
 
 const initialItems = [];
 export default function CustomSelect({
@@ -28,6 +29,7 @@ export default function CustomSelect({
   const [itemsStat, setItemsStat] = useState({ checked: 0, unchecked: 0, total: 0 });
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkedItemsArray = [];
@@ -151,7 +153,7 @@ export default function CustomSelect({
   });
 
   const generateLabel = () => (checkedItems.length === 1 ? (checkedItems[0].label || checkedItems[0].title || checkedItems[0].name)
-    : `${checkedItems.filter((e) => e.type !== 'group').length} ${type} selected`);
+    : `${checkedItems.filter((e) => e.type !== 'group').length} ${t(`${type} selected`)}`);
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
@@ -176,7 +178,7 @@ export default function CustomSelect({
             {withSearch && (
               <Input
                 icon={<SearchIcon />}
-                placeholder='Search'
+                placeholder={t('Search')}
                 value={search}
                 name='search'
                 onChange={handleInputChange}

@@ -15,7 +15,7 @@
 
   &__header {
     display: grid;
-    grid-template-columns: 1fr 4fr 11px;
+    grid-template-columns: 1fr 5fr 11px;
     height: 54px;
     box-sizing: content-box;
     border-bottom: 1px solid #d9dfe3;
@@ -41,7 +41,7 @@
   &__content {
     display: grid;
     flex: 1;
-    grid-template-columns: 1fr 4fr 11px;
+    grid-template-columns: 1fr 5fr 11px;
 
     &__data {
       display: flex;

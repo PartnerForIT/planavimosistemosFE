@@ -873,5 +873,11 @@
         "Use a Geolocation restriction for Clock In if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą įsiregistravimo į darbą metu, jeigu Vieta turi nustatytą geolokaciją",
         "Use a Geolocation restriction for Clock Out if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą išsiregistravimo iš darbo metu, jeigu Vieta turi nustatytą geolokaciją",
         "Area": "Plotas",
-        "Select": "Pasirinkti"
+        "Select": "Pasirinkti",
+        "Assign to Group/Subgroup": "Priskirta prie Grupės/Subgrupės",
+        "Assigned to Group/Subgroup": "Priskirta prie Grupės/Subgrupės",
+        "Button Assign": "Priskirti",
+        "All Groups": "Visos grupės",
+        "Choose": "Pasirinkti",
+        "groups selected": "grupės priskirtos"
 }
