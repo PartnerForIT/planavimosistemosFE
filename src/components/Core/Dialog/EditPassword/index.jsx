@@ -90,7 +90,7 @@ export default function EditPassword({
           <Label text={t('New password')} htmlFor='new' />
           <Input
             placeholder={`${t('Enter new password')}`}
-            value={passwords.new}
+            value={passwords.password}
             type='password'
             name='password'
             fullWidth

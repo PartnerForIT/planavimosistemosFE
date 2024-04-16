@@ -165,11 +165,10 @@ export default function ButtonAppBar({ logOut }) {
     setPasswords(initialPasswords);
   };
   const submitPassword = () => {
-    const { password } = passwords;
     const employeeId = JSON.parse(localStorage.getItem('user'))?.employee?.id;
 
     if (employeeId) {
-      dispatch(changePassword(companyId, employeeId, password));
+      dispatch(changePassword(companyId, employeeId, passwords));
     }
     editHandleClose();
   };
