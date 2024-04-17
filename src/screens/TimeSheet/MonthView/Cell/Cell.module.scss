@@ -64,12 +64,36 @@
     flex: 1 0 120px;
     justify-content: flex-start;
     padding: 0 15px;
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    background: white;
+    height: 39px;
+    width: 122px;
+    border-right: 1px solid #d9dfe3;
+  }
+
+  &_statistic {
+    position: absolute;
+    height: 39px;
+    width: 50px;
+    right: 0;
+    z-index: 3;
+
+    &_time:nth-last-child(2) {
+      right: 51px;
+    }
+
+    &_cost {
+      z-index: 3;
+    }
   }
 
   &_header {
     justify-content: center;
     border-bottom: 1px solid #d9dfe3;
     background: #fafbfc;
+    height: 54px;
   }
 
   &_weekend {

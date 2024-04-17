@@ -28,10 +28,21 @@
       border-right: 1px solid #d9dfe3;
     }
 
+    &__dataOuter {
+      position: relative;
+      padding-right: 51px;
+      z-index: 1;
+      
+      &_withCost {
+        padding-right: 102px;
+      }
+    }
+
     &__data {
       display: flex;
       overflow-x: hidden;
       overflow-y: visible;
+      padding-left: 153px;
     }
 
     &__empty {
@@ -45,12 +56,22 @@
     flex: 1;
     grid-template-columns: 1fr 5fr 11px;
 
+    &__dataOuter {
+      position: relative;
+      padding-right: 51px;
+      background-color: #fafbfc;
+
+      &_withCost {
+        padding-right: 102px;
+      }
+    }
+
     &__data {
       display: flex;
       flex-direction: column;
       background-color: #fafbfc;
-      position: relative;
       overflow: auto;
+      padding-left: 153px;
 
       &__wrap {
         margin: 8px 0;

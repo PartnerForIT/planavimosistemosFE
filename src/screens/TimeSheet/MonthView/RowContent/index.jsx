@@ -97,7 +97,7 @@ const RowContent = ({
 
     return find && find[field] ? timeConvert(find[field]) : '';
   }
-
+  
   return (
     <>
       <div className={classes.rowContent}>
@@ -115,6 +115,7 @@ const RowContent = ({
             return (
              <Cell
                 key={item.id}
+                cellId={item.id}
                 title={parsedTitle(item)}
                 statistic={item.statistic}
                 weekend={item.weekend}

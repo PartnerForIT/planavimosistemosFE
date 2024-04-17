@@ -5,6 +5,7 @@ import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 import classes from './Cell.module.scss';
 
 export default ({
+  cellId,
   title,
   statistic,
   article,
@@ -20,6 +21,8 @@ export default ({
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
 
   const cellClasses = classnames(classes.cell, {
+    [classes.cell_statistic_time]: cellId === 'totalTime',
+    [classes.cell_statistic_cost]: cellId === 'totalCost',
     [classes.cell_statistic]: statistic,
     [classes.cell_article]: article,
     [classes.cell_weekend]: weekend,
