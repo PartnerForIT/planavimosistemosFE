@@ -149,6 +149,20 @@ const permissionsConfig = [
     name: 'night_rates',
     module: 'night_rates',
   },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+    permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'schedule_simple',
+    module: 'schedule_simple',
+    permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'schedule_module',
+    permission: 'schedule_module_access',
+  },
 ];
 
 export default () => {
@@ -488,6 +502,9 @@ export default () => {
       }
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         //return false;
+      }
+      if ((!permissions.schedule_simple && !permissions.schedule_shift) && column.field === 'shift_name') {
+        return false;
       }
       return true;
     });
