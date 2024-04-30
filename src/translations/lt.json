@@ -879,5 +879,7 @@
         "Button Assign": "Priskirti",
         "All Groups": "Visos grupės",
         "Choose": "Pasirinkti",
-        "groups selected": "grupės priskirtos"
+        "groups selected": "grupės priskirtos",
+        "Enable request photo to be taken on Clock In": "Aktyvuoti nuotraukos prašymą kai darbuotojas Pradeda darbą",
+        "Enable request photo to be taken on Clock Out": "Aktyvuoti nuotraukos prašymą kai darbuotojas Baigia darbą"
 }

@@ -1,0 +1,45 @@
+@import "../variables";
+
+.photoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  padding: 8px;
+  border-radius: 13px;
+  background-color: #d8ebfb;
+  margin: 15px 0 0 0;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    font-family: "Helvetica Neue Bold", sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+    color: #0085ff;
+    margin-bottom: 11px;
+
+    svg {
+      margin-right: 7px;
+    }
+  }
+
+  &__image {
+    border-radius: 7px;
+    width: 100%;
+    object-fit: cover;
+    margin-top: 2px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  &__text {
+    text-align: left;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    line-height: 15px;
+    color: #333945;
+  }
+
+  &__image + &__text {
+    margin-top: 10px;
+  }
+}

@@ -49,6 +49,8 @@ export default function Clock() {
     mobile_break_time: false,
     geolocation_restriction_clock_in: false,
     geolocation_restriction_clock_out: false,
+    photo_clock_in: false,
+    photo_clock_out: false,
   });
 
   const isLoadind = useSelector(isLoadingSelector);

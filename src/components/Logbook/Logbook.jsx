@@ -46,6 +46,7 @@ import { minutesToString } from '../Helpers';
 import InfoCard from '../Core/InfoCard/InfoCard';
 import CommentCard from '../Core/CommentCard/CommentCard';
 import KioskCard from '../Core/KioskCard/KioskCard';
+import PhotoCard from '../Core/PhotoCard/PhotoCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
@@ -859,6 +860,15 @@ export default () => {
                         name={selectedItem.kiosk_photo.kiosk_name}
                         photoIn={selectedItem.kiosk_photo.photo_in}
                         photoOut={selectedItem.kiosk_photo.photo_out}
+                      />
+                    )
+                  }
+
+                  {
+                    selectedItem.work_time_photo && (
+                      <PhotoCard
+                        photoIn={selectedItem.work_time_photo.photo_in}
+                        photoOut={selectedItem.work_time_photo.photo_out}
                       />
                     )
                   }

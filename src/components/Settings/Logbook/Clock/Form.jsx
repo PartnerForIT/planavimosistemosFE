@@ -91,6 +91,35 @@ export default function Form({
             />
           </div>
         </div>
+
+        <div className={style.generalBlock6}>
+          <Switch
+            onChange={() => handleChangeCalculation('photo_clock_in')}
+            offColor='#808F94'
+            onColor='#0085FF'
+            uncheckedIcon={false}
+            checkedIcon={false}
+            name='photo_clock_in'
+            checked={!!ClockData.photo_clock_in}
+            height={21}
+            width={40}
+          />
+          <Label text={t('Enable request photo to be taken on Clock In')} />
+        </div>
+        <div className={style.generalBlock6}>
+          <Switch
+            onChange={() => handleChangeCalculation('photo_clock_out')}
+            offColor='#808F94'
+            onColor='#0085FF'
+            uncheckedIcon={false}
+            checkedIcon={false}
+            name='photo_clock_out'
+            checked={!!ClockData.photo_clock_out}
+            height={21}
+            width={40}
+          />
+          <Label text={t('Enable request photo to be taken on Clock Out')} />
+        </div>
       </div>
     </form>
   );
