@@ -865,7 +865,7 @@ export default () => {
                   }
 
                   {
-                    selectedItem.work_time_photo && (
+                    selectedItem.work_time_photo && (selectedItem.work_time_photo.photo_in || selectedItem.work_time_photo.photo_out) && (
                       <PhotoCard
                         photoIn={selectedItem.work_time_photo.photo_in}
                         photoOut={selectedItem.work_time_photo.photo_out}
