@@ -21,8 +21,9 @@ const BootstrapInput = withStyles((theme) => ({
     border: '1px solid #e8eff6',
     fontSize: 14,
     lineHeight: '15px',
-    padding: '6px',
+    padding: '2px 6px',
     color: '#222',
+    maxWidth: '80px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     '&:focus': {
       boxShadow: 'none',
@@ -33,10 +34,9 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 
-export default function RowSearch({ handleInputChange, inputValues }) {
+export default function RowSearch({ handleInputChange, inputValues, title }) {
   return (
     <BootstrapInput
-      name='name'
       onChange={handleInputChange}
       value={inputValues}
       inputProps={{
@@ -45,8 +45,8 @@ export default function RowSearch({ handleInputChange, inputValues }) {
           autoComplete: 'off',
         },
       }}
-      placeholder='Search'
-      id='name'
+      placeholder={title}
+      id='search'
     />
   );
 }

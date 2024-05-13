@@ -42,9 +42,9 @@ header {
 .headerWrapperSearch {
   @extend .headerWrapper;
 
-  padding-bottom: 60px;
+  padding-bottom: 50px;
   box-shadow: none;
-  background: linear-gradient(to bottom, #eaf5ff 43%, #fff 43%);
+  background: linear-gradient(to bottom, #eaf5ff calc(100% - 40px), #fff calc(100% - 40px));
 
   .flexRowGlobal {
     position: relative;
@@ -52,8 +52,8 @@ header {
 
   .headerSearch {
     position: absolute;
-    bottom: -49px;
-    left: 10px;
+    bottom: -40px;
+    left: 2px;
     right: 10px;
     width: 100%;
   }

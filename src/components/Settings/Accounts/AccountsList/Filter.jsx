@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 import styles from './accounts.module.scss';
 import Button from '../../../Core/Button/Button';
 import InputSelect from '../../../Core/InputSelect';
+import SearchIcon from '../../../Icons/SearchIcon';
+import Input from '../../../Core/Input/Input';
 
 // const useStyles = makeStyles(() => ({
 //   root: {
@@ -35,6 +37,8 @@ export default function Filter({
   stats,
   selectedItem,
   withDeleteButton, employees,
+  setSearch,
+  search,
 }) {
   // const classes = useStyles();
   const { t } = useTranslation();
@@ -60,32 +64,42 @@ export default function Filter({
   };
   return (
     <div className={styles.filterBlock}>
-      <FormControl className={styles.filterBlock__leftContainer}>
-        <InputSelect
-          id='users'
-          name='users'
-          onChange={handleChangeUser}
-          value={users}
-          options={[
-            {
-              value: 4,
-              label: `${t('All Users')} ${stats.accounts ?? ''}`,
-            },
-            {
-              value: 1,
-              label: `${t('Active')} ${stats.active ?? ''}`,
-            },
-            {
-              value: 0,
-              label: `${t('Suspended')} ${stats.suspended ?? ''}`,
-            },
-            {
-              value: 3,
-              label: `${t('Blocked')} ${stats.blocked ?? ''}`,
-            },
-          ]}
-        />
-      </FormControl>
+      <div>
+        <FormControl className={styles.filterBlock__leftContainer}>
+          <InputSelect
+            id='users'
+            name='users'
+            onChange={handleChangeUser}
+            value={users}
+            options={[
+              {
+                value: 4,
+                label: `${t('All Users')} ${stats.accounts ?? ''}`,
+              },
+              {
+                value: 1,
+                label: `${t('Active')} ${stats.active ?? ''}`,
+              },
+              {
+                value: 0,
+                label: `${t('Suspended')} ${stats.suspended ?? ''}`,
+              },
+              {
+                value: 3,
+                label: `${t('Blocked')} ${stats.blocked ?? ''}`,
+              },
+            ]}
+          />
+        </FormControl>
+        <FormControl className={styles.margin}>
+          <Input
+            icon={<SearchIcon />}
+            placeholder={`${t('Search')}...`}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </FormControl>
+      </div>
 
       <div className={styles.filterBlock__inner}>
         <p>

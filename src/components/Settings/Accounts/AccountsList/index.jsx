@@ -188,6 +188,8 @@ export default function AccountsList() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [importVisible, setImportVisible] = useState(false);
   const schedule = useSelector(scheduleSelector);
+  const [colSearch, setColSearch] = useState({});
+  const [search, setSearch] = useState('');
 
   const [selected, setSelected] = useState({});
   const [newVisible, setNewVisible] = useState(false);
@@ -287,8 +289,8 @@ export default function AccountsList() {
 
   useEffect(() => {
     let allColumnsArray = columns;
-
     allColumnsArray = allColumnsArray.filter((column) => {
+
       if (!permissions.places && column.field === 'place') {
         return false;
       }
@@ -358,28 +360,82 @@ export default function AccountsList() {
 
   moment.locale(localStorage.getItem('i18nextLng') || 'en');
 
-  const employees = useMemo(() => employeesAll.map((empl) => {
-    const {
-      // eslint-disable-next-line camelcase,no-shadow
-      name, surname, status, groups, skills, subgroups, role,
-      created_at: createdAt,
-      updated_at: updatedAt,
-      place,
-      ...rest
-    } = empl;
-    return {
-      ...rest,
-      groups: groups,
-      subgroup: subgroups,
-      skills: skills,
-      place: place,
-      role: role,
-      created_at: createdAt ? moment(createdAt).format(`${dateFormat} HH:mm`) : '',
-      updated_at: updatedAt ? moment(updatedAt).format(`${dateFormat} HH:mm`) : '',
-      name: `${name} ${surname}`,
-      status: parseInt(status, 10),
-    };
-  }) ?? [], [employeesAll]);
+  const employees = useMemo(() => {
+    return employeesAll
+      .filter(empl => {
+        // Filter out any employees that don't match the search criteria
+        let searchValue = search.toLowerCase();
+        let globalSearch = true;
+        
+        if (searchValue) {
+          globalSearch = false;
+          for (let key in empl) {
+            let emplValue = empl[key];
+            if (emplValue !== undefined && emplValue !== null) {
+              if (key === 'created_at' || key === 'updated_at') {
+                // Special handling for date fields
+                emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+              } else {
+                // Convert emplValue to string for other fields
+                emplValue = emplValue.toString().toLowerCase();
+              }
+              if (emplValue.indexOf(searchValue) !== -1) {
+                globalSearch = true;
+                break;
+              }
+            }
+          }
+        }
+
+        if (globalSearch) {
+          for (let key in colSearch) {
+            if (colSearch[key]) { // Check if there's a search term for this key
+              let emplValue = empl[key];
+              let searchValue = colSearch[key].toLowerCase();
+        
+              if (emplValue !== undefined && emplValue !== null) { // Check if the employee has a value for this key
+                if (key === 'created_at' || key === 'updated_at') {
+                  // Special handling for date fields
+                  emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+                } else {
+                  // Convert emplValue to string for other fields
+                  emplValue = emplValue.toString().toLowerCase();
+                }
+        
+                if (emplValue.indexOf(searchValue) === -1) {
+                  return false; // This employee does not match the search term
+                }
+              } else {
+                return false; // Missing value for a key that has a search term
+              }
+            }
+          }
+        }
+        return globalSearch; // Include this employee
+      })
+      .map(empl => {
+        const {
+          name, surname, status, groups, skills, subgroups, role,
+          created_at: createdAt,
+          updated_at: updatedAt,
+          place,
+          ...rest
+        } = empl;
+  
+        return {
+          ...rest,
+          groups: groups,
+          subgroup: subgroups,
+          skills: skills,
+          place: place,
+          role: role,
+          created_at: createdAt ? moment(createdAt).format(`${dateFormat} HH:mm`) : '',
+          updated_at: updatedAt ? moment(updatedAt).format(`${dateFormat} HH:mm`) : '',
+          name: `${name} ${surname}`,
+          status: parseInt(status, 10),
+        };
+      });
+  }, [employeesAll, colSearch, dateFormat, search]);
 
   const selectionHandler = (itemId, value) => {
     // eslint-disable-next-line array-callback-return
@@ -429,6 +485,10 @@ export default function AccountsList() {
     setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
   };
 
+  const onColumnSearch = (column, value) => {
+    setColSearch({ ...colSearch, [column]: value });
+  }
+
   useEffect(() => {
     if (employees.length && checkedItems.length === employees.length) {
       setAll(true);
@@ -466,6 +526,8 @@ export default function AccountsList() {
                     selectedItem={selected}
                     employees={employees}
                     withDeleteButton={permissions.accounts_delete}
+                    setSearch={setSearch}
+                    search={search}
                   />
                   <DataTable
                     data={employees ?? []}
@@ -488,6 +550,8 @@ export default function AccountsList() {
                     all={all}
                     setAll={setAll}
                     accountList
+                    colSearch={colSearch}
+                    onSearch={onColumnSearch}
                   />
                 </>
               )

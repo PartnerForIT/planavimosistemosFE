@@ -9,6 +9,7 @@ import Scrollbar from 'react-scrollbars-custom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Row from './Row';
+import RowSearch from './Search';
 import styles from './DTM.module.scss';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
@@ -39,6 +40,8 @@ export default function DataTable({
   onEditBreak,
   onOpenAssignGroup,
   onEditAddress,
+  onSearch = false,
+  colSearch = {},
 }) {
   const { t } = useTranslation();
   const [tableData, setTableData] = useState(data);
@@ -220,8 +223,11 @@ export default function DataTable({
         onScroll={onScroll}
       >
         <div className={tableContentClasses}>
-          {/* <div className={onSerach ? styles.headerWrapperSearch : styles.headerWrapper}> */}
-          <div className={simpleTable ? styles.simpleTable : styles.headerWrapper}>
+          <div className={classNames({
+            [styles.headerWrapper]: !simpleTable && !onSearch,
+            [styles.simpleTable]: simpleTable,
+            [styles.headerWrapperSearch]: onSearch,
+          })}>
             <header className={flexTableClasses} role='rowgroup'>
               {
                 visibleColumns.length > 0 && visibleColumns.map((column, idx) => {
@@ -280,11 +286,14 @@ export default function DataTable({
                           && fieldIcons[column.field].map((icon) => icon.icon)
                         }
                       </div>
-                      {/* { (onSerach && columnsWidth[column.field] !== 80) &&
+                      { (onSearch && column.field !== 'status') &&
                         <div className={styles.headerSearch}>
-                          <RowSearch />
+                          <RowSearch
+                            handleInputChange={(e) => { onSearch(column.field, e.target.value) }}
+                            inputValues={colSearch[column.field] || ''}
+                            title={t('Search')} />
                         </div>
-                      } */}
+                      }
                     </div>
                   );
                 })
