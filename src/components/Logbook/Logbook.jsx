@@ -1021,6 +1021,7 @@ export default () => {
                 onChange={onPlacesSelectChange}
                 width='auto'
                 type='places'
+                withSearch={true}
               />
             </div>
 
@@ -1034,6 +1035,7 @@ export default () => {
                 onChange={onSkillsSelectChange}
                 width='auto'
                 type='skills'
+                withSearch={true}
               />
             </div>
 

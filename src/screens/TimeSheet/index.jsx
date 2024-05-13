@@ -277,6 +277,7 @@ export default () => {
             items={places}
             onChange={onPlaceSelectFilter}
             width='auto'
+            withSearch={true}
           />
           <CustomSelect
             placeholder={t('All skills')}
@@ -284,6 +285,7 @@ export default () => {
             items={skills}
             onChange={onSkillSelectFilter}
             width='auto'
+            withSearch={true}
           />
           <CustomSelect
             placeholder={t('All employees')}
