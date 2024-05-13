@@ -1108,6 +1108,7 @@ export default () => {
             onChange={onPlaceSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
+            withSearch={true}
           />
           <CustomSelect
             placeholder={t('All shifts')}
@@ -1116,6 +1117,7 @@ export default () => {
             onChange={onShiftSelectFilter}
             // onChange={onSkillsSelectChange}
             width='auto'
+            withSearch={true}
           />
           <CustomSelect
             placeholder={t('All employees')}
