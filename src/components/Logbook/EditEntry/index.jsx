@@ -558,7 +558,7 @@ export default ({
             ))
           }
           {
-            permissions.comments_photo && journal.end_day_comment && (
+            (permissions.comments_photo && journal.end_day_comment) ? (
               <Textarea
                 label={t('Comment')}
                 placeholder={t('Add new comment here')}
@@ -566,7 +566,7 @@ export default ({
                 name='comment'
                 value={formValues.comment}
               />
-            )
+            ) : null
           }
         </div>
       </Scrollbar>
