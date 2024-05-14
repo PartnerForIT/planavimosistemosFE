@@ -8,6 +8,7 @@ import 'photoswipe/dist/photoswipe.css'
 import { Gallery, Item } from 'react-photoswipe-gallery'
 
 export default function CommentCard({
+  onEditComment,
   photo,
   comment,
   width,
@@ -40,13 +41,11 @@ export default function CommentCard({
           </Gallery>
         )
       }
-      {
-        comment && (
-          <span className={styles.commentCard__text}>
-            {comment}
-          </span>
-        )
-      }
+      <span
+        onClick={onEditComment}
+        className={styles.commentCard__text}>
+        {comment ? comment : ''}
+      </span>
     </div>
   );
 }

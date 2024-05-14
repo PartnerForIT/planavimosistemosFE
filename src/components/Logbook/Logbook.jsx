@@ -35,7 +35,7 @@ import { placesSelector } from '../../store/places/selectors';
 import { userSelector } from '../../store/auth/selectors';
 import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
 // import { getEmployees } from '../../store/employees/actions';
-import { postLogbookEntry, postLogbookAddEntry } from '../../store/logbook/actions';
+import { postLogbookEntry, postLogbookAddEntry, postLogbookComment } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
 
@@ -61,6 +61,7 @@ import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import EditEntry from './EditEntry';
 import AddEntry from './AddEntry';
+import EditComment from './EditComment';
 import styles from './Logbook.module.scss';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
 
@@ -119,6 +120,10 @@ const permissionsConfig = [
   {
     name: 'logbook_delete_logs',
     permission: 'logbook_delete_logs',
+  },
+  {
+    name: 'logbook_edit_comments',
+    permission: 'logbook_edit_comments',
   },
   {
     name: 'logbook_add_logs',
@@ -193,6 +198,7 @@ export default () => {
   const [search, setSearch] = useState('');
   // const [employees, setEmployees] = useState([]);
   const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
+  const [isOpenEditComment, setIsOpenEditComment] = useState(false);
   const [isOpenAddEntry, setIsOpenAddEntry] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
@@ -686,6 +692,12 @@ export default () => {
     setIsOpenAddEntry(false);
   };
 
+
+  const handleClickSaveComment = (data) => {
+    dispatch(postLogbookComment(companyId, data, sendRequest));
+    setIsOpenEditComment(false);
+  };
+
   const EmployeeInfo = () => {
     const isApproval = (
       (permissions.approval_flow
@@ -847,6 +859,7 @@ export default () => {
                   {
                     (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) ? (
                       <CommentCard
+                        onEditComment={() => { if (permissions.logbook_delete_logs) { setIsOpenEditComment(true) } } }
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
                         width={journal.end_day_photo ? selectedItem.comments[0].photo_width : null}
                         height={journal.end_day_photo ? selectedItem.comments[0].photo_height : null}
@@ -902,6 +915,12 @@ export default () => {
           handleClose={() => setIsOpenEditEntry(false)}
           selectedItem={selectedItem}
           onClickSave={handleClickSaveEntry}
+        />
+        <EditComment
+          open={isOpenEditComment}
+          handleClose={() => setIsOpenEditComment(false)}
+          selectedItem={selectedItem}
+          onClickSave={handleClickSaveComment}
         />
       </div>
     );

@@ -8,6 +8,7 @@ import config from 'config';
 import axios from 'axios';
 import {
   POST_LOGBOOK_ENTRY,
+  POST_LOGBOOK_COMMENT,
   POST_LOGBOOK_ADD_ENTRY,
 } from './types';
 import {
@@ -48,6 +49,31 @@ export function* LogbookWatcher() {
   yield takeLatest(POST_LOGBOOK_ENTRY, postLogbookEntry);
 }
 
+
+function* postLogbookComment(action) {
+  try {
+    yield call(
+      axios.post,
+      `${config.api.url}/company/${action.id}/logbook/edit-comment`,
+      action.data,
+      token(),
+    );
+    action.callback();
+    // yield put(postLogbookEntrySuccess(data));
+    yield put(addSnackbar('Updated comment successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar(e, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+export function* LogbookCommentWatcher() {
+  yield takeLatest(POST_LOGBOOK_COMMENT, postLogbookComment);
+}
+
 function* postLogbookAddEntry(action) {
   try {
     yield call(
@@ -57,7 +83,6 @@ function* postLogbookAddEntry(action) {
       token(),
     );
     action.callback();
-    // yield put(postLogbookEntrySuccess(data));
     yield put(addSnackbar('Added logbook successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());

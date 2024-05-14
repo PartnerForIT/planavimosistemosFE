@@ -8,7 +8,7 @@ import routes from 'config/routes';
 import OverviewWatcher from './overview/saga';
 import OrganizationListWatcher from './organizationList/saga';
 import SettingsWatcher from './settings/saga';
-import { LogbookWatcher, LogbookAddWatcher } from './logbook/saga';
+import { LogbookWatcher, LogbookCommentWatcher, LogbookAddWatcher } from './logbook/saga';
 import EventsWatcher from './events/saga';
 import KiosksWatcher from './kiosks/saga';
 import CompanyWatcher from './company/saga';
@@ -47,6 +47,7 @@ export default function* rootSaga() {
     OrganizationListWatcher(),
     SettingsWatcher(),
     LogbookWatcher(),
+    LogbookCommentWatcher(),
     LogbookAddWatcher(),
     EventsWatcher(),
     KiosksWatcher(),

@@ -1,0 +1,64 @@
+@import "../../Core/variables";
+
+$padding-size: 25px;
+
+.scrollbar {
+  width: 100% !important;
+  height: 220px !important;
+}
+
+.modal {
+  max-width: 342px !important;
+  border-radius: 10px !important;
+
+  & > div {
+    min-width: 342px;
+    padding: 15px 0;
+  }
+}
+
+.editEntry {
+  padding: 0 24px;
+  margin-bottom: 20px;
+  height: 160px;
+
+  & > * {
+    margin-top: 10px;
+    height: 100%;
+  }
+
+  textarea {
+    width: 100%;
+  }
+}
+
+.buttonSave {
+  height: 36px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  outline: transparent;
+  letter-spacing: -0.17px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: $blue-grownu;
+  border: 1px solid transparent;
+}
+
+.scrollbarTrackY {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+  width: 7px !important;
+  height: calc(100% - 50px) !important;
+  top: 30px !important;
+  right: 0 !important;
+  z-index: 2;
+
+  div {
+    background-color: #d5dde1 !important;
+    border-radius: 10px !important;
+  }
+}

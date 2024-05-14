@@ -1,6 +1,8 @@
 import {
   POST_LOGBOOK_ENTRY,
   POST_LOGBOOK_ENTRY_SUCCESS,
+  POST_LOGBOOK_COMMENT,
+  POST_LOGBOOK_COMMENT_SUCCESS,
   POST_LOGBOOK_ADD_ENTRY,
   POST_LOGBOOK_ADD_ENTRY_SUCCESS,
 } from './types';
@@ -26,5 +28,17 @@ export const postLogbookAddEntry = (id, data, callback) => ({
 
 export const postLogbookEntryAddSuccess = (data) => ({
   type: POST_LOGBOOK_ADD_ENTRY_SUCCESS,
+  data,
+});
+
+export const postLogbookComment = (id, data, callback) => ({
+  type: POST_LOGBOOK_COMMENT,
+  id,
+  data,
+  callback,
+});
+
+export const postLogbookCommentSuccess = (data) => ({
+  type: POST_LOGBOOK_COMMENT_SUCCESS,
   data,
 });

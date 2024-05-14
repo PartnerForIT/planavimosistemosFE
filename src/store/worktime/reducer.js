@@ -5,6 +5,7 @@ import {
 } from './types';
 import {
   POST_LOGBOOK_ENTRY_SUCCESS,
+  POST_LOGBOOK_COMMENT_SUCCESS,
   POST_LOGBOOK_ADD_ENTRY_SUCCESS,
 } from '../logbook/types';
 
@@ -23,6 +24,14 @@ export const reducer = (state = initialState, action) => {
       return { ...state, error: null, loading: true };
 
     case POST_LOGBOOK_ENTRY_SUCCESS: {
+      return {
+        workTime: [
+          ...action.data.work_time,
+        ],
+        ...state,
+      };
+    }
+    case POST_LOGBOOK_COMMENT_SUCCESS: {
       return {
         workTime: [
           ...action.data.work_time,
