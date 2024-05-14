@@ -142,7 +142,7 @@ const Row = ({
           /* actions width */ - (withoutRightPanel ? 70 : 120) /* scroll width */ - (withoutRightPanel ? 17 : 32)}px`);
       }
     }
-  }, [index, tableRef, windowWidth]);
+  }, [index, tableRef, windowWidth, withoutRightPanel]);
 
   useEffect(() => {
     if (withoutShitCode) {
@@ -154,7 +154,7 @@ const Row = ({
         || (colored.success && row.success)) && row.checked) {
       onSelect(row.id, false);
     }
-  }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning]);
+  }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning, withoutShitCode]);
 
   return (
     <div

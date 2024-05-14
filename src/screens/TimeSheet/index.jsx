@@ -123,6 +123,8 @@ export default () => {
             if (employer.id === i.employeeId) {
               checkEmployer = true;
             }
+
+            return employer;
           });
         }
 
@@ -133,7 +135,7 @@ export default () => {
 
     return sheet?.resources;
 
-  }, [filter, sheet?.resources]);
+  }, [filter, sheet]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);

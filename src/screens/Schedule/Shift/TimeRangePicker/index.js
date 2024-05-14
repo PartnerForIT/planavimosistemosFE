@@ -79,7 +79,7 @@ export default memo(({
   const timeRangeColorClasses = classNames(classes.timeRangeColor, {
     [classes.timeRangeColor_openMenu]: isOpenMenu,
     [classes.timeRangeColor_copyTool]: inCopyTool,
-    ['timeRangeColor']: true,
+    'timeRangeColor': true,
   });
 
   const handleClickOpenModal = () => {

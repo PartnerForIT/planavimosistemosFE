@@ -58,10 +58,28 @@ export default function CustomSelect({
 
     const filterData = () => {
       if (!search) return items;
-
-      const arrayCopy = [...items];
-      return arrayCopy.filter((item) => (item.label || item.title || item.name).toLowerCase().includes(search.toLowerCase()));
-    };
+    
+      const searchLower = search.toLowerCase();
+    
+      function filterItems(items) {
+        return items.map(item => {
+          if (item.type === "group") {
+            // Create a new object for the group and filter its nested items
+            const filteredSubItems = filterItems([...item.items]);
+            if (filteredSubItems.length > 0) {
+              return { ...item, items: filteredSubItems };
+            }
+            return null; // Return null if no subitems match, to filter out this group
+          }
+          if ((item.label || item.title || item.name).toLowerCase().includes(searchLower)) {
+            return item; // Return the item if it matches
+          }
+          return null; // Return null if the item doesn't match
+        }).filter(item => item !== null); // Filter out nulls to remove non-matching items and empty groups
+      }
+    
+      return filterItems([...items]); // Copy the array to avoid modifying the original data
+    };    
 
     setItemsArray(setCheckedToAll(filterData()));
     setCheckedItems(checkedItemsArray);

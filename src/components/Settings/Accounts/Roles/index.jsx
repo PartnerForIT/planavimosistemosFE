@@ -88,6 +88,10 @@ const permissionsConfig = [
     name: 'integrations',
     module: 'integrations',
   },
+  {
+    name: 'comments_photo',
+    module: 'comments_photo',
+  },
 ];
 export default () => {
   const { id } = useParams();
@@ -122,6 +126,7 @@ export default () => {
             edit_settings: 'Can edit Logbook settings',
             add_logs: 'Can create new entries',
             edit_logs: 'Can edit entry logs',
+            ...(modules.comments_photo && { edit_comments: 'Can edit entry comments' }),
             delete_logs: 'Can delete entry logs',
             ...(modules.cost_earning && { earnings: 'Can see earnings (APP)' }),
             ...(modules.profitability && { profit: 'Can see earnings and profit' }),
@@ -291,7 +296,6 @@ export default () => {
       ?.accountRolesPermissions
       // eslint-disable-next-line no-shadow
       ?.map(({ permission_id: id, access }) => ({ id, access }));
-
     const newPermissions = data?.length ? data.map((item) => ({
       id: item, access: 1,
     })) : [];

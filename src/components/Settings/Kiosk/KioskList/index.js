@@ -117,7 +117,7 @@ export default () => {
       name: t('All places'),
     },
     ...places,
-  ], [places, i18n.language]);
+  ], [places, t]);
 
   // allPlaces
   const onEditItem = (id) => {

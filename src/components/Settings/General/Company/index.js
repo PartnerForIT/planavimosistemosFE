@@ -118,7 +118,7 @@ export default function Company() {
 
 
   const handleCompanyChange = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     const foundCountry = countries.find(({ code }) => code === value);
 
     const nextInputValues = {

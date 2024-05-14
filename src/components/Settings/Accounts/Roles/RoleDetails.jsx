@@ -65,6 +65,10 @@ function RoleDetails({
   const onChangeHandler = (id) => {
     setActivePermissions((prevState) => {
       if (prevState.some((i) => i === id)) {
+        if (permissionsIds.logbook.edit_logs === id) {
+          return prevState.filter((i) => i !== id && i !== permissionsIds.logbook.edit_comments);
+        }
+
         return prevState.filter((i) => i !== id);
       }
 
@@ -74,6 +78,10 @@ function RoleDetails({
 
       if (permissionsIds.accounts.create === id) {
         return [...prevState, id, permissionsIds.accounts.see_and_edit];
+      }
+
+      if (permissionsIds.logbook.edit_logs === id) {
+        return [...prevState, id, permissionsIds.logbook.edit_comments];
       }
 
       return [...prevState, id];

@@ -107,7 +107,7 @@ export default () => {
     } else if (permissions.categories_create) {
       history.push(`${mainPath}/categories`);
     }
-  }, [permissions, companyId]);
+  }, [permissions, companyId, history]);
 
   return (
     <MaynLayout>

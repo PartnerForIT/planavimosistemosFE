@@ -1644,7 +1644,7 @@ function* getSchedule(action) {
 
 function* postSchedule(action) {
   try {
-    const { data } = yield call(
+    yield call(
       axios.post,
       `${config.api.url}/company/${action.companyId}/schedule/settings/edit`,
       action.data,

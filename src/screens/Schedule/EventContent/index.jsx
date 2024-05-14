@@ -95,7 +95,7 @@ export default ({
       [styles.dayEnd]: isCompleted,
       [styles.eventContent__time]: content === 'addWorkingTime',
       [styles.activeDrag]: activeDrag,
-      ['activeDrag']: activeDrag,
+      'activeDrag': activeDrag,
       [styles.eventContent__removeTimelines]: removeTimelines,
     },
   );
