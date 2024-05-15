@@ -934,7 +934,8 @@ export default () => {
   const renderResourceLaneContent = ({resource}) => {
     let current_markers = [];
     if (markers) {
-      current_markers = markers.filter(m => m.employee_id*1 === resource.extendedProps.employeeId*1 );
+      // eslint-disable-next-line
+      current_markers = markers.filter(m => m.employee_id == resource.extendedProps.employeeId );
     }
 
     return (
@@ -962,7 +963,8 @@ export default () => {
                 }
 
                 // hide mark when day have event
-                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
+                // eslint-disable-next-line
+                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id == employeeId && !e.empty_manual)) : false;
                 
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>

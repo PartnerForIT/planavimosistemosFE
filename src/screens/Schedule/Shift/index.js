@@ -39,7 +39,6 @@ import ErrorModal from 'components/Core/Dialog/ErrorModal';
 import { companyModules } from '../../../store/company/selectors';
 
 import CopyTool from './../CopyTool';
-import ShiftColor from './ShiftColor';
 import DatePicker from './DatePicker';
 import ButtonsField from './ButtonsField';
 import Table from './Table';
@@ -289,9 +288,6 @@ export default () => {
   const handleClose = () => {
     setSaveChanges(false);
   };
-  const handleChangeShiftColor = (color) => {
-    setColorShift(color);
-  };
   const handleChangeShiftName = (event) => {
     setShiftName(event.target.value);
   };
@@ -366,6 +362,7 @@ export default () => {
 
     let submitEvents = customWorkingTime ? parseEvents(events) : {}
     if (modules?.manual_mode) {
+      // eslint-disable-next-line
       Object.keys(submitEvents).map((key, index) => {
           submitEvents[key] = submitEvents[key].map(item => {
               return {
@@ -382,8 +379,6 @@ export default () => {
               }
             }
           );
-
-          return submitEvents;
         }
       );
     }
@@ -620,13 +615,6 @@ export default () => {
         <span className={classes.header__title}>
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
-        <ShiftColor
-          label={`${t('Shift Color')}:`}
-          modalLabel={t('Shift')}
-          value={colorShift}
-          onChange={handleChangeShiftColor}
-          colors={COLORS_SHIFT}
-        />
         <Input
           placeholder={t('Enter Shift Name')}
           value={shiftName}
