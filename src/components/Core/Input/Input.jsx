@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 import styles from './Input.module.scss';
 
-const Input = ({
+const Input = forwardRef(({
   disabled, placeholder, icon, type, width, height,
   min, max, fullWidth, underlined, iconLeft, error, light, value='', ...props
-}) => {
+}, ref) => {
   const classes = classNames(
     styles.input,
     { [styles.withIcon]: !!icon },
@@ -28,6 +28,7 @@ const Input = ({
         </div>
       ) : null}
       <input
+        ref={ref}
         style={{ width: '100%', height }}
         className={classes}
         type={type || 'text'}
@@ -40,5 +41,5 @@ const Input = ({
       />
     </div>
   );
-};
+});
 export default Input;

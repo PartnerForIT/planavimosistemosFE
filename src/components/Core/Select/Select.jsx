@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useState,
+  useCallback, useEffect, useState, useRef
 } from 'react';
 import classNames from 'classnames';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -30,6 +30,8 @@ export default function CustomSelect({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const { t } = useTranslation();
+  const searchInputRef = useRef(null);
+
 
   useEffect(() => {
     const checkedItemsArray = [];
@@ -95,6 +97,12 @@ export default function CustomSelect({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedItems]);
+
+  useEffect(() => {
+    if (open && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [open]);
 
   const handleCheckboxChange = useCallback((item) => {
     const checkedItemsArray = [];
@@ -195,6 +203,7 @@ export default function CustomSelect({
           <div className={classNames(styles.contentBox)}>
             {withSearch && (
               <Input
+                ref={searchInputRef}
                 icon={<SearchIcon />}
                 placeholder={t('Search')}
                 value={search}
