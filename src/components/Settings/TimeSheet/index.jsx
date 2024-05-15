@@ -52,6 +52,7 @@ export default function TimeSheet() {
     overtime_hours: false,
     show_costs: false,
     working_days: false,
+    use_accumulated: false,
   });
 
   useEffect(() => {
@@ -74,6 +75,7 @@ export default function TimeSheet() {
       overtime_hours: payload.overtime_hours ? 1 : 0,
       show_costs: payload.show_costs ? 1 : 0,
       working_days: payload.working_days ? 1 : 0,
+      use_accumulated: payload.use_accumulated ? 1 : 0,
     };
     dispatch(editTimeSheet(id, data));
   }, [dispatch, id]);

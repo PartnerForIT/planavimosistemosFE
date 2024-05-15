@@ -27,10 +27,11 @@ import {
   downloadIntegration,
 } from '../../store/sheet/actions';
 import {
-  loadEmployeesAll, loadIntegrations, getSettingWorkTime,
+  loadEmployeesAll, loadIntegrations, getSettingWorkTime, loadTimeSheet,
 } from '../../store/settings/actions';
 //import { employeesSelector } from '../../store/employees/selectors';
-import { employeesSelector } from '../../store/settings/selectors';
+
+import { employeesSelector, TimeSheetDataSelector } from '../../store/settings/selectors';
 import { sheetSelector, isLoadingSelector } from '../../store/sheet/selectors';
 import { IntegrationsDataSelector } from '../../store/settings/selectors';
 import { getPlaces } from '../../store/places/actions';
@@ -74,6 +75,7 @@ export default () => {
   //const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
+  const timesheet = useSelector(TimeSheetDataSelector);
 
   const employToCheck = useCallback(({
     id,
@@ -253,6 +255,7 @@ export default () => {
     //dispatch(getEmployees(companyId));
     dispatch(getSettingWorkTime(companyId));
     dispatch(loadIntegrations(companyId));
+    dispatch(loadTimeSheet(companyId));
 
     dispatch(getSheet({
       companyId,
@@ -263,7 +266,7 @@ export default () => {
     dispatch(loadEmployeesAll(companyId));
 
     return () => {
-      // eslint-disable-next-line no-unused-expressions
+      // eslint-disable-next-line
       resizeObserverRef.current?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -321,6 +324,7 @@ export default () => {
               fields={sheet?.fields}
               onChangeMonth={handleGetSheet}
               withCost={permissions.cost && permissions.time_sheet_costs}
+              withAccumulated={timesheet.use_accumulated}
             />
           )
         }

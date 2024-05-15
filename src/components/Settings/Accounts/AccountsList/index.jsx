@@ -254,6 +254,8 @@ export default function AccountsList() {
       return newOne;
     }
     return {};
+
+    // eslint-disable-next-line
   }, [stats]);
 
   useEffect(() => {

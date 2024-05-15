@@ -50,6 +50,7 @@ const ResourceCell = ({
   // }, [onSubmit, parentRowId]);
   const handleExpander = useCallback(() => {
     onExpander({ rowId });
+    // eslint-disable-next-line
   }, [rowId]);
   // const handleDelete = useCallback(() => {
   //   onDelete({ rowId, parentRowId });

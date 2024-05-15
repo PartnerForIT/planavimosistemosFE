@@ -72,7 +72,7 @@ export default function ActivityLog() {
       place_id: inputValues.place !== 'select' ? inputValues.place : null,
     };
     dispatch(filterActivityLog(id, data));
-  }, [dispatch, id, inputValues]);
+  }, [dispatch, id, inputValues, t]);
 
   useEffect(() => {
     setEmployees(employeesArr.map((item) => ({ fullName: `${item.name} ${item.surname}`, ...item })));

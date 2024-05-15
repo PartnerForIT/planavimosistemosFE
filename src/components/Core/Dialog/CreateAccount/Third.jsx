@@ -154,6 +154,7 @@ function Third({
     if (!_.isEmpty(user) && ready) {
       create(user);
     }
+    // eslint-disable-next-line
   }, [ready, user]);
 
   return (

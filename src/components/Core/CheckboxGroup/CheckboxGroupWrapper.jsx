@@ -176,6 +176,7 @@ const CheckboxGroupWrapper = ({
     setCheckedItems(checkedItemsArray);
     onChange(!sorted ? checkedItemsArray
       : [...def.filter(({ id }) => id !== item.id), ...checkedItemsArray]);
+      // eslint-disable-next-line
   }, [def, itemsArray, onChange, sorted]);
 
   return (

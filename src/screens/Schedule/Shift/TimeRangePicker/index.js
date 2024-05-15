@@ -197,6 +197,7 @@ export default memo(({
         console.error(e);
       }
     }
+    // eslint-disable-next-line
   }, [isOpen, isOpenMenu]);
 
   return (

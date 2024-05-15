@@ -370,6 +370,7 @@ export default () => {
         return [...state, mappedReport];
       });
 
+      // eslint-disable-next-line
       if (activeReport && !generateRequest && generatedReport.id != activeReport) {
         const removeReport = (reps) => reps.filter((rep) => { return rep.id !== activeReport});
         setItemsArray(removeReport);
@@ -378,6 +379,7 @@ export default () => {
     }
     setGenerateRequest(null);
     // setTotalDuration(getTotalDuration);
+    // eslint-disable-next-line
   }, [comments, costState.show_costs, costState.show_earnings,
     costState.show_profit, generatedReport]);
 

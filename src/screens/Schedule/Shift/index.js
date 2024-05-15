@@ -279,6 +279,8 @@ export default () => {
     }
 
     return undefined;
+
+    // eslint-disable-next-line
   }, [shift]);
 
   const handleChangePlace = (event) => {
@@ -317,8 +319,10 @@ export default () => {
     const parseEvents = (prevEvents) => Object.keys(prevEvents)
       .reduce((acc, week) => {
         if (numberOfWeeks * 1  > week * 1) {
+          // eslint-disable-next-line
           acc[week] = prevEvents[week].map((event) => ({
             ...event,
+            // eslint-disable-next-line
             data: event.data.reduce((accJ, item, indexDay) => {
               if (daysOfWeek[week]) {
                 const currentDayOfWeek = daysOfWeek[week][indexDay];
@@ -378,6 +382,8 @@ export default () => {
               }
             }
           );
+
+          return submitEvents;
         }
       );
     }
@@ -605,6 +611,7 @@ export default () => {
         //  так как по этому условию будет подходить старый шифт
       }
     }
+    // eslint-disable-next-line
   }, [workTime, shift]);
 
   return (

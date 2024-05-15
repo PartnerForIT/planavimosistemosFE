@@ -1,31 +1,22 @@
 import React from 'react';
 import Switch from 'react-switch';
-import { withStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+//import { withStyles } from '@material-ui/core/styles';
+//import Radio from '@material-ui/core/Radio';
+//import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Label from '../../../Core/InputLabel';
-import Input from '../../../Core/Input/Input';
-import SimpleSelect from '../../../Core/SimpleSelect';
-import { timeArr } from '../../../Helpers/time';
+//import Input from '../../../Core/Input/Input';
+//import SimpleSelect from '../../../Core/SimpleSelect';
+//import { timeArr } from '../../../Helpers/time';
 
-const BlueRadio = withStyles({
-  root: {
-    color: '#ccc',
-    '&$checked': {
-      color: '#0085FF',
-    },
-  },
-  checked: {},
-})((props) => <Radio color='default' {...props} />);
 
 export default function Form({
   t,
   style,
-  handleInputChange,
+  //handleInputChange,
   handleChangeCalculation,
   ClockData,
-  permissions,
+  //permissions,
 }) {
   return (
     <form className={style.clockBlock}>

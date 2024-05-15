@@ -164,6 +164,7 @@ export default () => {
       dispatch(getOrganisationModules(companyId));
       dispatch(loadLogbookAdditionalRates(companyId));
     }
+    // eslint-disable-next-line
   }, [companyId]);
   // useEffect(() => {
   //   if (!isLoadingCompanyModules) {

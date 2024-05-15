@@ -53,7 +53,7 @@ import styles from './KioskList.module.scss';
 export default () => {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const useStyles = makeStyles(() => ({
     error: {
       background: '#de4343',

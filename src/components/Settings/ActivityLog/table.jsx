@@ -70,7 +70,7 @@ export default function ActivityTable({
         place_id: paceName(item),
       })).reverse()
       : activityLog.reverse());
-  }, [activityLog, paceName]);
+  }, [activityLog, paceName, dateFormat]);
 
   const selectionHandler = (itemId, value) => {
     setDataArray((prevState) => prevState.map((item) => {

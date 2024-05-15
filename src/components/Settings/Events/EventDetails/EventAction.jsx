@@ -36,7 +36,7 @@ export default React.memo(({
   
   return (
     <Content tooltip='Tooltip' title={t('Event Action')}>
-      { values.event_type_id == 9 || values.event_type_id == 10 ? (
+      { values.event_type_id === 9 || values.event_type_id === 10 ? (
         <StyledCheckbox
           label={t('Push notification in APP')}
           id='notification_push'

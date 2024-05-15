@@ -1,11 +1,9 @@
-import { success, error } from 'redux-saga-requests';
+import { success } from 'redux-saga-requests';
 import {
   GET_SHEET,
-  GET_SHEET_SUCCESS,
   GET_SHEET_ERROR,
 
   GET_INTEGRATION,
-  GET_INTEGRATION_SUCCESS,
   GET_INTEGRATION_ERROR,
 } from './types';
 import {ADD_SNACKBAR} from "../organizationList/types";

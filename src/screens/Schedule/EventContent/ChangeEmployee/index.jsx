@@ -61,7 +61,7 @@ export default ({
     }
 
     return employees.filter(e => { return !unavailableEmployees.includes(e.id) });
-  }, [searchValue, employees]);
+  }, [searchValue, employees, unavailableEmployees]);
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
 
   return (

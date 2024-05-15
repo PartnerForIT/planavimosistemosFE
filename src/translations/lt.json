@@ -884,5 +884,10 @@
         "Enable request photo to be taken on Clock In": "Aktyvuoti nuotraukos prašymą kai darbuotojas Pradeda darbą",
         "Enable request photo to be taken on Clock Out": "Aktyvuoti nuotraukos prašymą kai darbuotojas Baigia darbą",
         "Planned time": "Suplanuotos valandos", 
-        "Registered time": "Registruotos valandos"
+        "Registered time": "Registruotos valandos",
+
+        "Planned Time _s": "Plan. laikas",
+        "Target Time _s": "Reik. Laikas",
+        "Planned Time _t": "Suplanuotas Laikas",
+        "Target Time _t": "Reikalingas Laikas"
 }

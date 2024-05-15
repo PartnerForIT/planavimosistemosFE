@@ -144,6 +144,7 @@ export default function CreateAddress({
     setCurrentZoom(7);
   };
 
+  // eslint-disable-next-line
   const fetchCoordinates = useCallback(async (setZoom) => {
     try {
       const response = await fromAddress(formValues.address);
@@ -224,7 +225,7 @@ export default function CreateAddress({
   
   useEffect(() => {
     
-    if (company && countries.length && open && !initialValues.address && initialValues?.id != formValues?.id) {
+    if (company && countries.length && open && !initialValues.address && initialValues?.id !== formValues?.id) {
       const foundCountry = countries.find(({ code }) => code === company.country);
       if (foundCountry) {
         initCoords(foundCountry?.name);
@@ -245,7 +246,7 @@ export default function CreateAddress({
         ...initialFormValues,
       });
     }
-
+// eslint-disable-next-line
   }, [initialValues, open]);
   
   const MyMap = withScriptjs(withGoogleMap(props => {
@@ -254,7 +255,7 @@ export default function CreateAddress({
       ref={mapRef}
       defaultZoom={initData.zoom}
       zoom={currentDataRef.current.zoom ? currentDataRef.current.zoom : initData.zoom}
-      defaultCenter={{lat: currentDataRef.current.lat != 0 ? currentDataRef.current.lat : initData.center_lat, lng: currentDataRef.current.lng != 0 ? currentDataRef.current.lng : initData.center_lng}}
+      defaultCenter={{lat: currentDataRef.current.lat*1 !== 0 ? currentDataRef.current.lat : initData.center_lat, lng: currentDataRef.current.lng*1 !== 0 ? currentDataRef.current.lng : initData.center_lng}}
       onClick={onMapClick}
       onZoomChanged={() => { currentDataRef.current.zoom = mapRef.current.getZoom(); }}
       //onDragEnd={() => { setInitData({...initData, center_lat: mapRef.current.getCenter().lat(), center_lng: mapRef.current.getCenter().lng()}); }}
@@ -287,6 +288,7 @@ export default function CreateAddress({
                 onSearch={searchAddress}
                 onCancel={() => getPlacePredictions({ input: '' })}
                 onSelect={onSelectAddress}
+                // eslint-disable-next-line
                 onChange={useCallback((e) => setFormValues({ ...formValues, address: e.target.value }))}
                 onClear={onClear}
                 onClickItem={(name) => { setFormValues({ ...formValues, address: name }) }}

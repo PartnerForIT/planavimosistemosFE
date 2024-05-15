@@ -177,17 +177,17 @@ export default function EditAccount({
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({ id, name }) => ({ id, name })) ?? [];
     return grps;
-  }, [groups, t]);
+  }, [groups]);
 
   const skillsOptions = useMemo(() => {
     const sks = skills?.map(({ id, name }) => ({ id, name })) ?? [];
     return sks;
-  }, [skills, t]);
+  }, [skills]);
 
   const rolesOptions = useMemo(() => {
     const rls = roles?.map(({ id, name }) => ({ id, name })) ?? [];
     return rls;
-  }, [roles, t]);
+  }, [roles]);
 
   const subGroupsOpt = useMemo(() => {
     // eslint-disable-next-line eqeqeq
@@ -197,19 +197,19 @@ export default function EditAccount({
   }, [groups, user.group]);
 
   const shiftsOptions = useMemo(() => {
-    const shft = shifts?.filter(e => !user.place || user.place == e.place_id)?.map(({ id, name }) => ({ id, name })) ?? [];
+    const shft = shifts?.filter(e => !user.place || user.place*1 === e.place_id*1)?.map(({ id, name }) => ({ id, name })) ?? [];
     return shft;
-  }, [shifts, user, t]);
+  }, [shifts, user]);
 
   const jobTypesOptions = useMemo(() => {
-    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id == user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+    const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id*1 === user.shift_id*1))?.map(({ id, title }) => ({ id, name: title })) ?? [];
     return jt;
-  }, [job_types, user, shifts, t]);
+  }, [job_types, user]);
 
-  const assignjobTypesOptions = useMemo(() => {
-    const jt = job_types?.filter(e => user.assign_shift_id && e?.shifts.find(s => s.id == user.assign_shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
-    return jt;
-  }, [job_types, user, shifts, t]);
+  // const assignjobTypesOptions = useMemo(() => {
+  //   const jt = job_types?.filter(e => user.assign_shift_id && e?.shifts.find(s => s.id*1 === user.assign_shift_id*1))?.map(({ id, title }) => ({ id, name: title })) ?? [];
+  //   return jt;
+  // }, [job_types, user, shifts, t]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -258,28 +258,28 @@ export default function EditAccount({
 
           if (prevState.shift_id) {
             const foundShift = shifts.find(({ id }) => id === prevState.shift_id);
-            if (foundShift && foundShift.place_id != value) {
+            if (foundShift && foundShift.place_id*1 !== value*1) {
               delete nextValues.shift_id;
             }
           }
 
           if (prevState.assign_shift_id) {
             const foundShift = shifts.find(({ id }) => id === prevState.assign_shift_id);
-            if (foundShift && foundShift.place_id != value) {
+            if (foundShift && foundShift.place_id*1 !== value*1) {
               delete nextValues.assign_shift_id;
             }
           }
 
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.shift_id)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id*1 === nextValues?.shift_id*1)) {
               delete nextValues.job_type_id;
             }
           }
 
           if (prevState.assign_job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == nextValues?.assign_shift_id)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id*1 === nextValues?.assign_shift_id*1)) {
               delete nextValues.assign_job_type_id;
             }
           }
@@ -294,7 +294,7 @@ export default function EditAccount({
 
           if (prevState.job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id*1 === value*1)) {
               delete nextValues.job_type_id;
             }
           }
@@ -310,7 +310,7 @@ export default function EditAccount({
 
           if (prevState.assign_job_type_id) {
             const foundJT = job_types.find(({ id }) => id === prevState.assign_job_type_id);
-            if (foundJT && !foundJT?.shifts.find(s => s.id == value)) {
+            if (foundJT && !foundJT?.shifts.find(s => s.id*1 === value*1)) {
               delete nextValues.assign_job_type_id;
             }
           }

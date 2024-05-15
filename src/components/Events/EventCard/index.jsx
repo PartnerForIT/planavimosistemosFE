@@ -238,6 +238,7 @@ const EventInformation = ({
       }
       default: return { items: [] };
     }
+    // eslint-disable-next-line
   }, [type, time]);
 
   return (
@@ -274,7 +275,7 @@ export default ({
 }) => {
   
   const { t } = useTranslation();
-  const { icon, title, subTitle } = useMemo(() => {
+  const { icon, subTitle } = useMemo(() => {
     switch (selectedItem?.event_type_id) {
       case EVENT_TYPE.EARLY_CLOCK_IN: {
         return {
@@ -344,6 +345,8 @@ export default ({
       }
       default: return {};
     }
+
+    // eslint-disable-next-line
   }, [selectedItem?.event_type_id]);
 
   return (

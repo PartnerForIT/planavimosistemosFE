@@ -15,7 +15,9 @@ const reducer = (state = initialState, action) => {
           return !(
             resultItem.start <= action.payload.end &&
             resultItem.end >= action.payload.start &&
+            // eslint-disable-next-line
             resultItem.resourceId == action.payload.resourceId &&
+            // eslint-disable-next-line
             (!action.payload.day || (action.payload.day && resultItem.day == action.payload.day))
           );
         }), action.payload],

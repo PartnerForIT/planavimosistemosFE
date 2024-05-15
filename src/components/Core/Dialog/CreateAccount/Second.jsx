@@ -125,6 +125,7 @@ const SecondStep = ({
       name,
     })) ?? [];
     return sks;
+    // eslint-disable-next-line
   }, [skills, t]);
 
   const rolesOptions = useMemo(() => {
@@ -140,11 +141,13 @@ const SecondStep = ({
   const jobTypesOptions = useMemo(() => {
     const jt = job_types?.filter(e => user.shift_id && e?.shifts.find(s => s.id === user.shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
     return jt;
+    // eslint-disable-next-line
   }, [job_types, user, shifts]);
 
   const assignjobTypesOptions = useMemo(() => {
     const jt = job_types?.filter(e => user.assign_shift_id && e?.shifts.find(s => s.id === user.assign_shift_id))?.map(({ id, title }) => ({ id, name: title })) ?? [];
     return jt;
+    // eslint-disable-next-line
   }, [job_types, user, shifts]);
 
   const nextWithValidate = () => {

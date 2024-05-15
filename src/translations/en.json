@@ -10,5 +10,10 @@
         "May_short": "May",
         "Name_nn": "Name",
 
-        "if workday exceeds 4.30 hours": "if workday exceeds 4:30 hours"
+        "if workday exceeds 4.30 hours": "if workday exceeds 4:30 hours",
+
+        "Planned Time _s": "Planned Time",
+        "Target Time _s": "Target Time",
+        "Planned Time _t": "",
+        "Target Time _t": ""
 }

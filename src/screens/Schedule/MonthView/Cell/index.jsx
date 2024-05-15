@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
-import MoonIcon from '../../../../components/Icons/Moon';
 import CellOptions from '../CellOptions';
 import moment from 'moment';
 
@@ -95,6 +94,7 @@ export default ({
   let end = event ? moment(event.end) : null;
 
   if (event?.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
+    // eslint-disable-next-line
     const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());
     if (time?.start) {
       const [h, m] = time.start.split(':');
@@ -118,7 +118,7 @@ export default ({
   let isCompleted = event?.is_completed;
   let jobTypeId;
 
-  if (resource?.employeeId || resource?.employeeId == 0) {
+  if (resource?.employeeId || resource?.employeeId*1 === 0) {
     [shiftId, jobTypeId] = resource.id.split('-');
     withMenu = event ? true : false;
     employeeName = resource.title;
@@ -129,7 +129,9 @@ export default ({
   let unEmployees = [];
   if (event) {
     const allEmployees  = events.filter(e => e.empty_employee === false
+      // eslint-disable-next-line
                                                     && e.resourceId.indexOf(shiftId+'-') == 0
+                                                    // eslint-disable-next-line
                                                     && event.day_number == e.day_number);
 
     unEmployees = allEmployees.map(e => {
@@ -243,13 +245,24 @@ export default ({
   }
 
   return (
-    <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
+    <>
+    { title*1 > 0 ? 
+     (
+      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
       <span>{t('Go')}</span>
-      {title != 0 ? title : ''}
+      {title*1 !== 0 ? title : ''}
       <HolidayIcon
         holidays={holiday}
         month={true}
       />
-    </div>
+      </div>
+     ) :
+     (
+      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell}>
+      {title*1 !== 0 ? title : ''}
+      </div>
+     )
+    }
+    </>
   );
 };

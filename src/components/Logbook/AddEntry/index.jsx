@@ -18,13 +18,6 @@ import { jobTypesSelector } from '../../../store/jobTypes/selectors';
 import { placesSelector } from '../../../store/places/selectors';
 import classes from './AddEntry.module.scss';
 
-const formatChars = {
-  2: '[0-2]',
-  3: '[0-3]',
-  5: '[0-5]',
-  9: '[0-9]',
-};
-
 const MiniCardInfo = ({
   icon,
   label,
@@ -202,6 +195,7 @@ export default ({
         ].sort((a, b) => moment(a.started_at).diff(b.started_at)),
       );
     }
+    // eslint-disable-next-line
   }, [open, setTimeParts]);
 
   const employees = useMemo(() => allEmployees.map((empl) => {

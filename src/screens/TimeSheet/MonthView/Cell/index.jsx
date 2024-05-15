@@ -23,6 +23,8 @@ export default ({
   const cellClasses = classnames(classes.cell, {
     [classes.cell_statistic_time]: cellId === 'totalTime',
     [classes.cell_statistic_cost]: cellId === 'totalCost',
+    [classes.cell_statistic_planned]: cellId === 'plannedTime',
+    [classes.cell_statistic_target]: cellId === 'targetTime',
     [classes.cell_statistic]: statistic,
     [classes.cell_article]: article,
     [classes.cell_weekend]: weekend,
@@ -43,6 +45,7 @@ export default ({
         refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth - 4}px`;
       }
     }
+    // eslint-disable-next-line
   }, [title]);
 
   if (!header && title) {
@@ -70,7 +73,13 @@ export default ({
 
   return (
     <div className={cellClasses} ref={refCell}>
-      {title !== 0 ? title : ''}
+      <div
+        data-for='title'
+        data-tip={`${tooltip ? tooltip : ''}`}
+      >
+        {title !== 0 ? title : ''}
+      </div>
+      
       { header && (
         <HolidayIcon
           holidays={holiday}

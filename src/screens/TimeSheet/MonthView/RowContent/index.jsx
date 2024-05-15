@@ -74,28 +74,46 @@ const RowContent = ({
 
   let time = 0;
   let cost = 0;
-  const check = (statistic, id) => {
-    if (statistic && id === "totalTime" && field !== 'show_costs'){
+  const check = (item) => {
+    if (item.statistic && item.id === "totalTime" && field !== 'show_costs'){
       return time > 0 ? (field !== 'working_days' ? timeConvert(time) : time) : '';
     }
-    if (statistic && id === "totalCost"){
+    if (item.statistic && item.id === "totalCost"){
       return cost > 0 ? <><CurrencySign />{parseFloat(cost).toFixed(2)}</> : '';
+    }
+
+    if (item.statistic && item.id === "plannedTime" && field === 'total_hours'){
+      const found = sheet.find((item) => resource.id === item.employeeId && resource.place_id === item.place_id);
+      if (found && found.planned_time) {
+        return found.planned_time;
+      }
+    }
+
+    if (item.statistic && item.id === "targetTime" && field === 'total_hours'){
+      const found = sheet.find((item) => resource.id === item.employeeId && resource.place_id === item.place_id);
+      if (found && found.target_time) {
+        return found.target_time;
+      }
     }
 
     return ''
   }
 
   const parsedTitle = (item) => {
-    return item.statistic ? check(item.statistic, item.id) : foundItem(item.title)
+    return item.statistic ? check(item) : foundItem(item.title)
   }
 
-  const tooltipInner = (day) => {
-    const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);
-    if (find) {
-      return "From <strong>" + moment(find.start).format('HH:mm') + "</strong> To <strong>" + moment(find.end).format('HH:mm') + "</strong>";
+  const tooltipInner = (itemCheck, field) => {
+    if (!itemCheck.statistic && field === 'total_hours') {
+      const find = sheet.find((item) => resource.id === item.employeeId && item.day*1 === itemCheck.id*1 && resource.place_id === item.place_id);
+      if (find) {
+        return "From <strong>" + moment(find.start).format('HH:mm') + "</strong> To <strong>" + moment(find.end).format('HH:mm') + "</strong>";
+      }
+
+      return find && find[field] ? timeConvert(find[field]) : '';
     }
 
-    return find && find[field] ? timeConvert(find[field]) : '';
+    return '';
   }
   
   return (
@@ -119,7 +137,7 @@ const RowContent = ({
                 title={parsedTitle(item)}
                 statistic={item.statistic}
                 weekend={item.weekend}
-                tooltip={!item.statistic && field === 'total_hours' ? tooltipInner(item.id) : ''}
+                tooltip={tooltipInner(item, field)}
                 past={!item.statistic && pastDay >= item.id}
                 holiday={item.holiday}
             />)

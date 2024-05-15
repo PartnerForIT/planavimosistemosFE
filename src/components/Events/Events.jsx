@@ -202,6 +202,7 @@ const Events = () => {
       //holiday: eventsParse[label][0]?.holiday,
       items: eventsParse[label],
     })));
+    // eslint-disable-next-line
   }, [events]);
 
   useEffect(() => {

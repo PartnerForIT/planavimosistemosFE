@@ -76,10 +76,11 @@ export default ({
     }
 
     // eslint-disable-next-line eqeqeq
-    if (!options || (options && options.message == 'Permission denied')) {
+    if (!options || (options && options.message === 'Permission denied')) {
       return placeholder
     }
 
+    // eslint-disable-next-line
     return options.find((option) => option[valueKey] == value)?.[labelKey] || '';//placeholder;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placeholder, open, options, value, searchValue, withoutSearch]);
@@ -109,6 +110,7 @@ export default ({
         contentBox.current.style.minHeight = `${minHeight}px`;
 
         if (scrollBar.current) {
+          // eslint-disable-next-line
           scrollBar.current.scrollTo(0, options.findIndex(obj => obj[valueKey] == value) * 36 - (minHeight/2-18));
         }
 
@@ -119,6 +121,7 @@ export default ({
         console.error(e);
       }
     }
+    // eslint-disable-next-line
   }, [options, open]);
 
   return (

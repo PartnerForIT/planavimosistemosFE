@@ -52,6 +52,7 @@ export default function CreateAccount({
 
   const closeStat = useSelector(errorPushEmployerSelector);
 
+  // eslint-disable-next-line
   const close = () => {
     setUser(initialUser);
     setStep(1);
@@ -66,7 +67,7 @@ export default function CreateAccount({
     if (closeStat === false) {
       close();
     }
-  }, [closeStat]);
+  }, [closeStat, close]);
   const handleInput = (e) => {
     const {
       name,

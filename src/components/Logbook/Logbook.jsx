@@ -482,6 +482,8 @@ export default () => {
       setColumnsWidthArray({...columnsWidth});
       setTotal(getTotal);
     }
+
+    // eslint-disable-next-line
   }, [workTime, getTotal, sortStatus, logbook_employee]);
 
   useEffect(() => {
@@ -516,7 +518,9 @@ export default () => {
       return true;
     });
 
+    // eslint-disable-next-line
     setColumnsArray(allColumnsArray);
+    // eslint-disable-next-line
   }, [permissions, setColumnsArray, journal.approve_flow]);
 
   useEffect(() => {

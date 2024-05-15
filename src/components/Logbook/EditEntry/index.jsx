@@ -283,6 +283,7 @@ export default ({
         ].sort((a, b) => moment(a.started_at).diff(b.started_at)),
       );
     }
+    // eslint-disable-next-line
   }, [open, selectedItem, setTimeParts]);
 
   const handleExited = () => {};

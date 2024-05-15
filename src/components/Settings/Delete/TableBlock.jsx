@@ -67,7 +67,7 @@ export default function DeleteDataTable({
         user_id: userName(item),
       }))
       : deleteData);
-  }, [deleteData, userName]);
+  }, [deleteData, userName, dateFormat]);
 
   const selectionHandler = (itemId, value) => {
     setDataArray((prevState) => prevState.map((item) => {

@@ -57,7 +57,11 @@ export default function Filter({
           if (j.id === i && j.status===3) {
             b = true;
           }
+
+          return j;
         });
+
+        return i;
       });
       return b;
     }

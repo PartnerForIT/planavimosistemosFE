@@ -30,7 +30,7 @@ import {
   getShiftError,
   putShiftSuccess,
   putShiftError,
-  getSchedule as getScheduleAction, addTempemployeeSuccess,
+  getSchedule as getScheduleAction,
 } from './actions';
 import { addSnackbar, dismissSnackbar } from '../organizationList/actions';
 import getToken from '../getToken';

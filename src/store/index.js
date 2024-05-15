@@ -2,7 +2,6 @@ import createSagaMiddleware from 'redux-saga';
 import thunkMiddleware from 'redux-thunk';
 import { requestsPromiseMiddleware } from 'redux-saga-requests';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { createLogger } from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import saga from './saga';
@@ -26,7 +25,6 @@ import sheet from './sheet/reducer';
 import copyTool from './copyTool/reducer';
 import shiftTypes from './shiftsTypes/reducer';
 
-const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({

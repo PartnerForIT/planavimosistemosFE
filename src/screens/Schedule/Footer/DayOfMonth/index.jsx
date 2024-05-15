@@ -33,7 +33,7 @@ export default ({
         statistic ? (
           <>
             { text }
-            { (night_time && night_time != 0) ? (
+            { (night_time && night_time*1 !== 0) ? (
                 <span className={classes.dayOfMonth_night}>
                 {night_time} h
                 </span>

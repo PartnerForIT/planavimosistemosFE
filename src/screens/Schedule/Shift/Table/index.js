@@ -115,6 +115,7 @@ const ResourcesCell = ({
 
   const handleChangeNumber = useCallback((value) => {
     onChangeNumber({ rowId, value });
+    // eslint-disable-next-line
   }, [rowId]);
   const handleSubmit = useCallback((values) => {
     onSubmit({
@@ -124,9 +125,11 @@ const ResourcesCell = ({
   }, [onSubmit, parentRowId]);
   const handleExpander = useCallback(() => {
     onExpander({ rowId });
+    // eslint-disable-next-line
   }, [rowId]);
   const handleDelete = useCallback(() => {
     onDelete({ rowId, parentRowId });
+    // eslint-disable-next-line
   }, [rowId, parentRowId]);
   
   return (
@@ -227,6 +230,7 @@ const RowContent = ({
     });
   }, [resourceId, onNotWorkToday]);
 
+  // eslint-disable-next-line
   const foundItem = useMemo(() => items ? items.find((item) => resourceId.toString() === item.resourceId.toString()) : {}, [items]);
   //console.log('foundItem', foundItem, items, resourceId);
 
@@ -327,16 +331,6 @@ const RowDefaultTimeContent = ({
       }
     </div>
   );
-};
-
-const trackYProps = {
-  renderer: ({ elementRef, ...props }) => (
-    <span
-      {...props}
-      ref={elementRef}
-      className={classes.scrollableContent__scrollbarTrackY}
-    />
-  ),
 };
 
 export default forwardRef(({
@@ -442,6 +436,7 @@ export default forwardRef(({
       
       const mweek = prevState[currentWeek].map((item, index) => {
 
+        // eslint-disable-next-line
         if (!item.data[cellIndex] || resourceId != item.resourceId) {
           return item;
         }
@@ -488,7 +483,7 @@ export default forwardRef(({
       
       const mweek = prevState[currentWeek].map((item, index) => {
 
-        if (!item.data[cellIndex] || (resourceId.toString() != item.resourceId.toString() && item.resourceId.toString().indexOf(resourceId+'-') !== 0)){
+        if (!item.data[cellIndex] || (resourceId.toString() !== item.resourceId.toString() && item.resourceId.toString().indexOf(resourceId+'-') !== 0)){
           return item;
         }
 
@@ -820,6 +815,7 @@ export default forwardRef(({
   const jobTypes = useMemo(() => allJobTypes
     .filter((item) => !resources
       .some((itemJ) => itemJ.jobTypeId === item.id)),
+      // eslint-disable-next-line
   [resources.length, allJobTypes]);
   const backgroundArr = useMemo(() => {
     const countRows = Math.ceil((window.innerHeight - 68 - 74 - 218) / 41) - 2;
@@ -986,6 +982,7 @@ export default forwardRef(({
 
       return acc;
     }, {});
+    // eslint-disable-next-line
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
 
   const { t } = useTranslation();
@@ -997,6 +994,8 @@ export default forwardRef(({
         res[key] = {...timesPanel[currentWeek][key]};
         res[key].children = [{...timesPanel[currentWeek][key], id: initialValues?.shift_info?.id, place_id: initialValues?.shift_info?.id, title: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name')), name: ((initialValues?.shift_info?.name) ? initialValues?.shift_info?.name : t('no shift name'))}];
       }
+
+      return res;
     });
 
     let resShift = {};
@@ -1005,10 +1004,12 @@ export default forwardRef(({
         resShift[key] = {...res[key]};
         resShift[key].children = [{...res[key], id: initialValues?.shift_info?.place?.id, place_id: initialValues?.shift_info?.place?.id, title: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name')), name: ((initialValues?.shift_info?.place?.name) ? initialValues?.shift_info?.place?.name : t('no place name'))}];
       }
+
+      return resShift;
     });
 
     return resShift;
-
+// eslint-disable-next-line
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
   //console.log('mergedData', mergedData, numberOfWeeks);
   //console.log('resources', resources);

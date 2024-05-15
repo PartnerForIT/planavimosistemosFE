@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import { useTranslation } from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 
 import Button from '../../../components/Core/Button/Button';
 
@@ -10,8 +10,6 @@ import Input from "../../../components/Core/Input/Input";
 import CheckboxGroupWrapper from "../../../components/Core/CheckboxGroup/CheckboxGroupWrapper";
 import useGroupingEmployees from "../../../hooks/useGroupingEmployees";
 import {employeesSelector} from "../../../store/settings/selectors";
-import {addTempemployee, getSchedule} from "../../../store/schedule/actions";
-import moment from "moment";
 import Cross from "../../../components/Icons/Cross";
 
 export default ({
@@ -33,7 +31,6 @@ export default ({
     // let fromDateRef = new Date();
     // fromDateRef.format('YYYY-MM-DD')
 
-    const dispatch = useDispatch();
     const employToCheck = useCallback(({
     id,
     name,
@@ -84,6 +81,7 @@ export default ({
     }
 
     return employees.filter(e => { return !unavailableEmployees.includes(e.id) });
+    // eslint-disable-next-line
   }, [searchValue, employees]);
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
   return (

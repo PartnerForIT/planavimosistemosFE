@@ -337,6 +337,8 @@ export default () => {
     if (!allPermissions?.length) {
       dispatch(loadPermissions(id));
     }
+
+    // eslint-disable-next-line
   }, [dispatch, id, allPermissions?.length]);
 
   useEffect(() => {
@@ -411,6 +413,8 @@ export default () => {
         moduleAccess: nextModuleAccess,
       };
     });
+
+    // eslint-disable-next-line
   }, [permissions, journal]);
 
     useEffect(() => {

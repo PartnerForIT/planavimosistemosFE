@@ -40,6 +40,8 @@ const Dropdown = forwardRef(({
     return () => {
       document.removeEventListener('mousedown', handleOuterDropdownClick, false);
     };
+
+    // eslint-disable-next-line
   }, []);
 
   useImperativeHandle(ref, () => ({

@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback
+  useEffect, useLayoutEffect, useRef, useState, useCallback
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';

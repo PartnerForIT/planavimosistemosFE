@@ -1,4 +1,3 @@
-import { getMinutes, getHours, getSeconds } from 'date-fns';
 import Resizer from 'react-image-file-resizer';
 
 // export const dateToUCT = (date) => (new Date(`${date}Z`.replace(' ', 'T')));

@@ -4,6 +4,7 @@ import React from 'react';
 import Tooltip from '../../Core/Tooltip';
 import Label from '../../Core/InputLabel';
 import Checkbox from '../../Core/Checkbox/Checkbox2';
+import Switch from 'react-switch';
 
 export default ({
   t,
@@ -14,6 +15,23 @@ export default ({
 }) => (
 
   <div className={style.timeSheetBlock}>
+
+    <div className={style.generalBlock2}>
+      <Switch
+        onChange={(checked) => { handleInputChange({ target: { name: 'use_accumulated', value: checked, type : 'checkbox' }}) }}
+        offColor='#808F94'
+        onColor='#0085FF'
+        uncheckedIcon={false}
+        checkedIcon={false}
+        checked={timeSheetData.use_accumulated || false}
+        height={21}
+        width={40}
+      />
+      <Label text={t('Use accumulated hours calculation')} />
+    </div>
+
+    <div className={style.hr} />
+    
     <div className={style.timeSheet__label}>
       <Label text={`${t('Select hours types to show in Time Sheet')}`} />
       <Tooltip title={t('Selecting or deselecting the value will control the data you would like to see in the Time Sheet for all users who are using this module. If deselected - such data row will be excluded from the module.')} />

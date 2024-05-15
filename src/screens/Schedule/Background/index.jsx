@@ -1,7 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 import moment from 'moment';
-import classNames from 'classnames';
 
 import { TIMES_PANEL } from '../../../const';
 import Item from './Item';
@@ -10,7 +8,6 @@ import classes from './Background.module.scss';
 export default ({
   startDay,
 }) => {
-  const { t } = useTranslation();
   const day = moment(startDay).startOf('isoWeek');
   const currentDay = moment();
 

@@ -32,9 +32,17 @@
       position: relative;
       padding-right: 51px;
       z-index: 1;
+
+      &_withAccumulated {
+        padding-right: 153px;
+      }
       
       &_withCost {
         padding-right: 102px;
+
+        &.sheetmonthView__header__dataOuter_withAccumulated {
+          padding-right: 204px;
+        }
       }
     }
 
@@ -61,8 +69,16 @@
       padding-right: 51px;
       background-color: #fafbfc;
 
+      &_withAccumulated {
+        padding-right: 153px;
+      }
+
       &_withCost {
         padding-right: 102px;
+
+        &.sheetmonthView__content__dataOuter_withAccumulated {
+          padding-right: 204px;
+        }
       }
     }
 

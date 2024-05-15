@@ -46,6 +46,8 @@ export default ({
     return () => {
       document.removeEventListener('mousedown', handleOuterDropdownClick, false);
     };
+
+    // eslint-disable-next-line
   }, []);
 
   return (

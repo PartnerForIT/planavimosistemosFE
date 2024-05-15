@@ -192,6 +192,7 @@ export default function TableBlock({
     }
 
     setColumnsArray(allColumnsArray);
+    // eslint-disable-next-line
   }, [permissions, selectedCategory]);
 
   const selectionHandler = (itemId, value) => {

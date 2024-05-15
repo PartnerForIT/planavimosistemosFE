@@ -38,6 +38,8 @@ export default ({
     }
 
     return 0;
+
+    // eslint-disable-next-line
   }, [data.time]);
 
   const night_duration = useMemo(() => {
@@ -46,6 +48,8 @@ export default ({
     }
 
     return 0;
+
+    // eslint-disable-next-line
   }, [data.night_duration]);
 
   useEffect(() => {
@@ -118,7 +122,7 @@ export default ({
               </span>
             </span>
             {
-              night_duration && night_duration != '0' ? (
+              night_duration && night_duration !== '0' ? (
                 <span className={classes.footer__total}>
                   {`${t('Night Time')}: `}
                   <span className={classes.footer__total__value}>

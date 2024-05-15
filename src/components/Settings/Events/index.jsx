@@ -70,7 +70,7 @@ function Events() {
 
   useEffect(() => {
     dispatch(getEvents(companyId));
-  }, [companyId]);
+  }, [companyId, dispatch]);
 
   const removeRole = (eventId) => {
     dispatch(deleteEvent(companyId, eventId));

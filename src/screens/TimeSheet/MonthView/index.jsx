@@ -33,6 +33,7 @@ export default ({
   holidays,
   onChangeMonth,
   withCost,
+  withAccumulated,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -71,6 +72,20 @@ export default ({
       statistic: true,
     });
 
+    if (withAccumulated) {
+      arr.push({
+        id: 'plannedTime',
+        title: t('Planned Time _s'),
+        statistic: true,
+      });
+
+      arr.push({
+        id: 'targetTime',
+        title: t('Target Time _s'),
+        statistic: true,
+      });
+    }
+
     if (withCost) {
       arr.push({
         id: 'totalCost',
@@ -81,7 +96,7 @@ export default ({
 
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language, currentMonth, withCost, holidays]);
+  }, [i18n.language, currentMonth, withCost, withAccumulated, holidays]);
 
   useEffect(() => {
     setResources(externalResources);
@@ -125,7 +140,10 @@ export default ({
             onClickPrev={handleClickPrevMonth}
             onClickNext={handleClickNextMonth}
           />
-          <div className={classnames(classes.sheetmonthView__header__dataOuter, {[classes.sheetmonthView__header__dataOuter_withCost]: withCost})}>
+          <div className={classnames(classes.sheetmonthView__header__dataOuter, {
+            [classes.sheetmonthView__header__dataOuter_withCost]: withCost,
+            [classes.sheetmonthView__header__dataOuter_withAccumulated]: withAccumulated
+            })}>
             <div
               ref={headerRef}
               className={classes.sheetmonthView__header__data}>
@@ -145,6 +163,7 @@ export default ({
                     today={item.today}
                     holiday={item.holiday}
                     header
+                    tooltip={item.id === 'plannedTime' ? t('Planned Time _t') : item.id === 'targetTime' ? t('Target Time _t') : ''}
                   />
                 ))
               }
@@ -163,7 +182,10 @@ export default ({
               currentMonth={currentMonth}
               height={empHeight[fields.length]}
             />
-            <div className={classnames(classes.sheetmonthView__content__dataOuter, {[classes.sheetmonthView__content__dataOuter_withCost]: withCost})}>
+            <div className={classnames(classes.sheetmonthView__content__dataOuter, {
+              [classes.sheetmonthView__content__dataOuter_withCost]: withCost,
+              [classes.sheetmonthView__content__dataOuter_withAccumulated]: withAccumulated
+            })}>
               <div 
                 ref={contentRef}
                 className={classes.sheetmonthView__content__data}>

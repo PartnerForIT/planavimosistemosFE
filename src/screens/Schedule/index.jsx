@@ -163,6 +163,7 @@ export default () => {
             item.count = item.count || 0;
             item.children.map((i) => {
               item.count = item.count + i.children.length;
+              return i;
             });
           }
           if (item.job_type_id) {
@@ -240,6 +241,7 @@ export default () => {
 
     // schedule.resources
     return schedule?.resources;
+    // eslint-disable-next-line
   }, [filterData, schedule?.resources]);
 
   const events = useMemo(() => {
@@ -272,7 +274,7 @@ export default () => {
         return !copyToolHistory.some((historyItem) => (
           resultItem.start <= historyItem.end &&
           resultItem.end >= historyItem.start &&
-          resultItem.resourceId == historyItem.resourceId
+          resultItem.resourceId === historyItem.resourceId
         ));
       }),
       ...copyToolHistory.map((e) => ({
@@ -280,6 +282,7 @@ export default () => {
         copy_event: true,
       })),
     ];
+    // eslint-disable-next-line
   }, [filterData, schedule?.events, copyToolHistory]);
   
 
@@ -296,6 +299,7 @@ export default () => {
     }
 
     return accumulatedHours;
+    // eslint-disable-next-line
   }, [events]);
 
   const filteringResource = (data) => {
@@ -310,6 +314,8 @@ export default () => {
             if (shiftEl.id === j.shiftId) {
               checkShift = true;
             }
+
+            return shiftEl;
           });
           j.children = j.children.filter((k) => {
             let checkPlace = false;
@@ -318,6 +324,8 @@ export default () => {
               if (placeEL.id === k.job_type_id) {
                 checkPlace = true;
               }
+
+              return placeEL;
             });
             k.children = k.children.filter((it) => {
               let checkEmployer = false;
@@ -327,6 +335,8 @@ export default () => {
                   checkEmployeePlace = true;
                   checkEmployeeShift = true;
                 }
+
+                return employer;
               });
               if (!data.employers.length) { checkEmployeeShift = true; checkEmployeePlace = true; return true; }
               return checkEmployer;
@@ -406,6 +416,7 @@ export default () => {
   };
   useEffect(() => {
     filteringResource(filter);
+    // eslint-disable-next-line
   }, [filter]);
   useEffect(() => {
     
@@ -414,6 +425,7 @@ export default () => {
     if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
       setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
     }
+    // eslint-disable-next-line
   }, [scheduleSettings]);
   const handleChangeTimeline = (value, date) => {
     setTimeline(value);
@@ -616,6 +628,7 @@ export default () => {
     let endDay;
     let dayNumber;
     let isCompleted;
+    // eslint-disable-next-line
     if (resourceInfo.extendedProps.employeeId || resourceInfo?.extendedProps?.employeeId == 0) {
       [shiftId] = resourceInfo.id.split('-');
       // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
@@ -635,7 +648,9 @@ export default () => {
     
     if (selectedEvent) {
       const allEmployees  = events.filter(e => e.empty_employee === false
+                                              // eslint-disable-next-line
                                                       && e.resourceId.indexOf(shiftId+'-') == 0
+                                                      // eslint-disable-next-line
                                                       && selectedEvent.day_number == e.day_number);
                                                       //&& selectedEvent.start == e.start
                                                       //&& selectedEvent.end == e.end);
@@ -653,6 +668,7 @@ export default () => {
     let end = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent?.realEnd) ? selectedEvent?.realEnd : event.end;
 
     if (event.extendedProps.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
+      // eslint-disable-next-line
       const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());
       if (time?.start) {
         const [h, m] = time.start.split(':');
@@ -730,12 +746,12 @@ export default () => {
   };
   const renderResourceLabelContent = ({ fieldValue, resource }) => {
     const {
-      count,
+      //count,
       photo,
       shiftId,
       employeeId,
       employeesCount,
-      hours_demand,
+      //hours_demand,
     } = resource.extendedProps;
     const realCount = employeesCount;
 
@@ -753,8 +769,7 @@ export default () => {
     );
   };
   const renderResourceAreaHeaderContent = ({ view }) => {
-    const viewTitle = view.title?.split(' ')[3]
-
+    
     const handleClickPrev = () => {
       view.calendar.prev();
       fromDateRef.current = view.getCurrentData().currentDate;
@@ -910,6 +925,8 @@ export default () => {
           }
           
         }
+
+        return null;
       });
     })
   };
@@ -1079,10 +1096,13 @@ export default () => {
 
   const unavailableEmployees = () => {
     
+    // eslint-disable-next-line
     const selectedEvent  = events.find(e => e.id == tempEventID);
     if (selectedEvent) {
       const allEmployees  = events.filter(e => e.empty_employee === false
+                                                  // eslint-disable-next-line
                                                       && e.resourceId.indexOf(tempShiftID+'-') == 0
+                                                      // eslint-disable-next-line
                                                       && selectedEvent.day_number == e.day_number);
 
       return allEmployees.map(e => {

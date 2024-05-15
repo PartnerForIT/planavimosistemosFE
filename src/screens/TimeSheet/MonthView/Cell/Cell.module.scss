@@ -66,7 +66,7 @@
     padding: 0 15px;
     position: absolute;
     left: 0;
-    z-index: 3;
+    z-index: 4;
     background: white;
     height: 39px;
     width: 122px;
@@ -81,6 +81,18 @@
     z-index: 3;
 
     &_time:nth-last-child(2) {
+      right: 51px;
+    }
+
+    &_time:nth-last-child(4) {
+      right: 153px;
+    }
+
+    &_planned:nth-last-child(3) {
+      right: 102px;
+    }
+
+    &_target:nth-last-child(2) {
       right: 51px;
     }
 
