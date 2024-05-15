@@ -76,7 +76,15 @@ export default ({
         </tr>
         <tr>
           <td>
-              <b>${ t('Actual time') }:</b>
+              <b>${ t('Target time') }:</b>
+          </td>
+          <td>
+            ${accumulatedHours?.totalHours || 0} ${t('hours')}
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <b>${ t('Planned time') }:</b>
           </td>
           <td>
             ${accumulatedHours?.actualHours || 0} ${t('hours')}
@@ -84,10 +92,10 @@ export default ({
         </tr>
         <tr>
           <td>
-              <b>${ t('Target time') }:</b>
+              <b>${ t('Registered time') }:</b>
           </td>
           <td>
-            ${accumulatedHours?.totalHours || 0} ${t('hours')}
+            ${accumulatedHours?.rigisteredHours || 0} ${t('hours')}
           </td>
         </tr>
       </table>
