@@ -172,7 +172,7 @@ export default () => {
       ...(modules.schedule_shift && {
         schedule: {
           options: {
-            edit: 'Can create & edit schedules',
+            create_and_edit: 'Can create & edit schedules',
             view: 'Can see Schedule',
             assigned_place: 'Only assigned place view',
             see_all_employees: 'Can see all employees',
@@ -243,7 +243,7 @@ export default () => {
       },
       schedule: {
         options: {
-          ...(modules.schedule_shift && { create_and_edit: 'Can edit Schedule settings' }),
+          ...(modules.schedule_shift && { edit: 'Can edit Schedule settings' }),
         },
       },
       time_sheet: {
