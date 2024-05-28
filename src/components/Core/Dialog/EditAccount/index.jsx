@@ -265,7 +265,7 @@ export default function EditAccount({
 
           if (prevState.assign_shift_id) {
             const foundShift = shifts.find(({ id }) => id === prevState.assign_shift_id);
-            if (foundShift && foundShift.place_id*1 !== value*1) {
+            if (!foundShift || foundShift.place_id*1 !== value*1) {
               delete nextValues.assign_shift_id;
             }
           }
