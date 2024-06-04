@@ -307,6 +307,7 @@
             "Automatic lunch break": "Automatinis poilsio laikas", 
             "Automatic lunch break (Turn on/off)": "Automatinis poilsio laikas (Įjungti/Išjungti). Įjungus šį funkcionalumą tuomet sistema pradės skaičiuoti automatinius poilsio laikus pagal nurodytus kriterijus. Poilsio laikai nėra apmokestinami, todėl jie bus išskaičiuoti iš darbo laiko ir pateikti kaip atskiras darbo valandų tipas - poilsio valandos.", 
             "Insert break automatically": "Įtraukti automatinį poilsio laiką",
+            "if workday exceeds 4 hours": "jeigu darbo laikas viršiją 4 valandų",
             "if workday exceeds 4.30 hours": "jeigu darbo laikas viršiją 4:30 valandų",
             "if workday exceeds 6 hours": "jeigu darbo laikas viršiją 6 valandų", 
             "if workday exceeds 7 hours": "jeigu darbo laikas viršiją 7 valandų", 

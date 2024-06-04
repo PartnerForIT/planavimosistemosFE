@@ -14,7 +14,8 @@ import Select from '../../../Core/SimpleSelect';
 import CurrencySign from "../../../shared/CurrencySign";
 
 const breakArr = [
-  { code: '4', name: 'if workday exceeds 4.30 hours' },
+  { code: '4', name: 'if workday exceeds 4 hours' },
+  { code: '4.5', name: 'if workday exceeds 4.30 hours' },
   { code: '6', name: 'if workday exceeds 6 hours' },
   { code: '7', name: 'if workday exceeds 7 hours' },
   { code: '8', name: 'if workday exceeds 8 hours' },
