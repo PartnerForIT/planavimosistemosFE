@@ -72,3 +72,12 @@
     color: #fd9d27;
   }
 }
+
+.margin {
+  margin: 0 5px !important;
+  width: 189px;
+
+  & > input {
+    height: 36,
+  }
+}

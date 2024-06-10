@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 import MainLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -19,6 +20,7 @@ import EditPinCode from '../../../Core/Dialog/EditPinCode';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import Kiosk2Icon from '../../../Icons/Kiosk2';
 import Filter from './Filter';
+import useCompanyInfo from '../../../../hooks/useCompanyInfo';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
 import {
   kiosksUsersLoadingSelector,
@@ -70,6 +72,8 @@ export default () => {
   const kiosksUsersLoading = useSelector(kiosksUsersLoadingSelector);
   const pinCode = useSelector(pinCodeSelector);
   const pinCodeGenerateLoading = useSelector(pinCodeGenerateLoadingSelector);
+  const [colSearch, setColSearch] = useState({});
+  const [search, setSearch] = useState('');
 
   const [selectedItemId, setSelectedItemId] = useState('');
   const [viewPinVisible, setViewPinVisible] = useState(false);
@@ -78,6 +82,13 @@ export default () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [columnsFiltered, setColumnsFiltered] = useState([]);
   const [dropdownValue, setDropdownValue] = useState(null);
+  const { getDateFormat } = useCompanyInfo();
+
+  const dateFormat = getDateFormat({
+    'YY.MM.DD': 'YYYY, MMM DD',
+    'DD.MM.YY': 'DD MMM, YYYY',
+    'MM.DD.YY': 'MMM DD, YYYY',
+  });
 
   const columns = useMemo(() => {
     const nextColumns = [
@@ -139,33 +150,85 @@ export default () => {
       } else if (typeof kiosksUsers.employees === 'object') {
           employeesArray = Object.values(kiosksUsers.employees);
       }
-      return employeesArray.map((item) => {
-        const {
-          name,
-          surname,
-          status,
-          place,
-          groups,
-          skills,
-          subgroups,
-          permissions,
-          ...employee
-        } = item;
+      return employeesArray
+        .map((item) => {
+          const {
+            name,
+            surname,
+            status,
+            place,
+            groups,
+            skills,
+            subgroups,
+            permissions,
+            ...employee
+          } = item;
 
-        return {
-          ...employee,
-          groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
-          subgroup: subgroups?.[0]?.name ?? '',
-          skills: skills?.[0]?.name ?? '',
-          place: place?.[0]?.name ?? '',
-          role: permissions?.[0]?.account_roles?.name ?? '',
-          name: `${name} ${surname}`,
-        };
-      }) ?? [];
+          return {
+            ...employee,
+            groups: groups?.[0]?.name ?? subgroups?.[0]?.parent_group?.name ?? '',
+            subgroup: subgroups?.[0]?.name ?? '',
+            skills: skills?.[0]?.name ?? '',
+            place: place?.[0]?.name ?? '',
+            role: permissions?.[0]?.account_roles?.name ?? '',
+            name: `${name} ${surname}`,
+          };
+        })
+        .filter(empl => {
+          // Filter out any employees that don't match the search criteria
+          let searchValue = search.toLowerCase();
+          let globalSearch = true;
+          
+          if (searchValue) {
+            globalSearch = false;
+            for (let key in empl) {
+              let emplValue = empl[key];
+              if (emplValue !== undefined && emplValue !== null) {
+                if (key === 'created_at' || key === 'updated_at') {
+                  // Special handling for date fields
+                  emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+                } else {
+                  // Convert emplValue to string for other fields
+                  emplValue = emplValue.toString().toLowerCase();
+                }
+                if (emplValue.indexOf(searchValue) !== -1) {
+                  globalSearch = true;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (globalSearch) {
+            for (let key in colSearch) {
+              if (colSearch[key]) { // Check if there's a search term for this key
+                let emplValue = empl[key];
+                let searchValue = colSearch[key].toLowerCase();
+          
+                if (emplValue !== undefined && emplValue !== null) { // Check if the employee has a value for this key
+                  if (key === 'created_at' || key === 'updated_at') {
+                    // Special handling for date fields
+                    emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+                  } else {
+                    // Convert emplValue to string for other fields
+                    emplValue = emplValue.toString().toLowerCase();
+                  }
+          
+                  if (emplValue.indexOf(searchValue) === -1) {
+                    return false; // This employee does not match the search term
+                  }
+                } else {
+                  return false; // Missing value for a key that has a search term
+                }
+              }
+            }
+          }
+          return globalSearch; // Include this employee
+        }) ?? [];
     }
 
     return [];
-  }, [kiosksUsers]);
+  }, [kiosksUsers, colSearch, dateFormat, search]);
 
   const handleSort = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
@@ -242,6 +305,9 @@ export default () => {
     setSelectedItemId('');
     setGeneratePinVisible(false);
   };
+  const onColumnSearch = (column, value) => {
+    setColSearch({ ...colSearch, [column]: value });
+  }
 
   useEffect(() => {
     dispatch(getKiosksUsers(companyId, dropdownValue));
@@ -274,6 +340,8 @@ export default () => {
               no: kiosksUsers?.stats?.no,
             }}
             onNewPinCodes={handleNewPinCodes}
+            setSearch={setSearch}
+            search={search}
           />
           <DataTable
             data={employees}
@@ -294,6 +362,8 @@ export default () => {
             setAll={setAll}
             selectAll
             loading={kiosksUsersLoading}
+            colSearch={colSearch}
+            onSearch={onColumnSearch}
           />
           <EditPinCode
             open={viewPinVisible}
