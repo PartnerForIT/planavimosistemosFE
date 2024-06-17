@@ -67,6 +67,7 @@ export default function ActivityLog() {
 
   const [inputValues, setInputValues] = useState({
     clock_in_restriction: false,
+    ignore_clockin_restriction: false,
     work_night_excel: false,
   });
 
@@ -106,9 +107,16 @@ export default function ActivityLog() {
 
     switch (type) {
       case 'checkbox': {
-        handleSetInputValues({
-          [name]: checked,
-        });
+        if (name === 'clock_in_restriction' && !checked) {
+          handleSetInputValues({
+            [name]: checked,
+            ignore_clockin_restriction: false,
+          });
+        } else {
+          handleSetInputValues({
+            [name]: checked,
+          });
+        }
         break;
       }
       default: {
@@ -151,6 +159,15 @@ export default function ActivityLog() {
                       onChange={handleChangeInput}
                     />
                     {t('min')}
+                  </div>
+                  <div className={styles.clockInMore}>
+                    <Checkbox
+                      onChange={handleChangeInput}
+                      checked={inputValues.ignore_clockin_restriction}
+                      label={t("Ignore the restriction for employees who don't have any work planned on that day (Let to Clock In)")}
+                      name='ignore_clockin_restriction'
+                      disabled={!inputValues.clock_in_restriction}
+                    />
                   </div>
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
