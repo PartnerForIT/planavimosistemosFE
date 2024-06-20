@@ -207,7 +207,6 @@ export default function CustomSelect({
                 icon={<SearchIcon />}
                 placeholder={t('Search')}
                 value={search}
-                name='search'
                 onChange={handleInputChange}
                 fullWidth
               />

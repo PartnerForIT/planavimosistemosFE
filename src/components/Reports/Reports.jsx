@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { loadLogbookJournal } from '../../store/settings/actions';
+import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
 import StyledCheckbox from '../Core/Checkbox/Checkbox';
 import MainLayout from '../Core/MainLayout';
@@ -25,9 +25,11 @@ import {
   columnsSelector,
   reportLoadingSelector,
 } from '../../store/reports/selectors';
-import { employeesSelector } from '../../store/employees/selectors';
+import {
+  employeesSelector,
+} from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
-import { getEmployees } from '../../store/employees/actions';
+//import { getEmployees } from '../../store/employees/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getPlaces } from '../../store/places/actions';
 import { placesSelector } from '../../store/places/selectors';
@@ -182,11 +184,23 @@ export default () => {
   const columns = useSelector(columnsSelector);
   // const getTotalDuration = useSelector(totalDurationSelector);
 
-  const getAllEmployees = useSelector(employeesSelector);
+  const { users: allEmployees } = useSelector(employeesSelector);
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
   const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
+
+
+  const getAllEmployees = allEmployees.map(employee => ({
+      id: employee.id,
+      label: `${employee.name} ${employee.surname}`,
+      photo: employee.photo,
+      profitability: {
+          cost: employee.profitability.cost || 0,
+          sallary: employee.profitability.sallary || 0,
+          profit: employee.profitability.profit || 0
+      }
+  }));
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
@@ -196,7 +210,8 @@ export default () => {
   useEffect(() => {
     dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
-    dispatch(getEmployees(companyId));
+    //dispatch(getEmployees(companyId));
+    dispatch(loadEmployeesAll(companyId, { page: 'reports' }));
     dispatch(getSkills(companyId));
     // dispatch(getReportsPlaces({ companyId })).then().catch();
     // dispatch(getReportsEmployees({ companyId })).then().catch();

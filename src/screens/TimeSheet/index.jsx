@@ -263,7 +263,7 @@ export default () => {
       firstLoading: true,
     }));
     //dispatch(getsheetSetting(companyId));
-    dispatch(loadEmployeesAll(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}));
 
     return () => {
       // eslint-disable-next-line

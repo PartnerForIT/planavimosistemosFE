@@ -1024,7 +1024,7 @@ export default () => {
       firstLoading: true,
     }));
     dispatch(getscheduleSetting(companyId));
-    dispatch(loadEmployeesAll(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'schedule'}));
     dispatch(getShiftTypes(companyId));
     dispatch(loadIntegrations(companyId));
 

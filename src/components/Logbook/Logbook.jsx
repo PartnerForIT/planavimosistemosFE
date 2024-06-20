@@ -351,7 +351,7 @@ export default () => {
     // dispatch(getEmployees(companyId));
     dispatch(getSkills(companyId));
     dispatch(loadLogbookJournal(companyId));
-    dispatch(loadEmployeesAll(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'logbook'}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
