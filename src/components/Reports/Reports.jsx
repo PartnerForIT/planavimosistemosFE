@@ -184,23 +184,11 @@ export default () => {
   const columns = useSelector(columnsSelector);
   // const getTotalDuration = useSelector(totalDurationSelector);
 
-  const { users: allEmployees } = useSelector(employeesSelector);
+  const { users: getAllEmployees } = useSelector(employeesSelector);
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
   const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
-
-
-  const getAllEmployees = allEmployees.map(employee => ({
-      id: employee.id,
-      label: `${employee.name} ${employee.surname}`,
-      photo: employee.photo,
-      profitability: {
-          cost: employee.profitability.cost || 0,
-          sallary: employee.profitability.sallary || 0,
-          profit: employee.profitability.profit || 0
-      }
-  }));
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
@@ -271,8 +259,19 @@ export default () => {
 
   useEffect(() => {
     if (Array.isArray(getAllEmployees)) {
-      setEmployees(getAllEmployees);
-      setFilteredEmployees(getAllEmployees);
+      const newEmployeesFormat = getAllEmployees.map(employee => ({
+          id: employee.id,
+          label: `${employee.name} ${employee.surname}`,
+          photo: employee.photo,
+          profitability: {
+              cost: employee.profitability.cost || 0,
+              sallary: employee.profitability.sallary || 0,
+              profit: employee.profitability.profit || 0
+          }
+      }));
+
+      setEmployees(newEmployeesFormat);
+      setFilteredEmployees(newEmployeesFormat);
     }
   }, [getAllEmployees]);
 
