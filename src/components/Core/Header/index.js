@@ -68,6 +68,10 @@ const permissionsConfig = [
     permission: 'reports_module_access',
   },
   {
+    name: 'schedule_schedule_shift',
+    permission: 'schedule_schedule_shift',
+  },
+  {
     name: 'schedule_shift',
     module: 'schedule_shift',
     permission: 'schedule_module_access',
@@ -241,7 +245,7 @@ export default function ButtonAppBar({ logOut }) {
         to: `/${companyId}/time-sheet`,
       });
     }
-    if (permissions.schedule_shift || permissions.schedule_simple) {
+    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_schedule_shift) {
       nextMenuItems.push({
         Icon: ScheduleIcon,
         title: t('Schedule'),
@@ -263,7 +267,7 @@ export default function ButtonAppBar({ logOut }) {
     || (permissions.logbook && permissions.logbook_edit_settings)
     || permissions.kiosk
     || (permissions.events && permissions.events_create)
-    || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_create_and_edit)
+    || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_schedule_shift)
     || permissions.activity_log
     || permissions.data_delete
     || permissions.categories_create
