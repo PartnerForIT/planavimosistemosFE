@@ -123,7 +123,7 @@ export default () => {
       ...(modules.logbook && {
         logbook: {
           options: {
-            edit_settings: 'Can edit Logbook settings',
+            assigned_place: 'Only assigned place view',
             add_logs: 'Can create new entries',
             edit_logs: 'Can edit entry logs',
             ...(modules.comments_photo && { edit_comments: 'Can edit entry comments' }),
@@ -225,6 +225,11 @@ export default () => {
         options: {
           edit_settings: 'Can edit General Settings',
         },
+      },
+      logbook: {
+        options: {
+          edit_settings: 'Can edit Logbook settings',
+        }
       },
       manager: {
         options: {
