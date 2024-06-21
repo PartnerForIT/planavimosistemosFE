@@ -84,9 +84,9 @@ const permissionsConfig = [
     permission: 'schedule_costs',
   },
   {
-    name: 'schedule_edit',
+    name: 'schedule_create_and_edit',
     module: 'schedule_shift',
-    permission: 'schedule_edit',
+    permission: 'schedule_create_and_edit',
   },
   {
     name: 'night_rates',
@@ -1185,7 +1185,7 @@ export default () => {
           {/*  checked={isOnlyWorkingDays}*/}
           {/*  label={t('Show only working days')}*/}
           {/*/>*/}
-          { !copyTool && permissions.schedule_edit && (
+          { !copyTool && permissions.schedule_create_and_edit && (
             <Button onClick={handleCreateNewShift}>
               {t('Create new shift')}
             </Button> )

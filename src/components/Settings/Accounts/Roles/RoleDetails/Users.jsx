@@ -78,6 +78,7 @@ const Users = React.memo(({
       const users = checkedItems.map(({ id }) => id)
         .filter((item) => typeof item !== 'string');
       setReady(false);
+      //console.log(users, checkedItems, employees);
       roleEmployeesEdit(users);
     }
   }, [checkedItems, ready, roleEmployeesEdit]);
