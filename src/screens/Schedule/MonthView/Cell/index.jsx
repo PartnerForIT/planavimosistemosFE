@@ -223,8 +223,8 @@ export default ({
                 resourceId={resource?.id}
                 photo={resource?.photo}
                 jobTypeName={resource?.job_type_name}
-                withMenu={withMenu && !copyTool && permissions?.schedule_edit}
-                editPermissions={permissions?.schedule_edit}
+                withMenu={withMenu && !copyTool && permissions?.schedule_create_and_edit}
+                editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}
                 unavailableEmployees={unEmployees}
                 markers={markers}

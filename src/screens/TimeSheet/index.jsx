@@ -56,6 +56,11 @@ const permissionsConfig = [
     module: 'integrations',
     permission: 'integrations_module_access',
   },
+  {
+    name: 'schedule_create_and_edit',
+    module: 'schedule_shift',
+    permission: 'schedule_create_and_edit',
+  },  
 ];
 
 export default () => {

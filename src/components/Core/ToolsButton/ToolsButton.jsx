@@ -14,9 +14,9 @@ import { companyModules } from '../../../store/company/selectors';
 
 const permissionsConfig = [
   {
-    name: 'schedule_edit',
+    name: 'schedule_create_and_edit',
     module: 'schedule_shift',
-    permission: 'schedule_edit',
+    permission: 'schedule_create_and_edit',
   },
 ];
 
@@ -54,7 +54,7 @@ const ToolsButton = ({
             {t('Tools')}
             <CloseIcon onClick={() => setOpen(!open)} />
             <div className={classNames(styles.checkboxesBox)}>
-              { modules.manual_mode && permissions.schedule_edit ? (
+              { modules.manual_mode && permissions.schedule_create_and_edit ? (
               <div className={styles.generalBlock}>
                 <Checkbox
                   onChange={handleInputChange}

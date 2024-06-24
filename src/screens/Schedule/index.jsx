@@ -710,7 +710,7 @@ export default () => {
         nightPermission={permissions.night_rates && AdditionalRates.night_time}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
-        withMenu={withMenu && !copyTool && permissions.schedule_edit}
+        withMenu={withMenu && !copyTool && permissions.schedule_create_and_edit}
         jobTypeName={resourceInfo.extendedProps.job_type_name}
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
@@ -723,7 +723,7 @@ export default () => {
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
-        editPermissions={permissions.schedule_edit}
+        editPermissions={permissions.schedule_create_and_edit}
         isCompleted={isCompleted}
         activeDrag={activeDrag === resourceInfo.id}
         unavailableEmployees={unEmployees}
@@ -738,7 +738,7 @@ export default () => {
     if (info.event.extendedProps.empty_manual) {
       classes.push('is-empty-manual')
     }
-    if (!permissions.schedule_edit || copyTool || info.event.extendedProps.copy_event) {
+    if (!permissions.schedule_create_and_edit || copyTool || info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
 
@@ -761,7 +761,7 @@ export default () => {
         photo={photo}
         accumulatedHours={schedule?.accumulatedHours[employeeId] || []}
         shiftId={shiftId}
-        withMenu={!!shiftId && permissions.schedule_edit}
+        withMenu={!!shiftId && permissions.schedule_create_and_edit}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
         onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
