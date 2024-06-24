@@ -73,17 +73,26 @@ const Users = React.memo(({
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
 
+  const allSortedEmployees = useGroupingEmployees(empList, employToCheck);
+  const allEmployees = useGroupingEmployees([...employees], employToCheck);
+
   useEffect(() => {
     if (ready) {
       const users = checkedItems.map(({ id }) => id)
         .filter((item) => typeof item !== 'string');
       setReady(false);
-      //console.log(users, checkedItems, employees);
-      roleEmployeesEdit(users);
-    }
-  }, [checkedItems, ready, roleEmployeesEdit]);
+      //console.log(users, checkedItems, allEmployees);
 
-  const allSortedEmployees = useGroupingEmployees(empList, employToCheck);
+      const sortedEmployeeIds = new Set(allSortedEmployees.map(employee => employee.id));
+
+      // Filter allEmployees to get those that are checked and not in allSortedEmployees
+      const filteredEmployees = allEmployees.filter(employee => 
+        employee.checked && !sortedEmployeeIds.has(employee.id)
+      ).map(({ id }) => id);
+
+      roleEmployeesEdit([...filteredEmployees, ...users]);
+    }
+  }, [checkedItems, ready, roleEmployeesEdit, allEmployees, allSortedEmployees]);
 
   const handleInputChange = (term) => {
     setSearch(term);

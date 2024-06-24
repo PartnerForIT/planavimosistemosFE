@@ -1110,7 +1110,7 @@ function* patchRole(action) {
           params: { permissions: JSON.stringify(permissions) },
           ...tokens,
         });
-
+        
       // console.log('permissions = ', permissions);
       // console.log('permissions = ', newPermissions);
       // console.log('action = ', action);
@@ -1128,7 +1128,7 @@ function* patchRole(action) {
           ...tokens,
         });
 
-      if (action.data.default || action.data.name || typeof users === 'string') {
+      if (action.data.default || action.data.name || typeof users !== 'string') {
         yield put(updateRoleSuccess(
           roles.map((role) => {
             if (action.data.default) {
@@ -1155,9 +1155,12 @@ function* patchRole(action) {
                 ...role, ...data,
               };
             }
+
             return role;
           }),
         ));
+
+        
       } else {
         yield put(getRoles(action.companyId));
       }

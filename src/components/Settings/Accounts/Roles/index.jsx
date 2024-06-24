@@ -286,7 +286,7 @@ export default () => {
     return _temp;
   }, [allPermissions]);
 
-  const roleEmployeesEdit = (data) => {
+  const roleEmployeesEdit = async (data) => {
     dispatch(updateRole(id, activeRole.id, { users: data?.length ? data.toString() : '' }));
   };
 
