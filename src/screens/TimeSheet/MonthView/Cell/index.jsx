@@ -38,15 +38,15 @@ export default ({
 
   const refCell = useRef();
 
-  useEffect(() => {
-    if (!header && title) {
-      if (refCell.current.scrollWidth >= refCell.current.offsetWidth || tooltip) {
-        refCell.current.classList.add(classes.cell_doesNotFit);
-        refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth - 4}px`;
-      }
-    }
-    // eslint-disable-next-line
-  }, [title]);
+  // useEffect(() => {
+  //   if (!header && title) {
+  //     if (refCell.current.scrollWidth >= refCell.current.offsetWidth || tooltip) {
+  //       refCell.current.classList.add(classes.cell_doesNotFit);
+  //       refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth - 4}px`;
+  //     }
+  //   }
+  //   // eslint-disable-next-line
+  // }, [title]);
 
   if (!header && title) {
     return (
