@@ -81,6 +81,9 @@ export default () => {
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
   const timesheet = useSelector(TimeSheetDataSelector);
+  const hasLoadedOnceRef = useRef(false);
+  const isHandlingGetSheet = useRef(0);
+
 
   const employToCheck = useCallback(({
     id,
@@ -167,13 +170,46 @@ export default () => {
     }).catch();
   }
 
-  const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
-    let nextFromDate = moment(fromDate);
-    setCurrentDate(fromDate);
+  const loadSheetByParts = (arr, fromDate, query) => {
+    const arrCopy = [...arr];
+    const arrPart = arrCopy.splice(0, 20);
+
     dispatch(getSheet({
       companyId,
-      fromDate: nextFromDate.format('YYYY-MM-DD'),
-    }));
+      data: {
+        ...filter,
+        employeesArr: arrPart.map(({id}) => id),
+      },
+      fromDate
+    })).then(() => {
+      if (arrCopy.length && query === isHandlingGetSheet.current) {
+        loadSheetByParts(arrCopy, fromDate, query);
+      }
+    });
+  };
+
+  const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
+
+    isHandlingGetSheet.current += 1;
+
+    let nextFromDate = moment(fromDate);
+    setCurrentDate(fromDate);
+
+    const data = {
+      skillsArr: filter.skills.map(({id}) => id),
+      employeesArr: filter.employers.map(({id}) => id),
+      placesArr: filter.place.map(({id}) => id),
+    };
+
+    if (data.employeesArr.length === 0) {
+      loadSheetByParts(employees, nextFromDate.format('YYYY-MM-DD'), isHandlingGetSheet.current);
+    } else {
+      dispatch(getSheet({
+        companyId,
+        data,
+        fromDate: nextFromDate.format('YYYY-MM-DD'),
+      }));
+    }
   };
 
   const onEmployeesSelectFilter = (emp) => {
@@ -262,13 +298,8 @@ export default () => {
     dispatch(loadIntegrations(companyId));
     dispatch(loadTimeSheet(companyId));
 
-    dispatch(getSheet({
-      companyId,
-      fromDate: moment(new Date()).format('YYYY-MM-DD'),
-      firstLoading: true,
-    }));
     //dispatch(getsheetSetting(companyId));
-    dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}));
+    dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}))
 
     return () => {
       // eslint-disable-next-line
@@ -277,6 +308,14 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (employees.length > 0 && !hasLoadedOnceRef.current) {
+      handleGetSheet({ fromDate: moment(new Date()).format('YYYY-MM-DD') });
+      hasLoadedOnceRef.current = true;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employees]); 
+  
   return (
     <MainLayout>
       <div className='timeSheet-screen'>

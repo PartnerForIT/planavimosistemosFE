@@ -1,5 +1,5 @@
 import {
-  GET_SHEET,
+  //GET_SHEET,
   GET_SHEET_SUCCESS,
   GET_SHEET_ERROR,
 
@@ -8,17 +8,37 @@ import {
   GET_INTEGRATION_ERROR,
 
 } from './types';
+import getToken from '../getToken';
+import config from 'config';
 
-export const getSheet = ({
-  companyId,
-  fromDate,
-  firstLoading,
-}) => ({
-  type: GET_SHEET,
-  companyId,
-  fromDate,
-  firstLoading,
-});
+
+export const getSheet = ({ companyId, data, fromDate }) => {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/sheet?from_date=${fromDate}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(getSheetSuccess(data));
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(getSheetError());
+        reject(error);
+      });
+    });
+  };
+};
+
 export const getSheetSuccess = (data) => ({
   type: GET_SHEET_SUCCESS,
   data,
@@ -26,6 +46,7 @@ export const getSheetSuccess = (data) => ({
 export const getSheetError = () => ({
   type: GET_SHEET_ERROR,
 });
+
 export const downloadIntegration = (companyId, fromDate, data) => ({
   type: GET_INTEGRATION,
   request: {

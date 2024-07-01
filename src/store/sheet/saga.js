@@ -19,8 +19,9 @@ import getToken from '../getToken';
 function* getSheet(action) {
   try {
     const { data } = yield call(
-      axios.get,
+      axios.post,
       `${config.api.url}/company/${action.companyId}/sheet?from_date=${action.fromDate}`,
+      action.data,
       getToken(),
     );
     yield put(getSheetSuccess(data));

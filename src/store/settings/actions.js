@@ -87,7 +87,7 @@ import {
   PATCH_ACCOUNTS_GROUP_SUCCESS,
   PATCH_ACCOUNTS_GROUP_ERROR,
   PATCH_ACCOUNTS_SUBGROUP_ERROR,
-  GET_SETTINGS_EMPLOYEES_ALL,
+  //GET_SETTINGS_EMPLOYEES_ALL,
   GET_SETTINGS_EMPLOYEES_ERROR,
   GET_SETTINGS_EMPLOYEES_EDIT,
   GET_SETTINGS_EMPLOYEES_EDIT_SUCCESS,
@@ -161,6 +161,8 @@ import {
   GET_SETTINGS_INTEGRATION_SUCCESS,
   GET_SETTINGS_INTEGRATION_ERROR,
 } from './types';
+import config from 'config';
+import getToken from '../getToken';
 
 export const getSettingCompany = (id) => ({
   type: GET_SETTINGS_COMPANY,
@@ -372,12 +374,35 @@ export const loadEmployees = (id) => ({
   id,
 });
 
-export const loadEmployeesAll = (id, params = null) => ({
-  type: GET_SETTINGS_EMPLOYEES_ALL,
-  id,
-  all: true,
-  params,
-});
+export const loadEmployeesAll = (companyId, params) => {
+  return (dispatch, getState) => {
+    // Convert params object to query string
+    const queryString = new URLSearchParams(params).toString();
+    const urlWithParams = `${config.api.url}/company/${companyId}/employees/all${queryString ? `?${queryString}` : ''}`;
+
+    return new Promise((resolve, reject) => {
+      fetch(urlWithParams, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(loadEmployeesSuccess(data)); // Assuming there's a success action
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(loadEmployeesError()); // Assuming there's an error action
+        reject(error);
+      });
+    });
+  };
+};
 
 export const loadEmployeesQuery = (companyId, data = {}) => ({
   type: GET_SETTINGS_EMPLOYEES_QUERY,
