@@ -14,6 +14,7 @@ const initialState = {
   loading: false,
 };
 
+// eslint-disable-next-line
 const mergeArraysById = (primaryArray, secondaryArray, idKey) => {
   const primaryMap = new Map(primaryArray.map(item => [item[idKey], item]));
   for (const item of secondaryArray) {
@@ -29,9 +30,9 @@ const mergeData = (state, newData) => {
 
   mergedState.sheet = newData;
 
-  mergedState.sheet.places = mergeArraysById([...(state.sheet?.places ?? [])], newData?.places ?? [], 'id');
-  mergedState.sheet.resources = mergeArraysById([...(state.sheet?.resources ?? [])], newData?.resources ?? [], 'id');
-  mergedState.sheet.sheet = mergeArraysById([...(state.sheet?.sheet ?? [])], newData?.sheet ?? [], 'id');
+  //mergedState.sheet.places = mergeArraysById([...(state.sheet?.places ?? [])], newData?.places ?? [], 'id');
+  //mergedState.sheet.resources = mergeArraysById([...(state.sheet?.resources ?? [])], newData?.resources ?? [], 'id');
+  //mergedState.sheet.sheet = mergeArraysById([...(state.sheet?.sheet ?? [])], newData?.sheet ?? [], 'id');
 
   return mergedState;
 };

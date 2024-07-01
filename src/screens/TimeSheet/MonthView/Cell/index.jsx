@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 

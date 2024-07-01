@@ -33,6 +33,10 @@
     margin-right: 5px;
   }
 
+  &__buttonFilter {
+    margin-right: 10px;
+  }
+
   &__buttonDownload {
     margin-right: 10px;
     padding-top: 4px;
@@ -91,6 +95,18 @@
     }
   }
 
+  &__footer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 15px;
+    border-radius: 12px;
+    background-color: #feffff;
+    border: 0.5px solid rgba(#e2ebf4, 0.85);
+    margin-top: 16px;
+    z-index: 5;
+  }
+
   &__overlay-loading {
     display: flex;
     align-items: center;
@@ -103,5 +119,21 @@
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.2);
     //border-radius: 12px;
+  }
+
+  &__tooltip {
+    background-color: #fff !important;
+    border-radius: 6px !important;
+    border: none !important;
+    opacity: 1 !important;
+    padding: 7px 14px !important;
+    color: #333945 !important;
+    font-family: Helvetica Neue, sans-serif !important;
+    font-size: 12px !important;
+    box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+
+    &::after {
+      border-top-color: #fff !important;
+    }
   }
 }
