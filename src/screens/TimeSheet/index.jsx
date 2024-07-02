@@ -166,7 +166,6 @@ export default () => {
       }
       return {
         ...employee,
-        fromResource: employee.title ? 1 : 0,
         title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
         employeeId: employee.id*1,
       };
