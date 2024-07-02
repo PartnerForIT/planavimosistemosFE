@@ -103,12 +103,78 @@ export default () => {
     // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
   }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
-  
+
+  const pageEmployeeIds = (pageNumber = page) => {
+    return filteredEmployees.map(({id}) => id).splice((pageNumber - 1) * onPage, onPage);
+  };
+
+  const filteredEmployees = useMemo(() => {
+    const copyObject = [...employees];
+    return copyObject.filter((i) => {
+      let checkSkill = true;
+      if (filter?.skills?.length) {
+        checkSkill = false;
+        filter.skills.map((shiftEl) => {
+          if (shiftEl.id*1 === i.skill_id*1) {
+            checkSkill = true;
+          }
+
+          return shiftEl;
+        });
+      }
+        
+      let checkPlace = true;
+      if (filter?.place?.length) {
+        checkPlace = false;
+        filter.place.map((placeEL) => {
+          if (placeEL.id*1 === i.place_id*1) {
+            checkPlace = true;
+          }
+
+          return placeEL;
+        });
+      }
+          
+      let checkEmployer = true;
+      if (filter?.employers?.length) {
+        checkEmployer = false;
+        filter.employers.map((employer) => {
+          if (employer.id === i.id) {
+            checkEmployer = true;
+          }
+
+          return employer;
+        });
+      }
+
+      return (checkSkill && checkPlace && checkEmployer) ? i : null;
+          
+    });
+  }, [employees, filter]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredEmployees.length / onPage));
+  }, [filteredEmployees, onPage]);
 
   const resources = useMemo(() => {
     //filter we submit no need filter here
     return sheet?.resources;
   }, [sheet]);
+
+  const pageResources = useMemo(() => {
+    return pageEmployeeIds().map((id) => {
+      let employee = resources?.find((i) => i.id === id);
+      
+      if (!employee) {
+        employee = employees.find((i) => i.id === id);
+      }
+      return {
+        ...employee,
+        title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
+        employeeId: employee.id,
+      };
+    });
+  }, [employees, page, resources]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
@@ -119,7 +185,7 @@ export default () => {
       placesArr: filter.place.map(({id}) => id),
     };
 
-
+    setLoading(true);
     dispatch(downloadIntegration(companyId, nextFromDate.format('YYYY-MM-DD'), data)).then(({ data }) => {
       const link = document.createElement('a');
       //console.log(data.file);
@@ -129,32 +195,22 @@ export default () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      //setLoading(false);
+      setLoading(false);
     }).catch();
   }
 
   const loadSheetByPage = (fromDate) => {
     setLoading(true);
 
-    let data = {
+    const data = {
       skillsArr: filter.skills.map(({id}) => id),
-      employeesArr: filter.employers.map(({id}) => id),
       placesArr: filter.place.map(({id}) => id),
+      employeesArr: pageEmployeeIds(),
     };
-
-    if (data.employeesArr.length === 0) {
-      data.employeesArr = employees.map(({id}) => id);
-    }
-
-    setTotalPages(Math.ceil(data.employeesArr.length / onPage));
-
-    data.employeesArr = data.employeesArr.splice((page - 1) * onPage, onPage);
 
     dispatch(getSheet({
       companyId,
-      data: {
-        ...data
-      },
+      data,
       fromDate
     })).then(() => {
       setLoading(false);
@@ -200,15 +256,7 @@ export default () => {
   };
 
   const tooltipEmployees = (pageNumber) => {
-    let employeesArr = filter.employers.map(({id}) => id);
-
-    if (employeesArr.length === 0) {
-      employeesArr = employees.map(({id}) => id);
-    }
-
-    employeesArr = employeesArr.splice((pageNumber - 1) * onPage, onPage);
-
-    return employeesArr.map((id) => {
+    return pageEmployeeIds(pageNumber).map((id) => {
       const employee = employees.find((i) => i.id === id);
       return `${employee.name} ${employee.surname}`;
     }).join('<br />');
@@ -293,7 +341,7 @@ export default () => {
             <></>
           ) : (
             <MonthView
-              resources={Object.values(resources) || []}
+              resources={Object.values(pageResources) || []}
               holidays={sheet?.holidays}
               sheet={sheet?.sheet}
               fields={sheet?.fields}
@@ -311,7 +359,7 @@ export default () => {
           )
         }
 
-        { totalPages > 1 && !loading && sheet && (
+        { totalPages > 1 && sheet && (
           <>
           <PagesBlock
             page={page}
