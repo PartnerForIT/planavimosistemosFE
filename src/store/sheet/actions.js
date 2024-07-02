@@ -11,6 +11,29 @@ import {
 import getToken from '../getToken';
 import config from 'config';
 
+export const checkIntegration = (companyId, file) => {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/sheet/integration/check?file=${file}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(error => {
+        reject(error);
+      });
+    });
+  };
+};
 
 export const getSheet = ({ companyId, data, fromDate }) => {
   return (dispatch, getState) => {

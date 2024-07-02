@@ -26,6 +26,7 @@ import ReactTooltip from 'react-tooltip';
 import {
   getSheet,
   downloadIntegration,
+  checkIntegration,
 } from '../../store/sheet/actions';
 import {
   loadEmployeesAll, loadIntegrations, getSettingWorkTime, loadTimeSheet,
@@ -163,18 +164,20 @@ export default () => {
 
   const pageResources = useMemo(() => {
     return pageEmployeeIds().map((id) => {
-      let employee = resources?.find((i) => i.id === id);
+      let employee = sheet?.resources?.find((i) => i.id === id);
       
       if (!employee) {
         employee = employees.find((i) => i.id === id);
       }
       return {
         ...employee,
+        fromResource: employee.title ? 1 : 0,
         title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
-        employeeId: employee.id,
+        employeeId: employee.id*1,
       };
     });
-  }, [employees, page, resources]);
+    // eslint-disable-next-line
+  }, [employees, sheet]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
@@ -187,25 +190,44 @@ export default () => {
 
     setLoading(true);
     dispatch(downloadIntegration(companyId, nextFromDate.format('YYYY-MM-DD'), data)).then(({ data }) => {
-      const link = document.createElement('a');
-      //console.log(data.file);
-      link.setAttribute('download', data.file);
-      link.setAttribute('target', '_blank');
-      link.href = `${data.path}`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setLoading(false);
+      if (data) {
+        askIntegrationReady(data);
+      } else {
+        setLoading(false);
+      }
     }).catch();
   }
 
-  const loadSheetByPage = (fromDate) => {
+  const askIntegrationReady = (data) => {
+    dispatch(checkIntegration(
+      companyId,
+      data.file,
+    )).then((response) => {
+      if (response.status === 'ready') {
+        const link = document.createElement('a');
+        link.setAttribute('download', data.file);
+        link.setAttribute('target', '_blank');
+        link.href = `${data.path}`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setLoading(false);
+      } else {
+        setTimeout(() => {
+          askIntegrationReady(data);
+        }, 1000);
+      }
+    });
+  }
+
+
+  const loadSheetByPage = (fromDate, fromPage) => {
     setLoading(true);
 
     const data = {
       skillsArr: filter.skills.map(({id}) => id),
       placesArr: filter.place.map(({id}) => id),
-      employeesArr: pageEmployeeIds(),
+      employeesArr: pageEmployeeIds(fromPage),
     };
 
     dispatch(getSheet({
@@ -364,9 +386,9 @@ export default () => {
           <PagesBlock
             page={page}
             totalPages={totalPages}
-            onPageChange={(page) => {
-              setPage(page);
-              loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'));
+            onPageChange={(newPage) => {
+              setPage(newPage);
+              loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), newPage);
             }}
             tooltip={tooltipEmployees}
           />
