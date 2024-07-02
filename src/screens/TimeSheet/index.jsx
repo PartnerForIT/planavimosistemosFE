@@ -157,11 +157,6 @@ export default () => {
     setTotalPages(Math.ceil(filteredEmployees.length / onPage));
   }, [filteredEmployees, onPage]);
 
-  const resources = useMemo(() => {
-    //filter we submit no need filter here
-    return sheet?.resources;
-  }, [sheet]);
-
   const pageResources = useMemo(() => {
     return pageEmployeeIds().map((id) => {
       let employee = sheet?.resources?.find((i) => i.id === id);
