@@ -1016,6 +1016,8 @@ export default () => {
   }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
+  console.log('RENDER', checkedItems)
+
   return (
     <MaynLayout>
       <div className={styles.container}>
