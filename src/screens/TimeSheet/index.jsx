@@ -110,7 +110,19 @@ export default () => {
   };
 
   const filteredEmployees = useMemo(() => {
-    const copyObject = [...employees];
+    let copyObject = [];
+    if (sheet?.resources) {
+      copyObject.push(...sheet.resources);
+    }
+  
+    employees.map((employee) => {
+      if (!copyObject.find((i) => i.id === employee.id)) {
+        copyObject.push(employee);
+      }
+
+      return employee;
+    });
+
     return copyObject.filter((i) => {
       let checkSkill = true;
       if (filter?.skills?.length) {
@@ -151,19 +163,14 @@ export default () => {
       return (checkSkill && checkPlace && checkEmployer) ? i : null;
           
     });
-  }, [employees, filter]);
+  }, [employees, filter, sheet]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredEmployees.length / onPage));
   }, [filteredEmployees, onPage]);
 
   const pageResources = useMemo(() => {
-    return pageEmployeeIds().map((id) => {
-      let employee = sheet?.resources?.find((i) => i.id === id);
-      
-      if (!employee) {
-        employee = employees.find((i) => i.id === id);
-      }
+    return filteredEmployees.map((employee) => {
       return {
         ...employee,
         title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
@@ -171,7 +178,7 @@ export default () => {
       };
     });
     // eslint-disable-next-line
-  }, [employees, sheet]);
+  }, [filteredEmployees]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
