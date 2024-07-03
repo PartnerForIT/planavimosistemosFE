@@ -125,16 +125,16 @@ export default () => {
       }
         
       let checkPlace = true;
-      if (filter?.place?.length) {
-        checkPlace = false;
-        filter.place.map((placeEL) => {
-          if (placeEL.id*1 === i.place_id*1) {
-            checkPlace = true;
-          }
+      // if (filter?.place?.length) {
+      //   checkPlace = false;
+      //   filter.place.map((placeEL) => {
+      //     if (placeEL.id*1 === i.place_id*1) {
+      //       checkPlace = true;
+      //     }
 
-          return placeEL;
-        });
-      }
+      //     return placeEL;
+      //   });
+      // }
           
       let checkEmployer = true;
       if (filter?.employers?.length) {
