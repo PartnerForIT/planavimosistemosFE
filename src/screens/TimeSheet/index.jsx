@@ -165,12 +165,33 @@ export default () => {
     });
   }, [employees, filter, sheet]);
 
+
+  const onPageEmployees = useMemo(() => {
+    let copyObject = [];
+    if (sheet?.resources) {
+      copyObject.push(...sheet.resources);
+    }
+  
+    if (employees) {
+      employees.map((employee) => {
+        if (!copyObject.find((i) => i.id === employee.id)) {
+          copyObject.push(employee);
+        }
+
+        return employee;
+      });
+    }
+
+    return copyObject;
+
+  }, [employees, sheet]);
+
   useEffect(() => {
     setTotalPages(Math.ceil(filteredEmployees.length / onPage));
   }, [filteredEmployees, onPage]);
 
   const pageResources = useMemo(() => {
-    return filteredEmployees.map((employee) => {
+    return onPageEmployees.map((employee) => {
       return {
         ...employee,
         title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
@@ -178,7 +199,7 @@ export default () => {
       };
     });
     // eslint-disable-next-line
-  }, [filteredEmployees]);
+  }, [onPageEmployees]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
