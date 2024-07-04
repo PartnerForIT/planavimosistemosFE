@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import CurrencySign from '../../../../components/shared/CurrencySign';
 import moment from 'moment';
@@ -127,8 +127,8 @@ const RowContent = ({
         {
           daysOfMonth.map((item, index) => {
             if(index < item.id ){
-              time+=foundTime(item.title)
-              cost+=foundCost(item.title)
+              // time+=foundTime(item.title)
+              // cost+=foundCost(item.title)
             }
             return (
              <Cell
@@ -149,4 +149,8 @@ const RowContent = ({
   );
 };
 
-export default RowContent;
+const isEqual = () => {
+  return true
+}
+
+export default memo(RowContent, isEqual);

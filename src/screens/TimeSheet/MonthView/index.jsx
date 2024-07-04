@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useRef,
   useMemo,
+  memo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -26,8 +27,8 @@ const trackYProps = {
   ),
 };
 
-export default ({
-  resources: externalResources,
+const MonthView = ({
+  resources,
   sheet,
   fields,
   holidays,
@@ -36,7 +37,7 @@ export default ({
   withAccumulated,
 }) => {
   const { t, i18n } = useTranslation();
-  const [resources, setResources] = useState([]);
+  // const [resources, setResources] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   const contentRef = useRef(null);
   const headerRef = useRef(null);
@@ -98,11 +99,11 @@ export default ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language, currentMonth, withCost, withAccumulated, holidays]);
 
-  useEffect(() => {
-    setResources(externalResources);
+  // useEffect(() => {
+  //   setResources(externalResources);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalResources]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [externalResources]);
 
 
 
@@ -191,18 +192,20 @@ export default ({
                 className={classes.sheetmonthView__content__data}>
                 {
                   resources.map((resource, index) => (
-                    <div key={resource.id+'_'+resource.place_id+'_'+index} className={classes.sheetmonthView__content__data__wrap}>
+                    <div key={resource.id+'_'+resource.place_id+'_'+index} id={resource.id+'_'+resource.place_id+'_'+index} className={classes.sheetmonthView__content__data__wrap}>
                       {
                         resource ?
-                          fields.map((item) => (
-                            <RowContent
-                              key={resource.id+'-'+item}
-                              field={item}
-                              resource={resource}
-                              sheet={sheet}
-                              daysOfMonth={daysOfMonth}
-                            />
-                          )) : null
+                          fields.map((item) => {
+                            return (
+                              <RowContent
+                                key={resource.id+'-'+item}
+                                field={item}
+                                resource={resource}
+                                sheet={sheet}
+                                daysOfMonth={daysOfMonth}
+                              />
+                            )
+                          }) : null
                       }
                     </div>
                   ))
@@ -227,3 +230,9 @@ export default ({
     </>
   );
 };
+
+const isEqual = () => {
+  return true
+}
+
+export default memo(MonthView, isEqual)
