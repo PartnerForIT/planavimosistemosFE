@@ -114,13 +114,21 @@ export default () => {
   }, [sheetResources])
 
   const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
-
-  const currentEmployees = currentEmployeeIds.map(id => {
-    return {
-      ...employeesData[id],
-      ...(resourceData?.[id] || null),
+  const {currentEmployees} = currentEmployeeIds.map(id => {
+    return employeesData[id]
+  }).reduce((acc, employee) => {
+    const existInResources = acc.resources.filter(res => res.employeeId === employee.id)
+    if (existInResources.length) {
+      return {
+        currentEmployees: [...acc.currentEmployees, ...existInResources],
+        resources: acc.resources.filter(res => res.employeeId !== employee.id)
+      }
     }
-  })
+    return {
+      ...acc,
+      currentEmployees: [...acc.currentEmployees, employee]
+    }
+  }, {currentEmployees: [], resources: sheetResources || []})
 
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -208,12 +216,12 @@ export default () => {
     });
   }
 
-  const loadSheetByPage = async (fromDate, fromPage) => {
+  const loadSheetByPage = async (fromDate, employeeIds) => {
     setLoading(true)
     const data = {
       skillsArr: filter.skills.map(({id}) => id),
       placesArr: filter.place.map(({id}) => id),
-      employeesArr: currentEmployeeIds,
+      employeesArr: employeeIds ?? currentEmployeeIds,
     }
     await dispatch(getSheet({
       companyId,
@@ -250,7 +258,7 @@ export default () => {
       setPage(1)
       return
     }
-    loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'))
+    loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), tempList.map(e => e.id))
   }
 
   const onEmployeesSelectFilter = (emp) => {

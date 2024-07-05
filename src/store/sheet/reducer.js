@@ -47,7 +47,7 @@ export const reducer = (state = initialState, action) => {
         ...mergeData(state, action.data),
         //...state,
         //sheet: action.data,
-        //resources: action.data.resources,
+        // resources: action.data.resources,
         loading: false,
       };
     case GET_SHEET_ERROR:
