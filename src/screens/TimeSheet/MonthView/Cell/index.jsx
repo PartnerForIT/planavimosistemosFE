@@ -4,7 +4,7 @@ import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 
 import classes from './Cell.module.scss';
 
-export default ({
+const Cell = ({
   cellId,
   title,
   statistic,
@@ -89,3 +89,5 @@ export default ({
     </div>
   );
 };
+
+export default Cell

@@ -37,10 +37,22 @@ const MonthView = ({
   withAccumulated,
 }) => {
   const { t, i18n } = useTranslation();
-  // const [resources, setResources] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   const contentRef = useRef(null);
   const headerRef = useRef(null);
+
+  useEffect(() => {
+    const handleScrolling = (event) => {
+      if(contentRef !== null && headerRef !== null && headerRef.current && contentRef.current && headerRef.current.scrollLeft !== contentRef.current.scrollLeft) {
+        headerRef.current.scrollLeft = contentRef.current.scrollLeft;
+      }
+    }
+    
+    window.addEventListener("wheel", handleScrolling);
+    return () => {
+      window.removeEventListener("wheel", handleScrolling);
+    }
+  }, [])
   
   const handleClickPrevMonth = () => {
     const nextMonth = currentMonth.clone().add(-1, 'months');
@@ -98,26 +110,6 @@ const MonthView = ({
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language, currentMonth, withCost, withAccumulated, holidays]);
-
-  // useEffect(() => {
-  //   setResources(externalResources);
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [externalResources]);
-
-
-
-  useEffect(() => {
-
-    const handleScrolling = (event) => {
-      if(contentRef !== null && headerRef !== null && headerRef.current && contentRef.current && headerRef.current.scrollLeft !== contentRef.current.scrollLeft) {
-        headerRef.current.scrollLeft = contentRef.current.scrollLeft;
-      }
-    }
-
-    window.removeEventListener("wheel", handleScrolling);
-    window.addEventListener("wheel", handleScrolling);
-  })
 
   //fix for employee block height
   const empHeight = {
@@ -231,8 +223,8 @@ const MonthView = ({
   );
 };
 
-const isEqual = () => {
-  return true
+const isEqual = (prev, next) => {
+  return prev.sheet === next.sheet
 }
 
 export default memo(MonthView, isEqual)
