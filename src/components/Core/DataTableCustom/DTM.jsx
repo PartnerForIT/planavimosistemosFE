@@ -291,7 +291,7 @@ export default function DataTable({
               }
               return (
                 <Group
-                  key={idx.toString()}
+                  key={group.id}
                   group={group}
                   label={group.label}
                   rows={group.items}

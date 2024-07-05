@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './DTM.module.scss';
@@ -20,8 +20,6 @@ const Group = ({
   const detailsClasses = classNames(
     styles.details,
     {
-      [styles.datailsHidden]: !expanded,
-      [styles.detailsShown]: expanded,
       [styles.detailsReports]: reports,
       [styles.detailsNotSelectable]: !reports && !selectable,
     },
@@ -157,28 +155,39 @@ const Group = ({
           }
         </div>
       </div>
-      <div className={detailsClasses}>
-        {
-          rows.map((row, idx) => (
-            <Row
-              key={idx.toString()}
-              row={row}
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              columns={columns}
-              selectable={selectable}
-              onSelect={onSelect}
-              fieldIcons={fieldIcons}
-              reports={reports}
-              columnsWidth={columnsWidth}
-              totalCustomWidthColumns={totalCustomWidthColumns}
-              totalCustomColumns={totalCustomColumns}
-            />
-          ))
-        }
-      </div>
+      {
+        expanded
+          ? <div className={detailsClasses}>
+              {
+                rows.map((row, idx) => {
+                  return (
+                    <Row
+                      key={row.id.toString()}
+                      row={row}
+                      selectedItem={selectedItem}
+                      setSelectedItem={setSelectedItem}
+                      columns={columns}
+                      selectable={selectable}
+                      onSelect={onSelect}
+                      fieldIcons={fieldIcons}
+                      reports={reports}
+                      columnsWidth={columnsWidth}
+                      totalCustomWidthColumns={totalCustomWidthColumns}
+                      totalCustomColumns={totalCustomColumns}
+                    />
+                  )
+                })
+              }
+            </div>
+          : null
+      }
+      
     </div>
   );
 };
 
-export default Group;
+const isEqual = ({groupChecked: prevChecked, selectedItem: prevSelectedItem, rows: prevRows}, {groupChecked, selectedItem, rows}) => {
+  return prevChecked === groupChecked && prevSelectedItem === selectedItem && prevRows === rows
+}
+
+export default memo(Group, isEqual);

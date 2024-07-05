@@ -74,6 +74,7 @@ const RowContent = ({
 
   let time = 0;
   let cost = 0;
+
   const check = (item) => {
     if (item.statistic && item.id === "totalTime" && field !== 'show_costs'){
       return time > 0 ? (field !== 'working_days' ? timeConvert(time) : time) : '';
@@ -149,4 +150,4 @@ const RowContent = ({
   );
 };
 
-export default RowContent;
+export default RowContent

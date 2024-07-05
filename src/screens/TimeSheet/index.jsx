@@ -21,7 +21,6 @@ import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import ExcelIcon from '../../components/Icons/ExcelIcon';
 import usePermissions from '../../components/Core/usePermissions';
 import ReactTooltip from 'react-tooltip';
-//import { getEmployees } from '../../store/employees/actions';
 
 import {
   getSheet,
@@ -31,9 +30,8 @@ import {
 import {
   loadEmployeesAll, loadIntegrations, getSettingWorkTime, loadTimeSheet,
 } from '../../store/settings/actions';
-//import { employeesSelector } from '../../store/employees/selectors';
 
-import { employeesSelector, TimeSheetDataSelector } from '../../store/settings/selectors';
+import { TimeSheetDataSelector } from '../../store/settings/selectors';
 import { sheetSelector, isLoadingSelector } from '../../store/sheet/selectors';
 import { IntegrationsDataSelector } from '../../store/settings/selectors';
 import { getPlaces } from '../../store/places/actions';
@@ -68,6 +66,8 @@ const permissionsConfig = [
 
 export default () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
   const [filter, setFilter] = useState({ employers: [], place: [], skills: [] });
   const places = useSelector(placesSelector);
   const skills = useSelector(skillsSelector);
@@ -75,24 +75,89 @@ export default () => {
   const [currentDate, setCurrentDate] = useState(fromDateRef.current);
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
-  const dispatch = useDispatch();
-  //const employees = useSelector(employeesSelector);
-  const { users: employees } = useSelector(employeesSelector);
+  
   const sheet = useSelector(sheetSelector);
   const isLoading = useSelector(isLoadingSelector);
-  //const [filterData, setFilterData] = useState({});
+  const users = useSelector(state => state.settings.employees.users);
+
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
   const timesheet = useSelector(TimeSheetDataSelector);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const hasLoadedOnceRef = useRef(false);
+  const [employees, setEmployees] = useState(users)
+  const sheetResources = sheet?.resources
   const onPage = 20;
-  const [totalPages, setTotalPages] = useState(0);
+
+  const totalPages = Math.ceil(employees.length / onPage)
+
+  const employeesData = useMemo(() => {
+    return users.reduce((acc, employee) => {
+      return {
+        ...acc,
+        [employee.id]: {
+          ...employee,
+          title: `${employee.name} ${employee.surname}`,
+          employeeId: employee.id,
+        }
+      }
+    }, {})
+  }, [users])
+
+  const resourceData = useMemo(() => {
+    return sheetResources?.reduce((acc, resource) => {
+      return {
+        ...acc,
+        [resource.employeeId]: resource,
+      }
+    }, {})
+  }, [sheetResources])
+
+  const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
+  const {currentEmployees} = currentEmployeeIds.map(id => {
+    return employeesData[id]
+  }).reduce((acc, employee) => {
+    const existInResources = acc.resources.filter(res => res.employeeId === employee.id)
+    if (existInResources.length) {
+      return {
+        currentEmployees: [...acc.currentEmployees, ...existInResources],
+        resources: acc.resources.filter(res => res.employeeId !== employee.id)
+      }
+    }
+    return {
+      ...acc,
+      currentEmployees: [...acc.currentEmployees, employee]
+    }
+  }, {currentEmployees: [], resources: sheetResources || []})
 
   useEffect(() => {
     ReactTooltip.rebuild();
-  });
+    dispatch(getPlaces(companyId));
+    dispatch(getSkills(companyId));
+    dispatch(getSettingWorkTime(companyId));
+    dispatch(loadIntegrations(companyId));
+    dispatch(loadTimeSheet(companyId));
+
+    //dispatch(getsheetSetting(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}))
+
+    return () => {
+      // eslint-disable-next-line
+      resizeObserverRef.current?.disconnect();
+    };
+  }, [dispatch, companyId]);
+
+  useEffect(() => {
+    if (users.length) {
+      setEmployees(users)
+    }
+  }, [users])
+
+  useEffect(() => {
+    if (employees.length) {
+      loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'))
+    }
+  }, [page, employees, currentDate])
 
   const employToCheck = useCallback(({
     id,
@@ -103,103 +168,12 @@ export default () => {
     label: `${name} ${surname}`,
     // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
   }), []);
-  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
+
+  const allSortedEmployees = useGroupingEmployees(users, employToCheck);
 
   const pageEmployeeIds = (pageNumber = page) => {
-    return filteredEmployees.map(({id}) => id).splice((pageNumber - 1) * onPage, onPage);
+    return employees.map(({id}) => id).splice((pageNumber - 1) * onPage, onPage);
   };
-
-  const filteredEmployees = useMemo(() => {
-    let copyObject = [];
-    if (sheet?.resources) {
-      copyObject.push(...sheet.resources);
-    }
-  
-    employees.map((employee) => {
-      if (!copyObject.find((i) => i.id === employee.id)) {
-        copyObject.push(employee);
-      }
-
-      return employee;
-    });
-
-    return copyObject.filter((i) => {
-      let checkSkill = true;
-      if (filter?.skills?.length) {
-        checkSkill = false;
-        filter.skills.map((shiftEl) => {
-          if (shiftEl.id*1 === i.skill_id*1) {
-            checkSkill = true;
-          }
-
-          return shiftEl;
-        });
-      }
-        
-      let checkPlace = true;
-      // if (filter?.place?.length) {
-      //   checkPlace = false;
-      //   filter.place.map((placeEL) => {
-      //     if (placeEL.id*1 === i.place_id*1) {
-      //       checkPlace = true;
-      //     }
-
-      //     return placeEL;
-      //   });
-      // }
-          
-      let checkEmployer = true;
-      if (filter?.employers?.length) {
-        checkEmployer = false;
-        filter.employers.map((employer) => {
-          if (employer.id === i.id) {
-            checkEmployer = true;
-          }
-
-          return employer;
-        });
-      }
-
-      return (checkSkill && checkPlace && checkEmployer) ? i : null;
-          
-    });
-  }, [employees, filter, sheet]);
-
-
-  const onPageEmployees = useMemo(() => {
-    let copyObject = [];
-    if (sheet?.resources) {
-      copyObject.push(...sheet.resources);
-    }
-  
-    if (employees) {
-      employees.map((employee) => {
-        if (!copyObject.find((i) => i.id === employee.id)) {
-          copyObject.push(employee);
-        }
-
-        return employee;
-      });
-    }
-
-    return copyObject;
-
-  }, [employees, sheet]);
-
-  useEffect(() => {
-    setTotalPages(Math.ceil(filteredEmployees.length / onPage));
-  }, [filteredEmployees, onPage]);
-
-  const pageResources = useMemo(() => {
-    return onPageEmployees.map((employee) => {
-      return {
-        ...employee,
-        title: employee.title ? employee.title : `${employee.name} ${employee.surname}`,
-        employeeId: employee.id*1,
-      };
-    });
-    // eslint-disable-next-line
-  }, [onPageEmployees]);
 
   const downloadIntegrationFile = (type) => {
     let nextFromDate = moment(currentDate);
@@ -242,23 +216,19 @@ export default () => {
     });
   }
 
-
-  const loadSheetByPage = (fromDate, fromPage) => {
-    setLoading(true);
-
+  const loadSheetByPage = async (fromDate, employeeIds) => {
+    setLoading(true)
     const data = {
       skillsArr: filter.skills.map(({id}) => id),
       placesArr: filter.place.map(({id}) => id),
-      employeesArr: pageEmployeeIds(fromPage),
-    };
-
-    dispatch(getSheet({
+      employeesArr: employeeIds ?? currentEmployeeIds,
+    }
+    await dispatch(getSheet({
       companyId,
       data,
       fromDate
-    })).then(() => {
-      setLoading(false);
-    });
+    }))
+    setLoading(false)
   };
 
   const handleGetSheet = ({ fromDate = fromDateRef.current }) => {
@@ -270,14 +240,30 @@ export default () => {
   }
 
   const handleSubmitFiler = () => {
-    setPage(1);
-    loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'));
+    let tempList = users
+    if (filter.place.length) {
+      const placeIds = filter.place.reduce((acc, place) => ({...acc, [place.id]: true}), {})
+      tempList = users.filter(u => u.places_where_worked.some(placeId => placeIds[placeId]))
+    }
+    if (filter.skills.length) {
+      const skillLabels = filter.skills.reduce((acc, skill) => ({...acc, [skill.label]: true}), {})
+      tempList = tempList.filter(u => skillLabels[u.skills])
+    }
+    if (filter.employers.length) {
+      const employerIds = filter.employers.reduce((acc, employer) => ({...acc, [employer.id]: true}), {})
+      tempList = tempList.filter(u => employerIds[u.id])
+    }
+    setEmployees(tempList)
+    if (page !== 1) {
+      setPage(1)
+      return
+    }
+    loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), tempList.map(e => e.id))
   }
 
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
-
       ...prevState,
       employers: arrChecked,
     }));
@@ -301,37 +287,11 @@ export default () => {
 
   const tooltipEmployees = (pageNumber) => {
     return pageEmployeeIds(pageNumber).map((id) => {
-      const employee = employees.find((i) => i.id === id);
+      const employee = employeesData[id]
       return `${employee.name} ${employee.surname}`;
     }).join('<br />');
   }
-  
-  useEffect(() => {
-    dispatch(getPlaces(companyId));
-    dispatch(getSkills(companyId));
-    //dispatch(getEmployees(companyId));
-    dispatch(getSettingWorkTime(companyId));
-    dispatch(loadIntegrations(companyId));
-    dispatch(loadTimeSheet(companyId));
 
-    //dispatch(getsheetSetting(companyId));
-    dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}))
-
-    return () => {
-      // eslint-disable-next-line
-      resizeObserverRef.current?.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (employees.length > 0 && !hasLoadedOnceRef.current) {
-      handleGetSheet({ fromDate: moment(new Date()).format('YYYY-MM-DD') });
-      hasLoadedOnceRef.current = true;
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [employees]); 
-  
   return (
     <MainLayout>
       <div className='timeSheet-screen'>
@@ -363,7 +323,7 @@ export default () => {
           <Button
             onClick={handleSubmitFiler}
             className='timeSheet-screen__buttonFilter'
-            disabled={isLoading || loading || (filter.employers.length === 0 && filter.place.length === 0 && filter.skills.length === 0)}
+            disabled={isLoading || loading || (filter.employers.length === 0 && filter.place.length === 0 && filter.skills.length === 0 && false)}
           >
             {t('Search')}
           </Button>
@@ -385,7 +345,7 @@ export default () => {
             <></>
           ) : (
             <MonthView
-              resources={Object.values(pageResources) || []}
+              resources={currentEmployees || []}
               holidays={sheet?.holidays}
               sheet={sheet?.sheet}
               fields={sheet?.fields}
@@ -410,7 +370,7 @@ export default () => {
             totalPages={totalPages}
             onPageChange={(newPage) => {
               setPage(newPage);
-              loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), newPage);
+              // loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), newPage);
             }}
             tooltip={tooltipEmployees}
           />
