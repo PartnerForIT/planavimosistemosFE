@@ -86,6 +86,8 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [employees, setEmployees] = useState(users)
+  
+  const applyingFilters = useRef(false)
   const sheetResources = sheet?.resources
   const onPage = 20;
 
@@ -104,15 +106,6 @@ export default () => {
     }, {})
   }, [users])
 
-  const resourceData = useMemo(() => {
-    return sheetResources?.reduce((acc, resource) => {
-      return {
-        ...acc,
-        [resource.employeeId]: resource,
-      }
-    }, {})
-  }, [sheetResources])
-
   const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
   const {currentEmployees} = currentEmployeeIds.map(id => {
     return employeesData[id]
@@ -123,6 +116,9 @@ export default () => {
         currentEmployees: [...acc.currentEmployees, ...existInResources],
         resources: acc.resources.filter(res => res.employeeId !== employee.id)
       }
+    }
+    if (filter.place.length) {
+      return acc
     }
     return {
       ...acc,
@@ -154,8 +150,10 @@ export default () => {
   }, [users])
 
   useEffect(() => {
-    if (employees.length) {
+    if (employees.length && !applyingFilters.current) {
       loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'))
+    } else if (applyingFilters.current) {
+      applyingFilters.current = false
     }
   }, [page, employees, currentDate])
 
@@ -255,8 +253,8 @@ export default () => {
     }
     setEmployees(tempList)
     if (page !== 1) {
+      applyingFilters.current = true
       setPage(1)
-      return
     }
     loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), tempList.map(e => e.id))
   }
@@ -369,7 +367,7 @@ export default () => {
             page={page}
             totalPages={totalPages}
             onPageChange={(newPage) => {
-              setPage(newPage);
+              setPage(newPage)
               // loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), newPage);
             }}
             tooltip={tooltipEmployees}
