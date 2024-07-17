@@ -186,8 +186,15 @@ const Group = ({
   );
 };
 
-const isEqual = ({groupChecked: prevChecked, selectedItem: prevSelectedItem, rows: prevRows}, {groupChecked, selectedItem, rows}) => {
-  return prevChecked === groupChecked && prevSelectedItem === selectedItem && prevRows === rows
+const isEqual = ({groupChecked: prevChecked, selectedItem: prevSelectedItem, rows: prevRows, group: prevGroup, ids: prevIds, columns: prevColumns}, {groupChecked, selectedItem, rows, group, ids, columns}) => {
+  return (
+    prevChecked === groupChecked
+    && prevSelectedItem === selectedItem
+    && prevRows === rows
+    && prevGroup === group
+    && prevIds === ids
+    && prevColumns === columns
+  )
 }
 
 export default memo(Group, isEqual);
