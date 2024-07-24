@@ -30,6 +30,7 @@ const RowContent = ({
   handleCopyTool,
   handleAddHistory,
   addTempEmployees,
+  currentMonth,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -88,6 +89,7 @@ const RowContent = ({
              <Cell
                 event={newFoundItem(item.title)}
                 currentDay={index+1}
+                currentMonth={currentMonth}
                 key={item.id}
                 title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title)?.hours ?? '')}
                 startFinish={item.statistic || !employeeId ? '' : (newFoundItem(item.title)?.title ?? '')}
@@ -147,6 +149,7 @@ const RowContent = ({
             handleCopyTool={handleCopyTool}
             handleAddHistory={handleAddHistory}
             addTempEmployees={addTempEmployees}
+            currentMonth={currentMonth}
           />
         ))
       }

@@ -332,6 +332,7 @@ export default ({
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
                     addTempEmployees={addTempEmployees}
+                    currentMonth={currentMonth}
                   />
                 ))
               }
