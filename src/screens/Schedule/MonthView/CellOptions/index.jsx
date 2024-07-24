@@ -92,14 +92,10 @@ export default ({
   };
   const copyEvent = () => {
     let start_day = moment(start).format('YYYY-MM-DD');
-    let end_day = moment(end).format('YYYY-MM-DD');
     if (!start) {
       start_day = moment(currentMonth).date(currentDay).format('YYYY-MM-DD');
     }
-    if (!end) {
-      end_day = moment(currentMonth).date(currentDay).format('YYYY-MM-DD');
-    }
-    handleAddHistory({resourceId: resourceId, day: currentDay, start: start_day, end: end_day});
+    handleAddHistory({resourceId: resourceId, day: currentDay, start: start_day, end: start_day});
   };
   const handleCancel = () => {
     if (modalAddRef.current) {
