@@ -43,6 +43,7 @@ export default ({
   handleAddHistory,
   addTempEmployees,
   currentDay,
+  currentMonth,
 }) => {
   
   const { t } = useTranslation();
@@ -209,6 +210,7 @@ export default ({
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}
+                currentMonth={currentMonth}
                 copy_event={event?.copy_event}
                 empty={event?.empty_event}
                 empty_manual={event?.empty_manual}
