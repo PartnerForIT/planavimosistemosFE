@@ -92,6 +92,7 @@ const columns = [
     checked: true,
     cellRenderer: NameWithAvatar,
   },
+  { label: 'External ID', field: 'external_id', checked: true },
   { label: 'Employment status', field: 'em_status', checked: true },
   { label: 'Email', field: 'email', checked: true },
   { label: 'Role', field: 'role', checked: true },
@@ -291,6 +292,7 @@ export default function AccountsList() {
 
   useEffect(() => {
     let allColumnsArray = columns;
+    const exist_external_id = employeesAll.some((empl) => empl.external_id);
     allColumnsArray = allColumnsArray.filter((column) => {
 
       if (!permissions.places && column.field === 'place') {
@@ -311,11 +313,14 @@ export default function AccountsList() {
       if ((!permissions.schedule_shift || !schedule.use_accumulated || schedule.accumulated_from_country) && column.field === 'hours_demand') {
         return false;
       }
+      if (column.field === 'external_id' && !exist_external_id) {
+        return false;
+      }
       return true;
     });
 
     setColumnsArray(allColumnsArray);
-  }, [permissions, schedule]);
+  }, [permissions, schedule, employeesAll]);
 
   const deleteEmployee = (employeeId) => {
     setDeleteVisible([employeeId]);
@@ -420,6 +425,7 @@ export default function AccountsList() {
           name, surname, status, groups, skills, subgroups, role,
           created_at: createdAt,
           updated_at: updatedAt,
+          external_id,
           place,
           ...rest
         } = empl;
@@ -427,6 +433,7 @@ export default function AccountsList() {
         return {
           ...rest,
           groups: groups,
+          external_id: external_id,
           subgroup: subgroups,
           skills: skills,
           place: place,
