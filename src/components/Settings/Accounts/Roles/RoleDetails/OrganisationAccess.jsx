@@ -19,6 +19,10 @@ export default memo(({
       return activePermissions.every((it) => it !== permissionsIds[module].see_and_edit);
     }
 
+    if (module === 'manager' && action === 'clock_in') {
+      return activePermissions.every((it) => it !== permissionsIds[module].mobile);
+    }
+
     return false;
   };
   

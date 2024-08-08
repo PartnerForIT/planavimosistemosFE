@@ -234,6 +234,7 @@ export default () => {
       manager: {
         options: {
           ...(modules.use_manager_mobile && { mobile: 'Use Managers Mobile View' }),
+          ...(modules.use_manager_mobile && { clock_in: 'Manager can clock in' }),
         },
       },
       app: {
@@ -399,6 +400,7 @@ export default () => {
       if (!permissions.events) {
         delete nextModuleAccess.events;
       }
+
       if (!permissions.schedule_shift) {
         // delete nextModuleAccess.events;
 

@@ -65,6 +65,10 @@ function RoleDetails({
   const onChangeHandler = (id) => {
     setActivePermissions((prevState) => {
       if (prevState.some((i) => i === id)) {
+        if (permissionsIds.manager.mobile === id) {
+          return prevState.filter((i) => i !== id && i !== permissionsIds.manager.clock_in);
+        }
+
         if (permissionsIds.logbook.edit_logs === id) {
           return prevState.filter((i) => i !== id && i !== permissionsIds.logbook.edit_comments);
         }
