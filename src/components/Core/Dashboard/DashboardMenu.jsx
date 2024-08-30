@@ -131,8 +131,8 @@ const permissionsConfig = [
     module: 'kiosk',
   },
   {
-    name: 'schedule_schedule_shift',
-    permission: 'schedule_schedule_shift',
+    name: 'schedule_edit',
+    permission: 'schedule_edit',
   },
   {
     name: 'schedule_shift',
@@ -265,7 +265,7 @@ export default function DashboardMenu() {
         items: logbook_items
       });
     }
-
+    
     // Kiosk
     if (permissions.kiosk) {
       nextMenuItems.push({
@@ -295,9 +295,9 @@ export default function DashboardMenu() {
         name: 'events',
       });
     }
-
+    
     // Schedule
-    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_schedule_shift) {
+    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit) {
       nextMenuItems.push({
         to: `/${companyId}/settings/schedule`,
         icon: ScheduleIcon,

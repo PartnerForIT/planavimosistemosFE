@@ -263,7 +263,7 @@ export default function ButtonAppBar({ logOut }) {
     || (permissions.logbook && permissions.logbook_edit_settings)
     || permissions.kiosk
     || (permissions.events && permissions.events_create)
-    || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_schedule_shift)
+    || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit)
     || permissions.activity_log
     || permissions.data_delete
     || permissions.categories_create

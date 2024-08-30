@@ -56,8 +56,8 @@ const permissionsConfig = [
     module: 'kiosk',
   },
   {
-    name: 'schedule_schedule_shift',
-    permission: 'schedule_schedule_shift',
+    name: 'schedule_edit',
+    permission: 'schedule_edit',
   },
   {
     name: 'schedule_shift',
@@ -98,7 +98,7 @@ export default () => {
       history.push(`${mainPath}/kiosk/kiosk-list`);
     } else if (permissions.events) {
       history.push(`${mainPath}/events`);
-    } else if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_schedule_shift) {
+    } else if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit) {
       history.push(`${mainPath}/schedule`);
     } else if (permissions.activity_log) {
       history.push(`${mainPath}/activity-log`);
