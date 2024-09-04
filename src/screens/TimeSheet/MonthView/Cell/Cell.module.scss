@@ -80,22 +80,38 @@
     right: 0;
     z-index: 3;
 
-    &_time:nth-last-child(2) {
+    &:nth-last-child(2) {
       right: 51px;
     }
 
-    &_time:nth-last-child(4) {
-      right: 153px;
-    }
-
-    &_planned:nth-last-child(3) {
+    &:nth-last-child(3) {
       right: 102px;
     }
 
-    &_target:nth-last-child(2) {
-      right: 51px;
+    &:nth-last-child(4) {
+      right: 153px;
     }
 
+    // &_time:nth-last-child(2) {
+    //   right: 51px;
+    // }
+
+    // &_time:nth-last-child(1) {
+    //   right: 51px;
+    // }
+
+    // &_time:nth-last-child(4) {
+    //   right: 153px;
+    // }
+
+    // &_planned:nth-last-child(3) {
+    //   right: 102px;
+    // }
+
+    // &_target:nth-last-child(2) {
+    //   right: 51px;
+    // }
+    
     &_cost {
       z-index: 3;
     }
