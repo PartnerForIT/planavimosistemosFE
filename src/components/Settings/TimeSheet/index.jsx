@@ -53,6 +53,7 @@ export default function TimeSheet() {
     show_costs: false,
     working_days: false,
     use_accumulated: false,
+    merge_timesheet_places: false,
   });
 
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function TimeSheet() {
       show_costs: payload.show_costs ? 1 : 0,
       working_days: payload.working_days ? 1 : 0,
       use_accumulated: payload.use_accumulated ? 1 : 0,
+      merge_timesheet_places: payload.merge_timesheet_places ? 1 : 0,
     };
     dispatch(editTimeSheet(id, data));
   }, [dispatch, id]);

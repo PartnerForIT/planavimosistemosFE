@@ -30,6 +30,20 @@ export default ({
       <Label text={t('Use accumulated hours calculation')} />
     </div>
 
+    <div className={style.generalBlock2}>
+      <Switch
+        onChange={(checked) => { handleInputChange({ target: { name: 'merge_timesheet_places', value: checked, type : 'checkbox' }}) }}
+        offColor='#808F94'
+        onColor='#0085FF'
+        uncheckedIcon={false}
+        checkedIcon={false}
+        checked={timeSheetData.merge_timesheet_places || false}
+        height={21}
+        width={40}
+      />
+      <Label text={t("Don't split worktime by place")} />
+    </div>
+
     <div className={style.hr} />
     
     <div className={style.timeSheet__label}>
