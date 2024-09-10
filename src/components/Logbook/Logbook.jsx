@@ -658,12 +658,14 @@ export default () => {
 
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     const skillsArr = checkedSkills.map((emp) => emp.id);
+    const placesArr = checkedPlaces.map((emp) => emp.id);
 
     const requestObj = {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : null,
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : null,
       // places: null,
       // jobTypes: null,
+      placesArr,
       employeesArr,
       skillsArr,
       columnsArray
