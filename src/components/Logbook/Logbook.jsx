@@ -334,11 +334,17 @@ export default () => {
   const stopedSelector = (stoped) => {
     switch (stoped) {
       case 'daily_overtime':
-        return 'Clock stopped by Daily Overtime';
+        return t('Clock stopped by Daily Overtime');
       case 'weekly_overtime':
-        return 'Clock stopped by Weekly Overtime';
+        return t('Clock stopped by Weekly Overtime');
       case 'manager':
-        return 'Clock stopped by Manager';
+        return t('Clock stopped by Manager');
+      case 'geolocation_leave':
+        return t('Clock stopped by leaving geozone');
+      case 'geolocation_off':
+        return t('Clock stopped by turning off geolocation');
+      case 'geolocation_app':
+        return t('Clock stopped by switching off the app');
       default:
         return '';
     }

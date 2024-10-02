@@ -85,6 +85,27 @@ export default function Form({
 
         <div className={style.generalBlock6}>
           <Switch
+            onChange={() => handleChangeCalculation('geolocation_restriction_leave')}
+            offColor='#808F94'
+            onColor='#0085FF'
+            uncheckedIcon={false}
+            checkedIcon={false}
+            name='geolocation_restriction_leave'
+            checked={!!ClockData.geolocation_restriction_leave}
+            height={21}
+            width={40}
+          />
+          <Label text={t('Use Geolocation tracking to identify leaves in specific locations')} />
+          <div className={style.tooltipBlock}>
+            <Tooltip title={
+              t('If this setting is turned on, the mobile app will check every 5 minutes to see if the employee/user is still within the geolocation radius of the registered place. If the location does not have a set geo zone, this rule is simply ignored.')
+            }
+            />
+          </div>
+        </div>
+
+        <div className={style.generalBlock6}>
+          <Switch
             onChange={() => handleChangeCalculation('photo_clock_in')}
             offColor='#808F94'
             onColor='#0085FF'

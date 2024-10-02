@@ -144,7 +144,7 @@
             "Blocked": "Užblokuoti",
             "New account": "Nauja paskyra",
             "Activate": "Aktyvuoti",
-            "Delete": "Ištrynti",
+            "Delete": "Ištrinti",
             "USERS SELECTED": "PASIRINKTA VARTOTOJŲ",
 
     "//Accounts list//New Account//1st step": "",
@@ -206,7 +206,7 @@
 
     "//Delete account": "",
 
-            "Delete Employee": "Ištrynti Darbuotoją",
+            "Delete Employee": "Ištrinti Darbuotoją",
             
     "//Accounts list//Import": "",
 
@@ -257,7 +257,7 @@
             "Can create Events": "Gali kurti Įvykius", 
             "Can delete entry data": "Gali naudotis Duomenų Pašalinimu",
             "Can create New accounts": "Gali kurti Naujas Paskyras",
-            "Can delete Accounts list": "Gali ištrynti Paskyras",
+            "Can delete Accounts list": "Gali ištrinti Paskyras",
             "Can see & edit Accounts List": "Gali matyti ir koreguoti Paskyras",
             "Can see Activity Log": "Gali matyti Veiklos žurnalą",
             "Can edit General Settings": "Gali koreguoti Bendrus Nustatymus",
@@ -512,9 +512,9 @@
             
     "//Settings//Data Delete": "",
 
-            "Delete Data": "Ištrynti Duomenis",       
-            "Delete data": "Ištrynti duomenis", 
-            "Delete Data?": "Ištrynti Duomenis?",
+            "Delete Data": "Ištrinti Duomenis",       
+            "Delete data": "Ištrinti duomenis", 
+            "Delete Data?": "Ištrinti Duomenis?",
             "Data deleted successfully": "Duomenų pašalinimas sėkmingas",
             "Select Employee": "Pasirinkti Darbuotoją",
     
@@ -603,13 +603,13 @@
         "Suspend": "Suspenduoti",
         "Suspend All": "Suspenduoti Visus", 
         "Suspended": "Suspenduoti",
-        "Delete All": "Ištrynti Visus",   
+        "Delete All": "Ištrinti Visus",   
         "Multiple entries selected": "Pasirinkti keli įrašai",    
         "entry": "įrašas",    
         "entries": "įrašai",
         "selected": "pasirinkta",
         "Overall": "Viso",
-        "Are you sure you want to delete this entry/entries?": "Ar jūs tikrai norite ištrynti įrašą/įrašus?",
+        "Are you sure you want to delete this entry/entries?": "Ar jūs tikrai norite ištrinti įrašą/įrašus?",
         "OK": "OK",                                         
     
     "//Events//Everything in Events module table and around": "",
@@ -678,15 +678,15 @@
         "Remove timelines in week view": "Pašalinti laiko juostos veikimo režimą savaitės apžvalgoje",
         "employees": "darbuotojai",
         "Edit Shift": "Pakoreguoti Pamainą",
-        "Delete Shift": "Ištrynti Pamainą",
-        "Delete Shift?": "Ištrynti Pamainą?",
+        "Delete Shift": "Ištrinti Pamainą",
+        "Delete Shift?": "Ištrinti Pamainą?",
         "will be deleted permanently from Schedule.": "bus ištryntas negrįžtamai iš Kalendoriaus modulio",
         "Add Working Time": "Pridėti Darbo Valandas",
         "Add Time": "Pridėti Laiką",
         "Set Working Time": "Nustatyti Darbo Laiką",
         "Set": "Nustatyti",
         "Change Working Time": "Pakeisti Darbo Laiką",
-        "Delete Timeline": "Ištrynti Laiko Juostą",
+        "Delete Timeline": "Ištrinti Laiko Juostą",
         "hours": "valandos",
         "No workers this day": "Nėra darbuotojų šią dieną",
         "employee": "darbuotojai",
@@ -767,7 +767,7 @@
     "//Delete Data table": "",
 
             "Information": "Informacija",
-            "Deleted all data from": "Ištrynti visi duomenys nuo",
+            "Deleted all data from": "Ištrinti visi duomenys nuo",
             "to": "iki",
             "for the user:": "vartotojui",
             "with a name of": "vardu",
@@ -785,7 +785,7 @@
             "Update Place name": "Atnaujinti Vietos pavadinimą",
             "Place name": "Vietos pavadinimas",
             "Update Place Name": "Atnaujinti Vietos Pavadinimą",
-            "Delete place?": "Ištrynti vietą?",
+            "Delete place?": "Ištrinti vietą?",
             "Enter External ID": "Įvesti Išorinį ID",
             "Delete job?": "Pašalinti darbą?",
             "Update skill": "Atnaujinti specialybę",
@@ -840,7 +840,7 @@
         "Charge": "Įkainis",
         "Break Time": "Poilsio Laikas",
         "for the user": "vartotojui",
-        "work hours has been deleted.": "valandomis buvo ištrynti.",
+        "work hours has been deleted.": "valandomis buvo ištrinti.",
         "entries will be imported": "įrašų(ai) bus įkelti",
         "from": "iš",
         "entries has been imported": "įrašų(ai) buvo įkelti",
@@ -875,6 +875,8 @@
         "Enable Break Time in Mobile APP session": "Aktyvuoti Poilsio mygtuką Mobilioje Apilkacijoje",
         "Use a Geolocation restriction for Clock In if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą įsiregistravimo į darbą metu, jeigu Vieta turi nustatytą geolokaciją",
         "Use a Geolocation restriction for Clock Out if the Place has a Geolocation set": "Naudoti geolokacijos patikrinimą išsiregistravimo iš darbo metu, jeigu Vieta turi nustatytą geolokaciją",
+        "Use Geolocation tracking to identify leaves in specific locations": "Naudokite vietos nustatymo funkciją darbuotojų išvykimams sekti ir nustatyti",
+        "If this setting is turned on, the mobile app will check every 5 minutes to see if the employee/user is still within the geolocation radius of the registered place. If the location does not have a set geo zone, this rule is simply ignored.": "Jei ši nustatymo parinktis įjungta, mobili programėlė kas 5 minutes tikrins, ar darbuotojas/vartotojas vis dar yra registruotoje vietoje ir jos nustatytoje geo zonoje. Jeigu vieta neturi nustatytos geo zonos, ši taisyklė tiesiog ignoruojama.",
         "Area": "Plotas",
         "Select": "Pasirinkti",
         "Assign to Group/Subgroup": "Priskirta prie Grupės/Subgrupės",
@@ -892,5 +894,17 @@
         "Target Time _s": "Reik. Laikas",
         "Planned Time _t": "Suplanuotas Laikas",
         "Target Time _t": "Reikalingas Laikas",
-        "Don't split worktime by place": "Neskirstyti darbo laiko pagal darbo vietą"
+        "Don't split worktime by place": "Neskirstyti darbo laiko pagal darbo vietą",
+
+        "Clock stopped by Daily Overtime": "Sustabdytas dėl Dienos Viršvalandžių",
+        "Clock stopped by Weekly Overtime": "Sustabdytas dėl Savaitės Viršvalandžių",
+        "Clock stopped by Manager": "Sustabdytas Vadovo",
+        "Clock stopped by leaving geozone": "Sustabdytas palikus geografinę zoną",
+        "Clock stopped by turning off geolocation": "Sustabdytas išjungus geografinę zoną",
+        "Clock stopped by switching off the app": "Sustabdytas išjungus programėlę",
+        "Stopped by Manager": "Sustabdyta Vadovo",
+        "Stopped by System": "Sustabdyta Sistemos",
+        "Stopped by APP": "Sustabdyta Programėlės",
+
+        "Manager can start the time for others": "Vadovas gali pradėti darbą už kitus"
 }

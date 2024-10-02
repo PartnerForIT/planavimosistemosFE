@@ -235,6 +235,7 @@ export default () => {
         options: {
           ...(modules.use_manager_mobile && { mobile: 'Use Managers Mobile View' }),
           ...(modules.use_manager_mobile && { clock_in: 'Manager can clock in' }),
+          ...(modules.use_manager_mobile && { start: 'Manager can start the time for others' }),
         },
       },
       app: {
