@@ -5,7 +5,8 @@ import classes from './ResourcesBlock.module.scss';
 
 export default ({
   resources,
-  height
+  height,
+  mergeTimesheetPlaces,
 }) => {
   return (
     <div className={classes.resourcesBlock}>
@@ -15,7 +16,7 @@ export default ({
             title={item.title}
             photo={item.photo}
             skill={item.skill}
-            place={item.place}
+            place={mergeTimesheetPlaces ? '' : item.place}
             height={height}
             key={index}
             rowId={item.id}

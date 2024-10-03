@@ -35,6 +35,7 @@ const MonthView = ({
   onChangeMonth,
   withCost,
   withAccumulated,
+  mergeTimesheetPlaces,
 }) => {
   const { t, i18n } = useTranslation();
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
@@ -174,6 +175,7 @@ const MonthView = ({
               resources={resources}
               currentMonth={currentMonth}
               height={empHeight[fields.length]}
+              mergeTimesheetPlaces={mergeTimesheetPlaces}
             />
             <div className={classnames(classes.sheetmonthView__content__dataOuter, {
               [classes.sheetmonthView__content__dataOuter_withCost]: withCost,

@@ -350,6 +350,7 @@ export default () => {
               onChangeMonth={handleGetSheet}
               withCost={permissions.cost && permissions.time_sheet_costs}
               withAccumulated={timesheet.use_accumulated}
+              mergeTimesheetPlaces={timesheet.merge_timesheet_places}
             />
           )
         }
