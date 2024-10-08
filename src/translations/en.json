@@ -15,5 +15,7 @@
         "Planned Time _s": "Planned Time",
         "Target Time _s": "Target Time",
         "Planned Time _t": "",
-        "Target Time _t": ""
+        "Target Time _t": "",
+        
+        "setWorkTimeFor": "Set Work Time for {{title}}"
 }

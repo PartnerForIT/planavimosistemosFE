@@ -155,6 +155,7 @@ export default () => {
     } else if (applyingFilters.current) {
       applyingFilters.current = false
     }
+    // eslint-disable-next-line
   }, [page, employees, currentDate])
 
   const employToCheck = useCallback(({

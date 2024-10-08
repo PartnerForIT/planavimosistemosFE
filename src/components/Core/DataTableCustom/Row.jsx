@@ -17,7 +17,7 @@ const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
-  withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onEditAddress,
+  withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
   withoutShitCode,
 }) => {
   const selected = useMemo(() => {
@@ -234,7 +234,7 @@ const Row = ({
                   ? <TriangleIcon className={triangleIconClasses} />
                   : null}
                 {IconComponent}
-                {column.field !== 'breaks' && column.field !== 'place_groups' && column.field !== 'place_address' && (
+                {column.field !== 'breaks' && column.field !== 'place_groups' && column.field !== 'work_time' && column.field !== 'place_address' && (
                   <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                     {
                       row[column.field] !== 'tableActions'
@@ -258,6 +258,23 @@ const Row = ({
                       {displaySubgroupsWithGroup(row['subgroups'], row['groups'])}
                     </span> :
                     <span className={styles.addBreak} onClick={() => onOpenAssignGroup(row.id)}>+</span>
+                  )
+                }
+                {/* for groups section */}
+                {(column.field === 'work_time' && onOpenWorkTime) 
+                  && (
+                    (row['work_time'] && Object.keys(row['work_time']).some(day => row['work_time'][day].checked)) ? 
+                    <span className={styles.existedBreak} onClick={() => onOpenWorkTime(row.id)}>
+                      {Object.keys(row['work_time'])
+                        .sort((a, b) => ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].indexOf(a) - ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].indexOf(b))
+                        .filter((day) => row['work_time'][day].checked) // Filter out days where checked is false
+                        .map((day) => {
+                          const dayIndex = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].indexOf(day) + 1; // Get the correct day index
+                          return `${dayIndex} - (${row['work_time'][day].start} - ${row['work_time'][day].finish})`;
+                        })
+                        .join("/ ")}
+                    </span> :
+                    <span className={styles.addBreak} onClick={() => onOpenWorkTime(row.id)}>+</span>
                   )
                 }
                 {/* for groups section */}

@@ -52,6 +52,7 @@ export default function Clock() {
     geolocation_restriction_leave: false,
     photo_clock_in: false,
     photo_clock_out: false,
+    auto_clock_out_place_working_time: false,
   });
 
   const isLoadind = useSelector(isLoadingSelector);

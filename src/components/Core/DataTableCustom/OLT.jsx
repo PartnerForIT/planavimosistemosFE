@@ -39,6 +39,7 @@ export default function DataTable({
   withoutShitCode,
   onEditBreak,
   onOpenAssignGroup,
+  onOpenWorkTime,
   onEditAddress,
   onSearch = false,
   colSearch = {},
@@ -330,6 +331,7 @@ export default function DataTable({
                 onEditBreak={onEditBreak}
                 onEditAddress={onEditAddress}
                 onOpenAssignGroup={onOpenAssignGroup}
+                onOpenWorkTime={onOpenWorkTime}
               />
             )) : null
           }

@@ -12,6 +12,7 @@ import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
 import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
 import DialogCreateAddress from '../../Core/Dialog/CreateAddress';
 import DialogAssignGroup from '../../Core/Dialog/AssignGroup';
+import DialogWorkTime from '../../Core/Dialog/WorkTime';
 import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import {
   patchPlace,
@@ -24,20 +25,21 @@ import {
 
 const columns = [
   { label: 'Title', field: 'name', checked: true },
-  { label: 'ID', field: 'id', checked: true },
+  //{ label: 'ID', field: 'id', checked: true },
   { label: <LabelWithCurrencySign text='Cost' tail='/h' />, field: 'cost', checked: true },
   { label: <LabelWithCurrencySign text='Charge' tail='/h' />, field: 'earn', checked: true },
 ];
 
 const columnsJobs = [
   { label: 'Title', field: 'title', checked: true },
-  { label: 'ID', field: 'id', checked: true },
+  //{ label: 'ID', field: 'id', checked: true },
   { label: 'Break Times', field: 'breaks', checked: true },
 ];
 
 const columnsPlaces = [
   { label: 'Title', field: 'name', checked: true },
-  { label: 'ID', field: 'id', checked: true },
+  //{ label: 'ID', field: 'id', checked: true },
+  { label: 'Work Time', field: 'work_time', checked: true },
   { label: 'Assigned to Group/Subgroup', field: 'place_groups', checked: true },
   { label: 'Geolocation', field: 'place_address', checked: true },
   { label: 'External ID', field: 'external_id', checked: true },
@@ -65,7 +67,7 @@ export default function TableBlock({
   loading,
   companyId,
   scheduleSettings,
-  groups,
+  groups
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -77,6 +79,7 @@ export default function TableBlock({
   const [isEditBreak, setIsEditBreak] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAssignGroup, setIsAssignGroup] = useState(false);
+  const [isEditWorkTime, setIsEditWorkTime] = useState(false);
   
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -326,6 +329,20 @@ export default function TableBlock({
     handleCloseAssignGroup();
   }
 
+  const onOpenWorkTime = (id) => {
+    setSelectedItem(id);
+    setIsEditWorkTime(id);
+  };
+
+  const handleCloseWorkTime = () => {
+    setSelectedItem(null);
+    setIsEditWorkTime(false);
+  }
+  const onEditWorkTime = (values) => {
+    dispatch(patchPlace({ work_time: values || [] }, companyId, selectedItem));
+    setIsEditWorkTime();
+  }
+
   return (
     <div className={style.categoryPage__Table}>
       <Label text={t('Select Category')} htmlFor='' />
@@ -354,6 +371,7 @@ export default function TableBlock({
         onEditBreak={onEditBreak}
         onEditAddress={onEditAddress}
         onOpenAssignGroup={onOpenAssignGroup}
+        onOpenWorkTime={onOpenWorkTime}
         grey
       />
       <DeleteItem
@@ -405,6 +423,14 @@ export default function TableBlock({
         initialValues={selectedItemData}
         groups={groups}
         assignGroup={onAssignGroup}
+      />
+      <DialogWorkTime
+        open={!!isEditWorkTime}
+        handleClose={handleCloseWorkTime}
+        title={t('setWorkTimeFor', { title: selectedItemData?.title })}
+        buttonTitle={t('Save Place Work Time')}
+        initialValues={selectedItemData}
+        editWorkTime={onEditWorkTime}
       />
       <DialogCreateAddress
         open={!!isEditAddress}

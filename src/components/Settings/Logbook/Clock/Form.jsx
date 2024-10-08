@@ -132,6 +132,27 @@ export default function Form({
           />
           <Label text={t('Enable request photo to be taken on Clock Out')} />
         </div>
+
+        <div className={style.generalBlock6}>
+          <Switch
+            onChange={() => handleChangeCalculation('auto_clock_out_place_working_time')}
+            offColor='#808F94'
+            onColor='#0085FF'
+            uncheckedIcon={false}
+            checkedIcon={false}
+            name='auto_clock_out_place_working_time'
+            checked={!!ClockData.auto_clock_out_place_working_time}
+            height={21}
+            width={40}
+          />
+          <Label text={t('Automatically Clock-Out at the end of the Place Working Time')} />
+          <div className={style.tooltipBlock}>
+            <Tooltip title={
+              t('Automatically Clock-Out the working employees based on the work place they work either via mobile phone or via kiosk solution. It means they have started the work in the place which has assigned kiosk or the Clock-In was performed with regular mobile telephone. If such Place has for the exact day of the week has enabled a checkbox in the Categories/Places, then the time will be stopped at the exact time according the time set. Those days which do not have checked mark turned on, the work time will not be stopped.')
+            }
+            />
+          </div>
+        </div>
       </div>
     </form>
   );
