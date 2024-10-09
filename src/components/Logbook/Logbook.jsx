@@ -345,6 +345,8 @@ export default () => {
         return t('Clock stopped by turning off geolocation');
       case 'geolocation_app':
         return t('Clock stopped by switching off the app');
+      case 'logout':
+        return t('Clock stopped by logging off the app');
       default:
         return '';
     }
