@@ -905,6 +905,10 @@
         "Stopped by Manager": "Sustabdyta Vadovo",
         "Stopped by System": "Sustabdyta Sistemos",
         "Stopped by APP": "Sustabdyta Programėlės",
+        "Left geozone": "Paliko geozoną",
+        "Turned off geolocation": "Išjungė geolokaciją",
+        "Turned off APP": "Išjungė programėlę",
+        "Logged off the APP": "Atsijungė nuo programėlės",
 
         "Manager can start the time for others": "Vadovas gali pradėti darbą už kitus",
 

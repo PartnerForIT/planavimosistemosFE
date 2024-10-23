@@ -302,10 +302,47 @@ export default () => {
         icon: <PendingIcon />,
         onClick: (status) => sorting(status),
       },
+      {
+        value: 'Left geozone',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
+      {
+        value: 'Turned off geolocation',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
+      {
+        value: 'Turned off APP',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
+      {
+        value: 'Logged off the APP',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
     ],
   };
 
   const statusSelector = (status, stoped) => {
+ 
+    if (stoped === 'manager') {
+      return 'Stopped by Manager';
+    } else if (stoped === 'geolocation_leave') {
+      return "Left geozone"
+    } else if (stoped === 'geolocation_off') {
+      return "Turned off geolocation"
+    } else if (stoped === 'geolocation_app') {
+      return "Turned off APP"
+    } else if (stoped === 'logout') {
+      return "Logged off the APP"
+    }
+
     switch (status) {
       case 0:
         return 'Pending';

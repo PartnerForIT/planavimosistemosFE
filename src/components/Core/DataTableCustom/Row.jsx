@@ -86,6 +86,22 @@ const Row = ({
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
+    'Left geozone': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
+    'Turned off geolocation': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
+    'Turned off APP': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
+    'Logged off the APP': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />
   };
 
   const selectRow = (selectedRow) => {
