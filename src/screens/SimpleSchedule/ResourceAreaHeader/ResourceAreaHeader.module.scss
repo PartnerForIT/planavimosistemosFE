@@ -1,0 +1,43 @@
+.resourceAreaHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  font-family: 'Helvetica Neue Medium', sans-serif;
+  font-size: 14px;
+  padding: 15px;
+  //border-bottom: 1px solid #d9dfe3;
+  //border-right: 1px solid #d9dfe3;
+  background-color: #fafbfc;
+  z-index: 3;
+
+  &__buttonLeft,
+  &__buttonRight {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid #d0d6db;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0,0,4,4,8,0' transform='translate(8.707 4.5) rotate(180)' fill='none' stroke='%238a949f' stroke-linecap='round' stroke-linejoin='round' stroke-width='1'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 6px;
+    cursor: pointer;
+  }
+
+  &__buttonLeft {
+    transform: rotate(-90deg);
+  }
+
+  &__buttonRight {
+    transform: rotate(90deg);
+  }
+
+  > span {
+    display: flex;
+    align-items: center;
+    > div {
+      margin-left: 16px;
+    }
+  }
+}

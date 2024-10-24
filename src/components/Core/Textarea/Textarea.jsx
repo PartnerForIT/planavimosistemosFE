@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './Textarea.module.scss';
 
 const Textarea = ({
-  disabled, placeholder, label,
+  disabled, placeholder, label, wrapperClass,
   error, value='', ...props
 }) => {
   const classes = classNames(
@@ -13,6 +13,7 @@ const Textarea = ({
 
   const wrapperClasses = classNames(
     styles.textareaWrapper,
+    wrapperClass,
   );
 
   const handleKeyDown = (e) => {

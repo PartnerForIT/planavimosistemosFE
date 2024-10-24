@@ -16,6 +16,7 @@ import { userSelector } from '../../store/auth/selectors';
 
 import Events from '../../components/Events/Events';
 import Schedule from '../Schedule';
+import SimpleSchedule from '../SimpleSchedule';
 import CreateShift from '../Schedule/Shift';
 import TimeSheet from '../TimeSheet';
 import Settings from '../../components/Settings';
@@ -223,7 +224,7 @@ export default () => {
       }
       {
         (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule' component={Schedule} />
+          <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : Schedule} />
         )
       }
       {

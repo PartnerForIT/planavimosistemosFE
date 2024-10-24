@@ -1,0 +1,53 @@
+.addEmployeesModal {
+  position: absolute;
+  //top: -75px;
+  //top: 0;
+  right: -273px;
+  background-color: #fff;
+  border: 1px solid #0085ff;
+  box-shadow: 0 3px 20px rgba(#647d93, 0.27);
+  border-radius: 6px;
+  padding: 9px;
+  width: 281px;
+  box-sizing: border-box;
+  z-index: 5;
+  cursor: default;
+
+  &_top {
+    top: -260px;
+  }
+
+  &__title {
+    text-align: left;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 9px;
+  }
+
+  &__scrollbar {
+    border: 1px solid #d0dfef;
+    border-radius: 4px;
+    width: 100% !important;
+    height: 155px !important;
+    margin: 9px 0;
+  }
+
+  & > button {
+    height: 36px;
+  }
+
+  .scrollbarTrackY {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    width: 3px !important;
+    z-index: 2;
+    right: 4px !important;
+
+    div {
+      background-color: #d5dde1 !important;
+      border-radius: 10px !important;
+      //height: 47px !important;
+    }
+  }
+}

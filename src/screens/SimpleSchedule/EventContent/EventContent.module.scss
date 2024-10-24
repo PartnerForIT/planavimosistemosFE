@@ -1,0 +1,151 @@
+.eventContent {
+  align-items: center;
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  visibility: hidden;
+  $eventContent: &;
+
+  &__invisible,
+  &__invisible:hover {
+    position: absolute;
+    left: 50%;
+    background: transparent;
+
+    svg {
+      display: none;
+    }
+  }
+
+  &__night_end {
+    position: absolute;
+    visibility: visible;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(135, 135, 135, 0.7);
+    width: 0;
+    z-index: -1;
+    border-radius: 0 4px 4px 0;
+  }
+
+  &__night_start {
+    position: absolute;
+    visibility: visible;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(135, 135, 135, 0.7);
+    width: 0;
+    z-index: -1;
+    border-radius: 4px 0 0 4px;
+  }
+
+  &__removeTimelines {
+    .eventContent__night_end,
+    .eventContent__night_start {
+      display: none;
+    }
+  }
+
+  &__line {
+    width: 3px;
+    height: 35px;
+    margin-right: 5px;
+    visibility: visible;
+    border-radius: 3px;
+  }
+
+  &__time {
+    visibility: visible;
+  }
+
+  &__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    margin-right: 5px;
+  }
+
+  &__title {
+    font-size: 12px;
+    line-height: 15px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #333945;
+    width: 100%;
+    visibility: visible;
+  }
+
+  &__leftSpace {
+    margin-left: auto;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    width: 168px;
+
+    &__avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      margin-right: 10px;
+    }
+
+    &__right {
+      display: flex;
+      flex-direction: column;
+
+      &__fullName {
+        font-size: 14px;
+        font-family: Helvetica Neue, sans-serif;
+        color: black;
+        line-height: 17px;
+      }
+
+      &__jobType {
+        font-size: 11px;
+        font-family: "Helvetica Neue Medium", sans-serif;
+        color: #808f94;
+        line-height: 16px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #808f94;
+    line-height: 16px;
+    margin-top: 11px;
+  }
+
+  &__value {
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #333945;
+    line-height: 16px;
+    margin-top: 3px;
+    margin-bottom: 12px;
+  }
+
+  &__space {
+    margin-top: -7px;
+  }
+
+  &__rightSpace {
+    width: 12px;
+  }
+}
+.dayEnd{
+  background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
+  opacity: 0.2;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.dayGoneBe{
+  background: transparent;
+  opacity: 1;
+}

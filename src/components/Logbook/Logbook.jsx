@@ -315,7 +315,7 @@ export default () => {
         onClick: (status) => sorting(status),
       },
       {
-        value: 'Turned off APP',
+        value: 'Turned off internet or app',
         hideTop: true,
         icon: <PendingIcon />,
         onClick: (status) => sorting(status),
@@ -338,7 +338,7 @@ export default () => {
     } else if (stoped === 'geolocation_off') {
       return "Turned off geolocation"
     } else if (stoped === 'geolocation_app') {
-      return "Turned off APP"
+      return "Turned off internet or app"
     } else if (stoped === 'logout') {
       return "Logged off the APP"
     }
@@ -381,7 +381,7 @@ export default () => {
       case 'geolocation_off':
         return t('Clock stopped by turning off geolocation');
       case 'geolocation_app':
-        return t('Clock stopped by switching off the app');
+        return t('Clock stopped by turning off internet or app');
       case 'logout':
         return t('Clock stopped by logging off the app');
       default:

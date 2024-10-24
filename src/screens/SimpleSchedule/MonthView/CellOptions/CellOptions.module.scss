@@ -1,0 +1,167 @@
+.cellOptions {
+  align-items: center;
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  visibility: hidden;
+  position: absolute;
+  right: -20px;
+  top: 0;
+  z-index: 100;
+  
+  $cellOptions: &;
+
+  &__withoutMenu {
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+  }
+
+  &__invisible,
+  &__invisible:hover {
+    position: absolute;
+    left: 50%;
+    background: transparent;
+
+    svg {
+      display: none;
+    }
+  }
+
+  &__time {
+    visibility: visible;
+  }
+
+  &__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    margin-right: 5px;
+  }
+
+  &__title {
+    font-size: 12px;
+    line-height: 15px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #333945;
+    width: 100%;
+    visibility: visible;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    width: 168px;
+
+    &__avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      margin-right: 10px;
+    }
+
+    &__right {
+      display: flex;
+      flex-direction: column;
+
+      &__fullName {
+        font-size: 14px;
+        font-family: Helvetica Neue, sans-serif;
+        color: black;
+        line-height: 17px;
+      }
+
+      &__jobType {
+        font-size: 11px;
+        font-family: "Helvetica Neue Medium", sans-serif;
+        color: #808f94;
+        line-height: 16px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #808f94;
+    line-height: 16px;
+    margin-top: 11px;
+  }
+
+  &__value {
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    color: #333945;
+    line-height: 16px;
+    margin-top: 3px;
+    margin-bottom: 12px;
+  }
+
+  &__space {
+    margin-top: -7px;
+  }
+
+  &:hover .copyAdd {
+    visibility: visible;
+  }
+}
+.dayEnd{
+  background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
+  opacity: 0.2;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.emptyAdd {
+  pointer-events: all;
+  
+  &:hover {
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    right: 0px;
+    width: auto;
+    bottom: 0px;
+    height: auto;
+
+    &::before {
+      justify-content: center;
+      margin: -4px 0 0 -1px !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: auto !important;
+    }
+  }
+}
+
+.copyAdd {
+  pointer-events: all;
+  line-height: 12px !important;
+
+  &.event {
+    right: -3px !important;
+    left: -1px !important;
+
+  }
+  
+  &:hover {
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    visibility: visible;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+
+    &::before {
+      justify-content: center;
+      margin: -4px 0 0 -1px !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: auto !important;
+    }
+  }
+}

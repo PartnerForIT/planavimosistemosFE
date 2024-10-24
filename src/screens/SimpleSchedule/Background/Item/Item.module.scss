@@ -1,0 +1,13 @@
+.item {
+  display: flex;
+  padding: 0 10px;
+
+  &_currentDay {
+    background-color: rgba(#ebf3fa, 0.4);
+  }
+
+  &_dayGoneBy {
+      //background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
+      //opacity: 0.2;
+  }
+}

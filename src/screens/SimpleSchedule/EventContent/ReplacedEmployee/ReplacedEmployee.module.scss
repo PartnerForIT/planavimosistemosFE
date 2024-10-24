@@ -1,0 +1,110 @@
+@import './src/components/Core/variables';
+
+.replacedEmployee {
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: 5px;
+    width: 16px;
+    visibility: visible;
+    height: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: #000;
+    border: 1px solid #fff;
+    cursor: pointer;
+    svg {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    $user: &;
+
+    &_change {
+      margin-top: 12px;
+      position: relative;
+
+      &::after {
+        content: ' ';
+        height: 9px;
+        width: 1px;
+        top: -10px;
+        left: 14px;
+        border-right: 1px dotted #808f94;
+        position: absolute;
+      }
+
+      #{$user}__icon {
+        position: absolute;
+        top: 0;
+        left: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 8px;
+        background-color: #000;
+
+        svg {
+          width: 7px;
+          height: 7px;
+        }
+      }
+    }
+
+    &__avatar {
+      width: 30px !important;
+      height: 30px !important;
+      border-radius: 15px;
+      margin-right: 10px;
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+
+      &__fullName {
+        font-family: "Helvetica Neue Medium", sans-serif;
+        font-size: 14px;
+        line-height: 17px;
+      }
+
+      &__bottom {
+        margin-top: 2px;
+        font-family: Helvetica Neue, sans-serif;
+        font-size: 11px;
+        line-height: 16px;
+        color: #818f94;
+
+        &__status {
+          color: #40c3e2;
+        }
+      }
+    }
+  }
+
+  &__changeEmployee,
+  &__deleteTimeline {
+    height: 36px;
+  }
+
+  &__changeEmployee {
+    margin-top: 15px;
+  }
+
+  &__deleteTimeline {
+    margin-top: 5px;
+    font-family: $font-family;
+  }
+
+  &__space {
+    margin-top: -6px;
+  }
+}

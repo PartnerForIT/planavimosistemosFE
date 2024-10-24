@@ -1,0 +1,75 @@
+.changeWorkingTime {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #0085ff;
+  //position: fixed;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 12px 15px;
+  box-sizing: border-box;
+  z-index: 8;
+  box-shadow: 0 3px 20px rgba(100, 125, 147, .27);
+  left: 50%;
+  position: absolute;
+  margin-left: -150px;
+  bottom: -10px;
+
+  &__close {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #d9dfe3;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    color: black;
+    line-height: 17px;
+  }
+
+  &__userInfo {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    line-height: 16px;
+    color: #808f94;
+    margin-top: 8px;
+    width: 263px;
+
+    &__avatar {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+  }
+
+  &__form {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 4px;
+
+    & > *:first-child button,
+    & > *:last-child {
+      min-height: 36px;
+      max-height: 36px;
+    }
+
+    & > *:first-child {
+      max-width: 110px;
+      margin-right: 7px;
+    }
+
+    & > *:last-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 146px;
+      padding: 0;
+    }
+  }
+}

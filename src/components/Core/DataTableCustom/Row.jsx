@@ -94,7 +94,7 @@ const Row = ({
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
-    'Turned off APP': <PendingIcon className={classNames(
+    'Turned off internet or app': <PendingIcon className={classNames(
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
