@@ -319,7 +319,7 @@ const SecondStep = ({
                         id='subgroup'
                         options={subGroupsOpt}
                         user={user}
-                        disabled={subGroupsOpt.length <= 1}
+                        disabled={subGroupsOpt.length <= 0}
                         name='subgroup'
                         placeholder={t('Select a subgroup')}
                         handleInput={handleInput}

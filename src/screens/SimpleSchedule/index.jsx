@@ -12,10 +12,9 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import cloneDeep from 'lodash';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import ReactTooltip from 'react-tooltip';
 import { getSettingWorkTime } from '../../store/settings/actions';
 
@@ -25,30 +24,34 @@ import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
-import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const';
+import { TIMELINE, COLORS_SHIFT } from '../../const';
 import { resourcesMock } from '../../const/mock';
-import { getJobTypes } from '../../store/jobTypes/actions';
+import { getSkills } from '../../store/skills/actions';
 import { getEmployees } from '../../store/employees/actions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import {
-  getSchedule,
   deleteTimeline,
   emptyTimeline,
   patchChangeTimeline,
   patchAddTimeline,
   patchChangeEmployee,
-  deleteShift, addTempemployee, patchMarker
+  addTempemployee, patchMarker
 } from '../../store/schedule/actions';
+
+import {
+  getSchedule,
+  postShift,
+} from '../../store/simpleSchedule/actions';
+
+
 import {
   loadEmployeesAll,
   getSchedule as getscheduleSetting,
   loadIntegrations,
 } from '../../store/settings/actions';
-import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
-import { copyToolHistorySelector } from '../../store/copyTool/selectors';
+import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/simpleSchedule/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
-import { jobTypesSelector } from '../../store/jobTypes/selectors';
 
 import EventContent from './EventContent';
 import MonthView from './MonthView';
@@ -63,10 +66,9 @@ import {
   scheduleSelector as scheduleSettingSelector,
 } from '../../store/settings/selectors';
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
-import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
+import { skillsSelector } from '../../store/skills/selectors';
 import AddTempEmployee from "./AddTempEmployee";
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
-import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
 import DialogNewSimpleSchedule from 'components/Core/Dialog/NewSimpleSchedule';
 
 const permissionsConfig = [
@@ -87,7 +89,6 @@ const permissionsConfig = [
 
 export default () => {
   const { t } = useTranslation();
-  const history = useHistory();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
@@ -98,10 +99,9 @@ export default () => {
   const dispatch = useDispatch();
   //const employees = useSelector(employeesSelector);
   const { users: employees } = useSelector(employeesSelector);
-  const jobTypes = useSelector(jobTypesSelector);
-  const shiftsTypes = useSelector(shiftTypesSelector);
   const schedule = useSelector(scheduleSelector);
   const markers = useSelector(markersSelector);
+  const allSkills = useSelector(skillsSelector);
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
@@ -110,12 +110,9 @@ export default () => {
   const [tempShiftID,setTempShiftID] = useState(0)
   const [activeDrag,setActiveDrag] = useState('')
   const copyToolRef = useRef();
-  const copyToolHistory = useSelector(copyToolHistorySelector);
   const [copyTool,setCopyTool] = useState(false)
   const [copyToolTime,setCopyToolTime] = useState({})
   const [tempEventID,setTempEventID] = useState(0)
-  const [openDialog,setOpenDialog] = useState(false)
-  const [deletedShiftName,setDeletedShiftName] = useState('')
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const [openCreateShift, setOpenCreateShift] = useState(false);
@@ -131,101 +128,24 @@ export default () => {
   }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
-  const handleDialog = () => {
-    setOpenDialog(false);
-    setDeletedShiftName('');
-  };
-  const cancelDelete = () => {
-    setOpenDialog(false);
-    setDeletedShiftName('');
-  };
-
   const resources = useMemo(() => {
-    let currentColor = 0;
-    let colorType = 'bright';
-    const updateChildren = (children, upLastShift, upLastJobType, upCustomTime) => {
+    const updateChildren = (children) => {
       if (children) {
         return Object.values(children).map((item, index) => {
-          const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index));
-          const customTime = upCustomTime || item.custom_time;
-          const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index));
-      
-
-          if (item.shiftId) {
-            item.count = item.count || 0;
-            item.children.map((i) => {
-              item.count = item.count + i.children.length;
-              return i;
-            });
-          }
-          if (item.job_type_id) {
-            item.count = item.children.length;
-          }
-
-          // Set color
-          let eventBackgroundColor = item.color;
-          let eventBorderColor = item.color;
-          let lineColor = false;
-
-          if (item.place_id){
-            eventBorderColor = COLORS_JOB_TYPE[colorType][217];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][217], 0.5);
-          }
-          if (item.shiftId) {
-            colorType = COLORS_SHIFT.bright.some((itemC) => itemC === item.color) ? 'bright' : 'calm';
-            eventBorderColor = COLORS_SHIFT[colorType][currentColor];
-            eventBackgroundColor = COLORS_SHIFT[colorType][currentColor];
-          }
-
-          if (item.job_type_id) {
-            if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
-              currentColor = 0;
-            }
-
-            eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor];
-            eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor];
-            currentColor += 1;
-          }
-
-          if (item.employeeId) {
-            eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][currentColor - 1], 0.5);
-          }
-          if (item.employee_type === 3|| item.employee_type === 2 || item.empty_event) {
-            eventBorderColor = COLORS_JOB_TYPE[colorType][216];
-            eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
-          }
-
-          if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
-            lineColor = eventBackgroundColor;
-            eventBorderColor = 'transparent';
-            eventBackgroundColor = 'transparent';
-          }
-          
           const nextItem = {
             ...item,
-            eventBackgroundColor,
-            eventBorderColor,
-            lineColor,
-            eventDurationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
-            children: updateChildren(item.children, lastShift, lastJobType, customTime),
+            eventBackgroundColor: COLORS_SHIFT.bright[0],
+            eventBorderColor: COLORS_SHIFT.bright[0],
+            lineColor: false,
+            eventDurationEditable: true,
+            children: updateChildren(item.children),
           };
-          if (lastShift) {
-            nextItem.lastShift = lastShift;
-          }
-
-          if (lastJobType) {
-            nextItem.lastJobType = lastJobType;
-          }
 
           return nextItem;
         });
       }
       return [];
     };
-    if (filterData[0] && (filter.employers.length || filter.place.length || filter.shiftType.length)) {
-      //return updateChildren(filterData);
-    }
 
     if (schedule?.resources) {
       return updateChildren(schedule.resources);
@@ -261,26 +181,14 @@ export default () => {
       }
     }
   
-    return [
-      ...result.filter((resultItem) => {
-        return !copyToolHistory.some((historyItem) => (
-          resultItem.start <= historyItem.end &&
-          resultItem.end >= historyItem.start &&
-          resultItem.resourceId === historyItem.resourceId
-        ));
-      }),
-      ...copyToolHistory.map((e) => ({
-        ...e,
-        copy_event: true,
-      })),
-    ];
+    return result;
     // eslint-disable-next-line
-  }, [filterData, schedule?.events, copyToolHistory]);
+  }, [filterData, schedule?.events]);
   
 
   const accumulatedHours = useMemo(() => {
     let accumulatedHours = schedule?.accumulatedHours || {};
-    if (accumulatedHours && events && copyToolHistory) {
+    if (accumulatedHours && events) {
     }
 
     return accumulatedHours;
@@ -344,8 +252,15 @@ export default () => {
   };
 
   const handleCreateShift = (data) => {
-    console.log(data);
-
+    dispatch(postShift({
+      companyId,
+      data: {
+        ...data,
+        start_work: data.duration.start,
+        end_work: data.duration.end,
+        date: data.date.format('YYYY-MM-DD'),
+      }
+    }));
     setOpenCreateShift(false)
   }
 
@@ -381,19 +296,11 @@ export default () => {
     }));
   };
 
-  const onPlaceSelectFilter = (place) => {
-    const arrChecked = place?.filter((i) => i.checked);
+  const onSkillSelectFilter = (skill) => {
+    const arrChecked = skill?.filter((i) => i.checked);
     setFilter((prevState) => ({
       ...prevState,
-      place: arrChecked,
-    }));
-  };
-
-  const onShiftSelectFilter = (shift) => {
-    const arrChecked = shift?.filter((i) => i.checked);
-    setFilter((prevState) => ({
-      ...prevState,
-      shiftType: arrChecked,
+      skill: arrChecked,
     }));
   };
 
@@ -445,6 +352,7 @@ export default () => {
   const handleCreateNewShift = () => {
     setOpenCreateShift(true);
   };
+  
   const handleResourceLabelClassNames = ({ resource }) => {
     const { extendedProps: props } = resource;
     const classes = [];
@@ -475,7 +383,8 @@ export default () => {
     return classes;
   };
   const handleEditShift = (shiftId) => {
-    history.push(`/${companyId}/schedule/shift/${shiftId}`);
+    
+
   };
   const getBodyForGetSchedule = () => {
     let nextFromDate = moment(fromDateRef.current);
@@ -491,15 +400,6 @@ export default () => {
       employeesArr: filter?.employers.map(({id}) => id),
       placesArr: filter?.place.map(({id}) => id),
     };
-  };
-  const handleDeleteShift = (shiftId) => {
-    setOpenDialog(false)
-    setDeletedShiftName('')
-    dispatch(deleteShift({
-      companyId,
-      id: shiftId,
-      body: getBodyForGetSchedule(),
-    }));
   };
   const handleChangeEmployee = ({ employeeId, shiftId, id }) => {
     dispatch(patchChangeEmployee({
@@ -732,7 +632,6 @@ export default () => {
         withMenu={!!shiftId}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
-        onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
       />
     );
   };
@@ -981,7 +880,7 @@ export default () => {
 
   useEffect(() => {
     dispatch(getEmployees(companyId));
-    dispatch(getJobTypes(companyId));
+    dispatch(getSkills(companyId));
     dispatch(getSettingWorkTime(companyId));
 
     dispatch(getSchedule({
@@ -1062,20 +961,10 @@ export default () => {
       <div className='schedule-screen'>
         <div className='schedule-screen__header'>
           <CustomSelect
-            placeholder={t('All job types')}
+            placeholder={t('All skills')}
             buttonLabel={t('Filter')}
-            items={jobTypes}
-            onChange={onPlaceSelectFilter}
-            // onChange={onSkillsSelectChange}
-            width='auto'
-            withSearch={true}
-          />
-          <CustomSelect
-            placeholder={t('All shifts')}
-            buttonLabel={t('Filter')}
-            items={shiftsTypes?.shiftTypes}
-            onChange={onShiftSelectFilter}
-            // onChange={onSkillsSelectChange}
+            items={allSkills}
+            onChange={onSkillSelectFilter}
             width='auto'
             withSearch={true}
           />
@@ -1147,7 +1036,6 @@ export default () => {
                     addTempEmployees={addTempEmployees}
                     handleChangeTimeline={handleChangeTimeline}
                     onEditShift={(shiftId) => handleEditShift(shiftId)}
-                    onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
                   />
                 ) : (
                   <>
@@ -1244,16 +1132,6 @@ export default () => {
             </>
           )
         }
-        <DialogDeleteShift
-          open={openDialog}
-          handleClose={handleDialog}
-          title={t('Delete Shift?')}
-          buttonTitle2={t('Cancel')}
-          buttonTitle={t('Delete')}
-          shiftName={deletedShiftName}
-          submitDeleteShift={() => handleDeleteShift(openDialog)}
-          cancelDelete={cancelDelete}
-        />
         <DialogNewSimpleSchedule
           open={openCreateShift}
           title={t('Create New Schedule')}

@@ -11,7 +11,7 @@ import { jobTypesSelector } from '../../../../store/jobTypes/selectors';
 import TimeRangePicker from '../../../../screens/SimpleSchedule/Shift/TimeRangePicker';
 import { placesSelector } from '../../../../store/places/selectors';
 import { useSelector, useDispatch } from 'react-redux';
-//import { getJobTypes } from '../../../../store/jobTypes/actions';
+import { getJobTypes } from '../../../../store/jobTypes/actions';
 import { getPlaces } from '../../../../store/places/actions';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -44,20 +44,24 @@ const permissionsConfig = [
   },
 ];
 
+const initialFormValues = {
+  date: moment(), duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0}
+};
+
 export default function NewSimpleSchedule({
   handleClose, title, open, handleSubmit,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const permissions = usePermissions(permissionsConfig);
-  const [formValues, setFormValues] = useState({date: moment(), duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0}});
+  const [formValues, setFormValues] = useState(initialFormValues);
   const { users: allEmployees } = useSelector(employeesSelector);
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
   const { id: companyId } = useParams();
 
   useEffect(() => {
-    //dispatch(getJobTypes(companyId));
+    dispatch(getJobTypes(companyId));
     dispatch(getPlaces(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
@@ -72,6 +76,11 @@ export default function NewSimpleSchedule({
       name: `${name} ${surname}`,
     };
   }) ?? [], [allEmployees]);
+
+  const handleOnSubmit = () => {
+    handleSubmit(formValues);
+    setFormValues(initialFormValues);
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -443,7 +452,7 @@ export default function NewSimpleSchedule({
         <Button onClick={() => handleClose()} inverse size='big'>
           {t('Cancel')}
         </Button>
-        <Button onClick={() => handleSubmit(formValues)} disabled={!formValues.employee_id} size='big'>
+        <Button onClick={() => handleOnSubmit()} disabled={!formValues.employee_id} size='big'>
           {t('Create')}
         </Button>
       </div>
