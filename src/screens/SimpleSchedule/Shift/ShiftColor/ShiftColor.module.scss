@@ -1,0 +1,68 @@
+.shiftColor {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &__label {
+    font-size: 15px;
+    font-family: Helvetica Neue, sans-serif;
+    margin-right: 10px;
+    color: #818f94;
+  }
+
+  &__button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+
+  &__modal {
+    position: absolute;
+    top: 25px;
+    background-color: #fff;
+    border: 1px solid #0085ff;
+    border-radius: 6px;
+    padding: 12px 14px 14px 14px;
+    width: 200px;
+    box-sizing: border-box;
+    z-index: 5;
+
+    &__title {
+      font-size: 14px;
+      font-family: "Helvetica Neue Medium", sans-serif;
+    }
+
+    &__subTitel {
+      font-size: 11px;
+      margin-top: 2px;
+      font-family: Helvetica Neue, sans-serif;
+      color: #808f94;
+    }
+
+    &__label {
+      margin-top: 10px;
+      font-size: 14px;
+      font-family: Helvetica Neue, sans-serif;
+      color: #808f94;
+    }
+
+    &__colors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+      gap: 5px;
+      margin-top: 9px;
+
+      &__item {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+      }
+    }
+  }
+}
