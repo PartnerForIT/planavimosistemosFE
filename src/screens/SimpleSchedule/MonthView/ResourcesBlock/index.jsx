@@ -11,6 +11,7 @@ export default ({
   onEditShift,
   onDeleteShift,
 }) => {
+  console.log(resources, 'in res block');
   return (
     <div className={classes.resourcesBlock}>
       {
@@ -30,12 +31,6 @@ export default ({
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
             onEditShift={ onEditShift }
             onDeleteShift={ onDeleteShift }
-            // employees={employees}
-            // onSubmit={handleSubmitAddEmployees}
-            // onChangeNumber={handleChangeNumber}
-            // onDelete={handleDelete}
-            // numberOfWeeks={numberOfWeeks}
-            // main
           />
         ))
       }

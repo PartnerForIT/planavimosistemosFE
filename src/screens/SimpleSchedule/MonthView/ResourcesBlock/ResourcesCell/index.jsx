@@ -7,13 +7,7 @@ import classes from './ResourcesCell.module.scss';
 import Section from '../../../Shift/Table/Section';
 
 const ResourceCell = ({
-  // employees,
-  // onSubmit,
-  // onChangeNumber,
-  // onDelete,
-  // numberOfWeeks,
   rowId,
-  // parentRowId,
   items,
   withExpander,
   expander,
@@ -39,22 +33,10 @@ const ResourceCell = ({
     [classes.resourcesCell__empty]: isEmpty,
   });
 
-  // const handleChangeNumber = useCallback((value) => {
-  //   onChangeNumber({ rowId, value });
-  // }, [rowId]);
-  // const handleSubmit = useCallback((values) => {
-  //   onSubmit({
-  //     items: values,
-  //     parentRowId,
-  //   });
-  // }, [onSubmit, parentRowId]);
   const handleExpander = useCallback(() => {
     onExpander({ rowId });
     // eslint-disable-next-line
   }, [rowId]);
-  // const handleDelete = useCallback(() => {
-  //   onDelete({ rowId, parentRowId });
-  // }, [rowId, parentRowId]);
   
   return (
     <>
@@ -76,10 +58,6 @@ const ResourceCell = ({
           withMenu={nestingLevel === 1}
           onEditShift={() => { onEditShift(shiftId) }}
           onDeleteShift={() => { onDeleteShift(shiftId, title) }}
-          // withNumberInput={withNumberInput}
-          // count={countChildren}
-          // onChangeNumber={handleChangeNumber}
-          // onDelete={handleDelete}
         />
       </div>
       {
@@ -105,11 +83,6 @@ const ResourceCell = ({
             isEmpty={item.empty}
             onEditShift={ onEditShift }
             onDeleteShift={ onDeleteShift }
-            // lastChild={index + 1 === items.length}
-            // employees={employees}
-            // onSubmit={onSubmit}
-            // onDelete={onDelete}
-            // parentTitle={title}
           />
         ))
       }

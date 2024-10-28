@@ -19,6 +19,7 @@ export const reducer = (state = initialState, action) => {
     case GET_SIMPLE_SCHEDULE:
       return { ...state, loading: true };
     case GET_SIMPLE_SCHEDULE_SUCCESS:
+      console.log('teststs');
       return {
         ...state,
         schedule: action.data,

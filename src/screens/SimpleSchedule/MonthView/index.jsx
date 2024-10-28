@@ -250,7 +250,7 @@ export default ({
       handleChangeTimeline(TIMELINE.DAY, date);
     }
   }
-
+console.log(resources, 'resources');
   return (
     <>
       <div className={classes.monthView}>

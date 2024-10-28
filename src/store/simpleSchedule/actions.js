@@ -11,7 +11,7 @@ import config from 'config';
 
 export const getSchedule = (data) => {
   return (dispatch, getState) => {
-    dispatch(getScheduleAction());
+    dispatch(getSimpleScheduleAction());
     return new Promise((resolve, reject) => {
       const sendData = {
         skills: '',
@@ -32,11 +32,12 @@ export const getSchedule = (data) => {
         return response.json();
       })
       .then(data => {
-        dispatch(getScheduleSuccess(data));
+        console.log('data', data);
+        dispatch(getSimpleScheduleSuccess(data));
         resolve(data);
       })
       .catch(error => {
-        dispatch(getScheduleError());
+        dispatch(getSimpleScheduleError());
         reject(error);
       });
     });
@@ -46,7 +47,7 @@ export const getSchedule = (data) => {
 
 export const postShift = ({ companyId, data }) => {
   return (dispatch, getState) => {
-    dispatch(postSheet());
+    dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
       fetch(`${config.api.url}/company/${companyId}/simple/store`, {
         method: 'POST',
@@ -61,40 +62,40 @@ export const postShift = ({ companyId, data }) => {
         return response.json();
       })
       .then(data => {
-        dispatch(postSheetSuccess(data));
+        dispatch(postSimpleSheetSuccess(data));
         resolve(data);
       })
       .catch(error => {
-        dispatch(postSheetError());
+        dispatch(postSimpleSheetError());
         reject(error);
       });
     });
   };
 };
 
-export const postSheet = (data) => ({
+export const postSimpleSheet = (data) => ({
   type: POST_SIMPLE_SHEET,
   data,
 });
 
-export const postSheetSuccess = (data) => ({
+export const postSimpleSheetSuccess = (data) => ({
   type: POST_SIMPLE_SHEET_SUCCESS,
   data,
 });
-export const postSheetError = () => ({
+export const postSimpleSheetError = () => ({
   type: POST_SIMPLE_SHEET_ERROR,
 });
 
-export const getScheduleAction = (data) => ({
+export const getSimpleScheduleAction = (data) => ({
   type: GET_SIMPLE_SCHEDULE,
   data,
 });
 
-export const getScheduleSuccess = (data) => ({
+export const getSimpleScheduleSuccess = (data) => ({
   type: GET_SIMPLE_SCHEDULE_SUCCESS,
   data,
 });
 
-export const getScheduleError = () => ({
+export const getSimpleScheduleError = () => ({
   type: GET_SIMPLE_SCHEDULE_ERROR,
 });

@@ -47,6 +47,7 @@ import InfoCard from '../Core/InfoCard/InfoCard';
 import CommentCard from '../Core/CommentCard/CommentCard';
 import KioskCard from '../Core/KioskCard/KioskCard';
 import PhotoCard from '../Core/PhotoCard/PhotoCard';
+import GeolocationCard from '../Core/GeolocationCard/GeolocationCard';
 import InfoIcon from '../Icons/InfoIcon';
 import CheckboxIcon from '../Icons/CheckboxIcon';
 import PendingIcon from '../Icons/PendingIcon';
@@ -749,13 +750,15 @@ export default () => {
     setIsOpenEditComment(false);
   };
 
+  const selectedItemPlace = places.find((place) => place.id === selectedItem?.place_id || place.name === selectedItem?.place);
+
   const EmployeeInfo = () => {
     const isApproval = (
       (permissions.approval_flow
         || (permissions.approval_flow_in_place && user?.employee?.place?.[0]?.id === selectedItem?.place_id)
       ) && !!journal.approve_flow
     );
-
+    
     return (
       <div className={styles.employeeInfo}>
         <div className={styles.hero}>
@@ -936,6 +939,16 @@ export default () => {
                       />
                     )
                   }
+
+                  {
+                    selectedItemPlace && selectedItemPlace.coordinates && selectedItem.stoped_by && selectedItem.stoped_by === 'geolocation_leave' && selectedItem.coordinates && (
+                      <GeolocationCard
+                        coordinates={selectedItem.coordinates}
+                        place={selectedItemPlace}
+                      />
+                    )
+                  }
+            
                 </Scrollbar>
                 {
                   isApproval && (

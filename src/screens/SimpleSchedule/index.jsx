@@ -129,6 +129,7 @@ export default () => {
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const resources = useMemo(() => {
+    console.log(schedule, 'scheduke');
     const updateChildren = (children) => {
       if (children) {
         return Object.values(children).map((item, index) => {
@@ -955,7 +956,7 @@ export default () => {
     
     return [];
   };
-  
+  console.log(isLoading, resources);
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -1004,7 +1005,7 @@ export default () => {
           }
         </div>
         {
-          (!schedule) ? (
+          (isLoading || !schedule) ? (
             // <Progress />
               <></>
           ) : (
@@ -1012,7 +1013,7 @@ export default () => {
               {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
-                    resources={Object.values(resources) || resourcesMock}
+                    resources={resources ? Object.values(resources) : resourcesMock}
                     events={events}
                     holidays={schedule?.holidays}
                     accumulatedHours={accumulatedHours}
