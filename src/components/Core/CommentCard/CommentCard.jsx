@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CommentIcon from '../../Icons/CommentIcon';
@@ -11,10 +11,21 @@ export default function CommentCard({
   onEditComment,
   photo,
   comment,
-  width,
-  height
+  width: propWidth,
+  height: propHeight
 }) {
   const { t } = useTranslation();
+  const [dimensions, setDimensions] = useState({ width: propWidth, height: propHeight });
+
+  useEffect(() => {
+    if (!propWidth || !propHeight) {
+      const img = new Image();
+      img.src = photo;
+      img.onload = () => {
+        setDimensions({ width: img.width, height: img.height });
+      };
+    }
+  }, [photo, propWidth, propHeight]);
 
   return (
     <div className={styles.commentCard}>
@@ -24,14 +35,12 @@ export default function CommentCard({
       </div>
       {
         photo && (
-          <Gallery
-            withDownloadButton
-          >
+          <Gallery withDownloadButton>
             <Item
               original={photo}
               thumbnail={photo}
-              width={width}
-              height={height}
+              width={dimensions.width}
+              height={dimensions.height}
               target="_blank"
             >
               {({ ref, open }) => (
@@ -44,7 +53,7 @@ export default function CommentCard({
       <span
         onClick={onEditComment}
         className={styles.commentCard__text}>
-        {comment ? comment : ''}
+        {comment || ''}
       </span>
     </div>
   );

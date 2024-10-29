@@ -350,11 +350,6 @@ export default () => {
                   reportsProfit += profit;
                   return {
                     ...all,
-                    date: moment(all.date, 'DD.MM.YYYY').format(getDateFormat({
-                      'YY.MM.DD': 'yyyy-MM-DD',
-                      'DD.MM.YY': 'DD-MM-yyyy',
-                      'MM.DD.YY': 'MM-DD-yyyy',
-                    })),
                     cost,
                     sallary,
                     profit,

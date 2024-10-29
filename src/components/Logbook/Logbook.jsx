@@ -915,8 +915,8 @@ export default () => {
                       <CommentCard
                         onEditComment={() => { if (permissions.logbook_delete_logs) { setIsOpenEditComment(true) } } }
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
-                        width={journal.end_day_photo ? selectedItem.comments[0].photo_width : null}
-                        height={journal.end_day_photo ? selectedItem.comments[0].photo_height : null}
+                        //width={journal.end_day_photo ? selectedItem.comments[0].photo_width : null}
+                        //height={journal.end_day_photo ? selectedItem.comments[0].photo_height : null}
                         comment={selectedItem.comments[0].comment}
                       />
                     ) : null
