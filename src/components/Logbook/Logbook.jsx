@@ -332,21 +332,22 @@ export default () => {
 
   const statusSelector = (status, stoped) => {
  
-    if (stoped === 'manager') {
-      return 'Stopped by Manager';
-    } else if (stoped === 'geolocation_leave') {
-      return "Left geozone"
-    } else if (stoped === 'geolocation_off') {
-      return "Turned off geolocation"
-    } else if (stoped === 'geolocation_app') {
-      return "Turned off internet or app"
-    } else if (stoped === 'logout') {
-      return "Logged off the APP"
-    }
-
     switch (status) {
-      case 0:
+      case 0: {
+        if (stoped === 'manager') {
+          return 'Stopped by Manager';
+        } else if (stoped === 'geolocation_leave') {
+          return "Left geozone"
+        } else if (stoped === 'geolocation_off') {
+          return "Turned off geolocation"
+        } else if (stoped === 'geolocation_app') {
+          return "Turned off internet or app"
+        } else if (stoped === 'logout') {
+          return "Logged off the APP"
+        }
+        
         return 'Pending';
+      }
       case 1: {
         if (stoped === 'daily_overtime' || stoped === 'weekly_overtime') {
           return 'Stopped by System';
