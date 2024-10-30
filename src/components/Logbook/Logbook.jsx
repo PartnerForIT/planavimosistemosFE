@@ -507,7 +507,13 @@ export default () => {
           if (items?.length) {
             items = items
               .map((it) => ({ ...it, status: statusSelector(it.works[0].status, it?.stoped_by) }))
-              .filter((it) => !sortStatus.some((status) => status === it.status));
+              .filter((it) => !sortStatus.some((status) => 
+                status === it.status ||
+                (status === 'Pending' && it.status === 'Left geozone') ||
+                (status === 'Pending' && it.status === 'Turned off geolocation') ||
+                (status === 'Pending' && it.status === 'Turned off internet or app') ||
+                (status === 'Pending' && it.status === 'Logged off the APP')
+            ));
           }
 
           const partFormat = getDateFormat({
