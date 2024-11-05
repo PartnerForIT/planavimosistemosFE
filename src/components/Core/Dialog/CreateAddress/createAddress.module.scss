@@ -125,4 +125,17 @@
         cursor: pointer;
     }
   }
-  
+
+.tooltipBlock {
+  color: #fff;
+  width: 18px;
+  cursor: pointer;
+  height: 18px;
+  display: flex;
+  font-size: 14px;
+  background: #808F94;
+  align-items: center;
+  line-height: 18px;
+  border-radius: 50%;
+  justify-content: center;
+}

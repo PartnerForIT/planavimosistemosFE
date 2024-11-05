@@ -295,7 +295,7 @@ export default function CreateAddress({
                 onFit={onFit}
                 onPoint={onPoint}
                 places={placePredictions}
-                width={'480px'}
+                width={'450px'}
               />
               <div data-tip={t('Pick location')} data-for='google_marker' className={classes.createAddress__btnMarkerWrap}>
                 <FlatButton  onClick={() => setDragMarker(!dragMarker)} className={classes.createAddress__btnMarker}>
@@ -308,8 +308,12 @@ export default function CreateAddress({
                   value={formValues.radius}
                   width='130px'
                   onChange={(e) => setFormValues({ ...formValues, radius: e.target.value })}
+                  onBlur={(e) => setFormValues({ ...formValues, radius: e.target.value < 100 ? 100 : e.target.value })}
                 />
                 { formValues.radius && <span>m</span> }
+              </div>
+              <div className={classes.tooltipBlock} data-tip={t('100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy')} data-for='google_marker'>
+                ?
               </div>
               { formValues.radius &&
                 <div className={classes.createAddress__head_inputs_area}>
