@@ -34,6 +34,7 @@ const initialValues = {
   rates: false,
   night_rates: false,
   holiday_rates: false,
+  use_geolocation: false,
 };
 
 export default ({
@@ -263,6 +264,13 @@ export default ({
                   </div>
                 )
               }
+
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.use_geolocation}
+                label={t('Geolocation checking live')}
+                name='use_geolocation'
+              />
 
               <div className={style.buttonBlock}>
                 <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>

@@ -512,7 +512,9 @@ export default () => {
                 (status === 'Pending' && it.status === 'Left geozone') ||
                 (status === 'Pending' && it.status === 'Turned off geolocation') ||
                 (status === 'Pending' && it.status === 'Turned off internet or app') ||
-                (status === 'Pending' && it.status === 'Logged off the APP')
+                (status === 'Pending' && it.status === 'Logged off the APP') ||
+                (status === 'Pending' && it.status === 'Stopped by System') ||
+                (status === 'Pending' && it.status === 'Stopped by Manager')
             ));
           }
 
