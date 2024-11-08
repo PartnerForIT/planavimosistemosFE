@@ -85,7 +85,7 @@ const NameWithAvatar = (row) => (
 );
 
 const columns = [
-  { label: 'Status', field: 'status', checked: true },
+  { label: 'Status', field: 'status', checked: true, translate: true },
   {
     label: 'Employee',
     field: 'name',

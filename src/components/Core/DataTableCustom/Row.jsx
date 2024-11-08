@@ -12,6 +12,7 @@ import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
+import { useTranslation } from 'react-i18next';
 
 const Row = ({
   index, row, columns, fieldIcons, selectable, selectAll, onSelect, selectedItem, setSelectedItem, reports,
@@ -20,12 +21,14 @@ const Row = ({
   withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
   withoutShitCode,
 }) => {
+  const { t } = useTranslation();
   const selected = useMemo(() => {
     if (multiselect) {
       return selectedItem.find((item) => item.id === row.id);
     }
     return selectedItem;
   }, [multiselect, row.id, selectedItem]);
+
 
   const [subTableExpanded, setSubTableExpanded] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
@@ -254,7 +257,7 @@ const Row = ({
                   <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                     {
                       row[column.field] !== 'tableActions'
-                        && (column.cellRenderer ? column.cellRenderer(row) : row[column.field])
+                        && (column.cellRenderer ? column.cellRenderer(row) : t(row[column.field]))
                     }
                   </span>
                 )}

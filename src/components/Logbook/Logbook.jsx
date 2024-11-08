@@ -524,9 +524,13 @@ export default () => {
             'MM.DD.YY': 'MMMM. DD, YYYY',
           });
 
+          let new_label = moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase();
+          if (new_label === 'INVALID DATE') {
+            new_label = moment(item.id).format(`dddd, ${partFormat}`).toUpperCase();
+          }
           return {
             ...item,
-            label: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase(),
+            label: new_label === 'INVALID DATE' ? item.id : new_label,
             items,
           };
         }).filter(({ items }) => items.length));
@@ -920,7 +924,7 @@ export default () => {
                     )
                   }
                   {
-                    (permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) ? (
+                    (selectedItem.stoped_by !== 'manager' && permissions.comments_photo && journal.end_day_comment && !!selectedItem.comments?.length) ? (
                       <CommentCard
                         onEditComment={() => { if (permissions.logbook_delete_logs) { setIsOpenEditComment(true) } } }
                         photo={journal.end_day_photo ? selectedItem.comments[0].photo : null}
