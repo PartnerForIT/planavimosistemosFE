@@ -134,6 +134,7 @@ export default function CreateAddress({
   };
 
   const onSelectAddress = (address) => {
+    fetchCoordinates(true);
     getPlacePredictions({ input: '' });
     setFormValues({ ...formValues, address });
   };
