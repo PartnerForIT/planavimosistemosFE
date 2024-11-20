@@ -469,6 +469,16 @@ export default function AccountsList() {
   const sorting = useCallback((employees, { field, asc }) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
+      if (field === 'active_timer') {
+        const a_string = a[field]?.id ? 'yes' : 'no';
+        const b_string = b[field]?.id ? 'yes' : 'no';
+        if (asc) {
+          return a_string.toString()
+            .localeCompare(b_string);
+        }
+        return b_string.toString()
+          .localeCompare(a_string);
+      }
       if (field === 'cost' || field === 'sallary') {
         return sortNumFunction(a.profitability, b.profitability);
       }

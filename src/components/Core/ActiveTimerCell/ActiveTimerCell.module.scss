@@ -62,12 +62,11 @@
     &__active {
         position: relative;
         padding: 2px;
+        color: #1D88FC;
+        background-color: #EDF7FA;
+        border-radius: 2px;
 
         &:hover {
-            color: #1D88FC;
-            background-color: #EDF7FA;
-            border-radius: 2px;
-            padding: 2px;
 
             .cellActiveTimerCell__tooltip {
                 display: block;
