@@ -109,7 +109,6 @@ export default function AdditionalRates() {
       value,
       type,
     } = event.target;
-    console.log('change', event);
     if (type === 'checkbox') {
       setAdditionalRatesData({
         ...AdditionalRatesData,

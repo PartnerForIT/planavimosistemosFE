@@ -12,6 +12,7 @@ import _ from 'lodash';
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
 import TitleBlock from '../../../Core/TitleBlock';
+import ActiveTimerCell from '../../../Core/ActiveTimerCell';
 import Dashboard from '../../../Core/Dashboard';
 import AccountsIcon from '../../../Icons/2Peple';
 import Progress from '../../../Core/Progress';
@@ -86,6 +87,7 @@ const NameWithAvatar = (row) => (
 
 const columns = [
   { label: 'Status', field: 'status', checked: true, translate: true },
+  { label: 'Online', field: 'active_timer', checked: true, cellRenderer: ActiveTimerCell, disable_search: true },
   {
     label: 'Employee',
     field: 'name',

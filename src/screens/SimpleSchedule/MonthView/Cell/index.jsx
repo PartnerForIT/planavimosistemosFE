@@ -136,10 +136,6 @@ export default ({
                                                     && event.day_number == e.day_number);
 
     unEmployees = allEmployees.map(e => {
-      if (e?.new_employee?.id) {
-        return e?.new_employee?.id*1;
-      }
-
       return e.employee_id*1;
     });
   }
@@ -176,7 +172,7 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if (!event?.new_employee?.name && (employeeName === 'Empty' || event?.empty_event)) {
+    } else if (employeeName === 'Empty' || event?.empty_event) {
       type += '_empty';
     }
       
@@ -214,8 +210,6 @@ export default ({
                 copy_event={event?.copy_event}
                 empty={event?.empty_event}
                 empty_manual={event?.empty_manual}
-                newEmployee={event?.new_employee}
-                oldEmployee={event?.old_employee}
                 copyTool={copyTool}
                 start={start}
                 end={end}

@@ -257,7 +257,7 @@ const Row = ({
                   <span className={(statysIcon && column.field === 'status' && width === 80) ? styles.opacityText : ''}>
                     {
                       row[column.field] !== 'tableActions'
-                        && (column.cellRenderer ? column.cellRenderer(row) : t(row[column.field]))
+                        && (column.cellRenderer ? column.cellRenderer(row, t) : t(row[column.field]))
                     }
                   </span>
                 )}

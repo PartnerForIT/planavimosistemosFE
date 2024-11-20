@@ -77,7 +77,7 @@ const MonthView = ({
         title: index + 1,
         weekend: dayNumber === 6 || dayNumber === 0,
         today: currentDay.isSame(day, 'day'),
-        holiday: holidays[index + 1] ? holidays[index + 1] : false
+        holiday: holidays && holidays[index + 1] ? holidays[index + 1] : false
       };
     });
     arr.push({

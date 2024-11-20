@@ -32,7 +32,6 @@ export const getSchedule = (data) => {
         return response.json();
       })
       .then(data => {
-        console.log('data', data);
         dispatch(getSimpleScheduleSuccess(data));
         resolve(data);
       })

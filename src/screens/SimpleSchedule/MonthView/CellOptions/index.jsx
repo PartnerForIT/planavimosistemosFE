@@ -4,7 +4,6 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 
 import Dropdown from '../../Dropdown';
-import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
@@ -25,15 +24,12 @@ export default ({
   onChangeWorkingTime,
   onDeleteTimeline,
   onEmptyTimeline,
-  newEmployee,
-  oldEmployee,
   start,
   end,
   copy_event,
   empty,
   empty_manual,
   editPermissions,
-  addEmployee,
   addTimeline,
   isCompleted,
   unavailableEmployees,
@@ -56,7 +52,7 @@ export default ({
     styles.cellOptions,
     {
       [styles.dayEnd]: isCompleted,
-      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name)),
+      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty')),
       [styles.cellOptions__time]: content === 'addWorkingTime',
     },
   );
@@ -156,9 +152,6 @@ export default ({
     });
   };
 
-  const [isShown, setIsShown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
   const markerComment = () => {
     const current = markers ? markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request) : false;
     return current ? current.comment : false;
@@ -168,8 +161,6 @@ export default ({
     <div
       className={classes}
       id='dropdownButton'
-      onMouseEnter={() => setIsShown(true)}
-      onMouseLeave={() => setIsShown(false)}
     >
       {
           employeeName && (
@@ -181,33 +172,8 @@ export default ({
               {
                 copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
               }
-              {
-                (!!newEmployee?.name)
-
-                  ? null
-                    :(employeeName === 'Empty' || empty)
-                    ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    :null
-
-                
-              }
             </span>
           
-        )
-      }
-
-      {
-        !copy_event && newEmployee?.name !== oldEmployee?.name && (
-          <ReplacedEmployee
-            newEmployee={newEmployee}
-            oldEmployee={oldEmployee}
-            onDelete={handleDeleteTimeline}
-            onChangeEmployee={openChangeEmployee}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            isShown={isCompleted ? isShown : isOpen}
-            isToday={isCompleted}
-          />
         )
       }
       {
@@ -222,7 +188,7 @@ export default ({
               onClose={() => setContent('menu')}
               photo={photo}
               jobTypeName={jobTypeName}
-              employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+              employeeName={employeeName}
               start={start}
               end={end}
               onChangeTime={handleAddWorkingTime}
@@ -231,7 +197,7 @@ export default ({
         )
       }
       {
-        !isCompleted && !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
+        !isCompleted && !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty') ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -243,7 +209,7 @@ export default ({
                 <ChangeEmployee
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                  employeeName={employeeName}
                   onChangeEmployee={handleChangeEmployee}
                   unavailableEmployees={unavailableEmployees}
                 />
@@ -254,7 +220,7 @@ export default ({
                 <ChangeWorkingTime
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                  employeeName={employeeName}
                   start={start}
                   end={end}
                   onChangeTime={handleChangeWorkingTime}
@@ -265,26 +231,9 @@ export default ({
               content === 'menu' && (
                 <>
                   <div className={styles.cellOptions__userInfo}>
-                    {
-                      (!!newEmployee?.name || empty)
-                        ? (newEmployee?.photo === null || empty)
-                          ? ''
-                          :<img
-                                  alt='avatar'
-                                  src={newEmployee?.photo}
-                                  className={styles.cellOptions__userInfo__avatar}
-                              />
-                          :photo && (
-                          <img
-                              alt='avatar'
-                              src={photo}
-                              className={styles.cellOptions__userInfo__avatar}
-                          />
-                      )
-                    }
                     <div className={styles.cellOptions__userInfo__right}>
                       <div className={styles.cellOptions__userInfo__right__fullName}>
-                        {newEmployee?.name ? newEmployee?.name : employeeName}
+                        {employeeName}
                       </div>
                       <div className={styles.cellOptions__userInfo__right__jobType}>
                         {jobTypeName}

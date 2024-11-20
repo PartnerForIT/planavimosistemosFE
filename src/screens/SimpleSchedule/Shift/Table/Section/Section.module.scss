@@ -13,6 +13,11 @@
   border-radius: 4px;
   $section: &;
 
+  &__skill {
+    color: #808F94;
+    font-size: 11px;
+  }
+
   &__avatar {
     width: 20px;
     height: 20px;

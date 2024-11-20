@@ -10,7 +10,10 @@ import {
 
 const initialState = {
   schedule: null,
+  resources: null,
+  events: null,
   loading: false,
+  markers: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -19,7 +22,6 @@ export const reducer = (state = initialState, action) => {
     case GET_SIMPLE_SCHEDULE:
       return { ...state, loading: true };
     case GET_SIMPLE_SCHEDULE_SUCCESS:
-      console.log('teststs');
       return {
         ...state,
         schedule: action.data,

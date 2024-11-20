@@ -35,7 +35,6 @@ export default ({
   onChangeMonth,
   withCost,
   timesPanel,
-  accumulatedHours,
   markerActive,
   handleMarker,
   scheduleSettings,
@@ -138,7 +137,7 @@ export default ({
         title: index + 1,
         weekend: dayNumber === 6 || dayNumber === 0,
         today: currentDay.isSame(day, 'day'),
-        holiday: holidays[index + 1] ? holidays[index + 1] : false,
+        holiday: holidays && holidays[index + 1] ? holidays[index + 1] : false,
         markers: markers.filter((marker) => day.isSame(moment(marker.date), 'day'))
       };
     });
@@ -250,7 +249,7 @@ export default ({
       handleChangeTimeline(TIMELINE.DAY, date);
     }
   }
-console.log(resources, 'resources');
+  
   return (
     <>
       <div className={classes.monthView}>
@@ -289,7 +288,6 @@ console.log(resources, 'resources');
               onExpander={handleExpander}
               markerActive={markerActive}
               currentMonth={currentMonth}
-              accumulatedHours={accumulatedHours}
               onEditShift={onEditShift}
               onDeleteShift={onDeleteShift}
             />

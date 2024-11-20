@@ -7,23 +7,22 @@ export default ({
   resources,
   onExpander,
   markerActive,
-  accumulatedHours,
   onEditShift,
   onDeleteShift,
 }) => {
-  console.log(resources, 'in res block');
   return (
     <div className={classes.resourcesBlock}>
       {
         resources.map((item, index) => (
           <ResourcesCell
             title={item.title}
+            skill={item.skill_name}
             key={index}
+            avatar={item.photo}
             items={item.children}
             expander={item.expander}
             onExpander={onExpander}
             markerActive={markerActive}
-            accumulatedHours={accumulatedHours}
             withExpander={!!item.children?.length}
             withNumberInput
             countChildren={item.children?.length}

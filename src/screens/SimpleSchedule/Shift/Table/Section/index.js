@@ -9,12 +9,9 @@ import Dropdown from '../../../Dropdown';
 import InputNumber from '../InputNumber';
 import classes from './Section.module.scss';
 
-import moment from 'moment';
-
-import useCompanyInfo from '../../../../../hooks/useCompanyInfo';
-
 export default ({
   title,
+  skill,
   avatar,
   expander,
   withExpander,
@@ -25,28 +22,10 @@ export default ({
   onDelete,
   withMenu,
   withMenuEdit,
-  nestingLevel = 1,
-  employeeId,
-  accumulatedHours,
   onEditShift,
   onDeleteShift,
 }) => {
   const { t } = useTranslation();
-  const { getDateFormat } = useCompanyInfo();
-  const formatDate = getDateFormat({
-    'YY.MM.DD': 'yyyy.MM.DD',
-    'DD.MM.YY': 'DD.MM.yyyy',
-    'MM.DD.YY': 'MM.DD.yyyy',
-  });
-  const demandClasses = classnames(
-    classes.section__demand,
-    {
-      [classes.section__demand_red]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours < accumulatedHours?.totalHours,
-      [classes.section__demand_gray]: !accumulatedHours?.totalHours || !accumulatedHours?.actualHours,
-      [classes.section__demand_green]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours === accumulatedHours?.totalHours,
-      [classes.section__demand_orange]: accumulatedHours?.totalHours && accumulatedHours?.actualHours && accumulatedHours?.actualHours > accumulatedHours?.totalHours,
-    },
-  );
 
   const handleCloseModal = () => {
     setIsOpenMenu(false);
@@ -62,45 +41,6 @@ export default ({
   const sectionClass = classnames('section', classes.section, {
     [classes.section_openMenu]: isOpenMenu,
   });
-
-  const demandTip = () => {
-    return `
-      <table>
-        <tr>
-          <td>
-              <b>${ t('Period') }:</b>
-          </td>
-          <td>
-            ${moment(accumulatedHours?.startPeriod).format(formatDate)} - ${moment(accumulatedHours?.endPeriod).format(formatDate)}
-          </td>
-        </tr>
-        <tr>
-          <td>
-              <b>${ t('Target time') }:</b>
-          </td>
-          <td>
-            ${accumulatedHours?.totalHours || 0} ${t('hours')}
-          </td>
-        </tr>
-        <tr>
-          <td>
-              <b>${ t('Planned time') }:</b>
-          </td>
-          <td>
-            ${accumulatedHours?.actualHours || 0} ${t('hours')}
-          </td>
-        </tr>
-        <tr>
-          <td>
-              <b>${ t('Registered time') }:</b>
-          </td>
-          <td>
-            ${accumulatedHours?.rigisteredHours || 0} ${t('hours')}
-          </td>
-        </tr>
-      </table>
-    `
-  };
 
   useEffect(() => {
     if (isOpenMenu) {
@@ -128,8 +68,15 @@ export default ({
   }, [isOpenMenu]);
 
   return (
-    <div style={{ backgroundColor: `${nestingLevel === 0 ? 'lightgray' : 'inherit'}` }} className={sectionClass}>
-      {title}
+    <div className={sectionClass}>
+      <div className={classes.section__titleBlock}>
+        <div className={classes.section__name}>{title}</div>
+        {
+          skill && (
+            <div className={classes.section__skill}>{skill}</div>
+          )
+        }
+      </div>
       {
         (withNumberInput || withExpander) && (
           <div className={classes.section__options}>
@@ -151,21 +98,6 @@ export default ({
                 />
               )
             }
-          </div>
-        )
-      }
-      {
-        accumulatedHours?.startPeriod && employeeId && (
-          <div
-            data-for='demand_hours'
-            data-tip={demandTip()}
-            data-html={true}
-            className={demandClasses}>
-              {
-                !accumulatedHours?.actualHours && !accumulatedHours?.totalHours ?
-                ('n/a') :
-                ((accumulatedHours?.actualHours ? accumulatedHours?.actualHours : '-')+'/'+(accumulatedHours?.totalHours ? accumulatedHours?.totalHours : '-'))
-              }
           </div>
         )
       }

@@ -14,6 +14,7 @@ const ResourceCell = ({
   onExpander,
   markerActive,
   title,
+  skill,
   avatar,
   shiftId,
   nestingLevel = 0,
@@ -22,7 +23,6 @@ const ResourceCell = ({
   isEmpty = false,
   employeesCount,
   employeeId,
-  accumulatedHours,
   onEditShift,
   onDeleteShift,
 }) => {
@@ -48,9 +48,9 @@ const ResourceCell = ({
         </div>
         <Section
           title={`${title} ${employeesCount ? `(${employeesCount})` : ''}`}
+          skill={skill}
           avatar={avatar}
           onExpander={handleExpander}
-          accumulatedHours={employeeId && accumulatedHours && accumulatedHours[employeeId] ? accumulatedHours[employeeId] : []}
           employeeId={employeeId}
           expander={expander}
           withExpander={withExpander && !markerActive}
@@ -66,6 +66,7 @@ const ResourceCell = ({
             key={index+'_'+nestingLevel}
             rowId={item.id}
             title={item.title}
+            skill={item.skill_name}
             avatar={item.photo}
             employeeId={item.employeeId}
             items={item.children}
@@ -74,7 +75,6 @@ const ResourceCell = ({
             withExpander={!!item.children?.length}
             onExpander={onExpander}
             expander={item.expander}
-            accumulatedHours={accumulatedHours}
             markerActive={markerActive}
             relatives={items}
             lastChild1={nestingLevel === 0 ? (index + 1 === items.length) : lastChild1}

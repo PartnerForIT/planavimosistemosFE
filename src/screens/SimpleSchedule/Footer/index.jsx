@@ -40,7 +40,7 @@ export default ({
     return 0;
 
     // eslint-disable-next-line
-  }, [data.time]);
+  }, [data, timeline]);
 
   const night_duration = useMemo(() => {
     if (timeline === TIMELINE.DAY) {
@@ -50,7 +50,7 @@ export default ({
     return 0;
 
     // eslint-disable-next-line
-  }, [data.night_duration]);
+  }, [data, timeline]);
 
   useEffect(() => {
     if (Array.isArray(currencies) && !currencies.length && !settingsLoading) {
@@ -166,14 +166,14 @@ export default ({
         timeline === TIMELINE.MONTH && (
           <>
             <Item
-              employeesCount={data.total?.employeesCount}
-              empty={!data.total?.employeesCount}
-              photos={data.total?.photos ?? []}
-              hours={data.total?.time ?? 0}
-              night_time={data.total?.night_duration ?? 0}
-              money={data.total?.cost ?? 0}
-              title={data.total?.title}
-              nested={data.total?.children}
+              employeesCount={data?.total?.employeesCount}
+              empty={!data?.total?.employeesCount}
+              photos={data?.total?.photos ?? []}
+              hours={data?.total?.time ?? 0}
+              night_time={data?.total?.night_duration ?? 0}
+              money={data?.total?.cost ?? 0}
+              title={data?.total?.title}
+              nested={data?.total?.children}
               withCost={withCost}
             />
             <div className={classes.footer__items}>

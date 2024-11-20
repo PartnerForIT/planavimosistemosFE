@@ -139,6 +139,7 @@ const ResourcesCell = ({
           (title && !empty) ? (
             <Section
               title={title}
+              skill={skill}
               avatar={avatar}
               onExpander={handleExpander}
               expander={expander}

@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
 import { TIMELINE } from '../../../const';
-import ReplacedEmployee from './ReplacedEmployee';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
@@ -49,8 +48,6 @@ export default ({
   onChangeWorkingTime,
   onDeleteTimeline,
   onEmptyTimeline,
-  newEmployee,
-  oldEmployee,
   start,
   end,
   viewType,
@@ -273,15 +270,12 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if (!newEmployee?.name && (employeeName === 'Empty' || empty)) {
+    } else if ((employeeName === 'Empty' || empty)) {
       type += '_empty';
     }
       
     return type;
   }
-
-  const [isShown, setIsShown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const markerComment = () => {
     const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request);
@@ -330,8 +324,6 @@ export default ({
       data-html={true}
       data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
       id='dropdownButton'
-      onMouseEnter={() => setIsShown(true)}
-      onMouseLeave={() => setIsShown(false)}
     >
       { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div
@@ -347,26 +339,6 @@ export default ({
           ></div>
         )
       }
-      {/* {
-        !empty_manual && (
-        (!!newEmployee?.name || empty)
-          ? (newEmployee?.photo === null || empty)
-            ? ''
-            :<img
-                    alt='avatar'
-                    src={newEmployee?.photo}
-                    className={styles.eventContent__avatar}
-                />
-            :photo && (
-            <img
-                alt='avatar'
-                src={photo}
-                className={styles.eventContent__avatar}
-            />
-       
-        )
-        )
-      } */}
       { !copy_event && removeTimelines && !empty_manual && (
           <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
         )
@@ -382,36 +354,12 @@ export default ({
               {
                 copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
               }
-              {
-                (!!newEmployee?.name)
-
-                  ? <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
-                    :(employeeName === 'Empty' || empty)
-                    ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    :<>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
-
-                
-              }
             </span>
           
         )
       }
 
       <div className={styles.eventContent__leftSpace} />
-      {
-        !copy_event && newEmployee?.name !== oldEmployee?.name && (
-          <ReplacedEmployee
-            newEmployee={newEmployee}
-            oldEmployee={oldEmployee}
-            onDelete={handleDeleteTimeline}
-            onChangeEmployee={openChangeEmployee}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            isShown={isCompleted ? isShown : isOpen}
-            isToday={isCompleted}
-          />
-        )
-      }
       {
         content === 'addWorkingTime' && (
           <Dropdown
@@ -424,7 +372,7 @@ export default ({
               onClose={() => setContent('menu')}
               photo={photo}
               jobTypeName={jobTypeName}
-              employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+              employeeName={employeeName}
               start={start}
               end={end}
               onChangeTime={handleAddWorkingTime}
@@ -433,7 +381,7 @@ export default ({
         )
       }
       {
-        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
+        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty') ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -445,7 +393,7 @@ export default ({
                 <ChangeEmployee
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                  employeeName={employeeName}
                   onChangeEmployee={handleChangeEmployee}
                   unavailableEmployees={unavailableEmployees}
                 />
@@ -456,7 +404,7 @@ export default ({
                 <ChangeWorkingTime
                   photo={photo}
                   jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                  employeeName={employeeName}
                   start={start}
                   end={end}
                   onChangeTime={handleChangeWorkingTime}
@@ -467,26 +415,9 @@ export default ({
               content === 'menu' && (
                 <>
                   <div className={styles.eventContent__userInfo}>
-                    {
-                      (!!newEmployee?.name || empty)
-                        ? (newEmployee?.photo === null || empty)
-                          ? ''
-                          :<img
-                                  alt='avatar'
-                                  src={newEmployee?.photo}
-                                  className={styles.eventContent__userInfo__avatar}
-                              />
-                          :photo && (
-                          <img
-                              alt='avatar'
-                              src={photo}
-                              className={styles.eventContent__userInfo__avatar}
-                          />
-                      )
-                    }
                     <div className={styles.eventContent__userInfo__right}>
                       <div className={styles.eventContent__userInfo__right__fullName}>
-                        {newEmployee?.name ? newEmployee?.name : employeeName}
+                        {employeeName}
                       </div>
                       <div className={styles.eventContent__userInfo__right__jobType}>
                         {jobTypeName}

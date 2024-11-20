@@ -50,7 +50,7 @@ import {
   getSchedule as getscheduleSetting,
   loadIntegrations,
 } from '../../store/settings/actions';
-import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/simpleSchedule/selectors';
+import { simpleScheduleSelector, markersSelector, isLoadingSelector } from '../../store/simpleSchedule/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
 
 import EventContent from './EventContent';
@@ -99,7 +99,7 @@ export default () => {
   const dispatch = useDispatch();
   //const employees = useSelector(employeesSelector);
   const { users: employees } = useSelector(employeesSelector);
-  const schedule = useSelector(scheduleSelector);
+  const schedule = useSelector(simpleScheduleSelector);
   const markers = useSelector(markersSelector);
   const allSkills = useSelector(skillsSelector);
   const isLoading = useSelector(isLoadingSelector);
@@ -129,7 +129,6 @@ export default () => {
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const resources = useMemo(() => {
-    console.log(schedule, 'scheduke');
     const updateChildren = (children) => {
       if (children) {
         return Object.values(children).map((item, index) => {
@@ -185,16 +184,6 @@ export default () => {
     return result;
     // eslint-disable-next-line
   }, [filterData, schedule?.events]);
-  
-
-  const accumulatedHours = useMemo(() => {
-    let accumulatedHours = schedule?.accumulatedHours || {};
-    if (accumulatedHours && events) {
-    }
-
-    return accumulatedHours;
-    // eslint-disable-next-line
-  }, [events]);
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
@@ -526,10 +515,6 @@ export default () => {
                                                       //&& selectedEvent.end == e.end);
 
       unEmployees = allEmployees.map(e => {
-        if (e?.new_employee?.id) {
-          return e?.new_employee?.id*1;
-        }
-
         return e.employee_id*1;
       });
     }
@@ -569,8 +554,6 @@ export default () => {
         copy_event={event.extendedProps.copy_event}
         empty={event.extendedProps.empty_event}
         empty_manual={event.extendedProps.empty_manual}
-        newEmployee={event.extendedProps.new_employee}
-        oldEmployee={event.extendedProps.old_employee}
         cost={event.extendedProps.cost}
         night_minutes={event.extendedProps.night_minutes}
         break_minutes={event.extendedProps.break_minutes}
@@ -628,7 +611,6 @@ export default () => {
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
-        accumulatedHours={schedule?.accumulatedHours[employeeId] || []}
         shiftId={shiftId}
         withMenu={!!shiftId}
         employeeId={employeeId}
@@ -946,17 +928,13 @@ export default () => {
                                                       && selectedEvent.day_number == e.day_number);
 
       return allEmployees.map(e => {
-        if (e?.new_employee?.id) {
-          return e?.new_employee?.id*1;
-        }
-
         return e.employee_id*1;
       });
     }
     
     return [];
   };
-  console.log(isLoading, resources);
+  console.log('schedule', schedule)
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -1016,7 +994,6 @@ export default () => {
                     resources={resources ? Object.values(resources) : resourcesMock}
                     events={events}
                     holidays={schedule?.holidays}
-                    accumulatedHours={accumulatedHours}
                     markers={markers}
                     markerActive={toolsActive['marking']}
                     handleMarker={handleMarker}

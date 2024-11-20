@@ -86,7 +86,6 @@ export default function Clock() {
       value,
       type,
     } = event.target;
-    console.log('change', event);
     if (type === 'checkbox') {
       setClockData({
         ...ClockData,

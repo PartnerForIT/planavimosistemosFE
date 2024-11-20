@@ -21,6 +21,7 @@ import logbook from './logbook/reducer';
 import events from './events/reducer';
 import kiosks from './kiosks/reducer';
 import schedule from './schedule/reducer';
+import simpleSchedule from './simpleSchedule/reducer';
 import sheet from './sheet/reducer';
 import copyTool from './copyTool/reducer';
 import shiftTypes from './shiftsTypes/reducer';
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   events,
   kiosks,
   schedule,
+  simpleSchedule,
   sheet,
   copyTool,
   shiftTypes,
