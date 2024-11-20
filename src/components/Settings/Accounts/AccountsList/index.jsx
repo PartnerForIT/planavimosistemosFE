@@ -375,7 +375,6 @@ export default function AccountsList() {
         // Filter out any employees that don't match the search criteria
         let searchValue = search.toLowerCase();
         let globalSearch = true;
-        
         if (searchValue) {
           globalSearch = false;
           for (let key in empl) {
@@ -384,10 +383,13 @@ export default function AccountsList() {
               if (key === 'created_at' || key === 'updated_at') {
                 // Special handling for date fields
                 emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+              } else if (key === 'active_timer') {
+                emplValue = (emplValue?.id ? t('Yes') : t('No')).toString().toLowerCase();
               } else {
                 // Convert emplValue to string for other fields
                 emplValue = emplValue.toString().toLowerCase();
               }
+              
               if (emplValue.indexOf(searchValue) !== -1) {
                 globalSearch = true;
                 break;
@@ -406,6 +408,8 @@ export default function AccountsList() {
                 if (key === 'created_at' || key === 'updated_at') {
                   // Special handling for date fields
                   emplValue = moment(emplValue).format(`${dateFormat} HH:mm`).toLowerCase();
+                } else if (key === 'active_timer') {
+                  emplValue = (emplValue?.id ? t('Yes') : t('No')).toString().toLowerCase();
                 } else {
                   // Convert emplValue to string for other fields
                   emplValue = emplValue.toString().toLowerCase();
@@ -429,6 +433,7 @@ export default function AccountsList() {
           updated_at: updatedAt,
           external_id,
           place,
+          active_timer,
           ...rest
         } = empl;
   
@@ -440,12 +445,14 @@ export default function AccountsList() {
           skills: skills,
           place: place,
           role: role,
+          active_timer: active_timer,
           created_at: createdAt ? moment(createdAt).format(`${dateFormat} HH:mm`) : '',
           updated_at: updatedAt ? moment(updatedAt).format(`${dateFormat} HH:mm`) : '',
           name: `${name} ${surname}`,
           status: parseInt(status, 10),
         };
       });
+      // eslint-disable-next-line
   }, [employeesAll, colSearch, dateFormat, search]);
 
   const selectionHandler = (itemId, value) => {
