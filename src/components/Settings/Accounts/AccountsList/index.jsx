@@ -87,7 +87,7 @@ const NameWithAvatar = (row) => (
 
 const columns = [
   { label: 'Status', field: 'status', checked: true, translate: true },
-  { label: 'Online', field: 'active_timer', checked: true, cellRenderer: ActiveTimerCell, disable_search: true },
+  { label: 'Online', field: 'active_timer', checked: true, cellRenderer: ActiveTimerCell },
   {
     label: 'Employee',
     field: 'name',
