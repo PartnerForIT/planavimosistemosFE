@@ -317,10 +317,22 @@ export default function DashboardMenu() {
 
     if (permissions.data_delete) {
       nextMenuItems.push({
-        to: `/${companyId}/settings/delete`,
+        //to: `/${companyId}/settings/delete`,
         icon: DeleteIcon,
         title: t('Data Delete'),
         name: 'delete',
+        items: [
+          {
+            to: `/${companyId}/settings/delete/data-delete`,
+            name: 'data-delete',
+            title: t('Delete Data'),
+          },
+          {
+            to: `/${companyId}/settings/delete/auto-delete`,
+            name: 'auto-delete',
+            title: t('Auto Delete'),
+          },
+        ],
       });
     }
 

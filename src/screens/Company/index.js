@@ -37,7 +37,8 @@ import Clock from '../../components/Settings/Logbook/Clock';
 import ActivityLog from '../../components/Settings/ActivityLog';
 import TimeSheetSettings from '../../components/Settings/TimeSheet';
 import IntegrationsSettings from '../../components/Settings/Integrations';
-import SettingDelete from '../../components/Settings/Delete';
+import SettingDelete from '../../components/Settings/Delete/DataDelete';
+import AutoDelete from '../../components/Settings/Delete/AutoDelete';
 import SettingEvents from '../../components/Settings/Events';
 import Reports from '../../components/Reports/Reports';
 import usePermissions from '../../components/Core/usePermissions';
@@ -330,7 +331,12 @@ export default () => {
       }
       {
         permissions.data_delete && (
-          <Route exact path='/:id/settings/delete' component={SettingDelete} />
+          <Route exact path='/:id/settings/delete/data-delete' component={SettingDelete} />
+        )
+      }
+      {
+        permissions.data_delete && (
+          <Route exact path='/:id/settings/delete/auto-delete' component={AutoDelete} />
         )
       }
       {

@@ -36,6 +36,8 @@ import {
   EDIT_LOGBOOK_ADDITIONAL_RATES,
   GET_LOGBOOK_CLOCK,
   EDIT_LOGBOOK_CLOCK,
+  GET_AUTO_DELETE,
+  EDIT_AUTO_DELETE,
   GET_TIME_SHEET,
   EDIT_TIME_SHEET,
   GET_INTEGRATIONS,
@@ -104,6 +106,8 @@ import {
   editLogbookAdditionalRatesSuccess,
   loadLogbookClockSuccess,
   editLogbookClockSuccess,
+  loadAutoDeleteSuccess,
+  editAutoDeleteSuccess,
   getAccountGroupsSuccess,
   createAccountGroupSuccess,
   createAccountGroupError,
@@ -802,6 +806,36 @@ function* patchLogbookClock(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(addSnackbar('An error occurred while creating the Clock', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* loadAutoDeleteData(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/deletedata/autodelete`, token());
+    yield put(loadAutoDeleteSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* patchAutoDelete(action) {
+  try {
+    const { data } = yield call(axios.patch,
+      `${config.api.url}/company/${action.id}/deletedata/autodelete/store`, action.data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    
+    yield put(editAutoDeleteSuccess(data));
+    yield put(addSnackbar('Edit Data successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Data', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -1703,6 +1737,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(EDIT_LOGBOOK_ADDITIONAL_RATES, patchLogbookAdditionalRates);
   yield takeLeading(GET_LOGBOOK_CLOCK, loadClockData);
   yield takeLatest(EDIT_LOGBOOK_CLOCK, patchLogbookClock);
+  yield takeLeading(GET_AUTO_DELETE, loadAutoDeleteData);
+  yield takeLatest(EDIT_AUTO_DELETE, patchAutoDelete);
   yield takeLeading(GET_TIME_SHEET, loadTimeSheetData);
   yield takeLatest(EDIT_TIME_SHEET, patchTimeSheet);
   yield takeLeading(GET_INTEGRATIONS, loadIntegrationsData);

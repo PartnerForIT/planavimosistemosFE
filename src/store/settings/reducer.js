@@ -42,6 +42,9 @@ import {
   GET_LOGBOOK_CLOCK,
   GET_LOGBOOK_CLOCK_SUCCESS,
   EDIT_LOGBOOK_CLOCK_SUCCESS,
+  GET_AUTO_DELETE,
+  GET_AUTO_DELETE_SUCCESS,
+  EDIT_AUTO_DELETE_SUCCESS,
   GET_TIME_SHEET,
   GET_TIME_SHEET_SUCCESS,
   EDIT_TIME_SHEET_SUCCESS,
@@ -137,6 +140,7 @@ const initialState = {
   overtime: {},
   additionalRates: {},
   clock: {},
+  autoDelete: {},
   timeSheet: {},
   integrations: {},
   skills: [],
@@ -638,6 +642,30 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         loading: false,
         clock: action.data,
+        error: null,
+      };
+    }
+    case GET_AUTO_DELETE: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    }
+    case GET_AUTO_DELETE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        autoDelete: action.data,
+        error: null,
+      };
+    }
+
+    case EDIT_AUTO_DELETE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        autoDelete: action.data,
         error: null,
       };
     }

@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-import useCompanyInfo from '../../../hooks/useCompanyInfo';
-import DataTable from '../../Core/DataTableCustom/OLT';
-import Label from '../../Core/InputLabel';
+import useCompanyInfo from '../../../../hooks/useCompanyInfo';
+import DataTable from '../../../Core/DataTableCustom/OLT';
+import Label from '../../../Core/InputLabel';
 
 const columns = [
   { label: 'Timestamp', field: 'created_at', checked: true },

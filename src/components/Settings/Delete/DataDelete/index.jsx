@@ -5,17 +5,17 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import MaynLayout from '../../Core/MainLayout';
-import PageLayout from '../../Core/PageLayout';
-import TitleBlock from '../../Core/TitleBlock';
-import Dashboard from '../../Core/Dashboard';
-import DeleteIcon from '../../Icons/DeletePageIcon';
-import Progress from '../../Core/Progress';
+import MaynLayout from '../../../Core/MainLayout';
+import PageLayout from '../../../Core/PageLayout';
+import TitleBlock from '../../../Core/TitleBlock';
+import Dashboard from '../../../Core/Dashboard';
+import DeleteIcon from '../../../Icons/DeletePageIcon';
+import Progress from '../../../Core/Progress';
 import {
   isLoadingSelector, isShowSnackbar,
   snackbarType, snackbarText, employeesSelector, deleteDataSelector,
-} from '../../../store/settings/selectors';
-import { loadEmployees, loadDeleteData, deleteDataCompany } from '../../../store/settings/actions';
+} from '../../../../store/settings/selectors';
+import { loadEmployees, loadDeleteData, deleteDataCompany } from '../../../../store/settings/actions';
 import FilterDelete from './filterBlock';
 import Table from './TableBlock';
 

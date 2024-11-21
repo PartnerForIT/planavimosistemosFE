@@ -1,10 +1,10 @@
 import React from 'react';
-import Label from '../../Core/InputLabel';
-import Tooltip from '../../Core/Tooltip';
-import DateRangePicker from '../../Core/DateRangePicker';
-import Button from '../../Core/Button/Button';
-import DialogDeleteData from '../../Core/Dialog/DeleteData';
-import SimpleSelect from '../../Core/SimpleSelect';
+import Label from '../../../Core/InputLabel';
+import Tooltip from '../../../Core/Tooltip';
+import DateRangePicker from '../../../Core/DateRangePicker';
+import Button from '../../../Core/Button/Button';
+import DialogDeleteData from '../../../Core/Dialog/DeleteData';
+import SimpleSelect from '../../../Core/SimpleSelect';
 
 export default function FilterDelete({
   style, inputValues,

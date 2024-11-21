@@ -68,6 +68,10 @@ import {
   GET_LOGBOOK_CLOCK_SUCCESS,
   EDIT_LOGBOOK_CLOCK,
   EDIT_LOGBOOK_CLOCK_SUCCESS,
+  GET_AUTO_DELETE,
+  GET_AUTO_DELETE_SUCCESS,
+  EDIT_AUTO_DELETE,
+  EDIT_AUTO_DELETE_SUCCESS,
   GET_ACCOUNTS_GROUPS,
   GET_ACCOUNTS_GROUPS_SUCCESS,
   CREATE_ACCOUNTS_GROUP,
@@ -656,6 +660,25 @@ export const editLogbookClock = (id, data) => ({
 });
 export const editLogbookClockSuccess = (data) => ({
   type: EDIT_LOGBOOK_CLOCK_SUCCESS,
+  data,
+});
+
+
+export const loadAutoDelete = (id) => ({
+  type: GET_AUTO_DELETE,
+  id,
+});
+export const loadAutoDeleteSuccess = (data) => ({
+  type: GET_AUTO_DELETE_SUCCESS,
+  data,
+});
+export const editAutoDelete = (id, data) => ({
+  type: EDIT_AUTO_DELETE,
+  id,
+  data,
+});
+export const editAutoDeleteSuccess = (data) => ({
+  type: EDIT_AUTO_DELETE_SUCCESS,
   data,
 });
 

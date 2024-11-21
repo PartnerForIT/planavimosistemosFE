@@ -921,5 +921,9 @@
         "100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy": "Minimalus lokacijos diametras turi būti 100 metrų, dėl galimų GPS signalo šuolių ir neatitikimų",
 
         "Clock-In Time": "Įsiregistravimo Laikas",
-        "Clock-In Photo": "Įsiregistravimo Nuotrauka"
+        "Clock-In Photo": "Įsiregistravimo Nuotrauka",
+
+        "Activate Auto Data Delete after amount of days": "Aktyvuoti Automatinį Duomenų Trynimą po tiek dienų laikotarpio",
+        "Auto data deletion helps manage private data, such as geolocation coordinates, face photos from clock-in/clock-out, and images taken when employees finish work or leave the workplace. This feature ensures the automatic removal of such data based on your organization's settings and the days terms which have been set in this rule": "Automatinis duomenų ištrynimas padeda valdyti asmeninius duomenis, tokius kaip geografinės koordinatės, veido nuotraukos nuo prisijungimo/prieš išėjimą ir nuotraukos, padarytos, kai darbuotojai baigia darbą arba palieka darbo vietą. Ši funkcija užtikrina automatinį tokių duomenų pašalinimą pagal jūsų organizacijos nustatytus terminus ir taisykles."
+
 }
