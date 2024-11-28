@@ -111,7 +111,7 @@ export default ({
         )
       }
       {
-        withMenu && (
+        withMenu && false && (
           <Dropdown buttonClass={classes.section__buttonDots}>
             <div className={classes.section__title}>
               {title}
@@ -130,7 +130,7 @@ export default ({
         )
       }
       {
-        withMenuEdit && (
+        withMenuEdit && false && (
           <ClickAwayListener onClickAway={handleCloseModal}>
             <div className={classes.section__menu}>
               <button

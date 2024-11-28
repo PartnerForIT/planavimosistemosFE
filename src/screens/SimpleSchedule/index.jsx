@@ -190,47 +190,57 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
       const copyObject = cloneDeep(schedule.resources).__wrapped__;
       const a = copyObject.filter((i) => {
-        i.children=i.children.filter((j) => {
-          let checkShift = false;
-          let checkEmployeeShift = data.employers.length ? false : true;
-          data.shiftType.map((shiftEl) => {
-            if (shiftEl.id === j.shiftId) {
-              checkShift = true;
-            }
-
-            return shiftEl;
-          });
-          j.children = j.children.filter((k) => {
-            let checkPlace = false;
-            let checkEmployeePlace = data.employers.length ? false : true;
-            data.place.map((placeEL) => {
-              if (placeEL.id === k.job_type_id) {
-                checkPlace = true;
+        if (i.children) {
+          i.children=i.children.filter((j) => {
+            let checkShift = false;
+            let checkEmployeeShift = data.employers.length ? false : true;
+            data.shiftType.map((shiftEl) => {
+              if (shiftEl.id === j.shiftId) {
+                checkShift = true;
               }
 
-              return placeEL;
+              return shiftEl;
             });
-            k.children = k.children.filter((it) => {
-              let checkEmployer = false;
-              data.employers.map((employer) => {
-                if (employer.id === it.employeeId) {
-                  checkEmployer = true;
-                  checkEmployeePlace = true;
-                  checkEmployeeShift = true;
+            if (j.children) {
+              j.children = j.children.filter((k) => {
+                let checkPlace = false;
+                let checkEmployeePlace = data.employers.length ? false : true;
+                data.place.map((placeEL) => {
+                  if (placeEL.id === k.job_type_id) {
+                    checkPlace = true;
+                  }
+
+                  return placeEL;
+                });
+                if (k.children) {
+                  k.children = k.children.filter((it) => {
+                    let checkEmployer = false;
+                    data.employers.map((employer) => {
+                      if (employer.id === it.employeeId) {
+                        checkEmployer = true;
+                        checkEmployeePlace = true;
+                        checkEmployeeShift = true;
+                      }
+
+                      return employer;
+                    });
+                    if (!data.employers.length) { checkEmployeeShift = true; checkEmployeePlace = true; return true; }
+                    return checkEmployer;
+                  });
                 }
 
-                return employer;
+                if (checkEmployeePlace && !data.place.length) { checkEmployeeShift = true; return true; }
+                return checkEmployeePlace && checkPlace;
               });
-              if (!data.employers.length) { checkEmployeeShift = true; checkEmployeePlace = true; return true; }
-              return checkEmployer;
-            });
-            if (checkEmployeePlace && !data.place.length) { checkEmployeeShift = true; return true; }
-            return checkEmployeePlace && checkPlace;
+            }
+            if (checkEmployeeShift && !data.shiftType.length) { return true; }
+            return checkEmployeeShift && checkShift;
           });
-          if (checkEmployeeShift && !data.shiftType.length) { return true; }
-          return checkEmployeeShift && checkShift;
-        });
-        return i.children.length;
+        
+          return i.children.length;
+        } else {
+          return 0
+        }
       });
       if (data.employers.length || data.place.length || data.shiftType.length) {
         setFilterData(a);
@@ -934,7 +944,7 @@ export default () => {
     
     return [];
   };
-  console.log('schedule', schedule)
+  
   return (
     <MainLayout>
       <div className='schedule-screen'>

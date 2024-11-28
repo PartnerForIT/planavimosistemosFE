@@ -38,10 +38,6 @@ const RowContent = ({
 
   const newFoundItem = (day) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
-    if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
-      return {};
-    }
-
     if (ev?.copy_event) {
       ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
       ev.hours = Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10;
