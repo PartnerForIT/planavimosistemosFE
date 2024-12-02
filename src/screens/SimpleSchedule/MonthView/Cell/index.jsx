@@ -172,8 +172,6 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if (employeeName === 'Empty' || event?.empty_event) {
-      type += '_empty';
     }
       
     return type;
@@ -208,8 +206,6 @@ export default ({
                 currentDay={currentDay}
                 currentMonth={currentMonth}
                 copy_event={event?.copy_event}
-                empty={event?.empty_event}
-                empty_manual={event?.empty_manual}
                 copyTool={copyTool}
                 start={start}
                 end={end}

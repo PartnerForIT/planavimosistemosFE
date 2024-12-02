@@ -74,6 +74,28 @@
     color: #333945;
     width: 100%;
     visibility: visible;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  &__place {
+    font-size: 12px;
+    line-height: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #fff;
+  }
+
+  &__job_type {
+    font-size: 11px;
+    line-height: 14px;
+    font-family: Helvetica Neue, sans-serif;
+    color: #fff;
+    opacity: 0.8;
   }
 
   &__leftSpace {
@@ -110,6 +132,49 @@
         line-height: 16px;
         margin-top: 2px;
       }
+    }
+  }
+
+  &__photo {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    border-radius: 50%;
+    visibility: visible;
+    margin-right: 4px;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    .eventContent__reccuring {
+      position: absolute;
+      top: -2px;
+      right: -6px;
+    }
+  }
+
+  &__reccuring {
+    background-color: #FD9D27;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    margin-right: 4px;
+
+    svg {
+      width: 6px;
+      height: 6px;
+      fill: #fff;
     }
   }
 

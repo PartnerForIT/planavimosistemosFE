@@ -9,6 +9,7 @@ import { TIMELINE } from '../../../const';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
+import RefreshArrows from '../../../components/Icons/RefreshArrows';
 import styles from './EventContent.module.scss';
 //import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
@@ -29,10 +30,10 @@ const permissionsConfig = [
 
 export default ({
   id,
-  shiftId,
   employeeId,
   resourceId,
-  //title,
+  title,
+  reccuring,
   photo,
   jobTypeName,
   employeeName,
@@ -52,23 +53,18 @@ export default ({
   end,
   viewType,
   copy_event,
-  empty,
-  empty_manual,
   editPermissions,
   addEmployee,
   addTimeline,
   //dayNumber,
   isCompleted,
-  activeDrag,
   unavailableEmployees,
   markers,
-  removeTimelines,
   lineColor,
   handleCopyTool,
   copyTool,
   handleAddHistory
 }) => {
-
   const { t } = useTranslation();
 
   const [content, setContent] = useState('menu');
@@ -91,9 +87,6 @@ export default ({
     {
       [styles.dayEnd]: isCompleted,
       [styles.eventContent__time]: content === 'addWorkingTime',
-      [styles.activeDrag]: activeDrag,
-      'activeDrag': activeDrag,
-      [styles.eventContent__removeTimelines]: removeTimelines,
     },
   );
 
@@ -200,9 +193,6 @@ export default ({
     setContent('menu');
     handleCopyTool({start, end});
   };
-  const openAddWorkingTime = () => {
-    setContent('addWorkingTime');
-  };
   const copyEvent = () => {
     handleAddHistory({resourceId: resourceId, start: moment(start).format('YYYY-MM-DD'), end: moment(start).format('YYYY-MM-DD')});
   };
@@ -213,10 +203,10 @@ export default ({
     setContent('menu');
   };
   const handleDeleteTimeline = () => {
-    onDeleteTimeline({ id, shiftId });
+    onDeleteTimeline({ id });
   };
   const handleEmptyTimeline = () => {
-    onEmptyTimeline({ id, shiftId });
+    onEmptyTimeline({ id });
   };
   const handleChangeWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -235,7 +225,7 @@ export default ({
       };
     }
 
-    onChangeWorkingTime({ id, shiftId, time });
+    onChangeWorkingTime({ id, time });
   };
   const handleAddWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -254,11 +244,10 @@ export default ({
       };
     }
 
-    addTimeline({ id, shiftId, time });
+    addTimeline({ id, time });
   };
   const handleChangeEmployee = (nextEmployeeId) => {
     onChangeEmployee({
-      shiftId,
       employeeId: nextEmployeeId,
       id,
     });
@@ -270,16 +259,9 @@ export default ({
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
-    } else if ((employeeName === 'Empty' || empty)) {
-      type += '_empty';
     }
       
     return type;
-  }
-
-  const markerComment = () => {
-    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request);
-    return current ? current.comment : false;
   }
 
   const convertMinutesToHoursAndMinutes = function(minutes) {
@@ -322,40 +304,54 @@ export default ({
       className={classes}
       data-for={tooltipType()}
       data-html={true}
-      data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
+      data-tip={copy_event || copyTool || tooltipContent()}
       id='dropdownButton'
     >
-      { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
+      { !copy_event && endOverlap() > 0 && (
           <div
             className={styles.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
         )
       }
-      { !copy_event && !activeDrag && !empty_manual && startOverlap() > 0 && (
+      { !copy_event && startOverlap() > 0 && (
           <div
             className={styles.eventContent__night_start}
             style={{ width: `${startOverlap()}%` }}
           ></div>
         )
       }
-      { !copy_event && removeTimelines && !empty_manual && (
-          <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
-        )
+      {
+        photo && 
+        <div className={styles.eventContent__photo}>
+          <img src={photo} alt={employeeName}
+            className={styles.eventContent__photo__img}
+          />
+          { reccuring &&
+            <div className={styles.eventContent__reccuring}>
+              <RefreshArrows />
+            </div>
+          }
+        </div>
       }
       {
-          (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
+        reccuring && !photo &&
+        <div className={styles.eventContent__reccuring}>
+          <RefreshArrows />
+        </div>
+      }
+      {
+          (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && (
 
-            (empty_manual)
-            ? (copyTool)
-              ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span>
-              : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-            : <span className={styles.eventContent__title} >
-              {
-                copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
-              }
-            </span>
-          
+          <span className={styles.eventContent__title} >
+            {
+              copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+            }
+
+            { title.place && <span className={styles.eventContent__place}>{title.place}</span> }
+            { title.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
+          </span>
+
         )
       }
 
@@ -381,7 +377,7 @@ export default ({
         )
       }
       {
-        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty') ? (
+        !copy_event && withMenu ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

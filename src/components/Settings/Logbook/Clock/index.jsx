@@ -17,6 +17,7 @@ import {
 import { editLogbookClock, loadLogbookClock } from '../../../../store/settings/actions';
 import Form from './Form';
 import usePermissions from '../../../Core/usePermissions';
+import { companyModules } from '../../../../store/company/selectors';
 
 import styles from '../logbook.module.scss';
 
@@ -60,6 +61,7 @@ export default function Clock() {
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
   const Clock = useSelector(ClockDataSelector);
+  const modules = useSelector(companyModules);
 
   useEffect(() => {
     if (id) {
@@ -138,6 +140,7 @@ export default function Clock() {
                   ClockData={ClockData}
                   readOnly={!permissions.logbook_settings}
                   permissions={permissions}
+                  modules={modules}
                 />
               )
           }

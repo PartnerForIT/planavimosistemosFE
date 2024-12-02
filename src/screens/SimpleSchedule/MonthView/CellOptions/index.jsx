@@ -27,8 +27,6 @@ export default ({
   start,
   end,
   copy_event,
-  empty,
-  empty_manual,
   editPermissions,
   addTimeline,
   isCompleted,
@@ -52,7 +50,7 @@ export default ({
     styles.cellOptions,
     {
       [styles.dayEnd]: isCompleted,
-      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty')),
+      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu),
       [styles.cellOptions__time]: content === 'addWorkingTime',
     },
   );
@@ -164,15 +162,9 @@ export default ({
     >
       {
           employeeName && (
-            (empty_manual)
-            ? (copyTool)
+            (copyTool)
               ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
               : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-            : <span className={styles.cellOptions__title} >
-              {
-                copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
-              }
-            </span>
           
         )
       }
@@ -197,7 +189,7 @@ export default ({
         )
       }
       {
-        !isCompleted && !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty') ? (
+        !isCompleted && !copy_event && withMenu ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

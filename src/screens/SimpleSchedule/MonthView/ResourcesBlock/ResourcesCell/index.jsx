@@ -16,15 +16,12 @@ const ResourceCell = ({
   title,
   skill,
   avatar,
-  shiftId,
   nestingLevel = 0,
   lastChild1 = false,
   lastChild2 = false,
   isEmpty = false,
   employeesCount,
   employeeId,
-  onEditShift,
-  onDeleteShift,
 }) => {
 
   const rowClasses = classnames(classes.resourcesCell, {
@@ -56,8 +53,6 @@ const ResourceCell = ({
           withExpander={withExpander && !markerActive}
           nestingLevel={nestingLevel}
           withMenu={nestingLevel === 1}
-          onEditShift={() => { onEditShift(shiftId) }}
-          onDeleteShift={() => { onDeleteShift(shiftId, title) }}
         />
       </div>
       {
@@ -81,8 +76,6 @@ const ResourceCell = ({
             lastChild2={nestingLevel === 1 ? (index + 1 === items.length) : lastChild2}
             nestingLevel={nestingLevel + 1}
             isEmpty={item.empty}
-            onEditShift={ onEditShift }
-            onDeleteShift={ onDeleteShift }
           />
         ))
       }

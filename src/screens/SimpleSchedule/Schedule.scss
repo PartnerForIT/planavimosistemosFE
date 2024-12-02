@@ -1,4 +1,4 @@
-.schedule-screen {
+.simple-schedule-screen {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 110px);
@@ -23,6 +23,10 @@
       &:nth-child(4) {
         margin-left: 20px;
         margin-right: 21px;
+      }
+
+      &:nth-child(3) {
+        margin-left: auto;
       }
     }
 
@@ -332,6 +336,15 @@
         }
       }
     }
+  }
+
+  .fc-week-view .fc-timeline-lane-frame .fc-timeline-event-harness .fc-timeline-event {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  .fc-event-resizer {
+    display: none !important;
   }
 
   .fc-h-event {

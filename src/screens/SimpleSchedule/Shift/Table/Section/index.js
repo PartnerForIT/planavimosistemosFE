@@ -22,8 +22,6 @@ export default ({
   onDelete,
   withMenu,
   withMenuEdit,
-  onEditShift,
-  onDeleteShift,
 }) => {
   const { t } = useTranslation();
 
@@ -116,15 +114,6 @@ export default ({
             <div className={classes.section__title}>
               {title}
             </div>
-            <Dropdown.ItemMenu
-              title={t('Edit Shift')}
-              onClick={onEditShift}
-            />
-            <Dropdown.ItemMenu
-              title={t('Delete Shift')}
-              onClick={onDeleteShift}
-              remove
-            />
             <div className={classes.section__space} />
           </Dropdown>
         )

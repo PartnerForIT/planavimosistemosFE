@@ -7,8 +7,6 @@ export default ({
   resources,
   onExpander,
   markerActive,
-  onEditShift,
-  onDeleteShift,
 }) => {
   return (
     <div className={classes.resourcesBlock}>
@@ -28,8 +26,6 @@ export default ({
             countChildren={item.children?.length}
             rowId={item.id}
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
-            onEditShift={ onEditShift }
-            onDeleteShift={ onDeleteShift }
           />
         ))
       }

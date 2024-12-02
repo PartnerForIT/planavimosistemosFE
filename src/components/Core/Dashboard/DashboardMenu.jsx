@@ -297,7 +297,7 @@ export default function DashboardMenu() {
     }
     
     // Schedule
-    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit) {
+    if ((permissions.schedule_shift) && permissions.schedule_edit) {
       nextMenuItems.push({
         to: `/${companyId}/settings/schedule`,
         icon: ScheduleIcon,

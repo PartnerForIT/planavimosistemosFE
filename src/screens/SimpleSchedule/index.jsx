@@ -24,7 +24,7 @@ import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
-import { TIMELINE, COLORS_SHIFT } from '../../const';
+import { TIMELINE } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getSkills } from '../../store/skills/actions';
 import { getEmployees } from '../../store/employees/actions';
@@ -90,7 +90,7 @@ const permissionsConfig = [
 export default () => {
   const { t } = useTranslation();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
-  const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
+  const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false});
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -107,8 +107,6 @@ export default () => {
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
   const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
-  const [tempShiftID,setTempShiftID] = useState(0)
-  const [activeDrag,setActiveDrag] = useState('')
   const copyToolRef = useRef();
   const [copyTool,setCopyTool] = useState(false)
   const [copyToolTime,setCopyToolTime] = useState({})
@@ -134,8 +132,8 @@ export default () => {
         return Object.values(children).map((item, index) => {
           const nextItem = {
             ...item,
-            eventBackgroundColor: COLORS_SHIFT.bright[0],
-            eventBorderColor: COLORS_SHIFT.bright[0],
+            eventBackgroundColor: "#40C3E2",
+            eventBorderColor: "#40C3E2",
             lineColor: false,
             eventDurationEditable: true,
             children: updateChildren(item.children),
@@ -158,16 +156,16 @@ export default () => {
 
   const events = useMemo(() => {
     let result = [];
+    if (isLoading) return result;
   
     if (schedule?.events) {
-      if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
-        // Make fake time for remove_timelines
+      if (timeline === TIMELINE.WEEK) {
         result = schedule.events.map((e) => ({
           ...e,
           realStart: e.start,
           realEnd: e.end,
-          start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          start: moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         }));
       } else if (timeline === TIMELINE.DAY) {
         result = schedule.events.filter((e) => {
@@ -183,7 +181,7 @@ export default () => {
   
     return result;
     // eslint-disable-next-line
-  }, [filterData, schedule?.events]);
+  }, [filterData, schedule?.events, isLoading]);
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
@@ -194,13 +192,7 @@ export default () => {
           i.children=i.children.filter((j) => {
             let checkShift = false;
             let checkEmployeeShift = data.employers.length ? false : true;
-            data.shiftType.map((shiftEl) => {
-              if (shiftEl.id === j.shiftId) {
-                checkShift = true;
-              }
 
-              return shiftEl;
-            });
             if (j.children) {
               j.children = j.children.filter((k) => {
                 let checkPlace = false;
@@ -260,7 +252,9 @@ export default () => {
         end_work: data.duration.end,
         date: data.date.format('YYYY-MM-DD'),
       }
-    }));
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    })
     setOpenCreateShift(false)
   }
 
@@ -320,8 +314,8 @@ export default () => {
     
   }, [markers]);
   useEffect(() => {
-    if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
-      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
+    if (scheduleSettings.start_finish) {
+      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish})
     }
     // eslint-disable-next-line
   }, [scheduleSettings]);
@@ -367,8 +361,6 @@ export default () => {
 
     if (props.place_id) {
       classes.push('fc-datagrid-cell-place');
-    } else if (props.shiftId) {
-      classes.push('fc-datagrid-cell-shift');
     } else if (props.job_type_id) {
       classes.push('fc-datagrid-cell-job-type');
     } else if (props.employeeId || props.employeeId === 0) {
@@ -381,10 +373,6 @@ export default () => {
       classes.push('fc-datagrid-cell-empty');
     }
     return classes;
-  };
-  const handleEditShift = (shiftId) => {
-    
-
   };
   const getBodyForGetSchedule = () => {
     let nextFromDate = moment(fromDateRef.current);
@@ -401,10 +389,9 @@ export default () => {
       placesArr: filter?.place.map(({id}) => id),
     };
   };
-  const handleChangeEmployee = ({ employeeId, shiftId, id }) => {
+  const handleChangeEmployee = ({ employeeId, id }) => {
     dispatch(patchChangeEmployee({
       companyId,
-      shiftId,
       data: {
         employee_id: employeeId,
         data: id,
@@ -413,10 +400,9 @@ export default () => {
       id,
     }));
   };
-  const handleChangeWorkingTime = ({ shiftId, id, time }) => {
+  const handleChangeWorkingTime = ({ id, time }) => {
     dispatch(patchChangeTimeline({
       companyId,
-      shiftId,
 
       data: {
         dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
@@ -427,10 +413,9 @@ export default () => {
       id,
     }));
   };
-  const handleAddWorkingTime = ({ shiftId, id, time }) => {
+  const handleAddWorkingTime = ({ id, time }) => {
     dispatch(patchAddTimeline({
       companyId,
-      shiftId,
 
       data: {
         dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
@@ -441,25 +426,22 @@ export default () => {
       id,
     }));
   };
-  const handleDeleteTimeline = ({ id, shiftId }) => {
+  const handleDeleteTimeline = ({ id }) => {
     dispatch(deleteTimeline({
       companyId,
-      shiftId,
       body: getBodyForGetSchedule(),
       id,
     }));
   };
-  const handleEmptyTimeline = ({ id, shiftId }) => {
+  const handleEmptyTimeline = ({ id }) => {
     dispatch(emptyTimeline({
       companyId,
-      shiftId,
       body: getBodyForGetSchedule(),
       id,
     }));
   };
-  const addTempEmployees =  (shiftId,employeeId,jobTypeId,eventId) => {
+  const addTempEmployees =  (employeeId,jobTypeId,eventId) => {
     setmodalAddTempEmployee(data => !data)
-    setTempShiftID(shiftId)
     setTempEventID(eventId)
   }
 
@@ -471,7 +453,6 @@ export default () => {
                 data:tempEventID
               },
               body: getBodyForGetSchedule(),
-              shiftId: tempShiftID,
             }
         )
     )
@@ -488,51 +469,33 @@ export default () => {
 
     const resourceInfo = event.getResources()[0];
 
-    let shiftId;
     //let placeId;
-    let employee_Id;
-    let jobTypeId;
     let withMenu = false;
     let employeeName;
     let endDay;
     let dayNumber;
     let isCompleted;
-    // eslint-disable-next-line
-    if (resourceInfo.extendedProps.employeeId || resourceInfo?.extendedProps?.employeeId == 0) {
-      [shiftId] = resourceInfo.id.split('-');
-      // const shiftInfo = view.calendar.getResourceById(`${placeId}-${shiftId}`).extendedProps;
-      withMenu = true;
-      employeeName = resourceInfo.title;
-      employee_Id = resourceInfo.extendedProps.employeeId
-      shiftId = resourceInfo.extendedProps.shift_id ? resourceInfo.extendedProps.shift_id : shiftId
-      jobTypeId = resourceInfo.extendedProps.job_type_id
-      endDay = event.endStr
-    }
+  
     
     dayNumber = event._def.extendedProps.day_number || event.extendedProps.day_number
     isCompleted = event?._def?.extendedProps?.is_completed
 
     let unEmployees = []
     const selectedEvent  = events.find(e => e.resourceId+'' === resourceInfo.id+'' && dayNumber === e.day_number);
-    
     if (selectedEvent) {
-      const allEmployees  = events.filter(e => e.empty_employee === false
-                                              // eslint-disable-next-line
-                                                      && e.resourceId.indexOf(shiftId+'-') == 0
-                                                      // eslint-disable-next-line
-                                                      && selectedEvent.day_number == e.day_number);
-                                                      //&& selectedEvent.start == e.start
-                                                      //&& selectedEvent.end == e.end);
+      withMenu = selectedEvent?.employee_id ? true : false;
+      // eslint-disable-next-line
+      const allEmployees  = events.filter(e => selectedEvent.day_number == e.day_number);
 
       unEmployees = allEmployees.map(e => {
         return e.employee_id*1;
       });
     }
     
-    let start = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent?.realStart) ? selectedEvent?.realStart : event.start;
-    let end = (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK && selectedEvent?.realEnd) ? selectedEvent?.realEnd : event.end;
+    let start = (timeline === TIMELINE.WEEK && selectedEvent?.realStart) ? selectedEvent?.realStart : event.start;
+    let end = (timeline === TIMELINE.WEEK && selectedEvent?.realEnd) ? selectedEvent?.realEnd : event.end;
 
-    if (event.extendedProps.empty_manual && start && end && workTime?.work_time?.work_days?.days) {
+    if (start && end && workTime?.work_time?.work_days?.days) {
       // eslint-disable-next-line
       const time = workTime.work_time.work_days.days.find(i => i.day == moment(start).isoWeekday());
       if (time?.start) {
@@ -553,17 +516,15 @@ export default () => {
     return (
       <EventContent
         id={event.id}
-        shiftId={shiftId}
-        employeeId={resourceInfo?.extendedProps?.employeeId}
-        title={event.title}
+        employeeId={selectedEvent?.employee_id || null}
+        title={selectedEvent?.title || null}
+        reccuring={selectedEvent?.reccuring || null}
         employeeName={employeeName}
         timeText={timeText}
         start={start}
         end={end}
         resourceId={resourceInfo.id}
         copy_event={event.extendedProps.copy_event}
-        empty={event.extendedProps.empty_event}
-        empty_manual={event.extendedProps.empty_manual}
         cost={event.extendedProps.cost}
         night_minutes={event.extendedProps.night_minutes}
         break_minutes={event.extendedProps.break_minutes}
@@ -583,23 +544,17 @@ export default () => {
         handleAddHistory={handleAddHistory}
         copyTool={copyTool}
         modalAddTempEmployee={modalAddTempEmployee}
-        addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
-        activeDrag={activeDrag === resourceInfo.id}
         unavailableEmployees={unEmployees}
         markers={markers}
-        removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
         lineColor={resourceInfo?.extendedProps?.lineColor}
       />
     );
   };
   const handleEventClassNames = (info) => {
     let classes = [];
-    if (info.event.extendedProps.empty_manual) {
-      classes.push('is-empty-manual')
-    }
     if (copyTool || info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
@@ -610,7 +565,6 @@ export default () => {
     const {
       //count,
       photo,
-      shiftId,
       employeeId,
       employeesCount,
       //hours_demand,
@@ -621,10 +575,8 @@ export default () => {
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
-        shiftId={shiftId}
-        withMenu={!!shiftId}
+        withMenu={false}
         employeeId={employeeId}
-        onEditShift={() => handleEditShift(shiftId)}
       />
     );
   };
@@ -682,26 +634,6 @@ export default () => {
         />
       </div>
     );
-  };
-  const handleEventChange = ({ event }) => {
-    const resourceInfo = event.getResources()[0];
-    const [shiftId] = resourceInfo.id.split('-');
-
-    handleChangeWorkingTime({
-      id: event.id,
-      shiftId,
-      time: {
-        start: moment(event.start),
-        end: moment(event.end),
-      },
-    });
-  };
-  const handleEventChangeStart  = ({ event, jsEvent }) => {
-    setActiveDrag(event.getResources()[0]?.id);
-  };
-
-  const handleEventChangeStop  = ({ event, jsEvent }) => {
-    setActiveDrag('');
   };
 
   const updateWidthCell = (rows) => {
@@ -822,7 +754,7 @@ export default () => {
                 }
 
                 // hide mark when day have event
-                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
+                const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1)) : false;
                 
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
@@ -931,11 +863,8 @@ export default () => {
     // eslint-disable-next-line
     const selectedEvent  = events.find(e => e.id == tempEventID);
     if (selectedEvent) {
-      const allEmployees  = events.filter(e => e.empty_employee === false
-                                                  // eslint-disable-next-line
-                                                      && e.resourceId.indexOf(tempShiftID+'-') == 0
-                                                      // eslint-disable-next-line
-                                                      && selectedEvent.day_number == e.day_number);
+      // eslint-disable-next-line
+      const allEmployees  = events.filter(e => selectedEvent.day_number == e.day_number);
 
       return allEmployees.map(e => {
         return e.employee_id*1;
@@ -947,8 +876,8 @@ export default () => {
   
   return (
     <MainLayout>
-      <div className='schedule-screen'>
-        <div className='schedule-screen__header'>
+      <div className='simple-schedule-screen'>
+        <div className='simple-schedule-screen__header'>
           <CustomSelect
             placeholder={t('All skills')}
             buttonLabel={t('Filter')}
@@ -993,7 +922,7 @@ export default () => {
           }
         </div>
         {
-          (isLoading || !schedule) ? (
+          (!schedule) ? (
             // <Progress />
               <></>
           ) : (
@@ -1023,7 +952,6 @@ export default () => {
                     handleAddHistory={handleAddHistory}
                     addTempEmployees={addTempEmployees}
                     handleChangeTimeline={handleChangeTimeline}
-                    onEditShift={(shiftId) => handleEditShift(shiftId)}
                   />
                 ) : (
                   <>
@@ -1061,16 +989,14 @@ export default () => {
                       resources={resources}
                       events={events}
                       eventStartEditable={false}
-                      eventDurationEditable={timeline === TIMELINE.DAY}
+                      eventResizableFromStart={false}
+                      eventDurationEditable={false}
                       eventContent={renderEventContent}
                       eventClassNames={handleEventClassNames}
                       resourceAreaHeaderContent={renderResourceAreaHeaderContent}
                       viewDidMount={handleViewDidMount}
                       resourceLabelClassNames={handleResourceLabelClassNames}
                       resourceLabelContent={renderResourceLabelContent}
-                      eventResize={handleEventChange}
-                      eventResizeStart={handleEventChangeStart}
-                      eventResizeStop={handleEventChangeStop}
                       slotLaneClassNames={handeSlotLaneClassNames}
                       resourceLaneDidMount={handleSetupMarkersWidth}
                       resourceLaneContent={renderResourceLaneContent}
