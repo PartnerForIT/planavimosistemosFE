@@ -300,7 +300,7 @@ const Row = ({
                 {(column.field === 'place_address' && onEditAddress)
                   && (
                     row['address'] ? 
-                    <span className={styles.existedBreak} onClick={() => onEditAddress(row.id)}>{row['address']}</span> :
+                    <span className={styles.existedBreak} onClick={() => onEditAddress(row.id)}>{row['address']} {row['disable_rtt'] ? <span className={styles.rttOff}>RTT OFF</span> : null}</span> :
                     <span className={styles.addBreak} onClick={() => onEditAddress(row.id)}>+</span>
                   )
                 }

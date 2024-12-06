@@ -307,7 +307,7 @@ export default function TableBlock({
     setIsEditAddress(false);
   }
   const onCreateAddress = (values) => {
-    let post = {address: '', coordinates: '', radius: ''};
+    let post = {address: '', coordinates: '', radius: '', disable_rtt: values.disable_rtt};
     if (values.address) post = { ...post, address: values.address };
     if (values.coordinates) post = { ...post, coordinates: values.coordinates };
     if (values.radius) post = { ...post, radius: values.radius };

@@ -32,9 +32,20 @@ const columns = [
     label: 'Name',
     field: 'name',
     checked: true,
-  }, {
+  },
+  {
     label: 'Surname',
     field: 'surname',
+    checked: true,
+  },
+  {
+    label: 'External ID',
+    field: 'external_id',
+    checked: true,
+  },
+  {
+    label: 'Employee Status',
+    field: 'em_status',
     checked: true,
   },
   {
@@ -67,20 +78,34 @@ const columns = [
     field: 'place',
     checked: true,
   },
+  {
+    label: 'Cost',
+    field: 'cost',
+    checked: true,
+  },
+  {
+    label: 'Kiosk',
+    field: 'kiosk',
+    checked: true,
+  },
 ];
 
 const columnsWidth = {
   status: 120,
   name: 200,
+  external_id: 120,
+  em_status: 100,
   place: 150,
   skills: 200,
   role: 150,
   email: 250,
   groups: 150,
   subgroup: 150,
+  cost: 80,
+  kiosk: 80,
 };
 const order = [
-  'status', 'name', 'surname', 'role', 'email', 'skill', 'group', 'subgroup', 'place',
+  'status', 'name', 'surname', 'external_id', 'em_status', 'role', 'email', 'skill', 'group', 'subgroup', 'place', 'cost', 'kiosk',
 ];
 
 const useStyles = makeStyles(() => ({
@@ -120,6 +145,7 @@ export default function ImportAccounts({
 
   const [ignoreEmpty, setIgnoreEmpty] = useState(false);
   const [createMissing, setCreateMissing] = useState(true);
+  const [updateCurrent, setUpdateCurrent] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [importSuccess, setImportSuccess] = useState(false);
   const [isAllSelected, setIsAllSelected] = useState(false);
@@ -134,6 +160,7 @@ export default function ImportAccounts({
     setIgnoreEmpty(false);
     setCreateMissing(true);
     setImportSuccess(false);
+    setUpdateCurrent(false);
   };
 
   const selectionHandler = (itemId, value, e) => {
@@ -203,7 +230,7 @@ export default function ImportAccounts({
             }
           });
 
-          if (employees.some(({ email }) => email === temp.email)) {
+          if (employees.some(({ email }) => email === temp.email) && !updateCurrent) {
             temp.success = true;
           }
 
@@ -211,6 +238,7 @@ export default function ImportAccounts({
         });
       setData(mappedFile ?? null);
     }
+    // eslint-disable-next-line
   }, [dispatch, employees, file, t]);
 
   useEffect(() => {
@@ -239,7 +267,7 @@ export default function ImportAccounts({
                 ...rest,
                 // eslint-disable-next-line no-nested-ternary
                 error: !suc,
-                success: suc,
+                success: suc && !updateCurrent,
               };
             }
 
@@ -252,7 +280,7 @@ export default function ImportAccounts({
         }
       }
     }
-  }, [importSuccess, imported, imported.users, selectedItems, selectedItems.length]);
+  }, [importSuccess, updateCurrent, imported, imported.users, selectedItems, selectedItems.length]);
 
   const fakeUpload = () => {
     if (tempFile) {
@@ -281,7 +309,7 @@ export default function ImportAccounts({
     }) => {
       let check = !!value;
 
-      if (success || (!ignoreEmpty && warning)) {
+      if ((success && !updateCurrent) || (!ignoreEmpty && warning)) {
         check = false;
       }
 
@@ -311,6 +339,8 @@ export default function ImportAccounts({
               return 1;
             case 'suspended':
               return 0;
+            case 'delete':
+              return 2;
             default:
               return 0;
           }
@@ -322,7 +352,7 @@ export default function ImportAccounts({
         };
       });
 
-    dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0 }));
+    dispatch(sendImportedEmployees(companyId, { users, createMissing: createMissing ? 1 : 0, updateCurrent: updateCurrent ? 1 : 0 }));
   };
 
   const handleCloseHandler = () => {
@@ -337,16 +367,26 @@ export default function ImportAccounts({
   const handleChangeIgnoreEmpty = () => {
     const nextIgnoreEmpty = !ignoreEmpty;
     setIgnoreEmpty(nextIgnoreEmpty);
+    updateData(nextIgnoreEmpty, updateCurrent);
+  };
 
-    setData(((prevState) => {
+  const handleChangeUpdateCurrent = () => {
+    const nextUpdateCurrent = !updateCurrent;
+    setUpdateCurrent(nextUpdateCurrent);
+    updateData(ignoreEmpty, nextUpdateCurrent);
+  };
+
+  const updateData = (empty, current) => {
+    setData((prevState) => {
       let nextState = prevState.map((item) => {
-        const warning = nextIgnoreEmpty
+        const warning = empty
           ? !(item.email && item.name && item.surname)
           : !(item.group && item.subgroup && item.place && item.role && item.skill);
 
         return {
           ...item,
           warning,
+          success: item.success && !current,
         };
       });
 
@@ -361,15 +401,15 @@ export default function ImportAccounts({
           ...rest
         }) => {
           let check = checked;
-          if (!success && !error) {
-            check = !warning;
+          if ((success && !current) || (!empty && warning)) {
+            check = false;
           }
 
           return {
             ...rest,
             warning,
             error,
-            success,
+            success: success && !updateCurrent,
             checked: check,
           };
         });
@@ -378,9 +418,9 @@ export default function ImportAccounts({
       }
 
       return nextState;
-    }));
-  };
-
+    });
+  }
+  
   return (
     <Dialog
       handleClose={handleCloseHandler}
@@ -426,13 +466,13 @@ export default function ImportAccounts({
         <div className={style.formControl}>
           <Label text={t('Example of CSV file contents')} />
           <div className={classes.textarea} style={{ backgroundColor }}>
-            <p>{`${t('status')};${t('name')};${t('surname')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};`}</p>
+            <p>{`${t('status')};${t('name')};${t('surname')};${t('external_id')};${t('employment_status')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};${t('cost')};${t('kiosk')};`}</p>
             <span>
               {t('EXAMPLE')}
               {':'}
             </span>
             {' '}
-            {`${t('active')};John;Doe;${t('manager')};example@email.com;${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};`}
+            {`${t('active')};John;Doe;${t('123456')};${t('0.5')};${t('manager')};example@email.com;${t('test') + t('skill')};${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};${t('11,4')};${t('yes')};`}
           </div>
         </div>
 
@@ -467,6 +507,11 @@ export default function ImportAccounts({
               label={t('Ignore empty values')}
               checked={ignoreEmpty}
               onChange={handleChangeIgnoreEmpty}
+            />
+            <StyledCheckbox
+              label={t('Update current accounts')}
+              checked={updateCurrent}
+              onChange={handleChangeUpdateCurrent}
             />
           </div>
           <div className={classes.importStats}>

@@ -30,10 +30,15 @@ export default ({
 
     // default bottom
     if (offset.top + maxHeight > window.innerHeight) {
-      style.bottom = window.innerHeight - offset.bottom + 18;
+      style.bottom = window.innerHeight - offset.bottom;
+
+      if (offset.top - maxHeight < 0) {
+        style.bottom = 0;
+      }
     } else {
-      style.top = offset.top + offset.height + 6;
+      style.top = offset.top + offset.height;
     }
+
 
     // style.top = offset.top;
 

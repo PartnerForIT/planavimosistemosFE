@@ -48,7 +48,7 @@ const permissionsConfig = [
 ];
 
 const initialFormValues = {
-  date: moment(), duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0, repeat_type: 1},
+  date: moment(), title: '', duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0, repeat_type: 1},
 };
 
 export default function NewSimpleSchedule({
@@ -95,6 +95,11 @@ export default function NewSimpleSchedule({
 
   const handleDateChange = (date) => {
     const nextInputValues = { ...formValues, date };
+    setFormValues(nextInputValues);
+  };
+
+  const handleEndDateChange = (date) => {
+    const nextInputValues = { ...formValues, reccuring_end: date };
     setFormValues(nextInputValues);
   };
 
@@ -185,6 +190,18 @@ export default function NewSimpleSchedule({
             valueKey='id'
           />
         </div>
+        <div className={classes.addEntry__formControl}>
+          <div className={classes.addEntry__formControl__labelBlock}>
+            <Label text={t('Title')} htmlFor='title' />
+          </div>
+          <Input
+            type='text'
+            value={formValues.title}
+            onChange={handleInputChange}
+            name='title'
+            fullWidth
+          />
+        </div>
         <div className={classes.addEntry__formFlex}>
           <div className={classes.addEntry__formControl}>
             <div className={classes.addEntry__formControl__labelBlock}>
@@ -263,13 +280,33 @@ export default function NewSimpleSchedule({
               rows={3}
           />
         </div>
-        <div className={classes.addEntry__formCheckbox}>
-          <Checkbox
-            onChange={handleCheckboxChange}
-            checked={formValues.reccuring}
-            label={t('Reccuring')}
-            name="reccuring"
-          />
+        <div className={classes.addEntry__formFlex}>
+          <div className={classes.addEntry__formCheckbox}>
+            <Checkbox
+              onChange={handleCheckboxChange}
+              checked={formValues.reccuring}
+              label={t('Reccuring')}
+              name="reccuring"
+            />
+          </div>
+          { formValues.reccuring &&
+            <div className={classes.addEntry__formControl}>
+              <div className={classes.addEntry__formControl__labelBlock}>
+                <Label text={t('End date')} htmlFor='reccuring_end' />
+              </div>
+              <div className={classes.addEntry__date}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DatePicker
+                    label={t('End date')}
+                    value={formValues.reccuring_end}
+                    onChange={handleEndDateChange}
+                    format='MMM, DD, YYYY'
+                    name="reccuring_end"
+                  />
+                </MuiPickersUtilsProvider>
+              </div>
+            </div>
+          }
         </div>
         <div className={classes.addEntry__line}></div>
 

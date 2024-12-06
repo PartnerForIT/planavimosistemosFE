@@ -24,7 +24,7 @@ import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
-import { TIMELINE } from '../../const';
+import { TIMELINE, COLORS_JOB_TYPE } from '../../const';
 import { resourcesMock } from '../../const/mock';
 import { getSkills } from '../../store/skills/actions';
 import { getEmployees } from '../../store/employees/actions';
@@ -127,13 +127,22 @@ export default () => {
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const resources = useMemo(() => {
+    let currentColor = 0;
+    let colorType = 'bright';
     const updateChildren = (children) => {
       if (children) {
+        currentColor += 1;
+        if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
+          currentColor = 0;
+        }
+        const eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+        const eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+
         return Object.values(children).map((item, index) => {
           const nextItem = {
             ...item,
-            eventBackgroundColor: "#40C3E2",
-            eventBorderColor: "#40C3E2",
+            eventBackgroundColor,
+            eventBorderColor,
             lineColor: false,
             eventDurationEditable: true,
             children: updateChildren(item.children),
@@ -160,13 +169,18 @@ export default () => {
   
     if (schedule?.events) {
       if (timeline === TIMELINE.WEEK) {
-        result = schedule.events.map((e) => ({
-          ...e,
-          realStart: e.start,
-          realEnd: e.end,
-          start: moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        }));
+        result = schedule.events.map((e) => {
+          const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
+          return {
+            ...e,
+            realStart: e.start,
+            realEnd: e.end,
+            group: sameDay.length > 1 ? sameDay : false,
+            start: moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+            end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          }}).filter((e) => {
+            return (e.group && e.group[0].id === e.id) || !e.group;
+          });
       } else if (timeline === TIMELINE.DAY) {
         result = schedule.events.filter((e) => {
           if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
@@ -470,8 +484,7 @@ export default () => {
     const resourceInfo = event.getResources()[0];
 
     //let placeId;
-    let withMenu = false;
-    let employeeName;
+    let withMenu = false
     let endDay;
     let dayNumber;
     let isCompleted;
@@ -480,16 +493,10 @@ export default () => {
     dayNumber = event._def.extendedProps.day_number || event.extendedProps.day_number
     isCompleted = event?._def?.extendedProps?.is_completed
 
-    let unEmployees = []
     const selectedEvent  = events.find(e => e.resourceId+'' === resourceInfo.id+'' && dayNumber === e.day_number);
+    
     if (selectedEvent) {
       withMenu = selectedEvent?.employee_id ? true : false;
-      // eslint-disable-next-line
-      const allEmployees  = events.filter(e => selectedEvent.day_number == e.day_number);
-
-      unEmployees = allEmployees.map(e => {
-        return e.employee_id*1;
-      });
     }
     
     let start = (timeline === TIMELINE.WEEK && selectedEvent?.realStart) ? selectedEvent?.realStart : event.start;
@@ -512,14 +519,16 @@ export default () => {
         end = moment(end).set({h: 17});
       }
     }
-
+    
     return (
       <EventContent
         id={event.id}
         employeeId={selectedEvent?.employee_id || null}
         title={selectedEvent?.title || null}
         reccuring={selectedEvent?.reccuring || null}
-        employeeName={employeeName}
+        employeeName={selectedEvent?.employee_name || null}
+        description={selectedEvent?.description || null}
+        group={selectedEvent?.group || null}
         timeText={timeText}
         start={start}
         end={end}
@@ -535,21 +544,17 @@ export default () => {
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && !copyTool}
-        jobTypeName={resourceInfo.extendedProps.job_type_name}
+        jobTypeName={selectedEvent?.job_type_name}
         onChangeEmployee={handleChangeEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteTimeline={handleDeleteTimeline}
         onEmptyTimeline={handleEmptyTimeline}
-        handleCopyTool={handleCopyTool}
         handleAddHistory={handleAddHistory}
         copyTool={copyTool}
         modalAddTempEmployee={modalAddTempEmployee}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
-        unavailableEmployees={unEmployees}
-        markers={markers}
-        lineColor={resourceInfo?.extendedProps?.lineColor}
       />
     );
   };

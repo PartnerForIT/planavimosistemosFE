@@ -924,6 +924,9 @@
         "Clock-In Photo": "Įsiregistravimo Nuotrauka",
 
         "Activate Auto Data Delete after amount of days": "Aktyvuoti Automatinį Duomenų Trynimą po tiek dienų laikotarpio",
-        "Auto data deletion helps manage private data, such as geolocation coordinates, face photos from clock-in/clock-out, and images taken when employees finish work or leave the workplace. This feature ensures the automatic removal of such data based on your organization's settings and the days terms which have been set in this rule": "Automatinis duomenų ištrynimas padeda valdyti asmeninius duomenis, tokius kaip geografinės koordinatės, veido nuotraukos nuo prisijungimo/prieš išėjimą ir nuotraukos, padarytos, kai darbuotojai baigia darbą arba palieka darbo vietą. Ši funkcija užtikrina automatinį tokių duomenų pašalinimą pagal jūsų organizacijos nustatytus terminus ir taisykles."
+        "Auto data deletion helps manage private data, such as geolocation coordinates, face photos from clock-in/clock-out, and images taken when employees finish work or leave the workplace. This feature ensures the automatic removal of such data based on your organization's settings and the days terms which have been set in this rule": "Automatinis duomenų ištrynimas padeda valdyti asmeninius duomenis, tokius kaip geografinės koordinatės, veido nuotraukos nuo prisijungimo/prieš išėjimą ir nuotraukos, padarytos, kai darbuotojai baigia darbą arba palieka darbo vietą. Ši funkcija užtikrina automatinį tokių duomenų pašalinimą pagal jūsų organizacijos nustatytus terminus ir taisykles.",
 
+        "Update current accounts": "Atnaujinti esamas paskyras",
+
+        "Don’t use real time tracking for this place": "Šioje vietoje nenaudoti realaus laiko sekimo"
 }

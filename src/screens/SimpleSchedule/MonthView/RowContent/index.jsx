@@ -37,12 +37,37 @@ const RowContent = ({
   });
   
   const newFoundItem = (day) => {
-    const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
+    const ev = {...events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1)};
     if (ev?.copy_event) {
       ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
       ev.hours = Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10;
     }
-    
+
+    const all_at_this_day = events.filter((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
+    if (all_at_this_day.length > 1) {
+      let hours = 0;
+      let title = 0;
+      let minutes = 0;
+      let start = false;
+      let end = false;
+      
+      for (let i in all_at_this_day) {
+        if (all_at_this_day[i].hours) {
+          hours += all_at_this_day[i].hours*1
+          title += all_at_this_day[i].title*1
+          minutes += all_at_this_day[i].minutes*1
+
+          start = start ? moment(all_at_this_day[i].start).isBefore(moment(start)) ? all_at_this_day[i].start : start : all_at_this_day[i].start
+          end = end ? moment(all_at_this_day[i].end).isAfter(moment(end)) ? all_at_this_day[i].end : end : all_at_this_day[i].end
+        }
+      }
+
+      ev.minutes = minutes
+      ev.title = title
+      ev.hours = hours
+      ev.start = start
+      ev.end = end
+    }
     return ev;
   }
   

@@ -12,6 +12,7 @@ const initialFormValues = {
   address: '',
   coordinates: '',
   radius: '',
+  disable_rtt: false,
 };
 
 export default function Inputs({
@@ -40,6 +41,7 @@ export default function Inputs({
         address: initialValues.address,
         coordinates: initialValues.coordinates,
         radius: initialValues.radius,
+        disable_rtt: initialValues.disable_rtt,
       });
     } else {
       setFormValues({

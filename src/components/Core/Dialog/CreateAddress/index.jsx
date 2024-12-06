@@ -6,6 +6,7 @@ import Tooltip from 'react-tooltip';
 import GoogleMarkerIcon from '../../../../components/Icons/GoogleMarkerIcon';
 import InputAddress from '../../InputAddress/InputAddress';
 import Input from '../../Input/Input';
+import StyledCheckbox from '../../Checkbox/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
 import CloseIcon from '@material-ui/icons/Close';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +33,7 @@ const initialFormValues = {
   address: '',
   coordinates: '',
   radius: '',
+  disable_rtt: false,
 };
 
 const defaultProps = {
@@ -241,6 +243,7 @@ export default function CreateAddress({
         address: initialValues.address,
         coordinates: initialValues.coordinates,
         radius: initialValues.radius,
+        disable_rtt: initialValues.disable_rtt,
       });
     } else {
       setFormValues({
@@ -282,45 +285,54 @@ export default function CreateAddress({
         </div>
         <div className={classes.createAddress__form}>
           <div className={classes.createAddress__head}>
-            <div className={classes.createAddress__head_inputs}>
-              <InputAddress
-                placeholder={t('Enter address')}
-                value={formValues.address}
-                onSearch={searchAddress}
-                onCancel={() => getPlacePredictions({ input: '' })}
-                onSelect={onSelectAddress}
-                // eslint-disable-next-line
-                onChange={useCallback((e) => setFormValues({ ...formValues, address: e.target.value }))}
-                onClear={onClear}
-                onClickItem={(name) => { setFormValues({ ...formValues, address: name }) }}
-                onFit={onFit}
-                onPoint={onPoint}
-                places={placePredictions}
-                width={'450px'}
-              />
-              <div data-tip={t('Pick location')} data-for='google_marker' className={classes.createAddress__btnMarkerWrap}>
-                <FlatButton  onClick={() => setDragMarker(!dragMarker)} className={classes.createAddress__btnMarker}>
-                  <GoogleMarkerIcon active={dragMarker} />
-                </FlatButton>
-              </div>
-              <div className={classes.createAddress__radiusrWrap}>
-                <Input
-                  placeholder={t('Enter radius')}
-                  value={formValues.radius}
-                  width='130px'
-                  onChange={(e) => setFormValues({ ...formValues, radius: e.target.value })}
-                  onBlur={(e) => setFormValues({ ...formValues, radius: e.target.value < 100 ? 100 : e.target.value })}
+            <div className={classes.createAddress__head_left}>
+              <div className={classes.createAddress__head_inputs}>
+                <InputAddress
+                  placeholder={t('Enter address')}
+                  value={formValues.address}
+                  onSearch={searchAddress}
+                  onCancel={() => getPlacePredictions({ input: '' })}
+                  onSelect={onSelectAddress}
+                  // eslint-disable-next-line
+                  onChange={useCallback((e) => setFormValues({ ...formValues, address: e.target.value }))}
+                  onClear={onClear}
+                  onClickItem={(name) => { setFormValues({ ...formValues, address: name }) }}
+                  onFit={onFit}
+                  onPoint={onPoint}
+                  places={placePredictions}
+                  width={'450px'}
                 />
-                { formValues.radius && <span>m</span> }
-              </div>
-              <div className={classes.tooltipBlock} data-tip={t('100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy')} data-for='google_marker'>
-                ?
-              </div>
-              { formValues.radius &&
-                <div className={classes.createAddress__head_inputs_area}>
-                  {`${t('Area:')}`} <b>{`${Math.round(formValues.radius * formValues.radius * Math.PI)}`} m<sup>2</sup></b>
+                <div data-tip={t('Pick location')} data-for='google_marker' className={classes.createAddress__btnMarkerWrap}>
+                  <FlatButton  onClick={() => setDragMarker(!dragMarker)} className={classes.createAddress__btnMarker}>
+                    <GoogleMarkerIcon active={dragMarker} />
+                  </FlatButton>
                 </div>
-              }
+                <div className={classes.createAddress__radiusrWrap}>
+                  <Input
+                    placeholder={t('Enter radius')}
+                    value={formValues.radius}
+                    width='130px'
+                    onChange={(e) => setFormValues({ ...formValues, radius: e.target.value })}
+                    onBlur={(e) => setFormValues({ ...formValues, radius: e.target.value < 100 ? 100 : e.target.value })}
+                  />
+                  { formValues.radius && <span>m</span> }
+                </div>
+                <div className={classes.tooltipBlock} data-tip={t('100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy')} data-for='google_marker'>
+                  ?
+                </div>
+                { formValues.radius &&
+                  <div className={classes.createAddress__head_inputs_area}>
+                    {`${t('Area:')}`} <b>{`${Math.round(formValues.radius * formValues.radius * Math.PI)}`} m<sup>2</sup></b>
+                  </div>
+                }
+              </div>
+              <div className={classes.createAddress__checkboxWrap}>
+                <StyledCheckbox
+                  label={t('Don’t use real time tracking for this place')}
+                  checked={formValues.disable_rtt}
+                  onChange={(e) => setFormValues({ ...formValues, disable_rtt: !formValues.disable_rtt })}
+                />
+              </div>
             </div>
             <Button onClick={handleCreateAddress} size='likeinp'>
               {buttonTitle}

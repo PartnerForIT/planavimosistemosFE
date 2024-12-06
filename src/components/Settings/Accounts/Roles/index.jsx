@@ -408,7 +408,7 @@ export default () => {
         if (!permissions.schedule_simple) {
           delete nextModuleAccess.schedule;
           delete nextOrganisation.schedule;
-        } else {
+        } else if (nextModuleAccess.schedule?.options) {
           delete nextModuleAccess.schedule.options.assigned_place;
         }
       }

@@ -1543,7 +1543,7 @@ function* showSnackBar({ message, snackbarType }) {
 
 function* sendImportedEmployees(action) {
   try {
-    const { companyId, data: { users, createMissing } } = action;
+    const { companyId, data: { users, createMissing, updateCurrent } } = action;
 
     const { data } = yield call(
       axios.post,
@@ -1552,6 +1552,7 @@ function* sendImportedEmployees(action) {
       {
         params: {
           create_missing: createMissing,
+          update_current: updateCurrent,
         },
         ...token(),
         timeout: 0,

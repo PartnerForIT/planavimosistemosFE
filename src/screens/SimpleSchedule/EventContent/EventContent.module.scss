@@ -6,6 +6,10 @@
   visibility: hidden;
   $eventContent: &;
 
+  &__menu {
+    max-width: 260px;
+  }
+
   &__invisible,
   &__invisible:hover {
     position: absolute;
@@ -130,9 +134,88 @@
         font-family: "Helvetica Neue Medium", sans-serif;
         color: #808f94;
         line-height: 16px;
-        margin-top: 2px;
       }
     }
+  }
+
+  &__userReccuring {
+    border: 1px solid #D8E3ED;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 10px;
+
+    &_head {
+      color: #FD9D27;
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      font-family: Helvetica Neue, sans-serif;
+      line-height: 16px;
+      gap: 4px;
+    }
+
+    &_body {
+      &_section {
+        margin-top: 7px;
+        font-size: 8px;
+        line-height: 10px;
+        color: #808F94;
+
+        b {
+          color: black;
+        }
+      }
+  
+      &_buttons {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        gap: 3px;
+        flex-wrap: wrap;
+      }
+    }
+
+    &_icon {
+      background-color: #FD9D27;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      flex: 0 0 12px;
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 6px;
+        height: 6px;
+        fill: #fff;
+      }
+    }
+  }
+
+  &__group {
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: Helvetica Neue, sans-serif;
+
+    &_icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+    }
+  }
+
+  &__description {
+    color: #818F94;
+    font-size: 12px;
+    margin-top: 10px;
   }
 
   &__photo {
@@ -162,6 +245,7 @@
     border-radius: 50%;
     width: 12px;
     height: 12px;
+    flex: 0 0 12px;
     display: block;
     opacity: 1;
     visibility: visible;

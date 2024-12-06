@@ -1,130 +1,134 @@
 @import "../../../Core/variables";
 
 .createAddress {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 4px;
+
+  &__btnMarker {
+    padding: 9px;
+  }
+
+  &__btnMarkerWrap {
+    margin-right: 8px;
+  }
+
+  &__radiusrWrap {
+    position: relative;
+
+    > span {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: $input-placeholder-color;
+    }
+  }
+
+  &__head {
     display: flex;
-    flex-direction: column;
-    padding: 16px 24px;
-    box-sizing: border-box;
-    overflow: hidden;
-    border-radius: 4px;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
 
-    &__btnMarker {
-      padding: 9px;
-    }
-
-    &__btnMarkerWrap {
-      margin-right: 8px;
-    }
-
-    &__radiusrWrap {
-      position: relative;
-
-      > span {
-        position: absolute;
-        top: 50%;
-        right: 12px;
-        transform: translateY(-50%);
-        font-size: 15px;
-        color: $input-placeholder-color;
-      }
-    }
-
-    &__head {
+    &_inputs {
       display: flex;
-      width: 100%;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      
+      &_area {
+        font-size: 14px;
+        color: $input-placeholder-color;
 
-      &_inputs {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 8px;
-        
-        &_area {
+        b {
+          color: #000;
+          font-weight: 500;
           font-size: 14px;
-          color: $input-placeholder-color;
-
-          b {
-            color: #000;
-            font-weight: 500;
-            font-size: 14px;
-          }
         }
       }
     }
+  }
 
-    &__map {
-      margin: 16px -24px -24px -24px;
-      height: 520px;
-    }
+  &__map {
+    margin: 16px -24px -24px -24px;
+    height: 520px;
+  }
 
-    &__close {
-      cursor: pointer;
+  &__close {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #d9dfe3;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    color: black;
+    line-height: 28px;
+    font-weight: 500;
+
+    > svg {
       position: absolute;
-      right: 15px;
-      top: 10px;
-      color: #d9dfe3;
-    }
-  
-    &__title {
-      font-size: 18px;
-      font-family: 'Helvetica Neue Medium', sans-serif;
-      color: black;
-      line-height: 28px;
-      font-weight: 500;
-
-      > svg {
-        position: absolute;
-        top: 16px;
-        width: 20px;
-        height: 20px;
-        right: 24px;
-        color: #808f94;
-        cursor: pointer;
-      }
-    }
-  
-    &__form {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
-      margin-bottom: 4px;
-    }
-
-    &__item {
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    &__button {
-        border: 1px solid #0085ff;
-        border-radius: 6px;
-        background-color: #ECF4FA;
-        text-align: center;
-        line-height: 40px;
-        min-height: 40px;
-        margin-bottom: 16px;
-        cursor: pointer;
-    }
-
-    &__removeButton {
-      border: none;
-      background: transparent;
-      padding: 0;
-      margin: 0;
-      margin-left: 16px;
-    }
-
-    &__removeIcon {
-        width: 20px !important;
-        height: 20px !important;
-        cursor: pointer;
+      top: 16px;
+      width: 20px;
+      height: 20px;
+      right: 24px;
+      color: #808f94;
+      cursor: pointer;
     }
   }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  &__item {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  }
+
+  &__button {
+      border: 1px solid #0085ff;
+      border-radius: 6px;
+      background-color: #ECF4FA;
+      text-align: center;
+      line-height: 40px;
+      min-height: 40px;
+      margin-bottom: 16px;
+      cursor: pointer;
+  }
+
+  &__removeButton {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    margin-left: 16px;
+  }
+
+  &__removeIcon {
+      width: 20px !important;
+      height: 20px !important;
+      cursor: pointer;
+  }
+
+  &__checkboxWrap {
+    margin-left: -9px;
+  }
+}
 
 .tooltipBlock {
   color: #fff;
