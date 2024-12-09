@@ -5,6 +5,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
+import Content from '../Dropdown/Content';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
 import RefreshArrows from '../../../components/Icons/RefreshArrows';
@@ -64,12 +65,15 @@ export default ({
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
   const modalAddRef = useRef(null);
+  const buttonRef = useRef(null);
+  const dropdownRef = useRef(null);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
   const schedule = useSelector(scheduleSelector);
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
+  const [openedGroup, setOpenedGroup] = useState(false);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -159,6 +163,24 @@ export default ({
     // If not, there is no overlap.
     return overlap > 0 ? overlap : 0;
   }
+
+  useEffect(() => {
+    const handleOuterDropdownClick = (e) => {
+      if (dropdownRef && dropdownRef.current
+          && ((dropdownRef.current.contains(e.target)
+              || (buttonRef.current && buttonRef.current.contains(e.target))))
+      ) {
+        return;
+      }
+      setOpenedGroup(false);
+    };
+    document.addEventListener('mousedown', handleOuterDropdownClick, false);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOuterDropdownClick, false);
+    };
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (content === 'addWorkingTime') {
@@ -265,7 +287,7 @@ export default ({
     },
     [company.currency, currencies],
   );
-
+console.log('group', group)
   const tooltipContent = () => {
     if (group) {
       return null
@@ -312,7 +334,10 @@ export default ({
       }
       {
         group ? (
-          <span className={styles.eventContent__group} >
+          <span className={styles.eventContent__group}
+            onClick={() => setOpenedGroup(!openedGroup)}
+            ref={buttonRef}
+          >
             <div className={styles.eventContent__group_icon} >
               <img src={GroupIcon} alt={employeeName} />
             </div>
@@ -333,6 +358,46 @@ export default ({
       }
 
       <div className={styles.eventContent__leftSpace} />
+      { openedGroup && (
+        <Content
+          onClose={() => setOpenedGroup(false)}
+          wrapperRef={dropdownRef}
+          offset={buttonRef.current.getBoundingClientRect()}
+        >
+          <div className={styles.eventContent__groupModal}>
+            <div className={styles.eventContent__userInfo}>
+              { photo &&
+                <div className={styles.eventContent__photo}>
+                  <img src={photo} alt={employeeName} /> 
+                </div>
+              }
+              <div className={styles.eventContent__userInfo__right}>
+                <div className={styles.eventContent__userInfo__right__fullName}>
+                  {employeeName}
+                </div>
+                <div className={styles.eventContent__userInfo__right__jobType}>
+                  {jobTypeName}
+                </div>
+              </div>
+            </div>
+            <div className={styles.eventContent__groupModal__count}>
+              { group.length } { t('tasks') }
+            </div>
+
+            <div className={styles.eventContent__groupModal__list}>
+              {
+                group.map((item, index) => (
+                  <div key={index} className={styles.eventContent__groupModal__item}>
+                    <div className={styles.eventContent__groupModal__item__title}>
+                      
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </Content>
+      )}
       {
         content === 'addWorkingTime' && (
           <Dropdown
@@ -354,7 +419,7 @@ export default ({
         )
       }
       {
-        !copy_event && withMenu ? (
+        !copy_event && withMenu && !group ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

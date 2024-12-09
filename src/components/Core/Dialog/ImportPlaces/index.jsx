@@ -187,10 +187,10 @@ export default function ImportPlaces({
           }
 
           emp.data.forEach((field, idx) => {
-            temp[order[idx]] = field;
+            temp[order[idx]] = field.trim(); 
           });
 
-          if (places.some(({ external_id, name }) => name && name.toLowerCase() === temp?.name?.toLowerCase()  && (!temp.external_id || !external_id || (temp.external_id && external_id && external_id.toLowerCase() === temp?.external_id?.toLowerCase()))) && !updateCurrent) {
+          if (places.some(({ external_id, name }) => name === temp?.name  && (!temp.external_id || (temp.external_id && external_id === temp?.external_id))) && !updateCurrent) {
             temp.success = true;
           }
 
@@ -226,7 +226,7 @@ export default function ImportPlaces({
             id, name, external_id, error, success, ...rest
           }) => {
             if (selectedItems.some((i) => i === id)) {
-              const suc = importedPlaces.some(({ place }) => place?.name.toLowerCase() === name.toLowerCase() && (!external_id || (external_id && place?.external_id.toLowerCase() === external_id.toLowerCase())));
+              const suc = importedPlaces.some(({ place }) => place?.name === name && (!external_id || (external_id && place?.external_id === external_id)));
               return {
                 id,
                 name,
