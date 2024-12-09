@@ -363,6 +363,7 @@ console.log('group', group)
           onClose={() => setOpenedGroup(false)}
           wrapperRef={dropdownRef}
           offset={buttonRef.current.getBoundingClientRect()}
+          onTop
         >
           <div className={styles.eventContent__groupModal}>
             <div className={styles.eventContent__userInfo}>

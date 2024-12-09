@@ -8,6 +8,7 @@ import classNames from "classnames";
 export default ({
   children,
   offset,
+  onTop,
   wrapperRef,
   cancel,
   onCancel,
@@ -21,22 +22,29 @@ export default ({
   const showComponent = () => {
     const style = {};
 
-    // default right
-    if (offset.left + 295 > window.innerWidth) {
-      style.right = window.innerWidth - offset.right + 18;
+    if (onTop) {
+      style.bottom = window.innerHeight - offset.top + 6;
+      style.left = offset.left;
+      style.transform = 'translateX(-50%)';
+      style.marginLeft = '12px';
     } else {
-      style.left = offset.left + offset.width + 6;
-    }
-
-    // default bottom
-    if (offset.top + maxHeight > window.innerHeight) {
-      style.bottom = window.innerHeight - offset.bottom;
-
-      if (offset.top - maxHeight < 0) {
-        style.bottom = 0;
+      // default right
+      if (offset.left + 295 > window.innerWidth) {
+        style.right = window.innerWidth - offset.right + 18;
+      } else {
+        style.left = offset.left + offset.width + 6;
       }
-    } else {
-      style.top = offset.top + offset.height;
+
+      // default bottom
+      if (offset.top + maxHeight > window.innerHeight) {
+        style.bottom = window.innerHeight - offset.bottom;
+
+        if (offset.top - maxHeight < 0) {
+          style.bottom = 0;
+        }
+      } else {
+        style.top = offset.top + offset.height;
+      }
     }
 
 

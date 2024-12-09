@@ -337,9 +337,11 @@ export default function ImportPlaces({
     setData((prevState) => {
       let nextState = prevState.map((item) => {
 
+        const suc = (places.some(({ external_id, name }) => name === item?.name  && (!item.external_id || (item.external_id && external_id === item?.external_id))) && !current)
+
         return {
           ...item,
-          success: item.success && !current,
+          success: suc,
         };
       });
 
