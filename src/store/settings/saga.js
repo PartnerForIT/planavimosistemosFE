@@ -64,6 +64,7 @@ import {
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
+  SEND_IMPORTED_PLACES,
   PATCH_PLACE,
   DELETE_PLACE,
   PATCH_JOB,
@@ -142,6 +143,7 @@ import {
   loadPermissionsSuccess,
   loadPermissionsError,
   getRoles, sendImportedEmployeesSuccess, changePasswordSuccess, changePasswordError,
+  sendImportedPlacesSuccess,
   loadSkills,
   getEventsSuccess,
   patchEventSuccess,
@@ -1569,6 +1571,33 @@ function* sendImportedEmployees(action) {
   }
 }
 
+function* sendImportedPlaces(action) {
+  try {
+    const { companyId, data: { places, updateCurrent } } = action;
+
+    const { data } = yield call(
+      axios.post,
+      `${config.api.url}/company/${companyId}/places/import-store`,
+      { places },
+      {
+        params: {
+          update_current: updateCurrent,
+        },
+        ...token(),
+        timeout: 0,
+      },
+    );
+    
+    yield put(sendImportedPlacesSuccess(data));
+  } catch (e) {
+    yield call(showSnackBar,
+      {
+        message: 'An error occurred while importing places',
+        snackbarType: 'error',
+      });
+  }
+}
+
 function* changePassword(action) {
   try {
     const { data } = yield call(axios.patch,
@@ -1765,6 +1794,7 @@ export default function* SettingsWatcher() {
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);
+  yield takeLatest(SEND_IMPORTED_PLACES, sendImportedPlaces);
   yield takeLeading(CHANGE_PASSWORD, changePassword);
   yield takeLatest(GET_EVENTS, getEvents);
   yield takeLatest(POST_EVENT, postEvent);

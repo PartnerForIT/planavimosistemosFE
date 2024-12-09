@@ -134,6 +134,9 @@ import {
   SEND_IMPORTED_EMPLOYEES,
   SEND_IMPORTED_EMPLOYEES_SUCCESS,
   SEND_IMPORTED_EMPLOYEES_ERROR,
+  SEND_IMPORTED_PLACES,
+  SEND_IMPORTED_PLACES_SUCCESS,
+  SEND_IMPORTED_PLACES_ERROR,
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_ERROR,
@@ -917,6 +920,22 @@ export const sendImportedEmployeesSuccess = (data = {}) => ({
 
 export const sendImportedEmployeesError = (data) => ({
   type: SEND_IMPORTED_EMPLOYEES_ERROR,
+  data,
+});
+
+export const sendImportedPlaces = (companyId, data) => ({
+  type: SEND_IMPORTED_PLACES,
+  companyId,
+  data,
+});
+
+export const sendImportedPlacesSuccess = (data) => ({
+  type: SEND_IMPORTED_PLACES_SUCCESS,
+  data: data?.importPlaces ?? {},
+});
+
+export const sendImportedPlacesError = (data) => ({
+  type: SEND_IMPORTED_PLACES_ERROR,
   data,
 });
 

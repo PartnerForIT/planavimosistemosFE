@@ -115,6 +115,9 @@ import {
   SEND_IMPORTED_EMPLOYEES,
   SEND_IMPORTED_EMPLOYEES_SUCCESS,
   SEND_IMPORTED_EMPLOYEES_ERROR,
+  SEND_IMPORTED_PLACES,
+  SEND_IMPORTED_PLACES_SUCCESS,
+  SEND_IMPORTED_PLACES_ERROR,
   GET_EVENTS,
   GET_EVENTS_SUCCESS,
   PATCH_EVENT,
@@ -165,6 +168,7 @@ const initialState = {
   roleDetails: {},
   permissions: [],
   import: {},
+  importPlaces: {},
   events: [],
   schedule: {},
   scheduleLoading: false,
@@ -871,6 +875,15 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return { ...state, import: action.data, importLoading: false };
 
     case SEND_IMPORTED_EMPLOYEES_ERROR:
+      return { ...state, importLoading: false };
+
+    case SEND_IMPORTED_PLACES:
+      return { ...state, importLoading: true };
+
+    case SEND_IMPORTED_PLACES_SUCCESS:
+      return { ...state, importPlaces: action.data, importLoading: false };
+
+    case SEND_IMPORTED_PLACES_ERROR:
       return { ...state, importLoading: false };
 
     /* events */

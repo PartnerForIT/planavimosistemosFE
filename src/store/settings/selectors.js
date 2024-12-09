@@ -16,6 +16,7 @@ export const jobTypesSelector = (state) => state.settings.job_types;
 export const employees = (state) => state.settings.employees;
 export const employeesSelector = createSelector(employees, (e) => e);
 export const importedEmployees = (state) => state.settings.import;
+export const importedPlaces = (state) => state.settings.importPlaces;
 export const importLoadingSelector = (state) => state.settings.importLoading;
 
 export const employeeSelector = (state) => state.settings.employee;

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Tooltip from '../../Core/Tooltip';
 import Label from '../../Core/InputLabel';
@@ -8,7 +8,12 @@ import Button from '../../Core/Button/Button';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
-import { createSkill, actionCreateJob, actionCreatePlace } from '../../../store/settings/actions';
+import { createSkill, actionCreateJob, sendImportedPlacesSuccess, actionCreatePlace } from '../../../store/settings/actions';
+import { importLoadingSelector, importedPlaces } from '../../../store/settings/selectors';
+import { placesSelector } from '../../../store/places/selectors';
+import { getPlaces } from '../../../store/places/actions';
+import ImportPlaces from 'components/Core/Dialog/ImportPlaces';
+import _ from 'lodash';
 
 export default function ButtonBlock({
   style, companyId,
@@ -20,6 +25,12 @@ export default function ButtonBlock({
   const dispatch = useDispatch();
 
   const [openNewItem, setOpenNewItem] = useState(false);
+  const [openImportPlaces, setOpenImportPlaces] = useState(false);
+  const importLoading = useSelector(importLoadingSelector);
+  const allPlaces = useSelector(placesSelector);
+  const imported = useSelector(importedPlaces);
+
+  const clearImported = () => dispatch(sendImportedPlacesSuccess());
 
   const buttons = useMemo(() => {
     const data = [
@@ -111,6 +122,16 @@ export default function ButtonBlock({
         >
           {t(`Create new ${itemName}`)}
         </Button>
+        {selectedCategory === 'places' && (
+          <Button
+            onClick={() => setOpenImportPlaces(true)}
+            white
+            fillWidth
+            size='big'
+          >
+            {t(`Import places`)}
+          </Button>
+        )}
       </div>
       <DialogCreateSkill
         open={openNewItem && selectedCategory === 'skills'}
@@ -135,6 +156,25 @@ export default function ButtonBlock({
         createPlace={createPlace}
         permissions={permissions}
       />
+      <ImportPlaces
+        title={t('Import places')}
+        open={openImportPlaces}
+        handleClose={() => {
+          if (importLoading) {
+            return;
+          }
+
+          setOpenImportPlaces(false);
+          if (!_.isEmpty(imported)) {
+            dispatch(getPlaces(companyId));
+          }
+        }}
+        imported={imported}
+        clearImported={clearImported}
+        places={allPlaces}
+        loading={importLoading}
+      />
+
     </div>
   );
 }
