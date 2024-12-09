@@ -383,10 +383,12 @@ export default function ImportAccounts({
           ? !(item.email && item.name && item.surname)
           : !(item.group && item.subgroup && item.place && item.role && item.skill);
 
+        const success = (employees.some(({ email }) => email === item.email) && !current);
+
         return {
           ...item,
           warning,
-          success: item.success && !current,
+          success: success,
         };
       });
 
@@ -523,7 +525,7 @@ export default function ImportAccounts({
                 // eslint-disable-next-line no-nested-ternary
                 !importSuccess
                   ? file ? `${selectedItems.length} ${t('entries will be imported')}` : ''
-                  : `${imported?.success} ${t('from')} ${imported?.total} ${t('entries has been imported')}`
+                  : `${imported?.success} ${t('imported')} ${imported?.deleted} ${t('deleted')} ${imported?.updated} ${t('updated')}, ${t('from')} ${imported?.total} ${t('entries')}`
               }
             </div>
             <Button size='big' disabled={!selectedItems.length} onClick={importHandler}>{t('Import')}</Button>

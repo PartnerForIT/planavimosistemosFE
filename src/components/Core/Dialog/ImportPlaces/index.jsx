@@ -466,7 +466,7 @@ export default function ImportPlaces({
                 // eslint-disable-next-line no-nested-ternary
                 !importSuccess
                   ? file ? `${selectedItems.length} ${t('entries will be imported')}` : ''
-                  : `${imported?.success} ${t('from')} ${imported?.total} ${t('entries has been imported')}`
+                  : `${imported?.success} ${t('imported')} ${imported?.deleted} ${t('deleted')} ${imported?.updated} ${t('updated')}, ${t('from')} ${imported?.total} ${t('entries')}`
               }
             </div>
             <Button size='big' disabled={!selectedItems.length} onClick={importHandler}>{t('Import')}</Button>
