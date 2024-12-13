@@ -24,12 +24,10 @@ const RowContent = ({
   markers,
   handleChangeEmployee,
   handleChangeWorkingTime,
-  handleDeleteTimeline,
   handleEmptyTimeline,
   handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
-  addTempEmployees,
   currentMonth,
 }) => {
   useEffect(() => {
@@ -131,12 +129,10 @@ const RowContent = ({
                 markers={markers}
                 handleChangeEmployee={handleChangeEmployee}
                 handleChangeWorkingTime={handleChangeWorkingTime}
-                handleDeleteTimeline={handleDeleteTimeline}
                 handleEmptyTimeline={handleEmptyTimeline}
                 handleAddWorkingTime={handleAddWorkingTime}
                 handleCopyTool={handleCopyTool}
                 handleAddHistory={handleAddHistory}
-                addTempEmployees={addTempEmployees}
             />)
           }
           )
@@ -164,12 +160,10 @@ const RowContent = ({
             markers={markers}
             handleChangeEmployee={handleChangeEmployee}
             handleChangeWorkingTime={handleChangeWorkingTime}
-            handleDeleteTimeline={handleDeleteTimeline}
             handleEmptyTimeline={handleEmptyTimeline}
             handleAddWorkingTime={handleAddWorkingTime}
             handleCopyTool={handleCopyTool}
             handleAddHistory={handleAddHistory}
-            addTempEmployees={addTempEmployees}
             currentMonth={currentMonth}
           />
         ))

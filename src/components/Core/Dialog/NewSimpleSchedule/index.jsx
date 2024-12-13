@@ -52,8 +52,9 @@ const initialFormValues = {
 };
 
 export default function NewSimpleSchedule({
-  handleClose, title, open, handleSubmit,
+  handleClose, title, open, handleSubmit, editData
 }) {
+  
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const permissions = usePermissions(permissionsConfig);
@@ -70,6 +71,74 @@ export default function NewSimpleSchedule({
     dispatch(getPlaces(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
+
+  useEffect(() => {
+    if (editData) {
+      const {
+        date,
+        job_type_id,
+        place_id,
+        title,
+        description,
+        employee_id,
+        reccuring,
+        reccuring_end,
+        start_work,
+        end_work,
+        setting,
+      } = editData;
+
+      const reccuring_settings = setting.reccuring_settings ? setting.reccuring_settings : {};
+
+      let repeat_every = false;
+      let repeat_type = false;
+      let start = false;
+      if (reccuring_settings?.type_id === 0) {
+        repeat_type = 1;
+      } else if (reccuring_settings?.type_id === 1) {
+        repeat_every = 1;
+      } else if (reccuring_settings?.type_id === 2) {
+        repeat_every = [];
+        repeat_type = 1;
+        start = [];
+        if (reccuring_settings?.start) {
+          setDaysSelect([
+            ...daysSelect.map((item) => {
+              return {
+                ...item,
+                checked: reccuring_settings.start.includes(item.id),
+              }
+            })
+          ]);
+
+        }
+      }
+
+      setFormValues({
+          ...formValues,
+          date: date ? moment(date, 'YYYY-MM-DD') : null,
+          duration: {start: moment(start_work, 'HH:mm:ss').format('HH:mm'), end: moment(end_work, 'HH:mm:ss').format('HH:mm')},
+          job_type_id,
+          place_id,
+          title: title ? title : '',
+          description : description ? description : '',
+          employee_id,
+          reccuring: reccuring ? true : false,
+          reccuring_end: reccuring_end ? moment(reccuring_end, 'YYYY-MM-DD') : null,
+          reccuring_settings: {
+            type_id: reccuring_settings?.type_id ? reccuring_settings.type_id : 0,
+            repeat_type: reccuring_settings?.repeat_type ? reccuring_settings.repeat_type : repeat_type,
+            repeat_every: reccuring_settings?.repeat_every ? reccuring_settings.repeat_every : repeat_every,
+            start: reccuring_settings?.start ? reccuring_settings.start : start,
+            day_of_week: reccuring_settings?.day_of_week ? reccuring_settings.day_of_week : [],
+          },
+      });
+    } else {
+      setFormValues(initialFormValues);
+    }
+
+    // eslint-disable-next-line
+  }, [editData]);
 
   const employees = useMemo(() => allEmployees.map((empl) => {
     const {
@@ -289,7 +358,7 @@ export default function NewSimpleSchedule({
               name="reccuring"
             />
           </div>
-          { formValues.reccuring &&
+          { formValues.reccuring && (
             <div className={classes.addEntry__formControl}>
               <div className={classes.addEntry__formControl__labelBlock}>
                 <Label text={t('End date')} htmlFor='reccuring_end' />
@@ -306,7 +375,7 @@ export default function NewSimpleSchedule({
                 </MuiPickersUtilsProvider>
               </div>
             </div>
-          }
+          )}
         </div>
         <div className={classes.addEntry__line}></div>
 

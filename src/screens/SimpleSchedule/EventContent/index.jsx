@@ -8,6 +8,8 @@ import Dropdown from '../Dropdown';
 import Content from '../Dropdown/Content';
 import ChangeWorkingTime from './ChangeWorkingTime';
 import AddWorkingTime from './AddWorkingTime';
+import ChangeEmployee from './ChangeEmployee';
+import MenuContent from './MenuContent';
 import RefreshArrows from '../../../components/Icons/RefreshArrows';
 import GroupIcon from '../../../components/Icons/group_icon.png';
 import styles from './EventContent.module.scss';
@@ -19,7 +21,6 @@ import { AdditionalRatesDataSelector,
   scheduleSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
-import Button from '../../../components/Core/Button/Button';
 
 const permissionsConfig = [
   {
@@ -46,10 +47,10 @@ export default ({
   costPermission,
   nightPermission,
   withMenu,
-  onChangeEmployee,
+  onDuplicateEmployee,
   onChangeWorkingTime,
-  onDeleteTimeline,
-  onEmptyTimeline,
+  onDeleteWorkingTime,
+  onEditWorkingTime,
   start,
   end,
   viewType,
@@ -74,6 +75,7 @@ export default ({
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
   const [openedGroup, setOpenedGroup] = useState(false);
+  const [activeGroupItem, setActiveGroupItem] = useState(null);
 
   useEffect(() => {
     Tooltip.rebuild();
@@ -82,10 +84,19 @@ export default ({
   const classes = classNames(
     styles.eventContent,
     {
-      [styles.dayEnd]: isCompleted,
+      //[styles.dayEnd]: isCompleted,
       [styles.eventContent__time]: content === 'addWorkingTime',
     },
   );
+
+  const getGroupItemClasses = (item) => {
+    return classNames(
+      styles.eventContent__groupModal__item,
+      {
+        [styles.eventContent__groupModal__item_completed]: item.is_completed,
+      },
+    );
+  }
 
   const endOverlap = () => {
     let result = 0
@@ -194,8 +205,8 @@ export default ({
     }
   }, [content]);
 
-  const openChangeWorkingTime = () => {
-    //setContent('changeWorkingTime');
+  const handleEditWorkingTime = () => {
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
   };
   
   const copyEvent = () => {
@@ -208,11 +219,15 @@ export default ({
     setContent('menu');
   };
   const handleDeleteWorkingTime = () => {
-    console.log('delete');
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
   };
-  const handleDuplicateWorkingTime = () => {
-    console.log('duplicate');
+  const handleDuplicateWorkingTime = (employeeId) => {
+    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
   };
+  const handleClickGroupItem = (index) => {
+    setActiveGroupItem(group[index]);
+    modalRef.current.open();
+  }
   const handleChangeWorkingTime = (value) => {
     const timeStart = value.start.split(':');
     const timeEnd = value.end.split(':');
@@ -259,7 +274,7 @@ export default ({
     if (start && end && moment().isBetween(start, end)) {
       type += '_active';
     } else if (isCompleted) {
-      type += '_past';
+      //type += '_past';
     }
       
     return type;
@@ -287,7 +302,7 @@ export default ({
     },
     [company.currency, currencies],
   );
-console.log('group', group)
+  
   const tooltipContent = () => {
     if (group) {
       return null
@@ -327,7 +342,7 @@ console.log('group', group)
         )
       }
       {
-        !group && reccuring && !photo &&
+        !group && reccuring &&
         <div className={styles.eventContent__reccuring}>
           <RefreshArrows />
         </div>
@@ -388,10 +403,13 @@ console.log('group', group)
             <div className={styles.eventContent__groupModal__list}>
               {
                 group.map((item, index) => (
-                  <div key={index} className={styles.eventContent__groupModal__item}>
+                  <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
                     <div className={styles.eventContent__groupModal__item__title}>
-                      
+                      { item.reccuring && <div className={styles.eventContent__reccuring}><RefreshArrows /></div> }
+                      {item.schedule_title ? item.schedule_title : ''}
                     </div>
+                    <div className={styles.eventContent__groupModal__item__time}>{moment(item.start).format('HH:mm')} - {moment(item.end).format('HH:mm')}{item.title?.job_type ? ` • ${item.title?.job_type}` : ''}</div>
+                    { item.title?.place && <div className={styles.eventContent__groupModal__item__place}>{item.title?.place}</div> }
                   </div>
                 ))
               }
@@ -420,12 +438,13 @@ console.log('group', group)
         )
       }
       {
-        !copy_event && withMenu && !group ? (
+        !copy_event && withMenu ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
             onCancel={handleCancel}
             ref={modalRef}
+            buttonClass={group ? styles.eventContent__invisible : null}
           >
             {
               content === 'changeWorkingTime' && (
@@ -440,192 +459,31 @@ console.log('group', group)
               )
             }
             {
-              content === 'menu' && !group && (
-                <div className={styles.eventContent__menu}>
-                  <div className={styles.eventContent__userInfo}>
-                    { photo &&
-                      <div className={styles.eventContent__photo}>
-                        <img src={photo} alt={employeeName} /> 
-                      </div>
-                    }
-                    <div className={styles.eventContent__userInfo__right}>
-                      <div className={styles.eventContent__userInfo__right__fullName}>
-                        {employeeName}
-                      </div>
-                      <div className={styles.eventContent__userInfo__right__jobType}>
-                        {jobTypeName}
-                      </div>
-                    </div>
-                  </div>
-                  {
-                    reccuring &&
-                    <div className={styles.eventContent__userReccuring}>
-                      <div className={styles.eventContent__userReccuring_head}>
-                        <div className={styles.eventContent__userReccuring_icon}>
-                          <RefreshArrows />
-                        </div>
-                        {t('Reccuring schedule')}
-                        <Button inverseblack={false} size='little'>
-                          { reccuring.type_id*1 === 0 && t('Daily') }
-                          { reccuring.type_id*1 === 1 && t('Weekly') }
-                          { reccuring.type_id*1 === 2 && t('Monthly') }
-                        </Button>
-                      </div>
-
-                      <div className={styles.eventContent__userReccuring_body}>
-                        { reccuring.type_id*1 === 0 && (
-                          <div>
-                            { reccuring?.reccuring_settings?.repeat_type*1 === 1 && (
-                              <div className={styles.eventContent__userReccuring_body_section}>
-                                { t('Repeat every day(s)') }
-                                <div className={styles.eventContent__userReccuring_body_buttons}>
-                                  {
-                                    ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                                      <Button key={index+1} inverseblack={!reccuring?.reccuring_settings?.day_of_week?.includes(index+1)} size='littler'>
-                                        {t(day)}
-                                      </Button>
-                                    ))
-                                  }
-                                </div>
-                              </div>
-                              )
-                            }
-                              
-                            { reccuring?.reccuring_settings?.repeat_type*1 === 2 &&
-                              <div className={styles.eventContent__userReccuring_body_section}>
-                                {t('Repeat every')} <b>{reccuring?.reccuring_settings?.repeat_every}</b> {t('day(s)')}
-                              </div>
-                            }
-                          </div>
-                          )
-                        }
-
-                        { reccuring.type_id*1 === 1 &&
-                          <div>
-                            <div className={styles.eventContent__userReccuring_body_section}>
-                              {t('Repeat every')} <b>{reccuring?.reccuring_settings?.repeat_every}</b> {t('week(s)')}
-                            </div>
-                            <div className={styles.eventContent__userReccuring_body_section}>
-                              {t('On the day of the week')}
-                              <div className={styles.eventContent__userReccuring_body_buttons}>
-                                {
-                                  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                                    <Button key={index+1} inverseblack={!reccuring?.reccuring_settings?.day_of_week?.includes(index+1)} size='littler'>
-                                      {t(day)}
-                                    </Button>
-                                  ))
-                                }
-                              </div>
-                            </div>
-                          </div>
-                        }
-
-                        { reccuring.type_id*1 === 2 &&
-                          <div>
-                            <div className={styles.eventContent__userReccuring_body_section}>
-                              {t('Repeat every')}
-                              <div className={styles.eventContent__userReccuring_body_buttons}>
-                                {
-                                  ['Jan', 'Feb', 'Mar', 'May', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((day, index) => (
-                                    <Button key={index} inverseblack={!reccuring?.reccuring_settings?.repeat_every?.includes(index+1)} size='little'>
-                                      {t(day)}
-                                    </Button>
-                                  ))
-                                }
-                              </div>
-                            </div>
-
-                            { reccuring.reccuring_settings.repeat_type*1 === 1 &&
-                              <div className={styles.eventContent__userReccuring_body_section}>
-                                {t('On the date')}
-                                <div className={styles.eventContent__userReccuring_body_buttons}>
-                                  {
-                                    Array.from({length: 31}, (_, i) => i+1).map((day, index) => (
-                                      <Button key={index+1} inverseblack={!reccuring?.reccuring_settings?.start?.includes(index+1)} size='littler'>
-                                        {day}
-                                      </Button>
-                                    ))
-                                  }
-                                </div>
-                              </div>  
-                            }
-
-                            { reccuring.reccuring_settings.repeat_type*1 === 2 &&
-                              <>
-                                <div className={styles.eventContent__userReccuring_body_section}>
-                                  {t('On the week')}
-                                  <div className={styles.eventContent__userReccuring_body_buttons}>
-                                    {
-                                      ['First', 'Second', 'Third', 'Fourth', 'Fifth'].map((day, index) => (
-                                        <Button key={index+1} inverseblack={!reccuring?.reccuring_settings?.start?.includes(index+1)} size='littler'>
-                                          {t(day)}
-                                        </Button>
-                                      ))
-                                    }
-                                  </div>
-                                </div>
-                                <div className={styles.eventContent__userReccuring_body_section}>
-                                  {t('On the day of the week')}
-                                  <div className={styles.eventContent__userReccuring_body_buttons}>
-                                    {
-                                      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                                        <Button key={index+1} inverseblack={!reccuring?.reccuring_settings?.day_of_week?.includes(index+1)} size='littler'>
-                                          {t(day)}
-                                        </Button>
-                                      ))
-                                    }
-                                  </div>
-                                </div>
-                              </>
-                            }
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  }
-                  {
-                    description && 
-                    <div className={styles.eventContent__description}>
-                      {description}
-                    </div>
-                  }
-                  <div className={styles.eventContent__label}>
-                    {t('Working Time')}
-                  </div>
-                  <div className={styles.eventContent__value}>
-                    {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
-                  </div>
-
-                  <div className={styles.eventContent__label}>
-                    {t('Place')}
-                  </div>
-                  <div className={styles.eventContent__value}>
-                    { title.place ? title.place : '' }
-                  </div>
-
-                  <div className={styles.eventContent__label}>
-                    {t('Job Type')}
-                  </div>
-                  <div className={styles.eventContent__value}>
-                    { title.job_type ? title.job_type : '' }
-                  </div>
-
-                  <Dropdown.ItemMenu
-                    title={t('Edit the entry')}
-                    onClick={openChangeWorkingTime}
-                  />
-
-                  <Dropdown.ItemMenu
-                    title={t('Duplicate to')}
-                    onClick={handleDuplicateWorkingTime}
-                  />
-
-                  <Dropdown.ItemMenu
-                    title={t('Delete')}
-                    onClick={handleDeleteWorkingTime}
-                    remove
-                  />
-                </div>
+              content === 'duplicateEmployee' && (
+                <ChangeEmployee
+                  photo={photo}
+                  jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                  employeeName={employeeName}
+                  onChangeEmployee={handleDuplicateWorkingTime}
+                  unavailableEmployees={[]}
+                />
+              )
+            }
+            {
+              content === 'menu' && (
+                <MenuContent
+                  reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
+                  photo={photo}
+                  employeeName={employeeName}
+                  jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                  description={activeGroupItem ? activeGroupItem.description : description}
+                  start={activeGroupItem ? activeGroupItem.start : start}
+                  end={activeGroupItem ? activeGroupItem.end : end}
+                  title={activeGroupItem ? activeGroupItem.title : title}
+                  handleEditWorkingTime={handleEditWorkingTime}
+                  handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
+                  handleDeleteWorkingTime={handleDeleteWorkingTime}
+                />
               )
             }
             <div className={styles.eventContent__space} />

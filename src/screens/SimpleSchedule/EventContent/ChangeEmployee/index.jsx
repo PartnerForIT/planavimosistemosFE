@@ -67,7 +67,7 @@ export default ({
   return (
     <div className={classes.changeEmployee}>
       <div className={classes.changeEmployee__title}>
-        {t('Change Employee')}
+        {t('Duplicate to')}
       </div>
       <div className={classes.changeEmployee__userInfo}>
         {
@@ -99,7 +99,7 @@ export default ({
         // defaultChecked={checkedByDefault}
       />
       <Button onClick={handleOnApplyEmployee}>
-        {t('Change Employee')}
+        {t('Duplicate')}
       </Button>
     </div>
   );

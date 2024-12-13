@@ -237,10 +237,40 @@
       color: #818F94;
     }
 
+    &__list {
+      width: 100%;
+    }
+
     &__item {
       margin: 0 -15px;
       padding: 9px 15px;
+      cursor: pointer;
 
+      &_completed {
+        background: #F0F7F1;
+      }
+
+      &:hover {
+        background: #F7F7F7;
+      }
+
+      &__title {
+        font-weight: 600;
+        font-size: 12px;
+        color: #333945;
+        display: flex;
+        align-items: center;
+      }
+
+      &__time {
+        font-size: 12px;
+        color: #818F94;
+      }
+
+      &__place {
+        font-size: 12px;
+        color: #818F94;
+      }
     }
   }
 

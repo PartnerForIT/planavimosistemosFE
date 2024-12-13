@@ -31,17 +31,17 @@ import { getEmployees } from '../../store/employees/actions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import {
-  deleteTimeline,
-  emptyTimeline,
   patchChangeTimeline,
   patchAddTimeline,
-  patchChangeEmployee,
-  addTempemployee, patchMarker
+  patchMarker
 } from '../../store/schedule/actions';
 
 import {
+  getEditSchedule,
+  deleteSchedule,
   getSchedule,
-  postShift,
+  postSchedule,
+  postDuplicateSchedule,
 } from '../../store/simpleSchedule/actions';
 
 
@@ -67,7 +67,6 @@ import {
 } from '../../store/settings/selectors';
 import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import { skillsSelector } from '../../store/skills/selectors';
-import AddTempEmployee from "./AddTempEmployee";
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogNewSimpleSchedule from 'components/Core/Dialog/NewSimpleSchedule';
 
@@ -106,14 +105,13 @@ export default () => {
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
-  const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
   const copyToolRef = useRef();
   const [copyTool,setCopyTool] = useState(false)
   const [copyToolTime,setCopyToolTime] = useState({})
-  const [tempEventID,setTempEventID] = useState(0)
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const [openCreateShift, setOpenCreateShift] = useState(false);
+  const [editShiftData, setEditShiftData] = useState(null);
 
   const employToCheck = useCallback(({
     id,
@@ -257,9 +255,15 @@ export default () => {
     }
   };
 
+  const handleCloseCreateShift = () => {
+    setOpenCreateShift(false);
+    setEditShiftData(null);
+  };
+
   const handleCreateShift = (data) => {
-    dispatch(postShift({
+    dispatch(postSchedule({
       companyId,
+      id: editShiftData?.id,
       data: {
         ...data,
         start_work: data.duration.start,
@@ -269,7 +273,7 @@ export default () => {
     })).then(() => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     })
-    setOpenCreateShift(false)
+    handleCloseCreateShift();
   }
 
   const handleGetSchedule = ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
@@ -358,6 +362,7 @@ export default () => {
     }
   };
   const handleCreateNewShift = () => {
+    setEditShiftData(null);
     setOpenCreateShift(true);
   };
   
@@ -403,16 +408,14 @@ export default () => {
       placesArr: filter?.place.map(({id}) => id),
     };
   };
-  const handleChangeEmployee = ({ employeeId, id }) => {
-    dispatch(patchChangeEmployee({
+  const handleDuplicateEmployee = (id, employeeId) => {
+    dispatch(postDuplicateSchedule({
       companyId,
-      data: {
-        employee_id: employeeId,
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+      id: (id+'').split('-')[0],
+      employeeId,
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    });
   };
   const handleChangeWorkingTime = ({ id, time }) => {
     dispatch(patchChangeTimeline({
@@ -440,38 +443,26 @@ export default () => {
       id,
     }));
   };
-  const handleDeleteTimeline = ({ id }) => {
-    dispatch(deleteTimeline({
-      companyId,
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+  const handleDeleteWorkingTime = (id) => {
+    const confirm = window.confirm('Are you sure you want to delete this schedule?');
+    if (confirm) {
+      dispatch(deleteSchedule({
+        companyId,
+        id: (id+'').split('-')[0],
+      })).then(() => {
+        handleGetSchedule({ fromDate: fromDateRef.current });
+      });
+    }
   };
-  const handleEmptyTimeline = ({ id }) => {
-    dispatch(emptyTimeline({
+  const handleEditWorkingTime = (id) => {
+    dispatch(getEditSchedule({
       companyId,
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+      id: (id+'').split('-')[0],
+    })).then((data) => {
+      setEditShiftData(data)
+      setOpenCreateShift(true);
+    });
   };
-  const addTempEmployees =  (employeeId,jobTypeId,eventId) => {
-    setmodalAddTempEmployee(data => !data)
-    setTempEventID(eventId)
-  }
-
-  const addTempEmployeeDispatch = (selectedEmployee) => {
-    dispatch(addTempemployee({
-              companyId: companyId,
-              data: {
-                employee_id: selectedEmployee,
-                data:tempEventID
-              },
-              body: getBodyForGetSchedule(),
-            }
-        )
-    )
-    
-  }
   const handleCopyTool = (time) => {
     setCopyToolTime(time)
     setCopyTool(!copyTool);
@@ -545,13 +536,12 @@ export default () => {
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && !copyTool}
         jobTypeName={selectedEvent?.job_type_name}
-        onChangeEmployee={handleChangeEmployee}
+        onDuplicateEmployee={handleDuplicateEmployee}
         onChangeWorkingTime={handleChangeWorkingTime}
-        onDeleteTimeline={handleDeleteTimeline}
-        onEmptyTimeline={handleEmptyTimeline}
+        onDeleteWorkingTime={handleDeleteWorkingTime}
+        onEditWorkingTime={handleEditWorkingTime}
         handleAddHistory={handleAddHistory}
         copyTool={copyTool}
-        modalAddTempEmployee={modalAddTempEmployee}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
@@ -862,22 +852,6 @@ export default () => {
     }
     return '24:00:00';
   };
-
-  const unavailableEmployees = () => {
-    
-    // eslint-disable-next-line
-    const selectedEvent  = events.find(e => e.id == tempEventID);
-    if (selectedEvent) {
-      // eslint-disable-next-line
-      const allEmployees  = events.filter(e => selectedEvent.day_number == e.day_number);
-
-      return allEmployees.map(e => {
-        return e.employee_id*1;
-      });
-    }
-    
-    return [];
-  };
   
   return (
     <MainLayout>
@@ -948,14 +922,11 @@ export default () => {
                     scheduleSettings={scheduleSettings}
                     copyTool={copyTool}
                     workTime={workTime}
-                    handleChangeEmployee={handleChangeEmployee}
+                    handleChangeEmployee={handleDuplicateEmployee}
                     handleChangeWorkingTime={handleChangeWorkingTime}
-                    handleDeleteTimeline={handleDeleteTimeline}
-                    handleEmptyTimeline={handleEmptyTimeline}
                     handleAddWorkingTime={handleAddWorkingTime}
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
-                    addTempEmployees={addTempEmployees}
                     handleChangeTimeline={handleChangeTimeline}
                   />
                 ) : (
@@ -1009,15 +980,6 @@ export default () => {
                       locale={localStorage.getItem('i18nextLng') || 'en'}
                       // nowIndicator
                     />
-                    {
-                      (modalAddTempEmployee)
-                          ?<AddTempEmployee
-                              setmodalAddTempEmployee={setmodalAddTempEmployee}
-                              addTempEmployeeDispatch={addTempEmployeeDispatch}
-                              unavailableEmployees={unavailableEmployees()}
-                          />
-                          : ''
-                    }
                     <ReactTooltip
                       id='holiday'
                       className='schedule-screen__tooltip'
@@ -1054,8 +1016,9 @@ export default () => {
         <DialogNewSimpleSchedule
           open={openCreateShift}
           title={t('Create New Schedule')}
-          handleClose={() => setOpenCreateShift(false)}
+          handleClose={handleCloseCreateShift}
           handleSubmit={handleCreateShift}
+          editData={editShiftData}
         />
         <Tooltip
           id='time'

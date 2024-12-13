@@ -141,7 +141,7 @@
   display: none;
 }
 
-.fc {
+.simple-schedule-screen .fc {
   overflow: hidden;
 
   .fc-day-view {
@@ -410,12 +410,6 @@
           }
         }
 
-        &.fc-timeline-event.fc-event-past {
-          div#dropdownButton {
-            visibility: visible;
-          }
-        }
-
         &.is-empty-manual {
           border-color: transparent !important;
           background-color: transparent !important;
@@ -579,20 +573,6 @@
                   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='36' viewBox='0 0 16 36'%3E%3Cpath d='M16-2H4A4,4,0,0,0,0,2V30a4,4,0,0,0,4,4H16a4,4,0,0,1-4-4V2A4,4,0,0,1,16-2Z' transform='translate(0 2)' fill='%2315171f' opacity='1'/%3E%3Cpath d='M9,13v6' transform='translate(-2 2)' fill='none' stroke='%23fff' stroke-linecap='round' stroke-width='1'/%3E%3Cpath d='M11,13v6' transform='translate(-6 2)' fill='none' stroke='%23fff' stroke-linecap='round' stroke-width='1'/%3E%3C/svg%3E%0A");
                 }
               }
-            }
-          }
-        }
-
-        &.fc-event-past,
-        &.disable-drag {
-          button#dropdownButton {
-            display: none;
-          }
-
-          &:hover div#dropdownButton {
-            &::after,
-            &::before {
-              display: none;
             }
           }
         }

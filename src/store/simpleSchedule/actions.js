@@ -42,19 +42,99 @@ export const getSchedule = (data) => {
     });
   };
 };
-    
 
-export const postShift = ({ companyId, data }) => {
+export const deleteSchedule = ({ companyId, id }) => {
   return (dispatch, getState) => {
     dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
-      fetch(`${config.api.url}/company/${companyId}/simple/store`, {
-        method: 'POST',
+      fetch(`${config.api.url}/company/${companyId}/simple/${id}/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(postSimpleSheetSuccess(data));
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(postSimpleSheetError());
+        reject(error);
+      });
+    });
+  };
+};
+
+export const postSchedule = ({ companyId, id, data }) => {
+  return (dispatch, getState) => {
+    dispatch(postSimpleSheet());
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/simple/${id ? id+'/update' : 'store'}`, {
+        method: id ? 'PATCH' : 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...getToken().headers,
         },
         body: JSON.stringify(data),
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(postSimpleSheetSuccess(data));
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(postSimpleSheetError());
+        reject(error);
+      });
+    });
+  };
+};
+
+export const postDuplicateSchedule = ({ companyId, id, employeeId }) => {
+  return (dispatch, getState) => {
+    dispatch(postSimpleSheet());
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/simple/${id}/duplicate/${employeeId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(postSimpleSheetSuccess(data));
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(postSimpleSheetError());
+        reject(error);
+      });
+    });
+  };
+};
+
+export const getEditSchedule = ({ companyId, id }) => {
+  return (dispatch, getState) => {
+    dispatch(postSimpleSheet());
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/simple/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
       })
       .then(response => {
         if (!response.ok) throw new Error('Network response was not ok.');

@@ -22,8 +22,6 @@ export default ({
   withMenu,
   onChangeEmployee,
   onChangeWorkingTime,
-  onDeleteTimeline,
-  onEmptyTimeline,
   start,
   end,
   copy_event,
@@ -96,12 +94,6 @@ export default ({
       modalAddRef.current.close();
     }
     setContent('menu');
-  };
-  const handleDeleteTimeline = () => {
-    onDeleteTimeline({ id, shiftId });
-  };
-  const handleEmptyTimeline = () => {
-    onEmptyTimeline({ id, shiftId });
   };
   const handleChangeWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -256,20 +248,6 @@ export default ({
                       onClick={openCopyMode}
                     />
                     ) : null
-                  }
-                  { !modules.manual_mode ? (
-                      <Dropdown.ItemMenu
-                        title={t('Empty Timeline')}
-                        onClick={handleEmptyTimeline}
-                        remove
-                      />
-                    ) : (
-                      <Dropdown.ItemMenu
-                        title={t('Delete Timeline')}
-                        onClick={handleDeleteTimeline}
-                        remove
-                      />
-                    )
                   }
                 </>
               )

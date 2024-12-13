@@ -36,12 +36,10 @@ export default ({
   markers,
   handleChangeEmployee,
   handleChangeWorkingTime,
-  handleDeleteTimeline,
   handleEmptyTimeline,
   handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
-  addTempEmployees,
   currentDay,
   currentMonth,
 }) => {
@@ -117,10 +115,9 @@ export default ({
   let employeeName;
   let withMenu = false;
   let isCompleted = event?.is_completed;
-  let jobTypeId;
 
   if (resource?.employeeId || resource?.employeeId*1 === 0) {
-    [shiftId, jobTypeId] = resource.id.split('-');
+    [shiftId] = resource.id.split('-');
     withMenu = event ? true : false;
     employeeName = resource.title;
     employee_Id = resource.employeeId
@@ -222,12 +219,10 @@ export default ({
                 markers={markers}
                 onChangeEmployee={handleChangeEmployee}
                 onChangeWorkingTime={handleChangeWorkingTime}
-                onDeleteTimeline={handleDeleteTimeline}
                 onEmptyTimeline={handleEmptyTimeline}
                 addTimeline={handleAddWorkingTime}
                 handleCopyTool={handleCopyTool}
                 handleAddHistory={handleAddHistory}
-                addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event?.id)}
               />
             }
           </div>

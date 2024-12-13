@@ -43,12 +43,9 @@ export default ({
   permissions,
   handleChangeEmployee,
   handleChangeWorkingTime,
-  handleDeleteTimeline,
-  handleEmptyTimeline,
   handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
-  addTempEmployees,
   handleChangeTimeline,
 }) => {
   const { t, i18n } = useTranslation();
@@ -320,12 +317,9 @@ export default ({
                     markers={markers}
                     handleChangeEmployee={handleChangeEmployee}
                     handleChangeWorkingTime={handleChangeWorkingTime}
-                    handleDeleteTimeline={handleDeleteTimeline}
-                    handleEmptyTimeline={handleEmptyTimeline}
                     handleAddWorkingTime={handleAddWorkingTime}
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
-                    addTempEmployees={addTempEmployees}
                     currentMonth={currentMonth}
                   />
                 ))
