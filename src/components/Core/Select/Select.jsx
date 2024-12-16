@@ -216,7 +216,7 @@ export default function CustomSelect({
               itemsStat={itemsStat}
             >
               <Scrollbar
-                className={styles.scrollableContent}
+                className={classNames(styles.scrollableContent, 'styledDropdown')}
                 removeTracksWhenNotUsed
                 noScrollX={true}
                 trackXProps={{

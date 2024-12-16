@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+//import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import TriangleIcon from '../../Icons/TriangleIcon';
 import classNames from 'classnames';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import StyledCheckbox from '../Checkbox/Checkbox';
@@ -169,7 +170,8 @@ export default function Dropdown({
           content: classes.summaryContent,
         }}
         expandIcon={(
-          <ExpandMoreIcon
+          
+          <TriangleIcon
             className={classNames(styles.expandIcon, expanded ? styles.expandIconExpanded : '')}
           />
         )}

@@ -5,17 +5,19 @@
 
 .arrowIcon {
   fill: none;
-  stroke: #0085ff;
+  stroke: #4D7499;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .expandIcon {
-  color: #0085ff;
-  fill: #0085ff;
+  color: #4D7499;
+  fill: #4D7499;
   transform: rotate(-90deg);
   padding: 0 !important;
   margin: 0 !important;
+  width: 8.315px !important;
+  height: 100% !important;
 }
 
 .checkboxLabel {
@@ -35,7 +37,7 @@
     position: relative;
 
     &::after {
-      content: '';
+      
       position: absolute;
       width: 100%;
       height: 1px;

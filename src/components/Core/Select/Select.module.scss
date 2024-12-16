@@ -100,3 +100,24 @@
     border-radius: 10px !important;
   }
 }
+
+:global .styledDropdown {
+  .MuiIconButton-root {
+    padding: 6px !important;
+  }
+
+ .MuiAccordion-root > .MuiButtonBase-root {
+    background: #E9F4FF !important;
+    border-radius: 4px !important;
+    color: #4D7499 !important;
+    margin-bottom: 6px;
+  }
+
+  .MuiAccordionDetails-root {
+    margin-bottom: 6px;
+  }
+
+  .MuiAccordion-root .MuiButtonBase-root::after {
+    content: none;
+  }
+}
