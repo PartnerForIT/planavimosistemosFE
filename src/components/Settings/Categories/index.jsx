@@ -69,6 +69,7 @@ export default function Categories() {
   const classes = useStyles();
   const permissions = usePermissions(permissionsConfig);
   const selectGroups = useSelector(AccountGroupsSelector);
+  
   const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
 

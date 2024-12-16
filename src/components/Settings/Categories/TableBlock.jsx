@@ -80,6 +80,7 @@ export default function TableBlock({
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAssignGroup, setIsAssignGroup] = useState(false);
   const [isEditWorkTime, setIsEditWorkTime] = useState(false);
+  const [colSearch, setColSearch] = useState({});
   
   const [dataArray, setDataArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -147,12 +148,58 @@ export default function TableBlock({
         break;
       }
       case 'places': {
-        setDataArray(allPlaces);
+        setDataArray(
+          allPlaces.filter(empl => {
+            let globalSearch = true;
+            for (let key in colSearch) {
+              if (colSearch[key]) {
+                let emplValue = empl[key];
+                let searchValue = colSearch[key].toLowerCase();
+                
+                if ((emplValue !== undefined && emplValue !== null) || key === 'place_groups' || key === 'work_time' || key === 'place_address') {
+                  if (key === 'place_groups') {
+                    emplValue = '';
+                    for (let group of empl.groups) {
+                      if (group.name.toLowerCase().indexOf(searchValue) !== -1) {
+                        emplValue += group.name.toLowerCase()+'; '; 
+                      }
+                    }
+                  } else if (key === 'work_time') {
+                    emplValue = '';
+                    if (empl.work_time) {
+                      emplValue = Object.keys(empl.work_time)
+                        .sort((a, b) => ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].indexOf(a) - ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].indexOf(b))
+                        .filter((day) => empl.work_time[day].checked) // Filter out days where checked is false
+                        .map((day) => {
+                          return `${day} - (${empl.work_time[day].start} - ${empl.work_time[day].finish})`;
+                        })
+                        .join("/ ");
+                    }
+                  } else if (key === 'place_address') {
+                    emplValue = empl.address || '';
+                    emplValue = emplValue.toString().toLowerCase();
+                  } else {
+                    // Convert emplValue to string for other fields
+                    emplValue = emplValue.toString().toLowerCase();
+                  }
+          
+                  if (emplValue.indexOf(searchValue) === -1) {
+                    return false; // This employee does not match the search term
+                  }
+                } else {
+                  return false; // Missing value for a key that has a search term
+                }
+              }
+            }
+            
+            return globalSearch;
+          })
+        );
         break;
       }
       default: break;
     }
-  }, [selectedCategory, skills, allJobTypes, allPlaces, setDataArray]);
+  }, [selectedCategory, skills, allJobTypes, allPlaces, setDataArray, colSearch]);
 
   useEffect(() => {
     let allColumnsArray;
@@ -239,6 +286,10 @@ export default function TableBlock({
     };
     setDataArray(sortItems);
   }, []);
+
+  const onColumnSearch = (column, value) => {
+    setColSearch({ ...colSearch, [column]: value });
+  }
 
   const onEditItem = (itemId) => {
     setSelectedItem(itemId);
@@ -362,7 +413,6 @@ export default function TableBlock({
         selectedItem={selectedRow}
         setSelectedItem={setSelectedRow}
         verticalOffset='360px'
-        simpleTable
         withoutFilterColumns
         hoverActions
         loading={loading}
@@ -373,6 +423,8 @@ export default function TableBlock({
         onOpenAssignGroup={onOpenAssignGroup}
         onOpenWorkTime={onOpenWorkTime}
         grey
+        colSearch={selectedCategory === 'places' ? colSearch : null}
+        onSearch={selectedCategory === 'places' ? onColumnSearch : null}
       />
       <DeleteItem
         open={isDeleteItem}

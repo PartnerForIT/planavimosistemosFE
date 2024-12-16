@@ -20,6 +20,7 @@ function EventsBlock({
   activeEvent = {},
   setActiveEvent = Function.prototype,
   createNewEvent = Function.prototype,
+  changeDefaultEvent = Function.prototype,
   remove = Function.prototype,
   loading = false,
   setEditVisible = Function.prototype,
@@ -54,12 +55,14 @@ function EventsBlock({
                 onClick={setActiveEvent}
                 onClickEdit={setEditVisible}
                 onClickRemove={setRemoveVisible}
+                onChangeDefault={changeDefaultEvent}
+                isDefault={event.default}
                 name={event.name}
                 userCount={event.assign_employees?.length}
                 selected={event.id === activeEvent.id}
                 itemName='event'
                 ariaLabel='event'
-                descriptionCount='users assigned to this event'
+                descriptionCount='users in this event'
               />
               {/* Role details */}
               {

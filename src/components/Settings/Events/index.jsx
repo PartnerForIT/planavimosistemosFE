@@ -83,6 +83,10 @@ function Events() {
     }
   };
 
+  const changeDefaultEvent = (eventId, checked) => {
+    dispatch(patchEvent(companyId, eventId, { default: checked ? 1 : 0 }));
+  };
+
   const createNewEvent = (eventName) => {
     if (eventName.trim()) {
       dispatch(postEvent(companyId, { name: eventName.trim() }));
@@ -108,6 +112,7 @@ function Events() {
                   activeEvent={activeEvent}
                   setActiveEvent={setActiveEvent}
                   createNewEvent={() => setNewEventOpen(true)}
+                  changeDefaultEvent={changeDefaultEvent}
                   loading={isLoadingEventUpdate}
                   setEditVisible={setEditVisible}
                   employees={employees}

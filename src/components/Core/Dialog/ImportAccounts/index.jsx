@@ -302,7 +302,7 @@ export default function ImportAccounts({
   }).map(({ id }) => id);
   const selectAllHandler = (items = []) => {
     const value = items.length;
-    const checkedItems = getCheckedItems(items);
+    let checkedItems = getCheckedItems(items);
 
     setData(data.map(({
       warning, error, success, checked, ...rest
@@ -311,6 +311,7 @@ export default function ImportAccounts({
 
       if ((success && !updateCurrent) || (!ignoreEmpty && warning)) {
         check = false;
+        checkedItems = checkedItems.filter((i) => i !== rest.id);
       }
 
       return {
@@ -393,7 +394,7 @@ export default function ImportAccounts({
       });
 
       if (isAllSelected) {
-        const checkedItems = getCheckedItems(nextState);
+        let checkedItems = getCheckedItems(nextState);
 
         nextState = nextState.map(({
           warning,
@@ -405,6 +406,7 @@ export default function ImportAccounts({
           let check = checked;
           if ((success && !current) || (!empty && warning)) {
             check = false;
+            checkedItems = checkedItems.filter((i) => i !== rest.id);
           }
 
           return {
