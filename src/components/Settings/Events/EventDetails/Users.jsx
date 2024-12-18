@@ -9,6 +9,7 @@ import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapp
 import Input from '../../../Core/Input/Input';
 import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 import classes from '../Events.module.scss';
+import classNames from 'classnames';
 
 const Users = React.memo(({
   employees = [],
@@ -88,7 +89,7 @@ const Users = React.memo(({
         fullWidth
         value={search}
       />
-      <div className={classes.checkboxGroupWrapper}>
+      <div className={classNames(classes.checkboxGroupWrapper, 'styledDropdown')}>
         <CheckboxGroupWrapper
           height={342}
           maxHeight={342}

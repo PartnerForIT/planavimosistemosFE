@@ -36,6 +36,7 @@ const Users = React.memo(({
 
   const checkboxGroupWrapperClasses = classNames(
     classes.checkboxGroupWrapper,
+    'styledDropdown',
     {
       [classes.checkboxGroupWrapper_readOnly]: readOnly,
     },

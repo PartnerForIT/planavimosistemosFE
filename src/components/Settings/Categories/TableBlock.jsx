@@ -413,8 +413,8 @@ export default function TableBlock({
         selectedItem={selectedRow}
         setSelectedItem={setSelectedRow}
         verticalOffset='360px'
-        withoutFilterColumns
         hoverActions
+        hoverable
         loading={loading}
         editRow={onEditItem}
         removeRow={onDeleteItem}
