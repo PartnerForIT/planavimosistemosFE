@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef,
+  //useMemo
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
@@ -18,11 +20,12 @@ import styles from './EventContent.module.scss';
 import classNames from 'classnames';
 //import { padStart } from '@fullcalendar/react';
 import { AdditionalRatesDataSelector,
-  currencySelector,
-  scheduleSelector,
-  settingCompanySelector, IntegrationsDataSelector } from '../../../store/settings/selectors';
+  //currencySelector,
+  //scheduleSelector,
+  //settingCompanySelector,
+  //IntegrationsDataSelector
+} from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
-import { remove } from 'lodash';
 
 const permissionsConfig = [
   {
@@ -73,11 +76,11 @@ export default ({
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
-  const currencies = useSelector(currencySelector);
-  const company = useSelector(settingCompanySelector);
-  const schedule = useSelector(scheduleSelector);
+  //const currencies = useSelector(currencySelector);
+  //const company = useSelector(settingCompanySelector);
+  //const schedule = useSelector(scheduleSelector);
   const permissions = usePermissions(permissionsConfig);
-  const integrations = useSelector(IntegrationsDataSelector);
+  //const integrations = useSelector(IntegrationsDataSelector);
   const [openedGroup, setOpenedGroup] = useState(false);
   const [activeGroupItem, setActiveGroupItem] = useState(null);
 
@@ -296,17 +299,17 @@ export default ({
     return `${formattedHours}:${formattedMinutes}`;
   }
 
-  const currency = useMemo(
-    () => {
-      if (Array.isArray(currencies)) {
-        return currencies
-          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
-      }
+  // const currency = useMemo(
+  //   () => {
+  //     if (Array.isArray(currencies)) {
+  //       return currencies
+  //         .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+  //     }
 
-      return '';
-    },
-    [company.currency, currencies],
-  );
+  //     return '';
+  //   },
+  //   [company.currency, currencies],
+  // );
   
   const tooltipContent = () => {
     let start_time = moment(start).format('HH:mm');

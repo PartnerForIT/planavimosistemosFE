@@ -1,16 +1,21 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef,
+  //useMemo
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 import CellOptions from '../CellOptions';
 import moment from 'moment';
 
 import classes from './Cell.module.scss';
-import { AdditionalRatesDataSelector,
-  currencySelector,
-  scheduleSelector,
-  settingCompanySelector, IntegrationsDataSelector } from '../../../../store/settings/selectors';
+import {
+  //AdditionalRatesDataSelector,
+  //currencySelector,
+  //scheduleSelector,
+  //settingCompanySelector,
+  //IntegrationsDataSelector
+} from '../../../../store/settings/selectors';
 
 export default ({
   title,
@@ -45,23 +50,23 @@ export default ({
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
-  const schedule = useSelector(scheduleSelector);
-  const currencies = useSelector(currencySelector);
-  const company = useSelector(settingCompanySelector);
-  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
-  const integrations = useSelector(IntegrationsDataSelector);
+  //const schedule = useSelector(scheduleSelector);
+  //const currencies = useSelector(currencySelector);
+  //const company = useSelector(settingCompanySelector);
+  //const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  //const integrations = useSelector(IntegrationsDataSelector);
 
-  const currency = useMemo(
-    () => {
-      if (Array.isArray(currencies)) {
-        return currencies
-          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
-      }
+  // const currency = useMemo(
+  //   () => {
+  //     if (Array.isArray(currencies)) {
+  //       return currencies
+  //         .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+  //     }
 
-      return '';
-    },
-    [company.currency, currencies],
-  );
+  //     return '';
+  //   },
+  //   [company.currency, currencies],
+  // );
 
   const cellClasses = classnames(classes.cell, 'monthCell', {
     [classes.cell_statistic]: statistic,

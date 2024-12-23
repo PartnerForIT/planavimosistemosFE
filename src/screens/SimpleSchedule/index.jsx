@@ -128,7 +128,7 @@ export default () => {
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
-    const updateChildren = (children) => {
+    const updateChildren = (children, lastSubgroup = false) => {
       if (children) {
         currentColor += 1;
         if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
@@ -150,8 +150,9 @@ export default () => {
             eventBackgroundColor,
             eventBorderColor,
             lineColor: lineColor,
+            lastSubgroup,
             eventDurationEditable: true,
-            children: updateChildren(item.children),
+            children: updateChildren(item.children, (index === Object.values(children).length - 1)),
           };
 
           return nextItem;
@@ -378,27 +379,22 @@ export default () => {
     const { extendedProps: props } = resource;
     const classes = [];
     
-    if (props.lastShift) {
-      classes.push('fc-datagrid-cell-last-shift');
+    if (props.group) {
+      classes.push('fc-datagrid-cell-group');
     }
 
-    if (props.lastJobType) {
-      classes.push('fc-datagrid-cell-last-job-type');
+    if (props.group) {
+      classes.push('fc-datagrid-cell-subgroup');
     }
 
-    if (props.place_id) {
-      classes.push('fc-datagrid-cell-place');
-    } else if (props.job_type_id) {
-      classes.push('fc-datagrid-cell-job-type');
-    } else if (props.employeeId || props.employeeId === 0) {
+    if (props.employee_id) {
       classes.push('fc-datagrid-cell-employee');
     }
-    if (props.lastJobType) {
-      classes.push('fc-datagrid-cell-last-job-type');
+
+    if (props.lastSubgroup) {
+      classes.push('fc-datagrid-cell-last-subgroup');
     }
-    if (props.employee_type === 3 || props.employee_type === 2){
-      classes.push('fc-datagrid-cell-empty');
-    }
+
     return classes;
   };
   const getBodyForGetSchedule = () => {
