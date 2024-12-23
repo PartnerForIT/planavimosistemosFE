@@ -44,7 +44,6 @@ const RowContent = ({
     const all_at_this_day = events.filter((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
     if (all_at_this_day.length > 1) {
       let hours = 0;
-      let title = 0;
       let minutes = 0;
       let start = false;
       let end = false;
@@ -52,7 +51,6 @@ const RowContent = ({
       for (let i in all_at_this_day) {
         if (all_at_this_day[i].hours) {
           hours += all_at_this_day[i].hours*1
-          title += all_at_this_day[i].title*1
           minutes += all_at_this_day[i].minutes*1
 
           start = start ? moment(all_at_this_day[i].start).isBefore(moment(start)) ? all_at_this_day[i].start : start : all_at_this_day[i].start
@@ -61,11 +59,14 @@ const RowContent = ({
       }
 
       ev.minutes = minutes
-      ev.title = title
+      ev.title = start && end ? `${moment(start).format("HH:mm")}-${moment(end).format("HH:mm")}` : '';
       ev.hours = hours
       ev.start = start
       ev.end = end
+    } else {
+      ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
     }
+
     return ev;
   }
   
@@ -143,7 +144,7 @@ const RowContent = ({
           <RowContent
             key={item.id}
             events={events}
-            employeeId={item.employeeId}
+            employeeId={item.employee_id}
             handleMarker={handleMarker}
             resourceId={item.id}
             resource={item}

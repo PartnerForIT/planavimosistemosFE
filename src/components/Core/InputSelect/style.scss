@@ -92,6 +92,12 @@
       }
     }
   }
+  .input-select__control {
+    input {
+      padding-right: 25px;
+      text-overflow: ellipsis;
+    }
+  }
 
   &_disabled {
     pointer-events: none;

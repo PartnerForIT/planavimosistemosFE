@@ -21,6 +21,7 @@ import { AdditionalRatesDataSelector,
   scheduleSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
+import { remove } from 'lodash';
 
 const permissionsConfig = [
   {
@@ -60,6 +61,8 @@ export default ({
   copyTool,
   handleAddHistory,
   description,
+  removeTimelines,
+  lineColor,
 }) => {
   const { t } = useTranslation();
 
@@ -86,6 +89,7 @@ export default ({
     {
       //[styles.dayEnd]: isCompleted,
       [styles.eventContent__time]: content === 'addWorkingTime',
+      [styles.eventContent__removeTimelines]: removeTimelines,
     },
   );
 
@@ -318,6 +322,28 @@ export default ({
       + `</div>`
     )
   }
+
+  const groupStart = () => {
+    let start = moment(group[0].start);
+    for (let i = 1; i < group.length; i++) {
+      if (moment(group[i].start).isBefore(start)) {
+        start = moment(group[i].start);
+      }
+    }
+
+    return start.format('HH:mm');
+  }
+
+  const groupEnd = () => {
+    let end = moment(group[0].end);
+    for (let i = 1; i < group.length; i++) {
+      if (moment(group[i].end).isAfter(end)) {
+        end = moment(group[i].end);
+      }
+    }
+
+    return end.format('HH:mm');
+  }
   
   return (
     <div
@@ -341,6 +367,10 @@ export default ({
           ></div>
         )
       }
+      { !copy_event && removeTimelines && (
+          <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
+        )
+      }
       {
         !group && reccuring &&
         <div className={styles.eventContent__reccuring}>
@@ -357,18 +387,33 @@ export default ({
               <img src={GroupIcon} alt={employeeName} />
             </div>
             <div className={styles.eventContent__group_title} >
-              { group.length } { t('tasks') }
+              {removeTimelines ? (
+                <span className={styles.eventContent__title}>
+                  {groupStart()}
+                  <br />
+                  {groupEnd()}
+                </span>
+              ) : (
+                <>
+                  {group.length} {t('tasks')}
+                </>
+              )}
             </div>
           </span>
         ) : (
-          <span className={styles.eventContent__title} >
-            {
-              copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
-            }
 
-            { title.place && <span className={styles.eventContent__place}>{title.place}</span> }
-            { title.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
-          </span>
+          removeTimelines ? (
+            <span className={styles.eventContent__title} >{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</span>
+            ) : (
+            <span className={styles.eventContent__title} >
+              {
+                copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+              }
+
+              { title.place && <span className={styles.eventContent__place}>{title.place}</span> }
+              { title.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
+            </span>
+          )
         )
       }
 

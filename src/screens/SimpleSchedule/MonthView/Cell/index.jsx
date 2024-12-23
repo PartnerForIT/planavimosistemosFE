@@ -43,7 +43,6 @@ export default ({
   currentDay,
   currentMonth,
 }) => {
-  
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
   const schedule = useSelector(scheduleSelector);

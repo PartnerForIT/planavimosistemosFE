@@ -22,6 +22,7 @@ import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
 import Button from '../../components/Core/Button/Button';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
+import ToolsButton from '../../components/Core/ToolsButton/ToolsButton';
 import Progress from '../../components/Core/Progress';
 import usePermissions from '../../components/Core/usePermissions';
 import { TIMELINE, COLORS_JOB_TYPE } from '../../const';
@@ -44,10 +45,10 @@ import {
   postDuplicateSchedule,
 } from '../../store/simpleSchedule/actions';
 
-
 import {
   loadEmployeesAll,
   getSchedule as getscheduleSetting,
+  postSchedule as postScheduleSetting,
   loadIntegrations,
 } from '../../store/settings/actions';
 import { simpleScheduleSelector, markersSelector, isLoadingSelector } from '../../store/simpleSchedule/selectors';
@@ -89,7 +90,7 @@ const permissionsConfig = [
 export default () => {
   const { t } = useTranslation();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
-  const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false});
+  const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
@@ -133,15 +134,22 @@ export default () => {
         if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
           currentColor = 0;
         }
-        const eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
-        const eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+        let eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+        let eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+        let lineColor = false;
+
+        if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+          lineColor = eventBackgroundColor;
+          eventBorderColor = 'transparent';
+          eventBackgroundColor = 'transparent';
+        }
 
         return Object.values(children).map((item, index) => {
           const nextItem = {
             ...item,
             eventBackgroundColor,
             eventBorderColor,
-            lineColor: false,
+            lineColor: lineColor,
             eventDurationEditable: true,
             children: updateChildren(item.children),
           };
@@ -159,11 +167,11 @@ export default () => {
     // schedule.resources
     return schedule?.resources;
     // eslint-disable-next-line
-  }, [filterData, schedule?.resources]);
+  }, [filterData, schedule?.resources, scheduleSettings]);
 
   const events = useMemo(() => {
     let result = [];
-    if (isLoading) return result;
+    if (isLoading) return result;        
   
     if (schedule?.events) {
       if (timeline === TIMELINE.WEEK) {
@@ -332,8 +340,8 @@ export default () => {
     
   }, [markers]);
   useEffect(() => {
-    if (scheduleSettings.start_finish) {
-      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish})
+    if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
+      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
     }
     // eslint-disable-next-line
   }, [scheduleSettings]);
@@ -470,6 +478,17 @@ export default () => {
   const handleAddHistory = (data) => {
     copyToolRef.current.addHistory(data);
   }
+  const handleChangeTool = (event) => {
+    const { name, checked } = event.target;
+    setToolsActive({ ...toolsActive, [name]: checked })
+
+    if (name === 'start_finish' || name ==='remove_timelines') {
+      dispatch(postScheduleSetting(companyId, { ...toolsActive, [name]: checked }));
+      setTimeout(() => {
+        dispatch(getscheduleSetting(companyId));
+      }, 1000);
+    }
+  }
   const renderEventContent = ({ event, timeText, view }) => {
 
     const resourceInfo = event.getResources()[0];
@@ -545,6 +564,8 @@ export default () => {
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
+        lineColor={resourceInfo?.extendedProps?.lineColor}
+        removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
       />
     );
   };
@@ -893,6 +914,13 @@ export default () => {
               value={timeline}
             />
           }
+
+          { !copyTool && (
+            <ToolsButton
+              handleInputChange={handleChangeTool}
+              values={toolsActive}
+            />
+          )}
 
           { !copyTool && (
             <Button onClick={handleCreateNewShift}>

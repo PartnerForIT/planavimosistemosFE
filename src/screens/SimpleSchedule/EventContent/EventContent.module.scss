@@ -4,6 +4,7 @@
   padding: 6px;
   display: flex;
   visibility: hidden;
+  width: 100%;
   $eventContent: &;
 
   &__menu {

@@ -121,3 +121,7 @@
     content: none;
   }
 }
+
+:global .MuiTypography-body1 {
+  line-height: 1.2 !important;
+}
