@@ -94,6 +94,9 @@
     line-height: 14px;
     font-family: Helvetica Neue, sans-serif;
     color: #fff;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__job_type {
@@ -102,6 +105,9 @@
     font-family: Helvetica Neue, sans-serif;
     color: #fff;
     opacity: 0.8;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__leftSpace {
