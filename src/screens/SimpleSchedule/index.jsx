@@ -134,8 +134,8 @@ export default () => {
         if (currentColor >= COLORS_JOB_TYPE[colorType].length) {
           currentColor = 0;
         }
-        let eventBorderColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
-        let eventBackgroundColor = COLORS_JOB_TYPE[colorType][currentColor - 1];
+        let eventBorderColor = '#2775D0';//COLORS_JOB_TYPE[colorType][currentColor - 1];
+        let eventBackgroundColor = '#2775D0';//COLORS_JOB_TYPE[colorType][currentColor - 1];
         let lineColor = false;
 
         if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {

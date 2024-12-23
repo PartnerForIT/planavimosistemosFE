@@ -12,6 +12,7 @@ import ChangeEmployee from './ChangeEmployee';
 import MenuContent from './MenuContent';
 import RefreshArrows from '../../../components/Icons/RefreshArrows';
 import GroupIcon from '../../../components/Icons/group_icon.png';
+import CommentIcon from '../../../components/Icons/comment_icon.png';
 import styles from './EventContent.module.scss';
 //import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
 import classNames from 'classnames';
@@ -308,12 +309,16 @@ export default ({
   );
   
   const tooltipContent = () => {
+    let start_time = moment(start).format('HH:mm');
+    let end_time = moment(end).format('HH:mm');
+
     if (group) {
-      return null
+      start_time = groupStart();
+      end_time = groupEnd();
     }
 
     return (
-      `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(end).format('HH:mm')}</b><br/>
+      `<div class="timeline-tooltip">${t('From')} <b>${start_time}</b> ${t('to')} <b>${end_time}</b><br/>
       ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
       // + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
       // + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
@@ -455,6 +460,13 @@ export default ({
                     </div>
                     <div className={styles.eventContent__groupModal__item__time}>{moment(item.start).format('HH:mm')} - {moment(item.end).format('HH:mm')}{item.title?.job_type ? ` • ${item.title?.job_type}` : ''}</div>
                     { item.title?.place && <div className={styles.eventContent__groupModal__item__place}>{item.title?.place}</div> }
+
+                    { item.description ? 
+                      <div className={styles.eventContent__comment_icon} >
+                        <img src={CommentIcon} alt={employeeName} />
+                      </div>
+                      : null
+                    }
                   </div>
                 ))
               }
