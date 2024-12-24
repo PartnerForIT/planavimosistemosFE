@@ -42,11 +42,12 @@ export default ({
   workTime,
   permissions,
   handleChangeEmployee,
-  handleChangeWorkingTime,
-  handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
   handleChangeTimeline,
+  handleEditWorkingTime,
+  handleDuplicateEmployee,
+  handleDeleteWorkingTime,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -316,11 +317,12 @@ export default ({
                     permissions={permissions}
                     markers={markers}
                     handleChangeEmployee={handleChangeEmployee}
-                    handleChangeWorkingTime={handleChangeWorkingTime}
-                    handleAddWorkingTime={handleAddWorkingTime}
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
                     currentMonth={currentMonth}
+                    handleEditWorkingTime={handleEditWorkingTime}
+                    handleDuplicateEmployee={handleDuplicateEmployee}
+                    handleDeleteWorkingTime={handleDeleteWorkingTime}
                   />
                 ))
               }

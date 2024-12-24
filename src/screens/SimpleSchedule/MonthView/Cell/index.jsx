@@ -40,13 +40,14 @@ export default ({
   events,
   markers,
   handleChangeEmployee,
-  handleChangeWorkingTime,
   handleEmptyTimeline,
-  handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
   currentDay,
   currentMonth,
+  handleEditWorkingTime,
+  handleDuplicateEmployee,
+  handleDeleteWorkingTime,
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -114,25 +115,15 @@ export default ({
     }
   }
 
-  let shiftId;
-  let employee_Id;
-  let employeeName;
-  let withMenu = false;
+  let employee_Id = event?.employee_id;
+  let employeeName = event?.employee_name;
+  let withMenu = event?.employee_id ? true : false;
   let isCompleted = event?.is_completed;
-
-  if (resource?.employeeId || resource?.employeeId*1 === 0) {
-    [shiftId] = resource.id.split('-');
-    withMenu = event ? true : false;
-    employeeName = resource.title;
-    employee_Id = resource.employeeId
-    shiftId = resource.shift_id ? resource.shift_id : shiftId
-  }
 
   let unEmployees = [];
   if (event) {
     const allEmployees  = events.filter(e => e.empty_employee === false
       // eslint-disable-next-line
-                                                    && e.resourceId.indexOf(shiftId+'-') == 0
                                                     // eslint-disable-next-line
                                                     && event.day_number == e.day_number);
 
@@ -177,7 +168,7 @@ export default ({
       
     return type;
   }
-
+  
   if (!header) {
     return (
       <div className={cellClasses} ref={refCell}>
@@ -207,26 +198,30 @@ export default ({
                 currentDay={currentDay}
                 currentMonth={currentMonth}
                 copy_event={event?.copy_event}
+                title={event?.real_title || null}
+                reccuring={event?.reccuring || null}
+                description={event?.description || null}
+                group={event?.group || null}
                 copyTool={copyTool}
                 start={start}
                 end={end}
-                shiftId={shiftId}
                 employeeId={employee_Id}
                 employeeName={employeeName}
                 resourceId={resource?.id}
                 photo={resource?.photo}
-                jobTypeName={resource?.job_type_name}
-                withMenu={withMenu && !copyTool && permissions?.schedule_create_and_edit}
+                jobTypeName={event?.job_type_name}
+                withMenu={withMenu && !copyTool}
                 editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}
                 unavailableEmployees={unEmployees}
                 markers={markers}
                 onChangeEmployee={handleChangeEmployee}
-                onChangeWorkingTime={handleChangeWorkingTime}
                 onEmptyTimeline={handleEmptyTimeline}
-                addTimeline={handleAddWorkingTime}
                 handleCopyTool={handleCopyTool}
                 handleAddHistory={handleAddHistory}
+                onEditWorkingTime={handleEditWorkingTime}
+                onDuplicateEmployee={handleDuplicateEmployee}
+                onDeleteWorkingTime={handleDeleteWorkingTime}
               />
             }
           </div>

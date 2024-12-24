@@ -32,8 +32,6 @@ import { getEmployees } from '../../store/employees/actions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
 import {
-  patchChangeTimeline,
-  patchAddTimeline,
   patchMarker
 } from '../../store/schedule/actions';
 
@@ -196,7 +194,12 @@ export default () => {
           return true;
         });
       } else {
-        result = schedule.events;
+        result = schedule.events.map((e) => {
+          const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
+          return {
+            ...e,
+            group: sameDay.length > 1 ? sameDay : false,
+          }})
       }
     }
   
@@ -421,32 +424,6 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     });
   };
-  const handleChangeWorkingTime = ({ id, time }) => {
-    dispatch(patchChangeTimeline({
-      companyId,
-
-      data: {
-        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
-        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
-  };
-  const handleAddWorkingTime = ({ id, time }) => {
-    dispatch(patchAddTimeline({
-      companyId,
-
-      data: {
-        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
-        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
-  };
   const handleDeleteWorkingTime = (id) => {
     const confirm = window.confirm('Are you sure you want to delete this schedule?');
     if (confirm) {
@@ -552,12 +529,10 @@ export default () => {
         withMenu={withMenu && !copyTool}
         jobTypeName={selectedEvent?.job_type_name}
         onDuplicateEmployee={handleDuplicateEmployee}
-        onChangeWorkingTime={handleChangeWorkingTime}
         onDeleteWorkingTime={handleDeleteWorkingTime}
         onEditWorkingTime={handleEditWorkingTime}
         handleAddHistory={handleAddHistory}
         copyTool={copyTool}
-        addTimeline={handleAddWorkingTime}
         endDay={endDay}
         isCompleted={isCompleted}
         lineColor={resourceInfo?.extendedProps?.lineColor}
@@ -946,12 +921,12 @@ export default () => {
                     scheduleSettings={scheduleSettings}
                     copyTool={copyTool}
                     workTime={workTime}
-                    handleChangeEmployee={handleDuplicateEmployee}
-                    handleChangeWorkingTime={handleChangeWorkingTime}
-                    handleAddWorkingTime={handleAddWorkingTime}
+                    handleDuplicateEmployee={handleDuplicateEmployee}
+                    handleDeleteWorkingTime={handleDeleteWorkingTime}
                     handleCopyTool={handleCopyTool}
                     handleAddHistory={handleAddHistory}
                     handleChangeTimeline={handleChangeTimeline}
+                    handleEditWorkingTime={handleEditWorkingTime}
                   />
                 ) : (
                   <>

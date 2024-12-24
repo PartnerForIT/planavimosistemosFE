@@ -8,8 +8,6 @@ import { useSelector } from 'react-redux';
 
 import Dropdown from '../Dropdown';
 import Content from '../Dropdown/Content';
-import ChangeWorkingTime from './ChangeWorkingTime';
-import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import MenuContent from './MenuContent';
 import RefreshArrows from '../../../components/Icons/RefreshArrows';
@@ -53,14 +51,12 @@ export default ({
   nightPermission,
   withMenu,
   onDuplicateEmployee,
-  onChangeWorkingTime,
   onDeleteWorkingTime,
   onEditWorkingTime,
   start,
   end,
   viewType,
   copy_event,
-  addTimeline,
   isCompleted,
   copyTool,
   handleAddHistory,
@@ -92,7 +88,6 @@ export default ({
     styles.eventContent,
     {
       //[styles.dayEnd]: isCompleted,
-      [styles.eventContent__time]: content === 'addWorkingTime',
       [styles.eventContent__removeTimelines]: removeTimelines,
     },
   );
@@ -202,14 +197,8 @@ export default ({
   }, []);
 
   useEffect(() => {
-    if (content === 'addWorkingTime') {
-      if (modalAddRef.current) {
-        modalAddRef.current.open();
-      }
-    } else {
-      if (modalAddRef.current) {
-        modalAddRef.current.close();
-      }
+    if (modalAddRef.current) {
+      modalAddRef.current.close();
     }
   }, [content]);
 
@@ -236,45 +225,6 @@ export default ({
     setActiveGroupItem(group[index]);
     modalRef.current.open();
   }
-  const handleChangeWorkingTime = (value) => {
-    const timeStart = value.start.split(':');
-    const timeEnd = value.end.split(':');
-    let time;
-    if ((timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1])) {
-      // night time
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(end).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    } else {
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(start).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    }
-
-    onChangeWorkingTime({ id, time });
-  };
-
-  const handleAddWorkingTime = (value) => {
-    const timeStart = value.start.split(':');
-    const timeEnd = value.end.split(':');
-    let time;
-    if ((timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1])) {
-      // night time
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(end).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    } else {
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(start).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    }
-
-    addTimeline({ id, time });
-  };
   
   const tooltipType = () => {
     let type = 'time';
@@ -478,26 +428,6 @@ export default ({
         </Content>
       )}
       {
-        content === 'addWorkingTime' && (
-          <Dropdown
-            cancel={content !== 'menu'}
-            onCancel={() => setContent('menu')}
-            ref={modalAddRef}
-            buttonClass={styles.eventContent__invisible}
-          >
-            <AddWorkingTime
-              onClose={() => setContent('menu')}
-              photo={photo}
-              jobTypeName={jobTypeName}
-              employeeName={employeeName}
-              start={start}
-              end={end}
-              onChangeTime={handleAddWorkingTime}
-            />
-          </Dropdown>
-        )
-      }
-      {
         !copy_event && withMenu ? (
           <Dropdown
             light
@@ -506,18 +436,6 @@ export default ({
             ref={modalRef}
             buttonClass={group ? styles.eventContent__invisible : null}
           >
-            {
-              content === 'changeWorkingTime' && (
-                <ChangeWorkingTime
-                  photo={photo}
-                  jobTypeName={jobTypeName}
-                  employeeName={employeeName}
-                  start={start}
-                  end={end}
-                  onChangeTime={handleChangeWorkingTime}
-                />
-              )
-            }
             {
               content === 'duplicateEmployee' && (
                 <ChangeEmployee

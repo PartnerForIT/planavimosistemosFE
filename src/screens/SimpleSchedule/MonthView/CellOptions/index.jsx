@@ -1,32 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
 
 import Dropdown from '../../Dropdown';
-import ChangeWorkingTime from './ChangeWorkingTime';
-import AddWorkingTime from './AddWorkingTime';
 import ChangeEmployee from './ChangeEmployee';
 import styles from './CellOptions.module.scss';
 import classNames from 'classnames';
-import { companyModules } from '../../../../store/company/selectors';
+import MenuContent from '../../EventContent/MenuContent';
+import Content from '../../Dropdown/Content';
+import RefreshArrows from '../../../../components/Icons/RefreshArrows';
+import CommentIcon from '../../../../components/Icons/comment_icon.png';
+import Dots from '../../../../components/Icons/Dots';
 
 export default ({
   id,
-  shiftId,
   employeeId,
   resourceId,
+  group,
+  reccuring,
+  title,
+  description,
   photo,
   jobTypeName,
   employeeName,
   withMenu,
   onChangeEmployee,
-  onChangeWorkingTime,
   start,
   end,
   copy_event,
   editPermissions,
-  addTimeline,
   isCompleted,
   unavailableEmployees,
   markers,
@@ -35,53 +37,76 @@ export default ({
   handleAddHistory,
   currentDay,
   currentMonth,
+  onEditWorkingTime,
+  onDeleteWorkingTime,
+  onDuplicateEmployee,
 }) => {
-
+  
   const { t } = useTranslation();
 
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
   const modalAddRef = useRef(null);
-  const modules = useSelector(companyModules);
+  const [activeGroupItem, setActiveGroupItem] = useState(null);
+  const [openedGroup, setOpenedGroup] = useState(false);
+  const buttonRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const classes = classNames(
     styles.cellOptions,
     {
       [styles.dayEnd]: isCompleted,
       [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu),
-      [styles.cellOptions__time]: content === 'addWorkingTime',
     },
   );
 
   useEffect(() => {
-    if (content === 'addWorkingTime') {
-      if (modalAddRef.current) {
-        modalAddRef.current.open();
+    const handleOuterDropdownClick = (e) => {
+      if (dropdownRef && dropdownRef.current
+          && ((dropdownRef.current.contains(e.target)
+              || (buttonRef.current && buttonRef.current.contains(e.target))))
+      ) {
+        return;
       }
-    } else {
-      if (modalAddRef.current) {
-        modalAddRef.current.close();
-      }
-    }
-  }, [content]);
+      setOpenedGroup(false);
+    };
+    document.addEventListener('mousedown', handleOuterDropdownClick, false);
 
-  const openChangeEmployee = () => {
-    modalRef.current.open();
-    setContent('changeEmployee');
-  };
-  const openChangeWorkingTime = () => {
-    setContent('changeWorkingTime');
-  };
-  const openCopyMode = () => {
+    return () => {
+      document.removeEventListener('mousedown', handleOuterDropdownClick, false);
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (modalAddRef.current) {
       modalAddRef.current.close();
     }
-    setContent('menu');
-    handleCopyTool({start, end});
+  }, [content]);
+
+  const getGroupItemClasses = (item) => {
+    return classNames(
+      styles.cellOptions__groupModal__item,
+      {
+        [styles.eventContent__groupModal__item_completed]: item.is_completed,
+      },
+    );
   };
-  const openAddWorkingTime = () => {
-    setContent('addWorkingTime');
+
+  const handleEditWorkingTime = () => {
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
   };
+  const handleDeleteWorkingTime = () => {
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
+  };
+  const handleDuplicateWorkingTime = (employeeId) => {
+    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
+  };
+  const handleClickGroupItem = (index) => {
+    setActiveGroupItem(group[index]);
+    modalRef.current.open();
+  }
+
   const copyEvent = () => {
     let start_day = moment(start).format('YYYY-MM-DD');
     if (!start) {
@@ -95,52 +120,6 @@ export default ({
     }
     setContent('menu');
   };
-  const handleChangeWorkingTime = (value) => {
-    const timeStart = value.start.split(':');
-    const timeEnd = value.end.split(':');
-    let time;
-    if ((timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1])) {
-      // night time
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(end).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    } else {
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(start).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    }
-
-    onChangeWorkingTime({ id, shiftId, time });
-  };
-  const handleAddWorkingTime = (value) => {
-    const timeStart = value.start.split(':');
-    const timeEnd = value.end.split(':');
-    let time;
-    if ((timeStart[0] * 60 + +timeStart[1]) > (timeEnd[0] * 60 + +timeEnd[1])) {
-      // night time
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(end).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    } else {
-      time = {
-        start: moment(start).set({ h: timeStart[0], m: timeStart[1] }),
-        end: moment(start).set({ h: timeEnd[0], m: timeEnd[1] }),
-      };
-    }
-
-    addTimeline({ id, shiftId, time });
-    setContent('menu');
-  };
-  const handleChangeEmployee = (nextEmployeeId) => {
-    onChangeEmployee({
-      shiftId,
-      employeeId: nextEmployeeId,
-      id,
-    });
-  };
 
   const markerComment = () => {
     const current = markers ? markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request) : false;
@@ -148,115 +127,127 @@ export default ({
   }
   
   return (
-    <div
-      className={classes}
-      id='dropdownButton'
-    >
-      {
-          employeeName && (
-            (copyTool)
-              ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
-              : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-          
-        )
-      }
-      {
-        content === 'addWorkingTime' && (
-          <Dropdown
-            cancel={content !== 'menu'}
-            onCancel={() => setContent('menu')}
-            ref={modalAddRef}
-            buttonClass={styles.cellOptions__invisible}
+    <>
+      { group && !copy_event && withMenu && (
+        <div
+          className={styles.cellOptions__group_button}
+          id='dropdownButton'
+        >
+          <div
+            className={styles.cellOptions__group_button_dots}
+            onClick={() => setOpenedGroup(!openedGroup)}
+            ref={buttonRef}
           >
-            <AddWorkingTime
-              onClose={() => setContent('menu')}
-              photo={photo}
-              jobTypeName={jobTypeName}
-              employeeName={employeeName}
-              start={start}
-              end={end}
-              onChangeTime={handleAddWorkingTime}
-            />
-          </Dropdown>
-        )
-      }
-      {
-        !isCompleted && !copy_event && withMenu ? (
-          <Dropdown
-            light
-            cancel={content !== 'menu'}
-            onCancel={handleCancel}
-            ref={modalRef}
-          >
-            {
-              content === 'changeEmployee' && (
-                <ChangeEmployee
-                  photo={photo}
-                  jobTypeName={jobTypeName}
-                  employeeName={employeeName}
-                  onChangeEmployee={handleChangeEmployee}
-                  unavailableEmployees={unavailableEmployees}
-                />
-              )
-            }
-            {
-              content === 'changeWorkingTime' && (
-                <ChangeWorkingTime
-                  photo={photo}
-                  jobTypeName={jobTypeName}
-                  employeeName={employeeName}
-                  start={start}
-                  end={end}
-                  onChangeTime={handleChangeWorkingTime}
-                />
-              )
-            }
-            {
-              content === 'menu' && (
-                <>
-                  <div className={styles.cellOptions__userInfo}>
-                    <div className={styles.cellOptions__userInfo__right}>
-                      <div className={styles.cellOptions__userInfo__right__fullName}>
-                        {employeeName}
-                      </div>
-                      <div className={styles.cellOptions__userInfo__right__jobType}>
-                        {jobTypeName}
-                      </div>
+            <Dots />
+          </div>
+        </div>
+      )}
+      { openedGroup && (
+        <Content
+          onClose={() => setOpenedGroup(false)}
+          wrapperRef={dropdownRef}
+          offset={buttonRef.current.getBoundingClientRect()}
+          onTop
+        >
+          <div className={styles.cellOptions__groupModal}>
+            <div className={styles.cellOptions__userInfo}>
+              { photo &&
+                <div className={styles.cellOptions__photo}>
+                  <img src={photo} alt={employeeName} /> 
+                </div>
+              }
+              <div className={styles.cellOptions__userInfo__right}>
+                <div className={styles.cellOptions__userInfo__right__fullName}>
+                  {employeeName}
+                </div>
+                <div className={styles.cellOptions__userInfo__right__jobType}>
+                  {jobTypeName}
+                </div>
+              </div>
+            </div>
+            <div className={styles.cellOptions__groupModal__count}>
+              { group.length } { t('tasks') }
+            </div>
+
+            <div className={styles.cellOptions__groupModal__list}>
+              {
+                group.map((item, index) => (
+                  <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
+                    <div className={styles.cellOptions__groupModal__item__title}>
+                      { item.reccuring && <div className={styles.cellOptions__reccuring}><RefreshArrows /></div> }
+                      {item.schedule_title ? item.schedule_title : ''}
                     </div>
+                    <div className={styles.cellOptions__groupModal__item__time}>{moment(item.start).format('HH:mm')} - {moment(item.end).format('HH:mm')}{item.title?.job_type ? ` • ${item.title?.job_type}` : ''}</div>
+                    { item.title?.place && <div className={styles.cellOptions__groupModal__item__place}>{item.title?.place}</div> }
+
+                    { item.description ? 
+                      <div className={styles.cellOptions__comment_icon} >
+                        <img src={CommentIcon} alt={employeeName} />
+                      </div>
+                      : null
+                    }
                   </div>
-                  <div className={styles.cellOptions__label}>
-                    {t('Working Time')}
-                  </div>
-                  <div className={styles.cellOptions__value}>
-                    {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
-                  </div>
-                  {/* Edgaras suggestion 2022-05-25 */}
-                  { !modules.manual_mode && (
-                      <Dropdown.ItemMenu
-                        title={t('Change Employee')}
-                        onClick={openChangeEmployee}
-                      />
-                    )
-                  } 
-                  <Dropdown.ItemMenu
-                    title={t('Change Working Time')}
-                    onClick={openChangeWorkingTime}
+                ))
+              }
+            </div>
+          </div>
+        </Content>
+      )}
+      <div
+        className={classes}
+        id='dropdownButton'
+      >
+        {
+            employeeName && (
+              (copyTool)
+                ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
+                : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+            
+          )
+        }
+        {
+          !copy_event && withMenu ? (
+            <Dropdown
+              light
+              cancel={content !== 'menu'}
+              onCancel={handleCancel}
+              ref={modalRef}
+              buttonClass={group ? styles.cellOptions__invisible : null}
+            >
+              {
+                content === 'duplicateEmployee' && (
+                  <ChangeEmployee
+                    photo={photo}
+                    jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                    employeeName={employeeName}
+                    onChangeEmployee={handleDuplicateWorkingTime}
+                    unavailableEmployees={[]}
                   />
-                  { modules.manual_mode ? (
-                    <Dropdown.ItemMenu
-                      title={t('Run Copy Mode')}
-                      onClick={openCopyMode}
-                    />
-                    ) : null
-                  }
-                </>
-              )
-            }
-            <div className={styles.cellOptions__space} />
-          </Dropdown>
-        ) : null
-      }
-    </div>
+                )
+              }
+              {
+                content === 'menu' && (
+                  <MenuContent
+                    reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
+                    photo={photo}
+                    employeeName={employeeName}
+                    jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                    description={activeGroupItem ? activeGroupItem.description : description}
+                    start={activeGroupItem ? activeGroupItem.start : start}
+                    end={activeGroupItem ? activeGroupItem.end : end}
+                    title={activeGroupItem ? activeGroupItem.title : title}
+                    handleEditWorkingTime={handleEditWorkingTime}
+                    handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
+                    handleDeleteWorkingTime={handleDeleteWorkingTime}
+                  />
+                )
+              }
+              <div className={styles.cellOptions__space} />
+            </Dropdown>
+          ) : null
+        }
+      </div>
+    </>
   );
 
 };

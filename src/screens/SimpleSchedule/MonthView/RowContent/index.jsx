@@ -23,12 +23,13 @@ const RowContent = ({
   permissions,
   markers,
   handleChangeEmployee,
-  handleChangeWorkingTime,
   handleEmptyTimeline,
-  handleAddWorkingTime,
   handleCopyTool,
   handleAddHistory,
   currentMonth,
+  handleEditWorkingTime,
+  handleDuplicateEmployee,
+  handleDeleteWorkingTime,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -36,6 +37,7 @@ const RowContent = ({
   
   const newFoundItem = (day) => {
     const ev = {...events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1)};
+    ev.real_title = ev?.title;
     if (ev?.copy_event) {
       ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
       ev.hours = Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10;
@@ -129,11 +131,12 @@ const RowContent = ({
                 events={events}
                 markers={markers}
                 handleChangeEmployee={handleChangeEmployee}
-                handleChangeWorkingTime={handleChangeWorkingTime}
                 handleEmptyTimeline={handleEmptyTimeline}
-                handleAddWorkingTime={handleAddWorkingTime}
                 handleCopyTool={handleCopyTool}
                 handleAddHistory={handleAddHistory}
+                handleEditWorkingTime={handleEditWorkingTime}
+                handleDuplicateEmployee={handleDuplicateEmployee}
+                handleDeleteWorkingTime={handleDeleteWorkingTime}
             />)
           }
           )
@@ -160,12 +163,13 @@ const RowContent = ({
             permissions={permissions}
             markers={markers}
             handleChangeEmployee={handleChangeEmployee}
-            handleChangeWorkingTime={handleChangeWorkingTime}
             handleEmptyTimeline={handleEmptyTimeline}
-            handleAddWorkingTime={handleAddWorkingTime}
             handleCopyTool={handleCopyTool}
             handleAddHistory={handleAddHistory}
             currentMonth={currentMonth}
+            handleEditWorkingTime={handleEditWorkingTime}
+            handleDuplicateEmployee={handleDuplicateEmployee}
+            handleDeleteWorkingTime={handleDeleteWorkingTime}
           />
         ))
       }
