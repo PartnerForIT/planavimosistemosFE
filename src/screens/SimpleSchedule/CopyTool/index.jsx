@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
 
-import TimeRangePicker from '../Shift/TimeRangePicker';
+import TimeRangePicker from '../TimeRangePicker';
 import classes from './CopyTool.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import { copyToolHistorySelector, copyToolRollbackSelector } from '../../../store/copyTool/selectors';

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import Button from '../../../../components/Core/Button/Button';
-import TimeRangePicker from '../../Shift/TimeRangePicker';
+import TimeRangePicker from '../../TimeRangePicker';
 import Cross from "../../../../components/Icons/Cross";
 
 import classes from './AddWorkingTime.module.scss';

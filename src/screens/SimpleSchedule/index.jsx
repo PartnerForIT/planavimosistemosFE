@@ -41,6 +41,8 @@ import {
   getSchedule,
   postSchedule,
   postDuplicateSchedule,
+  addScheduleEmployees,
+  removeScheduleEmployees,
 } from '../../store/simpleSchedule/actions';
 
 import {
@@ -386,7 +388,7 @@ export default () => {
       classes.push('fc-datagrid-cell-group');
     }
 
-    if (props.group) {
+    if (props.subgroup) {
       classes.push('fc-datagrid-cell-subgroup');
     }
 
@@ -396,6 +398,10 @@ export default () => {
 
     if (props.lastSubgroup) {
       classes.push('fc-datagrid-cell-last-subgroup');
+    }
+
+    if (props.button) {
+      classes.push('fc-datagrid-cell-button');
     }
 
     return classes;
@@ -444,6 +450,31 @@ export default () => {
       setOpenCreateShift(true);
     });
   };
+  const handleAddEmployees = (employees) => {
+    dispatch(addScheduleEmployees({
+      companyId,
+      data: {employees},
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    });
+  };
+  const handleDeleteEmployees = (data) => {
+    let post_data = {};
+    if (data.group) {
+      post_data = {group_id: data.id};
+    } else if (data.subgroup) {
+      post_data = {sub_group_id: data.id};
+    } else {
+      post_data = {employee_id: data.id};
+    }
+
+    dispatch(removeScheduleEmployees({
+      companyId,
+      data: {employees: post_data},
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    });
+  }
   const handleCopyTool = (time) => {
     setCopyToolTime(time)
     setCopyTool(!copyTool);
@@ -548,22 +579,47 @@ export default () => {
 
     return classes;
   };
+
+  const unEmployees = () => {
+    let result = [];
+
+    const getChildren = (item) => {
+      if (item.children) {
+        item.children.forEach((child) => {
+          result.push(child.id);
+          getChildren(child);
+        });
+      }
+    }
+
+    resources.forEach((item) => {
+      result.push(item.id);
+      getChildren(item);
+    });
+
+    return result;
+  }
+
   const renderResourceLabelContent = ({ fieldValue, resource }) => {
     const {
       //count,
       photo,
       employeeId,
       employeesCount,
+      button,
       //hours_demand,
     } = resource.extendedProps;
     const realCount = employeesCount;
 
     return (
       <ResourceItem
-        title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
+        title={button ? t('Add Employees') : (`${fieldValue} ${realCount ? `(${realCount})` : ''}`)}
         photo={photo}
-        withMenu={false}
         employeeId={employeeId}
+        onAddEmployees={button ? handleAddEmployees : false}
+        unavailableEmployees={unEmployees()}
+        handleDeleteEmployees={() => handleDeleteEmployees({...resource.extendedProps, id: resource.id})}
+        t={t}
       />
     );
   };
@@ -927,6 +983,8 @@ export default () => {
                     handleAddHistory={handleAddHistory}
                     handleChangeTimeline={handleChangeTimeline}
                     handleEditWorkingTime={handleEditWorkingTime}
+                    handleAddEmployees={handleAddEmployees}
+                    handleDeleteEmployees={handleDeleteEmployees}
                   />
                 ) : (
                   <>
@@ -961,7 +1019,7 @@ export default () => {
                       height='100%'
                       //agendaEventMinHeight={90}
                       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-                      resources={resources}
+                      resources={[...resources, {button: true}]}
                       events={events}
                       eventStartEditable={false}
                       eventResizableFromStart={false}

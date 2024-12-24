@@ -4,11 +4,12 @@ import React, {
 import classnames from 'classnames';
 
 import classes from './ResourcesCell.module.scss';
-import Section from '../../../Shift/Table/Section';
+import Section from '../../Section';
 
 const ResourceCell = ({
   rowId,
   items,
+  item,
   withExpander,
   expander,
   onExpander,
@@ -22,6 +23,9 @@ const ResourceCell = ({
   isEmpty = false,
   employeesCount,
   employeeId,
+  onAddEmployees,
+  unavailableEmployees,
+  onDeleteEmployees,
 }) => {
 
   const rowClasses = classnames(classes.resourcesCell, {
@@ -52,13 +56,16 @@ const ResourceCell = ({
           expander={expander}
           withExpander={withExpander && !markerActive}
           nestingLevel={nestingLevel}
-          withMenu={nestingLevel === 1}
+          onAddEmployees={onAddEmployees}
+          unavailableEmployees={unavailableEmployees}
+          onDelete={() => onDeleteEmployees(item)}
         />
       </div>
       {
         (expander || markerActive) && items?.map((item, index) => (
           <ResourceCell
             key={index+'_'+nestingLevel}
+            item={item}
             rowId={item.id}
             title={item.title}
             skill={item.skill_name}
@@ -76,6 +83,7 @@ const ResourceCell = ({
             lastChild2={nestingLevel === 1 ? (index + 1 === items.length) : lastChild2}
             nestingLevel={nestingLevel + 1}
             isEmpty={item.empty}
+            onDeleteEmployees={onDeleteEmployees}
           />
         ))
       }

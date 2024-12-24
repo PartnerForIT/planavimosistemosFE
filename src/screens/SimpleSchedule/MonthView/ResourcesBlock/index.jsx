@@ -7,12 +7,36 @@ export default ({
   resources,
   onExpander,
   markerActive,
+  handleAddEmployees,
+  handleDeleteEmployees,
 }) => {
+
+  const unEmployees = () => {
+    let result = [];
+
+    const getChildren = (item) => {
+      if (item.children) {
+        item.children.forEach((child) => {
+          result.push(child.id);
+          getChildren(child);
+        });
+      }
+    }
+
+    resources.forEach((item) => {
+      result.push(item.id);
+      getChildren(item);
+    });
+
+    return result;
+  }
+  
   return (
     <div className={classes.resourcesBlock}>
       {
         resources.map((item, index) => (
           <ResourcesCell
+            item={item}
             title={item.title}
             skill={item.skill_name}
             key={index}
@@ -26,9 +50,15 @@ export default ({
             countChildren={item.children?.length}
             rowId={item.id}
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
+            onDeleteEmployees={handleDeleteEmployees}
           />
         ))
       }
+
+      <ResourcesCell
+        onAddEmployees={handleAddEmployees}
+        unavailableEmployees={unEmployees()}
+      />
     </div>
   );
 }

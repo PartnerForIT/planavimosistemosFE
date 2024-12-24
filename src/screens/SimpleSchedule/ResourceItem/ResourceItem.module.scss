@@ -1,4 +1,11 @@
 .resourceItem {
+  &__container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   &__buttonDots {
     position: absolute;
     right: 2px;

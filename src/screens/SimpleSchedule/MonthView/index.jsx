@@ -48,6 +48,8 @@ export default ({
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
+  handleAddEmployees,
+  handleDeleteEmployees,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -284,6 +286,8 @@ export default ({
               onExpander={handleExpander}
               markerActive={markerActive}
               currentMonth={currentMonth}
+              handleAddEmployees={handleAddEmployees}
+              handleDeleteEmployees={handleDeleteEmployees}
             />
             <div className={classes.monthView__content__data}>
               {

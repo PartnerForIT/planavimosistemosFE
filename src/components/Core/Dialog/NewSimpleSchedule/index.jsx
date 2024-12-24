@@ -8,7 +8,7 @@ import usePermissions from '../../usePermissions';
 import { useTranslation } from 'react-i18next';
 import { employeesSelector } from '../../../../store/settings/selectors';
 import { jobTypesSelector } from '../../../../store/jobTypes/selectors';
-import TimeRangePicker from '../../../../screens/SimpleSchedule/Shift/TimeRangePicker';
+import TimeRangePicker from '../../../../screens/SimpleSchedule/TimeRangePicker';
 import { placesSelector } from '../../../../store/places/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { getJobTypes } from '../../../../store/jobTypes/actions';

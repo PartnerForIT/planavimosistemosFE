@@ -13,6 +13,13 @@
   border-radius: 4px;
   $section: &;
 
+  &__outer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   &__skill {
     color: #808F94;
     font-size: 11px;
@@ -193,5 +200,36 @@
 
   &__space {
     margin-top: -7px;
+  }
+
+  &_addEmployees {
+    border: 0.5px dashed #C4CAD0;
+    color: #1685FC;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    $section: &;
+
+    &:hover {
+      border: 0.5px solid #1685FC;
+
+      #{$section}_circle {
+        background-color: #1685FC;
+        color: white;
+        border: 0.5px solid #1685FC;
+      }
+    }
+
+    &_circle {
+      border: 0.5px dashed #1685FC;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 2px;
+    }
   }
 }

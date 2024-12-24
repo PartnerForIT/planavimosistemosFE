@@ -11,10 +11,10 @@ import Scrollbar from 'react-scrollbars-custom';
 import classNames from 'classnames';
 import moment from 'moment';
 
-import { timeArr } from '../../../../components/Helpers/time';
-import getOverflowParent from '../../../../helpers/getOverflowParent';
-import Button from '../../../../components/Core/Button/Button';
-import Dots from '../../../../components/Icons/Dots';
+import { timeArr } from '../../../components/Helpers/time';
+import getOverflowParent from '../../../helpers/getOverflowParent';
+import Button from '../../../components/Core/Button/Button';
+import Dots from '../../../components/Icons/Dots';
 import classes from './TimeRangePicker.module.scss';
 
 const ButtonTime = ({
