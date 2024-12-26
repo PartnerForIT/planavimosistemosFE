@@ -114,17 +114,6 @@ export default () => {
   const [openCreateShift, setOpenCreateShift] = useState(false);
   const [editShiftData, setEditShiftData] = useState(null);
 
-  const employToCheck = useCallback(({
-    id,
-    name,
-    surname,
-  }) => ({
-    id,
-    label: `${name} ${surname}`,
-    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
-  }), []);
-  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
-
   const resources = useMemo(() => {
     let currentColor = 0;
     let colorType = 'bright';
@@ -204,10 +193,93 @@ export default () => {
           }})
       }
     }
-  
+
+
+    let employee_ids = [];
+
+    const getChildren = (item) => {
+      if (item.children) {
+        item.children.forEach((child) => {
+          if (!child.group && !child.subgroup) {    
+            employee_ids.push(child.id);
+          }
+          getChildren(child);
+        });
+      }
+    }
+
+    (resources || []).forEach((item) => {
+      if (!item.group && !item.subgroup) {
+        employee_ids.push(item.id);
+      }
+      getChildren(item);
+    });
+
+    // Calculate days based on the timeline
+    let days = [];
+    if (timeline === TIMELINE.MONTH) {
+        const daysInMonth = moment(fromDateRef.current).daysInMonth(); // Total days in the selected month
+        days = Array.from({ length: daysInMonth }, (_, i) => i + 1); // [1, 2, ..., 28/29/30/31]
+    } else if (timeline === TIMELINE.WEEK) {
+        days = Array.from({ length: 7 }, (_, i) => moment(fromDateRef.current).startOf('isoWeek').add(i, 'days').date());
+    } else if (timeline === TIMELINE.DAY) {
+        days = [moment(fromDateRef.current).date()]; // Single day view
+    }
+
+    // Generate empty events
+    employee_ids.forEach((employee_id) => {
+        days.forEach((day_number) => {
+            const hasEvent = result.some(
+                (e) => e.employee_id === employee_id && e.day_number === day_number
+            );
+            if (!hasEvent) {
+                result.push({
+                    resourceId: employee_id,
+                    employee_id,
+                    day_number,
+                    day: day_number,
+                    empty_event: true,
+                    start: moment(fromDateRef.current).date(day_number).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    end: moment(fromDateRef.current).date(day_number).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                });
+            }
+        });
+    });
+
     return result;
     // eslint-disable-next-line
   }, [filterData, schedule?.events, isLoading]);
+
+  const unEmployees = useMemo(() => {
+    let result = [];
+
+    const getChildren = (item) => {
+      if (item.children) {
+        item.children.forEach((child) => {
+          result.push(child.id);
+          getChildren(child);
+        });
+      }
+    }
+
+    (resources || []).forEach((item) => {
+      result.push(item.id);
+      getChildren(item);
+    });
+
+    return result;
+  }, [resources]);
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => ({
+    id,
+    label: `${name} ${surname}`,
+    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
+  }), []);
+  const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
@@ -494,6 +566,10 @@ export default () => {
       }, 1000);
     }
   }
+  const handleOpenAddSchedule = ({day, employee_id}) => {
+    setEditShiftData({employee_id, date: moment(fromDateRef.current).date(day)})
+    setOpenCreateShift(true);
+  };
   const renderEventContent = ({ event, timeText, view }) => {
 
     const resourceInfo = event.getResources()[0];
@@ -544,6 +620,7 @@ export default () => {
         employeeName={selectedEvent?.employee_name || null}
         description={selectedEvent?.description || null}
         group={selectedEvent?.group || null}
+        empty={selectedEvent?.empty_event || null}
         timeText={timeText}
         start={start}
         end={end}
@@ -560,6 +637,7 @@ export default () => {
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && !copyTool}
         jobTypeName={selectedEvent?.job_type_name}
+        openAddSchedule={() => { handleOpenAddSchedule(selectedEvent) }}
         onDuplicateEmployee={handleDuplicateEmployee}
         onDeleteWorkingTime={handleDeleteWorkingTime}
         onEditWorkingTime={handleEditWorkingTime}
@@ -574,32 +652,15 @@ export default () => {
   };
   const handleEventClassNames = (info) => {
     let classes = [];
+    if (info.event.extendedProps.empty_event) {
+      classes.push('is-empty-manual')
+    }
     if (copyTool || info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
 
     return classes;
   };
-
-  const unEmployees = () => {
-    let result = [];
-
-    const getChildren = (item) => {
-      if (item.children) {
-        item.children.forEach((child) => {
-          result.push(child.id);
-          getChildren(child);
-        });
-      }
-    }
-
-    (resources || []).forEach((item) => {
-      result.push(item.id);
-      getChildren(item);
-    });
-
-    return result;
-  }
 
   const renderResourceLabelContent = ({ fieldValue, resource }) => {
     const {
@@ -618,7 +679,7 @@ export default () => {
         photo={photo}
         employeeId={employeeId}
         onAddEmployees={button ? handleAddEmployees : false}
-        unavailableEmployees={unEmployees()}
+        unavailableEmployees={unEmployees}
         handleDeleteEmployees={() => handleDeleteEmployees({...resource.extendedProps, id: resource.id})}
         t={t}
       />
@@ -986,6 +1047,7 @@ export default () => {
                     handleEditWorkingTime={handleEditWorkingTime}
                     handleAddEmployees={handleAddEmployees}
                     handleDeleteEmployees={handleDeleteEmployees}
+                    openAddSchedule={handleOpenAddSchedule}
                   />
                 ) : (
                   <>
@@ -1077,7 +1139,7 @@ export default () => {
           handleClose={handleCloseCreateShift}
           handleSubmit={handleCreateShift}
           editData={editShiftData}
-          availableEmployees={unEmployees()}
+          availableEmployees={unEmployees}
         />
         <Tooltip
           id='time'

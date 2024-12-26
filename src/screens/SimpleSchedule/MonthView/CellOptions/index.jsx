@@ -28,6 +28,7 @@ export default ({
   start,
   end,
   copy_event,
+  empty,
   editPermissions,
   isCompleted,
   unavailableEmployees,
@@ -40,10 +41,11 @@ export default ({
   onEditWorkingTime,
   onDeleteWorkingTime,
   onDuplicateEmployee,
+  openAddSchedule,
 }) => {
   
   const { t } = useTranslation();
-
+  
   const [content, setContent] = useState('menu');
   const modalRef = useRef(null);
   const modalAddRef = useRef(null);
@@ -56,7 +58,7 @@ export default ({
     styles.cellOptions,
     {
       [styles.dayEnd]: isCompleted,
-      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu),
+      [styles.cellOptions__withoutMenu]: !(!copy_event && withMenu) || empty,
     },
   );
 
@@ -120,11 +122,6 @@ export default ({
     }
     setContent('menu');
   };
-
-  const markerComment = () => {
-    const current = markers ? markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request) : false;
-    return current ? current.comment : false;
-  }
   
   return (
     <>
@@ -195,18 +192,15 @@ export default ({
       )}
       <div
         className={classes}
-        id='dropdownButton'
+        id={empty ? 'withEmpty' : 'dropdownButton'}
       >
         {
-            employeeName && (
-              (copyTool)
-                ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
-                : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-            
-          )
+          (copyTool)
+            ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
+            : empty && (<span onClick={openAddSchedule} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)
         }
         {
-          !copy_event && withMenu ? (
+          !copy_event && withMenu && !empty ? (
             <Dropdown
               light
               cancel={content !== 'menu'}

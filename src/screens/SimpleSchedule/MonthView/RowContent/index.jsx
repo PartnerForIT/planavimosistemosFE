@@ -30,6 +30,7 @@ const RowContent = ({
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
+  openAddSchedule,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -137,6 +138,7 @@ const RowContent = ({
                 handleEditWorkingTime={handleEditWorkingTime}
                 handleDuplicateEmployee={handleDuplicateEmployee}
                 handleDeleteWorkingTime={handleDeleteWorkingTime}
+                openAddSchedule={openAddSchedule}
             />)
           }
           )
@@ -170,6 +172,7 @@ const RowContent = ({
             handleEditWorkingTime={handleEditWorkingTime}
             handleDuplicateEmployee={handleDuplicateEmployee}
             handleDeleteWorkingTime={handleDeleteWorkingTime}
+            openAddSchedule={openAddSchedule}
           />
         ))
       }

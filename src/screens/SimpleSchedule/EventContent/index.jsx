@@ -42,6 +42,7 @@ export default ({
   jobTypeName,
   employeeName,
   group,
+  empty,
   cost,
   night_minutes,
   break_minutes,
@@ -63,6 +64,7 @@ export default ({
   description,
   removeTimelines,
   lineColor,
+  openAddSchedule,
 }) => {
   const { t } = useTranslation();
 
@@ -308,7 +310,7 @@ export default ({
       className={classes}
       data-for={tooltipType()}
       data-html={true}
-      data-tip={copy_event || copyTool || tooltipContent()}
+      data-tip={copy_event || copyTool || empty ? null : tooltipContent()}
       id='dropdownButton'
     >
       { !copy_event && endOverlap() > 0 && (
@@ -336,7 +338,9 @@ export default ({
         </div>
       }
       {
-        group ? (
+        empty ? 
+          <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        : (group ? (
           <span className={styles.eventContent__group}
             onClick={() => setOpenedGroup(!openedGroup)}
             ref={buttonRef}
@@ -372,7 +376,7 @@ export default ({
               { title.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
             </span>
           )
-        )
+        ))
       }
 
       <div className={styles.eventContent__leftSpace} />
@@ -428,7 +432,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu ? (
+        !copy_event && withMenu && !empty ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

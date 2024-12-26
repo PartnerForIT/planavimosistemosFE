@@ -50,6 +50,7 @@ export default ({
   handleDeleteWorkingTime,
   handleAddEmployees,
   handleDeleteEmployees,
+  openAddSchedule,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -327,6 +328,7 @@ export default ({
                     handleEditWorkingTime={handleEditWorkingTime}
                     handleDuplicateEmployee={handleDuplicateEmployee}
                     handleDeleteWorkingTime={handleDeleteWorkingTime}
+                    openAddSchedule={openAddSchedule}
                   />
                 ))
               }

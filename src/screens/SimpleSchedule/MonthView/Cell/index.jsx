@@ -48,6 +48,7 @@ export default ({
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
+  openAddSchedule,
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -68,7 +69,7 @@ export default ({
   //   },
   //   [company.currency, currencies],
   // );
-
+  
   const cellClasses = classnames(classes.cell, 'monthCell', {
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
@@ -197,6 +198,7 @@ export default ({
                 id={event?.id}
                 currentDay={currentDay}
                 currentMonth={currentMonth}
+                empty={event?.empty_event}
                 copy_event={event?.copy_event}
                 title={event?.real_title || null}
                 reccuring={event?.reccuring || null}
@@ -222,6 +224,7 @@ export default ({
                 onEditWorkingTime={handleEditWorkingTime}
                 onDuplicateEmployee={handleDuplicateEmployee}
                 onDeleteWorkingTime={handleDeleteWorkingTime}
+                openAddSchedule={() => { openAddSchedule(event) }}
               />
             }
           </div>

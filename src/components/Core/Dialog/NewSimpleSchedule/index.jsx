@@ -89,7 +89,7 @@ export default function NewSimpleSchedule({
         setting,
       } = editData;
 
-      const reccuring_settings = setting.reccuring_settings ? setting.reccuring_settings : {};
+      const reccuring_settings = setting?.reccuring_settings ? setting.reccuring_settings : {};
 
       let repeat_every = false;
       let repeat_type = false;
@@ -118,9 +118,12 @@ export default function NewSimpleSchedule({
       setFormValues({
           ...formValues,
           date: date ? moment(date, 'YYYY-MM-DD') : null,
-          duration: {start: moment(start_work, 'HH:mm:ss').format('HH:mm'), end: moment(end_work, 'HH:mm:ss').format('HH:mm')},
-          job_type_id,
-          place_id,
+          duration: {
+            start: start_work ? moment(start_work, 'HH:mm:ss').format('HH:mm') : initialFormValues.duration.start,
+            end: end_work ? moment(end_work, 'HH:mm:ss').format('HH:mm') : initialFormValues.duration.end,
+          },
+          job_type_id: job_type_id ? job_type_id : '',
+          place_id: place_id ? place_id : '',
           title: title ? title : '',
           description : description ? description : '',
           employees: employee_id ? [{id: employee_id, checked: true}] : [],
