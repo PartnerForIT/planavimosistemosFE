@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo, useCallback, useEffect} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '../index';
 import Button from '../../Button/Button';
@@ -25,6 +25,7 @@ import moment from 'moment';
 import Input from '../../Input/Input';
 import CustomSelect from '../../Select/Select';
 
+import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
 const BlueRadio = withStyles({
   root: {
@@ -52,14 +53,14 @@ const initialFormValues = {
 };
 
 export default function NewSimpleSchedule({
-  handleClose, title, open, handleSubmit, editData
+  handleClose, title, open, handleSubmit, editData, availableEmployees
 }) {
   
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const permissions = usePermissions(permissionsConfig);
   const [formValues, setFormValues] = useState(initialFormValues);
-  const { users: allEmployees } = useSelector(employeesSelector);
+  const { users: employees } = useSelector(employeesSelector);
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
   const { id: companyId } = useParams();
@@ -122,7 +123,7 @@ export default function NewSimpleSchedule({
           place_id,
           title: title ? title : '',
           description : description ? description : '',
-          employee_id,
+          employees: employee_id ? [{id: employee_id, checked: true}] : [],
           reccuring: reccuring ? true : false,
           reccuring_end: reccuring_end ? moment(reccuring_end, 'YYYY-MM-DD') : null,
           reccuring_settings: {
@@ -140,16 +141,21 @@ export default function NewSimpleSchedule({
     // eslint-disable-next-line
   }, [editData]);
 
-  const employees = useMemo(() => allEmployees.map((empl) => {
-    const {
-      // eslint-disable-next-line camelcase,no-shadow
-      id, name, surname
-    } = empl;
-    return {
-      id: id,
-      name: `${name} ${surname}`,
-    };
-  }) ?? [], [allEmployees]);
+  const employToCheck = useCallback(({
+      id,
+      name,
+      surname,
+    }) => ({
+      id,
+      label: `${name} ${surname}`,
+      checked: formValues.employees?.some(({id: employee_id}) => employee_id === id),
+
+    }), [formValues]);
+    const filteredEmployees = useMemo(() => {
+      return employees.filter(e => { return availableEmployees.includes(e.id) });
+      // eslint-disable-next-line
+    }, [employees, availableEmployees]);
+    const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
 
   const handleOnSubmit = () => {
     handleSubmit(formValues);
@@ -241,6 +247,11 @@ export default function NewSimpleSchedule({
     setFormValues(nextInputValues);
   }
 
+  const onEmployeesSelectChange = (selectedEmployees) => {
+    const nextInputValues = { ...formValues, employees: selectedEmployees };
+    setFormValues(nextInputValues);
+  };
+
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div>
@@ -248,15 +259,15 @@ export default function NewSimpleSchedule({
           <div className={classes.addEntry__formControl__labelBlock}>
             <Label text={t('Employee')} htmlFor='employee' />
           </div>
-          <SimpleSelect
-            handleInputChange={handleInputChange}
-            name='employee_id'
-            fullWidth
-            value={formValues.employee_id}
-            options={employees}
+          <CustomSelect
             placeholder={t('Select employee')}
-            require
-            valueKey='id'
+            items={allSortedEmployees ?? []}
+            onChange={onEmployeesSelectChange}
+            width='100%'
+            fullWidth
+            type='employees'
+            withSearch={true}
+            confirmButton={t('Select')}
           />
         </div>
         <div className={classes.addEntry__formControl}>
@@ -591,7 +602,7 @@ export default function NewSimpleSchedule({
         <Button onClick={() => handleClose()} inverse size='big'>
           {t('Cancel')}
         </Button>
-        <Button onClick={() => handleOnSubmit()} disabled={!formValues.employee_id} size='big'>
+        <Button onClick={() => handleOnSubmit()} disabled={!formValues.employees?.length || !formValues.title} size='big'>
           {t('Create')}
         </Button>
       </div>

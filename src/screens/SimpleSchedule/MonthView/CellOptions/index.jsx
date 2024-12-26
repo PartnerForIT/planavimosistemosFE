@@ -213,6 +213,7 @@ export default ({
               onCancel={handleCancel}
               ref={modalRef}
               buttonClass={group ? styles.cellOptions__invisible : null}
+              maxHeight={480}
             >
               {
                 content === 'duplicateEmployee' && (

@@ -65,11 +65,20 @@ export default ({
         style.left = offset.left + offset.width + 6;
       }
 
-      // default bottom
-      if (offset.top + maxHeight > window.innerHeight) {
-        style.bottom = window.innerHeight - offset.bottom;
+
+
+      const modalHeight = Math.min(maxHeight, window.innerHeight); // Ensure modal height fits in viewport
+      let top = offset.top + offset.height;
+
+      // Adjust position if modal goes out of the viewport
+      if (top + modalHeight > window.innerHeight) {
+          top = Math.max(0, offset.top - modalHeight); // Show above the button
+      }
+      
+      if (top <= 0) {
+        style.top = `${top}px`;
       } else {
-        style.top = offset.top + offset.height;
+        style.bottom = window.innerHeight - offset.bottom;
       }
     }
 

@@ -23,6 +23,7 @@ export default function CustomSelect({
   fullWidth,
   withSearch,
   confirmButton,
+  disabled = false,
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -188,7 +189,7 @@ export default function CustomSelect({
           // eslint-disable-next-line jsx-a11y/aria-role
           role='input'
           className={wrapperClasses}
-          onClick={() => setOpen(!open)}
+          onClick={disabled ? () => {} : () => setOpen(!open)}
         >
           <input
             type='text'
@@ -196,6 +197,7 @@ export default function CustomSelect({
             placeholder={placeholder}
             className={customSelectClasses}
             onChange={() => {}}
+            disabled={disabled}
           />
         </div>
 

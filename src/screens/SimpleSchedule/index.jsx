@@ -280,6 +280,7 @@ export default () => {
       id: editShiftData?.id,
       data: {
         ...data,
+        employees: data.employees.map(({id}) => id),
         start_work: data.duration.start,
         end_work: data.duration.end,
         date: data.date.format('YYYY-MM-DD'),
@@ -592,7 +593,7 @@ export default () => {
       }
     }
 
-    resources.forEach((item) => {
+    (resources || []).forEach((item) => {
       result.push(item.id);
       getChildren(item);
     });
@@ -1076,6 +1077,7 @@ export default () => {
           handleClose={handleCloseCreateShift}
           handleSubmit={handleCreateShift}
           editData={editShiftData}
+          availableEmployees={unEmployees()}
         />
         <Tooltip
           id='time'
