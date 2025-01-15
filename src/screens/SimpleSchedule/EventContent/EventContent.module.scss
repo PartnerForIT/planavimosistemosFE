@@ -156,7 +156,7 @@
       color: #FD9D27;
       display: flex;
       align-items: center;
-      font-size: 10px;
+      font-size: 12px;
       font-family: Helvetica Neue, sans-serif;
       line-height: 16px;
       gap: 4px;
@@ -165,8 +165,8 @@
     &_body {
       &_section {
         margin-top: 7px;
-        font-size: 8px;
-        line-height: 10px;
+        font-size: 10px;
+        line-height: 12px;
         color: #808F94;
 
         b {
@@ -184,8 +184,6 @@
     }
 
     &_icon {
-      background-color: #FD9D27;
-      border-radius: 50%;
       width: 12px;
       height: 12px;
       flex: 0 0 12px;
@@ -197,9 +195,8 @@
       justify-content: center;
 
       svg {
-        width: 6px;
-        height: 6px;
-        fill: #fff;
+        width: 12px;
+        height: 12px;
       }
     }
   }
@@ -279,6 +276,7 @@
 
       &_completed {
         background: #F0F7F1;
+        cursor: default;
 
         &::after {
           display: none;
@@ -351,8 +349,6 @@
   }
 
   &__reccuring {
-    background-color: #FD9D27;
-    border-radius: 50%;
     width: 12px;
     height: 12px;
     flex: 0 0 12px;
@@ -362,13 +358,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: flex-start;
     margin-right: 4px;
 
     svg {
-      width: 6px;
-      height: 6px;
-      fill: #fff;
+      width: 12px;
+      height: 12px;
     }
   }
 

@@ -24,6 +24,8 @@ export default function CustomSelect({
   withSearch,
   confirmButton,
   disabled = false,
+  choiceOfOnlyOne = false,
+  widthLikeInput = false,
 }) {
   const [itemsArray, setItemsArray] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -116,10 +118,14 @@ export default function CustomSelect({
           if (newObj.items) {
             newObj.items = setCheckedToAll(o.items, !o.checked);
           }
-        } else if (o.items) {
+        } else if (!choiceOfOnlyOne && o.items) {
           if (!newObj.disabled && typeof value !== 'undefined') newObj.checked = value;
           newObj.items = setCheckedToAll(o.items, value);
-        } else if (!newObj.disabled && typeof value !== 'undefined') newObj.checked = value;
+        } else if (!choiceOfOnlyOne && !newObj.disabled && typeof value !== 'undefined') {
+          newObj.checked = value;
+        } else if (choiceOfOnlyOne) {
+          newObj.checked = false;
+        }
 
         if (!newObj.disabled && newObj.checked) checkedItemsArray.push(newObj);
 
@@ -131,7 +137,7 @@ export default function CustomSelect({
     setItemsArray(setCheckedToAll(itemsArray));
     setCheckedItems(checkedItemsArray);
     onChange(checkedItemsArray);
-  }, [itemsArray, onChange]);
+  }, [itemsArray, onChange, choiceOfOnlyOne]);
   const selectAll = useCallback((check) => {
     const checkedItemsArray = [];
     const setCheckedToAll = (array) => {
@@ -202,7 +208,7 @@ export default function CustomSelect({
         </div>
 
         {open ? (
-          <div className={classNames(styles.contentBox)}>
+          <div className={classNames(styles.contentBox, { [styles.fullContentWidth]: widthLikeInput })}>
             {withSearch && (
               <Input
                 ref={searchInputRef}
@@ -216,6 +222,7 @@ export default function CustomSelect({
             <CheckboxGroup
               selectAll={selectAll}
               itemsStat={itemsStat}
+              choiceOfOnlyOne={choiceOfOnlyOne}
             >
               <Scrollbar
                 className={classNames(styles.scrollableContent, 'styledDropdown')}
@@ -251,6 +258,7 @@ export default function CustomSelect({
                           checked={data.checked}
                           items={data.items}
                           onChange={handleCheckboxChange}
+                          choiceOfOnlyOne={choiceOfOnlyOne}
                         />
                       )
                       : (

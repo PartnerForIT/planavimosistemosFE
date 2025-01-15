@@ -63,9 +63,20 @@ export default function NewSimpleSchedule({
   const { users: employees } = useSelector(employeesSelector);
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
+  const [ allSelectPlaces, setAllSelectPlaces ] = useState([]);
+  const [ allSelectJobTypes, setAllSelectJobTypes ] = useState([]);
   const { id: companyId } = useParams();
   // eslint-disable-next-line
   const [daysSelect, setDaysSelect] = useState([{id: 1, name: t('1')}, {id: 2, name : t('2')}, {id: 3, name: t('3')}, {id: 4, name: t('4')}, {id: 5, name: t('5')}, {id: 6, name: t('6')}, {id: 7, name: t('7')}, {id: 8, name: t('8')}, {id: 9, name: t('9')}, {id: 10, name: t('10')}, {id: 11, name: t('11')}, {id: 12, name: t('12')}, {id: 13, name: t('13')}, {id: 14, name: t('14')}, {id: 15, name: t('15')}, {id: 16, name: t('16')}, {id: 17, name: t('17')}, {id: 18, name: t('18')}, {id: 19, name: t('19')}, {id: 20, name: t('20')}, {id: 21, name: t('21')}, {id: 22, name: t('22')}, {id: 23, name: t('23')}, {id: 24, name: t('24')}, {id: 25, name: t('25')}, {id: 26, name: t('26')}, {id: 27, name: t('27')}, {id: 28, name: t('28')}, {id: 29, name: t('29')}, {id: 30, name: t('30')}, {id: 31, name: t('31')}]);
+
+  useEffect(() => {
+    setAllSelectJobTypes(allJobTypes.map((item) => ({id: item.id, name: item.title, checked: item.id === formValues.job_type_id})));
+  }, [allJobTypes, formValues.job_type_id]);
+
+  useEffect(() => {
+    setAllSelectPlaces(allPlaces.map((item) => ({id: item.id, name: item.name, checked: item.id === formValues.place_id})));
+  }, [allPlaces, formValues.place_id]);
+
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
@@ -255,6 +266,16 @@ export default function NewSimpleSchedule({
     setFormValues(nextInputValues);
   };
 
+  const onPlaceSelectChange = (selectedPlace) => {
+    const nextInputValues = { ...formValues, place_id: selectedPlace[0]?.id || '' };
+    setFormValues(nextInputValues);
+  }
+
+  const onJobTypeSelectChange = (selectedJobType) => {
+    const nextInputValues = { ...formValues, job_type_id: selectedJobType[0]?.id || '' };
+    setFormValues(nextInputValues);
+  }
+
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div>
@@ -314,38 +335,37 @@ export default function NewSimpleSchedule({
         </div>
         <div className={classes.addEntry__formFlex}>
          {
-            permissions.jobs && !!allJobTypes.length && (
+            permissions.jobs && !!allSelectJobTypes.length && (
               <div className={classes.addEntry__formControl}>
                 <div className={classes.addEntry__formControl__labelBlock}>
                   <Label text={`${t('Job Type')} (${t('optional')})`} htmlFor='job' />
                 </div>
-                <SimpleSelect
-                  handleInputChange={handleInputChange}
-                  name='job_type_id'
-                  fullWidth
-                  value={formValues.job_type_id}
-                  options={allJobTypes}
+                <CustomSelect
                   placeholder={t('Select job type')}
-                  valueKey='id'
-                  labelKey='title'
+                  items={allSelectJobTypes ?? []}
+                  onChange={onJobTypeSelectChange}
+                  fullWidth
+                  choiceOfOnlyOne
+                  widthLikeInput
+                  withSearch={true}
                 />
               </div>
             )
           }
           {
-            permissions.places && !!allPlaces.length && (
+            permissions.places && !!allSelectPlaces.length && (
               <div className={classes.addEntry__formControl}>
                 <div className={classes.addEntry__formControl__labelBlock}>
                   <Label text={`${'Place'} (${'optional'})`} htmlFor='place' />
                 </div>
-                <SimpleSelect
-                  handleInputChange={handleInputChange}
-                  name='place_id'
-                  fullWidth
-                  value={formValues.place_id}
-                  options={allPlaces}
+                <CustomSelect
                   placeholder={t('Select place')}
-                  valueKey='id'
+                  items={allSelectPlaces ?? []}
+                  onChange={onPlaceSelectChange}
+                  fullWidth
+                  choiceOfOnlyOne
+                  widthLikeInput
+                  withSearch={true}
                 />
               </div>
             )
@@ -606,7 +626,7 @@ export default function NewSimpleSchedule({
           {t('Cancel')}
         </Button>
         <Button onClick={() => handleOnSubmit()} disabled={!formValues.employees?.length || !formValues.title} size='big'>
-          {t('Create')}
+          { editData ? t('Edit Task') : t('Create Task')}
         </Button>
       </div>
     </Dialog>

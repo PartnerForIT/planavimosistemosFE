@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef,
-  //useMemo
-} from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from 'react-tooltip';
 import moment from 'moment';
@@ -18,9 +16,9 @@ import styles from './EventContent.module.scss';
 import classNames from 'classnames';
 //import { padStart } from '@fullcalendar/react';
 import { AdditionalRatesDataSelector,
-  //currencySelector,
+  currencySelector,
   //scheduleSelector,
-  //settingCompanySelector,
+  settingCompanySelector,
   //IntegrationsDataSelector
 } from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
@@ -62,6 +60,7 @@ export default ({
   copyTool,
   handleAddHistory,
   description,
+  schedule_title,
   removeTimelines,
   lineColor,
   openAddSchedule,
@@ -74,8 +73,8 @@ export default ({
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
-  //const currencies = useSelector(currencySelector);
-  //const company = useSelector(settingCompanySelector);
+  const currencies = useSelector(currencySelector);
+  const company = useSelector(settingCompanySelector);
   //const schedule = useSelector(scheduleSelector);
   const permissions = usePermissions(permissionsConfig);
   //const integrations = useSelector(IntegrationsDataSelector);
@@ -225,7 +224,9 @@ export default ({
   };
   const handleClickGroupItem = (index) => {
     setActiveGroupItem(group[index]);
-    modalRef.current.open();
+    if (modalRef.current) {
+      modalRef.current.open();
+    }
   }
   
   const tooltipType = () => {
@@ -251,34 +252,50 @@ export default ({
     return `${formattedHours}:${formattedMinutes}`;
   }
 
-  // const currency = useMemo(
-  //   () => {
-  //     if (Array.isArray(currencies)) {
-  //       return currencies
-  //         .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
-  //     }
+  const currency = useMemo(
+    () => {
+      if (Array.isArray(currencies)) {
+        return currencies
+          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+      }
 
-  //     return '';
-  //   },
-  //   [company.currency, currencies],
-  // );
+      return '';
+    },
+    [company.currency, currencies],
+  );
   
   const tooltipContent = () => {
-    let start_time = moment(start).format('HH:mm');
-    let end_time = moment(end).format('HH:mm');
-
+    let tooltip_start = moment(start);
+    let tooltip_end = moment(end);
+    let tooltip_minutes = minutes;
+    let tooltip_work_minutes = work_minutes;
+    let tooltip_night_minutes = night_minutes;
     if (group) {
-      start_time = groupStart();
-      end_time = groupEnd();
+      tooltip_minutes = 0;
+      tooltip_work_minutes = 0;
+      tooltip_night_minutes = 0;
+      group.forEach(g => {
+        if (g.start && moment(g.start).isBefore(tooltip_start)) {
+          tooltip_start = moment(g.start);
+        }
+        if (g.end && moment(g.end).isAfter(tooltip_end)) {
+          tooltip_end = moment(g.end);
+        }
+
+        tooltip_minutes += g.minutes;
+        tooltip_work_minutes += g.work_minutes;
+        tooltip_night_minutes += g.night_minutes;
+      });
     }
 
     return (
-      `<div class="timeline-tooltip">${t('From')} <b>${start_time}</b> ${t('to')} <b>${end_time}</b><br/>
-      ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
-      // + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
-      // + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
-      // + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
-      // + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
+      `<div class="timeline-tooltip">${t('From')} <b>${tooltip_start.format('HH:mm')}</b> ${t('to')} <b>${tooltip_end.format('HH:mm')}</b><br/>
+      ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(tooltip_minutes)}</b>`
+      + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(tooltip_work_minutes)}</b>` : ``)
+      //+ (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
+      + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(tooltip_night_minutes)}</strong>` : ``)
+      + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
+      + (group ? `<br />${t('Tasks')}: ${group.length}/${group.filter(g => g.is_completed).length}` : ``)
       + `</div>`
     )
   }
@@ -410,7 +427,7 @@ export default ({
             <div className={styles.eventContent__groupModal__list}>
               {
                 group.map((item, index) => (
-                  <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
+                  <div key={index} className={getGroupItemClasses(item)} onClick={() => item.is_completed ? null : handleClickGroupItem(index)}>
                     <div className={styles.eventContent__groupModal__item__title}>
                       { item.reccuring && <div className={styles.eventContent__reccuring}><RefreshArrows /></div> }
                       {item.schedule_title ? item.schedule_title : ''}
@@ -432,7 +449,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu && !empty ? (
+        !copy_event && withMenu && !empty && !isCompleted ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -459,6 +476,7 @@ export default ({
                   employeeName={employeeName}
                   jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
                   description={activeGroupItem ? activeGroupItem.description : description}
+                  schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                   start={activeGroupItem ? activeGroupItem.start : start}
                   end={activeGroupItem ? activeGroupItem.end : end}
                   title={activeGroupItem ? activeGroupItem.title : title}

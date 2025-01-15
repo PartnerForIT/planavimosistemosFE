@@ -229,6 +229,9 @@ export default () => {
     // Generate empty events
     employee_ids.forEach((employee_id) => {
         days.forEach((day_number) => {
+            //continue if it's past day
+            if (moment(fromDateRef.current).date(day_number).isBefore(moment().startOf('day'))) return;
+
             const hasEvent = result.some(
                 (e) => e.employee_id === employee_id && e.day_number === day_number
             );
@@ -427,14 +430,14 @@ export default () => {
   const handleChangeTimeline = (value, date) => {
     setTimeline(value);
     
-    //const calendarApi = calendarRef.current?.getApi();
+    const calendarApi = calendarRef.current?.getApi();
     let send = { nextTimeline: value };
 
-    //if (!calendarApi?.view?.getCurrentData()?.currentDate)
-    //{
+    if (!calendarApi?.view?.getCurrentData()?.currentDate || date)
+    {
       send.fromDate = date ? date.format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD');
       fromDateRef.current = date ? date : moment(new Date());
-    //}
+    }
 
     handleGetSchedule(send);
 
@@ -616,6 +619,7 @@ export default () => {
         id={event.id}
         employeeId={selectedEvent?.employee_id || null}
         title={selectedEvent?.title || null}
+        schedule_title={selectedEvent?.schedule_title || null}
         reccuring={selectedEvent?.reccuring || null}
         employeeName={selectedEvent?.employee_name || null}
         description={selectedEvent?.description || null}
@@ -1013,7 +1017,7 @@ export default () => {
 
           { !copyTool && (
             <Button onClick={handleCreateNewShift}>
-              {t('Create new shift')}
+              {t('Create Task')}
             </Button> )
           }
         </div>

@@ -10,6 +10,7 @@ import Input from "../../../components/Core/Input/Input";
 import CheckboxGroupWrapper from "../../../components/Core/CheckboxGroup/CheckboxGroupWrapper";
 import useGroupingEmployees from "../../../hooks/useGroupingEmployees";
 import {employeesSelector} from "../../../store/settings/selectors";
+import classNames from "classnames";
 
 export default ({
   onAddEmployee,
@@ -62,7 +63,7 @@ export default ({
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
 
   return (
-    <div className={classes.addEmployee}>
+    <div className={classNames(classes.addEmployee, 'styledDropdown')}>
       <div className={classes.addEmployee__title}>
         {t('Add Employees')}
       </div>

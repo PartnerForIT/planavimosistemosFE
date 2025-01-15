@@ -50,6 +50,8 @@ import { getSkills } from '../../store/skills/actions';
 import usePermissions from '../Core/usePermissions';
 import useCompanyInfo from '../../hooks/useCompanyInfo';
 
+import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+
 const profitabilityColumns = [
   { label: <LabelWithCurrencySignComa label='Cost' />, field: 'cost', checked: true },
   { label: <LabelWithCurrencySignComa label='Earnings' />, field: 'sallary', checked: true },
@@ -194,6 +196,17 @@ export default () => {
     [styles.mainContainerWithReports]: itemsArray.length,
   });
   
+  const employToCheck = useCallback(({
+      id = 0,
+      name,
+      surname,
+    }) => ({
+      id,
+      label: `${name} ${surname}`,
+      checked: filteredEmployees.some(({ employee_id }) => employee_id === id),
+    }), [filteredEmployees]);
+
+  const allSortedEmployees = useGroupingEmployees(getAllEmployees, employToCheck);
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
@@ -307,6 +320,11 @@ export default () => {
         
         const mappedReport = {
           ...generatedReport,
+          dateRange,
+          placesArr: checkedPlaces.map((place) => place.id),
+          jobTypesArr: checkedJobTypes.map((spec) => spec.id),
+          employeesArr: checkedEmployees.map((emp) => emp.id),
+          skillsArr: checkedSkills.map((emp) => emp.id),
           description: `${moment(generatedReport.startDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)} - ${moment(generatedReport.endDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)}`,
           report: generatedReport.report.map(({ items, ...rest }) => ({
             ...rest,
@@ -456,11 +474,11 @@ export default () => {
 
     const selectedReport = itemsArray.find((report) => report.id === activeReport);
 
-    const { startDate, endDate } = dateRange;
-    const placesArr = checkedPlaces.map((place) => place.id);
-    const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
-    const employeesArr = checkedEmployees.map((emp) => emp.id);
-    const skillsArr = checkedSkills.map((emp) => emp.id);
+    const { startDate, endDate } = selectedReport?.dateRange ? selectedReport?.dateRange : dateRange;
+    const placesArr = selectedReport?.placesArr ? selectedReport?.placesArr : checkedPlaces.map((place) => place.id);
+    const jobTypesArr = selectedReport?.jobTypesArr ? selectedReport?.jobTypesArr : checkedJobTypes.map((spec) => spec.id);
+    const employeesArr = selectedReport?.employeesArr ? selectedReport?.employeesArr : checkedEmployees.map((emp) => emp.id);
+    const skillsArr = selectedReport?.skillsArr ? selectedReport?.skillsArr : checkedSkills.map((emp) => emp.id);
 
     if (selectedReport) {
       let filter = '';
@@ -791,9 +809,9 @@ export default () => {
                     onChange={(e) => handleInputChange(e, employees, setFilteredEmployees)}
                     fullWidth
                   />
-                  <div className={styles.checkboxGroupWrapper}>
+                  <div className={classNames(styles.checkboxGroupWrapper, 'styledDropdown')}>
                     <CheckboxGroupWrapper
-                      items={filteredEmployees ?? []}
+                      items={allSortedEmployees ?? []}
                       onChange={(c) => filterChecked(c, 'employees')}
                     />
                   </div>

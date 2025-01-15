@@ -7,8 +7,12 @@
   border-radius: 4px;
   padding: 10px;
   position: absolute;
-  margin-top: 20px;
+  margin-top: 10px;
   z-index: 3;
+}
+
+.fullContentWidth {
+  width: auto;
 }
 
 .select {

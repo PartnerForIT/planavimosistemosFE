@@ -70,6 +70,21 @@ const RowContent = ({
       ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
     }
 
+    if (ev?.group) {
+      let start = ev.start;
+      let end = ev.end;
+      for (let i in ev?.group) {
+        if (moment(ev?.group[i].start).isBefore(moment(start))) {
+          start = ev?.group[i].start;
+        }
+        if (moment(ev?.group[i].end).isAfter(moment(end))) {
+          end = ev?.group[i].end;
+        }
+        
+        ev.title = `${moment(start).format("HH:mm")}-${moment(end).format("HH:mm")}`;
+      }
+    }
+
     return ev;
   }
   

@@ -1,19 +1,18 @@
-import React, { useRef,
-  //useMemo
-} from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 //import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 import CellOptions from '../CellOptions';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 import classes from './Cell.module.scss';
 import {
-  //AdditionalRatesDataSelector,
-  //currencySelector,
+  AdditionalRatesDataSelector,
+  currencySelector,
   //scheduleSelector,
-  //settingCompanySelector,
+  settingCompanySelector,
   //IntegrationsDataSelector
 } from '../../../../store/settings/selectors';
 
@@ -52,23 +51,22 @@ export default ({
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
-  //const schedule = useSelector(scheduleSelector);
-  //const currencies = useSelector(currencySelector);
-  //const company = useSelector(settingCompanySelector);
-  //const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  const currencies = useSelector(currencySelector);
+  const company = useSelector(settingCompanySelector);
+  const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   //const integrations = useSelector(IntegrationsDataSelector);
 
-  // const currency = useMemo(
-  //   () => {
-  //     if (Array.isArray(currencies)) {
-  //       return currencies
-  //         .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
-  //     }
+  const currency = useMemo(
+    () => {
+      if (Array.isArray(currencies)) {
+        return currencies
+          .find((curr) => curr.code === company?.currency || curr.name === company?.currency)?.symbol ?? '';
+      }
 
-  //     return '';
-  //   },
-  //   [company.currency, currencies],
-  // );
+      return '';
+    },
+    [company.currency, currencies],
+  );
   
   const cellClasses = classnames(classes.cell, 'monthCell', {
     [classes.cell_statistic]: statistic,
@@ -145,14 +143,38 @@ export default ({
   }
 
   const tooltipContent = () => {
+    let tooltip_start = moment(event.start);
+    let tooltip_end = moment(event.end);
+    let minutes = event.minutes;
+    let work_minutes = event.work_minutes;
+    let night_minutes = event.night_minutes;
+    if (event?.group) {
+      minutes = 0;
+      work_minutes = 0;
+      night_minutes = 0;
+      event.group.forEach(g => {
+        if (g.start && moment(g.start).isBefore(tooltip_start)) {
+          tooltip_start = moment(g.start);
+        }
+        if (g.end && moment(g.end).isAfter(tooltip_end)) {
+          tooltip_end = moment(g.end);
+        }
+
+        minutes += g.minutes;
+        work_minutes += g.work_minutes;
+        night_minutes += g.night_minutes;
+      });
+    }
+
     return (
       !event ? `${title} ${t('hours')}` : (
-      `<div class="timeline-tooltip">${t('From')} <b>${moment(event.start).format('HH:mm')}</b> ${t('to')} <b>${moment(event.end).format('HH:mm')}</b><br/>
-      ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(event.minutes)}</b>`
-      // + ((permissions.night_rates && AdditionalRates.night_time) ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(event.work_minutes)}</b>` : ``)
-      // + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(event.break_minutes)}</b>` : ``)
-      // + ((permissions.night_rates && AdditionalRates.night_time) ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(event.night_minutes)}</strong>` : ``)
-      // + ((permissions.cost && permissions.schedule_costs) ? `<br />${t('Cost')} <b>${event.cost}${currency}</b>` : ``)
+      `<div class="timeline-tooltip">${t('From')} <b>${tooltip_start.format('HH:mm')}</b> ${t('to')} <b>${moment(tooltip_end).format('HH:mm')}</b><br/>
+      ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
+      + ((permissions.night_rates && AdditionalRates.night_time) ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
+      //+ (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(event.break_minutes)}</b>` : ``)
+      + ((permissions.night_rates && AdditionalRates.night_time) ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
+      + ((permissions.cost && permissions.schedule_costs) ? `<br />${t('Cost')} <b>${event.cost}${currency}</b>` : ``)
+      + (event?.group ? `<br />${t('Tasks')}: ${event?.group.length}/${event?.group.filter(g => g.is_completed).length}` : ``)
       + `</div>`
       )
     )
@@ -193,7 +215,7 @@ export default ({
               ) : null
             }
 
-            { !statistic && !markerActive &&
+            { !statistic && !markerActive && !isCompleted &&
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}
@@ -203,6 +225,7 @@ export default ({
                 title={event?.real_title || null}
                 reccuring={event?.reccuring || null}
                 description={event?.description || null}
+                schedule_title={event?.schedule_title || null}
                 group={event?.group || null}
                 copyTool={copyTool}
                 start={start}

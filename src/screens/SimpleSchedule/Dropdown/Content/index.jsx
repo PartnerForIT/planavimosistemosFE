@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import CrossIcon from '../../../../components/Icons/Cross';
@@ -19,72 +19,88 @@ export default ({
     [classes.content_border]: withBorder,
   });
 
-  const showComponent = () => {
-    const style = {};
+  const [modalStyles, setModalStyles] = useState({});
 
-    if (onTop) {
+  useEffect(() => {
+    if (wrapperRef.current) {
+      const modalHeight = wrapperRef.current.offsetHeight;
 
-      if (!maxHeight) {
-        style.bottom = window.innerHeight - offset.top + 6;
-        style.left = offset.left;
-        style.transform = 'translateX(-50%)';
-        style.marginLeft = '12px';
+      if (onTop) {
+
+        if (!maxHeight) {
+          setModalStyles({
+            bottom: window.innerHeight - offset.top + 6,
+            left: offset.left,
+            transform: 'translateX(-50%)',
+            marginLeft: '12px',
+          });
+        } else {
+  
+          const elementHeight = maxHeight || 0;
+          const elementWidth = 295; // Fixed width of your window (adjust if dynamic)
+          
+          let topOffset = offset.top - elementHeight - 6; // Position above the reference element
+          let leftOffset = offset.left;
+  
+          // Adjust if the element overflows at the top
+          if (topOffset < 0) {
+            topOffset = 6; // Minimum margin from the top
+          }
+  
+          // Adjust if the element overflows on the left
+          if (leftOffset - elementWidth / 2 < 0) {
+            leftOffset = elementWidth / 2; // Center but prevent left overflow
+          }
+  
+          // Adjust if the element overflows on the right
+          if (leftOffset + elementWidth / 2 > window.innerWidth) {
+            leftOffset = window.innerWidth - elementWidth / 2; // Prevent right overflow
+          }
+          
+          setModalStyles({
+            top: topOffset,
+            left: leftOffset,
+            transform: 'translateX(-50%)',
+            marginLeft: '12px',
+          });
+        }
       } else {
+        // default right
+        let right = 'auto';
+        let left = 'auto';
 
-        const elementHeight = maxHeight || 0;
-        const elementWidth = 295; // Fixed width of your window (adjust if dynamic)
-        
-        let topOffset = offset.top - elementHeight - 6; // Position above the reference element
-        let leftOffset = offset.left;
-
-        // Adjust if the element overflows at the top
-        if (topOffset < 0) {
-          topOffset = 6; // Minimum margin from the top
+        if (offset.left + 295 > window.innerWidth) {
+          right = window.innerWidth - offset.right + 18;
+        } else {
+          left = offset.left + offset.width + 6;
+        }
+  
+        let top = offset.top; // Default position: below the button
+  
+        // If modal overflows below, position it above
+        if (top + modalHeight > window.innerHeight) {
+            top = offset.top - modalHeight; // Position above the button
+        }
+  
+        // Ensure modal does not overflow the top of the viewport
+        if (top < 90) {
+            top = 90;
         }
 
-        // Adjust if the element overflows on the left
-        if (leftOffset - elementWidth / 2 < 0) {
-          leftOffset = elementWidth / 2; // Center but prevent left overflow
-        }
-
-        // Adjust if the element overflows on the right
-        if (leftOffset + elementWidth / 2 > window.innerWidth) {
-          leftOffset = window.innerWidth - elementWidth / 2; // Prevent right overflow
-        }
-        
-        style.top = `${topOffset}px`;
-        style.left = `${leftOffset}px`;
-        style.transform = 'translateX(-50%)';
-        style.marginLeft = '12px';
-      }
-    } else {
-      // default right
-      if (offset.left + 295 > window.innerWidth) {
-        style.right = window.innerWidth - offset.right + 18;
-      } else {
-        style.left = offset.left + offset.width + 6;
-      }
-
-
-
-      const modalHeight = Math.min(maxHeight, window.innerHeight); // Ensure modal height fits in viewport
-      let top = offset.top + offset.height;
-
-      // Adjust position if modal goes out of the viewport
-      if (top + modalHeight > window.innerHeight) {
-          top = Math.max(0, offset.top - modalHeight); // Show above the button
-      }
-      
-      if (top <= 0) {
-        style.top = `${top}px`;
-      } else {
-        style.bottom = window.innerHeight - offset.bottom;
+        setModalStyles({
+          top: top,
+          left: left,
+          right: right,
+        });
       }
     }
+  }, [offset, maxHeight, wrapperRef, onTop]);
+
+  const showComponent = () => {
 
     return (
       <div
-        style={style}
+        style={modalStyles}
         ref={wrapperRef}
         className={contentClasses}
       >

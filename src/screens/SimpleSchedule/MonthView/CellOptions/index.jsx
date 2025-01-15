@@ -20,6 +20,7 @@ export default ({
   reccuring,
   title,
   description,
+  schedule_title,
   photo,
   jobTypeName,
   employeeName,
@@ -228,6 +229,7 @@ export default ({
                     employeeName={employeeName}
                     jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
                     description={activeGroupItem ? activeGroupItem.description : description}
+                    schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                     start={activeGroupItem ? activeGroupItem.start : start}
                     end={activeGroupItem ? activeGroupItem.end : end}
                     title={activeGroupItem ? activeGroupItem.title : title}

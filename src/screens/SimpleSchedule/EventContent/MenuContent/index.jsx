@@ -16,6 +16,7 @@ export default ({
   start,
   end,
   title,
+  schedule_title,
   handleEditWorkingTime,
   handleDuplicateWorkingTime,
   handleDeleteWorkingTime,
@@ -40,6 +41,12 @@ export default ({
             {jobTypeName}
           </div>
         </div>
+      </div>
+      <div className={styles.eventContent__label}>
+        {t('Task name')}
+      </div>
+      <div className={styles.eventContent__value}>
+        {schedule_title}
       </div>
       {
         reccuring && <ReccuringInfo reccuring={reccuring} />

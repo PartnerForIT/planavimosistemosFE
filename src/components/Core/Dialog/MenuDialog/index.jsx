@@ -67,7 +67,9 @@ function MenuDialog({
     changeLanguage(language);
     setLanguage(language);
     handleClose();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 
   // useEffect(() => {
