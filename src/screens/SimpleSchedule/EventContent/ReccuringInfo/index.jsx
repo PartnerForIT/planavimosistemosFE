@@ -18,7 +18,7 @@ export default ({
         <div className={styles.eventContent__userReccuring_icon}>
           <RefreshArrows />
         </div>
-        {t('Reccuring schedule')}
+        {t('Recurring schedule')}
         <Button inverseblack={false} size='little'>
           { reccuring.type_id*1 === 0 && t('Daily') }
           { reccuring.type_id*1 === 1 && t('Weekly') }

@@ -49,7 +49,7 @@ const permissionsConfig = [
 ];
 
 const initialFormValues = {
-  date: moment(), title: '', duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0, repeat_type: 1},
+  date: moment(), reccuring_end: null, title: '', duration: {start: '08:00', end: '17:00'}, reccuring: false, reccuring_settings: {type_id: 0, repeat_type: 1},
 };
 
 export default function NewSimpleSchedule({
@@ -95,6 +95,7 @@ export default function NewSimpleSchedule({
         employee_id,
         reccuring,
         reccuring_end,
+        exclude_holidays,
         start_work,
         end_work,
         setting,
@@ -140,6 +141,7 @@ export default function NewSimpleSchedule({
           employees: employee_id ? [{id: employee_id, checked: true}] : [],
           reccuring: reccuring ? true : false,
           reccuring_end: reccuring_end ? moment(reccuring_end, 'YYYY-MM-DD') : null,
+          exclude_holidays: exclude_holidays ? true : false,
           reccuring_settings: {
             type_id: reccuring_settings?.type_id ? reccuring_settings.type_id : 0,
             repeat_type: reccuring_settings?.repeat_type ? reccuring_settings.repeat_type : repeat_type,
@@ -388,7 +390,7 @@ export default function NewSimpleSchedule({
             <Checkbox
               onChange={handleCheckboxChange}
               checked={formValues.reccuring}
-              label={t('Reccuring')}
+              label={t('Recurring')}
               name="reccuring"
             />
           </div>
@@ -415,6 +417,16 @@ export default function NewSimpleSchedule({
 
         { formValues.reccuring && 
           <div>
+            <div className={classes.addEntry__formFlex}>
+              <div className={classes.addEntry__formCheckbox}>
+                <Checkbox
+                  onChange={handleCheckboxChange}
+                  checked={formValues.exclude_holidays}
+                  label={t('Exclude National Holidays')}
+                  name="exclude_holidays"
+                />
+              </div>
+            </div>
             <div className={classes.addEntry__formButtonsFlex}>
               <Button onClick={() => handleChangeReccuring(0)} inverseblack={formValues?.reccuring_settings?.type_id !== 0} size='small'>
                 {t('Daily')}
