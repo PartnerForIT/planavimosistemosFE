@@ -99,6 +99,7 @@ export default function NewSimpleSchedule({
         start_work,
         end_work,
         setting,
+        only_day,
       } = editData;
 
       const reccuring_settings = setting?.reccuring_settings ? setting.reccuring_settings : {};
@@ -142,6 +143,7 @@ export default function NewSimpleSchedule({
           reccuring: reccuring ? true : false,
           reccuring_end: reccuring_end ? moment(reccuring_end, 'YYYY-MM-DD') : null,
           exclude_holidays: exclude_holidays ? true : false,
+          only_day: only_day ? only_day.format('YYYY-MM-DD') : false,
           reccuring_settings: {
             type_id: reccuring_settings?.type_id ? reccuring_settings.type_id : 0,
             repeat_type: reccuring_settings?.repeat_type ? reccuring_settings.repeat_type : repeat_type,
@@ -294,6 +296,7 @@ export default function NewSimpleSchedule({
             type='employees'
             withSearch={true}
             confirmButton={t('Select')}
+            disabled={formValues.only_day}
           />
         </div>
         <div className={classes.addEntry__formControl}>
@@ -385,172 +388,65 @@ export default function NewSimpleSchedule({
               rows={3}
           />
         </div>
-        <div className={classes.addEntry__formFlex}>
-          <div className={classes.addEntry__formCheckbox}>
-            <Checkbox
-              onChange={handleCheckboxChange}
-              checked={formValues.reccuring}
-              label={t('Recurring')}
-              name="reccuring"
-            />
-          </div>
-          { formValues.reccuring && (
-            <div className={classes.addEntry__formControl}>
-              <div className={classes.addEntry__formControl__labelBlock}>
-                <Label text={t('End date')} htmlFor='reccuring_end' />
-              </div>
-              <div className={classes.addEntry__date}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <DatePicker
-                    label={t('End date')}
-                    value={formValues.reccuring_end}
-                    onChange={handleEndDateChange}
-                    format='MMM, DD, YYYY'
-                    name="reccuring_end"
-                  />
-                </MuiPickersUtilsProvider>
-              </div>
+        { !formValues.only_day && (
+          <>
+          <div className={classes.addEntry__formFlex}>
+            <div className={classes.addEntry__formCheckbox}>
+              <Checkbox
+                onChange={handleCheckboxChange}
+                checked={formValues.reccuring}
+                label={t('Recurring')}
+                name="reccuring"
+              />
             </div>
-          )}
-        </div>
-        <div className={classes.addEntry__line}></div>
-
-        { formValues.reccuring && 
-          <div>
-            <div className={classes.addEntry__formFlex}>
-              <div className={classes.addEntry__formCheckbox}>
-                <Checkbox
-                  onChange={handleCheckboxChange}
-                  checked={formValues.exclude_holidays}
-                  label={t('Exclude National Holidays')}
-                  name="exclude_holidays"
-                />
-              </div>
-            </div>
-            <div className={classes.addEntry__formButtonsFlex}>
-              <Button onClick={() => handleChangeReccuring(0)} inverseblack={formValues?.reccuring_settings?.type_id !== 0} size='small'>
-                {t('Daily')}
-              </Button>
-              <Button onClick={() => handleChangeReccuring(1)} inverseblack={formValues?.reccuring_settings?.type_id !== 1} size='small'>
-                {t('Weekly')}
-              </Button>
-              <Button onClick={() => handleChangeReccuring(2)} inverseblack={formValues?.reccuring_settings?.type_id !== 2} size='small'>
-                {t('Monthly')}
-              </Button>
-            </div>
-            <div className={classes.addEntry__sep}></div>
-            
-            { formValues?.reccuring_settings?.type_id === 0 &&
-              <div>
+            { formValues.reccuring && (
+              <div className={classes.addEntry__formControl}>
                 <div className={classes.addEntry__formControl__labelBlock}>
-                  <div className={classes.addEntry__formSmallButtonsFlex}>
-                    <FormControlLabel
-                      value='1'
-                      control={(
-                        <BlueRadio
-                          checked={formValues.reccuring_settings.repeat_type === 1}
-                          onChange={handleRepeatTypeChange}
-                          value='1'
-                          name='repeat_type'
-                        />
-                      )}
-                      label={t('Repeat every day(s)')}
-                    />
-                    <FormControlLabel
-                      value='2'
-                      control={(
-                        <BlueRadio
-                          checked={formValues.reccuring_settings.repeat_type === 2}
-                          onChange={handleRepeatTypeChange}
-                          value='2'
-                          name='repeat_type'
-                        />
-                      )}
-                      label={t('Repeat every')}
-                    />
-                  </div>
+                  <Label text={t('End date')} htmlFor='reccuring_end' />
                 </div>
-
-                { formValues.reccuring_settings.repeat_type === 1 &&
-                  <div className={classes.addEntry__formControl}>
-                    <div className={classes.addEntry__formSmallButtonsFlex}>
-                      {
-                        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                          <Button key={index+1} onClick={() => handleChangeDayOfWeek(index+1)} inverseblack={!formValues?.reccuring_settings?.day_of_week?.includes(index+1)} size='smaller'>
-                            {t(day)}
-                          </Button>
-                        ))
-                      }
-                    </div>
-                  </div>
-                }
-                
-                { formValues.reccuring_settings.repeat_type === 2 &&
-                  <div className={classes.addEntry__formControl}>
-                    <div className={classes.addEntry__formSmallButtonsFlex}>
-                      <Input
-                        type='number'
-                        value={formValues.reccuring_settings.repeat_every}
-                        onChange={(e) => handleChangeRepeatEvery(e.target.value)}
-                        className={classes.addEntry__formControl__smallInput}
-                      />
-                    </div>
-                  </div>
-                }
+                <div className={classes.addEntry__date}>
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <DatePicker
+                      label={t('End date')}
+                      value={formValues.reccuring_end}
+                      onChange={handleEndDateChange}
+                      format='MMM, DD, YYYY'
+                      name="reccuring_end"
+                    />
+                  </MuiPickersUtilsProvider>
+                </div>
               </div>
-            }
+            )}
+          </div>
+          <div className={classes.addEntry__line}></div>
 
-            { formValues?.reccuring_settings?.type_id === 1 &&
-              <div>
-                <div className={classes.addEntry__formControl}>
-                  <div className={classes.addEntry__formControl__labelBlock}>
-                    <Label text={t('Repeat every')} />
-                  </div>
-                  <SimpleSelect
-                    handleInputChange={handleChangeRepeatEveryWeek}
-                    value={formValues.reccuring_settings.repeat_every}
-                    options={[{id: 1, name: t('1 week')}, {id: 2, name : t('2 weeks')}, {id: 3, name: t('3 weeks')}, {id: 4, name: t('4 weeks')}]}
-                    placeholder={t('Select week')}
-                    valueKey='id'
-                    labelKey='name'
-                    className={classes.addEntry__formControl__smallSelect}
+          { formValues.reccuring && 
+            <div>
+              <div className={classes.addEntry__formFlex}>
+                <div className={classes.addEntry__formCheckbox}>
+                  <Checkbox
+                    onChange={handleCheckboxChange}
+                    checked={formValues.exclude_holidays}
+                    label={t('Exclude National Holidays')}
+                    name="exclude_holidays"
                   />
                 </div>
-                <div className={classes.addEntry__sep}></div>
-                <div className={classes.addEntry__formControl}>
-                  <div className={classes.addEntry__formControl__labelBlock}>
-                    <Label text={t('On the day of the week')} />
-                  </div>
-                  <div className={classes.addEntry__formSmallButtonsFlex}>
-                    {
-                      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                        <Button key={index+1} onClick={() => handleChangeDayOfWeek(index+1)} inverseblack={!formValues?.reccuring_settings?.day_of_week?.includes(index+1)} size='smaller'>
-                          {t(day)}
-                        </Button>
-                      ))
-                    }
-                  </div>
-                </div>
               </div>
-            }
-
-            { formValues?.reccuring_settings?.type_id === 2 &&
-              <div>
-                <div className={classes.addEntry__formControl}>
-                  <div className={classes.addEntry__formControl__labelBlock}>
-                    <Label text={t('Repeat every')} />
-                  </div>
-                  <div className={classes.addEntry__formSmallButtonsFlex}>
-                    {
-                      ['Jan', 'Feb', 'Mar', 'May', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((day, index) => (
-                        <Button key={index} onClick={() => handleChangeRepeatEveryMonth(index+1)} inverseblack={!formValues?.reccuring_settings?.repeat_every?.includes(index+1)} size='smaller'>
-                          {t(day)}
-                        </Button>
-                      ))
-                    }
-                  </div>
-                </div>
-                <div className={classes.addEntry__formControl}>
+              <div className={classes.addEntry__formButtonsFlex}>
+                <Button onClick={() => handleChangeReccuring(0)} inverseblack={formValues?.reccuring_settings?.type_id !== 0} size='small'>
+                  {t('Daily')}
+                </Button>
+                <Button onClick={() => handleChangeReccuring(1)} inverseblack={formValues?.reccuring_settings?.type_id !== 1} size='small'>
+                  {t('Weekly')}
+                </Button>
+                <Button onClick={() => handleChangeReccuring(2)} inverseblack={formValues?.reccuring_settings?.type_id !== 2} size='small'>
+                  {t('Monthly')}
+                </Button>
+              </div>
+              <div className={classes.addEntry__sep}></div>
+              
+              { formValues?.reccuring_settings?.type_id === 0 &&
+                <div>
                   <div className={classes.addEntry__formControl__labelBlock}>
                     <div className={classes.addEntry__formSmallButtonsFlex}>
                       <FormControlLabel
@@ -563,7 +459,7 @@ export default function NewSimpleSchedule({
                             name='repeat_type'
                           />
                         )}
-                        label={t('On the date')}
+                        label={t('Repeat every day(s)')}
                       />
                       <FormControlLabel
                         value='2'
@@ -575,45 +471,13 @@ export default function NewSimpleSchedule({
                             name='repeat_type'
                           />
                         )}
-                        label={t('On the week')}
+                        label={t('Repeat every')}
                       />
                     </div>
                   </div>
-                </div>
 
-                { formValues.reccuring_settings.repeat_type === 1 &&
-                  <div>
+                  { formValues.reccuring_settings.repeat_type === 1 &&
                     <div className={classes.addEntry__formControl}>
-                      <CustomSelect
-                        placeholder={t('Select date')}
-                        buttonLabel={t('Select')}
-                        items={daysSelect}
-                        onChange={handleChangeStartMonth}
-                        width='auto'
-                        withSearch={false}
-                      />
-                    </div>
-                  </div>  
-                }
-
-                { formValues.reccuring_settings.repeat_type === 2 &&
-                  <div>
-                    <div className={classes.addEntry__formControl}>
-                      <div className={classes.addEntry__formSmallButtonsFlex}>
-                        {
-                          ['First', 'Second', 'Third', 'Fourth', 'Fifth'].map((day, index) => (
-                            <Button key={index+1} onClick={() => handleChangeStartMonthButton(index+1)} inverseblack={!formValues?.reccuring_settings?.start?.includes(index+1)} size='smaller'>
-                              {t(day)}
-                            </Button>
-                          ))
-                        }
-                      </div>
-                    </div>
-                    <div className={classes.addEntry__sep}></div>
-                    <div className={classes.addEntry__formControl}>
-                      <div className={classes.addEntry__formControl__labelBlock}>
-                        <Label text={t('On the day of the week')} />
-                      </div>
                       <div className={classes.addEntry__formSmallButtonsFlex}>
                         {
                           ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
@@ -624,15 +488,159 @@ export default function NewSimpleSchedule({
                         }
                       </div>
                     </div>
+                  }
+                  
+                  { formValues.reccuring_settings.repeat_type === 2 &&
+                    <div className={classes.addEntry__formControl}>
+                      <div className={classes.addEntry__formSmallButtonsFlex}>
+                        <Input
+                          type='number'
+                          value={formValues.reccuring_settings.repeat_every}
+                          onChange={(e) => handleChangeRepeatEvery(e.target.value)}
+                          className={classes.addEntry__formControl__smallInput}
+                        />
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+
+              { formValues?.reccuring_settings?.type_id === 1 &&
+                <div>
+                  <div className={classes.addEntry__formControl}>
+                    <div className={classes.addEntry__formControl__labelBlock}>
+                      <Label text={t('Repeat every')} />
+                    </div>
+                    <SimpleSelect
+                      handleInputChange={handleChangeRepeatEveryWeek}
+                      value={formValues.reccuring_settings.repeat_every}
+                      options={[{id: 1, name: t('1 week')}, {id: 2, name : t('2 weeks')}, {id: 3, name: t('3 weeks')}, {id: 4, name: t('4 weeks')}]}
+                      placeholder={t('Select week')}
+                      valueKey='id'
+                      labelKey='name'
+                      className={classes.addEntry__formControl__smallSelect}
+                    />
                   </div>
-                }
-              </div>
-            }
+                  <div className={classes.addEntry__sep}></div>
+                  <div className={classes.addEntry__formControl}>
+                    <div className={classes.addEntry__formControl__labelBlock}>
+                      <Label text={t('On the day of the week')} />
+                    </div>
+                    <div className={classes.addEntry__formSmallButtonsFlex}>
+                      {
+                        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
+                          <Button key={index+1} onClick={() => handleChangeDayOfWeek(index+1)} inverseblack={!formValues?.reccuring_settings?.day_of_week?.includes(index+1)} size='smaller'>
+                            {t(day)}
+                          </Button>
+                        ))
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              { formValues?.reccuring_settings?.type_id === 2 &&
+                <div>
+                  <div className={classes.addEntry__formControl}>
+                    <div className={classes.addEntry__formControl__labelBlock}>
+                      <Label text={t('Repeat every')} />
+                    </div>
+                    <div className={classes.addEntry__formSmallButtonsFlex}>
+                      {
+                        ['Jan', 'Feb', 'Mar', 'May', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((day, index) => (
+                          <Button key={index} onClick={() => handleChangeRepeatEveryMonth(index+1)} inverseblack={!formValues?.reccuring_settings?.repeat_every?.includes(index+1)} size='smaller'>
+                            {t(day)}
+                          </Button>
+                        ))
+                      }
+                    </div>
+                  </div>
+                  <div className={classes.addEntry__formControl}>
+                    <div className={classes.addEntry__formControl__labelBlock}>
+                      <div className={classes.addEntry__formSmallButtonsFlex}>
+                        <FormControlLabel
+                          value='1'
+                          control={(
+                            <BlueRadio
+                              checked={formValues.reccuring_settings.repeat_type === 1}
+                              onChange={handleRepeatTypeChange}
+                              value='1'
+                              name='repeat_type'
+                            />
+                          )}
+                          label={t('On the date')}
+                        />
+                        <FormControlLabel
+                          value='2'
+                          control={(
+                            <BlueRadio
+                              checked={formValues.reccuring_settings.repeat_type === 2}
+                              onChange={handleRepeatTypeChange}
+                              value='2'
+                              name='repeat_type'
+                            />
+                          )}
+                          label={t('On the week')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  { formValues.reccuring_settings.repeat_type === 1 &&
+                    <div>
+                      <div className={classes.addEntry__formControl}>
+                        <CustomSelect
+                          placeholder={t('Select date')}
+                          buttonLabel={t('Select')}
+                          items={daysSelect}
+                          onChange={handleChangeStartMonth}
+                          width='auto'
+                          withSearch={false}
+                        />
+                      </div>
+                    </div>  
+                  }
+
+                  { formValues.reccuring_settings.repeat_type === 2 &&
+                    <div>
+                      <div className={classes.addEntry__formControl}>
+                        <div className={classes.addEntry__formSmallButtonsFlex}>
+                          {
+                            ['First', 'Second', 'Third', 'Fourth', 'Fifth'].map((day, index) => (
+                              <Button key={index+1} onClick={() => handleChangeStartMonthButton(index+1)} inverseblack={!formValues?.reccuring_settings?.start?.includes(index+1)} size='smaller'>
+                                {t(day)}
+                              </Button>
+                            ))
+                          }
+                        </div>
+                      </div>
+                      <div className={classes.addEntry__sep}></div>
+                      <div className={classes.addEntry__formControl}>
+                        <div className={classes.addEntry__formControl__labelBlock}>
+                          <Label text={t('On the day of the week')} />
+                        </div>
+                        <div className={classes.addEntry__formSmallButtonsFlex}>
+                          {
+                            ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
+                              <Button key={index+1} onClick={() => handleChangeDayOfWeek(index+1)} inverseblack={!formValues?.reccuring_settings?.day_of_week?.includes(index+1)} size='smaller'>
+                                {t(day)}
+                              </Button>
+                            ))
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
 
             <div className={classes.addEntry__line}></div>
           </div>
         }
+        </>
+      )}
       </div>
+      
       <div className={classes.buttonsBlock}>
         <Button onClick={() => handleClose()} inverse size='big'>
           {t('Cancel')}

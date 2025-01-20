@@ -43,6 +43,8 @@ export default ({
   onDeleteWorkingTime,
   onDuplicateEmployee,
   openAddSchedule,
+  onEditReccuring,
+  onDeleteReccuring,
 }) => {
   
   const { t } = useTranslation();
@@ -97,10 +99,10 @@ export default ({
   };
 
   const handleEditWorkingTime = () => {
-    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start);
   };
   const handleDeleteWorkingTime = () => {
-    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start);
   };
   const handleDuplicateWorkingTime = (employeeId) => {
     onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
@@ -236,6 +238,8 @@ export default ({
                     handleEditWorkingTime={handleEditWorkingTime}
                     handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
                     handleDeleteWorkingTime={handleDeleteWorkingTime}
+                    onEditReccuring={() => { onEditReccuring(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start) }}
+                    onDeleteReccuring={() => { onDeleteReccuring(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start) }}
                   />
                 )
               }

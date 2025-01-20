@@ -48,6 +48,8 @@ export default ({
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
   openAddSchedule,
+  onEditReccuring,
+  onDeleteReccuring
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
@@ -248,6 +250,8 @@ export default ({
                 onDuplicateEmployee={handleDuplicateEmployee}
                 onDeleteWorkingTime={handleDeleteWorkingTime}
                 openAddSchedule={() => { openAddSchedule(event) }}
+                onEditReccuring={onEditReccuring}
+                onDeleteReccuring={onDeleteReccuring}
               />
             }
           </div>

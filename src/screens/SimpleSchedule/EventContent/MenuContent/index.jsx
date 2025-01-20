@@ -20,7 +20,8 @@ export default ({
   handleEditWorkingTime,
   handleDuplicateWorkingTime,
   handleDeleteWorkingTime,
-
+  onEditReccuring,
+  onDeleteReccuring
 }) => {
   const { t } = useTranslation();
   
@@ -49,7 +50,7 @@ export default ({
         {schedule_title}
       </div>
       {
-        reccuring && <ReccuringInfo reccuring={reccuring} />
+        reccuring && <ReccuringInfo reccuring={reccuring} onEditReccuring={onEditReccuring} onDeleteReccuring={onDeleteReccuring} />
       }
       {
         description && 

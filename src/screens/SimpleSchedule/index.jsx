@@ -506,22 +506,28 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     });
   };
-  const handleDeleteWorkingTime = (id) => {
+  const handleDeleteWorkingTime = (id, day) => {
+    if (!day) return;
     const confirm = window.confirm('Are you sure you want to delete this schedule?');
     if (confirm) {
+      const splited_id = (id+'').split('-');
       dispatch(deleteSchedule({
         companyId,
-        id: (id+'').split('-')[0],
+        id: splited_id[0],
+        day: splited_id[1] ? day.format('YYYY-MM-DD') : null,
       })).then(() => {
         handleGetSchedule({ fromDate: fromDateRef.current });
       });
     }
   };
-  const handleEditWorkingTime = (id) => {
+  const handleEditWorkingTime = (id, day) => {
+    const splited_id = (id+'').split('-');
     dispatch(getEditSchedule({
       companyId,
-      id: (id+'').split('-')[0],
+      id: splited_id[0],
+      day: splited_id[1] ? day.format('YYYY-MM-DD') : null,
     })).then((data) => {
+      data.only_day = splited_id[1] ? day : null;
       setEditShiftData(data)
       setOpenCreateShift(true);
     });
@@ -550,6 +556,26 @@ export default () => {
     })).then(() => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     });
+  }
+  const handleEditReccuring = (id) => {
+    dispatch(getEditSchedule({
+      companyId,
+      id: (id+'').split('-')[0],
+    })).then((data) => {
+      setEditShiftData(data)
+      setOpenCreateShift(true);
+    });
+  }
+  const handleDeleteReccuring = (id) => {
+    const confirm = window.confirm('Are you sure you want to delete this recurring schedule?');
+    if (confirm) {
+      dispatch(deleteSchedule({
+        companyId,
+        id: (id+'').split('-')[0],
+      })).then(() => {
+        handleGetSchedule({ fromDate: fromDateRef.current });
+      });
+    }
   }
   const handleCopyTool = (time) => {
     setCopyToolTime(time)
@@ -651,6 +677,8 @@ export default () => {
         isCompleted={isCompleted}
         lineColor={resourceInfo?.extendedProps?.lineColor}
         removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
+        onEditReccuring={handleEditReccuring}
+        onDeleteReccuring={handleDeleteReccuring}
       />
     );
   };
@@ -1052,6 +1080,8 @@ export default () => {
                     handleAddEmployees={handleAddEmployees}
                     handleDeleteEmployees={handleDeleteEmployees}
                     openAddSchedule={handleOpenAddSchedule}
+                    onEditReccuring={handleEditReccuring}
+                    onDeleteReccuring={handleDeleteReccuring}
                   />
                 ) : (
                   <>

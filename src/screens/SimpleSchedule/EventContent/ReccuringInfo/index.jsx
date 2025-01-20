@@ -5,9 +5,12 @@ import Button from '../../../../components/Core/Button/Button';
 import RefreshArrows from '../../../../components/Icons/RefreshArrows';
 
 import styles from '../EventContent.module.scss';
+import classNames from 'classnames';
 
 export default ({
-  reccuring
+  reccuring,
+  onEditReccuring,
+  onDeleteReccuring
 }) => {
   const { t } = useTranslation();
   
@@ -134,6 +137,20 @@ export default ({
             }
           </div>
         }
+
+        <div
+          className={styles.eventContent__userReccuring__action}
+          onClick={onEditReccuring}
+        >
+          {t('Edit recurring')}
+        </div>
+
+        <div
+          className={classNames(styles.eventContent__userReccuring__action, styles.eventContent__userReccuring__action_delete)}
+          onClick={onDeleteReccuring}
+        >
+          {t('Delete')}
+        </div>
       </div>
     </div>
   );

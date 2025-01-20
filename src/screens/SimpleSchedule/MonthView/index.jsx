@@ -51,6 +51,8 @@ export default ({
   handleAddEmployees,
   handleDeleteEmployees,
   openAddSchedule,
+  onEditReccuring,
+  onDeleteReccuring
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -329,6 +331,8 @@ export default ({
                     handleDuplicateEmployee={handleDuplicateEmployee}
                     handleDeleteWorkingTime={handleDeleteWorkingTime}
                     openAddSchedule={openAddSchedule}
+                    onEditReccuring={onEditReccuring}
+                    onDeleteReccuring={onDeleteReccuring}
                   />
                 ))
               }

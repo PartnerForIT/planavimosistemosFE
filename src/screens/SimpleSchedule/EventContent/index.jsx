@@ -64,6 +64,8 @@ export default ({
   removeTimelines,
   lineColor,
   openAddSchedule,
+  onEditReccuring,
+  onDeleteReccuring
 }) => {
   const { t } = useTranslation();
 
@@ -204,7 +206,7 @@ export default ({
   }, [content]);
 
   const handleEditWorkingTime = () => {
-    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem?.start ? activeGroupItem?.start : start);
   };
   
   const copyEvent = () => {
@@ -217,7 +219,7 @@ export default ({
     setContent('menu');
   };
   const handleDeleteWorkingTime = () => {
-    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id);
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem?.start ? activeGroupItem?.start : start);
   };
   const handleDuplicateWorkingTime = (employeeId) => {
     onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
@@ -483,6 +485,8 @@ export default ({
                   handleEditWorkingTime={handleEditWorkingTime}
                   handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
                   handleDeleteWorkingTime={handleDeleteWorkingTime}
+                  onEditReccuring={() => { onEditReccuring(activeGroupItem?.id ? activeGroupItem?.id : id) }}
+                  onDeleteReccuring={() => { onDeleteReccuring(activeGroupItem?.id ? activeGroupItem?.id : id) }}
                 />
               )
             }

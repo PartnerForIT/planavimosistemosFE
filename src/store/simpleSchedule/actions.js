@@ -43,11 +43,11 @@ export const getSchedule = (data) => {
   };
 };
 
-export const deleteSchedule = ({ companyId, id }) => {
+export const deleteSchedule = ({ companyId, id, day }) => {
   return (dispatch, getState) => {
     dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
-      fetch(`${config.api.url}/company/${companyId}/simple/${id}/delete`, {
+      fetch(`${config.api.url}/company/${companyId}/simple/${id}/delete`+(day ? `?day=${day}` : ''), {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -125,11 +125,11 @@ export const postDuplicateSchedule = ({ companyId, id, employeeId }) => {
   };
 };
 
-export const getEditSchedule = ({ companyId, id }) => {
+export const getEditSchedule = ({ companyId, id, day }) => {
   return (dispatch, getState) => {
     dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
-      fetch(`${config.api.url}/company/${companyId}/simple/${id}`, {
+      fetch(`${config.api.url}/company/${companyId}/simple/${id}` + (day ? `?day=${day}` : ''), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

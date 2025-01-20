@@ -199,6 +199,28 @@
         height: 12px;
       }
     }
+
+    &__action {
+      display: flex;
+      align-items: center;
+      color: #333945;
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 12px;
+      line-height: 14px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 9px 0;
+      width: 100%;
+      border-top: 1px solid rgba(112, 112, 112, 0.24);
+      margin-top: 10px;
+  
+      &_delete {
+        color: #818f94;
+        margin-top: 0px;
+        margin-bottom: -10px;
+      }
+    }
   }
 
   &__group {
