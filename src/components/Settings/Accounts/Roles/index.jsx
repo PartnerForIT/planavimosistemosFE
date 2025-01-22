@@ -169,7 +169,7 @@ export default () => {
           },
         },
       }),
-      ...(modules.schedule_shift && {
+      ...((modules.schedule_shift || modules.schedule_simple) && {
         schedule: {
           options: {
             create_and_edit: 'Can create & edit schedules',

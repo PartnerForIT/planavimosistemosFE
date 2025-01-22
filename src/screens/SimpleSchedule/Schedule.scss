@@ -25,10 +25,6 @@
         margin-right: 21px;
       }
     }
-
-    & > button {
-      margin-left: auto;
-    }
   }
 
   &__buttonArrow {
@@ -130,6 +126,27 @@
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.2);
     //border-radius: 12px;
+  }
+
+  &__buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__publish,
+  &__notify {
+    border: 1px solid #0085FF;
+    color: #333945;
+    background: #fff;
+  }
+
+  &__published,
+  &__nochanges {
+    background: #E5E9ED;
+    border-color: #E5E9ED;
+    color: #fff;
   }
 }
 

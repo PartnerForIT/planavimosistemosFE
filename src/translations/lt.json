@@ -934,5 +934,11 @@
 
         "Don’t use real time tracking for this place": "Šioje vietoje nenaudoti realaus laiko sekimo",
 
-        "Import places": "Importuoti naujas vietas"
+        "Import places": "Importuoti naujas vietas",
+
+        "No Entries": "Įrašų nėra",
+        "Publish": "Paskelbti",
+        "Published": "Paskelbtas",
+        "Notify Changes": "Pranešti Pakeitimus",
+        "Changes Log": "Pakeitimų žurnalas"
 }

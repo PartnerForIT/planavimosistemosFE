@@ -646,7 +646,7 @@ export default function NewSimpleSchedule({
           {t('Cancel')}
         </Button>
         <Button onClick={() => handleOnSubmit()} disabled={!formValues.employees?.length || !formValues.title} size='big'>
-          { editData ? t('Edit Task') : t('Create Task')}
+          { editData?.id ? t('Edit Task') : t('Create Task')}
         </Button>
       </div>
     </Dialog>

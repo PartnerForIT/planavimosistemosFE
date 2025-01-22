@@ -48,6 +48,7 @@ export default ({
   minutes,
   costPermission,
   nightPermission,
+  editPermission,
   withMenu,
   onDuplicateEmployee,
   onDeleteWorkingTime,
@@ -206,7 +207,7 @@ export default ({
   }, [content]);
 
   const handleEditWorkingTime = () => {
-    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem?.start ? activeGroupItem?.start : start);
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem?.start ? activeGroupItem?.start : start));
   };
   
   const copyEvent = () => {
@@ -219,7 +220,7 @@ export default ({
     setContent('menu');
   };
   const handleDeleteWorkingTime = () => {
-    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem?.start ? activeGroupItem?.start : start);
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem?.start ? activeGroupItem?.start : start));
   };
   const handleDuplicateWorkingTime = (employeeId) => {
     onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
@@ -358,7 +359,7 @@ export default ({
       }
       {
         empty ? 
-          <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          editPermission && <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         : (group ? (
           <span className={styles.eventContent__group}
             onClick={() => setOpenedGroup(!openedGroup)}
@@ -451,7 +452,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu && !empty && !isCompleted ? (
+        !copy_event && withMenu && !empty && !isCompleted && editPermission ? (
           <Dropdown
             light
             cancel={content !== 'menu'}

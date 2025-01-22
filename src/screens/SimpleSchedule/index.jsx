@@ -43,6 +43,8 @@ import {
   postDuplicateSchedule,
   addScheduleEmployees,
   removeScheduleEmployees,
+  publishSchedule,
+  notifySchedule,
 } from '../../store/simpleSchedule/actions';
 
 import {
@@ -85,6 +87,10 @@ const permissionsConfig = [
     name: 'night_rates',
     module: 'night_rates',
   },
+  {
+    name: 'schedule_create_and_edit',
+    permission: 'schedule_create_and_edit',
+  },
 ];
 
 export default () => {
@@ -113,6 +119,20 @@ export default () => {
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const [openCreateShift, setOpenCreateShift] = useState(false);
   const [editShiftData, setEditShiftData] = useState(null);
+
+  const published = useMemo(() => {
+    if (schedule?.published) {
+      return true
+    }
+    return false
+  }, [schedule]);
+
+  const count_changes = useMemo(() => {
+    if (schedule?.count_changes) {
+      return schedule.count_changes
+    }
+    return 0
+  }, [schedule]);
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -525,11 +545,13 @@ export default () => {
     dispatch(getEditSchedule({
       companyId,
       id: splited_id[0],
-      day: splited_id[1] ? day.format('YYYY-MM-DD') : null,
+      day: splited_id[1] && day ? day.format('YYYY-MM-DD') : null,
     })).then((data) => {
-      data.only_day = splited_id[1] ? day : null;
-      setEditShiftData(data)
-      setOpenCreateShift(true);
+      if (data?.id) {
+        data.only_day = splited_id[1] ? day : null;
+        setEditShiftData(data)
+        setOpenCreateShift(true);
+      }
     });
   };
   const handleAddEmployees = (employees) => {
@@ -577,6 +599,23 @@ export default () => {
       });
     }
   }
+  const handlePublishSchedule = () => {
+    dispatch(publishSchedule({
+      companyId,
+      data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    });
+  }
+  const handleNotifyChanges = () => {
+    dispatch(notifySchedule({
+      companyId,
+      data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    })).then(() => {
+      handleGetSchedule({ fromDate: fromDateRef.current });
+    });
+  }
+
   const handleCopyTool = (time) => {
     setCopyToolTime(time)
     setCopyTool(!copyTool);
@@ -663,6 +702,7 @@ export default () => {
         minutes={event.extendedProps.minutes}
         costPermission={permissions.cost && permissions.schedule_costs}
         nightPermission={permissions.night_rates && AdditionalRates.night_time}
+        editPermission={permissions.schedule_create_and_edit}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && !copyTool}
@@ -953,7 +993,7 @@ export default () => {
       firstLoading: true,
     }));
     dispatch(getscheduleSetting(companyId));
-    dispatch(loadEmployeesAll(companyId, {page: 'schedule'}));
+    dispatch(loadEmployeesAll(companyId, {page: 'simple_schedule'}));
     dispatch(getShiftTypes(companyId));
     dispatch(loadIntegrations(companyId));
 
@@ -1043,11 +1083,55 @@ export default () => {
             />
           )}
 
-          { !copyTool && (
-            <Button onClick={handleCreateNewShift}>
-              {t('Create Task')}
-            </Button> )
-          }
+          
+          <div className='simple-schedule-screen__buttons'>
+            {
+              timeline === TIMELINE.MONTH && schedule && permissions.schedule_create_and_edit ? (
+                ! published && !schedule?.events?.length ? (
+                  <Button
+                    className={'simple-schedule-screen__nochanges'}
+                    disabled
+                  >
+                    {t('No Entries')}
+                  </Button>
+                ) : (
+                  ! published && schedule?.events?.length ? (
+                    <Button
+                      className={'simple-schedule-screen__publish'}
+                      onClick={handlePublishSchedule}
+                    >
+                      {t('Publish')}
+                    </Button>
+                  ) : (
+                    published && !count_changes ? (
+                      <Button
+                        className={'simple-schedule-screen__published'}
+                        disabled
+                      >
+                        {t('Published')}
+                      </Button>
+                    ) : (
+                      published && count_changes ? (
+                        <Button
+                          className={'simple-schedule-screen__notify'}
+                          onClick={handleNotifyChanges}
+                        >
+                          {t('Notify Changes')} ({count_changes})
+                        </Button>
+                      ) : null
+                    )
+                  )
+                )
+
+              ) : null
+            }
+
+            { !copyTool && permissions.schedule_create_and_edit && (
+              <Button onClick={handleCreateNewShift}>
+                {t('Create Task')}
+              </Button> )
+            }
+          </div>
         </div>
         {
           (!schedule) ? (

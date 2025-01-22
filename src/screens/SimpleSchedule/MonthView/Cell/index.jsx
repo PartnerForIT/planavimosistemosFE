@@ -119,7 +119,7 @@ export default ({
   let employee_Id = event?.employee_id;
   let employeeName = event?.employee_name;
   let withMenu = event?.employee_id ? true : false;
-  let isCompleted = event?.is_completed;
+  const isCompleted = event?.is_completed;
 
   let unEmployees = [];
   if (event) {
@@ -184,13 +184,13 @@ export default ({
 
   const tooltipType = () => {
     let type = 'time';
-
+    
     if (start && end && moment().isBetween(start, end)) {
       type += '_active';
     } else if (isCompleted) {
       type += '_past';
     }
-      
+    
     return type;
   }
   

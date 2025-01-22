@@ -99,10 +99,10 @@ export default ({
   };
 
   const handleEditWorkingTime = () => {
-    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start);
+    onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem ? activeGroupItem.start : start));
   };
   const handleDeleteWorkingTime = () => {
-    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start);
+    onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem ? activeGroupItem.start : start));
   };
   const handleDuplicateWorkingTime = (employeeId) => {
     onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
@@ -128,7 +128,7 @@ export default ({
   
   return (
     <>
-      { group && !copy_event && withMenu && (
+      { group && !copy_event && withMenu && editPermissions && (
         <div
           className={styles.cellOptions__group_button}
           id='dropdownButton'
@@ -198,12 +198,14 @@ export default ({
         id={empty ? 'withEmpty' : 'dropdownButton'}
       >
         {
+          editPermissions && (
           (copyTool)
             ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
             : empty && (<span onClick={openAddSchedule} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)
+          )
         }
         {
-          !copy_event && withMenu && !empty ? (
+          !copy_event && withMenu && !empty && editPermissions ? (
             <Dropdown
               light
               cancel={content !== 'menu'}
