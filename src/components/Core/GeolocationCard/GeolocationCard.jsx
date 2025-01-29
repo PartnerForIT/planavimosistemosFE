@@ -12,7 +12,7 @@ const defaultProps = {
   googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${config.google.key}&v=3.exp&libraries=geometry,drawing,places`,
 };
 
-export default ({ coordinates, place }) => {
+export default ({ coordinates, place, comment }) => {
   const { t } = useTranslation();
   const [initData, setInitData] = useState({ lat: 0, lng: 0, zoom: 3 });
   const mapRef = useRef(null);
@@ -92,7 +92,7 @@ export default ({ coordinates, place }) => {
   return (
     <div className={styles.GeolocationCard}>
       <span className={styles.GeolocationCard__text}>
-        {t('Last known location')}
+        {comment ? comment : t('Last known location')}
       </span>
       <span className={styles.GeolocationCard__map}>
         <MyMap

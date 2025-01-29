@@ -907,6 +907,8 @@
         "Clock stopped by leaving geozone": "Sustabdytas palikus geografinę zoną",
         "Clock stopped by turning off geolocation": "Sustabdytas išjungus geografinę zoną",
         "Clock stopped by turning off internet or app": "Sustabdytas išjungus internetą arba aplikaciją",
+        "Finished out of Geozone": "Darbą užbaigė už Geolauko",
+        "Out of Geozone": "Ne Geozonoje",
         "Stopped by Manager": "Sustabdyta Vadovo",
         "Stopped by System": "Sustabdyta Sistemos",
         "Stopped by APP": "Sustabdyta Programėlės",

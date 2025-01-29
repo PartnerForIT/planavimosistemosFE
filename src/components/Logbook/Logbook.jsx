@@ -310,6 +310,12 @@ export default () => {
         onClick: (status) => sorting(status),
       },
       {
+        value: 'Out of Geozone',
+        hideTop: true,
+        icon: <PendingIcon />,
+        onClick: (status) => sorting(status),
+      },
+      {
         value: 'Turned off geolocation',
         hideTop: true,
         icon: <PendingIcon />,
@@ -338,6 +344,8 @@ export default () => {
           return 'Stopped by Manager';
         } else if (stoped === 'geolocation_leave') {
           return "Left geozone"
+        } else if (stoped === 'geoleave_with_comment') {
+          return "Out of Geozone"
         } else if (stoped === 'geolocation_off') {
           return "Turned off geolocation"
         } else if (stoped === 'geolocation_app') {
@@ -380,6 +388,8 @@ export default () => {
         return t('Clock stopped by Manager');
       case 'geolocation_leave':
         return t('Clock stopped by leaving geozone');
+      case 'geoleave_with_comment':
+        return t('Finished out of Geozone');
       case 'geolocation_off':
         return t('Clock stopped by turning off geolocation');
       case 'geolocation_app':
@@ -510,6 +520,7 @@ export default () => {
               .filter((it) => !sortStatus.some((status) => 
                 status === it.status ||
                 (status === 'Pending' && it.status === 'Left geozone') ||
+                (status === 'Pending' && it.status === 'Out of Geozone') ||
                 (status === 'Pending' && it.status === 'Turned off geolocation') ||
                 (status === 'Pending' && it.status === 'Turned off internet or app') ||
                 (status === 'Pending' && it.status === 'Logged off the APP') ||
@@ -958,6 +969,16 @@ export default () => {
                       <GeolocationCard
                         coordinates={selectedItem.coordinates}
                         place={selectedItemPlace}
+                      />
+                    )
+                  }
+
+                  {
+                    selectedItemPlace && selectedItemPlace.coordinates && selectedItem.stoped_by && selectedItem.stoped_by === 'geoleave_with_comment' && selectedItem.coordinates && (
+                      <GeolocationCard
+                        coordinates={selectedItem.coordinates}
+                        place={selectedItemPlace}
+                        comment={selectedItem.geoleave_comment}
                       />
                     )
                   }

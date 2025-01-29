@@ -93,6 +93,10 @@ const Row = ({
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
     />,
+    'Out of Geozone': <PendingIcon className={classNames(
+      { [styles.pendingIconSelected]: selected && selected.id === row.id },
+    )}
+    />,
     'Turned off geolocation': <PendingIcon className={classNames(
       { [styles.pendingIconSelected]: selected && selected.id === row.id },
     )}
