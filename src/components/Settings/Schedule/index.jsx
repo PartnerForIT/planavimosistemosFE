@@ -138,73 +138,78 @@ export default function ActivityLog() {
             isLoading ? <Progress />
               : (
                 <>
-                  <div className={styles.clockInRestriction}>
-                    <Label text={t('Clock in restriction')} />
-                    <Tooltip title={t('Clock in restriction')} />
-                  </div>
-                  <div className={styles.clockIn}>
-                    <Checkbox
-                      onChange={handleChangeInput}
-                      checked={inputValues.clock_in_restriction}
-                      label={t('Do not let to Clock-in to Scheduled work earlier than')}
-                      name='clock_in_restriction'
-                    />
-                    <Input
-                      value={inputValues.clock_in_minutes}
-                      name='clock_in_minutes'
-                      type='number'
-                      placeholder='0'
-                      min='0'
-                      disabled={!inputValues.clock_in_restriction}
-                      onChange={handleChangeInput}
-                    />
-                    {t('min')}
-                  </div>
-                  <div className={styles.clockInMore}>
-                    <Checkbox
-                      onChange={handleChangeInput}
-                      checked={inputValues.ignore_clockin_restriction}
-                      label={t("Ignore the restriction for employees who don't have any work planned on that day (Let to Clock In)")}
-                      name='ignore_clockin_restriction'
-                      disabled={!inputValues.clock_in_restriction}
-                    />
-                  </div>
-                  <div className={styles.hr} />
-                  <div className={styles.workAtNight}>
-                    <Switch
-                      onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
-                      offColor='#808F94'
-                      onColor='#0085FF'
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                      checked={inputValues.working_at_night || false}
-                      height={21}
-                      width={40}
-                    />
-                    <Label text={t('Work at night')} />
-                  </div>
-                  <div className={styles.dayStart}>
-                    <div className={styles.dayStart__label}>
-                      <Label text={`${t('Schedule Day View starts')}:`} />
-                      <Tooltip title={t('Schedule Day View starts')} />
+                  { companyId*1 !== 125 && (
+                    <>
+                    <div className={styles.clockInRestriction}>
+                      <Label text={t('Clock in restriction')} />
+                      <Tooltip title={t('Clock in restriction')} />
                     </div>
-                    <SimpleSelect
-                      className={styles.dayStart__select}
-                      readOnly={!inputValues.working_at_night}
-                      handleInputChange={handleChangeInput}
-                      name='time_view_stats'
-                      value={inputValues.time_view_stats}
-                      options={timeHoursArr}
-                      withoutSearch
-                      fullWidth
-                    />
-                  </div>
-                  <div className={styles.hr} />
+                    <div className={styles.clockIn}>
+                      <Checkbox
+                        onChange={handleChangeInput}
+                        checked={inputValues.clock_in_restriction}
+                        label={t('Do not let to Clock-in to Scheduled work earlier than')}
+                        name='clock_in_restriction'
+                      />
+                      <Input
+                        value={inputValues.clock_in_minutes}
+                        name='clock_in_minutes'
+                        type='number'
+                        placeholder='0'
+                        min='0'
+                        disabled={!inputValues.clock_in_restriction}
+                        onChange={handleChangeInput}
+                      />
+                      {t('min')}
+                    </div>
+                    <div className={styles.clockInMore}>
+                      <Checkbox
+                        onChange={handleChangeInput}
+                        checked={inputValues.ignore_clockin_restriction}
+                        label={t("Ignore the restriction for employees who don't have any work planned on that day (Let to Clock In)")}
+                        name='ignore_clockin_restriction'
+                        disabled={!inputValues.clock_in_restriction}
+                      />
+                    </div>
+                    <div className={styles.hr} />
+                    <div className={styles.workAtNight}>
+                      <Switch
+                        onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
+                        offColor='#808F94'
+                        onColor='#FFBF23'
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        checked={inputValues.working_at_night || false}
+                        height={21}
+                        width={40}
+                      />
+                      <Label text={t('Work at night')} />
+                    </div>
+                    <div className={styles.dayStart}>
+                      <div className={styles.dayStart__label}>
+                        <Label text={`${t('Schedule Day View starts')}:`} />
+                        <Tooltip title={t('Schedule Day View starts')} />
+                      </div>
+                      <SimpleSelect
+                        className={styles.dayStart__select}
+                        readOnly={!inputValues.working_at_night}
+                        handleInputChange={handleChangeInput}
+                        name='time_view_stats'
+                        value={inputValues.time_view_stats}
+                        options={timeHoursArr}
+                        withoutSearch
+                        fullWidth
+                      />
+                    </div>
+                    <div className={styles.hr} />
+                    </>
+                    )
+                  }
                   <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ deduct_break: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.deduct_break || false}
@@ -229,7 +234,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ place_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.place_timeline || false}
@@ -242,7 +247,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ shift_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.shift_timeline || false}
@@ -255,7 +260,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ job_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.job_timeline || false}
@@ -265,11 +270,13 @@ export default function ActivityLog() {
                     <Label text={t('Show job type timeline')} />
                   </div>
                   <div className={styles.hr} />
+                  { companyId*1 !== 125 && (
+                    <>
                   <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ request_dayoff: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.request_dayoff || false}
@@ -279,11 +286,14 @@ export default function ActivityLog() {
                     <Label text={t('Use request day off mobile')} />
                   </div>
                   <div className={styles.hr} />
+                  </>
+                  )
+                  }
                   <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ use_accumulated: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.use_accumulated || false}
@@ -343,6 +353,8 @@ export default function ActivityLog() {
                     </div>
                   )
                   }
+                  { companyId*1 !== 125 && (
+                    <>
                   <div className={styles.hr} />
                   <div className={styles.clockIn}>
                     <Checkbox
@@ -352,6 +364,9 @@ export default function ActivityLog() {
                         name='work_night_excel'
                       />
                   </div>
+                  </>
+                  )
+                  }
                 </>
               )
           }

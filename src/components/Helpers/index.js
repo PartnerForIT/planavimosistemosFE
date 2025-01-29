@@ -59,7 +59,7 @@ export const getInfoCardColors = (type) => {
   switch (type) {
     case 'total':
       theme = {
-        text: '#0085ff',
+        text: '#FFBF23',
         background: '#ecf3f9',
       };
       break;
@@ -95,7 +95,7 @@ export const getInfoCardColors = (type) => {
       break;
     default:
       theme = {
-        text: '#0085ff',
+        text: '#FFBF23',
         background: '#ecf3f9',
       };
   }

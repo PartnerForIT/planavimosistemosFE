@@ -310,7 +310,7 @@ export default () => {
               />
             </div>
           </div>
-          <Tooltip title={t('Kiosk settings - in order to apply these Kiosk settings please re-login in your tablet within Grownu Mobile APP with the correct Kiosk admin user and password.')} />
+          <Tooltip title={t('Kiosk settings - in order to apply these Kiosk settings please re-login in your tablet within Planavimo Sistemos Mobile APP with the correct Kiosk admin user and password.')} />
           <DialogEditPasswordKiosk
             open={viewPasswordVisible}
             handleClose={handleCloseDialog}

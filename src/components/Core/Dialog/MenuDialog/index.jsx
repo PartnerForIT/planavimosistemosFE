@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu, MenuItem } from '@material-ui/core';
-import classnames from 'classnames';
+//import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import classes from './MenuDialog.module.scss';
 import LockIcon from '../../../Icons/LockIcon';
 import LogOutIcon from '../../../Icons/LogOutIcon';
-import LanguageDropdown from './LanguageDropdown';
+//import LanguageDropdown from './LanguageDropdown';
 import { onKeyDown } from '../../../Helpers';
 
 const paperStyle = {
@@ -51,24 +51,24 @@ function MenuDialog({
   editPassword = () => ({}), changeLanguage = () => ({}),
 }) {
   const { t } = useTranslation();
-  const [expanded, setExpanded] = useState(false);
-  const [language, setLanguage] = useState(localStorage.getItem('i18nextLng'));
+  //const [expanded, setExpanded] = useState(false);
+  //const [language, setLanguage] = useState(localStorage.getItem('i18nextLng'));
 
   const handleClose = (event) => {
     if (!(event?.key === 'Tab')) {
       setMenuOpen(false);
       setAnchorEl(null);
-      setExpanded(false);
+      //setExpanded(false);
     }
   };
 
-  const onChangeLanguage = (language) => {
-    localStorage.setItem('i18nextLng', language);
-    changeLanguage(language);
-    setLanguage(language);
-    handleClose();
-    window.location.reload();
-  }
+  // const onChangeLanguage = (language) => {
+  //   localStorage.setItem('i18nextLng', language);
+  //   changeLanguage(language);
+  //   setLanguage(language);
+  //   handleClose();
+  //   window.location.reload();
+  // }
 
   // useEffect(() => {
   //   if (expanded && language !== localStorage.getItem('i18nextLng')) {
@@ -126,7 +126,7 @@ function MenuDialog({
           {t('Change password')}
         </button>
       </MenuItem>
-      <MenuItem
+      {/* <MenuItem
         aria-hidden
         className={classnames(classes.menu_item, expanded ? classes.language : '')}
       >
@@ -136,7 +136,7 @@ function MenuDialog({
           language={language}
           setLanguage={onChangeLanguage}
         />
-      </MenuItem>
+      </MenuItem> */}
       <div className={classes.menu__hr} />
       <LogoutMenuItem
         onKeyDown={(e) => {

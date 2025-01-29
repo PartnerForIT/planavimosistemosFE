@@ -117,7 +117,7 @@ const columnsWidth = {
 
 const useStyles = makeStyles({
   colorPrimary: {
-    color: '#0087ff',
+    color: '#FFBF23',
   },
 });
 

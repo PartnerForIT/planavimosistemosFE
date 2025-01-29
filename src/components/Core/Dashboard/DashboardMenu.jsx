@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
     padding: '0px 0px 10px 5px',
     height: '40px',
     minHeight: '40px !important',
-    color: '#4080fc',
+    color: '#ffcc4b',
     fontSize: '16px',
     fontWeight: '600',
   },
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     padding: 0,
   },
   activeIcon: {
-    fill: '#4080fc',
+    fill: '#ffcc4b',
   },
   icon: {
     fill: '#69767A',
@@ -171,7 +171,7 @@ export default function DashboardMenu() {
     const nextMenuItems = [];
 
     if (permissions.company_edit_settings) {
-      nextMenuItems.push({
+      let company_settings = {
         icon: GenaralIcon,
         title: t('General'),
         name: 'general',
@@ -186,13 +186,16 @@ export default function DashboardMenu() {
             name: 'work-time',
             title: t('Work Time'),
           },
-          {
-            to: `/${companyId}/settings/general/security`,
-            name: 'security',
-            title: t('Security'),
-          },
         ],
-      });
+      }
+      if (companyId*1 !== 125) {
+        company_settings.items.push({
+          to: `/${companyId}/settings/general/security`,
+          name: 'security',
+          title: t('Security'),
+        })
+      }
+      nextMenuItems.push(company_settings);
     }
 
     if (permissions.accounts_see_and_edit || permissions.roles_create || permissions.groups) {
@@ -315,7 +318,7 @@ export default function DashboardMenu() {
       });
     }
 
-    if (permissions.data_delete) {
+    if (permissions.data_delete && companyId*1 !== 125) {
       nextMenuItems.push({
         //to: `/${companyId}/settings/delete`,
         icon: DeleteIcon,
@@ -398,7 +401,7 @@ export default function DashboardMenu() {
                   id={`panel${index + 1}-header`}
                 >
                   <IconWrapper>
-                    <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
+                    <item.icon fill={section === item.name ? '#ffcc4b' : '#69767A'} />
                   </IconWrapper>
                   <span className={styles.menuText}>
                     {item.title}
@@ -430,7 +433,7 @@ export default function DashboardMenu() {
                 key={item.name}
               >
                 <IconWrapper>
-                  <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
+                  <item.icon fill={section === item.name ? '#ffcc4b' : '#69767A'} />
                 </IconWrapper>
                 <span className={styles.textLink}>
                   {item.title}

@@ -105,7 +105,7 @@ export default function CreateSkill({
               <Switch
                 onChange={handleChangeRates}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#FFBF23'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 checked={formValues.use_rates}

@@ -29,7 +29,7 @@ const BootstrapInput = withStyles((theme) => ({
       boxShadow: 'none',
       borderRadius: 4,
       backgroundColor: theme.palette.common.white,
-      borderColor: '#0087ff',
+      borderColor: '#FFBF23',
     },
   },
 }))(InputBase);

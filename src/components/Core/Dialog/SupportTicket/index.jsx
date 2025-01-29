@@ -35,7 +35,7 @@ export default ({
           <>
             <div className={styles.description}>
               {/* eslint-disable-next-line max-len */}
-              {t('Your ticket has been sent to Grownu support team, we will answer your support request as soon as possible')}
+              {t('Your ticket has been sent to PlanavimoSistemos support team, we will answer your support request as soon as possible')}
             </div>
             <Button
               onClick={handleClose}

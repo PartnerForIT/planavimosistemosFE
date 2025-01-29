@@ -122,7 +122,7 @@ export default function ButtonBlock({
         >
           {t(`Create new ${itemName}`)}
         </Button>
-        {selectedCategory === 'places' && (
+        {companyId*1 !== 125 && selectedCategory === 'places' && (
           <Button
             onClick={() => setOpenImportPlaces(true)}
             white

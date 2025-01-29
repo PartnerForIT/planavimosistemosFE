@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   progress: {
-    color: '#4080ff',
+    color: '#FFBF23',
   },
 }));
 

@@ -27,7 +27,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('mobile_break_time')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='mobile_break_time'
@@ -47,7 +47,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('geolocation_restriction_clock_in')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='geolocation_restriction_clock_in'
@@ -67,7 +67,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('geolocation_restriction_clock_out')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='geolocation_restriction_clock_out'
@@ -89,7 +89,7 @@ export default function Form({
             <Switch
               onChange={() => handleChangeCalculation('geolocation_restriction_leave')}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               name='geolocation_restriction_leave'
@@ -112,7 +112,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('photo_clock_in')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='photo_clock_in'
@@ -126,7 +126,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('photo_clock_out')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='photo_clock_out'
@@ -141,7 +141,7 @@ export default function Form({
           <Switch
             onChange={() => handleChangeCalculation('auto_clock_out_place_working_time')}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='auto_clock_out_place_working_time'

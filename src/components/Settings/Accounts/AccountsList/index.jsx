@@ -532,7 +532,7 @@ export default function AccountsList() {
           title={t('Account list')}
           info={userStats}
           TitleButtonNew={permissions.accounts_create ? t('New account') : ''}
-          TitleButtonImport={permissions.accounts_create ? t('Import Accounts') : ''}
+          TitleButtonImport={id*1 !== 125 && permissions.accounts_create ? t('Import Accounts') : ''}
           tooltip={t('Accounts list')}
           handleButtonImport={() => setImportVisible(true)}
           handleButtonNew={() => setNewVisible(true)}

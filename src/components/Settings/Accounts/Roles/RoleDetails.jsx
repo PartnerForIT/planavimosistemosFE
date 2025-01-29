@@ -94,7 +94,7 @@ function RoleDetails({
   };
 
   const detailsClasses = classNames(classes.details, {
-    [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
+    [classes.details_withModules]: (permissions.schedule_simple || permissions.schedule_shift || permissions.reports || permissions.events || permissions.logbook),
   });
 
   return (
@@ -143,7 +143,6 @@ function RoleDetails({
         permissionsIds={permissionsIds}
         onChangeHandler={onChangeHandler}
       />
-      <div />
     </div>
   );
 }

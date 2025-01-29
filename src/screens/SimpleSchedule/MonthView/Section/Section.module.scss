@@ -96,7 +96,7 @@
       top: 0;
       right: -204px;
       background-color: #fff;
-      border: 1px solid #0085ff;
+      border: 1px solid #FFBF23;
       border-radius: 6px;
       padding: 12px 15px 6px 15px;
       width: 200px;
@@ -204,7 +204,7 @@
 
   &_addEmployees {
     border: 0.5px dashed #C4CAD0;
-    color: #1685FC;
+    color: #FFBF23;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -212,17 +212,17 @@
     $section: &;
 
     &:hover {
-      border: 0.5px solid #1685FC;
+      border: 0.5px solid #FFBF23;
 
       #{$section}_circle {
-        background-color: #1685FC;
+        background-color: #FFBF23;
         color: white;
-        border: 0.5px solid #1685FC;
+        border: 0.5px solid #FFBF23;
       }
     }
 
     &_circle {
-      border: 0.5px dashed #1685FC;
+      border: 0.5px dashed #FFBF23;
       border-radius: 50%;
       width: 24px;
       height: 24px;

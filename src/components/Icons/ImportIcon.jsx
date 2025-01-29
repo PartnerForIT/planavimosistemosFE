@@ -110,12 +110,12 @@ const ReportsIcon = ({ className }) => (
         </g>
       </g>
       <g id='_19e2a40db4e1365c35a66e97de3783a5' data-name='19e2a40db4e1365c35a66e97de3783a5' transform='translate(1975.552 3252.036) rotate(180)' opacity='0.588'>
-        <path id='Контур_13737' data-name='Контур 13737' d='M105.631,54.6h20.78V44.235h20.631L116.066,10,85,44.235h20.631Z' transform='translate(0)' fill='#4080fc' />
-        <path id='Контур_13738' data-name='Контур 13738' d='M360.9,642.3h20.8v5.2H360.9Z' transform='translate(-255.277 -585.036)' fill='#4080fc' />
-        <path id='Контур_13739' data-name='Контур 13739' d='M361,746.7h20.78v2.564H361Z' transform='translate(-255.369 -681.632)' fill='#4080fc' />
-        <path id='Контур_13740' data-name='Контур 13740' d='M361.3,816.4h20.728v2.564H361.3Z' transform='translate(-255.647 -746.122)' fill='#4080fc' />
-        <path id='Контур_13741' data-name='Контур 13741' d='M361,886h20.78v2.564H361Z' transform='translate(-255.369 -810.519)' fill='#4080fc' />
-        <path id='Контур_13742' data-name='Контур 13742' d='M361,955.2h20.78v2.6H361Z' transform='translate(-255.369 -874.547)' fill='#4080fc' />
+        <path id='Контур_13737' data-name='Контур 13737' d='M105.631,54.6h20.78V44.235h20.631L116.066,10,85,44.235h20.631Z' transform='translate(0)' fill='#ffcc4b' />
+        <path id='Контур_13738' data-name='Контур 13738' d='M360.9,642.3h20.8v5.2H360.9Z' transform='translate(-255.277 -585.036)' fill='#ffcc4b' />
+        <path id='Контур_13739' data-name='Контур 13739' d='M361,746.7h20.78v2.564H361Z' transform='translate(-255.369 -681.632)' fill='#ffcc4b' />
+        <path id='Контур_13740' data-name='Контур 13740' d='M361.3,816.4h20.728v2.564H361.3Z' transform='translate(-255.647 -746.122)' fill='#ffcc4b' />
+        <path id='Контур_13741' data-name='Контур 13741' d='M361,886h20.78v2.564H361Z' transform='translate(-255.369 -810.519)' fill='#ffcc4b' />
+        <path id='Контур_13742' data-name='Контур 13742' d='M361,955.2h20.78v2.6H361Z' transform='translate(-255.369 -874.547)' fill='#ffcc4b' />
       </g>
     </g>
 
