@@ -340,6 +340,7 @@ export default () => {
  
     switch (status) {
       case 0: {
+        console.log(stoped);
         if (stoped === 'manager') {
           return 'Stopped by Manager';
         } else if (stoped === 'geolocation_leave') {
@@ -352,6 +353,10 @@ export default () => {
           return "Turned off internet or app"
         } else if (stoped === 'logout') {
           return "Logged off the APP"
+        } else if (stoped === 'daily_overtime' || stoped === 'weekly_overtime') {
+          return 'Stopped by System';
+        } else if (stoped === 'manager') {
+          return 'Stopped by Manager';
         }
         
         return 'Pending';
