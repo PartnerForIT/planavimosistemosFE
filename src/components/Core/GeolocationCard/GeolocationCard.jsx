@@ -48,14 +48,14 @@ export default ({ coordinates, place, comment }) => {
       Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
-
+    
     if (distance < 1) return 16;
-    if (distance < 5) return 14;
-    if (distance < 10) return 12;
+    if (distance < 5) return 11;
+    if (distance < 10) return 10;
     if (distance < 20) return 10;
-    if (distance < 50) return 8;
-    if (distance < 100) return 7;
-    return 6; // Default to a broader zoom for large distances
+    if (distance < 50) return 9;
+    if (distance < 100) return 8;
+    return 7; // Default to a broader zoom for large distances
   };
 
   useEffect(() => {
