@@ -264,6 +264,34 @@ export const notifySchedule = ({ companyId, data }) => {
   };
 };
 
+export const changesLog = ({ companyId, data }) => {
+  return (dispatch, getState) => {
+    dispatch(postSimpleSheet());
+    return new Promise((resolve, reject) => {
+      fetch(`${config.api.url}/company/${companyId}/simple/changes-log`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getToken().headers,
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return response.json();
+      })
+      .then(data => {
+        dispatch(postSimpleSheetSuccess(data));
+        resolve(data);
+      })
+      .catch(error => {
+        dispatch(postSimpleSheetError());
+        reject(error);
+      });
+    });
+  };
+};
+
 export const postSimpleSheet = (data) => ({
   type: POST_SIMPLE_SHEET,
   data,

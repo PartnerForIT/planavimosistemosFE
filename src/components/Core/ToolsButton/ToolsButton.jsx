@@ -8,6 +8,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Checkbox from '../../Core/Checkbox/Checkbox2';
+import Button from '../../../components/Core/Button/Button';
 import Tooltip from '../../Core/Tooltip';
 import usePermissions from '../../../components/Core/usePermissions';
 import { companyModules } from '../../../store/company/selectors';
@@ -25,7 +26,7 @@ const permissionsConfig = [
  * Simple Button encapsulating all design variations
  */
 const ToolsButton = ({
-  values, handleInputChange,
+  values, handleInputChange, handleOpenChangeLog, withLog
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -98,6 +99,14 @@ const ToolsButton = ({
                 </div>
               </div>
             </div>
+            { withLog &&
+              <Button
+                className={styles.openChangeLog}
+                onClick={handleOpenChangeLog}
+              >
+                {t('Open change log')}
+              </Button>
+            }
           </div>
         ) : null}
       </div>

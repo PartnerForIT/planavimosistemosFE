@@ -21,6 +21,7 @@ import { getSettingWorkTime } from '../../store/settings/actions';
 import MainLayout from '../../components/Core/MainLayout';
 import CustomSelect from '../../components/Core/Select/Select';
 import Button from '../../components/Core/Button/Button';
+import ChangeLog from '../../components/Core/Dialog/ChangeLog';
 import ButtonGroupToggle from '../../components/Core/ButtonGroupToggle';
 import ToolsButton from '../../components/Core/ToolsButton/ToolsButton';
 import Progress from '../../components/Core/Progress';
@@ -119,6 +120,7 @@ export default () => {
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const [openCreateShift, setOpenCreateShift] = useState(false);
   const [editShiftData, setEditShiftData] = useState(null);
+  const [changeLogModal, setChangeLogModal] = useState(false);
 
   const published = useMemo(() => {
     if (schedule?.published) {
@@ -634,6 +636,9 @@ export default () => {
       }, 1000);
     }
   }
+  const handleOpenChangeLog = () => {
+    setChangeLogModal(true);
+  }
   const handleOpenAddSchedule = ({day, employee_id}) => {
     setEditShiftData({employee_id, date: moment(fromDateRef.current).date(day)})
     setOpenCreateShift(true);
@@ -1078,7 +1083,9 @@ export default () => {
 
           { !copyTool && (
             <ToolsButton
+              withLog
               handleInputChange={handleChangeTool}
+              handleOpenChangeLog={handleOpenChangeLog}
               values={toolsActive}
             />
           )}
@@ -1297,6 +1304,13 @@ export default () => {
             />
           )
         }
+        { changeLogModal && (
+          <ChangeLog
+            date={fromDateRef.current}
+            open={changeLogModal}
+            onClose={() => setChangeLogModal(false)}
+          />
+        )}
         <div/>
       </div>
     </MainLayout>
