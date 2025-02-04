@@ -347,7 +347,7 @@ export default ({
           ></div>
         )
       }
-      { !copy_event && removeTimelines && (
+      { !copy_event && removeTimelines && !empty && (
           <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
         )
       }

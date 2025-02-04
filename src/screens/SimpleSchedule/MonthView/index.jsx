@@ -313,6 +313,7 @@ export default ({
                     resourceId={item.id}
                     resources={item.children}
                     expander={item.expander}
+                    employeeId={item.employee_id}
                     markerActive={markerActive}
                     handleMarker={onHandleMarker}
                     daysOfMonth={daysOfMonth}
