@@ -200,12 +200,29 @@ export default () => {
             return (e.group && e.group[0].id === e.id) || !e.group;
           });
       } else if (timeline === TIMELINE.DAY) {
-        result = schedule.events.filter((e) => {
-          if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
-            return false;
-          }
-          return true;
-        });
+        result = schedule.events.map((e) => {
+          const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
+          return {
+            ...e,
+            realStart: e.start,
+            realEnd: e.end,
+            group: sameDay.length > 1 ? sameDay : false,
+            start: sameDay.length > 1 ? sameDay.reduce((a, b) => moment(a.start).isBefore(moment(b.start)) ? a : b).start : e.start,
+            end: sameDay.length > 1 ? sameDay.reduce((a, b) => moment(a.end).isAfter(moment(b.end)) ? a : b).end : e.end,
+          }}).filter((e) => {
+            return (e.group && e.group[0].id === e.id) || !e.group;
+          }).filter((e) => {
+            if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
+              return false;
+            }
+            return true;
+          });
+        // result = schedule.events.filter((e) => {
+        //   if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
+        //     return false;
+        //   }
+        //   return true;
+        // });
       } else {
         result = schedule.events.map((e) => {
           const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
@@ -652,12 +669,17 @@ export default () => {
     let endDay;
     let dayNumber;
     let isCompleted;
-  
+    let publicId;
     
     dayNumber = event._def.extendedProps.day_number || event.extendedProps.day_number
     isCompleted = event?._def?.extendedProps?.is_completed
+    publicId = event?._def?.publicId
 
-    const selectedEvent  = events.find(e => e.resourceId+'' === resourceInfo.id+'' && dayNumber === e.day_number);
+    const selectedEvent  = events.find(e => 
+      e.resourceId+'' === resourceInfo.id+'' &&
+      dayNumber === e.day_number &&
+      (timeline === TIMELINE.DAY && publicId && e.id ? publicId+'' === e.id+'' : true)
+    );
     
     if (selectedEvent) {
       withMenu = selectedEvent?.employee_id ? true : false;
@@ -682,6 +704,10 @@ export default () => {
       } else {
         end = moment(end).set({h: 17});
       }
+    }
+
+    if (resourceInfo.id*1 === 3178) {
+      console.log(selectedEvent, start, end);
     }
     
     return (
@@ -747,6 +773,7 @@ export default () => {
       employeesCount,
       button,
       //hours_demand,
+      skill_name,
     } = resource.extendedProps;
     const realCount = employeesCount;
 
@@ -754,6 +781,7 @@ export default () => {
       <ResourceItem
         title={button ? t('Add Employees') : (`${fieldValue} ${realCount ? `(${realCount})` : ''}`)}
         photo={photo}
+        skill={skill_name}
         employeeId={employeeId}
         onAddEmployees={button ? handleAddEmployees : false}
         unavailableEmployees={unEmployees}

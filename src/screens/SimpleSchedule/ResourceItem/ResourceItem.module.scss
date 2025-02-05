@@ -25,6 +25,16 @@
     width: 168px;
   }
 
+  &__name {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__skill {
+    color: #808F94;
+    font-size: 11px;
+  }
+
   &__space {
     margin-top: -7px;
   }

@@ -392,8 +392,8 @@ export default ({
                 copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
               }
 
-              { title.place && <span className={styles.eventContent__place}>{title.place}</span> }
-              { title.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
+              { title?.place && <span className={styles.eventContent__place}>{title.place}</span> }
+              { title?.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
             </span>
           )
         ))

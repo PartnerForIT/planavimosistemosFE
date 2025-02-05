@@ -48,6 +48,7 @@ export default ({
             withExpander={!!item.children?.length}
             withNumberInput
             countChildren={item.children?.length}
+            employeesCount={item.employeesCount}
             rowId={item.id}
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
             onDeleteEmployees={handleDeleteEmployees}

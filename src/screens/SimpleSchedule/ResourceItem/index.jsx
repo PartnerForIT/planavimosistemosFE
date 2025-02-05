@@ -10,6 +10,7 @@ import Content from '../Dropdown/Content';
 export default ({
   title,
   photo,
+  skill,
   onAddEmployees,
   unavailableEmployees,
   handleDeleteEmployees,
@@ -22,7 +23,10 @@ export default ({
   return (
     <>
       <div className={classes.resourceItem__container} onClick={onAddEmployees ? () => setIsOpenEmployees(true) : null}>
-      { title }
+      <div className={classes.resourceItem__name}>
+        { title }
+        { skill && <span className={classes.resourceItem__skill}>{skill}</span> }
+      </div>
       {
         onAddEmployees && (
           <div ref={buttonPlusRef} className="fc-datagrid-cell-button_circle">+</div>

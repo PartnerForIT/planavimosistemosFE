@@ -943,5 +943,10 @@
         "Publish": "Paskelbti",
         "Published": "Paskelbtas",
         "Notify Changes": "Pranešti Pakeitimus",
-        "Changes Log": "Pakeitimų žurnalas"
+        "Changes Log": "Pakeitimų žurnalas",
+
+        "Government holiday": "Valstybinės šventės",
+        "Company holiday": "Įmonės šventės",
+
+        "After applying this rule, the system starts checking every night what needs to be deleted.": "Pritaikius šią taisyklę, sistema kiekvieną naktį pradeda tikrinti, ką reikia ištrinti."
 }

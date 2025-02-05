@@ -50,7 +50,11 @@ export default function Form({
           
           <div className={style.tooltipBlock}>
             <Tooltip title={
-              t("Auto data deletion helps manage private data, such as geolocation coordinates, face photos from clock-in/clock-out, and images taken when employees finish work or leave the workplace. This feature ensures the automatic removal of such data based on your organization's settings and the days terms which have been set in this rule")
+              <>
+                {t("Auto data deletion helps manage private data, such as geolocation coordinates, face photos from clock-in/clock-out, and images taken when employees finish work or leave the workplace. This feature ensures the automatic removal of such data based on your organization's settings and the days terms which have been set in this rule")}
+                <br /><br />
+                {t("After applying this rule, the system starts checking every night what needs to be deleted.")}
+              </>
             }
             />
           </div>
