@@ -88,16 +88,18 @@ export default ({
         value={searchValue}
         fullWidth
       />
-      <CheckboxGroupWrapper
-        height={250}
-        maxHeight={250}
-        wrapperMarginBottom={0}
-        items={allSortedEmployees ?? []}
-        choiceOfOnlyOne
-        onChange={handleEmployeesChange}
-        sorted={!!searchValue.trim()}
-        // defaultChecked={checkedByDefault}
-      />
+      <div className={'styledDropdown'}>
+        <CheckboxGroupWrapper
+          height={250}
+          maxHeight={250}
+          wrapperMarginBottom={0}
+          items={allSortedEmployees ?? []}
+          choiceOfOnlyOne
+          onChange={handleEmployeesChange}
+          sorted={!!searchValue.trim()}
+          // defaultChecked={checkedByDefault}
+        />
+      </div>
       <Button onClick={handleOnApplyEmployee}>
         {t('Duplicate')}
       </Button>

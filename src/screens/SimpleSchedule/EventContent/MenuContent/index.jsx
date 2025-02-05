@@ -12,6 +12,7 @@ export default ({
   photo,
   employeeName,
   jobTypeName,
+  skillName,
   description,
   start,
   end,
@@ -25,7 +26,6 @@ export default ({
 }) => {
   const { t } = useTranslation();
   
-
   return (
     <div className={styles.eventContent__menu}>
       <div className={styles.eventContent__userInfo}>
@@ -39,7 +39,7 @@ export default ({
             {employeeName}
           </div>
           <div className={styles.eventContent__userInfo__right__jobType}>
-            {jobTypeName}
+            {skillName}
           </div>
         </div>
       </div>
@@ -53,13 +53,19 @@ export default ({
         reccuring && <ReccuringInfo reccuring={reccuring} onEditReccuring={onEditReccuring} onDeleteReccuring={onDeleteReccuring} />
       }
       {
-        description && 
-        <div className={styles.eventContent__description}>
-          {description}
-        </div>
+        description && (
+          <>
+            <div className={styles.eventContent__label}>
+              {t('Description')}
+            </div>
+            <div className={styles.eventContent__value}>
+              {description}
+            </div>
+          </>
+        )
       }
       <div className={styles.eventContent__label}>
-        {t('Working Time')}
+        {t('Planned Time')}
       </div>
       <div className={styles.eventContent__value}>
         {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}

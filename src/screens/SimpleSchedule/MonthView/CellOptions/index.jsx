@@ -23,6 +23,7 @@ export default ({
   schedule_title,
   photo,
   jobTypeName,
+  skillName,
   employeeName,
   withMenu,
   onChangeEmployee,
@@ -105,7 +106,7 @@ export default ({
     onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem ? activeGroupItem.start : start));
   };
   const handleDuplicateWorkingTime = (employeeId) => {
-    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
+    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId, moment(activeGroupItem ? activeGroupItem.start : start));
   };
   const handleClickGroupItem = (index) => {
     setActiveGroupItem(group[index]);
@@ -153,7 +154,7 @@ export default ({
             <div className={styles.cellOptions__userInfo}>
               { photo &&
                 <div className={styles.cellOptions__photo}>
-                  <img src={photo} alt={employeeName} /> 
+                  <img className={styles.cellOptions__avatar} src={photo} alt={employeeName} /> 
                 </div>
               }
               <div className={styles.cellOptions__userInfo__right}>
@@ -161,7 +162,7 @@ export default ({
                   {employeeName}
                 </div>
                 <div className={styles.cellOptions__userInfo__right__jobType}>
-                  {jobTypeName}
+                  {skillName}
                 </div>
               </div>
             </div>
@@ -219,6 +220,7 @@ export default ({
                   <ChangeEmployee
                     photo={photo}
                     jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                    skillName={skillName}
                     employeeName={employeeName}
                     onChangeEmployee={handleDuplicateWorkingTime}
                     unavailableEmployees={[]}
@@ -232,6 +234,7 @@ export default ({
                     photo={photo}
                     employeeName={employeeName}
                     jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                    skillName={skillName}
                     description={activeGroupItem ? activeGroupItem.description : description}
                     schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                     start={activeGroupItem ? activeGroupItem.start : start}

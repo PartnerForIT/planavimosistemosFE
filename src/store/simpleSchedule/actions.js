@@ -98,7 +98,7 @@ export const postSchedule = ({ companyId, id, data }) => {
   };
 };
 
-export const postDuplicateSchedule = ({ companyId, id, employeeId }) => {
+export const postDuplicateSchedule = ({ companyId, id, employeeId, date }) => {
   return (dispatch, getState) => {
     dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
@@ -108,6 +108,7 @@ export const postDuplicateSchedule = ({ companyId, id, employeeId }) => {
           'Content-Type': 'application/json',
           ...getToken().headers,
         },
+        body: JSON.stringify({ date }),
       })
       .then(response => {
         if (!response.ok) throw new Error('Network response was not ok.');

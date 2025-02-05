@@ -38,6 +38,7 @@ export default ({
   reccuring,
   photo,
   jobTypeName,
+  skillName,
   employeeName,
   group,
   empty,
@@ -223,7 +224,7 @@ export default ({
     onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem?.start ? activeGroupItem?.start : start));
   };
   const handleDuplicateWorkingTime = (employeeId) => {
-    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId);
+    onDuplicateEmployee(activeGroupItem?.id ? activeGroupItem?.id : id, employeeId, moment(activeGroupItem?.start ? activeGroupItem?.start : start));
   };
   const handleClickGroupItem = (index) => {
     setActiveGroupItem(group[index]);
@@ -419,7 +420,7 @@ export default ({
                   {employeeName}
                 </div>
                 <div className={styles.eventContent__userInfo__right__jobType}>
-                  {jobTypeName}
+                  {skillName}
                 </div>
               </div>
             </div>
@@ -465,6 +466,7 @@ export default ({
                 <ChangeEmployee
                   photo={photo}
                   jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                  skillName={skillName}
                   employeeName={employeeName}
                   onChangeEmployee={handleDuplicateWorkingTime}
                   unavailableEmployees={[]}
@@ -478,6 +480,7 @@ export default ({
                   photo={photo}
                   employeeName={employeeName}
                   jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
+                  skillName={skillName}
                   description={activeGroupItem ? activeGroupItem.description : description}
                   schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                   start={activeGroupItem ? activeGroupItem.start : start}

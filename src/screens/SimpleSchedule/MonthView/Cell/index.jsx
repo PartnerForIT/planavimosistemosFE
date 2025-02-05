@@ -237,6 +237,7 @@ export default ({
                 resourceId={resource?.id}
                 photo={resource?.photo}
                 jobTypeName={event?.job_type_name}
+                skillName={resource?.skill_name}
                 withMenu={withMenu && !copyTool}
                 editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}

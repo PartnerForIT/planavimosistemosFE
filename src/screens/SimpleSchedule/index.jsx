@@ -536,11 +536,12 @@ export default () => {
       placesArr: filter?.place.map(({id}) => id),
     };
   };
-  const handleDuplicateEmployee = (id, employeeId) => {
+  const handleDuplicateEmployee = (id, employeeId, date) => {
     dispatch(postDuplicateSchedule({
       companyId,
       id: (id+'').split('-')[0],
       employeeId,
+      date: date ? date.format('YYYY-MM-DD') : fromDateRef.current.format('YYYY-MM-DD'),
     })).then(() => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     });
@@ -706,10 +707,6 @@ export default () => {
       }
     }
 
-    if (resourceInfo.id*1 === 3178) {
-      console.log(selectedEvent, start, end);
-    }
-    
     return (
       <EventContent
         id={event.id}
@@ -738,6 +735,7 @@ export default () => {
         photo={resourceInfo.extendedProps.photo}
         withMenu={withMenu && !copyTool}
         jobTypeName={selectedEvent?.job_type_name}
+        skillName={resourceInfo?.extendedProps?.skill_name}
         openAddSchedule={() => { handleOpenAddSchedule(selectedEvent) }}
         onDuplicateEmployee={handleDuplicateEmployee}
         onDeleteWorkingTime={handleDeleteWorkingTime}
@@ -1288,7 +1286,7 @@ export default () => {
         }
         <DialogNewSimpleSchedule
           open={openCreateShift}
-          title={t('Create New Schedule')}
+          title={editShiftData ? (editShiftData.reccuring ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
           handleClose={handleCloseCreateShift}
           handleSubmit={handleCreateShift}
           editData={editShiftData}

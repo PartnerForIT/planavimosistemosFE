@@ -13,7 +13,6 @@ export default ({
   onDeleteReccuring
 }) => {
   const { t } = useTranslation();
-  
 
   return (
     <div className={styles.eventContent__userReccuring}>
@@ -27,6 +26,13 @@ export default ({
           { reccuring.type_id*1 === 1 && t('Weekly') }
           { reccuring.type_id*1 === 2 && t('Monthly') }
         </Button>
+      </div>
+
+      <div className={classNames(styles.eventContent__label, styles.eventContent__label__reccuring)}>
+        {t('Planned Time')}
+      </div>
+      <div className={classNames(styles.eventContent__value, styles.eventContent__value__reccuring)}>
+        {reccuring.original_start} - {reccuring.original_end}
       </div>
 
       <div className={styles.eventContent__userReccuring_body}>
