@@ -951,5 +951,9 @@
         "After applying this rule, the system starts checking every night what needs to be deleted.": "Pritaikius šią taisyklę, sistema kiekvieną naktį pradeda tikrinti, ką reikia ištrinti.",
         "Description": "Aprašymas",
 
-        "Edit Recurring Task": "Koreguoti Pasikartojančią Užduotį"
+        "Edit Recurring Task": "Koreguoti Pasikartojančią Užduotį",
+
+        "WAITING FOR PUBLISHING": "LAUKIAMA PASKELBIMO",
+        "This month is not yet published, your managers are still planning and scheduling work for this month.": "Šis mėnesis dar nėra paskelbtas, jūsų vadovai vis dar planuoja šio mėnesio grafikus.",
+        "You will be notified in the Grownu mobile app when this month will be published.": "Jūs gausite pranešimą mobiliojoje aplikacijoje Grownu apie grafiko paskelbimą."
 }

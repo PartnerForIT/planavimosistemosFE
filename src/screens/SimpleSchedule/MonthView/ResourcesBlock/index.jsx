@@ -56,10 +56,11 @@ export default ({
         ))
       }
 
-      <ResourcesCell
-        onAddEmployees={handleAddEmployees}
-        unavailableEmployees={unEmployees()}
-      />
+      { handleAddEmployees ? (
+        <ResourcesCell
+          onAddEmployees={handleAddEmployees}
+          unavailableEmployees={unEmployees()}
+        /> ) : null }
     </div>
   );
 }

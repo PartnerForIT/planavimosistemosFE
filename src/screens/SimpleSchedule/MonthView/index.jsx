@@ -16,6 +16,7 @@ import ResourcesBlock from './ResourcesBlock';
 import RowContent from './RowContent';
 import Cell from './Cell';
 import classes from './MonthView.module.scss';
+import NotPublished from '../../../components/Icons/NotPublished';
 
 const trackYProps = {
   renderer: ({ elementRef, ...props }) => (
@@ -28,6 +29,7 @@ const trackYProps = {
 };
 
 export default ({
+  published,
   resources: externalResources,
   events,
   holidays,
@@ -294,49 +296,49 @@ export default ({
             />
             <div className={classes.monthView__content__data}>
               {
-                // <div className={classes.monthView__content__data__divideRow}>
-                //   {
-                //     daysOfMonth.map((item) => (
-                //         <Cell
-                //             key={item.id}
-                //             statistic={item.statistic}
-                //             weekend={item.weekend}
-                //         />
-                //     ))
-                //   }
-                // </div>
-              }
-              {
-                resources.map((item) => (
-                  <RowContent
-                    key={item.id}
-                    resourceId={item.id}
-                    resources={item.children}
-                    expander={item.expander}
-                    employeeId={item.employee_id}
-                    markerActive={markerActive}
-                    handleMarker={onHandleMarker}
-                    daysOfMonth={daysOfMonth}
-                    events={events}
-                    pastDay={flexBackground.past}
-                    scheduleSettings={scheduleSettings}
-                    copyTool={copyTool}
-                    workTime={workTime}
-                    permissions={permissions}
-                    markers={markers}
-                    handleChangeEmployee={handleChangeEmployee}
-                    handleCopyTool={handleCopyTool}
-                    handleAddHistory={handleAddHistory}
-                    currentMonth={currentMonth}
-                    handleEditWorkingTime={handleEditWorkingTime}
-                    handleDuplicateEmployee={handleDuplicateEmployee}
-                    handleDeleteWorkingTime={handleDeleteWorkingTime}
-                    openAddSchedule={openAddSchedule}
-                    onEditReccuring={onEditReccuring}
-                    onDeleteReccuring={onDeleteReccuring}
-                  />
-                ))
-              }
+                !published && !permissions.schedule_create_and_edit ? (
+                  <div className={classes.monthView__content__data__empty}>
+                    <div className={classes.monthView__content__data__empty_inner}>
+                      <NotPublished className={classes.notPublishedIcon} />
+                      <p className={classes.monthView__content__data__empty_title}>{t("WAITING FOR PUBLISHING")}</p>
+                      <p className={classes.monthView__content__data__empty_description}>{t("This month is not yet published, your managers are still planning and scheduling work for this month.")}</p>
+                      <p className={classes.monthView__content__data__empty_description}>{t("You will be notified in the Grownu mobile app when this month will be published.")}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                {
+                  resources.map((item) => (
+                    <RowContent
+                      key={item.id}
+                      resourceId={item.id}
+                      resources={item.children}
+                      expander={item.expander}
+                      employeeId={item.employee_id}
+                      markerActive={markerActive}
+                      handleMarker={onHandleMarker}
+                      daysOfMonth={daysOfMonth}
+                      events={events}
+                      pastDay={flexBackground.past}
+                      scheduleSettings={scheduleSettings}
+                      copyTool={copyTool}
+                      workTime={workTime}
+                      permissions={permissions}
+                      markers={markers}
+                      handleChangeEmployee={handleChangeEmployee}
+                      handleCopyTool={handleCopyTool}
+                      handleAddHistory={handleAddHistory}
+                      currentMonth={currentMonth}
+                      handleEditWorkingTime={handleEditWorkingTime}
+                      handleDuplicateEmployee={handleDuplicateEmployee}
+                      handleDeleteWorkingTime={handleDeleteWorkingTime}
+                      openAddSchedule={openAddSchedule}
+                      onEditReccuring={onEditReccuring}
+                      onDeleteReccuring={onDeleteReccuring}
+                    />
+                  ))
+                } </>
+              )}
               <ReactTooltip
                 id='title'
                 className={classes.monthView__content__data__tooltip}

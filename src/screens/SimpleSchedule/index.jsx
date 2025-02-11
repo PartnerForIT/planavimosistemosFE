@@ -98,7 +98,7 @@ export default () => {
   const { t } = useTranslation();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
-  const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], });
+  const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], skill: []});
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
@@ -416,6 +416,7 @@ export default () => {
       shiftTypeArr: filter?.shiftType.map(({id}) => id),
       employeesArr: filter?.employers.map(({id}) => id),
       placesArr: filter?.place.map(({id}) => id),
+      skills: filter?.skill.map(({id}) => id),
       timeline: nextTimeline,
       fromDate: nextFromDate.format('YYYY-MM-DD'),
     }));
@@ -860,12 +861,58 @@ export default () => {
       });
     }
   };
-  const handleViewDidMount = () => {
+  const handleViewDidMount = (view) => {
     const container = document.getElementsByClassName('fc-timeline-slots');
     resizeObserverRef.current = new ResizeObserver((item) => {
       const rows = item[0].target.children[0].children[1].children[0].children;
       updateWidthCell(rows);
     }).observe(container[0], { box: 'border-box' });
+
+    if (!permissions.schedule_create_and_edit && !published) {
+      const calendarEl = view.el.closest('.fc');
+      const eventArea = calendarEl.querySelector('.fc-timeline-body');
+      let parentParent = null;
+      if (eventArea) {
+        parentParent = eventArea.parentElement?.parentElement;
+      }
+      
+      // Remove any previous "No events" message
+      const existingOverlay = calendarEl.querySelector('.no-events-overlay');
+      if (existingOverlay) existingOverlay.remove();
+
+      if (events.length === 0 && parentParent) {
+        // Create overlay container
+        const overlay = document.createElement("div");
+        overlay.classList.add("no-events-overlay");
+  
+        // Create NotPublished element (you can replace this with your own React component if needed)
+        const notPublished = document.createElement("div");
+        notPublished.classList.add("not-published-icon");
+  
+        // Create title
+        const title = document.createElement("p");
+        title.classList.add("empty-title");
+        title.innerText = t("WAITING FOR PUBLISHING");
+  
+        // Create descriptions
+        const desc1 = document.createElement("p");
+        desc1.classList.add("empty-description");
+        desc1.innerText = t("This month is not yet published, your managers are still planning and scheduling work for this month.");
+  
+        const desc2 = document.createElement("p");
+        desc2.classList.add("empty-description");
+        desc2.innerText = t("You will be notified in the Grownu mobile app when this month will be published.");
+  
+        // Append all elements inside overlay
+        overlay.appendChild(notPublished); // Append the NotPublished element
+        overlay.appendChild(title);
+        overlay.appendChild(desc1);
+        overlay.appendChild(desc2);
+  
+        // Insert overlay inside parentParent
+        parentParent.appendChild(overlay);
+      }
+    }
   };
 
   const handeSlotLaneClassNames = (info) => {
@@ -1175,6 +1222,7 @@ export default () => {
               {
                 timeline === TIMELINE.MONTH ? (
                   <MonthView
+                    published={published}
                     resources={resources ? Object.values(resources) : resourcesMock}
                     events={events}
                     holidays={schedule?.holidays}
@@ -1194,7 +1242,7 @@ export default () => {
                     handleAddHistory={handleAddHistory}
                     handleChangeTimeline={handleChangeTimeline}
                     handleEditWorkingTime={handleEditWorkingTime}
-                    handleAddEmployees={handleAddEmployees}
+                    handleAddEmployees={permissions.schedule_create_and_edit ? handleAddEmployees : false}
                     handleDeleteEmployees={handleDeleteEmployees}
                     openAddSchedule={handleOpenAddSchedule}
                     onEditReccuring={handleEditReccuring}
@@ -1233,8 +1281,8 @@ export default () => {
                       height='100%'
                       //agendaEventMinHeight={90}
                       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-                      resources={[...resources, {button: true}]}
-                      events={events}
+                      resources={[...resources, ...(permissions.schedule_create_and_edit ? [{ button: true }] : [])]}
+                      events={!permissions.schedule_create_and_edit && !published ? events : []}
                       eventStartEditable={false}
                       eventResizableFromStart={false}
                       eventDurationEditable={false}
