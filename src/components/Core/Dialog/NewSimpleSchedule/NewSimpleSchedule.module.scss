@@ -5,6 +5,12 @@
     & > * {
       margin-top: 10px;
     }
+
+    &__form {
+      > div > div {
+        overflow: visible;
+      }
+    }
   
     &__line {
       width: 100%;

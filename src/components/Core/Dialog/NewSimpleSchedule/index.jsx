@@ -281,7 +281,7 @@ export default function NewSimpleSchedule({
   }
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} open={open} title={title} className={classes.addEntry__form}>
       <div>
         <div className={classes.addEntry__formControl}>
           <div className={classes.addEntry__formControl__labelBlock}>

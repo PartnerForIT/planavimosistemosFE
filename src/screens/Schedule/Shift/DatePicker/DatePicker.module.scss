@@ -25,3 +25,15 @@
     }
   }
 }
+
+:global(.MuiPickersToolbar-toolbar) {
+  background-color: #0085ff !important;
+}
+
+:global(.MuiPickersDay-daySelected) {
+  background-color: #0085ff !important;
+}
+
+:global(.MuiButton-textPrimary) {
+  color: #0085ff !important;
+}
