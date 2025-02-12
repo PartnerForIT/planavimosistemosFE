@@ -188,7 +188,7 @@ export default () => {
     if (schedule?.events) {
       if (timeline === TIMELINE.WEEK) {
         result = schedule.events.map((e) => {
-          const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
+          const sameDay = schedule.events.filter((ev) => ev.resourceId === e.resourceId && ev.day_number === e.day_number)
           return {
             ...e,
             realStart: e.start,
@@ -201,7 +201,7 @@ export default () => {
           });
       } else if (timeline === TIMELINE.DAY) {
         result = schedule.events.map((e) => {
-          const sameDay = schedule.events.filter((ev) => ev.employee_id === e.employee_id && ev.day_number === e.day_number)
+          const sameDay = schedule.events.filter((ev) => ev.resourceId === e.resourceId && ev.day_number === e.day_number)
           return {
             ...e,
             realStart: e.start,
@@ -1166,7 +1166,7 @@ export default () => {
           
           <div className='simple-schedule-screen__buttons'>
             {
-              timeline === TIMELINE.MONTH && schedule && permissions.schedule_create_and_edit ? (
+              timeline === TIMELINE.MONTH && schedule && permissions.schedule_create_and_edit && scheduleSettings.use_publish ? (
                 ! published && !schedule?.events?.length ? (
                   <Button
                     className={'simple-schedule-screen__nochanges'}

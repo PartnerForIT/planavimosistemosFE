@@ -955,5 +955,10 @@
 
         "WAITING FOR PUBLISHING": "LAUKIAMA PASKELBIMO",
         "This month is not yet published, your managers are still planning and scheduling work for this month.": "Šis mėnesis dar nėra paskelbtas, jūsų vadovai vis dar planuoja šio mėnesio grafikus.",
-        "You will be notified in the Grownu mobile app when this month will be published.": "Jūs gausite pranešimą mobiliojoje aplikacijoje Grownu apie grafiko paskelbimą."
+        "You will be notified in the Grownu mobile app when this month will be published.": "Jūs gausite pranešimą mobiliojoje aplikacijoje Grownu apie grafiko paskelbimą.",
+
+        "Use publish month and change notifications": "Naudoti mėnesio paskelbimą bei pakeitimų pranešimus",
+
+        "Show group timeline": "Rodyti grupės eilutę",
+        "Show sub-group timeline": "Rodyti sub-grupės eilutę"
 }

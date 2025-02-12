@@ -73,6 +73,10 @@ const permissionsConfig = [
     name: 'additional-rates',
     permission: 'rates_create_and_edit',
   },
+  {
+    name: 'schedule_create_and_edit',
+    permission: 'schedule_create_and_edit',
+  },
 ];
 
 export default () => {
@@ -98,7 +102,7 @@ export default () => {
       history.push(`${mainPath}/kiosk/kiosk-list`);
     } else if (permissions.events) {
       history.push(`${mainPath}/events`);
-    } else if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit) {
+    } else if (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) {
       history.push(`${mainPath}/schedule`);
     } else if (permissions.activity_log) {
       history.push(`${mainPath}/activity-log`);

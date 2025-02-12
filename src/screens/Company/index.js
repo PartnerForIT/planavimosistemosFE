@@ -27,6 +27,7 @@ import Accounts from '../../components/Settings/Accounts/AccountsList';
 import Grouping from '../../components/Settings/Accounts/Grouping';
 import Roles from '../../components/Settings/Accounts/Roles';
 import ScheduleSettings from '../../components/Settings/Schedule';
+import SimpleScheduleSettings from '../../components/Settings/SimpleSchedule';
 import KioskList from '../../components/Settings/Kiosk/KioskList';
 import KioskUsers from '../../components/Settings/Kiosk/KioskUsers';
 import SettingCategories from '../../components/Settings/Categories';
@@ -146,6 +147,10 @@ const permissionsConfig = [
     name: 'integrations_edit_settings',
     module: 'integrations',
     permission: 'integrations_edit_settings',
+  },
+  {
+    name: 'schedule_create_and_edit',
+    permission: 'schedule_create_and_edit',
   },
 ];
 
@@ -275,8 +280,8 @@ export default () => {
         )
       }
       {
-        ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_module) && (
-          <Route exact path='/:id/settings/schedule' component={ScheduleSettings} />
+        (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) && (
+          <Route exact path='/:id/settings/schedule' component={permissions.schedule_simple_access ? SimpleScheduleSettings : ScheduleSettings} />
         )
       }
       {

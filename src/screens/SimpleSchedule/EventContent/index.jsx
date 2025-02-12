@@ -274,7 +274,8 @@ export default ({
     let tooltip_minutes = minutes;
     let tooltip_work_minutes = work_minutes;
     let tooltip_night_minutes = night_minutes;
-    if (group) {
+    
+    if (group && employeeId) {
       tooltip_minutes = 0;
       tooltip_work_minutes = 0;
       tooltip_night_minutes = 0;
@@ -299,7 +300,7 @@ export default ({
       //+ (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
       + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(tooltip_night_minutes)}</strong>` : ``)
       + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
-      + (group ? `<br />${t('Tasks')}: ${group.length}/${group.filter(g => g.is_completed).length}` : ``)
+      + (group && employeeId ? `<br />${t('Tasks')}: ${group.length}/${group.filter(g => g.is_completed).length}` : ``)
       + `</div>`
     )
   }
@@ -359,45 +360,47 @@ export default ({
         </div>
       }
       {
-        empty ? 
-          editPermission && <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        : (group ? (
-          <span className={styles.eventContent__group}
-            onClick={() => setOpenedGroup(!openedGroup)}
-            ref={buttonRef}
-          >
-            <div className={styles.eventContent__group_icon} >
-              <img src={GroupIcon} alt={employeeName} />
-            </div>
-            <div className={styles.eventContent__group_title} >
-              {removeTimelines ? (
-                <span className={styles.eventContent__title}>
-                  {groupStart()}
-                  <br />
-                  {groupEnd()}
-                </span>
-              ) : (
-                <>
-                  {group.length} {t('tasks')}
-                </>
-              )}
-            </div>
-          </span>
-        ) : (
-
-          removeTimelines ? (
-            <span className={styles.eventContent__title} >{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</span>
-            ) : (
-            <span className={styles.eventContent__title} >
-              {
-                copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
-              }
-
-              { title?.place && <span className={styles.eventContent__place}>{title.place}</span> }
-              { title?.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
+        employeeId && (
+          empty ?
+            editPermission && <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          : (group ? (
+            <span className={styles.eventContent__group}
+              onClick={() => setOpenedGroup(!openedGroup)}
+              ref={buttonRef}
+            >
+              <div className={styles.eventContent__group_icon} >
+                <img src={GroupIcon} alt={employeeName} />
+              </div>
+              <div className={styles.eventContent__group_title} >
+                {removeTimelines ? (
+                  <span className={styles.eventContent__title}>
+                    {groupStart()}
+                    <br />
+                    {groupEnd()}
+                  </span>
+                ) : (
+                  <>
+                    {group.length} {t('tasks')}
+                  </>
+                )}
+              </div>
             </span>
+            ) : (
+              removeTimelines ? (
+                <span className={styles.eventContent__title} >{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</span>
+                ) : (
+                <span className={styles.eventContent__title} >
+                  {
+                    copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+                  }
+
+                  { title?.place && <span className={styles.eventContent__place}>{title.place}</span> }
+                  { title?.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
+                </span>
+              )
+            )
           )
-        ))
+        )
       }
 
       <div className={styles.eventContent__leftSpace} />
@@ -453,7 +456,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu && !empty && !isCompleted && editPermission ? (
+        !copy_event && withMenu && !empty && !isCompleted && editPermission && employeeId ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
