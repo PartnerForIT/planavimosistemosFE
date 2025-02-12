@@ -300,7 +300,7 @@ export default ({
       //+ (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
       + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(tooltip_night_minutes)}</strong>` : ``)
       + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
-      + (group && employeeId ? `<br />${t('Tasks')}: ${group.length}/${group.filter(g => g.is_completed).length}` : ``)
+      + (group && employeeId ? `<br />${t('Tasks')}: ${group.length}/${group.filter(g => g.is_finished).length}` : ``)
       + `</div>`
     )
   }

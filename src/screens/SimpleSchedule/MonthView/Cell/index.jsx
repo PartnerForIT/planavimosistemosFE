@@ -176,7 +176,7 @@ export default ({
       //+ (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(event.break_minutes)}</b>` : ``)
       + ((permissions.night_rates && AdditionalRates.night_time) ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
       + ((permissions.cost && permissions.schedule_costs) ? `<br />${t('Cost')} <b>${event.cost}${currency}</b>` : ``)
-      + (event?.group ? `<br />${t('Tasks')}: ${event?.group.length}/${event?.group.filter(g => g.is_completed).length}` : ``)
+      + (event?.group ? `<br />${t('Tasks')}: ${event?.group.length}/${event?.group.filter(g => g.is_finished).length}` : ``)
       + `</div>`
       )
     )
@@ -213,6 +213,13 @@ export default ({
               title && night_duration && night_duration > 0 ? (
                 <span className={classes.cell_night}>
                   {night_duration}h
+                </span>
+              ) : null
+            }
+            {
+              title && event?.group && employee_Id ? (
+                <span className={classnames(classes.cell_tasks, {[classes.cell_tasks_completed]: event?.group.filter(g => g.is_finished).length === event?.group.length})}>
+                  {event?.group.length}/<span className={classnames(classes.cell_tasks_finished, {[classes.cell_tasks_finished_green]: event?.group.filter(g => g.is_finished).length > 0})}>{event?.group.filter(g => g.is_finished).length}</span>
                 </span>
               ) : null
             }

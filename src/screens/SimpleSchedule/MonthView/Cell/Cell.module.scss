@@ -61,6 +61,30 @@
     padding-left: 2px !important;
   }
 
+  &_tasks {
+    display: block;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 2px;
+    text-align: left;
+    border-left: 2px solid transparent;
+    border-color: #DB894F !important;
+    border-radius: 0 !important;
+    padding-left: 2px !important;
+
+    &_completed {
+      border-color: #1dd09e !important;
+      color: #1dd09e;
+    }
+
+    &_finished {
+      &_green {
+        color: #1dd09e;
+      }
+    }
+  }
+
   &_holiday {
 
     &_company:after {
