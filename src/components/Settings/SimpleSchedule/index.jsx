@@ -10,7 +10,6 @@ import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
 import TitleBlock from '../../Core/TitleBlock';
 import Dashboard from '../../Core/Dashboard';
-import Select from '../../Core/SimpleSelect';
 import Schedule2Icon from '../../Icons/Schedule2';
 import Progress from '../../Core/Progress';
 import {
@@ -26,8 +25,6 @@ import {
 } from '../../../store/settings/actions';
 
 import Label from '../../Core/InputLabel';
-import Input from '../../Core/Input/Input';
-import Checkbox from '../../Core/Checkbox/Checkbox2';
 import styles from './schedule.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -46,21 +43,6 @@ export default function ActivityLog() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
-
-  const monthArr = [
-    { code: 1, name: t('January') },
-    { code: 2, name: t('February') },
-    { code: 3, name: t('March') },
-    { code: 4, name: t('April') },
-    { code: 5, name: t('May') },
-    { code: 6, name: t('June') },
-    { code: 7, name: t('July') },
-    { code: 8, name: t('August') },
-    { code: 9, name: t('September') },
-    { code: 10, name: t('October') },
-    { code: 11, name: t('November') },
-    { code: 12, name: t('December') },
-  ];
 
   const [inputValues, setInputValues] = useState({
     clock_in_restriction: false,
@@ -92,38 +74,7 @@ export default function ActivityLog() {
     setInputValues(data);
     dispatch(postSchedule(companyId, data));
   };
-  const handleChangeInput = (event) => {
-    let {
-      name,
-      value,
-      checked,
-      type,
-    } = event.target;
-
-    value = (name === 'accumulated_months' && value && [1,2,3,4,6].includes(value)) ? 1 : value;
-
-    switch (type) {
-      case 'checkbox': {
-        if (name === 'clock_in_restriction' && !checked) {
-          handleSetInputValues({
-            [name]: checked,
-            ignore_clockin_restriction: false,
-          });
-        } else {
-          handleSetInputValues({
-            [name]: checked,
-          });
-        }
-        break;
-      }
-      default: {
-        handleSetInputValues({
-          [name]: value,
-        });
-      }
-    }
-  };
-
+  
   return (
     <MaynLayout>
       <Dashboard>
