@@ -9,6 +9,7 @@ import classNames from 'classnames';
 
 export default ({
   reccuring,
+  allowEdit,
   onEditReccuring,
   onDeleteReccuring
 }) => {
@@ -144,19 +145,23 @@ export default ({
           </div>
         }
 
-        <div
-          className={styles.eventContent__userReccuring__action}
-          onClick={onEditReccuring}
-        >
-          {t('Edit recurring')}
-        </div>
+        { allowEdit && (
+          <>
+            <div
+              className={styles.eventContent__userReccuring__action}
+              onClick={onEditReccuring}
+            >
+              {t('Edit recurring')}
+            </div>
 
-        <div
-          className={classNames(styles.eventContent__userReccuring__action, styles.eventContent__userReccuring__action_delete)}
-          onClick={onDeleteReccuring}
-        >
-          {t('Delete')}
-        </div>
+            <div
+              className={classNames(styles.eventContent__userReccuring__action, styles.eventContent__userReccuring__action_delete)}
+              onClick={onDeleteReccuring}
+            >
+              {t('Delete')}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

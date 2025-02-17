@@ -28,17 +28,21 @@ export default ({
       if (onTop) {
 
         if (!maxHeight) {
+          let marginTop = 0;
+          if (offset.top - modalHeight < 0) {
+            marginTop = offset.top - modalHeight - 30
+          }
+
           setModalStyles({
-            bottom: window.innerHeight - offset.top + 6,
+            bottom: window.innerHeight - offset.top + 6 + marginTop,
             left: offset.left,
             transform: 'translateX(-50%)',
-            marginLeft: '12px',
+            marginLeft: '6px',
           });
         } else {
   
           const elementHeight = maxHeight || 0;
           const elementWidth = 295; // Fixed width of your window (adjust if dynamic)
-          
           let topOffset = offset.top - elementHeight - 6; // Position above the reference element
           let leftOffset = offset.left;
   

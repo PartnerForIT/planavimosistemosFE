@@ -56,9 +56,12 @@ export default ({
   onEditWorkingTime,
   start,
   end,
+  worked_start,
+  worked_end,
   viewType,
   copy_event,
   isCompleted,
+  isFisnihed,
   copyTool,
   handleAddHistory,
   description,
@@ -434,7 +437,7 @@ export default ({
             <div className={styles.eventContent__groupModal__list}>
               {
                 group.map((item, index) => (
-                  <div key={index} className={getGroupItemClasses(item)} onClick={() => item.is_completed ? null : handleClickGroupItem(index)}>
+                  <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
                     <div className={styles.eventContent__groupModal__item__title}>
                       { item.reccuring && <div className={styles.eventContent__reccuring}><RefreshArrows /></div> }
                       {item.schedule_title ? item.schedule_title : ''}
@@ -456,7 +459,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu && !empty && !isCompleted && editPermission && employeeId ? (
+        !copy_event && withMenu && !empty && editPermission && employeeId ? (
           <Dropdown
             light
             cancel={content !== 'menu'}
@@ -481,6 +484,8 @@ export default ({
                 <MenuContent
                   reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
                   photo={photo}
+                  isCompleted={isCompleted}
+                  isFinished={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}
                   employeeName={employeeName}
                   jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
                   skillName={skillName}
@@ -488,6 +493,8 @@ export default ({
                   schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                   start={activeGroupItem ? activeGroupItem.start : start}
                   end={activeGroupItem ? activeGroupItem.end : end}
+                  worked_start={activeGroupItem ? activeGroupItem.worked_start : worked_start}
+                  worked_end={activeGroupItem ? activeGroupItem.worked_end : worked_end}
                   title={activeGroupItem ? activeGroupItem.title : title}
                   handleEditWorkingTime={handleEditWorkingTime}
                   handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}

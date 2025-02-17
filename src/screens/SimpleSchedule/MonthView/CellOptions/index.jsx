@@ -29,10 +29,13 @@ export default ({
   onChangeEmployee,
   start,
   end,
+  worked_start,
+  worked_end,
   copy_event,
   empty,
   editPermissions,
   isCompleted,
+  isFisnihed,
   unavailableEmployees,
   markers,
   handleCopyTool,
@@ -231,6 +234,8 @@ export default ({
                 content === 'menu' && (
                   <MenuContent
                     reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
+                    isCompleted={isCompleted}
+                    isFinished={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}
                     photo={photo}
                     employeeName={employeeName}
                     jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
@@ -239,6 +244,8 @@ export default ({
                     schedule_title={activeGroupItem ? activeGroupItem.schedule_title : schedule_title}
                     start={activeGroupItem ? activeGroupItem.start : start}
                     end={activeGroupItem ? activeGroupItem.end : end}
+                    worked_start={activeGroupItem ? activeGroupItem.worked_start : worked_start}
+                    worked_end={activeGroupItem ? activeGroupItem.worked_end : worked_end}
                     title={activeGroupItem ? activeGroupItem.title : title}
                     handleEditWorkingTime={handleEditWorkingTime}
                     handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}

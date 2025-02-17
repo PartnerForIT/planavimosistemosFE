@@ -723,6 +723,8 @@ export default () => {
         timeText={timeText}
         start={start}
         end={end}
+        worked_start={selectedEvent?.worked_start || null}
+        worked_end={selectedEvent?.worked_end || null}
         resourceId={resourceInfo.id}
         copy_event={event.extendedProps.copy_event}
         cost={event.extendedProps.cost}
@@ -746,6 +748,7 @@ export default () => {
         copyTool={copyTool}
         endDay={endDay}
         isCompleted={isCompleted}
+        isFisnihed={selectedEvent?.is_finished}
         lineColor={resourceInfo?.extendedProps?.lineColor}
         removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
         onEditReccuring={handleEditReccuring}

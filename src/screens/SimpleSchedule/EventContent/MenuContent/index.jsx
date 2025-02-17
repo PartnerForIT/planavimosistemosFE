@@ -16,8 +16,12 @@ export default ({
   description,
   start,
   end,
+  worked_start,
+  worked_end,
   title,
   schedule_title,
+  isCompleted,
+  isFinished,
   handleEditWorkingTime,
   handleDuplicateWorkingTime,
   handleDeleteWorkingTime,
@@ -25,6 +29,35 @@ export default ({
   onDeleteReccuring
 }) => {
   const { t } = useTranslation();
+
+  const calculateWorkedHours = (start, end) => {
+    const startMoment = moment(start);
+    const endMoment = moment(end);
+    const duration = moment.duration(endMoment.diff(startMoment));
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.asMinutes()) - hours * 60;
+    return `${hours}h ${minutes}m`;
+  }
+
+  const calculateDifference = (worked_start, worked_end, start, end) => {
+    const startMoment = moment(start);
+    const endMoment = moment(end);
+    const workedStartMoment = moment(worked_start);
+    const workedEndMoment = moment(worked_end);
+    const duration = moment.duration(workedEndMoment.diff(workedStartMoment));
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.asMinutes()) - hours * 60;
+    const workedDuration = hours * 60 + minutes;
+    const duration2 = moment.duration(endMoment.diff(startMoment));
+    const hours2 = Math.floor(duration2.asHours());
+    const minutes2 = Math.floor(duration2.asMinutes()) - hours2 * 60;
+    const plannedDuration = hours2 * 60 + minutes2;
+    const difference = workedDuration - plannedDuration;
+    if (difference === 0) {
+      return '0m';
+    }
+    return `${difference > 0 ? '+' : '-'}${Math.abs(difference)}m`;
+  }
   
   return (
     <div className={styles.eventContent__menu}>
@@ -50,7 +83,7 @@ export default ({
         {schedule_title}
       </div>
       {
-        reccuring && <ReccuringInfo reccuring={reccuring} onEditReccuring={onEditReccuring} onDeleteReccuring={onDeleteReccuring} />
+        reccuring && <ReccuringInfo allowEdit={!isCompleted && !isFinished} reccuring={reccuring} onEditReccuring={onEditReccuring} onDeleteReccuring={onDeleteReccuring} />
       }
       {
         description && (
@@ -71,6 +104,29 @@ export default ({
         {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
       </div>
 
+      { worked_start && worked_end && (
+        <>
+          <div className={styles.eventContent__label}>
+            {t('Worked Time')}
+          </div>
+          <div className={styles.eventContent__value}>
+            {`${moment(worked_start).format('HH:mm')} – ${moment(worked_end).format('HH:mm')}`}
+          </div>
+          <div className={styles.eventContent__label}>
+            {t('Worked Hours')}
+          </div>
+          <div className={styles.eventContent__value}>
+            {calculateWorkedHours(worked_start, worked_end)}
+          </div>
+          <div className={styles.eventContent__label}>
+            {t('Difference')}
+          </div>
+          <div className={styles.eventContent__value}>
+            {calculateDifference(worked_start, worked_end, start, end)}
+          </div>
+        </>
+      )}
+
       <div className={styles.eventContent__label}>
         {t('Place')}
       </div>
@@ -85,21 +141,25 @@ export default ({
         { title.job_type ? title.job_type : '' }
       </div>
 
-      <Dropdown.ItemMenu
-        title={t('Edit the entry')}
-        onClick={handleEditWorkingTime}
-      />
+      { !isCompleted && !isFinished && (
+        <>
+        <Dropdown.ItemMenu
+          title={t('Edit the entry')}
+          onClick={handleEditWorkingTime}
+        />
 
-      <Dropdown.ItemMenu
-        title={t('Duplicate to')}
-        onClick={handleDuplicateWorkingTime}
-      />
+        <Dropdown.ItemMenu
+          title={t('Duplicate to')}
+          onClick={handleDuplicateWorkingTime}
+        />
 
-      <Dropdown.ItemMenu
-        title={t('Delete')}
-        onClick={handleDeleteWorkingTime}
-        remove
-      />
+        <Dropdown.ItemMenu
+          title={t('Delete')}
+          onClick={handleDeleteWorkingTime}
+          remove
+        />
+        </>
+      )}
     </div>
   );
 };

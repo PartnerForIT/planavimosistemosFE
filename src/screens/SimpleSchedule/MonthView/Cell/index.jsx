@@ -224,7 +224,7 @@ export default ({
               ) : null
             }
 
-            { !statistic && !markerActive && !isCompleted &&
+            { !statistic && !markerActive &&
               <CellOptions
                 id={event?.id}
                 currentDay={currentDay}
@@ -239,6 +239,8 @@ export default ({
                 copyTool={copyTool}
                 start={start}
                 end={end}
+                worked_start={event?.worked_start}
+                worked_end={event?.worked_end}
                 employeeId={employee_Id}
                 employeeName={employeeName}
                 resourceId={resource?.id}
@@ -248,6 +250,7 @@ export default ({
                 withMenu={withMenu && !copyTool}
                 editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}
+                isFisnihed={event?.is_finished}
                 unavailableEmployees={unEmployees}
                 markers={markers}
                 onChangeEmployee={handleChangeEmployee}
