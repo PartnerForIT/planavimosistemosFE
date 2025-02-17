@@ -234,7 +234,7 @@ export default ({
                 content === 'menu' && (
                   <MenuContent
                     reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
-                    isCompleted={isCompleted}
+                    isCompleted={activeGroupItem ? activeGroupItem.is_completed : isCompleted}
                     isFinished={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}
                     photo={photo}
                     employeeName={employeeName}

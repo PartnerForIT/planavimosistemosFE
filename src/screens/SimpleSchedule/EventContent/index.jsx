@@ -484,7 +484,7 @@ export default ({
                 <MenuContent
                   reccuring={activeGroupItem ? activeGroupItem.reccuring : reccuring}
                   photo={photo}
-                  isCompleted={isCompleted}
+                  isCompleted={activeGroupItem ? activeGroupItem.is_completed : isCompleted}
                   isFinished={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}
                   employeeName={employeeName}
                   jobTypeName={activeGroupItem ? activeGroupItem.job_type_name : jobTypeName}
