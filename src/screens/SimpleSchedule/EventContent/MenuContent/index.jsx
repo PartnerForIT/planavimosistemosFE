@@ -25,6 +25,7 @@ export default ({
   handleEditWorkingTime,
   handleDuplicateWorkingTime,
   handleDeleteWorkingTime,
+  handleAddTask,
   onEditReccuring,
   onDeleteReccuring
 }) => {
@@ -157,6 +158,11 @@ export default ({
           title={t('Delete')}
           onClick={handleDeleteWorkingTime}
           remove
+        />
+
+        <Dropdown.ItemMenu
+          title={t('Add additional task')}
+          onClick={handleAddTask}
         />
         </>
       )}

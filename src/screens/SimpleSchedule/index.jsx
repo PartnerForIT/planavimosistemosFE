@@ -547,6 +547,24 @@ export default () => {
       handleGetSchedule({ fromDate: fromDateRef.current });
     });
   };
+  const handleAddTask = (id) => {
+    const found = events.find((e) => e.id === id);
+    let last_time = moment();
+    if (found) {
+      last_time = moment(found.end);
+      if (found.group) {
+        found.group.forEach((e) => {
+          if (moment(e.end).isAfter(last_time)) {
+            last_time = moment(e.end);
+          }
+        });
+      }
+
+      setEditShiftData({employee_id: found.employee_id, date: last_time, start_work: last_time.format('HH:mm'), end_work: last_time.add(1, 'hour').format('HH:mm')});
+    }
+
+    setOpenCreateShift(true);
+  };
   const handleDeleteWorkingTime = (id, day) => {
     if (!day) return;
     const confirm = window.confirm('Are you sure you want to delete this schedule?');
@@ -743,6 +761,7 @@ export default () => {
         openAddSchedule={() => { handleOpenAddSchedule(selectedEvent) }}
         onDuplicateEmployee={handleDuplicateEmployee}
         onDeleteWorkingTime={handleDeleteWorkingTime}
+        onAddTask={handleAddTask}
         onEditWorkingTime={handleEditWorkingTime}
         handleAddHistory={handleAddHistory}
         copyTool={copyTool}
@@ -1244,6 +1263,7 @@ export default () => {
                         workTime={workTime}
                         handleDuplicateEmployee={handleDuplicateEmployee}
                         handleDeleteWorkingTime={handleDeleteWorkingTime}
+                        handleAddTask={handleAddTask}
                         handleCopyTool={handleCopyTool}
                         handleAddHistory={handleAddHistory}
                         handleChangeTimeline={handleChangeTimeline}

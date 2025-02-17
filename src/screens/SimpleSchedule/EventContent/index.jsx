@@ -53,6 +53,7 @@ export default ({
   withMenu,
   onDuplicateEmployee,
   onDeleteWorkingTime,
+  onAddTask,
   onEditWorkingTime,
   start,
   end,
@@ -104,7 +105,7 @@ export default ({
     return classNames(
       styles.eventContent__groupModal__item,
       {
-        [styles.eventContent__groupModal__item_completed]: item.is_completed,
+        [styles.eventContent__groupModal__item_completed]: item.is_finished,
       },
     );
   }
@@ -222,6 +223,9 @@ export default ({
       modalAddRef.current.close();
     }
     setContent('menu');
+  };
+  const handleAddTask = () => {
+    onAddTask(id);
   };
   const handleDeleteWorkingTime = () => {
     onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem?.start ? activeGroupItem?.start : start));
@@ -455,6 +459,12 @@ export default ({
                 ))
               }
             </div>
+
+            { !isCompleted && (
+              <div className={styles.eventContent__groupModal__add}>
+                <span onClick={handleAddTask}>{t('Add additional task')}</span>
+              </div>
+            )}
           </div>
         </Content>
       )}
@@ -499,6 +509,7 @@ export default ({
                   handleEditWorkingTime={handleEditWorkingTime}
                   handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
                   handleDeleteWorkingTime={handleDeleteWorkingTime}
+                  handleAddTask={handleAddTask}
                   onEditReccuring={() => { onEditReccuring(activeGroupItem?.id ? activeGroupItem?.id : id) }}
                   onDeleteReccuring={() => { onDeleteReccuring(activeGroupItem?.id ? activeGroupItem?.id : id) }}
                 />

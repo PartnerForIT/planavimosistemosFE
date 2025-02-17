@@ -47,6 +47,7 @@ export default ({
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
+  handleAddTask,
   openAddSchedule,
   onEditReccuring,
   onDeleteReccuring
@@ -260,6 +261,7 @@ export default ({
                 onEditWorkingTime={handleEditWorkingTime}
                 onDuplicateEmployee={handleDuplicateEmployee}
                 onDeleteWorkingTime={handleDeleteWorkingTime}
+                onAddTask={handleAddTask}
                 openAddSchedule={() => { openAddSchedule(event) }}
                 onEditReccuring={onEditReccuring}
                 onDeleteReccuring={onDeleteReccuring}

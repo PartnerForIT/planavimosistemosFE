@@ -45,6 +45,7 @@ export default ({
   currentMonth,
   onEditWorkingTime,
   onDeleteWorkingTime,
+  onAddTask,
   onDuplicateEmployee,
   openAddSchedule,
   onEditReccuring,
@@ -97,13 +98,16 @@ export default ({
     return classNames(
       styles.cellOptions__groupModal__item,
       {
-        [styles.eventContent__groupModal__item_completed]: item.is_completed,
+        [styles.cellOptions__groupModal__item_completed]: item.is_finished,
       },
     );
   };
 
   const handleEditWorkingTime = () => {
     onEditWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem ? activeGroupItem.start : start));
+  };
+  const handleAddTask = () => {
+    onAddTask(id);
   };
   const handleDeleteWorkingTime = () => {
     onDeleteWorkingTime(activeGroupItem?.id ? activeGroupItem?.id : id, moment(activeGroupItem ? activeGroupItem.start : start));
@@ -194,6 +198,12 @@ export default ({
                 ))
               }
             </div>
+
+            { !isCompleted && (
+              <div className={styles.cellOptions__groupModal__add}>
+                <span onClick={handleAddTask}>{t('Add additional task')}</span>
+              </div>
+            )}
           </div>
         </Content>
       )}
@@ -250,6 +260,7 @@ export default ({
                     handleEditWorkingTime={handleEditWorkingTime}
                     handleDuplicateWorkingTime={() => setContent('duplicateEmployee')}
                     handleDeleteWorkingTime={handleDeleteWorkingTime}
+                    handleAddTask={handleAddTask}
                     onEditReccuring={() => { onEditReccuring(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start) }}
                     onDeleteReccuring={() => { onDeleteReccuring(activeGroupItem?.id ? activeGroupItem?.id : id, activeGroupItem ? activeGroupItem.start : start) }}
                   />

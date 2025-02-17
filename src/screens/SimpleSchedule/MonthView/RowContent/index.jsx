@@ -30,6 +30,7 @@ const RowContent = ({
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
+  handleAddTask,
   openAddSchedule,
   onEditReccuring,
   onDeleteReccuring
@@ -155,6 +156,7 @@ const RowContent = ({
                 handleEditWorkingTime={handleEditWorkingTime}
                 handleDuplicateEmployee={handleDuplicateEmployee}
                 handleDeleteWorkingTime={handleDeleteWorkingTime}
+                handleAddTask={handleAddTask}
                 openAddSchedule={openAddSchedule}
                 onEditReccuring={onEditReccuring}
                 onDeleteReccuring={onDeleteReccuring}
@@ -191,6 +193,7 @@ const RowContent = ({
             handleEditWorkingTime={handleEditWorkingTime}
             handleDuplicateEmployee={handleDuplicateEmployee}
             handleDeleteWorkingTime={handleDeleteWorkingTime}
+            handleAddTask={handleAddTask}
             openAddSchedule={openAddSchedule}
             onEditReccuring={onEditReccuring}
             onDeleteReccuring={onDeleteReccuring}
