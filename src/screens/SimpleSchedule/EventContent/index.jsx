@@ -472,6 +472,7 @@ export default ({
         !copy_event && withMenu && !empty && editPermission && employeeId ? (
           <Dropdown
             light
+            green={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}
             cancel={content !== 'menu'}
             onCancel={handleCancel}
             ref={modalRef}

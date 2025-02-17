@@ -37,7 +37,7 @@ export default ({
     const duration = moment.duration(endMoment.diff(startMoment));
     const hours = Math.floor(duration.asHours());
     const minutes = Math.floor(duration.asMinutes()) - hours * 60;
-    return `${hours}h ${minutes}m`;
+    return [hours, minutes];
   }
 
   const calculateDifference = (worked_start, worked_end, start, end) => {
@@ -55,9 +55,9 @@ export default ({
     const plannedDuration = hours2 * 60 + minutes2;
     const difference = workedDuration - plannedDuration;
     if (difference === 0) {
-      return '0m';
+      return '0';
     }
-    return `${difference > 0 ? '+' : '-'}${Math.abs(difference)}m`;
+    return `${difference > 0 ? '+' : '-'}${Math.abs(difference)}`;
   }
   
   return (
@@ -117,13 +117,13 @@ export default ({
             {t('Worked Hours')}
           </div>
           <div className={styles.eventContent__value}>
-            {calculateWorkedHours(worked_start, worked_end)}
+            {calculateWorkedHours(worked_start, worked_end)[0]}<span className={styles.eventContent__light}>h</span> {calculateWorkedHours(worked_start, worked_end)[1]}<span className={styles.eventContent__light}>m</span>
           </div>
           <div className={styles.eventContent__label}>
             {t('Difference')}
           </div>
           <div className={styles.eventContent__value}>
-            {calculateDifference(worked_start, worked_end, start, end)}
+            {calculateDifference(worked_start, worked_end, start, end)}<span className={styles.eventContent__light}>m</span>
           </div>
         </>
       )}

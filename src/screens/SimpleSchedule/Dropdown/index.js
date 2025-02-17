@@ -13,6 +13,7 @@ import ItemMenu from './MenuItem';
 const Dropdown = forwardRef(({
   children,
   light,
+  green,
   cancel,
   onCancel,
   buttonClass,
@@ -76,6 +77,7 @@ const Dropdown = forwardRef(({
       {
         isOpen && (
           <Content
+            green={green}
             onClose={handleCloseModal}
             wrapperRef={dropdownRef}
             offset={buttonRef.current.getBoundingClientRect()}

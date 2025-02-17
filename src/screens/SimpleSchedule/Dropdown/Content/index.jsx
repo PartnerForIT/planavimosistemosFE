@@ -6,6 +6,7 @@ import classes from './Content.module.scss';
 import classNames from "classnames";
 
 export default ({
+  green,
   children,
   offset,
   onTop,
@@ -17,6 +18,7 @@ export default ({
 }) => {
   const contentClasses = classNames(classes.content, {
     [classes.content_border]: withBorder,
+    [classes.content_green]: green,
   });
 
   const [modalStyles, setModalStyles] = useState({});
