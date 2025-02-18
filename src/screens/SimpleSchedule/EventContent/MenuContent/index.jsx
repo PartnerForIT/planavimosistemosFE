@@ -54,10 +54,9 @@ export default ({
     const minutes2 = Math.floor(duration2.asMinutes()) - hours2 * 60;
     const plannedDuration = hours2 * 60 + minutes2;
     const difference = workedDuration - plannedDuration;
-    if (difference === 0) {
-      return '0';
-    }
-    return `${difference > 0 ? '+' : '-'}${Math.abs(difference)}`;
+    const diffHours = Math.floor(Math.abs(difference) / 60);
+    const diffMinutes = Math.abs(difference) % 60;
+    return [diffHours, diffMinutes, difference >= 0 ? '+' : '-'];
   }
   
   return (
@@ -123,7 +122,7 @@ export default ({
             {t('Difference')}
           </div>
           <div className={styles.eventContent__value}>
-            {calculateDifference(worked_start, worked_end, start, end)}<span className={styles.eventContent__light}>m</span>
+            {calculateDifference(worked_start, worked_end, start, end)[2]}{calculateDifference(worked_start, worked_end, start, end)[0]}<span className={styles.eventContent__light}>h</span> {calculateDifference(worked_start, worked_end, start, end)[1]}<span className={styles.eventContent__light}>m</span>
           </div>
         </>
       )}
