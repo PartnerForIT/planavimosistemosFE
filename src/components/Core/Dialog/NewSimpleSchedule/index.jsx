@@ -281,8 +281,8 @@ export default function NewSimpleSchedule({
   }
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title} className={classes.addEntry__form}>
-      <div>
+    <Dialog handleClose={handleClose} open={open} title={title}>
+      <div className={classes.addEntry__form}>
         <div className={classes.addEntry__formControl}>
           <div className={classes.addEntry__formControl__labelBlock}>
             <Label text={t('Employee')} htmlFor='employee' />
@@ -333,6 +333,7 @@ export default function NewSimpleSchedule({
               <Label text={t('Work Duration')} htmlFor='work_duration' />
             </div>
             <TimeRangePicker
+              placement='bottom'
               value={formValues.duration}
               onChange={handleChangeTime}
             />

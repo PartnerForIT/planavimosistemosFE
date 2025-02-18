@@ -58,7 +58,8 @@ export default memo(({
   inCopyTool,
   handleCopyTool,
   handleAddHistory,
-  copyTool
+  copyTool,
+  placement
 }) => {
   const { t } = useTranslation();
   const buttonRef = useRef(null);
@@ -163,6 +164,8 @@ export default memo(({
           const offsetBottom = parentBounding.bottom - buttonBounding.bottom;
           menuPlacementVertical = (offsetBottom - heightContent) > 50 ? 'bottom' : 'top';
         }
+
+        menuPlacementVertical = placement ? placement : menuPlacementVertical;
 
         //fixes for center scroll
         if (startScrollRef.current) {

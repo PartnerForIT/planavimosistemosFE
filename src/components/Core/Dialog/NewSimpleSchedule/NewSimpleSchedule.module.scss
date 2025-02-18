@@ -5,6 +5,10 @@
     & > * {
       margin-top: 10px;
     }
+
+    &__form {
+      min-width: 450px;
+    }
   
     &__line {
       width: 100%;
