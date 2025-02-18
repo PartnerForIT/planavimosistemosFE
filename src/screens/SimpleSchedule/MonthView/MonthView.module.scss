@@ -53,12 +53,17 @@
         background: white;
         z-index: 70;
 
+        & ~ * {
+          display: none !important;
+        }
+
         &_inner {
           display: flex;
           align-items: center;
+          justify-content: center;
           flex-direction: column;
           gap: 0;
-          margin-top: 120px;
+          height: 100%;
         }
 
         &_title {
@@ -184,7 +189,7 @@
 }
 
 .notPublishedIcon {
-  width: 74px !important;
+  width: 90px !important;
   height: 90px !important;
   margin-bottom: 15px;
 }
