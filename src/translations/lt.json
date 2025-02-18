@@ -993,5 +993,8 @@
         "Second": "Antra",
         "Third": "Trečia",
         "Fourth": "Ketvirta",
-        "Fifth": "Penkta"
+        "Fifth": "Penkta",
+
+        "Create New Schedule": "Sukurti Naują Užduotį",
+        "Add additional task": "Pridėti papildomą užduotį"
 }

@@ -460,7 +460,7 @@ export default ({
               }
             </div>
 
-            { !isCompleted && (
+            { !moment(start).isBefore(moment().startOf('day')) && (
               <div className={styles.eventContent__groupModal__add}>
                 <span onClick={handleAddTask}>{t('Add additional task')}</span>
               </div>

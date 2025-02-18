@@ -1360,7 +1360,7 @@ export default () => {
             }
             <DialogNewSimpleSchedule
               open={openCreateShift}
-              title={editShiftData ? (editShiftData.reccuring ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
+              title={editShiftData?.id ? (editShiftData.reccuring ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
               handleClose={handleCloseCreateShift}
               handleSubmit={handleCreateShift}
               editData={editShiftData}
