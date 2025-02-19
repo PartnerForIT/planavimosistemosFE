@@ -14,6 +14,7 @@ export default ({
   onAddEmployees,
   unavailableEmployees,
   handleDeleteEmployees,
+  permissions,
   t,
 }) => {
   const [isOpenEmployees, setIsOpenEmployees] = useState(false);
@@ -42,7 +43,7 @@ export default ({
         )
       }
       {
-        !onAddEmployees && (
+        !onAddEmployees && permissions.schedule_create_and_edit && (
           <Dropdown buttonClass={classes.resourceItem__buttonDots}>
             <div className={classes.resourceItem__title}>
               {title}

@@ -809,6 +809,7 @@ export default () => {
         unavailableEmployees={unEmployees}
         handleDeleteEmployees={() => handleDeleteEmployees({...resource.extendedProps, id: resource.id})}
         t={t}
+        permissions={permissions}
       />
     );
   };

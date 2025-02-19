@@ -294,6 +294,7 @@ export default ({
               currentMonth={currentMonth}
               handleAddEmployees={handleAddEmployees}
               handleDeleteEmployees={handleDeleteEmployees}
+              permissions={permissions}
             />
             <div className={classes.monthView__content__data}>
               {

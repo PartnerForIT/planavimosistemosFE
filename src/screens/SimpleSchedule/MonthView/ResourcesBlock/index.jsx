@@ -9,6 +9,7 @@ export default ({
   markerActive,
   handleAddEmployees,
   handleDeleteEmployees,
+  permissions,
 }) => {
 
   const unEmployees = () => {
@@ -52,6 +53,7 @@ export default ({
             rowId={item.id}
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
             onDeleteEmployees={handleDeleteEmployees}
+            permissions={permissions}
           />
         ))
       }

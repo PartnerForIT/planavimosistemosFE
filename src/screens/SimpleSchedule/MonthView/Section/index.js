@@ -19,6 +19,7 @@ export default ({
   onDelete,
   onAddEmployees,
   unavailableEmployees,
+  permissions,
 }) => {
   const { t } = useTranslation();
 
@@ -108,7 +109,7 @@ export default ({
           )
         }
         {
-          !onAddEmployees && (
+          !onAddEmployees && permissions.schedule_create_and_edit && (
             <ClickAwayListener onClickAway={handleCloseModal}>
               <div className={classes.section__menu}>
                 <button

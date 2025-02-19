@@ -26,6 +26,7 @@ const ResourceCell = ({
   onAddEmployees,
   unavailableEmployees,
   onDeleteEmployees,
+  permissions,
 }) => {
 
   const rowClasses = classnames(classes.resourcesCell, {
@@ -59,6 +60,7 @@ const ResourceCell = ({
           onAddEmployees={onAddEmployees}
           unavailableEmployees={unavailableEmployees}
           onDelete={() => onDeleteEmployees(item)}
+          permissions={permissions}
         />
       </div>
       {
@@ -84,6 +86,7 @@ const ResourceCell = ({
             nestingLevel={nestingLevel + 1}
             isEmpty={item.empty}
             onDeleteEmployees={onDeleteEmployees}
+            permissions={permissions}
           />
         ))
       }
