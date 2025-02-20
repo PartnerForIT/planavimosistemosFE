@@ -996,5 +996,9 @@
         "Fifth": "Penkta",
 
         "Create New Schedule": "Sukurti Naują Užduotį",
-        "Add additional task": "Pridėti papildomą užduotį"
+        "Add additional task": "Pridėti papildomą užduotį",
+
+        "Schedule Publishing": "Grafiko Paskelbimas",
+        "You are about to publish your scheduled calendar for all employees and notify them with push notification to their Grownu Mobile APP. They will start seeing what is planned for them for this month both in WEB and Mobile APP environments.": "Jūsų suplanuotas kalendorius netrukus bus paskelbtas visiems darbuotojams, ir jie gaus pranešimus per Grownu Mobiliąją Programėlę. Jie pradės matyti kas jiems yra suplanuota tiek WEB tiek Mobiliosios Programėlės aplinkoje.",
+        "You are not able to revoke the process/unpublish so be sure that it's fully prepared.": "Kadangi šio proceso negalima atšaukti, svarbu užtikrinti, kad kalendorius būtų tikslus ir atitiktų visų darbuotojų poreikius."
 }

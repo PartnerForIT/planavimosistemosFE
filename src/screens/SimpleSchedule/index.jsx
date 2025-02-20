@@ -73,6 +73,7 @@ import { getShiftTypes } from '../../store/shiftsTypes/actions';
 import { skillsSelector } from '../../store/skills/selectors';
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogNewSimpleSchedule from 'components/Core/Dialog/NewSimpleSchedule';
+import DialogPublishShift from 'components/Core/Dialog/PublishShift';
 
 const permissionsConfig = [
   {
@@ -121,6 +122,7 @@ export default () => {
   const [openCreateShift, setOpenCreateShift] = useState(false);
   const [editShiftData, setEditShiftData] = useState(null);
   const [changeLogModal, setChangeLogModal] = useState(false);
+  const [publishDialog,setPublishDialog] = useState(false)
 
   const published = useMemo(() => {
     if (schedule?.published) {
@@ -383,6 +385,13 @@ export default () => {
     }
   };
 
+  const handlePublishDialog = () => {
+    setPublishDialog(false);
+  };
+  const cancelPublish = () => {
+    setPublishDialog(false);
+  };
+
   const handleCloseCreateShift = () => {
     setOpenCreateShift(false);
     setEditShiftData(null);
@@ -639,6 +648,7 @@ export default () => {
     }
   }
   const handlePublishSchedule = () => {
+    setPublishDialog(false)
     dispatch(publishSchedule({
       companyId,
       data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
@@ -1182,7 +1192,7 @@ export default () => {
 
               { !copyTool && (
                 <ToolsButton
-                  withLog
+                  withLog={permissions.schedule_create_and_edit}
                   handleInputChange={handleChangeTool}
                   handleOpenChangeLog={handleOpenChangeLog}
                   values={toolsActive}
@@ -1204,7 +1214,7 @@ export default () => {
                       ! published && schedule?.events?.length ? (
                         <Button
                           className={'simple-schedule-screen__publish'}
-                          onClick={handlePublishSchedule}
+                          onClick={() => { setPublishDialog(true) }}
                         >
                           {t('Publish')}
                         </Button>
@@ -1359,6 +1369,15 @@ export default () => {
                 </>
               )
             }
+            <DialogPublishShift
+              open={publishDialog}
+              handleClose={handlePublishDialog}
+              title={t('Schedule Publishing')}
+              buttonTitle2={t('Cancel')}
+              buttonTitle={t('Publish')}
+              submitDeleteShift={() => handlePublishSchedule(publishDialog)}
+              cancelDelete={cancelPublish}
+            />
             <DialogNewSimpleSchedule
               open={openCreateShift}
               title={editShiftData?.id ? (editShiftData.reccuring ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
