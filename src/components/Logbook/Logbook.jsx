@@ -72,6 +72,7 @@ let columns = [
   { label: 'Skill', field: 'skill', checked: true },
   { label: 'Place', field: 'place', checked: true },
   { label: 'Shift', field: 'shift_name', checked: true},
+  { label: 'Task', field: 'task_name', checked: true},
   { label: 'Job Type', field: 'jobType', checked: true },
   { label: 'Start', field: 'start', checked: true },
   { label: 'End', field: 'end', checked: true },
@@ -587,9 +588,18 @@ export default () => {
       if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
         //return false;
       }
-      if ((!permissions.schedule_simple && !permissions.schedule_shift) && column.field === 'shift_name') {
+      if ((!permissions.schedule_simple && !permissions.schedule_shift) && (column.field === 'shift_name' || column.field === 'task_name')) {
         return false;
       }
+
+      if (permissions.schedule_simple && column.field === 'shift_name') {
+        return false;
+      }
+
+      if (!permissions.schedule_simple && column.field === 'task_name') {
+        return false;
+      }
+
       return true;
     });
 
