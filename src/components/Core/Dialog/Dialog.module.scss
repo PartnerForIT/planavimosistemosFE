@@ -135,6 +135,16 @@
   font-weight: 500;
 }
 
+.publishData {
+  margin: 15px 5px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.3em;
+  color: $gray;
+  font-weight: 500;
+  max-width: 550px;
+}
+
 .edit {
   .avatarBlock {
     display: flex;

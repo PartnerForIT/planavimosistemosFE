@@ -51,6 +51,7 @@ export default ({
   nightPermission,
   editPermission,
   withMenu,
+  unavailableEmployees,
   onDuplicateEmployee,
   onDeleteWorkingTime,
   onAddTask,
@@ -486,7 +487,7 @@ export default ({
                   skillName={skillName}
                   employeeName={employeeName}
                   onChangeEmployee={handleDuplicateWorkingTime}
-                  unavailableEmployees={[]}
+                  unavailableEmployees={unavailableEmployees}
                 />
               )
             }

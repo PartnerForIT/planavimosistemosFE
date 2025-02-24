@@ -55,7 +55,8 @@ export default ({
   handleDeleteEmployees,
   openAddSchedule,
   onEditReccuring,
-  onDeleteReccuring
+  onDeleteReccuring,
+  availableEmployees,
 }) => {
   const { t, i18n } = useTranslation();
   const [resources, setResources] = useState([]);
@@ -67,16 +68,41 @@ export default ({
   useEffect(() => {
     localStorage.setItem('resourcesExpanders', JSON.stringify(resourcesExpanders));
   }, [resourcesExpanders]);
-
-  const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   
+  const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   const handleExpander = ({ rowId }) => {
-    setResources((prevState) => {
+    setResourcesExpanders((prev) => {
       const changeExpander = (items) => {
         if (!items?.length) {
           return undefined;
         }
+  
+        return items.map((item) => {
+          if (item.id === rowId) {
+            return {
+              id: item.id,
+              children: item.children,
+              expander: !item.expander,
+            };
+          }
+  
+          return {
+            id: item.id,
+            expander: item.expander,
+            children: changeExpander(item.children),
+          };
+        });
+      };
 
+      return changeExpander([...prev]);
+    });
+
+    setResources((prev) => {
+      const changeResourceExpander = (items) => {
+        if (!items?.length) {
+          return undefined;
+        }
+  
         return items.map((item) => {
           if (item.id === rowId) {
             return {
@@ -84,40 +110,16 @@ export default ({
               expander: !item.expander,
             };
           }
-
+  
           return {
             ...item,
-            children: changeExpander(item.children),
+            children: changeResourceExpander(item.children),
           };
         });
       };
-      return changeExpander(prevState);
+      
+      return changeResourceExpander([...prev]);
     });
-
-    const changeExpander = (items) => {
-      if (!items?.length) {
-        return undefined;
-      }
-
-      return items.map((item) => {
-        if (item.id === rowId) {
-          return {
-            id: item.id,
-            expander: !item.expander,
-          };
-        }
-
-        return {
-          id: item.id,
-          expander: item.expander,
-          children: changeExpander(item.children),
-        };
-      });
-    };
-
-    const expander = changeExpander(resources);
-
-    setResourcesExpanders(expander);
   };
   const handleClickPrevMonth = () => {
     const nextMonth = currentMonth.clone().add(-1, 'months');
@@ -275,6 +277,7 @@ export default ({
                   holiday={item.holiday}
                   handleMarker={() => { onClickDay(item.title) }}
                   header
+                  availableEmployees={availableEmployees}
                 />
               ))
             }
@@ -338,6 +341,7 @@ export default ({
                       openAddSchedule={openAddSchedule}
                       onEditReccuring={onEditReccuring}
                       onDeleteReccuring={onDeleteReccuring}
+                      availableEmployees={availableEmployees}
                     />
                   ))
                 } </>

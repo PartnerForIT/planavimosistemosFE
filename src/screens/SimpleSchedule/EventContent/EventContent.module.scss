@@ -315,14 +315,6 @@
       &_completed {
         background: #F0F7F1;
         cursor: default;
-
-        &::after {
-          display: none;
-        }
-
-        &:first-child::before {
-          display: none;
-        }
       }
 
       &:hover {

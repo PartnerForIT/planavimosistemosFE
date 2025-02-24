@@ -5,13 +5,14 @@ import style from '../Dialog.module.scss';
 
 export default function DeleteShift({
   handleClose, title, open,
-  buttonTitle, buttonTitle2, cancelDelete, submitDeleteShift,
+  buttonTitle, buttonTitle2, cancelDelete, submitDeleteShift, description,
 }) {
 
   return (
     <Dialog handleClose={handleClose} open={open} title={title}>
-      <div className={style.daleteData}>
+      <div className={style.publishData}>
         <div>
+          {description}
         </div>
       </div>
       <div className={style.buttonsBlock}>

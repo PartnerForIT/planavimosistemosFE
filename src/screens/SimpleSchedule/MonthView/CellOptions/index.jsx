@@ -237,7 +237,7 @@ export default ({
                     skillName={skillName}
                     employeeName={employeeName}
                     onChangeEmployee={handleDuplicateWorkingTime}
-                    unavailableEmployees={[]}
+                    unavailableEmployees={unavailableEmployees}
                   />
                 )
               }

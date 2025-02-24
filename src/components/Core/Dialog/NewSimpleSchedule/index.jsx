@@ -93,12 +93,14 @@ export default function NewSimpleSchedule({
         title,
         description,
         employee_id,
+        employees,
         reccuring,
         reccuring_end,
         exclude_holidays,
         start_work,
         end_work,
         setting,
+        batch_id,
         only_day,
       } = editData;
 
@@ -139,10 +141,11 @@ export default function NewSimpleSchedule({
           place_id: place_id ? place_id : '',
           title: title ? title : '',
           description : description ? description : '',
-          employees: employee_id ? [{id: employee_id, checked: true}] : [],
+          employees: employees ? employees.map(id => ({id: id, checked: true})) : (employee_id ? [{id: employee_id, checked: true}] : []),
           reccuring: reccuring ? true : false,
           reccuring_end: reccuring_end ? moment(reccuring_end, 'YYYY-MM-DD') : null,
           exclude_holidays: exclude_holidays ? true : false,
+          batch_id: batch_id && !only_day && reccuring ? batch_id : '',
           only_day: only_day ? only_day.format('YYYY-MM-DD') : false,
           reccuring_settings: {
             type_id: reccuring_settings?.type_id ? reccuring_settings.type_id : 0,
@@ -362,7 +365,7 @@ export default function NewSimpleSchedule({
             permissions.places && !!allSelectPlaces.length && (
               <div className={classes.addEntry__formControl}>
                 <div className={classes.addEntry__formControl__labelBlock}>
-                  <Label text={`${'Place'} (${'optional'})`} htmlFor='place' />
+                  <Label text={`${t('Place')} (${t('optional')})`} htmlFor='place' />
                 </div>
                 <CustomSelect
                   placeholder={t('Select place')}
@@ -379,7 +382,7 @@ export default function NewSimpleSchedule({
         </div>
         <div className={classes.addEntry__formControl}>
           <div className={classes.addEntry__formControl__labelBlock}>
-            <Label text={`${'Description'} (${t('optional')})`} htmlFor='description' />
+            <Label text={`${t('Description')} (${t('optional')})`} htmlFor='description' />
           </div>
           <Textarea
               onChange={handleInputChange}

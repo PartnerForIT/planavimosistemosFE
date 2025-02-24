@@ -14,6 +14,7 @@ import {
   //scheduleSelector,
   settingCompanySelector,
   //IntegrationsDataSelector
+  employeesSelector,
 } from '../../../../store/settings/selectors';
 
 export default ({
@@ -50,13 +51,15 @@ export default ({
   handleAddTask,
   openAddSchedule,
   onEditReccuring,
-  onDeleteReccuring
+  onDeleteReccuring,
+  availableEmployees,
 }) => {
   const { t } = useTranslation();
   const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
   const currencies = useSelector(currencySelector);
   const company = useSelector(settingCompanySelector);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  const { users: employees } = useSelector(employeesSelector);
   //const integrations = useSelector(IntegrationsDataSelector);
 
   const currency = useMemo(
@@ -86,15 +89,6 @@ export default ({
   });
 
   const refCell = useRef();
-  
-  // useEffect(() => {
-  //   if (!header && title) {
-  //     if (refCell.current.scrollWidth >= refCell.current.offsetWidth) {
-  //       refCell.current.classList.add(classes.cell_doesNotFit);
-  //       refCell.current.firstChild.style.maxWidth = `${refCell.current.offsetWidth}px`;
-  //     }
-  //   }
-  // }, [title]);
 
   let start = event ? moment(event.start) : null;
   let end = event ? moment(event.end) : null;
@@ -122,17 +116,14 @@ export default ({
   let withMenu = event?.employee_id ? true : false;
   const isCompleted = event?.is_completed;
 
-  let unEmployees = [];
-  if (event) {
-    const allEmployees  = events.filter(e => e.empty_employee === false
-      // eslint-disable-next-line
-                                                    // eslint-disable-next-line
-                                                    && event.day_number == e.day_number);
+  const unEmployees = useMemo(() => {
+    if (availableEmployees && availableEmployees.length) {
+      return employees.filter(e => !availableEmployees.includes(e.id)).map(e => e.id);
+    }
+    
+    return [];
+  }, [availableEmployees, employees]);
 
-    unEmployees = allEmployees.map(e => {
-      return e.employee_id*1;
-    });
-  }
 
   const convertMinutesToHoursAndMinutes = function(minutes) {
     const hours = Math.floor(minutes / 60);
@@ -252,7 +243,6 @@ export default ({
                 editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}
                 isFisnihed={event?.is_finished}
-                unavailableEmployees={unEmployees}
                 markers={markers}
                 onChangeEmployee={handleChangeEmployee}
                 onEmptyTimeline={handleEmptyTimeline}
@@ -265,6 +255,7 @@ export default ({
                 openAddSchedule={() => { openAddSchedule(event) }}
                 onEditReccuring={onEditReccuring}
                 onDeleteReccuring={onDeleteReccuring}
+                unavailableEmployees={unEmployees}
               />
             }
           </div>

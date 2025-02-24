@@ -737,6 +737,14 @@ export default () => {
       }
     }
 
+   const unavailableEmployees = () => {
+      if (unEmployees && unEmployees.length) {
+        return employees.filter(e => !unEmployees.includes(e.id)).map(e => e.id);
+      }
+      
+      return [];
+    }
+
     return (
       <EventContent
         id={event.id}
@@ -782,6 +790,7 @@ export default () => {
         removeTimelines={scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK}
         onEditReccuring={handleEditReccuring}
         onDeleteReccuring={handleDeleteReccuring}
+        unavailableEmployees={unavailableEmployees()}
       />
     );
   };
@@ -1284,6 +1293,7 @@ export default () => {
                         openAddSchedule={handleOpenAddSchedule}
                         onEditReccuring={handleEditReccuring}
                         onDeleteReccuring={handleDeleteReccuring}
+                        availableEmployees={unEmployees}
                       />
                     ) : (
                       <>
@@ -1373,6 +1383,13 @@ export default () => {
               open={publishDialog}
               handleClose={handlePublishDialog}
               title={t('Schedule Publishing')}
+              description={
+                <>
+                {t('You are about to publish your scheduled calendar for all employees and notify them with push notification to their Grownu Mobile APP. They will start seeing what is planned for them for this month both in WEB and Mobile APP environments.')}
+                <br/>
+                {t("You are not able to revoke the process/unpublish so be sure that it's fully prepared.")}
+                </>
+              }
               buttonTitle2={t('Cancel')}
               buttonTitle={t('Publish')}
               submitDeleteShift={() => handlePublishSchedule(publishDialog)}
@@ -1380,7 +1397,7 @@ export default () => {
             />
             <DialogNewSimpleSchedule
               open={openCreateShift}
-              title={editShiftData?.id ? (editShiftData.reccuring ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
+              title={editShiftData?.id ? (editShiftData.reccuring && !editShiftData.only_day ? t('Edit Recurring Task') : t('Edit Task')) : t('Create New Schedule')}
               handleClose={handleCloseCreateShift}
               handleSubmit={handleCreateShift}
               editData={editShiftData}

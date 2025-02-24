@@ -127,19 +127,27 @@ export default ({
         </>
       )}
 
-      <div className={styles.eventContent__label}>
-        {t('Place')}
-      </div>
-      <div className={styles.eventContent__value}>
-        { title.place ? title.place : '' }
-      </div>
+      { title.place && (
+        <>
+          <div className={styles.eventContent__label}>
+            {t('Place')}
+          </div>
+          <div className={styles.eventContent__value}>
+            { title.place ? title.place : '' }
+          </div>
+        </>
+      )}
 
-      <div className={styles.eventContent__label}>
-        {t('Job Type')}
-      </div>
-      <div className={styles.eventContent__value}>
-        { title.job_type ? title.job_type : '' }
-      </div>
+      { title.job_type && (
+        <>
+          <div className={styles.eventContent__label}>
+            {t('Job Type')}
+          </div>
+          <div className={styles.eventContent__value}>
+            { title.job_type ? title.job_type : '' }
+          </div>
+        </>
+      )}
 
       { !isCompleted && !isFinished && (
         <>

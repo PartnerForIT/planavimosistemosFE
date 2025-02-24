@@ -33,7 +33,8 @@ const RowContent = ({
   handleAddTask,
   openAddSchedule,
   onEditReccuring,
-  onDeleteReccuring
+  onDeleteReccuring,
+  availableEmployees,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -160,6 +161,7 @@ const RowContent = ({
                 openAddSchedule={openAddSchedule}
                 onEditReccuring={onEditReccuring}
                 onDeleteReccuring={onDeleteReccuring}
+                availableEmployees={availableEmployees}
             />)
           }
           )
@@ -197,6 +199,7 @@ const RowContent = ({
             openAddSchedule={openAddSchedule}
             onEditReccuring={onEditReccuring}
             onDeleteReccuring={onDeleteReccuring}
+            availableEmployees={availableEmployees}
           />
         ))
       }
