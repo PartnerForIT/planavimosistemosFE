@@ -37,6 +37,10 @@ const permissionsConfig = [
     name: 'logbook_settings',
     permission: 'logbook_edit_settings',
   },
+  {
+    name: 'custom_category',
+    module: 'custom_category',
+  },
 ];
 
 export default function Clock() {

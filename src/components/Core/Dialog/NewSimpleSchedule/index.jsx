@@ -163,20 +163,21 @@ export default function NewSimpleSchedule({
   }, [editData]);
 
   const employToCheck = useCallback(({
-      id,
-      name,
-      surname,
-    }) => ({
-      id,
-      label: `${name} ${surname}`,
-      checked: formValues.employees?.some(({id: employee_id}) => employee_id === id),
+    id,
+    name,
+    surname,
+  }) => {
+    return {
+    id,
+    label: `${name} ${surname}`,
+    checked: formValues.employees?.some(({id: employee_id}) => employee_id === id),
 
-    }), [formValues]);
-    const filteredEmployees = useMemo(() => {
-      return employees.filter(e => { return availableEmployees.includes(e.id) });
-      // eslint-disable-next-line
-    }, [employees, availableEmployees]);
-    const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
+  }}, [formValues]);
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(e => { return availableEmployees.includes(e.id) });
+    // eslint-disable-next-line
+  }, [employees, availableEmployees]);
+  const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
 
   const handleOnSubmit = () => {
     handleSubmit(formValues);

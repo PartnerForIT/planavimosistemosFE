@@ -13,6 +13,7 @@ import DialogCreateBreak from '../../Core/Dialog/CreateBreak';
 import DialogCreateAddress from '../../Core/Dialog/CreateAddress';
 import DialogAssignGroup from '../../Core/Dialog/AssignGroup';
 import DialogWorkTime from '../../Core/Dialog/WorkTime';
+import DialogCreateCustomCategory from '../../Core/Dialog/CreateCustomCategory';
 import LabelWithCurrencySign from '../../shared/LabelWithCurrencySign';
 import {
   patchPlace,
@@ -21,6 +22,8 @@ import {
   deleteJob,
   patchSkill,
   deleteSkill,
+  patchCustomCategory,
+  deleteCustomCategory,
 } from '../../../store/settings/actions';
 
 const columns = [
@@ -45,6 +48,11 @@ const columnsPlaces = [
   { label: 'External ID', field: 'external_id', checked: true },
 ];
 
+const columnsCustomCategories = [
+  { label: 'Title', field: 'name', checked: true },
+  { label: 'Entry field?', field: 'entry_field', checked: true },
+];
+
 const columnsWidthArray = {
   name: 'auto',
   external_id: 'auto',
@@ -62,6 +70,7 @@ export default function TableBlock({
   skills,
   allJobTypes,
   allPlaces,
+  allCustomCategories,
   permissions,
   selectedCategory,
   loading,
@@ -96,6 +105,9 @@ export default function TableBlock({
       case 'places': {
         return 'place';
       }
+      case 'custom_category': {
+        return 'additional category';
+      }
       default: return '';
     }
   }, [selectedCategory]);
@@ -121,6 +133,14 @@ export default function TableBlock({
             ...foundPlace,
             title: foundPlace.name,
             external_id: foundPlace.external_id,
+          };
+        }
+        case 'custom_category': {
+          const foundCustomCategory = allCustomCategories.find((item) => item.id === selectedItem);
+          return {
+            ...foundCustomCategory,
+            title: foundCustomCategory.name,
+            entry_field: foundCustomCategory.entry_field,
           };
         }
         default: return '';
@@ -197,9 +217,17 @@ export default function TableBlock({
         );
         break;
       }
+      case 'custom_category': {
+        setDataArray(allCustomCategories.map((item) => ({
+          ...item,
+          entry_field: item.entry_field ? t('Yes') : t('No'),
+        })));
+        break;
+      }
       default: break;
     }
-  }, [selectedCategory, skills, allJobTypes, allPlaces, setDataArray, colSearch]);
+    // eslint-disable-next-line
+  }, [selectedCategory, skills, allJobTypes, allPlaces, allCustomCategories, setDataArray, colSearch]);
 
   useEffect(() => {
     let allColumnsArray;
@@ -236,6 +264,10 @@ export default function TableBlock({
           }
           return true;
         });
+        break;
+      }
+      case 'custom_category': {
+        allColumnsArray = columnsCustomCategories;
         break;
       }
       default: break;
@@ -318,6 +350,10 @@ export default function TableBlock({
         dispatch(deletePlace(companyId, selectedItem));
         break;
       }
+      case 'custom_category': {
+        dispatch(deleteCustomCategory(companyId, selectedItem));
+        break;
+      }
       default: break;
     }
   };
@@ -334,6 +370,10 @@ export default function TableBlock({
   };
   const updatePlace = ({name, external_id}) => {
     dispatch(patchPlace({ name, external_id }, companyId, selectedItem));
+    handleCloseItem();
+  };
+  const updateCustomCategory = (values) => {
+    dispatch(patchCustomCategory(values, companyId, selectedItem));
     handleCloseItem();
   };
   const onEditBreak = (id) => {
@@ -458,6 +498,14 @@ export default function TableBlock({
         initialValues={selectedItemData}
         createPlace={updatePlace}
         permissions={permissions}
+      />
+      <DialogCreateCustomCategory
+        open={isEditItem && selectedCategory === 'custom_category'}
+        handleClose={handleCloseItem}
+        title={t('Update additional category')}
+        buttonTitle={t('Update Additional Category')}
+        initialValues={selectedItemData}
+        createCategory={updateCustomCategory}
       />
       <DialogCreateBreak
         open={!!isEditBreak}

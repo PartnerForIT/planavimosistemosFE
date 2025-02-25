@@ -16,7 +16,7 @@ export default function Form({
   //handleInputChange,
   handleChangeCalculation,
   ClockData,
-  //permissions,
+  permissions,
   modules,
 }) {
   return (
@@ -157,6 +157,23 @@ export default function Form({
             />
           </div>
         </div>
+
+        { permissions.custom_category && (
+          <div className={style.generalBlock6}>
+            <Switch
+              onChange={() => handleChangeCalculation('use_custom_categories')}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              name='use_custom_categories'
+              checked={!!ClockData.use_custom_categories}
+              height={21}
+              width={40}
+            />
+            <Label text={t('Use additional categories for registration process')} />
+          </div>
+        )}
       </div>
     </form>
   );

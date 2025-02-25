@@ -10,6 +10,7 @@ import worktime from './worktime/reducer';
 import employees from './employees/reducer';
 import jobTypes from './jobTypes/reducer';
 import places from './places/reducer';
+import customCategories from './customCategories/reducer';
 import skills from './skills/reducer';
 import reports from './reports/reducer';
 import overview from './overview/reducer';
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   employees,
   jobTypes,
   places,
+  customCategories,
   skills,
   reports,
   overview,

@@ -8,10 +8,12 @@ import Button from '../../Core/Button/Button';
 import DialogCreateSkill from '../../Core/Dialog/CreateSkill';
 import DialogCreateJob from '../../Core/Dialog/CreateJob';
 import DialogCreatePlace from '../../Core/Dialog/CreatePlace';
-import { createSkill, actionCreateJob, sendImportedPlacesSuccess, actionCreatePlace } from '../../../store/settings/actions';
+import DialogCreateCustomCategory from '../../Core/Dialog/CreateCustomCategory';
+import { createSkill, actionCreateJob, sendImportedPlacesSuccess, actionCreatePlace, actionCreateCustomCategory } from '../../../store/settings/actions';
 import { importLoadingSelector, importedPlaces } from '../../../store/settings/selectors';
 import { placesSelector } from '../../../store/places/selectors';
 import { getPlaces } from '../../../store/places/actions';
+
 import ImportPlaces from 'components/Core/Dialog/ImportPlaces';
 import _ from 'lodash';
 
@@ -55,6 +57,13 @@ export default function ButtonBlock({
         title: 'Place name',
       });
     }
+    if (permissions.custom_category) {
+      data.push({
+        onClick: () => setSelectedCategory('custom_category'),
+        inverse: selectedCategory !== 'custom_category',
+        title: 'Additional categories',
+      });
+    }
 
     return data;
   }, [permissions, selectedCategory, setSelectedCategory]);
@@ -68,6 +77,9 @@ export default function ButtonBlock({
       }
       case 'places': {
         return 'place';
+      }
+      case 'custom_category': {
+        return 'additional category';
       }
       default: return '';
     }
@@ -90,6 +102,10 @@ export default function ButtonBlock({
   };
   const createPlace = ({name, external_id}) => {
     dispatch(actionCreatePlace({ name, external_id }, companyId));
+    handleCloseItem();
+  };
+  const createCustomCategory = ({name, entry_field}) => {
+    dispatch(actionCreateCustomCategory({ name, entry_field }, companyId));
     handleCloseItem();
   };
 
@@ -155,6 +171,13 @@ export default function ButtonBlock({
         buttonTitle={t('Create Place Name')}
         createPlace={createPlace}
         permissions={permissions}
+      />
+      <DialogCreateCustomCategory
+        open={openNewItem && selectedCategory === 'custom_category'}
+        handleClose={handleCloseItem}
+        title={t('Create additional category')}
+        buttonTitle={t('Create Additional Category')}
+        createCategory={createCustomCategory}
       />
       <ImportPlaces
         title={t('Import places')}

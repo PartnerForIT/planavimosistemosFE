@@ -403,7 +403,7 @@ export default () => {
       id: editShiftData?.id,
       data: {
         ...data,
-        employees: data.employees.map(({id}) => id),
+        employees: data.employees.filter(({type, id}) => type !== 'group' && type !== 'subgroup').map(({id}) => id),
         start_work: data.duration.start,
         end_work: data.duration.end,
         date: data.date.format('YYYY-MM-DD'),

@@ -146,6 +146,11 @@ import {
   DELETE_JOB,
   PATCH_PLACE,
   DELETE_PLACE,
+  CREATE_CUSTOM_CATEGORY,
+  GET_CUSTOM_CATEGORY,
+  GET_CUSTOM_CATEGORY_SUCCESS,
+  PATCH_CUSTOM_CATEGORY,
+  DELETE_CUSTOM_CATEGORY,
   GET_EVENTS,
   GET_EVENTS_SUCCESS,
   POST_EVENT,
@@ -355,6 +360,33 @@ export const loadPlace = (id) => ({
 });
 export const loadPlaceSuccess = (data) => ({
   type: GET_PLACE_SUCCESS,
+  data,
+});
+
+
+export const actionCreateCustomCategory = (data, id) => ({
+  type: CREATE_CUSTOM_CATEGORY,
+  data,
+  id,
+});
+export const patchCustomCategory = (data, companyId, id) => ({
+  type: PATCH_CUSTOM_CATEGORY,
+  data,
+  companyId,
+  id,
+});
+export const deleteCustomCategory = (companyId, id) => ({
+  type: DELETE_CUSTOM_CATEGORY,
+  companyId,
+  id,
+});
+
+export const loadCustomCategory = (id) => ({
+  type: GET_CUSTOM_CATEGORY,
+  id,
+});
+export const loadCustomCategorySuccess = (data) => ({
+  type: GET_CUSTOM_CATEGORY_SUCCESS,
   data,
 });
 

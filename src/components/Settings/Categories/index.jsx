@@ -17,9 +17,11 @@ import {
 import { jobTypesSelector, loadingJobTypeSelector } from '../../../store/jobTypes/selectors';
 import { AccountGroupsSelector } from '../../../store/settings/selectors';
 import { placesSelector, loadingPlaceSelector } from '../../../store/places/selectors';
+import { customCategoriesSelector, loadingCustomCategoriesSelector } from '../../../store/customCategories/selectors';
 import { loadSkills, getSchedule, getAccountGroups } from '../../../store/settings/actions';
 import { getJobTypes } from '../../../store/jobTypes/actions';
 import { getPlaces } from '../../../store/places/actions';
+import { getCustomCategories } from '../../../store/customCategories/actions';
 import ButtonBlock from './ButtonsBlock';
 import TableBlock from './TableBlock';
 import usePermissions from '../../Core/usePermissions';
@@ -62,6 +64,10 @@ const permissionsConfig = [
     name: 'create_groups',
     module: 'create_groups',
   },
+  {
+    name: 'custom_category',
+    module: 'custom_category',
+  },
 ];
 export default function Categories() {
   const { id } = useParams();
@@ -81,6 +87,7 @@ export default function Categories() {
     dispatch(getPlaces(id));
     dispatch(getSchedule(id));
     dispatch(getAccountGroups(id));
+    dispatch(getCustomCategories(id));
   }, [dispatch, id]);
 
   const isLoadind = useSelector(isLoadingSelector);
@@ -90,8 +97,10 @@ export default function Categories() {
   const skills = useSelector(categoriesSkillsSelector);
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
+  const allCustomCategories = useSelector(customCategoriesSelector);
   const isLoadingJobTypes = useSelector(loadingJobTypeSelector);
   const isLoadingPlaces = useSelector(loadingPlaceSelector);
+  const isLoadingCustomCategories = useSelector(loadingCustomCategoriesSelector);
   const scheduleSettings = useSelector(scheduleSelector);
 
   useEffect(() => {
@@ -133,9 +142,10 @@ export default function Categories() {
                     skills={skills}
                     allJobTypes={allJobTypes}
                     allPlaces={allPlaces}
+                    allCustomCategories={allCustomCategories}
                     permissions={permissions}
                     selectedCategory={selectedCategory}
-                    loading={isLoadingJobTypes || isLoadingPlaces}
+                    loading={isLoadingJobTypes || isLoadingPlaces || isLoadingCustomCategories}
                     companyId={id}
                     scheduleSettings={scheduleSettings}
                     groups={groups}

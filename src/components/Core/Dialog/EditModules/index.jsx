@@ -27,6 +27,7 @@ const initialValues = {
   create_groups: false,
   use_manager_mobile: false,
   use_approval_flow: false,
+  custom_category: false,
   cost_earning: false,
   profitability: false,
   comments_photo: false,
@@ -194,6 +195,12 @@ export default ({
                 checked={modules.create_jobs}
                 label={t('Can create Jobs')}
                 name='create_jobs'
+              />
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.custom_category}
+                label={t('Can create custom category')}
+                name='custom_category'
               />
               <Checkbox
                 onChange={handleChange}

@@ -21,6 +21,8 @@ import {
   CREATE_JOB,
   CREATE_PLACE,
   GET_PLACE,
+  CREATE_CUSTOM_CATEGORY,
+  GET_CUSTOM_CATEGORY,
   GET_COMPANY_SHIFT,
   GET_COMPANY_JOB_TYPE,
   GET_ACTIVITY_LOG,
@@ -67,6 +69,8 @@ import {
   SEND_IMPORTED_PLACES,
   PATCH_PLACE,
   DELETE_PLACE,
+  PATCH_CUSTOM_CATEGORY,
+  DELETE_CUSTOM_CATEGORY,
   PATCH_JOB,
   DELETE_JOB,
   PATCH_SKILL,
@@ -92,6 +96,7 @@ import {
   loadSkillsSuccess,
   createSkillSuccess,
   loadPlaceSuccess,
+  loadCustomCategorySuccess,
   loadShiftSuccess,
   loadJobTypeSuccess,
   loadActivityLogSuccess,
@@ -154,6 +159,7 @@ import {
 } from './actions';
 import { getJobTypes } from '../jobTypes/actions';
 import { getPlaces } from '../places/actions';
+import { getCustomCategories } from '../customCategories/actions';
 import { authCheck } from '../auth/actions';
 import { updateCompanyInfo } from '../company/actions';
 
@@ -435,7 +441,7 @@ function* patchJob(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield put(addSnackbar('An error occurred while creating the Job', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -452,7 +458,7 @@ function* deleteJob(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield put(addSnackbar('An error occurred while delete Job', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -528,6 +534,76 @@ function* deletePlace(action) {
   }
 }
 
+function* createCustomCategory(action) {
+  try {
+    const { data, status } = yield call(
+      axios.post,
+      `${config.api.url}/company/${action.id}/custom_categories/create`,
+      action.data,
+      token(),
+    );
+
+    if (status === 200) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
+    yield put(getCustomCategories(action.id));
+    yield put(addSnackbar('Additional categery creation successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Additional category', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* patchCustomCategory(action) {
+  try {
+    const { data } = yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/custom_categories/update/${action.id}`,
+      action.data,
+      token(),
+    );
+
+    if (data.name?.[0]?.length > 1) {
+      yield put(addSnackbar(data.name[0], 'error'));
+      yield delay(4000);
+      yield put(dismissSnackbar());
+      return;
+    }
+
+    yield put(getCustomCategories(action.companyId));
+    yield put(addSnackbar('Updated Additional category successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Additional category', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+function* deleteCustomCategory(action) {
+  try {
+    yield call(
+      axios.delete,
+      `${config.api.url}/company/${action.companyId}/custom_categories/delete/${action.id}`,
+      token(),
+    );
+    yield put(getCustomCategories(action.companyId));
+    yield put(addSnackbar('Removed additiona category successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(addSnackbar('An error occurred while creating the Additional category', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* patchSkill(action) {
   try {
     const { data } = yield call(
@@ -549,7 +625,7 @@ function* patchSkill(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield put(addSnackbar('An error occurred while creating the Skill', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -566,7 +642,7 @@ function* deleteSkill(action) {
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
-    yield put(addSnackbar('An error occurred while creating the Place', 'error'));
+    yield put(addSnackbar('An error occurred while creating the Skill', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -576,6 +652,15 @@ function* loadCompanyPLace(action) {
   try {
     const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/places`, token());
     yield put(loadPlaceSuccess(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* loadCompanyCustomCategory(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.id}/custom_categories`, token());
+    yield put(loadCustomCategorySuccess(data));
   } catch (e) {
     console.log(e);
   }
@@ -1594,6 +1679,7 @@ function* sendImportedPlaces(action) {
       {
         message: 'An error occurred while importing places',
         snackbarType: 'error',
+
       });
   }
 }
@@ -1732,6 +1818,8 @@ export default function* SettingsWatcher() {
   yield takeLeading(DELETE_JOB, deleteJob);
   yield takeLeading(PATCH_PLACE, patchPlace);
   yield takeLeading(DELETE_PLACE, deletePlace);
+  yield takeLeading(PATCH_CUSTOM_CATEGORY, patchCustomCategory);
+  yield takeLeading(DELETE_CUSTOM_CATEGORY, deleteCustomCategory);
   yield takeLeading(PATCH_SKILL, patchSkill);
   yield takeLeading(DELETE_SKILL, deleteSkill);
   yield takeLeading(GET_SETTINGS_COMPANY, loadSettingsCompany);
@@ -1750,6 +1838,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_JOB, creacteJob);
   yield takeLatest(CREATE_PLACE, createPlace);
   yield takeLeading(GET_PLACE, loadCompanyPLace);
+  yield takeLatest(CREATE_CUSTOM_CATEGORY, createCustomCategory);
+  yield takeLeading(GET_CUSTOM_CATEGORY, loadCompanyCustomCategory);
   yield takeLeading(GET_COMPANY_SHIFT, loadCompanyShift);
   yield takeLeading(GET_COMPANY_JOB_TYPE, loadCompanyJobType);
   yield takeLatest(GET_ACTIVITY_LOG, loadActivityLog);
