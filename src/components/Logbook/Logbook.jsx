@@ -38,6 +38,8 @@ import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktim
 import { postLogbookEntry, postLogbookAddEntry, postLogbookComment } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getSkills } from '../../store/skills/actions';
+import { getCustomCategories } from '../../store/customCategories/actions';
+import { customCategoriesSelector } from '../../store/customCategories/selectors';
 
 import { loadEmployeesAll, loadLogbookJournal, patchEmployeeLogbook } from '../../store/settings/actions';
 import avatar from '../Icons/avatar.png';
@@ -171,6 +173,10 @@ const permissionsConfig = [
     name: 'schedule_module',
     permission: 'schedule_module_access',
   },
+  {
+    name: 'custom_category',
+    module: 'custom_category',
+  },
 ];
 
 export default () => {
@@ -202,6 +208,7 @@ export default () => {
   const [isOpenEditEntry, setIsOpenEditEntry] = useState(false);
   const [isOpenEditComment, setIsOpenEditComment] = useState(false);
   const [isOpenAddEntry, setIsOpenAddEntry] = useState(false);
+  const allCustomCategories = useSelector(customCategoriesSelector);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
@@ -415,6 +422,7 @@ export default () => {
     dispatch(getSkills(companyId));
     dispatch(loadLogbookJournal(companyId));
     dispatch(loadEmployeesAll(companyId, {page: 'logbook'}));
+    dispatch(getCustomCategories(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -563,7 +571,7 @@ export default () => {
   }, [workTime, getTotal, sortStatus, logbook_employee]);
 
   useEffect(() => {
-    const allColumnsArray = columns.filter((column) => {
+    let allColumnsArray = columns.filter((column) => {
       if (!permissions.places && column.field === 'place') {
         return false;
       }
@@ -603,10 +611,28 @@ export default () => {
       return true;
     });
 
+    if (permissions.custom_category) {
+      //need add it before 'start' column
+      const customCategories = allCustomCategories.map((category) => {
+        return {
+          label: category.name,
+          field: `custom_category_${category.id}`,
+          checked: true,
+        };
+      });
+
+      allColumnsArray = allColumnsArray.reduce((acc, item) => {
+        if (item.field === 'start') {
+          return [...acc, ...customCategories, item];
+        }
+        return [...acc, item];
+      }, []);
+    }
+
     // eslint-disable-next-line
     setColumnsArray(allColumnsArray);
     // eslint-disable-next-line
-  }, [permissions, setColumnsArray, journal.approve_flow]);
+  }, [permissions, setColumnsArray, allCustomCategories, journal.approve_flow]);
 
   useEffect(() => {
     setLoading(workTimeLoading);
