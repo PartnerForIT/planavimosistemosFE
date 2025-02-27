@@ -103,6 +103,10 @@ const permissionsConfig = [
     name: 'create_groups',
     module: 'create_groups',
   },
+  {
+    name: 'custom_category',
+    module: 'custom_category',
+  },
 ];
 const columnsWidth = {
   // user: 500,
