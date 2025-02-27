@@ -58,8 +58,9 @@ export default function CreateCustomCategory({
       </div>
       <div className={style.formControl}>
         <StyledCheckbox
-          label={t('entry field')}
+          label={t('Entry field')}
           checked={formValues.entry_field}
+          disabled={true}
           onChange={(e) => setFormValues({ ...formValues, entry_field: !formValues.entry_field })}
         />
       </div>

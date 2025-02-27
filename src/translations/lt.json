@@ -1006,5 +1006,14 @@
 
         "Add Employees": "Pridėti Darbuotojus",
         "Remove from list": "Pašalinti iš sąrašo",
-        "Select job type": "Pasirinkti darbo tipą"
+        "Select job type": "Pasirinkti darbo tipą",
+
+        "Additional categories": "Papildomos kategorijos",
+        "Update additional category": "Pakoreguoti papildomą kategoriją",
+        "Update Additional Category": "Pakoreguoti Papildomą Kategoriją",
+        "Category name": "Kategorijos pavadinimas",
+        "New additional category": "Nauja papildoma kategorija",
+        "Create new additional category": "Sukurti naują papildomą kategoriją",
+        "Entry field?": "Įvedamas laukas?",
+        "Use additional categories for registration process": "Aktyvuoti papildomų kategorijų naudojimą darbo laiko registravimo procese"
 }
