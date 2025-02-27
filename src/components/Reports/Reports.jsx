@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { getCustomCategories, getCustomCategoriesValues } from '../../store/customCategories/actions';
+import { customCategoriesSelector, customCategoriesValuesSelector } from '../../store/customCategories/selectors';
 
 import { loadEmployeesAll, loadLogbookJournal } from '../../store/settings/actions';
 import { JournalDataSelector } from '../../store/settings/selectors';
@@ -140,6 +142,8 @@ export default () => {
   /* Data table */
   const [itemsArray, setItemsArray] = useState([]);
   const [columnsArray, setColumnsArray] = useState([]);
+
+  const allCustomCategories = useSelector(customCategoriesSelector);
   // const [totalDuration, setTotalDuration] = useState(null);
   // const [employee, setEmployee] = useState(null);
   // const [employeeLoading, setEmployeeLoading] = useState(null);
@@ -166,7 +170,11 @@ export default () => {
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
 
-  const [search, setSearch] = useState({place: '', employee: '', type: '', skill: ''});
+  const [custom_category_values, setCustomCategoryValues] = useState([]);
+  const [filteredCustomCategory, setFilteredCustomCategory] = useState({});
+  const [checkedCustomCategoryValues, setCheckedCustomCategoryValues] = useState({});
+
+  const [search, setSearch] = useState({place: '', employee: '', type: '', skill: '', custom_category: {}});
 
   const [totalStat, setTotalStat] = useState({
     cost: 0,
@@ -194,6 +202,7 @@ export default () => {
   const getAllJobTypes = useSelector(jobTypesSelector);
   const getAllPlaces = useSelector(placesSelector);
   const getAllSkills = useSelector(skillsSelector);
+  const getAllCustomCategoriesValues = useSelector(customCategoriesValuesSelector);
   const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
@@ -223,6 +232,8 @@ export default () => {
     // dispatch(getReportsJobTypes({ companyId })).then().catch();
     // dispatch(getReportsSkills({ companyId })).then().catch();
     dispatch(loadLogbookJournal(companyId));
+    dispatch(getCustomCategories(companyId));
+    dispatch(getCustomCategoriesValues(companyId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -255,7 +266,8 @@ export default () => {
     const jobTypesArr = checkedJobTypes.map((spec) => spec.id);
     const employeesArr = checkedEmployees.map((emp) => emp.id);
     const skillsArr = checkedSkills.map((emp) => emp.id);
-
+    const customCategoryValuesArr = Object.values(checkedCustomCategoryValues).flat().map(item => item.id);
+    
     dispatch(getReport(companyId, {
       startDate: startDate ? format(startDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
       endDate: endDate ? format(endDate, 'yyyy-MM-dd HH:mm:ss') : undefined,
@@ -263,6 +275,7 @@ export default () => {
       employeesArr,
       placesArr,
       skillsArr,
+      customCategoryValuesArr,
       ...showCostsInReport(),
     })).then().catch();
   };
@@ -307,6 +320,20 @@ export default () => {
   }, [getAllSkills]);
 
   useEffect(() => {
+    if (Array.isArray(getAllCustomCategoriesValues)) {
+      setCustomCategoryValues(getAllCustomCategoriesValues);
+      let filteredCustomCategorySorted = {};
+      for (let i in getAllCustomCategoriesValues) {
+        if (!filteredCustomCategorySorted[getAllCustomCategoriesValues[i].custom_category_id]) {
+          filteredCustomCategorySorted[getAllCustomCategoriesValues[i].custom_category_id] = [];
+        }
+        filteredCustomCategorySorted[getAllCustomCategoriesValues[i].custom_category_id].push(getAllCustomCategoriesValues[i]);
+      }
+      setFilteredCustomCategory(filteredCustomCategorySorted);
+    }
+  }, [getAllCustomCategoriesValues]);
+
+  useEffect(() => {
     const formatDate = getDateFormat({
       'YY.MM.DD': 'yyyy-MM-DD',
       'DD.MM.YY': 'DD-MM-yyyy',
@@ -329,6 +356,7 @@ export default () => {
           jobTypesArr: checkedJobTypes.map((spec) => spec.id),
           employeesArr: checkedEmployees.map((emp) => emp.id),
           skillsArr: checkedSkills.map((emp) => emp.id),
+          customCategoryValuesArr: Object.values(checkedCustomCategoryValues).flat().map(item => item.id),
           description: `${moment(generatedReport.startDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)} - ${moment(generatedReport.endDate, 'YYYY-MM-DD HH:mm:ss').format(formatDate)}`,
           report: generatedReport.report.map(({ items, ...rest }) => ({
             ...rest,
@@ -483,6 +511,7 @@ export default () => {
     const jobTypesArr = selectedReport?.jobTypesArr ? selectedReport?.jobTypesArr : checkedJobTypes.map((spec) => spec.id);
     const employeesArr = selectedReport?.employeesArr ? selectedReport?.employeesArr : checkedEmployees.map((emp) => emp.id);
     const skillsArr = selectedReport?.skillsArr ? selectedReport?.skillsArr : checkedSkills.map((emp) => emp.id);
+    const customCategoryValuesArr = selectedReport?.customCategoryValuesArr ? selectedReport?.customCategoryValuesArr : Object.values(checkedCustomCategoryValues).flat().map(item => item.id);
 
     if (selectedReport) {
       let filter = '';
@@ -503,6 +532,7 @@ export default () => {
         employeesArr,
         placesArr,
         skillsArr,
+        customCategoryValuesArr,
         filter,
         ...showCostsInReport(),
       };
@@ -522,7 +552,7 @@ export default () => {
     }
   };
 
-  const handleInputChange = (e, items, setter) => {
+  const handleInputChange = (e, items, setter, id = false) => {
     let {
       value,
       name
@@ -531,73 +561,41 @@ export default () => {
     setSearch({...search, [name]: value});
     const filterData = () => {
       const arrayCopy = [...items];
-      return arrayCopy.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()));
+      return arrayCopy.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()) && (!id || item.custom_category_id === id));
     };
-    setter(filterData);
+    
+    if (id) {
+      setter((prevState) => ({
+        ...prevState,
+        [id]: filterData(),
+      }));
+    } else {
+      setter(filterData);
+    }
   };
 
-  const filterChecked = (checkedArray, type) => {
+  const filterChecked = (checkedArray, type, id) => {
     // let requestObj = {};
     switch (type) {
       case 'places':
         setCheckedPlaces(checkedArray);
-
-        // requestObj = {
-        //   companyId,
-        //   places: checkedArray.map((place) => place.id),
-        //   employees: checkedEmployees.map((emp) => emp.id),
-        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-        //   skills: checkedSkills.map((skill) => skill.id),
-        // };
-
-        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
         break;
       case 'employees':
         setCheckedEmployees(checkedArray);
-
-        // requestObj = {
-        //   companyId,
-        //   places: checkedPlaces.map((place) => place.id),
-        //   employees: checkedArray.map((emp) => emp.id),
-        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-        //   skills: checkedSkills.map((skill) => skill.id),
-        // };
-
-        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
         break;
       case 'jobTypes':
         setCheckedJobTypes(checkedArray);
-
-        // requestObj = {
-        //   companyId,
-        //   places: checkedPlaces.map((place) => place.id),
-        //   employees: checkedEmployees.map((emp) => emp.id),
-        //   jobTypes: checkedArray.map((jobType) => jobType.id),
-        //   skills: checkedSkills.map((skill) => skill.id),
-        // };
-
-        // if (!checkedSkills.length) dispatch(getReportsSkills(requestObj)).then().catch();
-        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
-        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
         break;
       case 'skills':
         setCheckedSkills(checkedArray);
-
-        // requestObj = {
-        //   companyId,
-        //   places: checkedPlaces.map((place) => place.id),
-        //   employees: checkedEmployees.map((emp) => emp.id),
-        //   jobTypes: checkedJobTypes.map((jobType) => jobType.id),
-        //   skills: checkedArray.map((skill) => skill.id),
-        // };
-
-        // if (!checkedJobTypes.length) dispatch(getReportsJobTypes(requestObj)).then().catch();
-        // if (!checkedPlaces.length) dispatch(getReportsPlaces(requestObj)).then().catch();
-        // if (!checkedEmployees.length) dispatch(getReportsEmployees(requestObj)).then().catch();
+        break;
+      case 'custom_category_values':
+        setCheckedCustomCategoryValues(
+          (prevState) => ({
+            ...prevState,
+            [id]: checkedArray,
+          }),
+        );
         break;
       default:
         break;
@@ -840,6 +838,28 @@ export default () => {
                       />
                     </div>
                   </>
+                )
+              }
+              {
+                permissions.custom_category && allCustomCategories?.length && (
+                  allCustomCategories.map((category) => (
+                    <div key={category.id} className={styles.sidebarBlock}>
+                      <div className={styles.sidebarTitle}>
+                        {category.name}
+                      </div>
+                      <Input
+                        icon={<SearchIcon />}
+                        placeholder={`${t('Search by')} ${category.name}`}
+                        value={search[`custom_category_${category.id}`]}
+                        name={`custom_category_${category.id}`}
+                        onChange={(e) => handleInputChange(e, custom_category_values, setFilteredCustomCategory, category.id)}
+                        fullWidth
+                      />
+                      <div className={styles.checkboxGroupWrapper}>
+                        <CheckboxGroupWrapper items={filteredCustomCategory?.[category.id] || []} onChange={(c) => filterChecked(c, 'custom_category_values', category.id)} />
+                      </div>
+                    </div>
+                  ))
                 )
               }
               {

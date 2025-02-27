@@ -158,6 +158,16 @@
     }
   }
 
+  .sidebarBlock {
+    padding-top: 10px;
+    padding-bottom: 5px;
+
+    .sidebarTitle {
+      padding-top: 0;
+      padding-bottom: 5px;
+    }
+  }
+
   .checkboxGroupWrapper {
     height: 270px;
     margin-top: 10px;

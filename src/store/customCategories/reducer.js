@@ -1,6 +1,7 @@
 import { success, error } from 'redux-saga-requests';
 import {
   GET_CUSTOM_CATEGORIES,
+  GET_CUSTOM_CATEGORIES_VALUES,
 } from './types';
 
 const initialState = {
@@ -23,6 +24,21 @@ export const reducer = (state = initialState, action) => {
       };
 
     case error(GET_CUSTOM_CATEGORIES):
+      return {
+        ...state, loading: false, error: action.error,
+      };
+
+    case GET_CUSTOM_CATEGORIES_VALUES:
+      return { ...state, error: null, loading: true };
+
+    case success(GET_CUSTOM_CATEGORIES_VALUES):
+      return {
+        ...state,
+        customCategoriesValues: action.data,
+        loading: false,
+      };
+
+    case error(GET_CUSTOM_CATEGORIES_VALUES):
       return {
         ...state, loading: false, error: action.error,
       };
