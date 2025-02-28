@@ -94,7 +94,7 @@ export default ({
         });
       };
 
-      return changeExpander([...prev]);
+      return changeExpander(prev);
     });
 
     setResources((prev) => {

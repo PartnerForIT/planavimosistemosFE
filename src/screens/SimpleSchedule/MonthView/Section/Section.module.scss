@@ -23,6 +23,10 @@
   &__skill {
     color: #808F94;
     font-size: 11px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 270px;
   }
 
   &__avatar {
