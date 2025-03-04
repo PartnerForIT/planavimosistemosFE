@@ -62,7 +62,7 @@ export default ({
   const [resources, setResources] = useState([]);
   const [resourcesExpanders, setResourcesExpanders] = useState(() => {
     const storedValue = localStorage.getItem('resourcesExpanders');
-    return storedValue ? JSON.parse(storedValue) : [];
+    return storedValue && storedValue !== 'undefined' ? JSON.parse(storedValue) : [];
   });
 
   useEffect(() => {
@@ -93,8 +93,8 @@ export default ({
           };
         });
       };
-
-      return changeExpander(prev);
+      
+      return changeExpander(resources);
     });
 
     setResources((prev) => {
@@ -118,7 +118,7 @@ export default ({
         });
       };
       
-      return changeResourceExpander([...prev]);
+      return changeResourceExpander(prev);
     });
   };
   const handleClickPrevMonth = () => {
