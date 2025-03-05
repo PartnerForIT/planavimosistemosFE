@@ -33,6 +33,21 @@ export const downloadExcel = (companyId, data, source) => ({
   },
 });
 
+export const downloadRupExcel = (companyId, data, source) => ({
+  type: EXCEL,
+  request: {
+    method: 'POST',
+    url: `/company/${companyId}/${source}/export/excel-rup`,
+    data: {
+      ...data,
+    },
+    responseType: 'application/json',
+  },
+  meta: {
+    thunk: true,
+  },
+});
+
 export const downloadPdf = (companyId, data,source) => ({
   type: PDF,
   request: {

@@ -42,7 +42,7 @@ import ReportsIcon from '../Icons/ReportsIcon';
 import CheckboxGroupWrapper from '../Core/CheckboxGroup/CheckboxGroupWrapper';
 import ArrowRightIcon from '../Icons/ArrowRightIcon';
 import {
-  getReport, downloadExcel, downloadPdf,
+  getReport, downloadExcel, downloadPdf, downloadRupExcel,
 } from '../../store/reports/actions';
 import SearchIcon from '../Icons/SearchIcon';
 import Input from '../Core/Input/Input';
@@ -686,6 +686,7 @@ export default () => {
                        setSelectedItem={rowSelectionHandler}
                        reports
                        downloadExcel={() => downloadReport(downloadExcel, 'xlsx')}
+                       downloadRupExcel={companyId*1 === 122 ? () => downloadReport(downloadRupExcel, 'xlsx') : null}
                        downloadPdf={() => downloadReport(downloadPdf, 'pdf')}
                        verticalOffset='212px'
                        amount={totalStat}

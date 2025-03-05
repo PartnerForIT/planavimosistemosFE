@@ -169,7 +169,7 @@ export default function EditAccount({
         subgroup: Array.isArray(subgroups) ? subgroups[0]?.id : '' ?? '',
         skill: skills?.[0]?.id ?? '',
         place: place?.[0]?.id ?? '',
-        em_status: em_status ? em_status.toFixed(2) : '1.00',
+        em_status: em_status ? (em_status*1).toFixed(3) : '1.00',
       });
     }
   }, [employee, groups, skills]);
@@ -340,15 +340,15 @@ export default function EditAccount({
   const handleBlurStatus = () => {
     let value = parseFloat(user.em_status);
 
-    if (isNaN(value) || value < 0.01) {
-      value = 0.01;
+    if (isNaN(value) || value < 0.001) {
+      value = 0.001;
     } else if (value > 1.5) {
       value = 1.5;
     }
 
     setUser((prevState) => {
       return {...prevState,
-        em_status: value.toFixed(2),
+        em_status: value.toFixed(3),
       }
     })
   };
@@ -535,8 +535,8 @@ export default function EditAccount({
                         value={user.em_status ?? '1.00'}
                         onChange={handleInputStatus}
                         onBlur={handleBlurStatus}
-                        step="0.01"
-                        min="0.01"
+                        step="0.001"
+                        min="0.001"
                         max="1.5"
                       />
                     </div>

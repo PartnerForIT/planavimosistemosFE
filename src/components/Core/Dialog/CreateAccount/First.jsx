@@ -120,13 +120,13 @@ const FirstStep = ({
   const handleBlurStatus = () => {
     let value = parseFloat(user.em_status);
 
-    if (isNaN(value) || value < 0.01) {
-      value = 0.01;
+    if (isNaN(value) || value < 0.001) {
+      value = 0.001;
     } else if (value > 1.5) {
       value = 1.5;
     }
 
-    handleInput({target: {name: 'em_status', value: value.toFixed(2)}});
+    handleInput({target: {name: 'em_status', value: value.toFixed(3)}});
   };
 
   useEffect(() => {
@@ -229,8 +229,8 @@ const FirstStep = ({
                 value={user.em_status ?? '1.00'}
                 onChange={handleInputStatus}
                 onBlur={handleBlurStatus}
-                step="0.01"
-                min="0.01"
+                step="0.001"
+                min="0.001"
                 max="1.5"
               />
             </div>

@@ -36,7 +36,7 @@ export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, total, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination = Function.prototype,
   selectedItem, setSelectedItem, reports,
-  downloadExcel, downloadPdf, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
+  downloadExcel, downloadPdf, downloadRupExcel, verticalOffset = '0px', columnsWidth, statusClickable = false, sortStatus = [],
   settingsCustom,
   permissions = {},
   withCost,
@@ -323,6 +323,15 @@ export default function DataTable({
             onClick={downloadExcel}
           >
             <ExcelIcon />
+          </div>
+        ) }
+        { typeof downloadRupExcel === 'function'
+        && (
+          <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+            className={classNames(styles.pointer, styles.mr10)}
+            onClick={downloadRupExcel}
+          >
+            R<ExcelIcon />
           </div>
         ) }
         { typeof downloadPdf === 'function'
