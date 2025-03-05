@@ -62,6 +62,19 @@
   }
 }
 
+.generalBlock8 {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  margin-left: 60px;
+
+  label {
+    margin-right: 12px;
+    padding-bottom: 0;
+  }
+}
+
 .fromToInput {
   width: 180px;
   display: flex;
@@ -112,6 +125,10 @@
   @extend .labelText;
 
   margin-left: 5px;
+}
+
+.labelText3 {
+  @extend .labelText;
 }
 
 .tooltipBlock {

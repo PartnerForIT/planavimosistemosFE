@@ -58,6 +58,8 @@ export default function Clock() {
     photo_clock_in: false,
     photo_clock_out: false,
     auto_clock_out_place_working_time: false,
+    ping_time: 5,
+    waiting_time: 30,
   });
 
   const isLoadind = useSelector(isLoadingSelector);

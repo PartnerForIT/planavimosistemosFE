@@ -5,7 +5,7 @@ import Switch from 'react-switch';
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '../../../Core/Tooltip';
 import Label from '../../../Core/InputLabel';
-//import Input from '../../../Core/Input/Input';
+import Input from '../../../Core/Input/Input';
 //import SimpleSelect from '../../../Core/SimpleSelect';
 //import { timeArr } from '../../../Helpers/time';
 
@@ -13,7 +13,7 @@ import Label from '../../../Core/InputLabel';
 export default function Form({
   t,
   style,
-  //handleInputChange,
+  handleInputChange,
   handleChangeCalculation,
   ClockData,
   permissions,
@@ -85,26 +85,56 @@ export default function Form({
         </div>
 
         { modules.use_geolocation ? (
-          <div className={style.generalBlock6}>
-            <Switch
-              onChange={() => handleChangeCalculation('geolocation_restriction_leave')}
-              offColor='#808F94'
-              onColor='#0085FF'
-              uncheckedIcon={false}
-              checkedIcon={false}
-              name='geolocation_restriction_leave'
-              checked={!!ClockData.geolocation_restriction_leave}
-              height={21}
-              width={40}
-            />
-            <Label text={t('Use Geolocation tracking to identify leaves in specific locations')} />
-            <div className={style.tooltipBlock}>
-              <Tooltip title={
-                t('If this setting is turned on, the mobile app will check every 5 minutes to see if the employee/user is still within the geolocation radius of the registered place. If the location does not have a set geo zone, this rule is simply ignored.')
-              }
+          <>
+            <div className={style.generalBlock6}>
+              <Switch
+                onChange={() => handleChangeCalculation('geolocation_restriction_leave')}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='geolocation_restriction_leave'
+                checked={!!ClockData.geolocation_restriction_leave}
+                height={21}
+                width={40}
+              />
+              <Label text={t('Use Geolocation tracking to identify leaves in specific locations')} />
+              <div className={style.tooltipBlock}>
+                <Tooltip title={
+                  t('If this setting is turned on, the mobile app will check every 5 minutes to see if the employee/user is still within the geolocation radius of the registered place. If the location does not have a set geo zone, this rule is simply ignored.')
+                }
+                />
+              </div>
+            </div>
+            <div className={style.generalBlock8}>
+              <div className={style.labelText3}>{t(`Set the ping time in minutes`)}</div>
+              <Input
+                value={ClockData.ping_time}
+                min='1'
+                width={80}
+                name='ping_time'
+                onChange={handleInputChange}
+              />
+              <div className={style.labelText2}></div>
+              <Tooltip
+                title={t("This is the time which can influence the battery drain of the mobile device. The time set controls how frequent our Grownu servers checks on the mobile device if he is still in the geolocation of the place.")}
               />
             </div>
-          </div>
+            <div className={style.generalBlock8}>
+              <div className={style.labelText3}>{t(`Set the waiting time in minutes`)}</div>
+              <Input
+                value={ClockData.waiting_time}
+                min='1'
+                width={80}
+                name='waiting_time'
+                onChange={handleInputChange}
+              />
+              <div className={style.labelText2}></div>
+              <Tooltip
+                title={t("This is the time how much the Grownu server is waiting for the mobile app to send the answer that the check up of the user in the geolocation of the place was successful. If during this time server will not get any response from the mobile device, it will be considered that this session will be stopped.")}
+              />
+            </div>
+          </>
         ) : null
         }
 
