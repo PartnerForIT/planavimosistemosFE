@@ -77,6 +77,10 @@ const permissionsConfig = [
     name: 'schedule_create_and_edit',
     permission: 'schedule_create_and_edit',
   },
+  {
+    name: 'time_off',
+    module: 'time_off'
+  },
 ];
 
 export default () => {
@@ -104,6 +108,8 @@ export default () => {
       history.push(`${mainPath}/events`);
     } else if (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) {
       history.push(`${mainPath}/schedule`);
+    } else if (permissions.time_off) {
+      history.push(`${mainPath}/time-off`);
     } else if (permissions.activity_log) {
       history.push(`${mainPath}/activity-log`);
     } else if (permissions.data_delete) {

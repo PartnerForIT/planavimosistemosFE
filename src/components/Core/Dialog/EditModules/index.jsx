@@ -17,6 +17,7 @@ const initialValues = {
   events: false,
   reports: false,
   activity_log: false,
+  time_off: false,
   time_sheet: false,
   integrations: false,
   schedule_simple: false,
@@ -162,6 +163,12 @@ export default ({
                   name='manual_mode'
                 />
               </div>
+              <Checkbox
+                onChange={handleChange}
+                checked={modules.time_off}
+                label={t('Time Off')}
+                name='time_off'
+              />
               <Checkbox
                 onChange={handleChange}
                 checked={modules.activity_log}

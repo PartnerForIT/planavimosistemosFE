@@ -14,6 +14,7 @@ import HelpIcon from '../../Icons/Help';
 import SettingsIcon from '../../Icons/Settings';
 import EventsIcon from '../../Icons/Events';
 import TimeSheetIcon from '../../Icons/TimeSheet';
+import TimeOffIcon from '../../Icons/TimeOff';
 import ScheduleIcon from '../../Icons/Schedule';
 import Grownu from '../../Icons/Grownu';
 import AvatarComponent from './Avatar';
@@ -139,6 +140,10 @@ const permissionsConfig = [
     module: 'time_sheet',
     permission: 'time_sheet_module_access',
   },
+  {
+    name: 'time_off',
+    module: 'time_off',
+  },
 ];
 
 export default function ButtonAppBar({ logOut }) {
@@ -252,6 +257,15 @@ export default function ButtonAppBar({ logOut }) {
       });
     }
 
+    if (permissions.time_off) {
+      nextMenuItems.push({
+        Icon: TimeOffIcon,
+        title: t('Time Off'),
+        name: 'time-off',
+        to: `/${companyId}/time-off`,
+      });
+    }
+
     return nextMenuItems;
   }, [permissions, companyId, t, user]);
   const withSettingsButton = useMemo(() => (
@@ -265,6 +279,7 @@ export default function ButtonAppBar({ logOut }) {
     || (permissions.events && permissions.events_create)
     || ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit)
     || permissions.activity_log
+    || permissions.time_off
     || permissions.data_delete
     || permissions.categories_create
   ), [permissions]);

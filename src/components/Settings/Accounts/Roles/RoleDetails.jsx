@@ -21,6 +21,7 @@ const categoriesNames = {
   data: 'Data',
   accounts: 'Accounts',
   activity_log: 'Activity',
+  //time_off: 'Time Off',
   pto: 'PTO',
 };
 

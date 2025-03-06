@@ -16,6 +16,7 @@ import CategoriesIcon from '../../Icons/Categories';
 import TimeSheetIcon from '../../Icons/TimeSheet';
 import IntegrationsIcon from '../../Icons/IntegrationsIcon';
 import ActivityLogIcon from '../../Icons/ActivityLog';
+import TimeOffIcon from '../../Icons/TimeOff';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import KioskIcon from '../../Icons/Kiosk';
 import styles from './dasboard.module.scss';
@@ -158,6 +159,10 @@ const permissionsConfig = [
     module: 'integrations',
     permission: 'integrations_edit_settings',
   },
+  {
+    name: 'time_off',
+    module: 'time_off',
+  }
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -303,6 +308,15 @@ export default function DashboardMenu() {
         icon: ScheduleIcon,
         title: t('Schedule'),
         name: 'schedule',
+      });
+    }
+
+    if (permissions.time_off) {
+      nextMenuItems.push({
+        to: `/${companyId}/settings/time-off`,
+        icon: TimeOffIcon,
+        title: t('Time Off'),
+        name: 'time-off',
       });
     }
 
