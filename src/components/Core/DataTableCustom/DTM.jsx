@@ -14,6 +14,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import CogwheelIcon from '../../Icons/CogwheelIcon';
 import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
+import RupExcelIcon from '../../Icons/RupExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
 import ReactTooltip from 'react-tooltip';
 
@@ -319,7 +320,7 @@ export default function DataTable({
         { typeof downloadExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={classNames(styles.pointer, styles.mr10)}
+            className={classNames(styles.pointer, styles.mr10, styles.exportLink)}
             onClick={downloadExcel}
           >
             <ExcelIcon />
@@ -328,16 +329,16 @@ export default function DataTable({
         { typeof downloadRupExcel === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={classNames(styles.pointer, styles.mr10)}
+            className={classNames(styles.pointer, styles.mr10, styles.exportLink)}
             onClick={downloadRupExcel}
           >
-            R<ExcelIcon />
+            <RupExcelIcon />
           </div>
         ) }
         { typeof downloadPdf === 'function'
         && (
           <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-            className={styles.pointer}
+            className={classNames(styles.pointer, styles.exportLink)}
             onClick={downloadPdf}
           >
             <PdfIcon />

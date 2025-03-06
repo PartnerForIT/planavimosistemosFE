@@ -331,6 +331,12 @@ header {
   margin-right: 10px;
 }
 
+.exportLink {
+  &:hover {
+    opacity: 0.4;
+  }
+}
+
 .nowrap {
   white-space: nowrap;
 }

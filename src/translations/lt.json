@@ -1026,5 +1026,8 @@
         "Time Off": "Nedarbas",
 
         "1st level approver": "1 lygio tvirtintojas",
-        "2nd level approver": "2 lygio tvirtintojas"
+        "2nd level approver": "2 lygio tvirtintojas",
+
+        "Select 1st level approver": "Pasirinkite 1 lygio tvirtintoją",
+        "Select 2nd level approver": "Pasirinkite 2 lygio tvirtintoją"
 }
