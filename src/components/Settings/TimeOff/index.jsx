@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  //useState,
+  useEffect,
+  //useCallback
+  } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,9 +18,10 @@ import Progress from '../../Core/Progress';
 import Form from './Form';
 import {
   isLoadingSelector, isShowSnackbar,
-  snackbarType, snackbarText, TimeOffDataSelector, AdditionalRatesDataSelector,
+  snackbarType, snackbarText,
+  //TimeOffDataSelector, AdditionalRatesDataSelector,
 } from '../../../store/settings/selectors';
-import { loadTimeOff, editTimeOff } from '../../../store/settings/actions';
+// import { loadTimeOff, editTimeOff } from '../../../store/settings/actions';
 import styles from './timeoff.module.scss';
 
 const useStyles = makeStyles(() => ({
@@ -40,38 +45,38 @@ export default function TimeOff() {
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
   const textSnackbar = useSelector(snackbarText);
-  const timeoff = useSelector(TimeOffDataSelector);
+  //const timeoff = useSelector(TimeOffDataSelector);
 
-  const [timeOffData, setTimeOffData] = useState({
+  // const [timeOffData, setTimeOffData] = useState({
     
-  });
+  // });
 
   useEffect(() => {
-    dispatch(loadTimeOff(id));
+    //dispatch(loadTimeOff(id));
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if (Object.keys(timeoff).length) {
-      setTimeOffData({ ...timeoff });
-    }
-  }, [timeoff]);
+  // useEffect(() => {
+  //   if (Object.keys(timeoff).length) {
+  //     setTimeOffData({ ...timeoff });
+  //   }
+  // }, [timeoff]);
 
-  const submit = useCallback((payload) => {
-    const data = {
+  // const submit = useCallback((payload) => {
+  //   const data = {
 
-    };
-    dispatch(editTimeOff(id, data));
-  }, [dispatch, id]);
+  //   };
+  //   //dispatch(editTimeOff(id, data));
+  // }, [dispatch, id]);
 
   const handleInputChange = (event) => {
-    const { name, value, type } = event.target;
-    if (type === 'checkbox') {
-      setTimeOffData({ ...timeOffData, [name]: !timeOffData[name] });
-      submit({ ...timeOffData, [name]: !timeOffData[name] });
-    } else {
-      setTimeOffData({ ...timeOffData, [name]: value });
-      submit({ ...timeOffData, [name]: value });
-    }
+    // const { name, value, type } = event.target;
+    // if (type === 'checkbox') {
+    //   setTimeOffData({ ...timeOffData, [name]: !timeOffData[name] });
+    //   submit({ ...timeOffData, [name]: !timeOffData[name] });
+    // } else {
+    //   setTimeOffData({ ...timeOffData, [name]: value });
+    //   submit({ ...timeOffData, [name]: value });
+    // }
   };
   
   return (
@@ -90,7 +95,7 @@ export default function TimeOff() {
                   t={t}
                   style={styles}
                   handleInputChange={handleInputChange}
-                  timeOffData={timeOffData}
+                  //timeOffData={timeOffData}
                 />
               )
           }

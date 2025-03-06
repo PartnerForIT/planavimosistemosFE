@@ -36,6 +36,7 @@ import Overtime from '../../components/Settings/Logbook/Overtime';
 import AdditionalRates from '../../components/Settings/Logbook/AdditionalRates';
 import Clock from '../../components/Settings/Logbook/Clock';
 import ActivityLog from '../../components/Settings/ActivityLog';
+import TimeOff from '../../components/Settings/TimeOff';
 import TimeSheetSettings from '../../components/Settings/TimeSheet';
 import IntegrationsSettings from '../../components/Settings/Integrations';
 import SettingDelete from '../../components/Settings/Delete/DataDelete';
@@ -151,6 +152,10 @@ const permissionsConfig = [
   {
     name: 'schedule_create_and_edit',
     permission: 'schedule_create_and_edit',
+  },
+  {
+    name: 'time_off',
+    module: 'time_off',
   },
 ];
 
@@ -322,6 +327,11 @@ export default () => {
       {
         permissions.activity_log && (
           <Route exact path='/:id/settings/activity-log' component={ActivityLog} />
+        )
+      }
+      {
+        permissions.time_off && (
+          <Route exact path='/:id/settings/time-off' component={TimeOff} />
         )
       }
       {
