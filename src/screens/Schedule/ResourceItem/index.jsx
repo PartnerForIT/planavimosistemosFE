@@ -55,7 +55,7 @@ export default ({
         </tr>
         <tr>
           <td>
-              <b>${ t('Planned time') }:</b>
+              <b>${ t('Planned time') } (${ t('period') }):</b>
           </td>
           <td>
             ${accumulatedHours?.actualHours || 0} ${t('hours')}
@@ -63,12 +63,44 @@ export default ({
         </tr>
         <tr>
           <td>
-              <b>${ t('Registered time') }:</b>
+              <b>${ t('Registered time') } (${ t('period') }):</b>
           </td>
           <td>
-            ${accumulatedHours?.rigisteredHours || 0} ${t('hours')}
+            ${accumulatedHours?.rigisteredHoursPeriod || 0} ${t('hours')}
           </td>
         </tr>
+
+         ${accumulatedHours?.accumulated_months > 1 ? `
+          <tr>
+            <td colspan="2"><hr></td>
+          </tr>
+
+          <tr>
+            <td>
+                <b>${ t('Target time') } (${ t('month') }):</b>
+            </td>
+            <td>
+              ${accumulatedHours?.totalHoursMonth || 0} ${t('hours')}
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <b>${ t('Planned time') } (${ t('month') }):</b>
+            </td>
+            <td>
+              ${accumulatedHours?.actualHoursMonth || 0} ${t('hours')}
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <b>${ t('Registered time') } (${ t('month') }):</b>
+            </td>
+            <td>
+              ${accumulatedHours?.rigisteredHours || 0} ${t('hours')}
+            </td>
+          </tr>
+
+        ` : ''}
       </table>
     `
   };

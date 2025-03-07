@@ -36,12 +36,20 @@
       &_withAccumulated {
         padding-right: 153px;
       }
+
+      &_withMonth {
+        padding-right: 255px; 
+      }
       
       &_withCost {
         padding-right: 102px;
 
         &.sheetmonthView__header__dataOuter_withAccumulated {
           padding-right: 204px;
+
+          &.sheetmonthView__header__dataOuter_withMonth {
+            padding-right: 305px;
+          }
         }
       }
     }
@@ -73,11 +81,19 @@
         padding-right: 153px;
       }
 
+      &_withMonth {
+        padding-right: 255px; 
+      }
+
       &_withCost {
         padding-right: 102px;
 
         &.sheetmonthView__content__dataOuter_withAccumulated {
           padding-right: 204px;
+
+          &.sheetmonthView__content__dataOuter_withMonth {
+            padding-right: 305px;
+          }
         }
       }
     }

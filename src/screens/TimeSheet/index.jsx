@@ -21,14 +21,16 @@ import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import ExcelIcon from '../../components/Icons/ExcelIcon';
 import usePermissions from '../../components/Core/usePermissions';
 import ReactTooltip from 'react-tooltip';
-
+import {
+  scheduleSelector,
+} from '../../store/settings/selectors';
 import {
   getSheet,
   downloadIntegration,
   checkIntegration,
 } from '../../store/sheet/actions';
 import {
-  loadEmployeesAll, loadIntegrations, getSettingWorkTime, loadTimeSheet,
+  getSchedule, loadEmployeesAll, loadIntegrations, getSettingWorkTime, loadTimeSheet,
 } from '../../store/settings/actions';
 
 import { TimeSheetDataSelector } from '../../store/settings/selectors';
@@ -86,6 +88,7 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [employees, setEmployees] = useState(users)
+  const schedule = useSelector(scheduleSelector);
   
   const applyingFilters = useRef(false)
   const sheetResources = sheet?.resources
@@ -133,6 +136,7 @@ export default () => {
     dispatch(getSettingWorkTime(companyId));
     dispatch(loadIntegrations(companyId));
     dispatch(loadTimeSheet(companyId));
+    dispatch(getSchedule(companyId));
 
     //dispatch(getsheetSetting(companyId));
     dispatch(loadEmployeesAll(companyId, {page: 'time_sheet'}))
@@ -351,6 +355,7 @@ export default () => {
               onChangeMonth={handleGetSheet}
               withCost={permissions.cost && permissions.time_sheet_costs}
               withAccumulated={timesheet.use_accumulated}
+              accumulatedMonths={schedule.accumulated_months}
               mergeTimesheetPlaces={timesheet.merge_timesheet_places}
             />
           )

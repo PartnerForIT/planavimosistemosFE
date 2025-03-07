@@ -97,6 +97,20 @@ const RowContent = ({
       }
     }
 
+    if (item.statistic && item.id === "plannedTimeMonth" && field === 'total_hours'){
+      const found = sheet.find((item) => resource.id === item.employeeId && resource.place_id === item.place_id);
+      if (found && found.planned_time_month) {
+        return found.planned_time_month;
+      }
+    }
+
+    if (item.statistic && item.id === "targetTimeMonth" && field === 'total_hours'){
+      const found = sheet.find((item) => resource.id === item.employeeId && resource.place_id === item.place_id);
+      if (found && found.target_time_month) {
+        return found.target_time_month;
+      }
+    }
+
     return ''
   }
 

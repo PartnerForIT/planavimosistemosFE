@@ -35,6 +35,7 @@ const MonthView = ({
   onChangeMonth,
   withCost,
   withAccumulated,
+  accumulatedMonths,
   mergeTimesheetPlaces,
 }) => {
   const { t, i18n } = useTranslation();
@@ -87,17 +88,31 @@ const MonthView = ({
     });
 
     if (withAccumulated) {
+      if (accumulatedMonths > 1) {
+        arr.push({
+          id: 'plannedTimeMonth',
+          title: t('Planned Time _s') + ' ('+t('month')+')',
+          statistic: true,
+        });
+  
+        arr.push({
+          id: 'targetTimeMonth',
+          title: t('Target Time _s') + ' ('+t('month')+')',
+          statistic: true,
+        }); 
+      }
+
       arr.push({
         id: 'plannedTime',
-        title: t('Planned Time _s'),
+        title: t('Planned Time _s') + ' ('+t('period')+')',
         statistic: true,
       });
 
       arr.push({
         id: 'targetTime',
-        title: t('Target Time _s'),
+        title: t('Target Time _s') + ' ('+t('period')+')',
         statistic: true,
-      });
+      });      
     }
 
     if (withCost) {
@@ -110,7 +125,7 @@ const MonthView = ({
 
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language, currentMonth, withCost, withAccumulated, holidays]);
+  }, [i18n.language, currentMonth, withCost, withAccumulated, accumulatedMonths, holidays]);
 
   //fix for employee block height
   const empHeight = {
@@ -136,7 +151,8 @@ const MonthView = ({
           />
           <div className={classnames(classes.sheetmonthView__header__dataOuter, {
             [classes.sheetmonthView__header__dataOuter_withCost]: withCost,
-            [classes.sheetmonthView__header__dataOuter_withAccumulated]: withAccumulated
+            [classes.sheetmonthView__header__dataOuter_withAccumulated]: withAccumulated,
+            [classes.sheetmonthView__header__dataOuter_withMonth]: withAccumulated && accumulatedMonths > 1
             })}>
             <div
               ref={headerRef}
@@ -179,7 +195,8 @@ const MonthView = ({
             />
             <div className={classnames(classes.sheetmonthView__content__dataOuter, {
               [classes.sheetmonthView__content__dataOuter_withCost]: withCost,
-              [classes.sheetmonthView__content__dataOuter_withAccumulated]: withAccumulated
+              [classes.sheetmonthView__content__dataOuter_withAccumulated]: withAccumulated,
+              [classes.sheetmonthView__content__dataOuter_withMonth]: withAccumulated && accumulatedMonths > 1
             })}>
               <div 
                 ref={contentRef}

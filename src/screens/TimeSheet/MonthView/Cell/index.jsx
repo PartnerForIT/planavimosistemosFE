@@ -23,8 +23,8 @@ const Cell = ({
   const cellClasses = classnames(classes.cell, {
     [classes.cell_statistic_time]: cellId === 'totalTime',
     [classes.cell_statistic_cost]: cellId === 'totalCost',
-    [classes.cell_statistic_planned]: cellId === 'plannedTime',
-    [classes.cell_statistic_target]: cellId === 'targetTime',
+    [classes.cell_statistic_planned]: cellId === 'plannedTime' || cellId === 'plannedTimeMonth',
+    [classes.cell_statistic_target]: cellId === 'targetTime' || cellId === 'targetTimeMonth',
     [classes.cell_statistic]: statistic,
     [classes.cell_article]: article,
     [classes.cell_weekend]: weekend,
