@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, {
-  useEffect, useMemo, useState
+  useEffect, useMemo, useState, useCallback,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
@@ -24,13 +24,16 @@ import classes from './EditAccount.module.scss';
 import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
+import CustomSelect from '../../Select/Select';
 import ReactTooltip from 'react-tooltip';
 import {
   getSchedule,
 } from '../../../../store/settings/actions';
 import {
   scheduleSelector,
+  employeesSelector,
 } from '../../../../store/settings/selectors';
+import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +77,10 @@ const permissionsConfig = [
     name: 'schedule_shift',
     module: 'schedule_shift',
   },
+  {
+    name: 'time_off',
+    module: 'time_off',
+  },
 ];
 export default function EditAccount({
   title,
@@ -97,6 +104,7 @@ export default function EditAccount({
 
   const schedule = useSelector(scheduleSelector);
 
+  const { users: employees } = useSelector(employeesSelector);
   const [user, setUser] = useState({});
   const [skillOpen, setSkillOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
@@ -145,7 +153,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, hours_demand, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
+        name, surname, phone, speciality_id, external_id, hours_demand, approver_1, approver_2, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups, em_status,
       } = employee;
@@ -157,6 +165,8 @@ export default function EditAccount({
         speciality_id,
         external_id,
         hours_demand,
+        approver_1,
+        approver_2,
         shift_id,
         job_type_id,
         assign_shift_id,
@@ -328,6 +338,16 @@ export default function EditAccount({
     });
   };
 
+  const onEmployeesSelectChange = (selectedEmployees) => {
+    const nextInputValues = { ...user, approver_1: selectedEmployees[0]?.id ?? '', approver_2: selectedEmployees[0]?.id ? user.approver_2 : '' };
+    setUser(nextInputValues);
+  };
+
+  const onEmployeesSelectChange2 = (selectedEmployees) => {
+    const nextInputValues = { ...user, approver_2: selectedEmployees[0]?.id ?? '' };
+    setUser(nextInputValues);
+  };
+
   const handleInputStatus = (e) => {
     const {value} = e.target;
     setUser((prevState) => {
@@ -352,6 +372,46 @@ export default function EditAccount({
       }
     })
   };
+
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => {
+    return {
+    id,
+    label: `${name} ${surname}`,
+    checked: user.approver_1 === id,
+  }}, [user]);
+
+  const availableEmployees = useMemo(() => {
+    return employees.filter(e => e.id !== employee?.id && e.id !== user.approver_2).map(e => e.id);
+  }, [employees, employee, user]);
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(e => { return availableEmployees.includes(e.id) });
+    // eslint-disable-next-line
+  }, [employees, availableEmployees]);
+  const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
+
+  const employToCheck2 = useCallback(({
+    id,
+    name,
+    surname,
+  }) => {
+    return {
+    id,
+    label: `${name} ${surname}`,
+    checked: user.approver_2 === id,
+  }}, [user]);
+
+  const availableEmployees2 = useMemo(() => {
+    return employees.filter(e => e.id !== employee?.id && e.id !== user.approver_1).map(e => e.id);
+  }, [employees, employee, user]);
+  const filteredEmployees2 = useMemo(() => {
+    return employees.filter(e => { return availableEmployees2.includes(e.id) });
+    // eslint-disable-next-line
+  }, [employees, availableEmployees2]);
+  const allSortedEmployees2 = useGroupingEmployees(filteredEmployees2, employToCheck2);
 
   useEffect(() => {
     if (file) {
@@ -545,7 +605,7 @@ export default function EditAccount({
 
                   <div className={style.center}>
                     
-                  <div className={classes.formItem}>
+                    <div className={classes.formItem}>
                       <Label text={t('Roles')} htmlFor='roles' />
                       <AddEditSelectOptions
                         id='roles'
@@ -630,6 +690,41 @@ export default function EditAccount({
                          />
                        </div>
                      )
+                    }
+                    {
+                      permissions.time_off && (
+                        <>
+                          <hr className={classes.horSep} />
+                          <div className={classes.formItem}>
+                            <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
+                            <CustomSelect
+                              placeholder={t('Select 1st level approver')}
+                              items={allSortedEmployees ?? []}
+                              onChange={onEmployeesSelectChange}
+                              width='100%'
+                              fullWidth
+                              choiceOfOnlyOne={true}
+                              type='employees'
+                              withSearch={true}
+                              disabled={false}
+                            />
+                          </div>
+                          <div className={classes.formItem}>
+                            <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
+                            <CustomSelect
+                              placeholder={t('Select 2nd level approver')}
+                              items={allSortedEmployees2 ?? []}
+                              onChange={onEmployeesSelectChange2}
+                              width='100%'
+                              fullWidth
+                              choiceOfOnlyOne={true}
+                              type='employees'
+                              withSearch={true}
+                              disabled={!user.approver_1}
+                            />
+                          </div>
+                        </>
+                      )
                     }
                   </div>
 

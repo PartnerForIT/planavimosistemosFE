@@ -29,6 +29,8 @@ export default function CreateAccount({
     surname: '',
     external_id: null,
     hours_demand: '',
+    approver_1: null,
+    approver_2: null,
     skill: null,
     subgroup: null,
     group: null,
@@ -143,6 +145,21 @@ export default function CreateAccount({
           }
 
           return nextValues;
+        }
+
+        if (name === 'approver_1') {
+          return {
+            ...prevState,
+            [name]: value || null,
+            approver_2: value ? prevState.approver_2 : null,
+          };
+        }
+
+        if (name === 'approver_2') {
+          return {
+            ...prevState,
+            [name]: value || null,
+          };
         }
 
         return {

@@ -30,6 +30,12 @@ $form-inner-width: 900px;
   }
 }
 
+.horSep {
+  border: none;
+  border-top: 1px solid #d0dfef82;
+  margin-bottom: 20px;
+}
+
 .labelSpan {
   display: flex;
   justify-content: space-between;

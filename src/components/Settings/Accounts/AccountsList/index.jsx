@@ -99,6 +99,8 @@ const columns = [
   { label: 'Email', field: 'email', checked: true },
   { label: 'Role', field: 'role', checked: true },
   { label: 'Skill', field: 'skills', checked: true },
+  { label: 'Select 1st level approver', field: 'approver_1', checked: true },
+  { label: 'Select 2nd level approver', field: 'approver_2', checked: true },
   { label: 'Group', field: 'groups', checked: true },
   { label: 'Sub-group', field: 'subgroup', checked: true },
   { label: 'Assigned Place', field: 'place', checked: true },
@@ -161,6 +163,10 @@ const permissionsConfig = [
   {
     name: 'schedule_shift',
     module: 'schedule_shift',
+  },
+  {
+    name: 'time_off',
+    module: 'time_off',
   },
 ];
 export default function AccountsList() {
@@ -313,6 +319,9 @@ export default function AccountsList() {
         return false;
       }
       if ((!permissions.schedule_shift || !schedule.use_accumulated || schedule.accumulated_from_country) && column.field === 'hours_demand') {
+        return false;
+      }
+      if ((column.field === 'approver_1' || column.field === 'approver_2') && !permissions.time_off) {
         return false;
       }
       if (column.field === 'external_id' && !exist_external_id) {

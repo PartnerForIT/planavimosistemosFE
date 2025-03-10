@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useMemo, useState,
+  useEffect, useMemo, useState, useCallback,
 } from 'react';
 import classnames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ import DialogCreateSkill from '../CreateSkill';
 import { createSkill } from '../../../../store/settings/actions';
 import CurrencySign from '../../../shared/CurrencySign';
 import Input from '../../Input/Input';
+import CustomSelect from '../../Select/Select';
 import NextStepButton from './NextStepButton';
 import UserCard from './UserCard';
 import usePermissions from '../../usePermissions';
@@ -24,7 +25,9 @@ import {
 } from '../../../../store/settings/actions';
 import {
   scheduleSelector,
+  employeesSelector,
 } from '../../../../store/settings/selectors';
+import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
 const permissionsConfig = [
   {
@@ -51,6 +54,10 @@ const permissionsConfig = [
     name: 'schedule_shift',
     module: 'schedule_shift',
   },
+  {
+    name: 'time_off',
+    module: 'time_off',
+  },
 ];
 const SecondStep = ({
   user,
@@ -71,6 +78,7 @@ const SecondStep = ({
   const permissions = usePermissions(permissionsConfig);
 
   const schedule = useSelector(scheduleSelector);
+  const { users: employees } = useSelector(employeesSelector);
 
   const [skillOpen, setSkillOpen] = useState(false);
   const [errors, setErrors] = useState({});
@@ -86,6 +94,14 @@ const SecondStep = ({
       setReady(false);
     }
   }, [errors, nextStep, ready]);
+
+  const onEmployeesSelectChange = (selectedEmployees) => {
+    handleInput({ target: { name: 'approver_1', value: selectedEmployees[0]?.id ?? '' } });
+  };
+
+  const onEmployeesSelectChange2 = (selectedEmployees) => {
+    handleInput({ target: { name: 'approver_2', value: selectedEmployees[0]?.id ?? '' } });
+  };
 
   const groupsOpt = useMemo(() => {
     const grps = groups?.map(({
@@ -191,6 +207,46 @@ const SecondStep = ({
     }
   };
 
+  const employToCheck = useCallback(({
+    id,
+    name,
+    surname,
+  }) => {
+    return {
+    id,
+    label: `${name} ${surname}`,
+    checked: user.approver_1 === id,
+  }}, [user]);
+
+  const availableEmployees = useMemo(() => {
+    return employees.filter(e => e.id !== user.approver_2).map(e => e.id);
+  }, [employees, user]);
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(e => { return availableEmployees.includes(e.id) });
+    // eslint-disable-next-line
+  }, [employees, availableEmployees]);
+  const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
+
+  const employToCheck2 = useCallback(({
+    id,
+    name,
+    surname,
+  }) => {
+    return {
+    id,
+    label: `${name} ${surname}`,
+    checked: user.approver_2 === id,
+  }}, [user]);
+
+  const availableEmployees2 = useMemo(() => {
+    return employees.filter(e => e.id !== user.approver_1).map(e => e.id);
+  }, [employees, user]);
+  const filteredEmployees2 = useMemo(() => {
+    return employees.filter(e => { return availableEmployees2.includes(e.id) });
+    // eslint-disable-next-line
+  }, [employees, availableEmployees2]);
+  const allSortedEmployees2 = useGroupingEmployees(filteredEmployees2, employToCheck2);
+
   const containerClasses = classnames(style.secondForm, {
     [style.secondForm_three]: (permissions.create_groups || permissions.create_places),
   });
@@ -291,6 +347,41 @@ const SecondStep = ({
                   onChange={handleInput}
                 />
               </div>
+            )
+          }
+          {
+            permissions.time_off && (
+              <>
+                <hr className={style.horSep} />
+                <div className={style.formItem}>
+                  <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
+                  <CustomSelect
+                    placeholder={t('Select 1st level approver')}
+                    items={allSortedEmployees ?? []}
+                    onChange={onEmployeesSelectChange}
+                    width='100%'
+                    fullWidth
+                    choiceOfOnlyOne={true}
+                    type='employees'
+                    withSearch={true}
+                    disabled={false}
+                  />
+                </div>
+                <div className={style.formItem}>
+                  <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
+                  <CustomSelect
+                    placeholder={t('Select 2nd level approver')}
+                    items={allSortedEmployees2 ?? []}
+                    onChange={onEmployeesSelectChange2}
+                    width='100%'
+                    fullWidth
+                    choiceOfOnlyOne={true}
+                    type='employees'
+                    withSearch={true}
+                    disabled={!user.approver_1}
+                  />
+                </div>
+              </>
             )
           }
         </div>
