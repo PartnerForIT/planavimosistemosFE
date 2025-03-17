@@ -166,6 +166,7 @@ export default () => {
         events: {
           options: {
             receive_app: 'Receive notifications',
+            ...(journal.geolocation_push_notification && { receive_geo_leave: 'Geo Leave' }),
           },
         },
       }),

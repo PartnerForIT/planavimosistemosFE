@@ -55,6 +55,7 @@ export default function Clock() {
     geolocation_restriction_clock_in: false,
     geolocation_restriction_clock_out: false,
     geolocation_restriction_leave: false,
+    geolocation_push_notification: false,
     photo_clock_in: false,
     photo_clock_out: false,
     auto_clock_out_place_working_time: false,

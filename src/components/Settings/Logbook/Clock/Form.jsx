@@ -134,6 +134,26 @@ export default function Form({
                 title={t("This is the time how much the Grownu server is waiting for the mobile app to send the answer that the check up of the user in the geolocation of the place was successful. If during this time server will not get any response from the mobile device, it will be considered that this session will be stopped.")}
               />
             </div>
+            <div className={style.generalBlock9}>
+              <Switch
+                onChange={() => handleChangeCalculation('geolocation_push_notification')}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='geolocation_push_notification'
+                checked={!!ClockData.geolocation_push_notification}
+                height={21}
+                width={40}
+              />
+              <Label text={t('Use push notification to inform employee geolocation leave ')} />
+              <div className={style.tooltipBlock}>
+                <Tooltip title={
+                  t('If enabled, users with the `Roles → Notifications/Geo Leave` permission will receive a push notification about the employee. If a manager is part of a group, they will only receive notifications for users within the same group.')
+                }
+                />
+              </div>
+            </div>
           </>
         ) : null
         }

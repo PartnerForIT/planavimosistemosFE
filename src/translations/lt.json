@@ -1029,5 +1029,9 @@
         "2nd level approver": "2 lygio tvirtintojas",
 
         "Select 1st level approver": "Pasirinkite 1 lygio tvirtintoją",
-        "Select 2nd level approver": "Pasirinkite 2 lygio tvirtintoją"
+        "Select 2nd level approver": "Pasirinkite 2 lygio tvirtintoją",
+
+        "Use push notification to inform employee geolocation leave": "Naudokite push pranešimus apie darbuotojų vietos palikimą",
+        "If enabled, users with the `Roles → Notifications/Geo Leave` permission will receive a push notification about the employee. If a manager is part of a group, they will only receive notifications for users within the same group.": "Jei įjungta, naudotojai, turintys teises `Roles → Notifications/Geo Leave`, gaus pranešimą apie darbuotoją. Jei vadovas yra grupėje, jis gaus pranešimus tik apie naudotojus, esančius toje pačioje grupėje.",
+        "Geo leave": "Geolokacijos palikimas"
 }
