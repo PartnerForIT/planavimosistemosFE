@@ -24,6 +24,13 @@
   margin-left: 30px;
 }
 
+.dialogTitleClear {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
 .buttonSaveBlock {
   margin-top: 25px;
   display: flex;
@@ -33,6 +40,60 @@
   button {
     width: 100%;
   }
+}
+
+.sideForm {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logoSide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #E1EBF5;
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.formSide {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 670px;
+  min-width: 345px;
+  padding: 20px 30px;
+
+  .dialogTitleBlock {
+    margin-bottom: 30px;
+    margin-right: -10px;
+  }
+
+  @media (max-width: 768px) {
+    border-left: none;
+  }
+}
+
+.tooltipBlock {
+  margin-left: auto;
+}
+
+.dialogTitleBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.labelBlock {
+  display: flex;
+}
+
+.required {
+  color: $red;
+  margin-left: 5px;
 }
 
 .buttonsBlock {
@@ -224,6 +285,24 @@
     & button {
       margin-left: 20px;
     }
+  }
+}
+
+.textarea {
+  resize: none;
+  border: 1px solid rgba(0, 133, 255, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  width: calc(100% + 4px);
+  margin: -10px -13px;
+  min-height: 60px;
+  background: white;
+  color: #333945;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 15px;
+
+  &::placeholder {
+    color: #b9b9b9;
   }
 }
 

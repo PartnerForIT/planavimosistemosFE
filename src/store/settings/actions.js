@@ -126,6 +126,30 @@ import {
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_SUCCESS,
   GET_ROLE_DETAILS_ERROR,
+  GET_TIME_OFFS,
+  GET_TIME_OFFS_SUCCESS,
+  GET_TIME_OFFS_ERROR,
+  CREATE_TIME_OFF,
+  CREATE_TIME_OFF_SUCCESS,
+  CREATE_TIME_OFF_ERROR,
+  DELETE_TIME_OFF,
+  DELETE_TIME_OFF_SUCCESS,
+  DELETE_TIME_OFF_ERROR,
+  UPDATE_TIME_OFF,
+  UPDATE_TIME_OFF_SUCCESS,
+  UPDATE_TIME_OFF_ERROR,
+  GET_POLICIES,
+  GET_POLICIES_SUCCESS,
+  GET_POLICIES_ERROR,
+  CREATE_POLICY,
+  CREATE_POLICY_SUCCESS,
+  CREATE_POLICY_ERROR,
+  DELETE_POLICY,
+  DELETE_POLICY_SUCCESS,
+  DELETE_POLICY_ERROR,
+  UPDATE_POLICY,
+  UPDATE_POLICY_SUCCESS,
+  UPDATE_POLICY_ERROR,
   LOAD_PERMISSIONS,
   LOAD_PERMISSIONS_SUCCESS,
   LOAD_PERMISSIONS_ERROR,
@@ -921,6 +945,138 @@ export const getRoleDetailsSuccess = (data) => ({
 
 export const getRoleDetailsError = (data) => ({
   type: GET_ROLE_DETAILS_ERROR,
+  data,
+});
+
+
+export const getTimeOffs = (companyId) => ({
+  type: GET_TIME_OFFS,
+  companyId,
+});
+
+export const getTimeOffsSuccess = (data) => ({
+  type: GET_TIME_OFFS_SUCCESS,
+  data,
+});
+
+export const getTimeOffsError = (data) => ({
+  type: GET_TIME_OFFS_ERROR,
+  data,
+});
+
+export const createTimeOff = (companyId, data) => ({
+  type: CREATE_TIME_OFF,
+  companyId,
+  data,
+});
+
+export const createTimeOffSuccess = (data) => ({
+  type: CREATE_TIME_OFF_SUCCESS,
+  data,
+});
+
+export const createTimeOffError = (data) => ({
+  type: CREATE_TIME_OFF_ERROR,
+  data,
+});
+
+export const deleteTimeOff = (companyId, timeOffId) => ({
+  type: DELETE_TIME_OFF,
+  companyId,
+  timeOffId,
+});
+
+export const deleteTimeOffSuccess = (data) => ({
+  type: DELETE_TIME_OFF_SUCCESS,
+  data,
+});
+
+export const deleteTimeOffError = (data) => ({
+  type: DELETE_TIME_OFF_ERROR,
+  data,
+});
+
+export const updateTimeOff = (companyId, timeOffId, data) => ({
+  type: UPDATE_TIME_OFF,
+  companyId,
+  timeOffId,
+  data,
+});
+
+export const updateTimeOffSuccess = (data) => ({
+  type: UPDATE_TIME_OFF_SUCCESS,
+  data,
+});
+
+export const updateTimeOffError = (data) => ({
+  type: UPDATE_TIME_OFF_ERROR,
+  data,
+});
+
+
+export const getPolicies = (companyId, timeOffId) => ({
+  type: GET_POLICIES,
+  companyId,
+  timeOffId,
+});
+
+export const getPoliciesSuccess = (data) => ({
+  type: GET_POLICIES_SUCCESS,
+  data,
+});
+
+export const getPoliciesError = (data) => ({
+  type: GET_POLICIES_ERROR,
+  data,
+});
+
+export const createPolicy = (companyId, timeOffId, data) => ({
+  type: CREATE_POLICY,
+  companyId,
+  timeOffId,
+  data,
+});
+
+export const createPolicySuccess = (data) => ({
+  type: CREATE_POLICY_SUCCESS,
+  data,
+});
+
+export const createPolicyError = (data) => ({
+  type: CREATE_POLICY_ERROR,
+  data,
+});
+
+export const deletePolicy = (companyId, policyId) => ({
+  type: DELETE_POLICY,
+  companyId,
+  policyId,
+});
+
+export const deletePolicySuccess = (data) => ({
+  type: DELETE_POLICY_SUCCESS,
+  data,
+});
+
+export const deletePolicyError = (data) => ({
+  type: DELETE_POLICY_ERROR,
+  data,
+});
+
+export const updatePolicy = (companyId, policyId, data) => ({
+  type: UPDATE_POLICY,
+  companyId,
+  policyId,
+  data,
+});
+
+export const updatePolicySuccess = (data) => ({
+  type: UPDATE_POLICY_SUCCESS,
+  data,
+});
+
+export const updatePolicyError = (data) => ({
+  type: UPDATE_POLICY_ERROR,
   data,
 });
 

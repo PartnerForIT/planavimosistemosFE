@@ -69,11 +69,25 @@ $arrow-size: 21px;
     color: $edit-icon-color;
   }
 
+  &_policy {
+    color: $edit-icon-color;
+
+    & svg {
+      width: 14px;
+      height: 14px;
+
+      path {
+        fill: $edit-icon-color;
+      }
+    }
+  }
+
   &_remove {
     color: red;
   }
 
   &_edit,
+  &_policy,
   &_remove {
     background-color: unset;
     border: unset;
@@ -108,6 +122,15 @@ $arrow-size: 21px;
       color: white;
       opacity: 1;
       z-index: 2;
+    }
+
+    & .card_policy {
+      & svg {
+
+        path {
+          fill: white;
+        }
+      }
     }
 
     &::before,

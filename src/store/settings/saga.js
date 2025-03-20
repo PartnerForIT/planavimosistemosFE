@@ -63,6 +63,14 @@ import {
   CREATE_ROLE,
   DELETE_ROLE,
   UPDATE_ROLE,
+  GET_TIME_OFFS,
+  CREATE_TIME_OFF,
+  DELETE_TIME_OFF,
+  UPDATE_TIME_OFF,
+  GET_POLICIES,
+  CREATE_POLICY,
+  DELETE_POLICY,
+  UPDATE_POLICY,
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
@@ -134,6 +142,24 @@ import {
   deleteRoleSuccess,
   updateRoleSuccess,
   updateRoleError,
+  getTimeOffs,
+  getTimeOffsSuccess,
+  getTimeOffsError,
+  createTimeOffError,
+  //createTimeOffSuccess,
+  deleteTimeOffError,
+  //deleteTimeOffSuccess,
+  //updateTimeOffSuccess,
+  updateTimeOffError,
+  getPolicies,
+  getPoliciesSuccess,
+  getPoliciesError,
+  createPolicyError,
+  //createPolicySuccess,
+  deletePolicyError,
+  //deletePolicySuccess,
+  //updatePolicySuccess,
+  updatePolicyError,
   loadEmployeesError,
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
@@ -1298,6 +1324,165 @@ function* patchRole(action) {
   }
 }
 
+
+function* loadTimeOffs(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off`, token());
+    yield put(getTimeOffsSuccess(data));
+  } catch (e) {
+    yield put(getTimeOffsError(e));
+  }
+}
+
+function* createTimeOff(action) {
+  try {
+    const {
+      companyId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/store`, data, token());
+
+    yield put(getTimeOffs(companyId));
+    yield put(addSnackbar('Added Time Off successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createTimeOffError(e));
+    yield put(addSnackbar('An error occurred while removing Time Off', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* removeTimeOff(action) {
+  try {
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/delete`,
+      token());
+    if (data.message?.toLowerCase() === 'deleted') {
+      yield put(getTimeOffs(action.companyId));
+    }
+    yield put(addSnackbar('Removed Time Off successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(deleteTimeOffError(e));
+    yield put(addSnackbar('An error occurred while removing Time Off', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchTimeOff(action) {
+  try {
+    const { data, timeOffId } = action;
+
+    const time_offs = yield select((state) => state.settings.time_offs ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/update`,
+      data,
+      token());
+
+    yield put(authCheck());
+    yield put(getTimeOffsSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, responseData } : time_off))));
+  
+    yield put(getTimeOffs(action.companyId));
+
+    yield put(addSnackbar('Updated Time Off successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updateTimeOffError(e));
+    yield put(addSnackbar('An error occurred while updating Time Off', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+
+function* loadPolicies(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy`, token());
+    yield put(getPoliciesSuccess(data));
+  } catch (e) {
+    yield put(getPoliciesError(e));
+  }
+}
+
+function* createPolicy(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/store`, data, token());
+
+    yield put(getPolicies(companyId, timeOffId));
+    yield put(addSnackbar('Added Policy successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createPolicyError(e));
+    yield put(addSnackbar('An error occurred while removing Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* removePolicy(action) {
+  try {
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy/${action.policyId}/delete`,
+      token());
+    if (data.message?.toLowerCase() === 'deleted') {
+      yield put(getPolicies(action.companyId, action.timeOffId));
+    }
+    yield put(addSnackbar('Removed Policy successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(deletePolicyError(e));
+    yield put(addSnackbar('An error occurred while removing Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchPolicy(action) {
+  try {
+    const { data, timeOffId, policyId } = action;
+
+    const policies = yield select((state) => state.settings.policies ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/policy/${policyId}/update`,
+      data,
+      token());
+
+    yield put(authCheck());
+    yield put(getPoliciesSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, responseData } : policy))));
+  
+    yield put(getPolicies(action.companyId));
+
+    yield put(addSnackbar('Updated Policy successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updatePolicyError(e));
+    yield put(addSnackbar('An error occurred while updating Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* getEmployeeEdit(action) {
   try {
     const { data } = yield call(axios.get,
@@ -1881,6 +2066,14 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_ROLE, createRole);
   yield takeLatest(DELETE_ROLE, removeRole);
   yield takeLatest(UPDATE_ROLE, patchRole);
+  yield takeLeading(GET_TIME_OFFS, loadTimeOffs);
+  yield takeLatest(CREATE_TIME_OFF, createTimeOff);
+  yield takeLatest(DELETE_TIME_OFF, removeTimeOff);
+  yield takeLatest(UPDATE_TIME_OFF, patchTimeOff);
+yield takeLeading(GET_POLICIES, loadPolicies);
+yield takeLatest(CREATE_POLICY, createPolicy);
+  yield takeLatest(DELETE_POLICY, removePolicy);
+  yield takeLatest(UPDATE_POLICY, patchPolicy);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);

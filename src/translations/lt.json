@@ -1033,5 +1033,56 @@
 
         "Use push notification to inform employee geolocation leave": "Naudokite push pranešimus apie darbuotojų vietos palikimą",
         "If enabled, users with the `Roles → Notifications/Geo Leave` permission will receive a push notification about the employee. If a manager is part of a group, they will only receive notifications for users within the same group.": "Jei įjungta, naudotojai, turintys teises `Roles → Notifications/Geo Leave`, gaus pranešimą apie darbuotoją. Jei vadovas yra grupėje, jis gaus pranešimus tik apie naudotojus, esančius toje pačioje grupėje.",
-        "Geo leave": "Geolokacijos palikimas"
+        "Geo leave": "Geolokacijos palikimas",
+
+        "Policy Type": "Politikos tipas",
+        "New Policy Type": "Naujas Politikos tipas",
+        "Create a new time off policy type": "Sukurkite naują nedarbo laiko politikos tipą",
+
+        "Create New Policy Type": "Sukurti Naują Politikos Tipą",
+        "Enter policy type name": "Įveskite politikos tipo pavadinimą",
+        "Policy type unit": "Politikos tipo vienetai",
+        "Paid or unpaid type": "Apmokamas ar neapmokamas tipas?",
+        "Work days or any days?": "Darbo dienis ar visos dienos?",
+        "Write a description": "Parašykite aprašymą",
+        "Submit": "Sukurti",
+
+        "Choose the type": "Pasirinkti tipą",
+
+        "Hours": "Valandos",
+        "Days": "Dienos",
+
+        "Working": "Dirbama",
+        "Paid, but not working": "Apmokama, bet nedirbama",
+        "Unpaid, and not working": "Neapmokama ir nedirbama",
+
+        "Any day": "Bet kurią dieną",
+        "Work days only": "Tik darbo dienomis",
+
+        "Choose which units to use for accruing and viewing the employee balance: hours or days.": "Pasirinkite, kokius vienetus naudoti darbuotojo balanso kaupimui ir peržiūrai: valandas ar dienas.",
+
+        "Select a policy type based on work and pay status:": "Pasirinkite politikos tipą pagal darbo ir apmokėjimo statusą:",
+        "Working – Actively working (e.g., office, remote work).": "Dirba – Aktyviai dirbama (pvz., ofise, nuotoliniu būdu).",
+        "Not working, but paid – Time off that is paid (e.g., holidays, sick leave).": "Nedirba, bet apmokama – Mokamas nedarbo laikas (pvz., atostogos, nedarbingumas).",
+        "Not working, and not paid – Unpaid leave, which is excluded from attendance-based working hours.": "Nedirba ir neapmokama – Neapmokamos atostogos, kurios neįtraukiamos į darbo valandas.",
+
+        "If 'Any day' is selected, requests on weekends or non-working days will be deducted from the balance. This is useful for compensatory time off (TOIL) or travel-related leave policies.": "Jei pasirenkama parinktis `Bet kuri diena`, prašymai savaitgaliais ar ne darbo dienomis bus nuskaičiuoti iš balanso. Tai naudinga kompensaciniam poilsio laikui (TOIL), papildomas poilsio laikas už viršvalandžius arba su darbo kelionėmis susijusioms atostogų politikoms.",
+
+        "users have this policy": "vartotojų turi šią politiką",
+        "active policies": "aktyvios politikos",
+
+        "Measured in days": "Skaičiuojama dienomis",
+        "Measured in hours": "Skaičiuojama valandomis",
+
+        "Delete Policy Type": "Pašalinti Politikos Tipą",
+        "policy type will be deleted with all its Policies inside it, are you sure you want to proceed with it?": "politikos tipas bus ištrintas kartu su visomis jame esančiomis politikomis. Ar tikrai norite tęsti?",
+        "Policies will be unassigned from the assigned employees.": "Politikos bus pašalintos iš juose priskirtų darbuotojų.",
+
+        "Default": "Numatytasis",
+        "Allowance type": "Priemokos tipas",
+
+        "Create New Policy": "Sukurti Naują Politiką",
+        "Policy name": "Politikos pavadinimas",
+        "Enter policy name": "Įveskite politikos pavadinimą",
+        "Policy type": "Politikos tipas"
 }

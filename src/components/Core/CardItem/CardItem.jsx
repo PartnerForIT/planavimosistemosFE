@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import EditIcon from '../../Icons/EditIcon';
 import RemoveRoleIcon from '../../Icons/RemoveRoleIcon';
+import CreatePolicyIcon from '../../Icons/CreatePolicyIcon';
 
 import classes from './CardItem.module.scss';
 
@@ -17,12 +18,15 @@ const CardItem = ({
   onClick,
   onClickEdit,
   onClickRemove,
+  onClickAddPolicy,
   isDefault,
   canDelete = true,
   onChangeDefault,
   itemName,
   ariaLabel,
   descriptionCount,
+  policiesCount,
+  descriptionPolicies,
 }) => {
   const { t } = useTranslation();
 
@@ -48,6 +52,7 @@ const CardItem = ({
     >
       <p className={classes.card_title}>{name}</p>
       <small>{`${userCount} ${t(descriptionCount)}`}</small>
+      { descriptionPolicies ? ( <><br /><small>{`${policiesCount} ${t(descriptionPolicies)}`}</small></>) : null }
       {
         !!onChangeDefault && (!!isDefault || selected) && (
           <div className={classes.card_check}>
@@ -69,6 +74,15 @@ const CardItem = ({
         >
           <EditIcon aria-hidden />
         </button>
+        { onClickAddPolicy && (
+          <button
+            className={classes.card_policy}
+            aria-label={`create policy button`}
+            onClick={onClickAddPolicy}
+          >
+            <CreatePolicyIcon />
+          </button>
+        )}
         {
           canDelete && (
             <button

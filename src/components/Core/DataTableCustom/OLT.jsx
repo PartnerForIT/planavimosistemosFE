@@ -29,6 +29,7 @@ const columnsWidthInitial = {};
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
+  footerButton, minHeight,
   downloadExcel, downloadPdf, verticalOffset = '0px',
   columnsWidth = columnsWidthInitial, simpleTable, editRow = () => ({}),
   removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
@@ -150,6 +151,7 @@ export default function DataTable({
     styles.scrollableContent,
     { [styles.scrollableContentWithoutRightPanel]: withoutFilterColumns },
     { [styles.scrollableContentReports]: reports },
+    { [styles.scrollableContentMinHeight]: minHeight },
   );
 
   const flexTableClasses = classNames(
@@ -164,6 +166,7 @@ export default function DataTable({
     styles.tableContent,
     {
       [styles.tableContentNotSortable]: !sortable,
+      [styles.tableContentMinHeight]: minHeight,
     },
   );
 
@@ -174,6 +177,7 @@ export default function DataTable({
       [styles.tableContainer_greyTitle]: greyTitle,
       [styles.tableContainer_accountList]: accountList,
       [styles.tableContainer_simpleTable]: simpleTable,
+      [styles.tableContainer_minHeight]: minHeight,
     },
   );
 
@@ -191,7 +195,7 @@ export default function DataTable({
   return (
     <div
       className={tableContainerClasses}
-      style={{ height: `calc(100vh - ${verticalOffset})` }}
+      style={{ height: minHeight ? `auto` : `calc(100vh - ${verticalOffset})` }}
       role='table'
       aria-label='Destinations'
       data-id={id}
@@ -200,7 +204,7 @@ export default function DataTable({
       <Scrollbar
         className={scrollableContentClasses}
         style={{
-          height: `calc(100vh - ${verticalOffset} - ${simpleTable ? 0 : 47}px + ${accountList ? 47 : 0}px)`,
+          height: minHeight ? `auto` : `calc(100vh - ${verticalOffset} - ${simpleTable ? 0 : 47}px + ${accountList ? 47 : 0}px)`,
         }}
         removeTracksWhenNotUsed
         trackXProps={{
@@ -334,6 +338,13 @@ export default function DataTable({
                 onOpenWorkTime={onOpenWorkTime}
               />
             )) : null
+          }
+          {
+            footerButton && (
+              <div className={classNames(styles.footerButton)}>
+                {footerButton}
+              </div>
+            )
           }
         </div>
       </Scrollbar>

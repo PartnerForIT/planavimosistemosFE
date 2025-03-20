@@ -9,6 +9,7 @@ import classes from './CardItemAdd.module.scss';
 const CardItemAdd = ({
   onClick,
   itemName,
+  descriptionName
 }) => {
   const { t } = useTranslation();
 
@@ -23,7 +24,7 @@ const CardItemAdd = ({
       tabIndex={0}
     >
       <p className={classes.card_title}>{t(`New ${itemName}`)}</p>
-      <small>{t(`Create a new ${itemName}`)}</small>
+      <small>{t(descriptionName ? descriptionName : `Create a new ${itemName}`)}</small>
       <span className={classes.card_icon}>
         <AddRolesIcon aria-hidden />
       </span>

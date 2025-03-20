@@ -89,6 +89,30 @@ import {
   GET_ROLE_DETAILS,
   GET_ROLE_DETAILS_ERROR,
   GET_ROLE_DETAILS_SUCCESS,
+  GET_TIME_OFFS,
+  GET_TIME_OFFS_SUCCESS,
+  GET_TIME_OFFS_ERROR,
+  CREATE_TIME_OFF,
+  CREATE_TIME_OFF_ERROR,
+  CREATE_TIME_OFF_SUCCESS,
+  DELETE_TIME_OFF,
+  DELETE_TIME_OFF_ERROR,
+  DELETE_TIME_OFF_SUCCESS,
+  UPDATE_TIME_OFF,
+  UPDATE_TIME_OFF_ERROR,
+  UPDATE_TIME_OFF_SUCCESS,
+  GET_POLICIES,
+  GET_POLICIES_SUCCESS,
+  GET_POLICIES_ERROR,
+  CREATE_POLICY,
+  CREATE_POLICY_ERROR,
+  CREATE_POLICY_SUCCESS,
+  DELETE_POLICY,
+  DELETE_POLICY_ERROR,
+  DELETE_POLICY_SUCCESS,
+  UPDATE_POLICY,
+  UPDATE_POLICY_ERROR,
+  UPDATE_POLICY_SUCCESS,
   GET_SETTINGS_EMPLOYEES_ERROR,
   GET_SETTINGS_EMPLOYEES_ALL,
   GET_SETTINGS_EMPLOYEES_EDIT,
@@ -169,6 +193,9 @@ const initialState = {
   currency: [],
   roles: [],
   roleDetails: {},
+  time_offs: [],
+  policies: [],
+  policiesLoading: false,
   permissions: [],
   import: {},
   importPlaces: {},
@@ -820,6 +847,67 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         rolesLoading: false,
         error: action.data.accountRoles,
+      };
+
+
+    case GET_TIME_OFFS:
+    case CREATE_TIME_OFF:
+    case DELETE_TIME_OFF:
+    case UPDATE_TIME_OFF:
+      return {
+        ...state,
+        timeOffsLoading: true,
+        error: null,
+      };
+
+    case GET_TIME_OFFS_SUCCESS:
+    case CREATE_TIME_OFF_SUCCESS:
+    case DELETE_TIME_OFF_SUCCESS:
+    case UPDATE_TIME_OFF_SUCCESS:
+      return {
+        ...state,
+        timeOffsLoading: false,
+        time_offs: action.data?.time_offs || action.data,
+      };
+
+    case GET_TIME_OFFS_ERROR:
+    case DELETE_TIME_OFF_ERROR:
+    case CREATE_TIME_OFF_ERROR:
+    case UPDATE_TIME_OFF_ERROR:
+      return {
+        ...state,
+        timeOffsLoading: false,
+        error: action.data.time_offs,
+      };
+
+    case GET_POLICIES:
+    case CREATE_POLICY:
+    case DELETE_POLICY:
+    case UPDATE_POLICY:
+      return {
+        ...state,
+        policiesLoading: true,
+        error: null,
+      };
+
+    case GET_POLICIES_SUCCESS:
+    case CREATE_POLICY_SUCCESS:
+    case DELETE_POLICY_SUCCESS:
+    case UPDATE_POLICY_SUCCESS:
+      return {
+        ...state,
+        policiesLoading: false,
+        policies: action.data?.policies || action.data,
+      };
+
+    case GET_POLICIES_ERROR:
+    case DELETE_POLICY_ERROR:
+    case CREATE_POLICY_ERROR:
+    case UPDATE_POLICY_ERROR:
+      return {
+        ...state,
+        policiesLoading: false,
+        error: action.data.policies,
       };
 
     case ADD_SETTING_SNACKBAR:

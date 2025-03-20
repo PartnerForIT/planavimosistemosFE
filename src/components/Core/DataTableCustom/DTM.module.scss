@@ -635,6 +635,11 @@ div {
   //    padding: 0;
   //  }
   //}
+
+  &.tableContentMinHeight {
+    min-height: 60px;
+    padding: 0;
+  }
 }
 
 // style scrollbar other screen
@@ -871,6 +876,14 @@ div {
       border-radius: 10px !important;
     }
   }
+
+  &.scrollableContentMinHeight {
+    min-height: 60px;
+  }
+}
+
+.footerButton {
+  margin-top: -5px;
 }
 
 .tableContainer {
@@ -1048,6 +1061,20 @@ div {
 
     .scrollingPanel {
       background-color: transparent;
+    }
+  }
+
+  &_minHeight {
+    min-height: 60px;
+
+    > div {
+      > div {
+        position: static !important;
+
+        > div {
+          position: static !important;
+        }
+      }
     }
   }
 }

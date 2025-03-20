@@ -40,6 +40,12 @@ export const rolesSelector = (state) => state.settings.roles;
 export const rolesLoading = (state) => state.settings.rolesLoading;
 export const permissionsSelector = (state) => state.settings.permissions;
 
+export const timeOffsSelector = (state) => state.settings.time_offs;
+export const timeOffsLoading = (state) => state.settings.timeOffsLoading;
+
+export const policiesSelector = (state) => state.settings.policies;
+export const policiesLoading = (state) => state.settings.policiesLoading;
+
 export const eventsSelector = (state) => state.settings.events;
 export const eventsTypesSelector = (state) => state.settings.eventsTypes;
 export const eventsLoadingSelector = (state) => state.settings.eventsLoading;
