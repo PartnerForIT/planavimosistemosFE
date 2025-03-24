@@ -10,7 +10,9 @@ import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
+import DescriptionIcon from '../../Icons/DescriptionIcon';
 import DeleteIcon from '../../Icons/DeleteIcon';
+import DuplicateIcon from '../../Icons/DuplicateIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +21,7 @@ const Row = ({
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
-  withoutShitCode,
+  withoutShitCode, duplicateRow,
 }) => {
   const { t } = useTranslation();
   const selected = useMemo(() => {
@@ -179,6 +181,10 @@ const Row = ({
     }
   }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning, withoutShitCode]);
 
+  const nltobr = (str) => {
+    return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+  }
+
   return (
     <div
       className={containerClasses}
@@ -192,6 +198,7 @@ const Row = ({
           <RowActions
             editRow={editRow}
             removeRow={removeRow}
+            duplicateRow={duplicateRow}
             visible={actionsVisible || (selected && selected.id === row.id && !reports)}
             absolute
             id={row.id}
@@ -263,6 +270,16 @@ const Row = ({
                       row[column.field] !== 'tableActions'
                         && (column.cellRenderer ? column.cellRenderer(row, t) : t(row[column.field]))
                     }
+                    { column.comment_field && row[column.comment_field] && (
+                      <span
+                        className={styles.comment}
+                        data-tip={nltobr(row[column.comment_field])}
+                        data-for='cell_description'
+                        data-html={true}
+                      >
+                        <DescriptionIcon />
+                      </span>
+                    )}
                   </span>
                 )}
                 {/* for job breaks section */}
@@ -321,7 +338,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                    <RowActions editRow={editRow} removeRow={removeRow} id={row.id} />
+                    <RowActions editRow={editRow} removeRow={removeRow} duplicateRow={duplicateRow} id={row.id} />
                   )
                 }
               </div>
@@ -349,18 +366,26 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, absolute = false, visible = true,
+  id, editRow, removeRow, duplicateRow, absolute = false, visible = true,
 }) => {
   const actionsClasses = classNames(
     styles.ActionsTable,
     (visible ? styles.actionsVisible : styles.actionsHidden),
     {
       [styles.absoluteActions]: absolute,
+      [styles.duplicateActions]: duplicateRow,
     },
   );
 
   return (
     <div className={actionsClasses}>
+      {
+        duplicateRow && (
+          <button onClick={() => duplicateRow(id)}>
+            <DuplicateIcon className={styles.iconButtonRow} />
+          </button>
+        )
+      }
       <button onClick={() => editRow(id)}>
         <EditIconFixedFill className={styles.iconButtonRow} />
       </button>

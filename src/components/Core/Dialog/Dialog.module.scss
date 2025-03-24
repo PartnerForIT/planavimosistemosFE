@@ -91,6 +91,16 @@
   display: flex;
 }
 
+.formCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    padding-bottom: 0
+  }
+}
+
 .required {
   color: $red;
   margin-left: 5px;

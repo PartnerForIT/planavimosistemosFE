@@ -2,7 +2,7 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-export default function CategoriesIcon({ fill, viewBox, className }) {
+export default function DeleteIcon({ fill, viewBox, className }) {
   return (
     <SvgIcon viewBox={viewBox || '0 0 18.008 20.654'} className={className}>
       <path

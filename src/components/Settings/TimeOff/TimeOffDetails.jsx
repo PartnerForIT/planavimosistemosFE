@@ -8,7 +8,7 @@ import CreatePolicyIcon from '../../Icons/CreatePolicyIcon';
 import { useTranslation } from 'react-i18next';
 
 const initColumnsArray = [
-  { label: 'active policies', field: 'name', checked: true },
+  { label: 'active policies', field: 'name', checked: true, comment_field: 'description' },
   { label: 'Default', field: 'default', checked: true },
   { label: 'Allowance type', field: 'type', checked: true },
   { label: 'Days', field: 'days', checked: true },
@@ -27,11 +27,15 @@ function TimeOffDetails({
   activeTimeOff,
   loading,
   createNewPolicy,
+  onEditPolicy,
+  onDeletePolicy,
+  onDuplicatePolicy,
   policies,
 }) {
   const { t } = useTranslation();
   const [dataArray, setDataArray] = useState([]);
   const [columnsArray, setCollumnsArray] = useState(initColumnsArray);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const detailsClasses = classNames(classes.details, {
     
@@ -44,10 +48,13 @@ function TimeOffDetails({
         return {
           id: policy.id,
           name: policy.name,
-          default: policy.default ? 'Yes' : 'No',
+          default: policy.default ? '' : '',
+          description: policy.description,
           type: policy.type,
           days: policy.days,
           users_count: policy.users_count,
+          //todo 
+          not_active: true,
         };
       }
       );
@@ -63,7 +70,8 @@ function TimeOffDetails({
       });
     });
   }, [activeTimeOff, policies]);
-
+  
+  
   const renderFooterButton = () => {
     return !policies?.length ? (
       <div className={classes.footerButton}>
@@ -78,24 +86,31 @@ function TimeOffDetails({
   return (
     <div className={detailsClasses}>
       {
-        loading && (
+        loading ? (
           <div className={classes.loader}>
             <Progress />
           </div>
+        ) : (
+          <DataTable
+            data={dataArray || []}
+            columns={columnsArray || []}
+            columnsWidth={columnsWidthArray || {}}
+            minHeight
+            simpleTable
+            withoutFilterColumns
+            hoverable
+            hoverActions
+            loading={loading}
+            verticalOffset={'100px'}
+            footerButton={renderFooterButton()}
+            selectedItem={selectedRow}
+            setSelectedItem={setSelectedRow}
+            editRow={onEditPolicy}
+            removeRow={onDeletePolicy}
+            duplicateRow={onDuplicatePolicy}
+          />
         )
       }
-      <DataTable
-        data={dataArray || []}
-        columns={columnsArray || []}
-        columnsWidth={columnsWidthArray || {}}
-        minHeight
-        simpleTable
-        withoutFilterColumns
-        hoverable
-        loading={loading}
-        verticalOffset={'100px'}
-        footerButton={renderFooterButton()}
-      />
     </div>
   );
 }

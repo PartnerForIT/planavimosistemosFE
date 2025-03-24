@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 import classes from '../timeoff.module.scss';
 import RemoveTimeOff from '../../../Core/Dialog/RemoveTimeOff';
+import RemovePolicy from '../../../Core/Dialog/RemovePolicy';
 import TimeOffDetails from '../TimeOffDetails';
 import CardItem from '../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
-import { add } from 'lodash';
 
 function TimeOffBlock({
   time_offs = [],
@@ -14,6 +14,9 @@ function TimeOffBlock({
   setActiveTimeOff = Function.prototype,
   createNewTimeOff = Function.prototype,
   createNewPolicy = Function.prototype,
+  onEditPolicy = Function.prototype,
+  onDeletePolicy = Function.prototype,
+  onDuplicatePolicy = Function.prototype,
   remove = Function.prototype,
   loading = false,
   setEditVisible = Function.prototype,
@@ -21,7 +24,8 @@ function TimeOffBlock({
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
-  
+  const [removePolicyVisible, setRemovePolicyVisible] = useState(false);
+
   return (
     <div className={classes.timeoff}>
       <>
@@ -60,6 +64,9 @@ function TimeOffBlock({
                     activeTimeOff={activeTimeOff}
                     loading={loading}
                     policies={policies}
+                    onEditPolicy={onEditPolicy}
+                    onDeletePolicy={setRemovePolicyVisible}
+                    onDuplicatePolicy={onDuplicatePolicy}
                   />
                 )
               }
@@ -73,6 +80,14 @@ function TimeOffBlock({
           name={removeVisible.name}
           buttonTitle={t('Delete')}
           remove={() => remove(removeVisible.id)}
+        />
+        <RemovePolicy
+          open={!!removePolicyVisible}
+          handleClose={() => setRemovePolicyVisible(false)}
+          title={t('Delete Policy')}
+          name={policies?.find((policy) => policy.id === removePolicyVisible)?.name}
+          buttonTitle={t('Delete')}
+          remove={() => onDeletePolicy(removePolicyVisible)}
         />
       </>
     </div>

@@ -113,6 +113,9 @@ import {
   UPDATE_POLICY,
   UPDATE_POLICY_ERROR,
   UPDATE_POLICY_SUCCESS,
+  DUPLICATE_POLICY,
+  DUPLICATE_POLICY_ERROR,
+  DUPLICATE_POLICY_SUCCESS,
   GET_SETTINGS_EMPLOYEES_ERROR,
   GET_SETTINGS_EMPLOYEES_ALL,
   GET_SETTINGS_EMPLOYEES_EDIT,
@@ -884,6 +887,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_POLICY:
     case DELETE_POLICY:
     case UPDATE_POLICY:
+    case DUPLICATE_POLICY:
       return {
         ...state,
         policiesLoading: true,
@@ -894,6 +898,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_POLICY_SUCCESS:
     case DELETE_POLICY_SUCCESS:
     case UPDATE_POLICY_SUCCESS:
+    case DUPLICATE_POLICY_SUCCESS:
       return {
         ...state,
         policiesLoading: false,
@@ -904,6 +909,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_POLICY_ERROR:
     case CREATE_POLICY_ERROR:
     case UPDATE_POLICY_ERROR:
+    case DUPLICATE_POLICY_ERROR:
       return {
         ...state,
         policiesLoading: false,

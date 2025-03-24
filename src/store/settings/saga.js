@@ -71,6 +71,7 @@ import {
   CREATE_POLICY,
   DELETE_POLICY,
   UPDATE_POLICY,
+  DUPLICATE_POLICY,
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
@@ -160,6 +161,8 @@ import {
   //deletePolicySuccess,
   //updatePolicySuccess,
   updatePolicyError,
+  //duplicatePolicySuccess,
+  duplicatePolicyError,
   loadEmployeesError,
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
@@ -1470,7 +1473,7 @@ function* patchPolicy(action) {
     yield put(authCheck());
     yield put(getPoliciesSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, responseData } : policy))));
   
-    yield put(getPolicies(action.companyId));
+    yield put(getPolicies(action.companyId, timeOffId));
 
     yield put(addSnackbar('Updated Policy successfully', 'success'));
     yield delay(4000);
@@ -1478,6 +1481,34 @@ function* patchPolicy(action) {
   } catch (e) {
     yield put(updatePolicyError(e));
     yield put(addSnackbar('An error occurred while updating Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* duplicatePolicy(action) {
+  try {
+    const { data, timeOffId, policyId } = action;
+
+    const policies = yield select((state) => state.settings.policies ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { responseData } = yield call(axios.post,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/policy/${policyId}/duplicate`,
+      data,
+      token());
+
+    yield put(authCheck());
+    yield put(getPoliciesSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, responseData } : policy))));
+  
+    yield put(getPolicies(action.companyId, timeOffId));
+
+    yield put(addSnackbar('Duplicated Policy successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(duplicatePolicyError(e));
+    yield put(addSnackbar('An error occurred while duplicating Policy', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -2074,6 +2105,7 @@ yield takeLeading(GET_POLICIES, loadPolicies);
 yield takeLatest(CREATE_POLICY, createPolicy);
   yield takeLatest(DELETE_POLICY, removePolicy);
   yield takeLatest(UPDATE_POLICY, patchPolicy);
+  yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);

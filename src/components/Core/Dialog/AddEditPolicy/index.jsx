@@ -10,6 +10,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import { useTranslation } from 'react-i18next';
 
+const defaultValues = {
+  name: '',
+  type: '',
+  description: '',
+};
+
 export default ({
   handleClose,
   title,
@@ -19,7 +25,7 @@ export default ({
   initialValue,
 }) => {
   const { t } = useTranslation();
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState(defaultValues);
   const [madeChanges, setMadeChanges] = useState(false);
 
   const handleChange = (e) => {
@@ -30,19 +36,23 @@ export default ({
     onSubmit(values);
   };
   const handleExited = () => {
-    setValues({});
+    setValues(defaultValues);
   };
   const onClose = () => {
-    setValues({});
+    setValues(defaultValues);
     handleClose();
 
   };
 
   useEffect(() => {
     if (initialValue) {
-      setValues(initialValue);
+      setValues({
+        ...defaultValues,
+        name: initialValue.name || '',
+        type: initialValue.type || '',
+        description: initialValue.description || ''});
     } else {
-      setValues({});
+      setValues(defaultValues);
     }
   }, [initialValue, open]);
 

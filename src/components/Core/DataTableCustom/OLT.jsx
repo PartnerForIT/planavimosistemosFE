@@ -17,6 +17,7 @@ import ExcelIcon from '../../Icons/ExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import debounce from 'lodash.debounce';
+import ReactTooltip from 'react-tooltip';
 
 
 const useStyles = makeStyles({
@@ -32,7 +33,7 @@ export default function DataTable({
   footerButton, minHeight,
   downloadExcel, downloadPdf, verticalOffset = '0px',
   columnsWidth = columnsWidthInitial, simpleTable, editRow = () => ({}),
-  removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
+  duplicateRow, removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
@@ -58,6 +59,10 @@ export default function DataTable({
   const classes = useStyles();
 
   const tableRef = useRef(null);
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
 
   useLayoutEffect(() => {
     if (typeof selectAllItems === 'function') {
@@ -326,6 +331,7 @@ export default function DataTable({
                 totalCustomColumns={totalCustomColumns}
                 editRow={editRow}
                 removeRow={removeRow}
+                duplicateRow={duplicateRow}
                 multiselect={multiselect}
                 hoverActions={hoverActions}
                 hoverable={hoverable}
@@ -431,6 +437,11 @@ export default function DataTable({
       <div className={classNames(styles.overlay, { [styles.overlayActive]: loading })}>
         <CircularProgress classes={{ colorPrimary: classes.colorPrimary }} />
       </div>
+      <ReactTooltip
+        id='cell_description'
+        className={styles.tooltip}
+        effect='solid'
+      />
     </div>
   );
 }

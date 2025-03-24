@@ -1084,5 +1084,10 @@
         "Create New Policy": "Sukurti Naują Politiką",
         "Policy name": "Politikos pavadinimas",
         "Enter policy name": "Įveskite politikos pavadinimą",
-        "Policy type": "Politikos tipas"
+        "Policy type": "Politikos tipas",
+
+        "Policy": "Politiką",
+        "Name for duplicate": "Dublikuoti politikos pavadinimas",
+        "Enter new name": "Įveskite naują pavadinimą",
+        "Duplicate employee assignation": "Dubliukuoti priskirtus darbuotojus"
 }

@@ -25,14 +25,15 @@ import {
   createPolicy,
   deletePolicy,
   updatePolicy,
+  duplicatePolicy,
   getPolicies,
   getAccountGroups,
   loadEmployeesAll,
   loadPermissions,
-  updateRole,
 } from '../../../store/settings/actions';
 import AddEditTimeOff from '../../Core/Dialog/AddEditTimeOff';
 import AddEditPolicy from '../../Core/Dialog/AddEditPolicy';
+import DuplicatePolicy from '../../Core/Dialog/DuplicatePolicy';
 import usePermissions from '../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
@@ -73,12 +74,9 @@ export default () => {
   const [activeTimeOff, setActiveTimeOff] = useState({});
   const [newTimeOffOpen, setNewTimeOffOpen] = useState(false);
   const [newPolicyOpen, setNewPolicyOpen] = useState(false);
+  const [duplicatePolicyOpen, setDuplicatePolicyOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-
-  const removeRolesPermissions = (data = []) => {
-    // eslint-disable-next-line no-shadow
-    dispatch(updateRole(id, activeTimeOff.id, { permissions: data.map((id) => ({ id, access: 0 })) }));
-  };
+  const [activePolicy, setActivePolicy] = useState(null);
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
@@ -124,6 +122,31 @@ export default () => {
     setNewPolicyOpen(false);
   }
 
+  const editPolicy = (data) => {
+    dispatch(updatePolicy(id, activeTimeOff.id, activePolicy.id, data));
+    setNewPolicyOpen(false);
+  };
+
+  const removePolicy = (policyId) => {
+    dispatch(deletePolicy(id, policyId, activeTimeOff.id));
+  };
+
+  const handleEditPolicy = (policyId) => {
+    setActivePolicy(policies.find(({id}) => id === policyId));
+    setNewPolicyOpen(true);
+  };
+
+  const handleDuplicatePolicy = (policyId) => {
+    setActivePolicy(policies.find(({id}) => id === policyId));
+    setDuplicatePolicyOpen(true);
+  };
+
+  const onDuplicatePolicy = (data) => {
+    dispatch(duplicatePolicy(id, activeTimeOff.id, activePolicy.id, data));
+    setActivePolicy(null);
+    setDuplicatePolicyOpen(false);
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -141,13 +164,15 @@ export default () => {
                   activeTimeOff={activeTimeOff}
                   setActiveTimeOff={setActiveTimeOff}
                   createNewTimeOff={() => setNewTimeOffOpen(true)}
-                  createNewPolicy={() => setNewPolicyOpen(true)}
+                  createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
                   remove={removeTimeOff}
                   loading={loading}
                   policies={policies}
                   setEditVisible={setEditVisible}
-                  removeRolesPermissions={removeRolesPermissions}
                   user={user}
+                  onEditPolicy={handleEditPolicy}
+                  onDeletePolicy={removePolicy}
+                  onDuplicatePolicy={handleDuplicatePolicy}
                 />
               )
           }
@@ -190,10 +215,19 @@ export default () => {
             handleClose={() => {
               setNewPolicyOpen(false);
             }}
-            initialValue={{type: activeTimeOff?.name}}
-            title={t('Create New Policy')}
-            onSubmit={createNewPolicy}
-            buttonTitle={t('Submit')}
+            initialValue={{ ...(activePolicy || {}), type: activeTimeOff?.name }}
+            title={activePolicy ? `${t('Edit')} ${activePolicy.name} ${t('Policy')}` : t('Create New Policy')}
+            onSubmit={activePolicy ? editPolicy : createNewPolicy}
+            buttonTitle={activePolicy ? t('Save Changes') : t('Submit')}
+          />
+          <DuplicatePolicy
+            open={duplicatePolicyOpen}
+            handleClose={() => {
+              setDuplicatePolicyOpen(false);
+            }}
+            title={`${t('Duplicate')} ${activePolicy?.name} ${t('Policy')}`}
+            onSubmit={onDuplicatePolicy}
+            buttonTitle={t('Duplicate')}
           />
         </PageLayout>
       </Dashboard>

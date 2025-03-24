@@ -150,6 +150,9 @@ import {
   UPDATE_POLICY,
   UPDATE_POLICY_SUCCESS,
   UPDATE_POLICY_ERROR,
+  DUPLICATE_POLICY,
+  DUPLICATE_POLICY_SUCCESS,
+  DUPLICATE_POLICY_ERROR,
   LOAD_PERMISSIONS,
   LOAD_PERMISSIONS_SUCCESS,
   LOAD_PERMISSIONS_ERROR,
@@ -1047,10 +1050,11 @@ export const createPolicyError = (data) => ({
   data,
 });
 
-export const deletePolicy = (companyId, policyId) => ({
+export const deletePolicy = (companyId, policyId, timeOffId) => ({
   type: DELETE_POLICY,
   companyId,
   policyId,
+  timeOffId,
 });
 
 export const deletePolicySuccess = (data) => ({
@@ -1063,9 +1067,10 @@ export const deletePolicyError = (data) => ({
   data,
 });
 
-export const updatePolicy = (companyId, policyId, data) => ({
+export const updatePolicy = (companyId, timeOffId, policyId, data) => ({
   type: UPDATE_POLICY,
   companyId,
+  timeOffId,
   policyId,
   data,
 });
@@ -1077,6 +1082,24 @@ export const updatePolicySuccess = (data) => ({
 
 export const updatePolicyError = (data) => ({
   type: UPDATE_POLICY_ERROR,
+  data,
+});
+
+export const duplicatePolicy = (companyId, timeOffId, policyId, data) => ({
+  type: DUPLICATE_POLICY,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const duplicatePolicySuccess = (data) => ({
+  type: DUPLICATE_POLICY_SUCCESS,
+  data,
+});
+
+export const duplicatePolicyError = (data) => ({
+  type: DUPLICATE_POLICY_ERROR,
   data,
 });
 
