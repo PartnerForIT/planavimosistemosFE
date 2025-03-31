@@ -17,6 +17,7 @@ import TitleBlock from '../../../Core/TitleBlock';
 import Dashboard from '../../../Core/Dashboard';
 import GenerateNewPin from '../../../Core/Dialog/GenerateNewPin';
 import EditPinCode from '../../../Core/Dialog/EditPinCode';
+import EditRFID from '../../../Core/Dialog/EditRFID';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import Kiosk2Icon from '../../../Icons/Kiosk2';
 import Filter from './Filter';
@@ -34,11 +35,13 @@ import {
   patchUpdatePinCode,
   patchUpdatePinCodes,
   getPinCodeGenerate,
+  patchUpdateRFID,
 } from '../../../../store/kiosks/actions';
 import styles from './KioskUsers.module.scss';
 
 const columnsWidthArray = {
   is_kiosk: 150,
+  rfid: 100,
   pin_code: 100,
   name: 140,
   place: 150,
@@ -77,6 +80,7 @@ export default () => {
 
   const [selectedItemId, setSelectedItemId] = useState('');
   const [viewPinVisible, setViewPinVisible] = useState(false);
+  const [viewRFIDVisible, setViewRFIDVisible] = useState(false);
   const [generatePinVisible, setGeneratePinVisible] = useState(false);
   const [all, setAll] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -100,6 +104,23 @@ export default () => {
           <span className={`${styles.isKiosk} ${isKiosk ? styles.isKiosk_true : styles.isKiosk_false}`}>
             {isKiosk ? 'Yes' : 'No'}
           </span>
+        ),
+      },
+      {
+        label: 'RFID number',
+        field: 'rfid',
+        checked: true,
+        cellRenderer: ({ id, is_kiosk: isKiosk }) => (
+          <button
+            disabled={!isKiosk}
+            className={styles.viewPin}
+            onClick={() => {
+              setSelectedItemId(id);
+              setViewRFIDVisible(true);
+            }}
+          >
+            View
+          </button>
         ),
       },
       {
@@ -294,6 +315,13 @@ export default () => {
     setViewPinVisible(false);
     setSelectedItemId('');
   };
+  const handleSetNewRFID = (values) => {
+    dispatch(patchUpdateRFID(companyId, selectedItemId, {
+      rfid: values.rfid,
+    }));
+    setViewRFIDVisible(false);
+    setSelectedItemId('');
+  };
   const handleGenerateNewPin = () => {
     dispatch(getPinCodeGenerate(companyId));
   };
@@ -369,11 +397,18 @@ export default () => {
             open={viewPinVisible}
             handleClose={() => setViewPinVisible(false)}
             currentPinCode={selectedItem.pin_code}
-            title={`${selectedItem.name} PIN`}
+            title={`${selectedItem.name} ${selectedItem.surname} PIN`}
             loading={pinCodeGenerateLoading}
             generatedPinCode={pinCode}
             generatePinCode={handleGenerateNewPin}
             onSubmit={handleSetNewPinCode}
+          />
+          <EditRFID
+            open={viewRFIDVisible}
+            handleClose={() => setViewRFIDVisible(false)}
+            currentRFID={selectedItem.rfid}
+            title={`${selectedItem.name} ${selectedItem.surname} ${t('RFID number')}`}
+            onSubmit={handleSetNewRFID}
           />
           <GenerateNewPin
             handleClose={() => setGeneratePinVisible(false)}

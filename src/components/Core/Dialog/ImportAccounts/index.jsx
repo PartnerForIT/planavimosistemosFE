@@ -88,6 +88,11 @@ const columns = [
     field: 'kiosk',
     checked: true,
   },
+  {
+    label: 'RFID',
+    field: 'rfid',
+    checked: true,
+  },
 ];
 
 const columnsWidth = {
@@ -103,9 +108,10 @@ const columnsWidth = {
   subgroup: 150,
   cost: 80,
   kiosk: 80,
+  rfid: 150,
 };
 const order = [
-  'status', 'name', 'surname', 'external_id', 'em_status', 'role', 'email', 'skill', 'group', 'subgroup', 'place', 'cost', 'kiosk',
+  'status', 'name', 'surname', 'external_id', 'em_status', 'role', 'email', 'skill', 'group', 'subgroup', 'place', 'cost', 'kiosk', 'rfid',
 ];
 
 const useStyles = makeStyles(() => ({
@@ -470,13 +476,13 @@ export default function ImportAccounts({
         <div className={style.formControl}>
           <Label text={t('Example of CSV file contents')} />
           <div className={classes.textarea} style={{ backgroundColor }}>
-            <p>{`${t('status')};${t('name')};${t('surname')};${t('external_id')};${t('employment_status')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};${t('cost')};${t('kiosk')};`}</p>
+            <p>{`${t('status')};${t('name')};${t('surname')};${t('external_id')};${t('employment_status')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};${t('cost')};${t('kiosk')};${t('rfid')};`}</p>
             <span>
               {t('EXAMPLE')}
               {':'}
             </span>
             {' '}
-            {`${t('active')};John;Doe;${t('123456')};${t('0.5')};${t('manager')};example@email.com;${t('test') + t('skill')};${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};${t('11,4')};${t('yes')};`}
+            {`${t('active')};John;Doe;${t('123456')};${t('0.5')};${t('manager')};example@email.com;${t('test') + t('skill')};${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};${t('11,4')};${t('yes')};${t('rfidvalue')};`}
           </div>
         </div>
 

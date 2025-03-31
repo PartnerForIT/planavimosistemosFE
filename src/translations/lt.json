@@ -1089,5 +1089,9 @@
         "Policy": "Politiką",
         "Name for duplicate": "Dublikuoti politikos pavadinimas",
         "Enter new name": "Įveskite naują pavadinimą",
-        "Duplicate employee assignation": "Dubliukuoti priskirtus darbuotojus"
+        "Duplicate employee assignation": "Dubliukuoti priskirtus darbuotojus",
+
+        "RFID number": "RFID numeris",
+        "Current RFID number": "Esamas RFID numeris",
+        "Change RFID number": "Pakeisti RFID numerį"
 }

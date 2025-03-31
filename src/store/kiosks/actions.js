@@ -27,6 +27,9 @@ import {
   PATCH_UPDATE_STATUS,
   PATCH_UPDATE_STATUS_SUCCESS,
   PATCH_UPDATE_STATUS_ERROR,
+  PATCH_UPDATE_RFID,
+  PATCH_UPDATE_RFID_SUCCESS,
+  PATCH_UPDATE_RFID_ERROR,
   PATCH_UPDATE_PIN_CODE,
   PATCH_UPDATE_PIN_CODE_SUCCESS,
   PATCH_UPDATE_PIN_CODE_ERROR,
@@ -157,6 +160,22 @@ export const patchUpdateStatusSuccess = (data) => ({
 });
 export const patchUpdateStatusError = (data) => ({
   type: PATCH_UPDATE_STATUS_ERROR,
+  data,
+});
+
+export const patchUpdateRFID = (companyId, employeeId, data) => ({
+  type: PATCH_UPDATE_RFID,
+  companyId,
+  employeeId,
+  data,
+});
+export const patchUpdateRFIDSuccess = (employeeId, data) => ({
+  type: PATCH_UPDATE_RFID_SUCCESS,
+  employeeId,
+  data,
+});
+export const patchUpdateRFIDError = (data) => ({
+  type: PATCH_UPDATE_RFID_ERROR,
   data,
 });
 

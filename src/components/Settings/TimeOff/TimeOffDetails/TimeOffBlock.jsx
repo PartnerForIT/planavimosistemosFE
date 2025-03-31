@@ -11,6 +11,7 @@ import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
 function TimeOffBlock({
   time_offs = [],
   activeTimeOff = {},
+  activePolicy = {},
   setActiveTimeOff = Function.prototype,
   createNewTimeOff = Function.prototype,
   createNewPolicy = Function.prototype,
@@ -68,6 +69,11 @@ function TimeOffBlock({
                     onDeletePolicy={setRemovePolicyVisible}
                     onDuplicatePolicy={onDuplicatePolicy}
                   />
+                )
+              }
+              {
+                activePolicy?.time_off_id === time_off.id && (
+                  test
                 )
               }
             </React.Fragment>

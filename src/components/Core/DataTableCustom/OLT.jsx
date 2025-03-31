@@ -296,7 +296,7 @@ export default function DataTable({
                           && fieldIcons[column.field].map((icon) => icon.icon)
                         }
                       </div>
-                      { (onSearch && !column.disable_search && column.field !== 'status' && column.field !== 'is_kiosk' && column.field !== 'pin_code') &&
+                      { (onSearch && !column.disable_search && column.field !== 'status' && column.field !== 'is_kiosk' && column.field !== 'pin_code' && column.field !== 'rfid') &&
                         <div className={styles.headerSearch}>
                           <RowSearch
                             handleInputChange={(e) => { onSearch(column.field, e.target.value) }}

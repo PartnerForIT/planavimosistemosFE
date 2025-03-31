@@ -162,6 +162,7 @@ export default () => {
                 <TimeOffBlock
                   time_offs={time_offs}
                   activeTimeOff={activeTimeOff}
+                  activePolicy={activePolicy}
                   setActiveTimeOff={setActiveTimeOff}
                   createNewTimeOff={() => setNewTimeOffOpen(true)}
                   createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }

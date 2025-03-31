@@ -109,6 +109,7 @@ function TimeOffDetails({
             removeRow={onDeletePolicy}
             duplicateRow={onDuplicatePolicy}
           />
+
         )
       }
     </div>

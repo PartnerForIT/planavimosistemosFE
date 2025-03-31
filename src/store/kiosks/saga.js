@@ -17,6 +17,7 @@ import {
   POST_SETTINGS_PHOTO_TAKE,
   GET_KIOSKS_USERS,
   PATCH_UPDATE_STATUS,
+  PATCH_UPDATE_RFID,
   PATCH_UPDATE_PIN_CODE,
   PATCH_UPDATE_PIN_CODES,
   GET_PIN_CODE_GENERATE,
@@ -40,10 +41,13 @@ import {
   getSettingsPhotoTakeError,
   postSettingsPhotoTakeSuccess,
   postSettingsPhotoTakeError,
+  getKiosksUsers as getKiosksUsersAction,
   getKiosksUsersSuccess,
   getKiosksUsersError,
   patchUpdateStatusSuccess,
   patchUpdateStatusError,
+  patchUpdateRFIDSuccess,
+  patchUpdateRFIDError,
   patchUpdatePinCodeSuccess,
   patchUpdatePinCodeError,
   patchUpdatePinCodesSuccess,
@@ -211,6 +215,24 @@ function* patchUpdateStatus(action) {
     yield put(dismissSnackbar());
   }
 }
+function* patchUpdateRFID(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/kiosk/user/${action.employeeId}/update-rfid`,
+      action.data,
+      getToken(),
+    );
+    yield put(patchUpdateRFIDSuccess(action.employeeId, action.data));
+    yield put(getKiosksUsersAction(action.companyId, action.isKiosk));
+
+  } catch (e) {
+    yield put(patchUpdateRFIDError());
+    yield put(addSnackbar('RFID already exist', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
 
 function* patchUpdatePinCode(action) {
   try {
@@ -271,6 +293,7 @@ export default function* KiosksWatcher() {
   yield takeLatest(POST_SETTINGS_PHOTO_TAKE, postSettingsPhotoTake);
   yield takeLatest(GET_KIOSKS_USERS, getKiosksUsers);
   yield takeLatest(PATCH_UPDATE_STATUS, patchUpdateStatus);
+  yield takeLatest(PATCH_UPDATE_RFID, patchUpdateRFID);
   yield takeLatest(PATCH_UPDATE_PIN_CODE, patchUpdatePinCode);
   yield takeLatest(PATCH_UPDATE_PIN_CODES, patchUpdatePinCodes);
   yield takeLatest(POST_KIOSK_CHANGE_PASSWORD, postKioskChangePassword);
