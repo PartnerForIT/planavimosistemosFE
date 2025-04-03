@@ -52,7 +52,7 @@ function TimeOffBlock({
                 onClickAddPolicy={createNewPolicy}
                 onClickRemove={setRemoveVisible}
                 name={time_off.name}
-                userCount={123}
+                userCount={time_off?.count_users || 0}
                 policiesCount={time_off.count_policies}
                 selected={time_off.id === activeTimeOff.id}
                 canDelete={true}

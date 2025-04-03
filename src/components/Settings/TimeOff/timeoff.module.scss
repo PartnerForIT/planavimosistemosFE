@@ -102,10 +102,12 @@ $arrow-size: 21px;
 
   &_row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 10px;
     gap: 10px;
+    margin-right: 1px;
 
+    &Last,
     &:last-child {
       margin-bottom: 0;
     }
@@ -116,8 +118,79 @@ $arrow-size: 21px;
   }
 }
 
+.symbolBlock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.symbol {
+  width: 43px !important;
+  height: 43px !important;
+  fill: none !important;
+  cursor: pointer;
+
+  &:hover path {
+    stroke: #0085FF !important;
+  }
+
+  &.active path {
+    stroke: #0085FF !important;
+  }
+}
+
+.simpleBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+} 
+
+.removeBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-top: 25px;
+}
+
+.iconButtonRow {
+  max-width: 18px;
+  max-height: 18px;
+}
+
 .labelBlock {
   display: flex;
+}
+
+.formCalcValue {
+  min-width: 32px;
+  width: auto !important;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  background: #D9D9D9;
+  margin-top: 25px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px;
+}
+
+.formControlSwhitchLine {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .tooltipBlock {
+    margin-bottom: 0;
+  }
 }
 
 .tooltipBlock {
@@ -163,6 +236,21 @@ $arrow-size: 21px;
   &::placeholder {
     color: #b9b9b9;
   }
+}
+
+.addBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid #0085FF;
+  width: 100%;
+  color: #0085FF;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .checklist {
