@@ -106,54 +106,58 @@ export default function Form({
                 />
               </div>
             </div>
-            <div className={style.generalBlock8}>
-              <div className={style.labelText3}>{t(`Set the ping time in minutes`)}</div>
-              <Input
-                value={ClockData.ping_time}
-                min='1'
-                width={80}
-                name='ping_time'
-                onChange={handleInputChange}
-              />
-              <div className={style.labelText2}></div>
-              <Tooltip
-                title={t("This is the time which can influence the battery drain of the mobile device. The time set controls how frequent our Grownu servers checks on the mobile device if he is still in the geolocation of the place.")}
-              />
-            </div>
-            <div className={style.generalBlock8}>
-              <div className={style.labelText3}>{t(`Set the waiting time in minutes`)}</div>
-              <Input
-                value={ClockData.waiting_time}
-                min='1'
-                width={80}
-                name='waiting_time'
-                onChange={handleInputChange}
-              />
-              <div className={style.labelText2}></div>
-              <Tooltip
-                title={t("This is the time how much the Grownu server is waiting for the mobile app to send the answer that the check up of the user in the geolocation of the place was successful. If during this time server will not get any response from the mobile device, it will be considered that this session will be stopped.")}
-              />
-            </div>
-            <div className={style.generalBlock9}>
-              <Switch
-                onChange={() => handleChangeCalculation('geolocation_push_notification')}
-                offColor='#808F94'
-                onColor='#0085FF'
-                uncheckedIcon={false}
-                checkedIcon={false}
-                name='geolocation_push_notification'
-                checked={!!ClockData.geolocation_push_notification}
-                height={21}
-                width={40}
-              />
-              <Label text={t('Use push notification to inform employee geolocation leave ')} />
-              <div className={style.tooltipBlock}>
-                <Tooltip title={
-                  t('If enabled, users with the `Roles → Notifications/Geo Leave` permission will receive a push notification about the employee. If a manager is part of a group, they will only receive notifications for users within the same group.')
-                }
+            { ClockData.geolocation_restriction_leave ? (
+              <>
+              <div className={style.generalBlock8}>
+                <div className={style.labelText3}>{t(`Set the ping time in minutes`)}</div>
+                <Input
+                  value={ClockData.ping_time}
+                  min='1'
+                  width={80}
+                  name='ping_time'
+                  onChange={handleInputChange}
+                />
+                <div className={style.labelText2}></div>
+                <Tooltip
+                  title={t("This is the time which can influence the battery drain of the mobile device. The time set controls how frequent our Grownu servers checks on the mobile device if he is still in the geolocation of the place.")}
                 />
               </div>
-            </div>
+              <div className={style.generalBlock8}>
+                <div className={style.labelText3}>{t(`Set the waiting time in minutes`)}</div>
+                <Input
+                  value={ClockData.waiting_time}
+                  min='1'
+                  width={80}
+                  name='waiting_time'
+                  onChange={handleInputChange}
+                />
+                <div className={style.labelText2}></div>
+                <Tooltip
+                  title={t("This is the time how much the Grownu server is waiting for the mobile app to send the answer that the check up of the user in the geolocation of the place was successful. If during this time server will not get any response from the mobile device, it will be considered that this session will be stopped.")}
+                />
+              </div>
+              <div className={style.generalBlock9}>
+                <Switch
+                  onChange={() => handleChangeCalculation('geolocation_push_notification')}
+                  offColor='#808F94'
+                  onColor='#0085FF'
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  name='geolocation_push_notification'
+                  checked={!!ClockData.geolocation_push_notification}
+                  height={21}
+                  width={40}
+                />
+                <Label text={t('Use push notification to inform employee geolocation leave ')} />
+                <div className={style.tooltipBlock}>
+                  <Tooltip title={
+                    t('If enabled, users with the `Roles → Notifications/Geo Leave` permission will receive a push notification about the employee. If a manager is part of a group, they will only receive notifications for users within the same group.')
+                  }
+                  />
+                </div>
+              </div>
+            </>
+            ) : null}
           </>
         ) : null
         }
