@@ -30,7 +30,7 @@ const columnsWidthInitial = {};
 export default function DataTable({
   data, columns, selectable, sortable, onSelect, onSort, fieldIcons, onColumnsChange, totalDuration, loading,
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
-  footerButton, minHeight,
+  footerButton, minHeight, tallRows,
   downloadExcel, downloadPdf, verticalOffset = '0px',
   columnsWidth = columnsWidthInitial, simpleTable, editRow = () => ({}),
   duplicateRow, removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
@@ -317,6 +317,7 @@ export default function DataTable({
                 index={idx}
                 key={idx.toString()}
                 row={row}
+                tallRows={tallRows}
                 selectedItem={selectedItem}
                 setSelectedItem={setSelectedItem}
                 columns={visibleColumns}

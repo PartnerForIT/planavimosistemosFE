@@ -133,6 +133,14 @@ header {
   min-width: 100%;
   position: relative;
 
+  &.flexTableTall {
+    padding: 0;
+
+    .rowWrapper {
+      padding: 0 10px;
+    }
+  }
+
   &.header {
     padding-left: 15px;
     padding-right: 25px;
@@ -420,6 +428,10 @@ header {
   }
 }
 
+.flexRowGroupTall {
+  padding: 16px 8px;
+}
+
 .IconStatus {
   display: block;
   position: absolute;
@@ -511,6 +523,15 @@ header {
   font-family: "Helvetica Neue Medium", sans-serif;
   font-size: 14px;
   font-weight: 500;
+}
+
+
+.notActiveRow {
+  background-color: #E9E9E9;
+
+  &:last-of-type {
+    border-radius: 0 0 12px 12px;
+  }
 }
 
 .approvedIconSelected {

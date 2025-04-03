@@ -1093,5 +1093,111 @@
 
         "RFID number": "RFID numeris",
         "Current RFID number": "Esamas RFID numeris",
-        "Change RFID number": "Pakeisti RFID numerį"
+        "Change RFID number": "Pakeisti RFID numerį",
+
+
+        "Enable the approval flow if you want the request from this policy to be approved by the first and second level approvers (if appointed in the account list) before processing further.": "Įjunkite patvirtinimo srautą, jei norite, kad šioje politikoje pateiktas prašymas būtų patvirtintas pirmo ir antro lygio patvirtintojų (jei jie paskirti paskyros sąraše) prieš tęsiant tolesnį apdorojimą.",
+        "Set default for new accounts": "Priskirti prie numatytųjų",
+
+        "Make the policy private": "Nustatyti privačia politico",
+        "Make this policy private, and then other employees will not be able to see those employees who are using it.": "Padarykite šią politiką privačia, tada kiti darbuotojai nematys tų darbuotojų, kurie ją naudoja.",
+        "Choose allowance type": "Pasirinkite priemokos tipą",
+        "Earned allowance": "Kaupiamasis",
+        "Unlimited allowance": "Neribotas",
+        "Annual grant": "Skirta kalendoriniams metams",
+
+        "Allowance types:": "Priemokų tipai:",
+        "Earned allowance - time off that is accumulated based on the hours or days worked. This allowance is typically granted gradually over time as the employee works, such as paid vacation or sick leave.": "Uždirbtos priemokos - poilsio laikas, kaupiamas pagal darbuotojo dirbtas valandas arba dienas. Ši priemoka paprastai suteikiama palaipsniui, priklausomai nuo atlikto darbo laiko, pavyzdžiui, apmokamos atostogos arba ligos atostogos.",
+        "Unlimited allowance - there is no fixed limit to the amount of time off the employee can take. The allowance is flexible and can be taken as needed, without being restricted by a specific number of days or hours.": "Neribota priemoka - priemoka, kurios kiekis nėra ribojamas. Darbuotojas gali imti tiek poilsio laiko, kiek jam reikia, be griežto dienų ar valandų limito.",
+        "Annual grant - A fixed amount of time off (in hours or days) that is granted to the employee on a yearly basis, often for vacation or other types of leave. This allowance resets annually.": "Metinė išmoka - nustatytas poilsio laiko kiekis (valandomis arba dienomis), suteikiamas darbuotojui kasmet, dažniausiai atostogoms arba kitoms poilsio rūšims. Ši priemoka atnaujinama kasmet.",
+
+        "Allowance calculation period": "Pasirinkite priemokos tipą",
+        "Annual allowance": "Metinis",
+        "Monthly allowance": "Mėnesinis",
+        "Weekly allowance": "Savaitinis",
+
+        "Allowance calculation period:": "Priemokos apskaičiavimo laikotarpiai:",
+        "Annual allowance - The total allowance is granted for the entire year at once. Employees receive a fixed amount of time off (in hours or days) for the year, which may be used at any time within that period.": "Metinė priemoka - viso metų laikotarpio priemoka suteikiama iš karto. Darbuotojai gauna nustatytą valandų ar dienų skaičių metams ir gali juo naudotis bet kuriuo metu per šį laikotarpį.",
+        "Monthly allowance - The allowance is distributed on a monthly basis. Employees receive a set number of hours or days each month, rather than receiving the full allowance upfront for the year.": "Mėnesinė priemoka - priemoka paskirstoma kas mėnesį. Darbuotojai kiekvieną mėnesį gauna nustatytą valandų ar dienų skaičių, o ne visą sumą iš karto už metus.",
+        "Weekly allowance - The allowance is calculated and allocated weekly. Employees get a specific amount of time off per week, ensuring a steady and short-term distribution of available leave.": "Savaitinė priemoka - Priemoka apskaičiuojama ir suteikiama kas savaitę. Darbuotojai kas savaitę gauna tam tikrą poilsio laiko kiekį, taip užtikrinant tolygų ir trumpalaikį paskirstymą.",
+
+        "Allowance amount": "Priemokos suma",
+        "Entry field: Enter allowance amount": "Įveskite kiekį",
+
+        "Proration type": "Proporcingas paskirstymas",
+        "Prorate by Calendar days": "Pagal Kalendorines dienas",
+        "Do not prorate": "Neperskirstyti",
+
+        "Proration type:": "Proporcingo paskirstymo tipas:",
+        "Prorate by calendar days - the allowance is calculated proportionally based on the number of calendar days in a given period. This ensures that employees receive an adjusted amount of leave depending on their start date.": "Paskirstyti pagal kalendorines dienas – priemoka apskaičiuojama proporcingai pagal kalendorinių dienų skaičių tam tikru laikotarpiu. Tai užtikrina, kad darbuotojai gautų koreguotą atostogų kiekį, priklausomai nuo jų įsidarbinimo datos.",
+        "Do not prorate - the full allowance is granted regardless of when the employee joined company and system. No proportional adjustments are made based on calendar days.": "Nepaskirstyti proporcingai – visa priemoka suteikiama nepriklausomai nuo to, kada darbuotojas prisijungė prie įmonės ir sistemos.  Proporcingi koregavimai pagal kalendorines dienas nėra atliekami.",
+
+        "Carryover type": "Perkelimas į kitą periodą",
+        "Yes, allow": "Taip, leisti",
+        "No, do not allow": "Ne, neleisti",
+
+        "Carryover type:": "Perkėlimo tipas:",
+        "Yes, allow - Unused balance may be carried over to the next period. Please enter the amount in the next field, what is the maximum limit for carryover.": "Taip, leisti – nepanaudotas likutis gali būti perkeltas į kitą laikotarpį. Šalia esančiame lauke įveskite maksimalų galimą skaičių nepanaudoto kiekio perkelimui į sekantį periodą.",
+        "No, do not allow - Unused balance will not be carried over to the next period.": "Ne, neleisti – nepanaudotas likutis nėra perkeliamas į kitą laikotarpį.",
+
+        "Carryover amount": "Perkelimo kiekis",
+        "Enter maximum amount": "Įveskite maksimalų kiekį",
+
+        "Use carryover expiration period": "Perkeltų likučių galiojimo laikas",
+        "Choose the period": "Pasirinkti periodą",
+
+        "1 month": "1 mėnesis",
+        "2 months": "2 mėnesiai",
+        "3 months": "3 mėnesiai",
+        "4 months": "4 mėnesiai",
+        "5 months": "5 mėnesiai",
+        "6 months": "6 mėnesiai",
+        "12 months": "12 mėnesių",
+        "24 months": "24 mėnesiai",
+
+        "Use carryover expiration period:": "Perkeltų likučių galiojimo laikas:",
+        "Enable this option to set an expiration period for carried-over balances. Select the desired period from the dropdown to define how long unused time off remains valid before expiring.": "Įjunkite šią parinktį, kad nustatytumėte perkeltų likučių galiojimo laikotarpį. Pasirinkite norimą laikotarpį iš išskleidžiamojo meniu, kad nustatytumėte, kiek laiko nepanaudotas poilsio laikas išliks galiojantis prieš pasibaigiant.",
+
+        "Use maximum balance capacity": "Įjungti maksimalų balansą",
+        "Maximum balance": "Maksimalus galimas balansas",
+        "Enter maximum balance": "Įveskite maksimalų kiekį",
+
+        "Use maximum balance capacity:": "Naudoti maksimalaus balanso funkcionalumą:",
+        "Enable this option to set a maximum limit on the total balance an employee can accumulate under this policy. If the balance reaches this limit, no additional time off will be accrued until some is used.": "Įjunkite šią parinktį, kad nustatytumėte didžiausią leistiną likutį pagal šią politiką. Jei likutis pasiekia nustatytą ribą, papildomas poilsio laikas nebus kaupiamas, kol dalis jo nebus panaudota.",
+
+        "Allow negative balance": "Leisti neigiamą balansą",
+        "Maximum negative balance": "Maksimalus neigiamas balansas",
+        "Enter negative balance": "Įvesti neigiamą reikšmę",
+
+        "Maximum negative balance:": "Leisti neigiamą balansą:",
+        "Enable this option to allow employees to have a negative balance in their policy. This means employees can take time off even if they have no remaining balance, but the excess will be deducted from future accruals.": "Įjunkite šią parinktį, kad leistumėte darbuotojams turėti neigiamą likutį pagal šią politiką. Tai reiškia, kad darbuotojai gali imti poilsio laiką, net jei jų likutis yra nulis, tačiau perteklius bus atimtas iš būsimų kaupimų.",
+
+        "Add extra amount based on years of service": "Pridėti papildomą kiekį pagal išdirbtus metus",
+        "Number of years at work": "Metai išdirbti darbe",
+        "Enter years of work": "Įveskite darbo metus",
+        "Extra amount": "Papildomas kiekis",
+        "Enter extra amount": "Įveskite papildomą kiekį",
+
+        "Numbers of years at work:": "Pridėti papildomą kiekį pagal išdirbtus metus:",
+        "An additional amount or benefit granted to an employee based on the number of years they have worked at the company. This could include bonuses, allowances, or other forms of compensation that increase with the employee's tenure.": "Papildoma suma arba nauda, suteikiama darbuotojui pagal jo darbo įmonėje metų skaičių. Tai gali būti premijos, priemokos arba kitos kompensacijos formos, kurios didėja priklausomai nuo darbuotojo darbo stažo.",
+
+        "Mark in Time Sheet Excel": "Žymėti Tabelio modulyje",
+        "Enter value": "Įveskite reikšmę",
+
+        "Mark in Time Sheet Excel:": "Žymėti Tabelio modulyje:",
+        "This value will be shown on those days in the Time Sheet module when it was taken. Also exported to the Excel file or to any other format which your organization is using and was set up initially.": "Šita reikšmė bus atvaizduota tabelio modulyje panaudotose dienose. Taip pat eksportuojant Excel formatą arba Jūsų organizacijos pritaikytą formatą (jeigu tai jau yra įdiegta pas Jus).",
+
+        "Mark in Schedule and Time Sheet module": "Žymos Kalendoriuje bei Tabelio modulyje",
+        "Choose the symbol": "Pasirinkite simbolį",
+        "Choose the colour": "Pasirinkite spalvą",
+        "Bright": "Ryškus",
+        "Calm": "Ramus",
+
+        "Mark in Shedule and Time Sheet module:": "Žymos Kalendoriuje bei Tabelio modulyje:",
+        "Mark with symbol on those days in the schedule and with colour option for better and fast identification of what policy is used by the employee. The same logic is for the Time Sheet module, in order to show the symbol and colour for better and faster identification of used policy inside the Time Sheet module.": "Žymėti šią politiką pasirinktu simboliu bei pasirinkta spalva kalendoriaus modulyje leis greičiau identifikuoti kokia politika buvo panaudota atitinkamo darbuotojo. Taip pat ir tabelio modulyje bus naudojamas simbolis ir spalva, greitam ir patogiam panaudotos politikos identifikavimui.",
+
+        "Prorate based on the employement status": "Paskirstyti proporcingai pagal etatą",
+        "Prorate based on the employement status:": "Paskirstyti proporcingai pagal darbo vietos etatą:",
+        "Adjust the allowance proportionally based on the employee's employment status. The employment status is represented as a value between 0.01 and 1.5, where 1.0 corresponds to a full-time workload (e.g., 40 hours per week). Employees with lower or higher status values will have their allowance adjusted accordingly.": "Paskirstykite priemoką proporcingai pagal darbuotojo etatą. Darbo vietos etatas nurodomas skaičiumi nuo 0,01 iki 1,5, kur 1,0 atitinka pilną darbo krūvį (pvz., 40 valandų per savaitę). Tai atliekama paskyrų sąraše kiekvienai paskyrai individualiai. Darbuotojams, kurių etato vertė yra mažesnė arba didesnė, priemoka bus atitinkamai koreguojama."
+
 }

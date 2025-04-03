@@ -31,6 +31,140 @@ $arrow-size: 21px;
   }
 }
 
+.detailsPolicy {
+  position: relative;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  background-color: $beige-color;
+  min-height: 440px;
+  padding: $details-padding;
+  border-radius: $card-padding;
+  border: $edit-border;
+  display: grid;
+  grid-column-gap: $card-padding;
+  grid-template-columns: 1fr 1.5fr;
+  margin-top: 16px;
+
+  &_inner {
+    &_title {
+      margin-bottom: 7px;
+
+      & > span {
+        font-family: "Helvetica Neue Bold", sans-serif;
+        color: $gray;
+        margin-right: 15px;
+        font-size: 14px;
+        display: inline-block;
+      }
+
+      & > span > span {
+        margin-left: 15px;
+        display: inline-block;
+      }
+    }
+  }
+
+  .content {
+    background-color: white;
+    padding: $card-padding;
+    border-radius: $card-padding;
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: '';
+    width: $arrow-size;
+    height: $arrow-size;
+    transform: rotate(45deg) translateX(-50%);
+    transform-origin: center center;
+    display: block;
+    top: - $arrow-size * 1.5 - 7px;
+    margin-top: 38px;
+    left: 50%;
+    background-color: $beige-color;
+  }
+
+  &::before {
+    z-index: -1;
+    border: $edit-border;
+  }
+
+  &::after {
+    z-index: 1;
+    border-color: $beige-color;
+    border-radius: 34px 0;
+  }
+}
+
+.policyForm {
+
+  &_row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    > div {
+      width: 100%;
+    }
+  }
+}
+
+.labelBlock {
+  display: flex;
+}
+
+.tooltipBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+
+  label {
+    padding-bottom: 0;
+  }
+
+  .required {
+    margin-left: -5px;
+  }
+}
+
+.hr {
+  border: none;
+  height: 1px;
+  background-color: #CBD1D8;
+  margin: 20px 0;
+}
+
+.required {
+  color: $red;
+  margin-left: 5px;
+}
+
+.textarea {
+  resize: none;
+  border: 1px solid rgba(0, 133, 255, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  width: calc(100% + 4px);
+  margin: -10px -13px;
+  min-height: 60px;
+  background: white;
+  color: #333945;
+  font-family: Helvetica Neue, sans-serif;
+  font-size: 15px;
+
+  &::placeholder {
+    color: #b9b9b9;
+  }
+}
+
 .checklist {
   list-style: none;
   margin: 0;
@@ -117,6 +251,7 @@ $arrow-size: 21px;
     font-weight: 400;
     font-family: 'Helvetica Neue', sans-serif;
     height: 40px;
+    width: 100%;
     gap: 10px;
 
     &:hover {

@@ -23,6 +23,7 @@ import Kiosk2Icon from '../../../Icons/Kiosk2';
 import Filter from './Filter';
 import useCompanyInfo from '../../../../hooks/useCompanyInfo';
 import { isShowSnackbar, snackbarText, snackbarType } from '../../../../store/settings/selectors';
+import usePermissions from '../../../Core/usePermissions';
 import {
   kiosksUsersLoadingSelector,
   kiosksUsersSelector,
@@ -52,9 +53,18 @@ const columnsWidthArray = {
   subgroup: 150,
 };
 
+const permissionsConfig = [
+  {
+    name: 'use_rfid',
+    module: 'use_rfid',
+  },
+];
+
 export default () => {
   const { t } = useTranslation();
   const { id: companyId } = useParams();
+  const permissions = usePermissions(permissionsConfig);
+
   const dispatch = useDispatch();
   const useStyles = makeStyles(() => ({
     error: {
@@ -106,23 +116,27 @@ export default () => {
           </span>
         ),
       },
-      {
-        label: 'RFID number',
-        field: 'rfid',
-        checked: true,
-        cellRenderer: ({ id, is_kiosk: isKiosk }) => (
-          <button
-            disabled={!isKiosk}
-            className={styles.viewPin}
-            onClick={() => {
-              setSelectedItemId(id);
-              setViewRFIDVisible(true);
-            }}
-          >
-            View
-          </button>
-        ),
-      },
+      ...(
+        permissions.use_rfid 
+          ? [{
+              label: 'RFID number',
+              field: 'rfid',
+              checked: true,
+              cellRenderer: ({ id, is_kiosk: isKiosk }) => (
+                <button
+                  disabled={!isKiosk}
+                  className={styles.viewPin}
+                  onClick={() => {
+                    setSelectedItemId(id);
+                    setViewRFIDVisible(true);
+                  }}
+                >
+                  View
+                </button>
+              ),
+            }]
+          : []
+      ),
       {
         label: 'PIN',
         field: 'pin_code',
@@ -154,7 +168,7 @@ export default () => {
       }));
     }
     return nextColumns;
-  }, [columnsFiltered]);
+  }, [columnsFiltered, permissions]);
   const selectedItem = useMemo(() => {
     if (selectedItemId) {
       return kiosksUsers.employees.find((item) => item.id === selectedItemId) || {};

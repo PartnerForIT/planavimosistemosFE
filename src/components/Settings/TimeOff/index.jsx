@@ -34,7 +34,7 @@ import {
 import AddEditTimeOff from '../../Core/Dialog/AddEditTimeOff';
 import AddEditPolicy from '../../Core/Dialog/AddEditPolicy';
 import DuplicatePolicy from '../../Core/Dialog/DuplicatePolicy';
-import usePermissions from '../../Core/usePermissions';
+//import usePermissions from '../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -47,18 +47,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const permissionsConfig = [
-  {
-    name: 'reports',
-    module: 'reports',
-  },
-];
+// const permissionsConfig = [
+//   {
+//     name: 'reports',
+//     module: 'reports',
+//   },
+// ];
 export default () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const permissions = usePermissions(permissionsConfig);
+  //const permissions = usePermissions(permissionsConfig);
 
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -98,9 +98,11 @@ export default () => {
       // eslint-disable-next-line no-shadow
       const time_off = time_offs.find(({id}) => id === activeTimeOff.id);
       setActiveTimeOff(time_off);
+      setActivePolicy(null);
 
       dispatch(getPolicies(id, activeTimeOff.id));
     }
+    // eslint-disable-next-line
   }, [activeTimeOff, time_offs]);
 
   const createNewTimeOff = (data) => {
@@ -165,6 +167,7 @@ export default () => {
                   activePolicy={activePolicy}
                   setActiveTimeOff={setActiveTimeOff}
                   createNewTimeOff={() => setNewTimeOffOpen(true)}
+                  setActivePolicy={setActivePolicy}
                   createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
                   remove={removeTimeOff}
                   loading={loading}
@@ -174,6 +177,8 @@ export default () => {
                   onEditPolicy={handleEditPolicy}
                   onDeletePolicy={removePolicy}
                   onDuplicatePolicy={handleDuplicatePolicy}
+                  employees={employees}
+                  groups={groups}
                 />
               )
           }

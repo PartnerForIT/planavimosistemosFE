@@ -14,9 +14,9 @@ import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
 const Users = React.memo(({
   employees = [],
-  activeTimeOff,
-  roleEmployeesEdit,
-  readOnly,
+  //groups = [],
+  activePolicy,
+  onEditPolicy,
 }) => {
   const { t } = useTranslation();
   const employToCheck = useCallback(({
@@ -26,8 +26,8 @@ const Users = React.memo(({
   }) => ({
     id,
     label: `${name} ${surname}`,
-    checked: activeTimeOff?.accountUserRoles.some(({ employee_id }) => employee_id === id),
-  }), [activeTimeOff.accountUserRoles]);
+    checked: activePolicy?.users.some(({ employee_id }) => employee_id === id),
+  }), [activePolicy.users]);
 
   const [search, setSearch] = useState('');
   const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
@@ -37,9 +37,6 @@ const Users = React.memo(({
   const checkboxGroupWrapperClasses = classNames(
     classes.checkboxGroupWrapper,
     'styledDropdown',
-    {
-      [classes.checkboxGroupWrapper_readOnly]: readOnly,
-    },
   );
 
   useEffect(() => {
@@ -62,14 +59,14 @@ const Users = React.memo(({
     }
   }, [employees, search, stringMatch]);
 
-  const checkedByDefault = useMemo(() => activeTimeOff?.accountUserRoles
+  const checkedByDefault = useMemo(() => activePolicy?.users
     .map((worker) => {
       const { employee } = worker;
       if (employee) {
         return employToCheck(employee);
       } return null;
     }).filter((item) => !!item) ?? [],
-  [activeTimeOff.accountUserRoles, employToCheck]);
+  [activePolicy.users, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
@@ -91,16 +88,16 @@ const Users = React.memo(({
         employee.checked && !sortedEmployeeIds.has(employee.id)
       ).map(({ id }) => id);
 
-      roleEmployeesEdit([...filteredEmployees, ...users]);
+      onEditPolicy([...filteredEmployees, ...users]);
     }
-  }, [checkedItems, ready, roleEmployeesEdit, allEmployees, allSortedEmployees]);
+  }, [checkedItems, ready, onEditPolicy, allEmployees, allSortedEmployees]);
 
   const handleInputChange = (term) => {
     setSearch(term);
   };
 
   return (
-    <Content tooltip='Tooltip' title={t('Users within this role')}>
+    <Content tooltip='Tooltip' title={t('Users within this policy')}>
       <>
         <div className={classes.sidebarTitle}>{t('Employees')}</div>
         <Input

@@ -21,7 +21,7 @@ const Row = ({
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
-  withoutShitCode, duplicateRow,
+  withoutShitCode, duplicateRow, tallRows,
 }) => {
   const { t } = useTranslation();
   const selected = useMemo(() => {
@@ -44,7 +44,7 @@ const Row = ({
       [styles.collapsIconSelected]: selected && selected.id === row.id && !reports,
     },
   );
-
+  
   const rowClasses = classNames(
     styles.flexRowGroup,
     styles.cell,
@@ -53,6 +53,7 @@ const Row = ({
       [styles.flexRowSelected]: selected && selected.id === row.id && !reports,
       [styles.reportsFlexRowSelected]: subTableExpanded && reports,
       [styles.flexRowGroupReports]: reports,
+      [styles.flexRowGroupTall]: tallRows,
     },
   );
 
@@ -68,6 +69,8 @@ const Row = ({
   const containerClasses = classNames(
     styles.flexTable, styles.row,
     { [styles.rowSelected]: (selected && selected.id === row.id && !reports) || (hoverable && actionsVisible) },
+    { [styles.flexTableTall]: tallRows },
+    { [styles.notActiveRow]: row.not_active },
   );
 
   const Components = {

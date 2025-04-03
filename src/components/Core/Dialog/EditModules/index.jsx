@@ -33,6 +33,7 @@ const initialValues = {
   profitability: false,
   comments_photo: false,
   kiosk: false,
+  use_rfid: false,
   rates: false,
   night_rates: false,
   holiday_rates: false,
@@ -252,6 +253,18 @@ export default ({
                 label={t('Can use Kiosk for identification')}
                 name='kiosk'
               />
+              {
+                modules.kiosk && (
+                  <div className={style.marginLeft}>
+                    <Checkbox
+                      onChange={handleChange}
+                      checked={modules.use_rfid}
+                      label={t('Uses ELO RFID')}
+                      name='use_rfid'
+                    />
+                  </div>
+                )
+              }
               <Checkbox
                 onChange={handleChange}
                 checked={modules.rates}

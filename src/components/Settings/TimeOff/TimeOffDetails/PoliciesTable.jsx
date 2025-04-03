@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
 
-import classes from './timeoff.module.scss';
-import Progress from '../../Core/Progress';
-import DataTable from '../../Core/DataTableCustom/OLT';
-import CreatePolicyIcon from '../../Icons/CreatePolicyIcon';
+import classes from '../timeoff.module.scss';
+import Progress from '../../../Core/Progress';
+import DataTable from '../../../Core/DataTableCustom/OLT';
+import CreatePolicyIcon from '../../../Icons/CreatePolicyIcon';
 import { useTranslation } from 'react-i18next';
 
 const initColumnsArray = [
@@ -30,6 +29,7 @@ function TimeOffDetails({
   onEditPolicy,
   onDeletePolicy,
   onDuplicatePolicy,
+  onClickPolicy,
   policies,
 }) {
   const { t } = useTranslation();
@@ -37,24 +37,14 @@ function TimeOffDetails({
   const [columnsArray, setCollumnsArray] = useState(initColumnsArray);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const detailsClasses = classNames(classes.details, {
-    
-  });
-
   useEffect(() => {
     if (activeTimeOff && activeTimeOff.id) {
       const policiesArray = policies.filter((policy) => policy.time_off_id === activeTimeOff.id);
       const data = policiesArray.map((policy) => {
         return {
-          id: policy.id,
-          name: policy.name,
-          default: policy.default ? '' : '',
-          description: policy.description,
-          type: policy.type,
-          days: policy.days,
-          users_count: policy.users_count,
-          //todo 
-          not_active: true,
+          ...policy,
+          type: activeTimeOff?.name,
+          not_active: policy?.users?.length === 0,
         };
       }
       );
@@ -69,22 +59,27 @@ function TimeOffDetails({
         };
       });
     });
+    // eslint-disable-next-line
   }, [activeTimeOff, policies]);
-  
+
+  const setSelectedPolicy = (policy) => {
+    setSelectedRow(policy);
+    onClickPolicy(policy);
+  }
   
   const renderFooterButton = () => {
     return !policies?.length ? (
       <div className={classes.footerButton}>
-        <a className={classes.footerButton__button} onClick={createNewPolicy}>
+        <button type="button" className={classes.footerButton__button} onClick={createNewPolicy}>
           <CreatePolicyIcon />
           {t('Create new policy')}
-        </a>
+        </button>
       </div>
     ) : null
   }
 
   return (
-    <div className={detailsClasses}>
+    <div>
       {
         loading ? (
           <div className={classes.loader}>
@@ -96,6 +91,7 @@ function TimeOffDetails({
             columns={columnsArray || []}
             columnsWidth={columnsWidthArray || {}}
             minHeight
+            tallRows
             simpleTable
             withoutFilterColumns
             hoverable
@@ -104,7 +100,7 @@ function TimeOffDetails({
             verticalOffset={'100px'}
             footerButton={renderFooterButton()}
             selectedItem={selectedRow}
-            setSelectedItem={setSelectedRow}
+            setSelectedItem={setSelectedPolicy}
             editRow={onEditPolicy}
             removeRow={onDeletePolicy}
             duplicateRow={onDuplicatePolicy}

@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import classes from '../timeoff.module.scss';
 import RemoveTimeOff from '../../../Core/Dialog/RemoveTimeOff';
 import RemovePolicy from '../../../Core/Dialog/RemovePolicy';
-import TimeOffDetails from '../TimeOffDetails';
+import PoliciesTable from './PoliciesTable';
+import PoliciesDetails from './PoliciesDetails';
 import CardItem from '../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
 
@@ -14,6 +15,7 @@ function TimeOffBlock({
   activePolicy = {},
   setActiveTimeOff = Function.prototype,
   createNewTimeOff = Function.prototype,
+  setActivePolicy = Function.prototype,
   createNewPolicy = Function.prototype,
   onEditPolicy = Function.prototype,
   onDeletePolicy = Function.prototype,
@@ -22,6 +24,8 @@ function TimeOffBlock({
   loading = false,
   setEditVisible = Function.prototype,
   policies = [],
+  employees = [],
+  groups = [],
 }) {
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
@@ -60,20 +64,27 @@ function TimeOffBlock({
               {/* Time off details */}
               {
                 activeTimeOff?.id === time_off.id && (
-                  <TimeOffDetails
-                    createNewPolicy={createNewPolicy}
-                    activeTimeOff={activeTimeOff}
-                    loading={loading}
-                    policies={policies}
-                    onEditPolicy={onEditPolicy}
-                    onDeletePolicy={setRemovePolicyVisible}
-                    onDuplicatePolicy={onDuplicatePolicy}
-                  />
-                )
-              }
-              {
-                activePolicy?.time_off_id === time_off.id && (
-                  test
+                  <div className={classes.details}>
+                    <PoliciesTable
+                      createNewPolicy={createNewPolicy}
+                      activeTimeOff={activeTimeOff}
+                      activePolicy={activePolicy}
+                      loading={loading}
+                      policies={policies}
+                      onEditPolicy={onEditPolicy}
+                      onDeletePolicy={setRemovePolicyVisible}
+                      onDuplicatePolicy={onDuplicatePolicy}
+                      onClickPolicy={setActivePolicy}
+                    />
+                    { activePolicy?.id && (
+                      <PoliciesDetails
+                        activePolicy={activePolicy}
+                        onEditPolicy={onEditPolicy}
+                        employees={employees}
+                        groups={groups}
+                      />
+                    )}
+                  </div>
                 )
               }
             </React.Fragment>

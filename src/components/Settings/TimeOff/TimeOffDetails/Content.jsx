@@ -10,8 +10,8 @@ function Content({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={classes.details_inner}>
-      <div className={classes.details_inner_title}>
+    <div className={classes.detailsPolicy_inner}>
+      <div className={classes.detailsPolicy_inner_title}>
         <span>
           {t(title)}
           {' '}
