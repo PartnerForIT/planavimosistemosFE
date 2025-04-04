@@ -38,6 +38,7 @@ const initialValues = {
   proration_type: '',
   allowance_carryover_type: '',
   allowance_carryover_amount: '',
+  prorotate_based_on_em_status: false,
   use_carryover_expiration_period: false,
   allowance_carryover_expiration_period: '',
   use_maximum_balance_capacity: false,
@@ -433,6 +434,39 @@ const PolicySettings = React.memo(({
                       onChange={handleChange}
                       disabled={!values.allowance_carryover_type || values.allowance_carryover_type === 'no'}
                     />
+                  </div>
+                </div>
+
+                <hr className={classes.hr} />
+              </>
+            )
+          }
+          {
+            (values.unit === 'hours' && (values.allowance_type === 'earned')) && (
+              <>
+                <div className={classes.policyForm_row}>
+                  <div className={classes.formControlSwhitchLine}>
+                    <Switch
+                      onChange={(checked) => handleChange({ target: { name: 'prorotate_based_on_em_status', value: checked } })}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={values.prorotate_based_on_em_status || false}
+                      height={21}
+                      width={40}
+                    />
+                    <div className={classes.tooltipBlock}>
+                      <Label text={t('Prorate based on the employement status')} />
+                      <Tooltip
+                        title={
+                          <>
+                            {t('Prorate based on the employement status:')}<br />
+                            {t("Adjust the allowance proportionally based on the employee's employment status. The employment status is represented as a value between 0.01 and 1.5, where 1.0 corresponds to a full-time workload (e.g., 40 hours per week). Employees with lower or higher status values will have their allowance adjusted accordingly.")}
+                          </>
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
 

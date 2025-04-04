@@ -44,6 +44,7 @@ function TimeOffDetails({
         return {
           ...policy,
           type: activeTimeOff?.name,
+          unit: activeTimeOff?.unit,
           not_active: policy?.users?.length === 0,
         };
       }
