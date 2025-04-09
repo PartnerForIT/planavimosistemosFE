@@ -10,6 +10,7 @@ import Input from '../../../Core/Input/Input';
 
 export default function Filter({
   changeUserStatus = () => ({}),
+  handleUnassign,
   checkedItems,
   selectedItem,
   setSearch,
@@ -57,7 +58,7 @@ export default function Filter({
         </Button>
         <Button
           black
-          onClick={() => changeUserStatus('unassign')}
+          onClick={handleUnassign}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Unassign')}

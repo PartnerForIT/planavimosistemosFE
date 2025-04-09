@@ -173,9 +173,10 @@ export default () => {
           activeDataManagement ? (
             <UserDataManagement
               handleClose={() => setActiveDataManagement(null)}
-              activeTimeOff={activeTimeOff}
-              activePolicy={activeDataManagement}
-              employeesList={activeDataManagement?.employees || []}
+              activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
+              activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
+              employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
+              handleEditPolicyEmployees={handleEditPolicyEmployees}
             />
           ) : (
           <>
@@ -190,8 +191,8 @@ export default () => {
                   : (
                     <TimeOffBlock
                       time_offs={time_offs}
-                      activeTimeOff={activeTimeOff}
-                      activePolicy={activePolicy}
+                      activeTimeOff={time_offs.find(({id}) => id === activeTimeOff.id)}
+                      activePolicy={policies.find(({id}) => id === activePolicy?.id)}
                       setActiveTimeOff={setActiveTimeOff}
                       createNewTimeOff={() => setNewTimeOffOpen(true)}
                       setActivePolicy={setActivePolicy}

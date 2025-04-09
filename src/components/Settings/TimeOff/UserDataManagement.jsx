@@ -114,6 +114,7 @@ function UserDataManagement({
   activeTimeOff,
   activePolicy,
   employeesList,
+  handleEditPolicyEmployees,
 }) {
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
@@ -284,6 +285,15 @@ function UserDataManagement({
     }
   };
 
+  const handleUnassign = () => {
+    const selectedEmployees = employees.filter((item) => (checkedItems.length ? !checkedItems.includes(item.id) : selected.id !== item.id));
+    const ids = selectedEmployees.map(({ id }) => id);
+
+    handleEditPolicyEmployees(ids);
+    setCheckedItems([]);
+  }
+  
+
   return (
     <>
       <TitleBlock
@@ -309,7 +319,7 @@ function UserDataManagement({
         <Filter
           changeUserStatus={() => ({})}
           checkedItems={checkedItems ?? []}
-          clearCheckbox={() => ({})}
+          handleUnassign={handleUnassign}
           selectedItem={selected}
           setSearch={setSearch}
           search={search}
