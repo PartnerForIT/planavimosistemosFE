@@ -10,6 +10,7 @@ import Dashboard from '../../Core/Dashboard';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
+import UserDataManagement from './UserDataManagement';
 import {
   AccountGroupsSelector, employeesSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, snackbarText, snackbarType,
@@ -79,11 +80,13 @@ export default () => {
   const [duplicatePolicyOpen, setDuplicatePolicyOpen] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [activePolicy, setActivePolicy] = useState(null);
+  const [activeDataManagement, setActiveDataManagement] = useState(null);
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
     dispatch(loadEmployeesAll(id));
     dispatch(getAccountGroups(id));
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -160,99 +163,112 @@ export default () => {
   }
   
   const handleUsersDataManagement = () => {
-    console.log('yeah!');
+    setActiveDataManagement(activePolicy);
   }
 
   return (
     <MaynLayout>
       <Dashboard>
-        <TitleBlock
-          title={t('Time Off')}
-        >
-          <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
-        </TitleBlock>
-        <PageLayout>
-          {
-            isLoading ? <Progress />
-              : (
-                <TimeOffBlock
-                  time_offs={time_offs}
-                  activeTimeOff={activeTimeOff}
-                  activePolicy={activePolicy}
-                  setActiveTimeOff={setActiveTimeOff}
-                  createNewTimeOff={() => setNewTimeOffOpen(true)}
-                  setActivePolicy={setActivePolicy}
-                  createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
-                  remove={removeTimeOff}
-                  loading={loading}
-                  policies={policies}
-                  setEditVisible={setEditVisible}
-                  user={user}
-                  onEditPolicy={onEditPolicy}
-                  onDeletePolicy={removePolicy}
-                  onDuplicatePolicy={handleDuplicatePolicy}
-                  handleEditPolicy={handleEditPolicy}
-                  handleEditPolicyEmployees={handleEditPolicyEmployees}
-                  handleUsersDataManagement={handleUsersDataManagement}
-                  employees={employees}
-                  groups={groups}
-                />
-              )
-          }
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            ContentProps={{
-              classes: {
-                root: typeSnackbar === 'error' ? classes.error : classes.success,
-              },
-            }}
-            severity='error'
-            open={isSnackbar}
-            message={textSnackbar}
-            key='rigth'
-          />
-          <AddEditTimeOff
-            open={editVisible}
-            handleClose={() => {
-              setEditVisible(false);
-            }}
-            initialValue={activeTimeOff ? activeTimeOff : {}}
-            title={`${t('Edit')} ${activeTimeOff ? activeTimeOff.name : ''} ${t('Policy Type')}`}
-            buttonTitle={t('Save Changes')}
-            onSubmit={changeTimeOff}
-          />
-          <AddEditTimeOff
-            open={newTimeOffOpen}
-            handleClose={() => {
-              setNewTimeOffOpen(false);
-            }}
-            title={t('Create New Policy Type')}
-            onSubmit={createNewTimeOff}
-            buttonTitle={t('Submit')}
-          />
-          <AddEditPolicy
-            open={newPolicyOpen}
-            handleClose={() => {
-              setNewPolicyOpen(false);
-            }}
-            initialValue={{ ...(activePolicy || {}), type: activeTimeOff?.name }}
-            title={activePolicy ? `${t('Edit')} ${activePolicy.name} ${t('Policy')}` : t('Create New Policy')}
-            onSubmit={activePolicy ? editPolicy : createNewPolicy}
-            buttonTitle={activePolicy ? t('Save Changes') : t('Submit')}
-          />
-          <DuplicatePolicy
-            open={duplicatePolicyOpen}
-            handleClose={() => {
-              setDuplicatePolicyOpen(false);
-            }}
-            title={`${t('Duplicate')} ${activePolicy?.name} ${t('Policy')}`}
-            onSubmit={onDuplicatePolicy}
-            buttonTitle={t('Duplicate')}
-          />
-        </PageLayout>
+        {
+          activeDataManagement ? (
+            <UserDataManagement
+              handleClose={() => setActiveDataManagement(null)}
+              activeTimeOff={activeTimeOff}
+              activePolicy={activeDataManagement}
+              employeesList={activeDataManagement?.employees || []}
+            />
+          ) : (
+          <>
+            <TitleBlock
+              title={t('Time Off')}
+            >
+              <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
+            </TitleBlock>
+            <PageLayout>
+              {
+                isLoading ? <Progress />
+                  : (
+                    <TimeOffBlock
+                      time_offs={time_offs}
+                      activeTimeOff={activeTimeOff}
+                      activePolicy={activePolicy}
+                      setActiveTimeOff={setActiveTimeOff}
+                      createNewTimeOff={() => setNewTimeOffOpen(true)}
+                      setActivePolicy={setActivePolicy}
+                      createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
+                      remove={removeTimeOff}
+                      loading={loading}
+                      policies={policies}
+                      setEditVisible={setEditVisible}
+                      user={user}
+                      onEditPolicy={onEditPolicy}
+                      onDeletePolicy={removePolicy}
+                      onDuplicatePolicy={handleDuplicatePolicy}
+                      handleEditPolicy={handleEditPolicy}
+                      handleEditPolicyEmployees={handleEditPolicyEmployees}
+                      handleUsersDataManagement={handleUsersDataManagement}
+                      employees={employees}
+                      groups={groups}
+                    />
+                  )
+              }
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                ContentProps={{
+                  classes: {
+                    root: typeSnackbar === 'error' ? classes.error : classes.success,
+                  },
+                }}
+                severity='error'
+                open={isSnackbar}
+                message={textSnackbar}
+                key='rigth'
+              />
+              <AddEditTimeOff
+                open={editVisible}
+                handleClose={() => {
+                  setEditVisible(false);
+                }}
+                initialValue={activeTimeOff ? activeTimeOff : {}}
+                title={`${t('Edit')} ${activeTimeOff ? activeTimeOff.name : ''} ${t('Policy Type')}`}
+                buttonTitle={t('Save Changes')}
+                onSubmit={changeTimeOff}
+              />
+              <AddEditTimeOff
+                open={newTimeOffOpen}
+                handleClose={() => {
+                  setNewTimeOffOpen(false);
+                }}
+                title={t('Create New Policy Type')}
+                onSubmit={createNewTimeOff}
+                buttonTitle={t('Submit')}
+              />
+              <AddEditPolicy
+                open={newPolicyOpen}
+                handleClose={() => {
+                  setNewPolicyOpen(false);
+                }}
+                initialValue={{ ...(activePolicy || {}), type: activeTimeOff?.name }}
+                title={activePolicy ? `${t('Edit')} ${activePolicy.name} ${t('Policy')}` : t('Create New Policy')}
+                onSubmit={activePolicy ? editPolicy : createNewPolicy}
+                buttonTitle={activePolicy ? t('Save Changes') : t('Submit')}
+              />
+              <DuplicatePolicy
+                open={duplicatePolicyOpen}
+                handleClose={() => {
+                  setDuplicatePolicyOpen(false);
+                }}
+                title={`${t('Duplicate')} ${activePolicy?.name} ${t('Policy')}`}
+                onSubmit={onDuplicatePolicy}
+                buttonTitle={t('Duplicate')}
+              />
+            </PageLayout>
+          </>
+        )
+      }
       </Dashboard>
     </MaynLayout>
   );

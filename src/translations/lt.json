@@ -1200,6 +1200,30 @@
         "Prorate based on the employement status:": "Paskirstyti proporcingai pagal darbo vietos etatą:",
         "Adjust the allowance proportionally based on the employee's employment status. The employment status is represented as a value between 0.01 and 1.5, where 1.0 corresponds to a full-time workload (e.g., 40 hours per week). Employees with lower or higher status values will have their allowance adjusted accordingly.": "Paskirstykite priemoką proporcingai pagal darbuotojo etatą. Darbo vietos etatas nurodomas skaičiumi nuo 0,01 iki 1,5, kur 1,0 atitinka pilną darbo krūvį (pvz., 40 valandų per savaitę). Tai atliekama paskyrų sąraše kiekvienai paskyrai individualiai. Darbuotojams, kurių etato vertė yra mažesnė arba didesnė, priemoka bus atitinkamai koreguojama.",
 
-        "Assigned users data management": "Priskirtų darbuotojų duomenų koregavimas"
+        "Assigned users data management": "Priskirtų darbuotojų duomenų koregavimas",
 
+        "Unassign": "Atjungti",
+
+        "Request on behalf": "Pateikti prašymą už kitą",
+        "Adjust balance": "Koreguoti balansą",
+        "Adjust time used": "Koreguoti panaudotą laiką",
+
+        "Balance": "Balansas",
+        "Amount accrued this cycle": "Sukauptas kiekis šį ciklą",
+        "Taken this cycle": "Panaudota šį ciklą",
+        "Booked before cycle": "Panaudota prieš ciklą",
+        "Сycle type": "Ciklo tipas",
+        "Current cycle start": "Einamojo ciklo pradžia",
+        "Current cycle end": "Einamojo ciklo pabaiga",
+        "Employment effective date": "Įdarbinimo data",
+        "First approver": "Pirmas tvirtintojas",
+        "Second approver": "Antras tvirtintojas",
+
+        "Note": "Pastaba",
+        "Write a note": "Parašykite pastabą",
+        "Adjustment type": "Pokyčio tipas",
+        "Remove": "Atimti",
+        "Enter quantity": "Įveskite kiekį",
+        "Users selected": "Pasirinkti vartotojai",
+        "Bulk update": "Masinis atnaujinimas"
 }
