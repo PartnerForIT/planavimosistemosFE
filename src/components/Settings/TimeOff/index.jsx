@@ -158,6 +158,10 @@ export default () => {
   const handleEditPolicyEmployees = (data) => {
     dispatch(updatePolicyEmployees(id, activeTimeOff.id, activePolicy.id, {employees: data}));
   }
+  
+  const handleUsersDataManagement = () => {
+    console.log('yeah!');
+  }
 
   return (
     <MaynLayout>
@@ -189,6 +193,7 @@ export default () => {
                   onDuplicatePolicy={handleDuplicatePolicy}
                   handleEditPolicy={handleEditPolicy}
                   handleEditPolicyEmployees={handleEditPolicyEmployees}
+                  handleUsersDataManagement={handleUsersDataManagement}
                   employees={employees}
                   groups={groups}
                 />

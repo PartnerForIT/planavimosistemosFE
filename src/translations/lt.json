@@ -1198,6 +1198,8 @@
 
         "Prorate based on the employement status": "Paskirstyti proporcingai pagal etatą",
         "Prorate based on the employement status:": "Paskirstyti proporcingai pagal darbo vietos etatą:",
-        "Adjust the allowance proportionally based on the employee's employment status. The employment status is represented as a value between 0.01 and 1.5, where 1.0 corresponds to a full-time workload (e.g., 40 hours per week). Employees with lower or higher status values will have their allowance adjusted accordingly.": "Paskirstykite priemoką proporcingai pagal darbuotojo etatą. Darbo vietos etatas nurodomas skaičiumi nuo 0,01 iki 1,5, kur 1,0 atitinka pilną darbo krūvį (pvz., 40 valandų per savaitę). Tai atliekama paskyrų sąraše kiekvienai paskyrai individualiai. Darbuotojams, kurių etato vertė yra mažesnė arba didesnė, priemoka bus atitinkamai koreguojama."
+        "Adjust the allowance proportionally based on the employee's employment status. The employment status is represented as a value between 0.01 and 1.5, where 1.0 corresponds to a full-time workload (e.g., 40 hours per week). Employees with lower or higher status values will have their allowance adjusted accordingly.": "Paskirstykite priemoką proporcingai pagal darbuotojo etatą. Darbo vietos etatas nurodomas skaičiumi nuo 0,01 iki 1,5, kur 1,0 atitinka pilną darbo krūvį (pvz., 40 valandų per savaitę). Tai atliekama paskyrų sąraše kiekvienai paskyrai individualiai. Darbuotojams, kurių etato vertė yra mažesnė arba didesnė, priemoka bus atitinkamai koreguojama.",
+
+        "Assigned users data management": "Priskirtų darbuotojų duomenų koregavimas"
 
 }

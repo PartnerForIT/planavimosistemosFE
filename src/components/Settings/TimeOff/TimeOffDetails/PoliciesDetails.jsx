@@ -9,6 +9,7 @@ function PoliciesDetails({
   activePolicy,
   handleEditPolicy,
   handleEditPolicyEmployees,
+  handleUsersDataManagement,
   employees,
   groups,
 }) {
@@ -23,6 +24,7 @@ function PoliciesDetails({
         groups={groups}
         activePolicy={activePolicy}
         handleEditPolicy={handleEditPolicyEmployees}
+        handleUsersDataManagement={handleUsersDataManagement}
       />
       <PolicySettings
         activePolicy={activePolicy}

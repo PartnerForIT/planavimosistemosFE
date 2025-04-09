@@ -9,6 +9,7 @@ import Content from './Content';
 import SearchIcon from '../../../Icons/SearchIcon';
 import CheckboxGroupWrapper from '../../../Core/CheckboxGroup/CheckboxGroupWrapper';
 import Input from '../../../Core/Input/Input';
+import Button from '../../../Core/Button/Button';
 import classes from '../timeoff.module.scss';
 import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
@@ -17,6 +18,7 @@ const Users = React.memo(({
   //groups = [],
   activePolicy,
   handleEditPolicy,
+  handleUsersDataManagement,
 }) => {
   const { t } = useTranslation();
   const employToCheck = useCallback(({
@@ -99,7 +101,13 @@ const Users = React.memo(({
   return (
     <Content tooltip='Tooltip' title={t('Users within this policy')}>
       <>
-        <div className={classes.sidebarTitle}>{t('Employees')}</div>
+        <Button
+          onClick={handleUsersDataManagement}
+          className={classes.managementButton}
+          fillWidth
+        >
+          {t('Assigned users data management')}
+        </Button>
         <Input
           icon={<SearchIcon />}
           placeholder={t('Search by employees')}

@@ -22,6 +22,7 @@ function TimeOffBlock({
   onDuplicatePolicy = Function.prototype,
   handleEditPolicy = Function.prototype,
   handleEditPolicyEmployees = Function.prototype,
+  handleUsersDataManagement = Function.prototype,
   remove = Function.prototype,
   loading = false,
   setEditVisible = Function.prototype,
@@ -83,6 +84,7 @@ function TimeOffBlock({
                         activePolicy={activePolicy}
                         handleEditPolicy={handleEditPolicy}
                         handleEditPolicyEmployees={handleEditPolicyEmployees}
+                        handleUsersDataManagement={handleUsersDataManagement}
                         employees={employees}
                         groups={groups}
                       />
