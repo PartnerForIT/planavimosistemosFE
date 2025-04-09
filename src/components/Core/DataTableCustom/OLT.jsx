@@ -32,7 +32,7 @@ export default function DataTable({
   lastPage, activePage, itemsCountPerPage, totalItemsCount, handlePagination, selectedItem, setSelectedItem, reports,
   footerButton, minHeight, tallRows,
   downloadExcel, downloadPdf, verticalOffset = '0px',
-  columnsWidth = columnsWidthInitial, simpleTable, editRow = () => ({}),
+  columnsWidth = columnsWidthInitial, simpleTable, editRow,
   duplicateRow, removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },

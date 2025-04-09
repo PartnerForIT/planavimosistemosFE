@@ -113,6 +113,12 @@ import {
   UPDATE_POLICY,
   UPDATE_POLICY_ERROR,
   UPDATE_POLICY_SUCCESS,
+  UPDATE_POLICY_SETTINGS,
+  UPDATE_POLICY_SETTINGS_ERROR,
+  UPDATE_POLICY_SETTINGS_SUCCESS,
+  UPDATE_POLICY_EMPLOYEES,
+  UPDATE_POLICY_EMPLOYEES_ERROR,
+  UPDATE_POLICY_EMPLOYEES_SUCCESS,
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_ERROR,
   DUPLICATE_POLICY_SUCCESS,
@@ -914,6 +920,26 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         policiesLoading: false,
         error: action.data.policies,
+      };
+
+    case UPDATE_POLICY_SETTINGS:
+    case UPDATE_POLICY_EMPLOYEES:
+      return {
+        ...state,
+        error: null,
+      };
+    case UPDATE_POLICY_SETTINGS_SUCCESS:
+    case UPDATE_POLICY_EMPLOYEES_SUCCESS:
+      return {
+        ...state,
+        policies: action.data,
+        error: null,
+      };
+    case UPDATE_POLICY_SETTINGS_ERROR:
+    case UPDATE_POLICY_EMPLOYEES_ERROR:
+      return {
+        ...state,
+        error: action.data,
       };
 
     case ADD_SETTING_SNACKBAR:

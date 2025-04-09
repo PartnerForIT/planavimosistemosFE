@@ -16,7 +16,7 @@ const Users = React.memo(({
   employees = [],
   //groups = [],
   activePolicy,
-  onEditPolicy,
+  handleEditPolicy,
 }) => {
   const { t } = useTranslation();
   const employToCheck = useCallback(({
@@ -26,8 +26,8 @@ const Users = React.memo(({
   }) => ({
     id,
     label: `${name} ${surname}`,
-    checked: activePolicy?.users.some(({ employee_id }) => employee_id === id),
-  }), [activePolicy.users]);
+    checked: activePolicy?.employees.some(({ employee_id }) => employee_id === id),
+  }), [activePolicy.employees]);
 
   const [search, setSearch] = useState('');
   const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.toLowerCase()), [search]);
@@ -59,14 +59,14 @@ const Users = React.memo(({
     }
   }, [employees, search, stringMatch]);
 
-  const checkedByDefault = useMemo(() => activePolicy?.users
+  const checkedByDefault = useMemo(() => activePolicy?.employees
     .map((worker) => {
       const { employee } = worker;
       if (employee) {
         return employToCheck(employee);
       } return null;
     }).filter((item) => !!item) ?? [],
-  [activePolicy.users, employToCheck]);
+  [activePolicy.employees, employToCheck]);
 
   const [checkedItems, setCheckedItems] = useState(checkedByDefault);
   const [ready, setReady] = useState(false);
@@ -88,9 +88,9 @@ const Users = React.memo(({
         employee.checked && !sortedEmployeeIds.has(employee.id)
       ).map(({ id }) => id);
 
-      onEditPolicy([...filteredEmployees, ...users]);
+      handleEditPolicy([...filteredEmployees, ...users]);
     }
-  }, [checkedItems, ready, onEditPolicy, allEmployees, allSortedEmployees]);
+  }, [checkedItems, ready, handleEditPolicy, allEmployees, allSortedEmployees]);
 
   const handleInputChange = (term) => {
     setSearch(term);

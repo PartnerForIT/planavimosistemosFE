@@ -7,7 +7,8 @@ import PolicySettings from './PolicySettings';
 
 function PoliciesDetails({
   activePolicy,
-  onEditPolicy,
+  handleEditPolicy,
+  handleEditPolicyEmployees,
   employees,
   groups,
 }) {
@@ -21,11 +22,11 @@ function PoliciesDetails({
         employees={employees}
         groups={groups}
         activePolicy={activePolicy}
-        onEditPolicy={onEditPolicy}
+        handleEditPolicy={handleEditPolicyEmployees}
       />
       <PolicySettings
         activePolicy={activePolicy}
-        onEditPolicy={onEditPolicy}
+        handleEditPolicy={handleEditPolicy}
       />
     </div>
   );

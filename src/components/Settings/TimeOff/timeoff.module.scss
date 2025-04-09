@@ -118,6 +118,39 @@ $arrow-size: 21px;
   }
 }
 
+.comment {
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.tableName {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tableSymbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 2px;
+
+  svg {
+    margin: 0;
+    padding: 0;
+
+    path {
+      stroke: white;
+      fill: transparent;
+    }
+  }
+}
+
 .symbolBlock {
   display: flex;
   flex-wrap: wrap;

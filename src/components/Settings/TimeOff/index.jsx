@@ -25,6 +25,8 @@ import {
   createPolicy,
   deletePolicy,
   updatePolicy,
+  updatePolicySettings,
+  updatePolicyEmployees,
   duplicatePolicy,
   getPolicies,
   getAccountGroups,
@@ -103,7 +105,7 @@ export default () => {
       dispatch(getPolicies(id, activeTimeOff.id));
     }
     // eslint-disable-next-line
-  }, [activeTimeOff, time_offs]);
+  }, [activeTimeOff]);
 
   const createNewTimeOff = (data) => {
     dispatch(createTimeOff(id, data));
@@ -133,7 +135,7 @@ export default () => {
     dispatch(deletePolicy(id, policyId, activeTimeOff.id));
   };
 
-  const handleEditPolicy = (policyId) => {
+  const onEditPolicy = (policyId) => {
     setActivePolicy(policies.find(({id}) => id === policyId));
     setNewPolicyOpen(true);
   };
@@ -148,6 +150,14 @@ export default () => {
     setActivePolicy(null);
     setDuplicatePolicyOpen(false);
   };
+
+  const handleEditPolicy = (data) => {
+    dispatch(updatePolicySettings(id, activeTimeOff.id, activePolicy.id, data));
+  }
+
+  const handleEditPolicyEmployees = (data) => {
+    dispatch(updatePolicyEmployees(id, activeTimeOff.id, activePolicy.id, {employees: data}));
+  }
 
   return (
     <MaynLayout>
@@ -174,9 +184,11 @@ export default () => {
                   policies={policies}
                   setEditVisible={setEditVisible}
                   user={user}
-                  onEditPolicy={handleEditPolicy}
+                  onEditPolicy={onEditPolicy}
                   onDeletePolicy={removePolicy}
                   onDuplicatePolicy={handleDuplicatePolicy}
+                  handleEditPolicy={handleEditPolicy}
+                  handleEditPolicyEmployees={handleEditPolicyEmployees}
                   employees={employees}
                   groups={groups}
                 />

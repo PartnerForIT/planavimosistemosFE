@@ -91,19 +91,81 @@ const allowance_carryover_expiration_period_arr = [
 
 const PolicySettings = React.memo(({
   activePolicy,
-  onEditPolicy,
+  handleEditPolicy,
 }) => {
   const { t } = useTranslation();
   const [values, setValues] = useState(initialValues);
 
   const handleChange = useCallback((e) => {
-    console.log(e.target);
     const { name, value } = e.target;
-    setValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }, []);
+  
+    setValues((prev) => {
+      const updatedValues = {
+        ...prev,
+        [name]: value,
+      };
+  
+      const requiredFields = [
+        'name',
+        'allowance_type',
+      ];
+  
+      if (updatedValues.allowance_type === 'earned') {
+        requiredFields.push('allowance_calculation_period');
+        requiredFields.push('proration_type');
+      }
+  
+      if (['earned', 'annual_grant'].includes(updatedValues.allowance_type)) {
+        requiredFields.push('allowance_amount');
+        requiredFields.push('allowance_carryover_type');
+        requiredFields.push('allowance_carryover_amount');
+  
+        if (updatedValues.use_maximum_balance_capacity) {
+          requiredFields.push('maximum_balance');
+        }
+        if (updatedValues.allow_negative_balance) {
+          requiredFields.push('maximum_negative_balance');
+        }
+        if (updatedValues.mark_in_time_sheet_excel) {
+          requiredFields.push('value_in_time_sheet_excel');
+        }
+        if (updatedValues.mark_in_schedule_and_time_sheet) {
+          requiredFields.push('symbol');
+          requiredFields.push('color');
+        }
+        if (updatedValues.use_carryover_expiration_period) {
+          requiredFields.push('allowance_carryover_expiration_period');
+        }
+      }
+  
+      if (updatedValues.allowance_carryover_type === 'yes') {
+        requiredFields.push('allowance_carryover_amount');
+      }
+  
+      if (updatedValues.allowance_type === 'unlimited') {
+        if (updatedValues.mark_in_time_sheet_excel) {
+          requiredFields.push('value_in_time_sheet_excel');
+        }
+        if (updatedValues.mark_in_schedule_and_time_sheet) {
+          requiredFields.push('symbol');
+          requiredFields.push('color');
+        }
+      }
+  
+      const isValid = requiredFields.every(
+        (field) => updatedValues[field] !== '' && updatedValues[field] !== undefined && updatedValues[field] !== null,
+      );
+  
+      if (handleEditPolicy) {
+        handleEditPolicy({ ...updatedValues, ready: isValid });
+      }
+  
+      return updatedValues;
+    });
+  
+    // eslint-disable-next-line
+  }, [handleEditPolicy]);
+
 
   const addExtraAmount = () => {
     setValues((prev) => ({
@@ -286,7 +348,7 @@ const PolicySettings = React.memo(({
           </div>
           <hr className={classes.hr} />
           {
-            values.allowance_type === 'earned' && (
+            values.allowance_type === 'earned' ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.selectBlock}>
@@ -366,10 +428,10 @@ const PolicySettings = React.memo(({
                   <div></div>
                 </div>
               </>
-            )
+            ) : null
           }
           {
-            values.allowance_type === 'annual_grant' && (
+            values.allowance_type === 'annual_grant' ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControl}>
@@ -388,10 +450,10 @@ const PolicySettings = React.memo(({
                   <div></div>
                 </div>
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.selectBlock}>
@@ -439,10 +501,10 @@ const PolicySettings = React.memo(({
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.unit === 'hours' && (values.allowance_type === 'earned')) && (
+            (values.unit === 'hours' && (values.allowance_type === 'earned')) ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -472,10 +534,10 @@ const PolicySettings = React.memo(({
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -504,7 +566,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.use_carryover_expiration_period && (
+                  values.use_carryover_expiration_period ? (
                     <div className={classes.policyForm_row}>
                       <div className={classes.selectBlock}>
                         <div className={classes.tooltipBlock}>
@@ -520,15 +582,15 @@ const PolicySettings = React.memo(({
                       </div>
                       <div></div>
                     </div>
-                  )
+                  ) : null
                 }
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -557,7 +619,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.use_maximum_balance_capacity && (
+                  values.use_maximum_balance_capacity ? (
                     <div className={classes.policyForm_row}>
                       <div className={classes.formControl}>
                         <div className={classes.labelBlock}>
@@ -574,15 +636,15 @@ const PolicySettings = React.memo(({
                       </div>
                       <div></div>
                     </div>
-                  )
+                  ) : null
                 }
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -611,7 +673,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.allow_negative_balance && (
+                  values.allow_negative_balance ? (
                     <div className={classes.policyForm_row}>
                       <div className={classes.formControl}>
                         <div className={classes.labelBlock}>
@@ -629,15 +691,15 @@ const PolicySettings = React.memo(({
                       </div>
                       <div></div>
                     </div>
-                  )
+                  ) : null
                 }
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -666,7 +728,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.add_extra_amount_based_on_years_of_service && (
+                  values.add_extra_amount_based_on_years_of_service ? (
                     <>
                       {
                         values.extra_amounts && values.extra_amounts.map((item, index) => (
@@ -722,15 +784,15 @@ const PolicySettings = React.memo(({
                         >+</button>
                       </div>
                     </>
-                  )
+                  ) : null
                 }
             
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -759,7 +821,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.mark_in_time_sheet_excel && (
+                  values.mark_in_time_sheet_excel ? (
                     <div className={classes.policyForm_row}>
                       <div className={classes.formControl}>
                         <div className={classes.labelBlock}>
@@ -776,15 +838,15 @@ const PolicySettings = React.memo(({
                       </div>
                       <div></div>
                     </div>
-                  )
+                  ) : null
                 }
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') && (
+            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -813,7 +875,7 @@ const PolicySettings = React.memo(({
                 </div>
 
                 {
-                  values.mark_in_schedule_and_time_sheet && (
+                  values.mark_in_schedule_and_time_sheet ? (
                     <div className={classes.policyForm_row}>
                       <div className={classes.formControl}>
                         <div className={classes.labelBlock}>
@@ -846,12 +908,12 @@ const PolicySettings = React.memo(({
                         </div>
                       </div>
                     </div>
-                  )
+                  ) : null
                 }
 
                 <hr className={classes.hr} />
               </>
-            )
+            ) : null
           }
         </div>
       </>

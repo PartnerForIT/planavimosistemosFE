@@ -10,7 +10,6 @@ import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
 import PendingIcon from '../../Icons/PendingIcon';
 import CheckStatus from '../../Icons/CheckStatus';
-import DescriptionIcon from '../../Icons/DescriptionIcon';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import DuplicateIcon from '../../Icons/DuplicateIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
@@ -184,10 +183,6 @@ const Row = ({
     }
   }, [colored.success, colored.warning, onSelect, row.checked, row.id, row.success, row.warning, withoutShitCode]);
 
-  const nltobr = (str) => {
-    return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
-  }
-
   return (
     <div
       className={containerClasses}
@@ -273,16 +268,6 @@ const Row = ({
                       row[column.field] !== 'tableActions'
                         && (column.cellRenderer ? column.cellRenderer(row, t) : t(row[column.field]))
                     }
-                    { column.comment_field && row[column.comment_field] && (
-                      <span
-                        className={styles.comment}
-                        data-tip={nltobr(row[column.comment_field])}
-                        data-for='cell_description'
-                        data-html={true}
-                      >
-                        <DescriptionIcon />
-                      </span>
-                    )}
                   </span>
                 )}
                 {/* for job breaks section */}
@@ -389,9 +374,13 @@ const RowActions = ({
           </button>
         )
       }
-      <button onClick={() => editRow(id)}>
-        <EditIconFixedFill className={styles.iconButtonRow} />
-      </button>
+      { 
+        editRow && (
+          <button onClick={() => editRow(id)}>
+            <EditIconFixedFill className={styles.iconButtonRow} />
+          </button>
+        )
+      }
       {
         removeRow && (
           <button onClick={() => removeRow(id)}>

@@ -20,6 +20,8 @@ function TimeOffBlock({
   onEditPolicy = Function.prototype,
   onDeletePolicy = Function.prototype,
   onDuplicatePolicy = Function.prototype,
+  handleEditPolicy = Function.prototype,
+  handleEditPolicyEmployees = Function.prototype,
   remove = Function.prototype,
   loading = false,
   setEditVisible = Function.prototype,
@@ -30,7 +32,7 @@ function TimeOffBlock({
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
   const [removePolicyVisible, setRemovePolicyVisible] = useState(false);
-
+  
   return (
     <div className={classes.timeoff}>
       <>
@@ -52,8 +54,8 @@ function TimeOffBlock({
                 onClickAddPolicy={createNewPolicy}
                 onClickRemove={setRemoveVisible}
                 name={time_off.name}
-                userCount={time_off?.count_users || 0}
-                policiesCount={time_off.count_policies}
+                userCount={time_off?.policies?.filter((policy) => policy.ready).reduce((acc, policy) => acc + (policy.employees?.length || 0), 0)}
+                policiesCount={time_off?.policies?.filter((policy) => policy.ready).length || 0}
                 selected={time_off.id === activeTimeOff.id}
                 canDelete={true}
                 itemName='Policy Type'
@@ -79,7 +81,8 @@ function TimeOffBlock({
                     { activePolicy?.id && (
                       <PoliciesDetails
                         activePolicy={activePolicy}
-                        onEditPolicy={onEditPolicy}
+                        handleEditPolicy={handleEditPolicy}
+                        handleEditPolicyEmployees={handleEditPolicyEmployees}
                         employees={employees}
                         groups={groups}
                       />

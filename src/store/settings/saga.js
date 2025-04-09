@@ -71,6 +71,8 @@ import {
   CREATE_POLICY,
   DELETE_POLICY,
   UPDATE_POLICY,
+  UPDATE_POLICY_SETTINGS,
+  UPDATE_POLICY_EMPLOYEES,
   DUPLICATE_POLICY,
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
@@ -150,7 +152,7 @@ import {
   //createTimeOffSuccess,
   deleteTimeOffError,
   //deleteTimeOffSuccess,
-  //updateTimeOffSuccess,
+  updateTimeOffSuccess,
   updateTimeOffError,
   getPolicies,
   getPoliciesSuccess,
@@ -162,6 +164,8 @@ import {
   //updatePolicySuccess,
   updatePolicyError,
   //duplicatePolicySuccess,
+  updatePolicySettingsError,
+  updatePolicySettingsSuccess,
   duplicatePolicyError,
   loadEmployeesError,
   loadEmployeesEditSuccess,
@@ -1385,15 +1389,15 @@ function* patchTimeOff(action) {
     const time_offs = yield select((state) => state.settings.time_offs ?? []);
     
     // eslint-disable-next-line no-unused-vars
-    const { responseData } = yield call(axios.patch,
+    const { data: responseData } = yield call(axios.patch,
       `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/update`,
       data,
       token());
 
-    yield put(authCheck());
-    yield put(getTimeOffsSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, responseData } : time_off))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...responseData } : time_off))));
+    //yield put(getTimeOffsSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, responseData } : time_off))));
   
-    yield put(getTimeOffs(action.companyId));
+    //yield put(getTimeOffs(action.companyId));
 
     yield put(addSnackbar('Updated Time Off successfully', 'success'));
     yield delay(4000);
@@ -1480,6 +1484,60 @@ function* patchPolicy(action) {
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(updatePolicyError(e));
+    yield put(addSnackbar('An error occurred while updating Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchPolicySettings(action) {
+  try {
+    const { data, timeOffId, policyId } = action;
+
+    const policies = yield select((state) => state.settings.policies ?? []);
+    const time_offs = yield select((state) => state.settings.time_offs ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { data: responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/policy/${policyId}/update-settings`,
+      data,
+      token());
+
+    //yield put(authCheck());
+    yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+
+    //yield delay(4000);
+    //yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updatePolicySettingsError(e));
+    yield put(addSnackbar('An error occurred while updating Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchPolicyEmployees(action) {
+  try {
+    const { data, timeOffId, policyId } = action;
+
+    const policies = yield select((state) => state.settings.policies ?? []);
+    const time_offs = yield select((state) => state.settings.time_offs ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { data: responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/policy/${policyId}/update-employees`,
+      data,
+      token());
+
+    //yield put(authCheck());
+    yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+
+    //yield delay(4000);
+    //yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updatePolicySettingsError(e));
     yield put(addSnackbar('An error occurred while updating Policy', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -2105,6 +2163,8 @@ yield takeLeading(GET_POLICIES, loadPolicies);
 yield takeLatest(CREATE_POLICY, createPolicy);
   yield takeLatest(DELETE_POLICY, removePolicy);
   yield takeLatest(UPDATE_POLICY, patchPolicy);
+  yield takeLatest(UPDATE_POLICY_SETTINGS, patchPolicySettings);
+  yield takeLatest(UPDATE_POLICY_EMPLOYEES, patchPolicyEmployees);
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);

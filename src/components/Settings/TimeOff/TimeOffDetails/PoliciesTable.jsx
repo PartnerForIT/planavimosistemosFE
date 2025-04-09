@@ -4,12 +4,55 @@ import classes from '../timeoff.module.scss';
 import Progress from '../../../Core/Progress';
 import DataTable from '../../../Core/DataTableCustom/OLT';
 import CreatePolicyIcon from '../../../Icons/CreatePolicyIcon';
+import DescriptionIcon from '../../../Icons/DescriptionIcon';
 import { useTranslation } from 'react-i18next';
+import TimeOffSymbol1 from '../../../Icons/TimeOffSymbol1';
+import TimeOffSymbol2 from '../../../Icons/TimeOffSymbol2';
+import TimeOffSymbol3 from '../../../Icons/TimeOffSymbol3';
+import TimeOffSymbol4 from '../../../Icons/TimeOffSymbol4';
+import TimeOffSymbol5 from '../../../Icons/TimeOffSymbol5';
+import TimeOffSymbol6 from '../../../Icons/TimeOffSymbol6';
+import TimeOffSymbol7 from '../../../Icons/TimeOffSymbol7';
+import TimeOffSymbol8 from '../../../Icons/TimeOffSymbol8';
+import TimeOffSymbol9 from '../../../Icons/TimeOffSymbol9';
+
+const nameFieldRenderer = (row) => (
+  <div className={classes.tableName}>
+    { (row.ready && row.symbol && row.color) ? (
+      <span className={classes.tableSymbol} style={{ backgroundColor: row.color }}>
+        {row.symbol === '1' && <TimeOffSymbol1 />}
+        {row.symbol === '2' && <TimeOffSymbol2 />}
+        {row.symbol === '3' && <TimeOffSymbol3 />}
+        {row.symbol === '4' && <TimeOffSymbol4 />}
+        {row.symbol === '5' && <TimeOffSymbol5 />}
+        {row.symbol === '6' && <TimeOffSymbol6 />}
+        {row.symbol === '7' && <TimeOffSymbol7 />}
+        {row.symbol === '8' && <TimeOffSymbol8 />}
+        {row.symbol === '9' && <TimeOffSymbol9 />}
+      </span>
+    ) : null }
+    { row.name }
+    { row.description && (
+      <span
+        className={classes.comment}
+        data-tip={nltobr(row.description)}
+        data-for='cell_description'
+        data-html={true}
+      >
+        <DescriptionIcon />
+      </span>
+    )}
+  </div>
+);
+
+const nltobr = (str) => {
+  return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+}
 
 const initColumnsArray = [
-  { label: 'active policies', field: 'name', checked: true, comment_field: 'description' },
+  { label: 'active policies', field: 'name', checked: true, cellRenderer: nameFieldRenderer },
   { label: 'Default', field: 'default', checked: true },
-  { label: 'Allowance type', field: 'type', checked: true },
+  { label: 'Allowance type', field: 'allowance_type_text', checked: true },
   { label: 'Days', field: 'days', checked: true },
   { label: 'Users', field: 'users_count', checked: true },
 ];
@@ -21,6 +64,17 @@ const columnsWidthArray = {
   days: '100px',
   users_count: '100px',
 };
+
+const allowance_type_arr = [
+  { code: 'earned', name: 'Earned allowance' },
+  { code: 'unlimited', name: 'Unlimited allowance' },
+  { code: 'annual_grant', name: 'Annual grant' },
+];
+
+const units = [
+  { code: 'hours', name: 'Hours' },
+  { code: 'days', name: 'Days' },
+];
 
 function TimeOffDetails({
   activeTimeOff,
@@ -45,7 +99,12 @@ function TimeOffDetails({
           ...policy,
           type: activeTimeOff?.name,
           unit: activeTimeOff?.unit,
-          not_active: policy?.users?.length === 0,
+          allowance_type_text: policy.ready ? t(allowance_type_arr.find((item) => item.code === policy.allowance_type)?.name) : '',
+          description: policy?.description || '',
+          not_active: !policy.ready,
+          default: policy.ready ? (policy.set_default ? t('Yes') : t('No')) : '',
+          users_count: policy.ready ? (policy.employees?.length || 0) : '',
+          days: policy.ready ? (units.find((item) => item.code === activeTimeOff?.unit)?.name || '') : '',
         };
       }
       );
@@ -56,7 +115,7 @@ function TimeOffDetails({
       return initColumnsArray.map((column) => {
         return {
           ...column,
-          label: column.field === 'name' ? (policies.length + ' ' + t(column.label)) : column.label,
+          label: column.field === 'name' ? ((policies?.filter(policy => policy.ready).length || 0) + ' ' + t(column.label)) : column.label,
         };
       });
     });
@@ -102,7 +161,7 @@ function TimeOffDetails({
             footerButton={renderFooterButton()}
             selectedItem={selectedRow}
             setSelectedItem={setSelectedPolicy}
-            editRow={onEditPolicy}
+            //editRow={onEditPolicy}
             removeRow={onDeletePolicy}
             duplicateRow={onDuplicatePolicy}
           />

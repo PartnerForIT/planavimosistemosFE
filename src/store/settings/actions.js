@@ -150,6 +150,12 @@ import {
   UPDATE_POLICY,
   UPDATE_POLICY_SUCCESS,
   UPDATE_POLICY_ERROR,
+  UPDATE_POLICY_SETTINGS,
+  UPDATE_POLICY_SETTINGS_SUCCESS,
+  UPDATE_POLICY_SETTINGS_ERROR,
+  UPDATE_POLICY_EMPLOYEES,
+  UPDATE_POLICY_EMPLOYEES_SUCCESS,
+  UPDATE_POLICY_EMPLOYEES_ERROR,
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_SUCCESS,
   DUPLICATE_POLICY_ERROR,
@@ -1082,6 +1088,42 @@ export const updatePolicySuccess = (data) => ({
 
 export const updatePolicyError = (data) => ({
   type: UPDATE_POLICY_ERROR,
+  data,
+});
+
+export const updatePolicySettings = (companyId, timeOffId, policyId, data) => ({
+  type: UPDATE_POLICY_SETTINGS,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const updatePolicySettingsSuccess = (data) => ({
+  type: UPDATE_POLICY_SETTINGS_SUCCESS,
+  data,
+});
+
+export const updatePolicySettingsError = (data) => ({
+  type: UPDATE_POLICY_SETTINGS_ERROR,
+  data,
+});
+
+export const updatePolicyEmployees = (companyId, timeOffId, policyId, data) => ({
+  type: UPDATE_POLICY_EMPLOYEES,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const updatePolicyEmployeesSuccess = (data) => ({
+  type: UPDATE_POLICY_EMPLOYEES_SUCCESS,
+  data,
+});
+
+export const updatePolicyEmployeesError = (data) => ({
+  type: UPDATE_POLICY_EMPLOYEES_ERROR,
   data,
 });
 
