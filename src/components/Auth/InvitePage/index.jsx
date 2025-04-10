@@ -24,10 +24,12 @@ const InvitePage = () => {
   const {
     email,
     security,
-    company: { companyName = '' },
+    company: { companyName = '', lang = 'en' },
     loading,
     admin,
   } = useSelector(companyServicesInfoSelector);
+
+  localStorage.setItem('i18nextLng', lang);
 
   useLayoutEffect(() => {
     dispatch(getInviteInfo(token));
@@ -107,8 +109,8 @@ const InvitePage = () => {
           <p>
             {
               admin
-                ? t(`You are the main admin user of the ${companyName} organization account.`)
-                : t(`You have been invited to the ${companyName} organization account as a company employee.`)
+                ? t(`You are the main admin user of the {{company}} organization account.`, { company: companyName })
+                : t(`You have been invited to the {{company}} organization account as a company employee.`, { company: companyName })
             }
           </p>
           <p>

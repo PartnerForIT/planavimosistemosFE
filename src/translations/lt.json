@@ -1225,5 +1225,12 @@
         "Remove": "Atimti",
         "Enter quantity": "Įveskite kiekį",
         "Users selected": "Pasirinkti vartotojai",
-        "Bulk update": "Masinis atnaujinimas"
+        "Bulk update": "Masinis atnaujinimas",
+
+        "Create password": "Sukurti slaptažodį",
+        "You are the main admin user of the {{company}} organization account.": "Jūs esate pagrindinis administratoriaus vartotojas {{company}} organizacijos paskyroje.",
+        "You have been invited to the {{company}} organization account as a company employee.": "Jūs buvote pakviestas į {{company}} organizacijos paskyrą kaip įmonės darbuotojas.",
+        "Your registered e-mail": "Jūsų registruotas el. paštas",
+        "Please create your password": "Sukurkite slaptažodį",
+        "Passwords do not match": "Slaptažodžiai nesutampa"
 }
