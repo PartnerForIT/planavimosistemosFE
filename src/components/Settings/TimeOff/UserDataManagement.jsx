@@ -9,6 +9,7 @@ import DataTable from '../../Core/DataTableCustom/OLT';
 import usePermissions from '../../Core/usePermissions';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import Filter from './TimeOffDetails/Filter';
+import RequestBehalf from '../../Core/Dialog/RequestBehalf';
 
 import classes from './timeoff.module.scss';
 import Button from '../../Core/Button/Button';
@@ -125,6 +126,7 @@ function UserDataManagement({
   const [employeesAll, setEmployeesAll] = useState([]);
   const [all, setAll] = useState(false);
   const [selected, setSelected] = useState({});
+  const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
 
   const { getDateFormat } = useCompanyInfo();
   const dateFormat = getDateFormat({
@@ -285,8 +287,14 @@ function UserDataManagement({
     }
   };
 
+  const selectedEmployees = useMemo(() => {
+    if (checkedItems.length) {
+      return employees.filter((item) => checkedItems.includes(item.id));
+    }
+    return employees.filter((item) => selected.id === item.id);
+  }, [checkedItems, employees, selected]);
+
   const handleUnassign = () => {
-    const selectedEmployees = employees.filter((item) => (checkedItems.length ? !checkedItems.includes(item.id) : selected.id !== item.id));
     const ids = selectedEmployees.map(({ id }) => id);
 
     handleEditPolicyEmployees(ids);
@@ -320,6 +328,7 @@ function UserDataManagement({
           changeUserStatus={() => ({})}
           checkedItems={checkedItems ?? []}
           handleUnassign={handleUnassign}
+          handleRequestBehalf={() => setRequestBehalfOpen(true)}
           selectedItem={selected}
           setSearch={setSearch}
           search={search}
@@ -352,6 +361,16 @@ function UserDataManagement({
         className={classes.selectdisabled__tooltip}
         effect='solid'
         placement='bottom'
+      />
+      <RequestBehalf
+        open={requestBehalfOpen}
+        handleClose={() => {
+          setRequestBehalfOpen(false);
+        }}
+        title={t('Request on behalf')}
+        onSubmit={() => {}}
+        buttonTitle={t('Submit')}
+        employees={selectedEmployees}
       />
     </>
   );

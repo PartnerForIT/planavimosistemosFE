@@ -11,6 +11,7 @@ import Input from '../../../Core/Input/Input';
 export default function Filter({
   changeUserStatus = () => ({}),
   handleUnassign,
+  handleRequestBehalf,
   checkedItems,
   selectedItem,
   setSearch,
@@ -39,7 +40,7 @@ export default function Filter({
         </p>
         
         <Button
-          onClick={() => changeUserStatus('request_on_behalf')}
+          onClick={handleRequestBehalf}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Request on behalf')}

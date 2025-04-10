@@ -59,6 +59,54 @@
   }
 }
 
+.employeesSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-right: 1px solid #E1EBF5;
+  padding: 20px;
+  min-width: 230px;
+
+  .dialogTitleClear {
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  .employeeItem {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+
+    .skillName {
+      font-size: 14px;
+      font-weight: 400;
+      color: #808F94;
+    }
+
+    .avatarBlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #E1EBF5;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+}
+
 .formSide {
   display: flex;
   flex-direction: column;
@@ -70,6 +118,10 @@
   .dialogTitleBlock {
     margin-bottom: 30px;
     margin-right: -10px;
+
+    button {
+      padding: 0;
+    }
   }
 
   @media (max-width: 768px) {
