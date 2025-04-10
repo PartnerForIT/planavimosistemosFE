@@ -1226,8 +1226,9 @@
         "Bulk update": "Masinis atnaujinimas",
 
         "You are the main admin user of the {{company}} organization account.": "Jūs esate pagrindinis administratoriaus vartotojas {{company}} organizacijos paskyroje.",
-        "You have been invited to the {{company}} organization account as a company employee.": "Jūs buvote pakvietas į {{company}} įmonės paskyrą kaip įmonės darbuotojas",
         "Your registered e-mail": "Jūsų registruotas el.paštas",
+        "You have been invited to the {{company}} organization account as a company employee.": "Jūs buvote pakviestas į {{company}} įmonės paskyrą kaip įmonės darbuotojas.",
+        "Your registered e-mail:": "Jūsų registruotas el.paštas",
         "Please create your password": "Prašome susikurti savo slaptažodį",
         "Create password": "Sukurkite slaptažodį",
         "Re-enter password": "Pakartokite slaptažodį",
