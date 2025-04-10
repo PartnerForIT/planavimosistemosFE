@@ -67,6 +67,8 @@
   border-right: 1px solid #E1EBF5;
   padding: 20px;
   min-width: 230px;
+  max-height: 520px;
+  overflow: auto;
 
   .dialogTitleClear {
     margin: 0;
@@ -382,4 +384,25 @@
   width: 100%;
   background-color: #cbd1d8;
   display: block;
+}
+
+.formRow {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 10px;
+  margin-right: 1px;
+
+  &Last,
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  > div {
+    width: 100%;
+  }
+
+  .formControl {
+    margin-bottom: 0;
+  }
 }

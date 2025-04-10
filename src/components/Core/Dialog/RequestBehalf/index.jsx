@@ -26,11 +26,9 @@ export default ({
 }) => {
   const { t } = useTranslation();
   const [values, setValues] = useState(defaultValues);
-  const [madeChanges, setMadeChanges] = useState(false);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    setMadeChanges(true);
   };
   const handleSubmit = () => {
     onSubmit(values);
@@ -95,40 +93,71 @@ export default ({
               <CloseIcon />
             </IconButton>
           </div>
-          <div className={style.formControl}>
-            <div className={style.labelBlock}>
-              <Label text={t('Policy name')} htmlFor='name' />
-              <span className={style.required}>*</span>
+          <div className={style.formRow}>
+            <div className={style.formControl}>
+              <div className={style.labelBlock}>
+                <Label text={t('Policy name')} htmlFor='name' />
+              </div>
+              <Input
+                placeholder={t('Enter policy name')}
+                value={values.name}
+                name='name'
+                fullWidth
+                onChange={handleChange}
+              />
             </div>
-            <Input
-              placeholder={t('Enter policy name')}
-              value={values.name}
-              name='name'
-              fullWidth
-              onChange={handleChange}
-            />
+            <div></div>
+          </div>
+
+          <div className={style.formRow}>
+            <div className={style.formControl}>
+              <div className={style.labelBlock}>
+                <Label text={t('From')} htmlFor='from' />
+              </div>
+              <Input
+                placeholder={t('Start date')}
+                value={values.from}
+                name='from'
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+            <div className={style.formControl}>
+              <div className={style.labelBlock}>
+                <Label text={t('To')} htmlFor='to' />
+              </div>
+              <Input
+                placeholder={t('End date')}
+                value={values.to}
+                name='to'
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
           
           <div className={style.formControl}>
-            <Label text={t('Description')} htmlFor='description' />
+            <Label text={t('Note')} htmlFor='note' />
             <Textarea
               className={style.textarea}
-              placeholder={`${t('Write a description')} (${t('optional')})`}
+              placeholder={`${t('Write a note')} (${t('optional')})`}
               onChange={handleChange}
-              name='description'
-              value={values.description}
+              name='note'
+              value={values.note}
             />
           </div>
-          <div className={style.buttonSaveBlock}>
-            <Button
-              disabled={!values.name || !madeChanges}
-              onClick={handleSubmit}
-              fillWidth
-              size='big'
-            >
-              {buttonTitle}
-            </Button>
+          <div className={style.formRow}>
+            <div></div>
+            <div className={style.buttonSaveBlock}>
+              <Button
+                onClick={handleSubmit}
+                fillWidth
+                size='big'
+              >
+                {buttonTitle}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

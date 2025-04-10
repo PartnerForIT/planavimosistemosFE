@@ -118,7 +118,6 @@ const PolicySettings = React.memo(({
       if (['earned', 'annual_grant'].includes(updatedValues.allowance_type)) {
         requiredFields.push('allowance_amount');
         requiredFields.push('allowance_carryover_type');
-        requiredFields.push('allowance_carryover_amount');
   
         if (updatedValues.use_maximum_balance_capacity) {
           requiredFields.push('maximum_balance');
