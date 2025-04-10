@@ -765,7 +765,6 @@
             "User": "Vartotojas",
             "Action": "Veiksmas", 
             "Device": "Įrenginys",
-            "Login": "Prisijungė", 
             "Logout": "Išsijungė", 
             "Clocked In": "Įsiregistravo (dirbti)",
             "Clocked Out": "Išsiregistravo (nustot dirbti)",
@@ -830,7 +829,6 @@
         "Target time": "Reikalingos valandos",
         "Period": "Periodas",
         "Create Holiday": "Sukurti Šventė",
-        "Re-enter password": "Pakartokite slaptažodį",
         "New kiosk": "Naujas kioskas",
         "Create a password": "Sukurti slaptažodį",
         "Enter hours threshold": "Įvesti valandų poreikį",
@@ -1227,10 +1225,12 @@
         "Users selected": "Pasirinkti vartotojai",
         "Bulk update": "Masinis atnaujinimas",
 
-        "Create password": "Sukurti slaptažodį",
         "You are the main admin user of the {{company}} organization account.": "Jūs esate pagrindinis administratoriaus vartotojas {{company}} organizacijos paskyroje.",
-        "You have been invited to the {{company}} organization account as a company employee.": "Jūs buvote pakviestas į {{company}} organizacijos paskyrą kaip įmonės darbuotojas.",
-        "Your registered e-mail": "Jūsų registruotas el. paštas",
-        "Please create your password": "Sukurkite slaptažodį",
-        "Passwords do not match": "Slaptažodžiai nesutampa"
+        "You have been invited to the {{company}} organization account as a company employee.": "Jūs buvote pakvietas į {{company}} įmonės paskyrą kaip įmonės darbuotojas",
+        "Your registered e-mail": "Jūsų registruotas el.paštas",
+        "Please create your password": "Prašome susikurti savo slaptažodį",
+        "Create password": "Sukurkite slaptažodį",
+        "Re-enter password": "Pakartokite slaptažodį",
+        "Login": "Prisijungti",
+        "Passwords do not match": "Nesutampa slaptažodžiai"
 }
