@@ -251,6 +251,43 @@
   margin-bottom: 20px;
 }
 
+.dateInput {
+  label {
+    z-index: 1;
+    font-size: 15px;
+    transform: translate(11px, 12px) scale(1);
+    color: #b9b9b9;
+
+    &[data-shrink="true"] {
+      display: none;
+    }
+  }
+
+  input {
+    background-color: #fcfdfd;
+    border: 1px solid rgba(0, 133, 255, 0.1);
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #333945;
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 15px;
+    padding: 0 11px;
+    outline: none;
+    margin: 0;
+    height: 36px;
+  }
+
+  div {
+    margin: 0 !important;
+    padding: 0;
+
+    &::after,
+    &::before {
+        display: none;
+    }
+  }
+}
+
 .daleteData {
   margin: 35px 15px;
   text-align: center;

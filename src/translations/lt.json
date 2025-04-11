@@ -1233,5 +1233,6 @@
         "Create password": "Sukurkite slaptažodį",
         "Re-enter password": "Pakartokite slaptažodį",
         "Login": "Prisijungti",
-        "Passwords do not match": "Nesutampa slaptažodžiai"
+        "Passwords do not match": "Nesutampa slaptažodžiai",
+        "Reset password": "Pakeisti slaptažodį"
 }

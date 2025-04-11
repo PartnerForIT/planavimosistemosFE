@@ -7,12 +7,15 @@ import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import MomentUtils from '@date-io/moment';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
   name: '',
-  type: '',
-  description: '',
+  from: null,
+  to: null,
+  note: '',
 };
 
 export default ({
@@ -112,27 +115,35 @@ export default ({
           <div className={style.formRow}>
             <div className={style.formControl}>
               <div className={style.labelBlock}>
-                <Label text={t('From')} htmlFor='from' />
+                <Label text={t('From')} htmlFor='From' />
               </div>
-              <Input
-                placeholder={t('Start date')}
-                value={values.from}
-                name='from'
-                fullWidth
-                onChange={handleChange}
-              />
+              <div className={style.dateInput}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DatePicker
+                    label={t('Start date')}
+                    value={values.from}
+                    onChange={(date) => handleChange({target: {name: 'from', value: date}})}
+                    format='MMM, DD, YYYY'
+                    name="from"
+                  />
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
             <div className={style.formControl}>
-              <div className={style.labelBlock}>
+            <div className={style.labelBlock}>
                 <Label text={t('To')} htmlFor='to' />
               </div>
-              <Input
-                placeholder={t('End date')}
-                value={values.to}
-                name='to'
-                fullWidth
-                onChange={handleChange}
-              />
+              <div className={style.dateInput}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DatePicker
+                    label={t('To date')}
+                    value={values.to}
+                    onChange={(date) => handleChange({target: {name: 'to', value: date}})}
+                    format='MMM, DD, YYYY'
+                    name="to"
+                  />
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
           </div>
 

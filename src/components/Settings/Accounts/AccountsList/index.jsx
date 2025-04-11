@@ -522,6 +522,11 @@ export default function AccountsList() {
     setEmployeesAll(employeesAll.map(({ checked, ...rest }) => ({ ...rest, checked: !!value })));
   };
 
+  const handleResetPassword = () => {
+    dispatch(setEmployeesActions(id, checkedItems.length ? checkedItems : [selected.id], 'reset_password'));
+    setCheckedItems([]);
+  };
+
   const onColumnSearch = (column, value) => {
     setColSearch({ ...colSearch, [column]: value });
   }
@@ -558,6 +563,7 @@ export default function AccountsList() {
                     users={usersOptions}
                     changeUserStatus={handleChangeStatus}
                     checkedItems={checkedItems ?? []}
+                    onResetPassword={handleResetPassword}
                     clearCheckbox={() => ({})}
                     stats={userStats}
                     selectedItem={selected}

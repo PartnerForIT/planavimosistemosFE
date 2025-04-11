@@ -33,6 +33,7 @@ export default function Filter({
   users,
   handleChangeUser,
   changeUserStatus = () => ({}),
+  onResetPassword,
   checkedItems,
   stats,
   selectedItem,
@@ -143,6 +144,17 @@ export default function Filter({
               disabled={!checkedItems.length > 0 && !selectedItem.id}
             >
               {t('Delete')}
+            </Button>
+          )
+        }
+        {
+          onResetPassword && (
+            <Button
+              darkBlue
+              onClick={onResetPassword}
+              disabled={!checkedItems.length > 0 && !selectedItem.id}
+            >
+              {t('Reset password')}
             </Button>
           )
         }

@@ -104,6 +104,13 @@
   background: $blue-3;
 }
 
+.darkBlue {
+  @extend %green;
+
+  border: 1px solid #3400C9;
+  background: #3400C9;
+}
+
 .danger,
 %danger {
   color: #fff;

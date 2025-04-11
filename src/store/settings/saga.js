@@ -1665,7 +1665,7 @@ function* setEmployeesActions(action) {
       });
 
     yield put(loadEmployeesAll(action.companyId));
-    yield put(addSnackbar('Changed status successfully', 'success'));
+    yield put(addSnackbar(action.status === 'reset_password' ? 'Password reset email sent' : 'Changed status successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
