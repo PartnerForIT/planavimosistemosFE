@@ -371,6 +371,8 @@ function UserDataManagement({
         onSubmit={() => {}}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id}}
       />
     </>
   );

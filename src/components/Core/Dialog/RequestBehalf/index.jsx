@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DialogClear from '../DialogClear';
 import Button from '../../Button/Button';
-import Input from '../../Input/Input';
+//import Input from '../../Input/Input';
+import Select from '../../../Core/SimpleSelect';
 import Textarea from '../../Textarea/Textarea';
 import Label from '../../InputLabel';
 import style from '../Dialog.module.scss';
@@ -26,6 +27,7 @@ export default ({
   onSubmit = Function.prototype,
   initialValue,
   employees,
+  policies,
 }) => {
   const { t } = useTranslation();
   const [values, setValues] = useState(defaultValues);
@@ -49,9 +51,8 @@ export default ({
     if (initialValue) {
       setValues({
         ...defaultValues,
-        name: initialValue.name || '',
-        type: initialValue.type || '',
-        description: initialValue.description || ''});
+        ...initialValue,
+      });
     } else {
       setValues(defaultValues);
     }
@@ -99,14 +100,15 @@ export default ({
           <div className={style.formRow}>
             <div className={style.formControl}>
               <div className={style.labelBlock}>
-                <Label text={t('Policy name')} htmlFor='name' />
+                <Label text={t('Policy name')} htmlFor='policy_id' />
               </div>
-              <Input
-                placeholder={t('Enter policy name')}
-                value={values.name}
-                name='name'
-                fullWidth
-                onChange={handleChange}
+              <Select
+                handleInputChange={handleChange}
+                name='policy_id'
+                placeholder={t('Policy name')}
+                value={values.policy_id ?? ''}
+                options={policies.map((item) => { return { code: item.id, name: item.name }})}
+                readOnly={initialValue?.policy_id}
               />
             </div>
             <div></div>
