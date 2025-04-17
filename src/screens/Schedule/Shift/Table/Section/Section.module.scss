@@ -42,6 +42,19 @@
         transform: unset;
       }
     }
+
+    &__with_template {
+      width: 24px;
+      height: 24px;
+      background: #40C3E210;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: 500;
+      color: #40C3E2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   &__menu {
@@ -127,6 +140,10 @@
 
   &:hover #{$section}__menu__button {
     visibility: visible;
+  }
+  
+  &_dropdownOpen {
+    border-color: #45494D;
   }
 
   &_openMenu #{$section}__menu__button {

@@ -16,6 +16,7 @@ import Button from '../../../components/Core/Button/Button';
 import InputSelect from '../../../components/Core/InputSelect';
 import Progress from '../../../components/Core/Progress';
 import Input from '../../../components/Core/Input/Input';
+import Label from '../../../components/Core/InputLabel';
 import PopupSave from './PopupSave';
 import { getPlaces } from '../../../store/places/actions';
 import { getSettingWorkTime, actionCreatePlace } from '../../../store/settings/actions';
@@ -110,6 +111,10 @@ const permissionsConfig = [
     module: 'schedule_shift',
     permission: 'schedule_costs',
   },
+  {
+    name: 'hybrid_mode',
+    module: 'hybrid_mode',
+  }
 ];
 
 export default () => {
@@ -122,6 +127,8 @@ export default () => {
   const [colorShift, setColorShift] = useState(COLORS_SHIFT.bright[0]);
   const [selectedPlace, setSelectedPlace] = useState('');
   const [shiftName, setShiftName] = useState('');
+  const [templateSchedule, setTemplateSchedule] = useState(false);
+  const [excludeHolidays, setExcludeHolidays] = useState(false);
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
   const [startShiftFrom, setStartShiftFrom] = useState(moment());
   const [customWorkingTime, setCustomWorkingTime] = useState(true);
@@ -291,6 +298,12 @@ export default () => {
   const handleChangeShiftName = (event) => {
     setShiftName(event.target.value);
   };
+  const handleChangeTemplateSchedule = (checked) => {
+    setTemplateSchedule(checked); 
+  };
+  const handleChangeExcludeHolidays = (checked) => {
+    setExcludeHolidays(checked);
+  };
   const handleCreatePlace = (placeName) => {
     dispatch(actionCreatePlace({ name: placeName }, companyId));
 
@@ -361,7 +374,7 @@ export default () => {
       }, {});
 
     let submitEvents = customWorkingTime ? parseEvents(events) : {}
-    if (modules?.manual_mode) {
+    if (modules?.manual_mode && !templateSchedule) {
       // eslint-disable-next-line
       Object.keys(submitEvents).map((key, index) => {
           submitEvents[key] = submitEvents[key].map(item => {
@@ -383,13 +396,33 @@ export default () => {
       );
     }
 
+    let emptyEvents = {};
+    // eslint-disable-next-line
+    Object.keys(submitEvents).map((key, index) => {
+      emptyEvents[key] = submitEvents[key].map(item => {
+          return {
+            ...item,
+            data: [
+              {day: 0, start: '00:00', end: '00:00'},
+              {day: 1, start: '00:00', end: '00:00'},
+              {day: 2, start: '00:00', end: '00:00'},
+              {day: 3, start: '00:00', end: '00:00'},
+              {day: 4, start: '00:00', end: '00:00'},
+              {day: 5, start: '00:00', end: '00:00'},
+              {day: 6, start: '00:00', end: '00:00'},
+            ]
+          }
+        }
+      );
+    });
+
     const dataResources = resources.map((item) => {
       let childrens = item.children.map((itemJ) => ({
         id: itemJ.id,
         employee_id: itemJ.employeeId,
       }))
 
-      if (modules?.manual_mode) {
+      if (modules?.manual_mode && !templateSchedule) {
         childrens = childrens.filter(i => i.employee_id)
       }
 
@@ -404,8 +437,10 @@ export default () => {
       shift_info: {
         name: shiftName || values.shiftName,
         place_id: selectedPlace || values.placeId,
+        template_schedule: templateSchedule,
+        exclude_holidays: excludeHolidays,
         color_shift: colorShift,
-        date_start: (modules?.manual_mode) ? startShiftFrom.startOf('isoWeek').format('YYYY-MM-DD HH:mm') : startShiftFrom.format('YYYY-MM-DD HH:mm'),
+        date_start: (modules?.manual_mode && !templateSchedule) ? startShiftFrom.startOf('isoWeek').format('YYYY-MM-DD HH:mm') : startShiftFrom.format('YYYY-MM-DD HH:mm'),
         custom_time: Number(customWorkingTime),
         company_id: companyId, // ?
         week_count: numberOfWeeks,
@@ -413,6 +448,7 @@ export default () => {
         defaultTime: parseDefaultTime(defaultWorkingTime),
       },
       events: submitEvents,
+      emptyEvents: emptyEvents,
       resources: dataResources,
     };
 
@@ -494,6 +530,8 @@ export default () => {
       setShiftName(initialValues.shift_info.name);
       setColorShift(initialValues.shift_info.color_shift);
       setSelectedPlace(initialValues.shift_info.place.id);
+      setTemplateSchedule(initialValues.shift_info.template_schedule);
+      setExcludeHolidays(initialValues.shift_info.exclude_holidays);
       setCustomWorkingTime(true);
       setNumberOfWeeks(initialValues.shift_info.week_count);
     }
@@ -615,6 +653,24 @@ export default () => {
         <span className={classes.header__title}>
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
+        {
+          permissions.hybrid_mode && isCreate && (
+            <div className={classes.checkButton}>
+              <Label text={t('Use automatic schedule')} />
+              <Switch
+                onChange={handleChangeTemplateSchedule}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='template_schedule'
+                checked={templateSchedule}
+                height={21}
+                width={40}
+              />
+            </div>
+          )
+        }
         <Input
           placeholder={t('Enter Shift Name')}
           value={shiftName}
@@ -636,13 +692,33 @@ export default () => {
           {t('Save Changes')}
         </Button>
       </div>
-      { !modules?.manual_mode && (<div className={classes.options}>
+      { (!modules?.manual_mode || templateSchedule) && (<div className={classes.options}>
+          <div className={classes.header__dayButtons}>
           <ButtonsField
             onChange={handleChangeNumberOfWeeks}
             value={numberOfWeeks}
             label={`${t('Make shift for')}:`}
             options={makeShiftForOptions.map(item => { return {...item, label: t(item.label)}})}
           />
+          {
+            templateSchedule && (
+            <div className={classes.checkButton}>
+              <Label text={t('Exclude bank holidays')} />
+              <Switch
+                onChange={handleChangeExcludeHolidays}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='exclude_holidays'
+                checked={excludeHolidays}
+                height={21}
+                width={40}
+              />
+            </div>
+          )
+          }
+          </div>
           <DatePicker
             label={`${t('Start Shift From')}:`}
             value={startShiftFrom}
@@ -682,6 +758,7 @@ export default () => {
             handleCopyTool={handleCopyTool}
             handleAddHistory={handleAddHistory}
             copyTool={copyTool}
+            templateSchedule={templateSchedule}
           />
         )
       }

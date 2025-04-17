@@ -16,6 +16,7 @@ const Dropdown = forwardRef(({
   cancel,
   onCancel,
   buttonClass,
+  onToggle,
 }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,6 +32,7 @@ const Dropdown = forwardRef(({
         return;
       }
       setIsOpen(false);
+      if (onToggle) onToggle(false);
       if (onCancel) {
         onCancel();
       }
@@ -48,20 +50,24 @@ const Dropdown = forwardRef(({
     open: () => {
       if (!isOpen) {
         setIsOpen(true);
+        if (onToggle) onToggle(true);
       }
     },
     close: () => {
       if (isOpen) {
         setIsOpen(false);
+        if (onToggle) onToggle(false);
       }
     },
   }));
 
   const handleClick = () => {
     setIsOpen((prevState) => !prevState);
+    if (onToggle) onToggle(!isOpen);
   };
   const handleCloseModal = () => {
     setIsOpen(false);
+    if (onToggle) onToggle(!isOpen);
   };
   
   return (

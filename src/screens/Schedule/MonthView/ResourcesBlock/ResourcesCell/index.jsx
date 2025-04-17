@@ -16,6 +16,7 @@ const ResourceCell = ({
   // parentRowId,
   items,
   withExpander,
+  withTemplate,
   expander,
   onExpander,
   markerActive,
@@ -30,6 +31,9 @@ const ResourceCell = ({
   employeeId,
   accumulatedHours,
   onEditShift,
+  checkIfEventsExist,
+  onGenerateTimes,
+  onClearTimes,
   onDeleteShift,
 }) => {
 
@@ -72,9 +76,12 @@ const ResourceCell = ({
           employeeId={employeeId}
           expander={expander}
           withExpander={withExpander && !markerActive}
+          withTemplate={withTemplate}
           nestingLevel={nestingLevel}
           withMenu={nestingLevel === 1}
-          onEditShift={() => { onEditShift(shiftId) }}
+          onEditShift={() => { onEditShift(withTemplate ? withTemplate : shiftId) }}
+          onGenerateTimes={!checkIfEventsExist(shiftId) ? () => { onGenerateTimes(shiftId) } : null}
+          onClearTimes={() => { onClearTimes(shiftId) }}
           onDeleteShift={() => { onDeleteShift(shiftId, title) }}
           // withNumberInput={withNumberInput}
           // count={countChildren}
@@ -94,6 +101,7 @@ const ResourceCell = ({
             employeesCount={item.employeesCount}
             shiftId={item.shiftId}
             withExpander={!!item.children?.length}
+            withTemplate={item.template_id}
             onExpander={onExpander}
             expander={item.expander}
             accumulatedHours={accumulatedHours}
@@ -104,6 +112,9 @@ const ResourceCell = ({
             nestingLevel={nestingLevel + 1}
             isEmpty={item.empty}
             onEditShift={ onEditShift }
+            checkIfEventsExist={ checkIfEventsExist }
+            onGenerateTimes={ onGenerateTimes }
+            onClearTimes={ onClearTimes }
             onDeleteShift={ onDeleteShift }
             // lastChild={index + 1 === items.length}
             // employees={employees}

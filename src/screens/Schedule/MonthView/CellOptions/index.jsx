@@ -297,14 +297,13 @@ export default ({
                   <div className={styles.cellOptions__value}>
                     {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
                   </div>
-                  {/* Edgaras suggestion 2022-05-25 */}
-                  { !modules.manual_mode && (
-                      <Dropdown.ItemMenu
-                        title={t('Change Employee')}
-                        onClick={openChangeEmployee}
-                      />
-                    )
-                  } 
+                  {/* Edgaras suggestion 2022-05-25 FOR REMOVE */}
+                  {/* Edgaras suggestion 2025-04-17 FOR RETURN */}
+                  {/* { !modules.manual_mode && ( */}
+                  <Dropdown.ItemMenu
+                    title={t('Change Employee')}
+                    onClick={openChangeEmployee}
+                  />
                   <Dropdown.ItemMenu
                     title={t('Change Working Time')}
                     onClick={openChangeWorkingTime}

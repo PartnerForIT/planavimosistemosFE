@@ -8,7 +8,7 @@ import styles from './CellOptions.module.scss';
 import classNames from 'classnames';
 import MenuContent from '../../EventContent/MenuContent';
 import Content from '../../Dropdown/Content';
-import RefreshArrows from '../../../../components/Icons/RefreshArrows';
+import ReccuringArrows from '../../../../components/Icons/ReccuringArrows';
 import CommentIcon from '../../../../components/Icons/comment_icon.png';
 import Dots from '../../../../components/Icons/Dots';
 
@@ -182,7 +182,7 @@ export default ({
                 group.map((item, index) => (
                   <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
                     <div className={styles.cellOptions__groupModal__item__title}>
-                      { item.reccuring && <div className={styles.cellOptions__reccuring}><RefreshArrows /></div> }
+                      { item.reccuring && <div className={styles.cellOptions__reccuring}><ReccuringArrows /></div> }
                       {item.schedule_title ? item.schedule_title : ''}
                     </div>
                     <div className={styles.cellOptions__groupModal__item__time}>{moment(item.start).format('HH:mm')} - {moment(item.end).format('HH:mm')}{item.title?.job_type ? ` • ${item.title?.job_type}` : ''}</div>

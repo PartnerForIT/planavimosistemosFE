@@ -18,6 +18,7 @@ export default ({
   avatar,
   expander,
   withExpander,
+  withTemplate,
   onExpander,
   withNumberInput,
   count,
@@ -29,6 +30,8 @@ export default ({
   employeeId,
   accumulatedHours,
   onEditShift,
+  onGenerateTimes,
+  onClearTimes,
   onDeleteShift,
 }) => {
   const { t } = useTranslation();
@@ -58,9 +61,11 @@ export default ({
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const buttonRef = useRef(null);
   const contentBoxRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const sectionClass = classnames('section', classes.section, {
     [classes.section_openMenu]: isOpenMenu,
+    [classes.section_dropdownOpen]: isDropdownOpen,
   });
   
   const demandTip = () => {
@@ -163,8 +168,11 @@ export default ({
     <div style={{ backgroundColor: `${nestingLevel === 0 ? 'lightgray' : 'inherit'}` }} className={sectionClass}>
       {title}
       {
-        (withNumberInput || withExpander) && (
+        (withNumberInput || withExpander || withTemplate) && (
           <div className={classes.section__options}>
+            { withTemplate && (
+              <div className={classes.section__options__with_template}>A</div>
+            )}
             {
               withNumberInput && (
                 <InputNumber
@@ -212,10 +220,26 @@ export default ({
       }
       {
         withMenu && (
-          <Dropdown buttonClass={classes.section__buttonDots}>
+          <Dropdown onToggle={setIsDropdownOpen} buttonClass={classes.section__buttonDots}>
             <div className={classes.section__title}>
               {title}
             </div>
+            {
+              withTemplate && onGenerateTimes && (
+                <Dropdown.ItemMenu
+                  title={t('Generate Work Times')}
+                  onClick={onGenerateTimes}
+                />
+              )   
+            } 
+            {
+              withTemplate && !onGenerateTimes && (
+                <Dropdown.ItemMenu
+                  title={t('Clear Work Times')}
+                  onClick={onClearTimes}
+                />
+              )   
+            } 
             <Dropdown.ItemMenu
               title={t('Edit Shift')}
               onClick={onEditShift}

@@ -8,7 +8,7 @@ import Dropdown from '../Dropdown';
 import Content from '../Dropdown/Content';
 import ChangeEmployee from './ChangeEmployee';
 import MenuContent from './MenuContent';
-import RefreshArrows from '../../../components/Icons/RefreshArrows';
+import ReccuringArrows from '../../../components/Icons/ReccuringArrows';
 import GroupIcon from '../../../components/Icons/group_icon.png';
 import CommentIcon from '../../../components/Icons/comment_icon.png';
 import styles from './EventContent.module.scss';
@@ -364,7 +364,7 @@ export default ({
       {
         !group && reccuring &&
         <div className={styles.eventContent__reccuring}>
-          <RefreshArrows />
+          <ReccuringArrows />
         </div>
       }
       {
@@ -444,7 +444,7 @@ export default ({
                 group.map((item, index) => (
                   <div key={index} className={getGroupItemClasses(item)} onClick={() => handleClickGroupItem(index)}>
                     <div className={styles.eventContent__groupModal__item__title}>
-                      { item.reccuring && <div className={styles.eventContent__reccuring}><RefreshArrows /></div> }
+                      { item.reccuring && <div className={styles.eventContent__reccuring}><ReccuringArrows /></div> }
                       {item.schedule_title ? item.schedule_title : ''}
                     </div>
                     <div className={styles.eventContent__groupModal__item__time}>{moment(item.start).format('HH:mm')} - {moment(item.end).format('HH:mm')}{item.title?.job_type ? ` • ${item.title?.job_type}` : ''}</div>

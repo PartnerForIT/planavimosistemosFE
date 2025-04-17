@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../../../../components/Core/Button/Button';
-import RefreshArrows from '../../../../components/Icons/RefreshArrows';
+import ReccuringArrows from '../../../../components/Icons/ReccuringArrows';
 
 import styles from '../EventContent.module.scss';
 import classNames from 'classnames';
@@ -19,7 +19,7 @@ export default ({
     <div className={styles.eventContent__userReccuring}>
       <div className={styles.eventContent__userReccuring_head}>
         <div className={styles.eventContent__userReccuring_icon}>
-          <RefreshArrows />
+          <ReccuringArrows />
         </div>
         {t('Recurring schedule')}
         <Button inverseblack={false} size='little'>

@@ -61,6 +61,10 @@ export default ({
   return (
     ReactDOM.createPortal(
       showComponent(),
+      // <>
+      //   <div className={classes.backdrop} onClick={onCancel} />
+      //   {showComponent()}
+      // </>,
       document.querySelector('#portal'),
     )
   );

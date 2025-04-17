@@ -92,6 +92,7 @@ const ResourcesCell = ({
   title,
   expander,
   withExpander,
+  withTemplate,
   onExpander,
   withNumberInput,
   items,
@@ -143,6 +144,7 @@ const ResourcesCell = ({
               onExpander={handleExpander}
               expander={expander}
               withExpander={withExpander}
+              withTemplate={withTemplate}
               withNumberInput={withNumberInput}
               count={countChildren}
               onChangeNumber={handleChangeNumber}
@@ -170,6 +172,7 @@ const ResourcesCell = ({
             avatar={item.photo}
             empty={item.empty}
             withExpander={!!item.children?.length}
+            withTemplate={item.template_id}
             onExpander={onExpander}
             expander={expander}
             relatives={items}
@@ -202,7 +205,8 @@ const RowContent = ({
   currentWeek,
   handleCopyTool,
   handleAddHistory,
-  copyTool
+  copyTool,
+  templateSchedule,
 }) => {
   const handleChangeTime = useCallback((values) => {
     onChange({
@@ -292,6 +296,7 @@ const RowContent = ({
             handleCopyTool={handleCopyTool}
             handleAddHistory={handleAddHistory}
             copyTool={copyTool}
+            templateSchedule={templateSchedule}
           />
         ))
       }
@@ -348,6 +353,7 @@ export default forwardRef(({
   handleCopyTool,
   handleAddHistory,
   copyTool,
+  templateSchedule,
 }, ref) => {
   const [data, setData] = useState(initialValues.data);
   const [resources, setResources] = useState(initialValues.resources);
@@ -1014,8 +1020,8 @@ export default forwardRef(({
   //console.log('mergedData', mergedData, numberOfWeeks);
   //console.log('resources', resources);
   return (
-    <div className={classnames(classes.table, modules?.manual_mode ? classes.table__gray : '')}>
-      { !modules?.manual_mode && (
+    <div className={classnames(classes.table, (modules?.manual_mode && !templateSchedule) ? classes.table__gray : '')}>
+      { (!modules?.manual_mode || templateSchedule) && (
         <Header
           onClickNext={handleClickNext}
           onClickPrev={handleClickPrev}
@@ -1062,7 +1068,7 @@ export default forwardRef(({
               }
             </div>
             
-            { !modules?.manual_mode && (
+            { (!modules?.manual_mode || templateSchedule) && (
               <div className={classes.table__content__data}>
                 <RowDefaultTimeContent
                   items={defaultWorkingTime[currentWeek]}
@@ -1092,6 +1098,7 @@ export default forwardRef(({
                       handleCopyTool={handleCopyTool}
                       handleAddHistory={handleAddHistory}
                       copyTool={copyTool}
+                      templateSchedule={templateSchedule}
                     />
                   ))
                 }
@@ -1099,7 +1106,7 @@ export default forwardRef(({
             )
           }
           </div>
-          { !modules?.manual_mode && (
+          { (!modules?.manual_mode || templateSchedule) && (
             <div className={classes.table__background}>
               {backgroundArr.map((item) => (
                 <div key={`cell-background-${item.id}`} className={classes.table__background__row}>
@@ -1115,7 +1122,7 @@ export default forwardRef(({
           )
           }
         </>
-      { !modules?.manual_mode && 
+      { (!modules?.manual_mode || templateSchedule) && 
         (<Footer
           timesPanel={timesPanelFull}
           daysOfWeek={daysOfWeek[currentWeek]}

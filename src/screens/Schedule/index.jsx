@@ -42,6 +42,8 @@ import {
   patchChangeTimeline,
   patchAddTimeline,
   patchChangeEmployee,
+  patchGenerateTimes,
+  patchClearTimes,
   deleteShift, addTempemployee, patchMarker, downloadSchedule
 } from '../../store/schedule/actions';
 import {
@@ -72,6 +74,7 @@ import {shiftTypesSelector} from '../../store/shiftsTypes/selector';
 import AddTempEmployee from "./AddTempEmployee";
 import HolidayIcon from 'components/Core/HolidayIcon/HolidayIcon';
 import DialogDeleteShift from 'components/Core/Dialog/DeleteShift';
+import DialogClearShift from 'components/Core/Dialog/ClearShift';
 
 const permissionsConfig = [
   {
@@ -124,6 +127,7 @@ export default () => {
   const [copyToolTime,setCopyToolTime] = useState({})
   const [tempEventID,setTempEventID] = useState(0)
   const [openDialog,setOpenDialog] = useState(false)
+  const [clearConfirmation, setClearConfirmation] = useState(false)
   const [deletedShiftName,setDeletedShiftName] = useState('')
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
@@ -406,6 +410,22 @@ export default () => {
     }));
   };
 
+  const getShiftName = (id) => {
+    const name = shiftsTypes?.shiftTypes?.find((i) => i.id === id)?.name;
+
+    return name || '';
+  };
+
+  const checkIfEventsExist = (shiftId) => {
+    if (!events || !shiftId) return false;
+    const selectedEvent = events.find((e) => {
+      const ids = e.resourceId.split('-');
+      return ids[0].toString() === shiftId.toString() && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
+    });
+    
+    return !!selectedEvent;
+  };
+
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
     setFilter((prevState) => ({
@@ -499,6 +519,37 @@ export default () => {
   };
   const handleEditShift = (shiftId) => {
     history.push(`/${companyId}/schedule/shift/${shiftId}`);
+  };
+  const handleGenerateTimes = (shiftId) => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    dispatch(patchGenerateTimes({
+      companyId,
+      shiftId,
+      data: {
+        from_date: nextFromDate.format('YYYY-MM-DD'),
+        type: timeline,
+      },
+      body: getBodyForGetSchedule(),
+    }));
+  };
+  const handleClearTimes = (shiftId) => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    setClearConfirmation(false);
+    dispatch(patchClearTimes({
+      companyId,
+      shiftId,
+      data: {
+        from_date: nextFromDate.format('YYYY-MM-DD'),
+        type: timeline,
+      },
+      body: getBodyForGetSchedule(),
+    }));
   };
   const getBodyForGetSchedule = () => {
     let nextFromDate = moment(fromDateRef.current);
@@ -764,6 +815,8 @@ export default () => {
         withMenu={!!shiftId && permissions.schedule_create_and_edit}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
+        onGenerateTimes={!checkIfEventsExist(shiftId) ? false : () => handleGenerateTimes(shiftId)}
+        onClearTimes={() => setClearConfirmation({shiftId: shiftId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
         onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
       />
     );
@@ -1224,6 +1277,9 @@ export default () => {
                     addTempEmployees={addTempEmployees}
                     handleChangeTimeline={handleChangeTimeline}
                     onEditShift={(shiftId) => handleEditShift(shiftId)}
+                    checkIfEventsExist={checkIfEventsExist}
+                    onGenerateTimes={(shiftId) => handleGenerateTimes(shiftId)}
+                    onClearTimes={(shiftId) => setClearConfirmation({shiftId: shiftId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
                     onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
                   />
                 ) : (
@@ -1330,6 +1386,16 @@ export default () => {
           shiftName={deletedShiftName}
           submitDeleteShift={() => handleDeleteShift(openDialog)}
           cancelDelete={cancelDelete}
+        />
+        <DialogClearShift
+          open={!!clearConfirmation?.shiftId}
+          handleClose={() => setClearConfirmation(false)}
+          title={t('Clear Work Times?')}
+          buttonTitle2={t('Cancel')}
+          buttonTitle={t('Clear')}
+          info={clearConfirmation}
+          submitDeleteShift={() => handleClearTimes(clearConfirmation.shiftId)}
+          cancelDelete={() => setClearConfirmation(false)}
         />
         <Tooltip
           id='time'

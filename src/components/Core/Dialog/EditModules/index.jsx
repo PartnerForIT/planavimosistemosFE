@@ -23,6 +23,7 @@ const initialValues = {
   schedule_simple: false,
   schedule_shift: false,
   manual_mode: false,
+  hybrid_mode: false,
   create_places: false,
   create_jobs: false,
   create_groups: false,
@@ -84,6 +85,7 @@ export default ({
           schedule_shift: checked,
           schedule_simple: false,
           manual_mode: false,
+          hybrid_mode: false,
           create_places: checked || prevState.create_places,
         }));
         break;
@@ -164,6 +166,13 @@ export default ({
                   name='manual_mode'
                 />
               </div>
+              <Checkbox
+                  onChange={handleChange}
+                  checked={modules.hybrid_mode}
+                  disabled={!modules.schedule_shift}
+                  label={t('Hybrid Schedule')}
+                  name='hybrid_mode'
+                />
               <Checkbox
                 onChange={handleChange}
                 checked={modules.time_off}

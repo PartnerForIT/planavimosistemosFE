@@ -12,6 +12,8 @@ import {
   GET_SHIFT,
   PUT_SHIFT,
   PATCH_MARKER,
+  PATCH_GENERATE_TIMES,
+  PATCH_CLEAR_TIMES,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
@@ -114,6 +116,40 @@ function* patchMarker(action) {
 
   } catch (error) {
     yield put(patchMarkerError());
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchGenerateTimes(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/generate-times`,
+      action.data,
+      getToken(),
+    );
+    
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
+    yield put(addSnackbar(error, 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* patchClearTimes(action) {
+  try {
+    yield call(
+      axios.patch,
+      `${config.api.url}/company/${action.companyId}/shift/${action.shiftId}/clear-times`,
+      action.data,
+      getToken(),
+    );
+    
+    yield put(getScheduleAction(action.body));
+  } catch (error) {
     yield put(addSnackbar(error, 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -237,6 +273,8 @@ export default function* ScheduleWatcher() {
   yield takeLatest(POST_SHIFT, postShift);
   yield takeLatest(PUT_SHIFT, putShift);
   yield takeLatest(PATCH_MARKER, patchMarker);
+  yield takeLatest(PATCH_GENERATE_TIMES, patchGenerateTimes);
+  yield takeLatest(PATCH_CLEAR_TIMES, patchClearTimes);
   yield takeLatest(PATCH_CHANGE_EMPLOYEE, patchChangeEmployee);
   yield takeLatest(PATCH_CHANGE_TIMELINE, patchChangeTimeline);
   yield takeLatest(PATCH_ADD_TIMELINE, patchAddTimeline);

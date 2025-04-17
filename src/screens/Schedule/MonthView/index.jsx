@@ -52,6 +52,9 @@ export default ({
   addTempEmployees,
   handleChangeTimeline,
   onEditShift,
+  onGenerateTimes,
+  checkIfEventsExist,
+  onClearTimes,
   onDeleteShift,
 }) => {
   const { t, i18n } = useTranslation();
@@ -291,6 +294,9 @@ export default ({
               currentMonth={currentMonth}
               accumulatedHours={accumulatedHours}
               onEditShift={onEditShift}
+              onGenerateTimes={onGenerateTimes}
+              checkIfEventsExist={checkIfEventsExist}
+              onClearTimes={onClearTimes}
               onDeleteShift={onDeleteShift}
             />
             <div className={classes.monthView__content__data}>

@@ -9,6 +9,9 @@ export default ({
   markerActive,
   accumulatedHours,
   onEditShift,
+  checkIfEventsExist,
+  onGenerateTimes,
+  onClearTimes,
   onDeleteShift,
 }) => {
   return (
@@ -24,11 +27,15 @@ export default ({
             markerActive={markerActive}
             accumulatedHours={accumulatedHours}
             withExpander={!!item.children?.length}
+            withTemplate={item.template_id}
             withNumberInput
             countChildren={item.children?.length}
             rowId={item.id}
             index={index + (index > 0 ? (resources[index - 1].children?.length || 0) : 0)}
             onEditShift={ onEditShift }
+            checkIfEventsExist={ checkIfEventsExist }
+            onGenerateTimes={ onGenerateTimes }
+            onClearTimes={ onClearTimes }
             onDeleteShift={ onDeleteShift }
             // employees={employees}
             // onSubmit={handleSubmitAddEmployees}

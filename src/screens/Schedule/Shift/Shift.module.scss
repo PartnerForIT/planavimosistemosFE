@@ -33,6 +33,12 @@
   & > button {
     width: 170px;
   }
+
+  &__dayButtons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
 }
 
 .options {
@@ -60,6 +66,20 @@
       //color: #69767a;
       //background-color: unset;
     }
+  }
+}
+
+.checkButton {
+  background: #ebf3fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  padding: 6px 8px 6px 14px;
+
+  label {
+    padding-bottom: 0;
   }
 }
 

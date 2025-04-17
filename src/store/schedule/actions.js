@@ -15,6 +15,8 @@ import {
   PATCH_MARKER,
   PATCH_MARKER_SUCCESS,
   PATCH_MARKER_ERROR,
+  PATCH_GENERATE_TIMES,
+  PATCH_CLEAR_TIMES,
   PATCH_CHANGE_EMPLOYEE,
   PATCH_CHANGE_TIMELINE,
   PATCH_ADD_TIMELINE,
@@ -136,6 +138,30 @@ export const patchChangeEmployee = ({
   shiftId,
   data,
   id,
+  body,
+});
+export const patchGenerateTimes = ({
+  companyId,
+  shiftId,
+  data,
+  body,
+}) => ({
+  type: PATCH_GENERATE_TIMES,
+  companyId,
+  shiftId,
+  data,
+  body,
+});
+export const patchClearTimes = ({
+  companyId,
+  shiftId,
+  data,
+  body,
+}) => ({
+  type: PATCH_CLEAR_TIMES,
+  companyId,
+  shiftId,
+  data,
   body,
 });
 export const patchChangeTimeline = ({
