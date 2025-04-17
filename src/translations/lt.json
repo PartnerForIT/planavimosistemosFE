@@ -1242,5 +1242,15 @@
         "Clear Work Times?": "Pašalinti Darbo Laikus?",
         "You are about to remove all scheduled work times for shift {{shift}} for {{month}.": "Jūs ketinate pašalinti visas suplanuotas darbo valandas pamainai {{shift}} už {{month}}.",
         "Are you sure you want to proceed? This action cannot be undone.": "Ar esate tikri, kad norite tęsti? Šis veiksmas negalės būti atšaukiamas.",
-        "Clear": "Pašalinti"
+        "Clear": "Pašalinti",
+
+        "Use empty hours feature in Logbook module": "Naudoti tuščių valandų funkcionalumą Žiniaraščio modulyje",
+        "Add as Work/H": "Pridėti kaip Darbo/Val",
+        "Empty hours": "Tuščios valandos",
+        "Scheduled hours": "Suplanuotas laikas",
+        "Successfully assigned Empty hours to Work hours": "Tuščios valandos sėkmingai priskirtos darbo valandoms",
+        "Assign Empty Hours?": "Priskirti tuščias valandas?",
+        "For {{name}} you are assigning the Empty Hours to the real Work Hours.  Are you sure you want to proceed?": "Darbuotojui {{name}} priskiriate tuščias valandas kaip tikrąsias darbo valandas.",
+        "The process is not reversible.": "Ar esate tikri, kad norite tęsti? Procesas yra negrįžtamas.",
+        "Assign": "Priskirti"
 }
