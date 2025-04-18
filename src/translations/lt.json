@@ -1253,5 +1253,6 @@
         "Assign Empty Hours?": "Priskirti tuščias valandas?",
         "For {{name}} you are assigning the Empty Hours to the real Work Hours.": "Darbuotojui {{name}} priskiriate tuščias valandas kaip tikrąsias darbo valandas.",
         "Are you sure you want to proceed? The process is not reversible.": "Ar esate tikri, kad norite tęsti? Procesas yra negrįžtamas.",
-        "Assign": "Priskirti"
+        "Assign": "Priskirti",
+        "Add Employee": "Pridėti darbuotoją"
 }

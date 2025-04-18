@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector} from 'react-redux';
+import classNames from 'classnames';
 
 import Button from '../../../components/Core/Button/Button';
 
@@ -85,7 +86,7 @@ export default ({
   }, [searchValue, employees]);
   const allSortedEmployees = useGroupingEmployees(filteredEmployees, employToCheck);
   return (
-    <div className={classes.changeEmployee}>
+    <div className={classNames(classes.changeEmployee, 'styledDropdown')}>
         <div style={style}>
             <div className={classes.changeEmployee__title2}>
                 {t('Add Employee')}
@@ -94,7 +95,7 @@ export default ({
         </div>
       <Input
         icon={<SearchIcon />}
-        placeholder='Search by employees'
+        placeholder={t('Search by employees')}
         onChange={handleInputChange}
         value={searchValue}
         fullWidth
