@@ -1348,15 +1348,6 @@ export default () => {
                       locale={localStorage.getItem('i18nextLng') || 'en'}
                       // nowIndicator
                     />
-                    {
-                      (modalAddTempEmployee)
-                          ?<AddTempEmployee
-                              setmodalAddTempEmployee={setmodalAddTempEmployee}
-                              addTempEmployeeDispatch={addTempEmployeeDispatch}
-                              unavailableEmployees={unavailableEmployees()}
-                          />
-                          : ''
-                    }
                     <ReactTooltip
                       id='holiday'
                       className='schedule-screen__tooltip'
@@ -1389,6 +1380,15 @@ export default () => {
               }
             </>
           )
+        }
+        {
+          (modalAddTempEmployee)
+              ?<AddTempEmployee
+                  setmodalAddTempEmployee={setmodalAddTempEmployee}
+                  addTempEmployeeDispatch={addTempEmployeeDispatch}
+                  unavailableEmployees={unavailableEmployees()}
+              />
+              : null
         }
         <DialogDeleteShift
           open={openDialog}

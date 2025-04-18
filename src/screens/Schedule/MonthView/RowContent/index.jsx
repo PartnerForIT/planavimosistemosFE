@@ -39,7 +39,7 @@ const RowContent = ({
   const newFoundItem = (day) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
-      return {};
+      return {id: ev.id};
     }
 
     if (ev?.copy_event) {
