@@ -132,6 +132,9 @@ function* patchGenerateTimes(action) {
     );
     
     yield put(getScheduleAction(action.body));
+    yield put(addSnackbar("Schedule generated successfully"));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   } catch (error) {
     yield put(addSnackbar(error, 'error'));
     yield delay(4000);
