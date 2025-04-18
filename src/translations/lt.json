@@ -1250,7 +1250,7 @@
         "Scheduled hours": "Suplanuotas laikas",
         "Successfully assigned Empty hours to Work hours": "Tuščios valandos sėkmingai priskirtos darbo valandoms",
         "Assign Empty Hours?": "Priskirti tuščias valandas?",
-        "For {{name}} you are assigning the Empty Hours to the real Work Hours.  Are you sure you want to proceed?": "Darbuotojui {{name}} priskiriate tuščias valandas kaip tikrąsias darbo valandas.",
-        "The process is not reversible.": "Ar esate tikri, kad norite tęsti? Procesas yra negrįžtamas.",
+        "For {{name}} you are assigning the Empty Hours to the real Work Hours.": "Darbuotojui {{name}} priskiriate tuščias valandas kaip tikrąsias darbo valandas.",
+        "Are you sure you want to proceed? The process is not reversible.": "Ar esate tikri, kad norite tęsti? Procesas yra negrįžtamas.",
         "Assign": "Priskirti"
 }

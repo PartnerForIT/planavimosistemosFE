@@ -654,7 +654,7 @@ export default () => {
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
         {
-          permissions.hybrid_mode && isCreate && (
+          permissions.hybrid_mode && permissions.manual_mode && isCreate && (
             <div className={classes.checkButton}>
               <Label text={t('Use automatic schedule')} />
               <Switch
