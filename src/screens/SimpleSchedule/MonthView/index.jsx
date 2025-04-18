@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
@@ -59,68 +60,60 @@ export default ({
   availableEmployees,
 }) => {
   const { t, i18n } = useTranslation();
+  const { id: companyId } = useParams();
+  const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   const [resources, setResources] = useState([]);
-  const [resourcesExpanders, setResourcesExpanders] = useState(() => {
-    const storedValue = localStorage.getItem('resourcesExpanders');
-    return storedValue && storedValue !== 'undefined' ? JSON.parse(storedValue) : [];
+  const getAllResourceIds = (items) => {
+    let ids = [];
+  
+    const traverse = (arr) => {
+      arr.forEach((item) => {
+        ids.push(item.id);
+        if (item.children?.length) {
+          traverse(item.children);
+        }
+      });
+    };
+  
+    traverse(items);
+    return ids;
+  };
+  const [expandedIds, setExpandedIds] = useState(() => {
+    const stored = localStorage.getItem('resourcesExpandersIdsSimple'+companyId);
+  
+    if (stored && stored !== 'undefined') {
+      return JSON.parse(stored);
+    }
+  
+    // Default: all open
+    return getAllResourceIds(externalResources);
   });
 
   useEffect(() => {
-    localStorage.setItem('resourcesExpanders', JSON.stringify(resourcesExpanders));
-  }, [resourcesExpanders]);
-  
-  const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
-  const handleExpander = ({ rowId }) => {
-    setResourcesExpanders((prev) => {
-      const changeExpander = (items) => {
-        if (!items?.length) {
-          return undefined;
-        }
-  
-        return items.map((item) => {
-          if (item.id === rowId) {
-            return {
-              id: item.id,
-              children: item.children,
-              expander: !item.expander,
-            };
-          }
-  
-          return {
-            id: item.id,
-            expander: item.expander,
-            children: changeExpander(item.children),
-          };
-        });
-      };
-      
-      return changeExpander(resources);
-    });
+    localStorage.setItem('resourcesExpandersIdsSimple'+companyId, JSON.stringify(expandedIds));
+  }, [expandedIds, companyId]);
 
-    setResources((prev) => {
-      const changeResourceExpander = (items) => {
-        if (!items?.length) {
-          return undefined;
-        }
+  const applyExpanders = (items, expandedIds) => {
+    return items.map(item => ({
+      ...item,
+      expander: expandedIds.includes(item.id),
+      children: item.children ? applyExpanders(item.children, expandedIds) : [],
+    }));
+  };
   
-        return items.map((item) => {
-          if (item.id === rowId) {
-            return {
-              ...item,
-              expander: !item.expander,
-            };
-          }
-  
-          return {
-            ...item,
-            children: changeResourceExpander(item.children),
-          };
-        });
-      };
-      
-      return changeResourceExpander(prev);
+  useEffect(() => {
+    setResources(applyExpanders(externalResources, expandedIds));
+    // eslint-disable-next-line 
+  }, [externalResources, expandedIds]);
+
+  const handleExpander = ({ rowId }) => {
+    setExpandedIds(prev => {
+      return prev.includes(rowId)
+        ? prev.filter(id => id !== rowId)
+        : [...prev, rowId];
     });
   };
+
   const handleClickPrevMonth = () => {
     const nextMonth = currentMonth.clone().add(-1, 'months');
     setCurrentMonth(nextMonth);
@@ -208,39 +201,16 @@ export default ({
   }, [currentMonth]);
 
   useEffect(() => {
-    const mergeExpander = (obj1, obj2) => {
-      if (obj1.id === obj2.id) {
-        if (obj2.expander !== undefined) {
-          obj1.expander = obj2.expander;
-        }else{
-          obj1.expander = true;
-        }
-        if (obj1.children && obj2.children) {
-          obj1.children = obj1.children.map(child1 => {
-            const child2 = obj2.children.find(obj => obj.id === child1.id);
-            if (child2) {
-              return mergeExpander(child1, child2);
-            }
-            return child1;
-          });
-        }
-      }
-      return obj1;
-    }
+    const applyExpanders = (items, expandedIds) => {
+      return items.map(item => ({
+        ...item,
+        expander: expandedIds.includes(item.id),
+        children: item.children ? applyExpanders(item.children, expandedIds) : [],
+      }));
+    };
 
-    const newResources = externalResources.map(obj1 => {
-      const obj2 = resourcesExpanders.find(obj => obj.id === obj1.id);
-      if (obj2) {
-        return mergeExpander(obj1, obj2);
-      } else {
-        return mergeExpander(obj1, {...obj1});
-      }
-    });
-    
-    setResources(newResources);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalResources]);
+    setResources(applyExpanders(externalResources, expandedIds));
+  }, [externalResources, expandedIds]);
 
   const onHandleMarker = (employeeId, day) => {
     if (employeeId && day && markerActive) {
