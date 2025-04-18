@@ -14,7 +14,7 @@ export default function ClearShift({
     <Dialog handleClose={handleClose} open={open} title={title}>
       <div className={style.daleteData}>
         <div>
-          {t("You are about to remove all scheduled work times for shift {{shift}} for {{month}}", {
+          {t("You are about to remove all scheduled work times for shift {{shift}} for {{month}}.", {
             shift: info.shift,
             month: info.month,
           })}

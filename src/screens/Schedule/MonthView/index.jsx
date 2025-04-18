@@ -61,7 +61,7 @@ export default ({
   const [resources, setResources] = useState([]);
   const [resourcesExpanders, setResourcesExpanders] = useState(() => {
     const storedValue = localStorage.getItem('resourcesExpanders');
-    return storedValue ? JSON.parse(storedValue) : [];
+    return storedValue && storedValue !== 'undefined' ? JSON.parse(storedValue) : [];
   });
 
   useEffect(() => {
@@ -69,14 +69,39 @@ export default ({
   }, [resourcesExpanders]);
 
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
-  
   const handleExpander = ({ rowId }) => {
-    setResources((prevState) => {
+    setResourcesExpanders((prev) => {
       const changeExpander = (items) => {
         if (!items?.length) {
           return undefined;
         }
+  
+        return items.map((item) => {
+          if (item.id === rowId) {
+            return {
+              id: item.id,
+              children: item.children,
+              expander: !item.expander,
+            };
+          }
+  
+          return {
+            id: item.id,
+            expander: item.expander,
+            children: changeExpander(item.children),
+          };
+        });
+      };
+      
+      return changeExpander(resources);
+    });
 
+    setResources((prev) => {
+      const changeResourceExpander = (items) => {
+        if (!items?.length) {
+          return undefined;
+        }
+  
         return items.map((item) => {
           if (item.id === rowId) {
             return {
@@ -84,40 +109,16 @@ export default ({
               expander: !item.expander,
             };
           }
-
+  
           return {
             ...item,
-            children: changeExpander(item.children),
+            children: changeResourceExpander(item.children),
           };
         });
       };
-      return changeExpander(prevState);
+      
+      return changeResourceExpander(prev);
     });
-
-    const changeExpander = (items) => {
-      if (!items?.length) {
-        return undefined;
-      }
-
-      return items.map((item) => {
-        if (item.id === rowId) {
-          return {
-            id: item.id,
-            expander: !item.expander,
-          };
-        }
-
-        return {
-          id: item.id,
-          expander: item.expander,
-          children: changeExpander(item.children),
-        };
-      });
-    };
-
-    const expander = changeExpander(resources);
-
-    setResourcesExpanders(expander);
   };
   const handleClickPrevMonth = () => {
     const nextMonth = currentMonth.clone().add(-1, 'months');

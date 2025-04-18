@@ -1236,11 +1236,12 @@
         "Passwords do not match": "Nesutampa slaptažodžiai",
         "Reset password": "Pakeisti slaptažodį",
 
+        "Generate Work Times": "Generuoti Darbo Laikus",
         "Use automatic schedule": "Naudoti automatines pamainas",
         "Exclude bank holidays": "Praleisti valstybines šventes",
         "Clear Work Times": "Pašalinti Darbo laikus",
         "Clear Work Times?": "Pašalinti Darbo Laikus?",
-        "You are about to remove all scheduled work times for shift {{shift}} for {{month}.": "Jūs ketinate pašalinti visas suplanuotas darbo valandas pamainai {{shift}} už {{month}}.",
+        "You are about to remove all scheduled work times for shift {{shift}} for {{month}}.": "Jūs ketinate pašalinti visas suplanuotas darbo valandas pamainai {{shift}} už {{month}}.",
         "Are you sure you want to proceed? This action cannot be undone.": "Ar esate tikri, kad norite tęsti? Šis veiksmas negalės būti atšaukiamas.",
         "Clear": "Pašalinti",
 
