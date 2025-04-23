@@ -139,6 +139,31 @@
   }
 }
 
+.emptytimes {
+  .emptyTime {
+    &:hover,
+    &.selected {
+      .timeStart {
+        background-color: #C3C4C4;
+        display: block;
+        left: -35px;
+        z-index: 1;
+      }
+
+      .timeEnd {
+        background-color: #C3C4C4;
+        display: block;
+        right: -35px;
+        z-index: 1;
+      }
+
+      .tooltip {
+        display: block;
+      }
+    }
+  }
+}
+
 .time {
   font-family: Helvetica Neue, sans-serif;
   font-size: 14px;

@@ -49,3 +49,15 @@ export const changeStatusItems = (companyId, queryObj) => ({
     thunk: true,
   },
 });
+
+export const patchEmptyHours = (companyId, queryObj) => ({
+  type: 'PATCH_EMPTY_HOURS',
+  request: {
+    method: 'PATCH',
+    url: `/company/${companyId}/logbook/empty-hours`,
+    data: queryObj
+  },
+  meta: {
+    thunk: true,
+  },
+});

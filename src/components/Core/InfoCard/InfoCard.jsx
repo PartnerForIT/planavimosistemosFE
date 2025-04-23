@@ -16,9 +16,14 @@ import SuspendedIcon from '../../Icons/SuspendedIcon';
 import EarningIcon from '../../Icons/EarningIcon';
 import CostIcon from '../../Icons/CostIcon';
 import ProfitIcon from '../../Icons/ProfitIcon';
+import CalendarIcon from '../../Icons/CalendarIcon';
+import Timeline from '../Timeline/Timeline';
+import Button from '../Button/Button';
+import moment from 'moment';
+import classNames from 'classnames';
 
 const InfoCard = ({
-  type, label, text, icon, time, editable, onChange, durationSec, showRange,
+  type, label, text, icon, time, editable, onChange, durationSec, showRange, eventMinutes, onApproveEmpty,
 }) => {
   const { t } = useTranslation();
   const [start, setStart] = useState(time && time.started_at
@@ -42,6 +47,25 @@ const InfoCard = ({
       '& path': {
         fill: `${colors.text} !important`,
       },
+    },
+
+    clockGrayIcon: {
+      width: '18px',
+      paddingRight: '2px',
+
+      '& g': {
+        fill: '#fff !important',
+        stroke: colors.background,
+      },
+
+      '& path': {
+        fill: `#B7B7B7 !important`,
+      },
+    },
+
+    calendarIcon: {
+      width: '16px',
+      paddingRight: '4px',
     },
 
     editIcon: {
@@ -98,6 +122,12 @@ const InfoCard = ({
     switch (type) {
       case 'total':
         return <PendingIcon className={classes.clockIcon} />;
+      case 'scheduled_hours':
+        return <CalendarIcon className={classes.calendarIcon} />;
+      case 'start_empty':
+        return <PendingIcon className={classes.clockGrayIcon} />;
+      case 'end_empty':
+        return <PendingIcon className={classes.clockGrayIcon} />;
       case 'working':
         return <PendingIcon className={classes.clockIcon} />;
       case 'holiday':
@@ -122,6 +152,11 @@ const InfoCard = ({
     switch (type) {
       case 'total':
         return t('Total hours');
+      case 'scheduled_hours':
+        return t('Scheduled hours');
+      case 'start_empty':
+      case 'end_empty':
+        return <span className={styles.grayText}>{t('Empty hours')}</span>;
       case 'working':
         return t('Working hours');
       case 'holiday':
@@ -169,6 +204,34 @@ const InfoCard = ({
         return <LabelWithCurrencySignComa label={time.cost} />;
       case 'profit':
         return <LabelWithCurrencySignComa label={time.profit} />;
+      case 'scheduled_hours':
+          return <div className={classes.timeline}><Timeline
+            startTime={moment(time.event_started_at).format('HH:mm')}
+            endTime={moment(time.event_finished_at).format('HH:mm')}
+            works={[{started_at: time.event_started_at, finished_at: time.event_finished_at, duration_sec: time.event_minutes*60}]}
+            total={time.event_minutes*60}
+            startMinute={time.event_started_at}
+          /></div>;
+      case 'start_empty':
+        return (
+          <span className={styles.grayText}>
+            <span className={styles.time}>{`${parseInt(time.start_minutes_difference / 60, 10)}`}</span>
+            <span className={styles.text}>h</span>
+            { ' ' }
+            <span className={styles.time}>{`${parseInt(time.start_minutes_difference % 60, 10)}`}</span>
+            <span className={styles.text}>min</span>
+          </span>
+        );
+      case 'end_empty':
+        return (
+          <span className={styles.grayText}>
+            <span className={styles.time}>{`${parseInt(time.end_minutes_difference / 60, 10)}`}</span>
+            <span className={styles.text}>h</span>
+            { ' ' }
+            <span className={styles.time}>{`${parseInt(time.end_minutes_difference % 60, 10)}`}</span>
+            <span className={styles.text}>min</span>
+          </span>
+        );
       default:
         return <span className={styles.time}>{text}</span>;
     }
@@ -245,11 +308,46 @@ const InfoCard = ({
               )
           }
 
+          {
+            eventMinutes && (
+              <div className={styles.scheduledHours}>
+                <span className={styles.time}>{`${parseInt(eventMinutes / 60, 10)}`}</span>
+                <span className={styles.text}>h</span>
+                { ' ' }
+                <span className={styles.time}>{`${parseInt(eventMinutes % 60, 10)}`}</span>
+                <span className={styles.text}>min</span>
+              </div>
+            )
+          }
+
+          { type === 'start_empty' && (
+            <div className={styles.grayText}>
+              {`${moment(time.work_started_at).format('HH:mm')} - ${moment(time.event_started_at).format('HH:mm')}`}
+            </div>
+          ) }
+          { type === 'end_empty' && (
+            <div className={styles.grayText}>
+              {`${moment(time.event_finished_at).format('HH:mm')} - ${moment(time.work_finished_at).format('HH:mm')}`}
+            </div>
+          ) }
+
         </div>
         )}
       </div>
-      <div className={styles.timeBlock}>
+      <div className={classNames(styles.timeBlock, {[styles.withApprove]: onApproveEmpty})}>
         <CardText />
+        {
+          onApproveEmpty && (
+            <Button
+              className={styles.addAsWork}
+              green
+              size='smaller'
+              onClick={() => onApproveEmpty(time)}
+            >
+              {t('Add as Work/H')}
+            </Button>
+          )
+        }
       </div>
     </div>
   );

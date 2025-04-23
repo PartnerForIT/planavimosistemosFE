@@ -33,7 +33,7 @@ import {
 import { skillsSelector } from '../../store/skills/selectors';
 import { placesSelector } from '../../store/places/selectors';
 import { userSelector } from '../../store/auth/selectors';
-import { changeStatusItems, getWorkTime, removeItems } from '../../store/worktime/actions';
+import { changeStatusItems, getWorkTime, removeItems, patchEmptyHours } from '../../store/worktime/actions';
 // import { getEmployees } from '../../store/employees/actions';
 import { postLogbookEntry, postLogbookAddEntry, postLogbookComment } from '../../store/logbook/actions';
 import { getJobTypes } from '../../store/jobTypes/actions';
@@ -61,6 +61,8 @@ import { downloadExcel, downloadPdf } from '../../store/reports/actions';
 import { getPlaces } from '../../store/places/actions';
 import usePermissions from '../Core/usePermissions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+import ApproveEmpty from '../Core/Dialog/ApproveEmpty';
+import ApproveEmptySuccess from '../Core/Dialog/ApproveEmptySuccess';
 
 import EditEntry from './EditEntry';
 import AddEntry from './AddEntry';
@@ -209,6 +211,8 @@ export default () => {
   const [isOpenEditComment, setIsOpenEditComment] = useState(false);
   const [isOpenAddEntry, setIsOpenAddEntry] = useState(false);
   const allCustomCategories = useSelector(customCategoriesSelector);
+  const [approveEmptyVisible, setApproveEmptyVisible] = useState(false);
+  const [approveEmptySuccess, setApproveEmptySuccess] = useState(false);
 
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
@@ -815,6 +819,17 @@ export default () => {
     setIsOpenEditComment(false);
   };
 
+  const handleApproveEmpty = (id, type) => {
+    setApproveEmptyVisible({id, type});
+  };
+
+  const onApproveEmpty = (id, type) => {
+    dispatch(patchEmptyHours(companyId, {id, type})).then(() => {
+      setApproveEmptySuccess(true);
+      sendRequest();
+    }).catch();
+  };
+
   const selectedItemPlace = places.find((place) => place.id === selectedItem?.place_id || place.name === selectedItem?.place);
 
   const EmployeeInfo = () => {
@@ -882,10 +897,11 @@ export default () => {
                     works={selectedItem.works}
                     breaks={selectedItem.breaks}
                     night={selectedItem.night}
+                    empty={selectedItem.empty}
                     total={selectedItem.total_work_sec}
-                    startMinute={selectedItem.started_at}
-                    startTime={selectedItem.start}
-                    endTime={selectedItem.end}
+                    startMinute={selectedItem?.work_started_at || selectedItem.started_at}
+                    startTime={selectedItem?.work_start || selectedItem.start}
+                    endTime={selectedItem?.work_end || selectedItem.end}
                     withTimeBreaks
                   />
                   <Delimiter />
@@ -900,18 +916,56 @@ export default () => {
                       </>
                     )
                   }
+                  {
+                    selectedItem.event_started_at && (
+                      <>
+                        <InfoCard
+                          type='scheduled_hours'
+                          time={selectedItem}
+                          eventMinutes={selectedItem.event_minutes}
+                        />
+                        <Delimiter />
+                      </>
+                    )
+                  }
                   <InfoCard
                     type='total'
                     time={selectedItem}
                     showRange
                   />
                   <Delimiter />
+                  {
+                    selectedItem.start_minutes_difference && (
+                      <>
+                        <InfoCard
+                          type='start_empty'
+                          time={selectedItem}
+                          durationSec={selectedItem.start_minutes_difference*60}
+                          onApproveEmpty={() => handleApproveEmpty(selectedItem.id, 'start')}
+                        />
+                        <Delimiter />
+                      </>
+                    )
+                  }
                   <InfoCard
                     type='working'
                     time={selectedItem}
                     durationSec={selectedItem.working_hours_sec}
                   />
                   <Delimiter />
+                  {
+                    selectedItem.end_minutes_difference && (
+                      <>
+                        <InfoCard
+                          type='end_empty'
+                          time={selectedItem}
+                          durationSec={selectedItem.end_minutes_difference*60}
+                          onApproveEmpty={() => handleApproveEmpty(selectedItem.id, 'end')}
+                        />
+                        <Delimiter />
+                      </>
+                    )
+                  }
                   {
                     (AdditionalRates.holiday) && (
                       <>
@@ -1280,6 +1334,25 @@ export default () => {
                   </div>
                 )
           }
+          <ApproveEmpty
+            open={!!approveEmptyVisible}
+            handleClose={() => setApproveEmptyVisible(false)}
+            title={t('Assign Empty Hours?')}
+            text={
+              <>
+                {t("For {{name}} you are assigning the Empty Hours to the real Work Hours.", { name: selectedItem?.employee })}
+                <br />
+                {t("Are you sure you want to proceed? The process is not reversible.")}
+              </>
+            }
+            buttonTitle={t('Assign')}
+            approve={() => onApproveEmpty(approveEmptyVisible.id, approveEmptyVisible.type)}
+          />
+          <ApproveEmptySuccess
+            open={!!approveEmptySuccess}
+            handleClose={() => setApproveEmptySuccess(false)}
+            text={t('Successfully assigned Empty hours to Work hours')}
+          />
         </div>
       </div>
     </MaynLayout>

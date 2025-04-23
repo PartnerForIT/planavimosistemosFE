@@ -281,6 +281,20 @@ export default function ActivityLog() {
                   <div className={styles.hr} />
                   <div className={styles.workAtNight}>
                     <Switch
+                      onChange={(checked) => { handleSetInputValues({ use_empty_hours: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.use_empty_hours || false}
+                      height={21}
+                      width={40}
+                    />
+                    <Label text={t('Use empty hours feature in Logbook module')} />
+                  </div>
+                  <div className={styles.hr} />
+                  <div className={styles.workAtNight}>
+                    <Switch
                       onChange={(checked) => { handleSetInputValues({ use_accumulated: checked }); }}
                       offColor='#808F94'
                       onColor='#0085FF'
