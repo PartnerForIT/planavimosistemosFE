@@ -129,6 +129,7 @@ export default () => {
   const [shiftName, setShiftName] = useState('');
   const [templateSchedule, setTemplateSchedule] = useState(false);
   const [excludeHolidays, setExcludeHolidays] = useState(false);
+  const [minusHour, setMinusHour] = useState(false);
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
   const [startShiftFrom, setStartShiftFrom] = useState(moment());
   const [customWorkingTime, setCustomWorkingTime] = useState(true);
@@ -304,6 +305,9 @@ export default () => {
   const handleChangeExcludeHolidays = (checked) => {
     setExcludeHolidays(checked);
   };
+  const handleChangeMinusHour = (checked) => {
+    setMinusHour(checked);
+  };
   const handleCreatePlace = (placeName) => {
     dispatch(actionCreatePlace({ name: placeName }, companyId));
 
@@ -439,6 +443,7 @@ export default () => {
         place_id: selectedPlace || values.placeId,
         template_schedule: templateSchedule,
         exclude_holidays: excludeHolidays,
+        minus_hour: minusHour,
         color_shift: colorShift,
         date_start: (modules?.manual_mode && !templateSchedule) ? startShiftFrom.startOf('isoWeek').format('YYYY-MM-DD HH:mm') : startShiftFrom.format('YYYY-MM-DD HH:mm'),
         custom_time: Number(customWorkingTime),
@@ -532,6 +537,7 @@ export default () => {
       setSelectedPlace(initialValues.shift_info.place.id);
       setTemplateSchedule(initialValues.shift_info.template_schedule);
       setExcludeHolidays(initialValues.shift_info.exclude_holidays);
+      setMinusHour(initialValues.shift_info.minus_hour);
       setCustomWorkingTime(true);
       setNumberOfWeeks(initialValues.shift_info.week_count);
     }
@@ -712,6 +718,24 @@ export default () => {
                 checkedIcon={false}
                 name='exclude_holidays'
                 checked={excludeHolidays}
+                height={21}
+                width={40}
+              />
+            </div>
+          )
+          }
+          {
+            templateSchedule && excludeHolidays && (
+            <div className={classes.checkButton}>
+              <Label text={t('-1h before holidays')} />
+              <Switch
+                onChange={handleChangeMinusHour}
+                offColor='#808F94'
+                onColor='#0085FF'
+                uncheckedIcon={false}
+                checkedIcon={false}
+                name='minus_hour'
+                checked={minusHour}
                 height={21}
                 width={40}
               />
