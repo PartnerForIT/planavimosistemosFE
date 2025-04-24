@@ -8,7 +8,8 @@
 }
 
 .timeline {
-  background-color: #ff9d00;
+  //background-color: #ff9d00;
+  background-color: transparent;
   display: flex;
   height: 5px;
   position: relative;
@@ -47,6 +48,14 @@
   top: 20px;
   width: 100px;
   z-index: 1;
+}
+
+.line {
+  border-radius: 5px;
+  overflow: hidden;
+  width: calc(100% - 2px);
+  height: 5px;
+  position: relative;
 }
 
 .worktimes {

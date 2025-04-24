@@ -26,52 +26,54 @@ const Timeline = ({
         <div className={styles.startTime}>{startTime}</div>
         <div className={styles.endTime}>{endTime}</div>
 
-        <div className={styles.worktimes}>
-          {workTimespans.map((timespan, idx) => (
-            <Timespan
-              key={idx.toString()}
-              timespan={timespan}
-              type="work"
-              withTimeBreaks={withTimeBreaks}
-              total={total}
-            />
-          ))}
-        </div>
+        <div className={styles.line}>
+          <div className={styles.worktimes}>
+            {workTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type="work"
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))}
+          </div>
 
-        <div className={styles.nighttimes}>
-          {nightTimespans.map((timespan, idx) => (
-            <Timespan
-              key={idx.toString()}
-              timespan={timespan}
-              type="night"
-              withTimeBreaks={withTimeBreaks}
-              total={total}
-            />
-          ))}
-        </div>
+          <div className={styles.nighttimes}>
+            {nightTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type="night"
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))}
+          </div>
 
-        <div className={styles.breaktimes}>
-          {breakTimespans.map((timespan, idx) => (
-            <Timespan
-              key={idx.toString()}
-              timespan={timespan}
-              type="break"
-              withTimeBreaks={withTimeBreaks}
-              total={total}
-            />
-          ))}
-        </div>
+          <div className={styles.breaktimes}>
+            {breakTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type="break"
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))}
+          </div>
 
-        <div className={styles.emptytimes}>
-          {emptyTimespans.map((timespan, idx) => (
-            <Timespan
-              key={idx.toString()}
-              timespan={timespan}
-              type="empty"
-              withTimeBreaks={withTimeBreaks}
-              total={total}
-            />
-          ))}
+          <div className={styles.emptytimes}>
+            {emptyTimespans.map((timespan, idx) => (
+              <Timespan
+                key={idx.toString()}
+                timespan={timespan}
+                type="empty"
+                withTimeBreaks={withTimeBreaks}
+                total={total}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
