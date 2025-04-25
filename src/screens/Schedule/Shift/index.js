@@ -163,9 +163,9 @@ export default () => {
           acc[week] = prevEvents[week].map((event) => {
               if (!defaultJobTime[week]) defaultJobTime[week] = [];
 
-              if (!defaultJobTime[week].find((item) => item.resourceId.toString() === event.resourceId.split('-')[0])) {
+              if (!defaultJobTime[week].find((item) => item.resourceId.toString() === event.resourceId.toString().split('-')[0])) {
                 defaultJobTime[week].push({
-                  resourceId: event.resourceId.split('-')[0],
+                  resourceId: event.resourceId.toString().split('-')[0],
                   data: [],
                 })
               }

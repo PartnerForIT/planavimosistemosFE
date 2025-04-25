@@ -630,7 +630,7 @@ export default forwardRef(({
         acc[item] = [
           ...prevState[item],
           ...newData.map((itemJ) => {
-            const findJob = prevState[item].find(i => i.resourceId.toString() === itemJ.resourceId.split('-')[0]);
+            const findJob = prevState[item].find(i => i.resourceId.toString() === itemJ.resourceId.toString().split('-')[0]);
 
             return {
               ...itemJ,
