@@ -815,15 +815,17 @@ export default () => {
       shiftId,
       employeeId,
       employeesCount,
+      jobTypeId,
       //hours_demand,
     } = resource.extendedProps;
     const realCount = employeesCount;
+    const accumulatedHoursDetected = schedule?.accumulatedHours[employeeId+'-'+jobTypeId] ? schedule?.accumulatedHours[employeeId+'-'+jobTypeId] : (schedule?.accumulatedHours[employeeId] ? schedule?.accumulatedHours[employeeId] : []);
 
     return (
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
-        accumulatedHours={schedule?.accumulatedHours[employeeId] || []}
+        accumulatedHours={accumulatedHoursDetected}
         shiftId={shiftId}
         withMenu={!!shiftId && permissions.schedule_create_and_edit}
         employeeId={employeeId}

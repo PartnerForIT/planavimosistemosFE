@@ -15,6 +15,7 @@ const ResourceCell = ({
   rowId,
   // parentRowId,
   items,
+  item,
   withExpander,
   withTemplate,
   expander,
@@ -59,6 +60,7 @@ const ResourceCell = ({
   // const handleDelete = useCallback(() => {
   //   onDelete({ rowId, parentRowId });
   // }, [rowId, parentRowId]);
+  const accumulatedHoursDetected = employeeId && accumulatedHours && item?.jobTypeId && accumulatedHours[employeeId+'-'+item?.jobTypeId] ? accumulatedHours[employeeId+'-'+item?.jobTypeId] : (employeeId && accumulatedHours && accumulatedHours[employeeId] ? accumulatedHours[employeeId] : []);
   
   return (
     <>
@@ -72,7 +74,7 @@ const ResourceCell = ({
           title={`${title} ${employeesCount ? `(${employeesCount})` : ''}`}
           avatar={avatar}
           onExpander={handleExpander}
-          accumulatedHours={employeeId && accumulatedHours && accumulatedHours[employeeId] ? accumulatedHours[employeeId] : []}
+          accumulatedHours={accumulatedHoursDetected}
           employeeId={employeeId}
           expander={expander}
           withExpander={withExpander && !markerActive}
@@ -98,6 +100,7 @@ const ResourceCell = ({
             avatar={item.photo}
             employeeId={item.employeeId}
             items={item.children}
+            item={item}
             employeesCount={item.employeesCount}
             shiftId={item.shiftId}
             withExpander={!!item.children?.length}
