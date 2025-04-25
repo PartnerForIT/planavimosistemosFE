@@ -429,15 +429,16 @@ export default () => {
     return name || '';
   };
 
-  const checkIfEventsExist = (shiftId) => {
+  const checkIfEventsExist = useCallback((shiftId, employeeId) => {
     if (!events || !shiftId) return false;
+
     const selectedEvent = events.find((e) => {
       const ids = e.resourceId.split('-');
-      return ids[0].toString() === shiftId.toString() && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
+      return ids[0].toString() === shiftId.toString() && (!employeeId || employeeId.toString() === e.employee_id.toString()) && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
     });
     
     return !!selectedEvent;
-  };
+  }, [events]);
 
   const onEmployeesSelectFilter = (emp) => {
     const arrChecked = emp?.filter((i) => i.checked);
@@ -533,7 +534,7 @@ export default () => {
   const handleEditShift = (shiftId) => {
     history.push(`/${companyId}/schedule/shift/${shiftId}`);
   };
-  const handleGenerateTimes = (shiftId) => {
+  const handleGenerateTimes = (shiftId, employeeId) => {
     let nextFromDate = moment(fromDateRef.current);
     if (timeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
@@ -544,11 +545,12 @@ export default () => {
       data: {
         from_date: nextFromDate.format('YYYY-MM-DD'),
         type: timeline,
+        employee_id: employeeId,
       },
       body: getBodyForGetSchedule(),
     }));
   };
-  const handleClearTimes = (shiftId) => {
+  const handleClearTimes = (shiftId, employeeId) => {
     let nextFromDate = moment(fromDateRef.current);
     if (timeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
@@ -560,6 +562,7 @@ export default () => {
       data: {
         from_date: nextFromDate.format('YYYY-MM-DD'),
         type: timeline,
+        employee_id: employeeId,
       },
       body: getBodyForGetSchedule(),
     }));
@@ -830,8 +833,8 @@ export default () => {
         withMenu={!!shiftId && permissions.schedule_create_and_edit}
         employeeId={employeeId}
         onEditShift={() => handleEditShift(shiftId)}
-        onGenerateTimes={!checkIfEventsExist(shiftId) ? false : () => handleGenerateTimes(shiftId)}
-        onClearTimes={() => setClearConfirmation({shiftId: shiftId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
+        onGenerateTimes={!checkIfEventsExist(shiftId, employeeId) ? false : () => handleGenerateTimes(shiftId, employeeId)}
+        onClearTimes={() => setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
         onDeleteShift={() => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
       />
     );
@@ -1293,8 +1296,8 @@ export default () => {
                     handleChangeTimeline={handleChangeTimeline}
                     onEditShift={(shiftId) => handleEditShift(shiftId)}
                     checkIfEventsExist={checkIfEventsExist}
-                    onGenerateTimes={(shiftId) => handleGenerateTimes(shiftId)}
-                    onClearTimes={(shiftId) => setClearConfirmation({shiftId: shiftId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
+                    onGenerateTimes={(shiftId, employeeId) => handleGenerateTimes(shiftId, employeeId)}
+                    onClearTimes={(shiftId, employeeId) => setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
                     onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
                   />
                 ) : (
@@ -1409,7 +1412,7 @@ export default () => {
           buttonTitle2={t('Cancel')}
           buttonTitle={t('Clear')}
           info={clearConfirmation}
-          submitDeleteShift={() => handleClearTimes(clearConfirmation.shiftId)}
+          submitDeleteShift={() => handleClearTimes(clearConfirmation.shiftId, clearConfirmation.employeeId)}
           cancelDelete={() => setClearConfirmation(false)}
         />
         <Tooltip

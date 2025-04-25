@@ -170,7 +170,7 @@ export default ({
       {
         (withNumberInput || withExpander || withTemplate) && (
           <div className={classes.section__options}>
-            { withTemplate && (
+            { withTemplate && !employeeId && (
               <div className={classes.section__options__with_template}>A</div>
             )}
             {
@@ -219,7 +219,7 @@ export default ({
         )
       }
       {
-        withMenu && (
+        (withMenu || withTemplate) && (
           <Dropdown onToggle={setIsDropdownOpen} buttonClass={classes.section__buttonDots}>
             <div className={classes.section__title}>
               {title}
@@ -239,16 +239,22 @@ export default ({
                   onClick={onClearTimes}
                 />
               )   
-            } 
-            <Dropdown.ItemMenu
-              title={t('Edit Shift')}
-              onClick={onEditShift}
-            />
-            <Dropdown.ItemMenu
-              title={t('Delete Shift')}
-              onClick={onDeleteShift}
-              remove
-            />
+            }
+            {
+              !employeeId && (
+                <>
+                  <Dropdown.ItemMenu
+                    title={t('Edit Shift')}
+                    onClick={onEditShift}
+                  />
+                  <Dropdown.ItemMenu
+                    title={t('Delete Shift')}
+                    onClick={onDeleteShift}
+                    remove
+                  />
+                </>
+              )
+            }
             <div className={classes.section__space} />
           </Dropdown>
         )

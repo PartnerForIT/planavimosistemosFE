@@ -61,7 +61,7 @@ const ResourceCell = ({
   //   onDelete({ rowId, parentRowId });
   // }, [rowId, parentRowId]);
   const accumulatedHoursDetected = employeeId && accumulatedHours && item?.jobTypeId && accumulatedHours[employeeId+'-'+item?.jobTypeId] ? accumulatedHours[employeeId+'-'+item?.jobTypeId] : (employeeId && accumulatedHours && accumulatedHours[employeeId] ? accumulatedHours[employeeId] : []);
-  
+  const employeeShiftId = rowId ? rowId.toString().split('-')[0] : null;
   return (
     <>
       <div className={rowClasses}>
@@ -82,8 +82,8 @@ const ResourceCell = ({
           nestingLevel={nestingLevel}
           withMenu={nestingLevel === 1}
           onEditShift={() => { onEditShift(withTemplate ? withTemplate : shiftId) }}
-          onGenerateTimes={!checkIfEventsExist(shiftId) ? () => { onGenerateTimes(shiftId) } : null}
-          onClearTimes={() => { onClearTimes(shiftId) }}
+          onGenerateTimes={!checkIfEventsExist(shiftId || employeeShiftId, employeeId) ? () => { onGenerateTimes(shiftId || employeeShiftId, employeeId) } : null}
+          onClearTimes={() => { onClearTimes(shiftId || employeeShiftId, employeeId) }}
           onDeleteShift={() => { onDeleteShift(shiftId, title) }}
           // withNumberInput={withNumberInput}
           // count={countChildren}
