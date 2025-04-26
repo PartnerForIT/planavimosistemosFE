@@ -204,6 +204,21 @@ export default () => {
   const getAllSkills = useSelector(skillsSelector);
   const getAllCustomCategoriesValues = useSelector(customCategoriesValuesSelector);
   const { end_day_comment: comments = false } = useSelector(JournalDataSelector);
+  const [empList, setEmpList] = useState(getAllEmployees);
+  const stringMatch = useCallback((str1 = '') => str1.toLowerCase().includes(search.employee.toLowerCase()), [search.employee]);
+
+  useEffect(() => {
+      if (search.employee.trim() && getAllEmployees) {
+        const filtered = getAllEmployees.filter((e) => stringMatch(`${e.name} ${e.surname}`)
+          || stringMatch(e.groups[0]?.name)
+          || stringMatch(e.groups[0]?.name)
+          || stringMatch(e.subgroups[0]?.name)
+          || stringMatch(e.subgroups[0]?.parent_group?.name));
+        setEmpList([...filtered]);
+      } else {
+        setEmpList([...getAllEmployees]);
+      }
+    }, [getAllEmployees, search.employee, stringMatch]);
 
   const mainContainerClasses = classNames(styles.mainContainer, {
     [styles.mainContainerWithReports]: itemsArray.length,
@@ -219,7 +234,7 @@ export default () => {
       checked: filteredEmployees.some(({ employee_id }) => employee_id === id),
     }), [filteredEmployees]);
 
-  const allSortedEmployees = useGroupingEmployees(getAllEmployees, employToCheck);
+  const allSortedEmployees = useGroupingEmployees(empList, employToCheck);
 
   useEffect(() => {
     dispatch(getJobTypes(companyId));
@@ -695,7 +710,7 @@ export default () => {
                        withSallary={permissions.cost && permissions.profit && costState.show_earnings}
                        white
                      />
-                   ) : <div className={styles.emptyContainer}>
+                   ) : <div className={styles.emptyContainer} key={report.id.toString()}>
                     <div className={styles.emptyContent}>
                       <div>
                         <ReportsIcon className={styles.reportsIcon} />

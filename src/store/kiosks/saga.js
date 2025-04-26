@@ -259,7 +259,11 @@ function* patchUpdatePinCodes(action) {
       action.data,
       getToken(),
     );
+
     yield put(patchUpdatePinCodesSuccess(data));
+    yield put(addSnackbar('Kiosk PIN codes generated successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
   } catch (e) {
     yield put(patchUpdatePinCodesError());
     yield put(addSnackbar('Pin-code already exist', 'error'));
