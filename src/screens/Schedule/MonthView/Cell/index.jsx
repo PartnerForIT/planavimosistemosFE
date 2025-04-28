@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
@@ -12,7 +12,7 @@ import { AdditionalRatesDataSelector,
   scheduleSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../../store/settings/selectors';
 
-export default ({
+const Cell = ({
   title,
   startFinish,
   statistic,
@@ -80,7 +80,7 @@ export default ({
     [classes.cell_start_finish]: (scheduleSettings?.start_finish && startFinish),
   });
 
-  const refCell = useRef();
+  
   
   // useEffect(() => {
   //   if (!header && title) {
@@ -185,7 +185,7 @@ export default ({
 
   if (!header) {
     return (
-      <div className={cellClasses} ref={refCell}>
+      <div className={cellClasses}>
         <div className={classes.cell__content} data-title={title ? title : null}>
           <div
             data-for={tooltipType()}
@@ -243,28 +243,61 @@ export default ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <>
-    { title*1 > 0 ? 
-     (
-      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
-      <span>{t('Go')}</span>
-      {title*1 !== 0 ? title : ''}
-      <HolidayIcon
-        holidays={holiday}
-        month={true}
-      />
-      </div>
-     ) :
-     (
-      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell}>
-      {title*1 !== 0 ? title : ''}
-      </div>
-     )
-    }
+      { title*1 > 0 ? 
+      (
+        <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} onClick={handleMarker}>
+        <span>{t('Go')}</span>
+        {title*1 !== 0 ? title : ''}
+        <HolidayIcon
+          holidays={holiday}
+          month={true}
+        />
+        </div>
+      ) :
+      (
+        <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses}>
+        {title*1 !== 0 ? title : ''}
+        </div>
+      )
+      }
     </>
-  );
+  )
 };
+
+const CellMemo = (props) => {
+  const ref = useRef(null);
+
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div ref={ref} style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+      {
+        isVisible
+          ? <Cell {...props} />
+          : null
+      }
+    </div>
+  )
+}
+
+
+export default React.memo(CellMemo)
