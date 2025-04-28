@@ -140,7 +140,7 @@ export default function ImportAccounts({
   const { id: companyId } = useParams();
 
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const isSnackbar = useSelector(isShowSnackbar);
 
   const [fileName, setFileName] = useState('');

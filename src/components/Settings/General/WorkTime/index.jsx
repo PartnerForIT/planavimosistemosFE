@@ -70,7 +70,7 @@ export default function WorkTime() {
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const workTime = useSelector(settingWorkTime);
 
   const filterWorksDay = useCallback((idDay) => workTime.work_time?.work_days

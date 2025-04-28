@@ -61,7 +61,7 @@ export default function Overtime() {
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const overtime = useSelector(OvertimeDataSelector);
 
   useEffect(() => {

@@ -28,12 +28,13 @@ import {
 } from '../../../../store/settings/actions';
 
 export default function Grouping() {
+  const { t } = useTranslation();
   const isLoading = useSelector(isLoadingSelector);
   const groupLoading = useSelector(groupsLoadingSelector);
   const subGroupLoading = useSelector(subGroupsLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const Groups = useSelector(AccountGroupsSelector);
 
   const useStyles = makeStyles(() => ({
@@ -48,7 +49,6 @@ export default function Grouping() {
   }));
   const classes = useStyles();
   const { id: companyId } = useParams();
-  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const [selected, setSelected] = useState({});

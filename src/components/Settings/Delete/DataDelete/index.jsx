@@ -49,7 +49,7 @@ export default function AccountsList() {
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const { users: employeesArr } = useSelector(employeesSelector);
   const deleteData = useSelector(deleteDataSelector);
 

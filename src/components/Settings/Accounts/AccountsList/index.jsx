@@ -178,7 +178,7 @@ export default function AccountsList() {
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const { users: Allemployees = [], stats = {} } = useSelector(employeesSelector);
   const empLoading = useSelector(employeesLoadingSelector);
   const employee = useSelector(employeeSelector);

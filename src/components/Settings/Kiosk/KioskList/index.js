@@ -68,7 +68,7 @@ export default () => {
 
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const security = useSelector(securityCompanySelector);
   const places = useSelector(placesSelector);
   const kiosksLoading = useSelector(kiosksLoadingSelector);

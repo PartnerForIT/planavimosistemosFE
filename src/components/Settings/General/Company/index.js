@@ -66,7 +66,7 @@ export default function Company() {
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   // const currencies = useSelector(currencySelector);
 
   const [timeZones, setTimeZones] = useState([]);

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Switch from 'react-switch';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import usePermissions from '../../Core/usePermissions';
 
 import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
@@ -44,7 +45,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const permissionsConfig = [
+  {
+    name: 'empty_hours_enabled',
+    module: 'empty_hours_enabled',
+  },
+];
+
 export default function ActivityLog() {
+  const permissions = usePermissions(permissionsConfig);
   const { id: companyId } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -73,7 +82,7 @@ export default function ActivityLog() {
 
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const isLoading = useSelector(scheduleLoadingSelector);
   const schedule = useSelector(scheduleSelector);
 
@@ -279,20 +288,26 @@ export default function ActivityLog() {
                     <Label text={t('Use request day off mobile')} />
                   </div>
                   <div className={styles.hr} />
-                  <div className={styles.workAtNight}>
-                    <Switch
-                      onChange={(checked) => { handleSetInputValues({ use_empty_hours: checked }); }}
-                      offColor='#808F94'
-                      onColor='#0085FF'
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                      checked={inputValues.use_empty_hours || false}
-                      height={21}
-                      width={40}
-                    />
-                    <Label text={t('Use empty hours feature in Logbook module')} />
-                  </div>
-                  <div className={styles.hr} />
+                  { 
+                    permissions.empty_hours_enabled && (
+                      <>
+                        <div className={styles.workAtNight}>
+                          <Switch
+                            onChange={(checked) => { handleSetInputValues({ use_empty_hours: checked }); }}
+                            offColor='#808F94'
+                            onColor='#0085FF'
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            checked={inputValues.use_empty_hours || false}
+                            height={21}
+                            width={40}
+                          />
+                          <Label text={t('Use empty hours feature in Logbook module')} />
+                        </div>
+                        <div className={styles.hr} />
+                      </>
+                    )
+                  }
                   <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ use_accumulated: checked }); }}

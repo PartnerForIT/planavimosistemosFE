@@ -47,7 +47,7 @@ function Events() {
   const isLoading = useSelector(eventsLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const events = useSelector(eventsSelector);
   const eventsTypes = useSelector(eventsTypesSelector);
   const isLoadingEventUpdate = useSelector(eventUpdateLoadingSelector);

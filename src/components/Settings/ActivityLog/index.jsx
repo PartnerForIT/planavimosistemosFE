@@ -53,7 +53,7 @@ export default function ActivityLog() {
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const placesArr = useSelector(placesSelector);
   const { users: employeesArr } = useSelector(employeesSelector);
   const activityLog = useSelector(activityLogSelector);

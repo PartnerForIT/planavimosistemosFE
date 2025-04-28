@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 
 import {
   isShowSnackbar,
@@ -22,10 +23,11 @@ const useStyles = makeStyles(() => ({
 
 export default () => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
 
   return (
     <Snackbar

@@ -66,7 +66,7 @@ export default function Clock() {
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const Clock = useSelector(ClockDataSelector);
   const modules = useSelector(companyModules);
 

@@ -14,6 +14,7 @@ import style from '../Dialog.module.scss';
 
 const initialValues = {
   logbook: false,
+  empty_hours_enabled: false,
   events: false,
   reports: false,
   activity_log: false,
@@ -133,6 +134,15 @@ export default ({
                 label={t('Logbook')}
                 name='logbook'
               />
+              <div className={style.marginLeft}>
+                <Checkbox
+                  onChange={handleChange}
+                  checked={modules.empty_hours_enabled}
+                  disabled={!modules.logbook}
+                  label={t('Use Empty hours')}
+                  name='empty_hours_enabled'
+                />
+              </div>
               <Checkbox
                 onChange={handleChange}
                 checked={modules.events}

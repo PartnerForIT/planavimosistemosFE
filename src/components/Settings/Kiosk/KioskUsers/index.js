@@ -80,7 +80,7 @@ export default () => {
 
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const kiosksUsers = useSelector(kiosksUsersSelector);
   const kiosksUsersLoading = useSelector(kiosksUsersLoadingSelector);
   const pinCode = useSelector(pinCodeSelector);

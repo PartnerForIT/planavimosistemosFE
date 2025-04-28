@@ -52,7 +52,7 @@ export default function ActivityLog() {
 
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const isLoading = useSelector(scheduleLoadingSelector);
   const schedule = useSelector(scheduleSelector);
 

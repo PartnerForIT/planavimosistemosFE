@@ -93,7 +93,7 @@ export default function Categories() {
   const isLoadind = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
   const typeSnackbar = useSelector(snackbarType);
-  const textSnackbar = useSelector(snackbarText);
+  const textSnackbar = t(useSelector(snackbarText));
   const skills = useSelector(categoriesSkillsSelector);
   const allJobTypes = useSelector(jobTypesSelector);
   const allPlaces = useSelector(placesSelector);
