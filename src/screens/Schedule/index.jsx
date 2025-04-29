@@ -434,7 +434,7 @@ export default () => {
 
     const selectedEvent = events.find((e) => {
       const ids = e.resourceId.toString().split('-');
-      return ids[0].toString() === shiftId.toString() && (!employeeId || employeeId.toString() === e.employee_id.toString()) && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
+      return ids && ids[0] && ids[0].toString() === shiftId.toString() && (!employeeId  || employeeId.toString() === (e?.employee_id || '' ).toString()) && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
     });
     
     return !!selectedEvent;
