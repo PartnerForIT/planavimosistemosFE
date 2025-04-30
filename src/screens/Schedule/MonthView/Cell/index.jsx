@@ -278,7 +278,7 @@ const CellMemo = (props) => {
   return (
     <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
       {
-        props.header ? <CellHeader {...props} /> : props.title ? <Cell {...props} /> : null
+        props.header ? <CellHeader {...props} /> : <Cell {...props} />
       }
     </div>
   )
