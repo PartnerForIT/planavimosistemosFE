@@ -34,7 +34,7 @@ const RowContent = ({
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
-  });
+  }, []);
 
   const newFoundItem = (day) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);

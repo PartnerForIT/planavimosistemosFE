@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
@@ -11,6 +11,17 @@ import { AdditionalRatesDataSelector,
   currencySelector,
   scheduleSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../../store/settings/selectors';
+
+const convertMinutesToHoursAndMinutes = function(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  
+  // Format the result as "hh:mm"
+  const formattedHours = hours < 10 ? `0${hours}` : hours;
+  const formattedMinutes = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+  
+  return `${formattedHours}:${formattedMinutes}`;
+}
 
 const Cell = ({
   title,
@@ -70,7 +81,7 @@ const Cell = ({
     [classes.cell_statistic]: statistic,
     [classes.cell_weekend]: weekend,
     [classes.cell_past]: past,
-    [classes.cell_header]: header && !markerActive,
+    // [classes.cell_header]: header && !markerActive,
     [classes.cell_marker]: marker && !title,
     [classes.cell_marker_active]: markerActive && !header,
     [classes.cell_today]: today,
@@ -144,16 +155,7 @@ const Cell = ({
     });
   }
 
-  const convertMinutesToHoursAndMinutes = function(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    
-    // Format the result as "hh:mm"
-    const formattedHours = hours < 10 ? `0${hours}` : hours;
-    const formattedMinutes = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
-    
-    return `${formattedHours}:${formattedMinutes}`;
-  }
+  
 
   const tooltipContent = () => {
     return (
@@ -183,121 +185,104 @@ const Cell = ({
     return type;
   }
 
-  if (!header) {
-    return (
-      <div className={cellClasses}>
-        <div className={classes.cell__content} data-title={title ? title : null}>
-          <div
-            data-for={tooltipType()}
-            data-html={true}
-            data-tip={title && !copyTool ? tooltipContent() : null}
-            onClick={handleMarker}
-            className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
-          >
-            { title ? (
-                <span className={classes.cell_day} style={{borderColor: borderColor ? borderColor : null}}dangerouslySetInnerHTML={{ __html: scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', '<br />') : title }} />
-              ) : null
-            }
-            {
-              title && night_duration && night_duration > 0 ? (
-                <span className={classes.cell_night}>
-                  {night_duration}h
-                </span>
-              ) : null
-            }
+  return (
+    <div className={cellClasses}>
+      <div className={classes.cell__content} data-title={title ? title : null}>
+        <div
+          data-for={tooltipType()}
+          data-html={true}
+          data-tip={title && !copyTool ? tooltipContent() : null}
+          onClick={handleMarker}
+          className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
+        >
+          { title ? (
+              <span className={classes.cell_day} style={{borderColor: borderColor ? borderColor : null}}dangerouslySetInnerHTML={{ __html: scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', '<br />') : title }} />
+            ) : null
+          }
+          {
+            title && night_duration && night_duration > 0 ? (
+              <span className={classes.cell_night}>
+                {night_duration}h
+              </span>
+            ) : null
+          }
 
-            { !statistic && !markerActive &&
-              <CellOptions
-                id={event?.id}
-                currentDay={currentDay}
-                currentMonth={currentMonth}
-                copy_event={event?.copy_event}
-                empty={event?.empty_event}
-                empty_manual={event?.empty_manual}
-                newEmployee={event?.new_employee}
-                oldEmployee={event?.old_employee}
-                copyTool={copyTool}
-                start={start}
-                end={end}
-                shiftId={shiftId}
-                employeeId={employee_Id}
-                employeeName={employeeName}
-                resourceId={resource?.id}
-                photo={resource?.photo}
-                jobTypeName={resource?.job_type_name}
-                withMenu={withMenu && !copyTool && permissions?.schedule_create_and_edit}
-                editPermissions={permissions?.schedule_create_and_edit}
-                isCompleted={isCompleted}
-                unavailableEmployees={unEmployees}
-                markers={markers}
-                onChangeEmployee={handleChangeEmployee}
-                onChangeWorkingTime={handleChangeWorkingTime}
-                onDeleteTimeline={handleDeleteTimeline}
-                onEmptyTimeline={handleEmptyTimeline}
-                addTimeline={handleAddWorkingTime}
-                handleCopyTool={handleCopyTool}
-                handleAddHistory={handleAddHistory}
-                addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event?.id)}
-              />
-            }
-          </div>
+          { !statistic && !markerActive &&
+            <CellOptions
+              id={event?.id}
+              currentDay={currentDay}
+              currentMonth={currentMonth}
+              copy_event={event?.copy_event}
+              empty={event?.empty_event}
+              empty_manual={event?.empty_manual}
+              newEmployee={event?.new_employee}
+              oldEmployee={event?.old_employee}
+              copyTool={copyTool}
+              start={start}
+              end={end}
+              shiftId={shiftId}
+              employeeId={employee_Id}
+              employeeName={employeeName}
+              resourceId={resource?.id}
+              photo={resource?.photo}
+              jobTypeName={resource?.job_type_name}
+              withMenu={withMenu && !copyTool && permissions?.schedule_create_and_edit}
+              editPermissions={permissions?.schedule_create_and_edit}
+              isCompleted={isCompleted}
+              unavailableEmployees={unEmployees}
+              markers={markers}
+              onChangeEmployee={handleChangeEmployee}
+              onChangeWorkingTime={handleChangeWorkingTime}
+              onDeleteTimeline={handleDeleteTimeline}
+              onEmptyTimeline={handleEmptyTimeline}
+              addTimeline={handleAddWorkingTime}
+              handleCopyTool={handleCopyTool}
+              handleAddHistory={handleAddHistory}
+              addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event?.id)}
+            />
+          }
         </div>
       </div>
-    )
-  }
-
-  return (
-    <>
-      { title*1 > 0 ? 
-      (
-        <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} onClick={handleMarker}>
-        <span>{t('Go')}</span>
-        {title*1 !== 0 ? title : ''}
-        <HolidayIcon
-          holidays={holiday}
-          month={true}
-        />
-        </div>
-      ) :
-      (
-        <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses}>
-        {title*1 !== 0 ? title : ''}
-        </div>
-      )
-      }
-    </>
+    </div>
   )
 };
 
-const CellMemo = (props) => {
-  const ref = useRef(null);
+const CellHeader = ({title, marker, statistic, past, weekend, markerActive, today, scheduleSettings, startFinish, holiday, handleMarker}) => {
+  const { t } = useTranslation();
+  const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
+  const cellClasses = classnames(classes.cell, 'monthCell', {
+    [classes.cell_statistic]: statistic,
+    [classes.cell_weekend]: weekend,
+    [classes.cell_past]: past,
+    [classes.cell_header]: !markerActive,
+    [classes.cell_marker]: marker && !title,
+    [classes.cell_today]: today,
+    //[classes.cell_holiday]: h.date ? true : false,
+    [classes.cell_holiday_company]: h.company_work_time_id ? true : false,
+    [classes.cell_holiday_government]: (h.date && !h.company_work_time_id) ? true : false,
+    [classes.cell_start_finish]: (scheduleSettings?.start_finish && startFinish),
+  });
 
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsVisible(entry.isIntersecting);
-    });
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  const isDate = !isNaN(title)
 
   return (
-    <div ref={ref} style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+    <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} onClick={isDate ? handleMarker : null}>
+      {isDate ? <span>{t('Go')}</span> : null}
+      { title }
+      {isDate ? <HolidayIcon holidays={holiday} month={true} /> : null}
+    </div>
+  )
+}
+
+const CellMemo = (props) => {
+  return (
+    <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
       {
-        isVisible
-          ? <Cell {...props} />
-          : null
+        props.header ? <CellHeader {...props} /> : props.title ? <Cell {...props} /> : null
       }
     </div>
   )
 }
 
 
-export default React.memo(CellMemo)
+export default React.memo(CellMemo, () => true)
