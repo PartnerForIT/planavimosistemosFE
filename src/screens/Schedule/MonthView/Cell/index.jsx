@@ -285,4 +285,4 @@ const CellMemo = (props) => {
 }
 
 
-export default React.memo(CellMemo, () => true)
+export default CellMemo
