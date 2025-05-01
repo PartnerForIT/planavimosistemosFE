@@ -434,7 +434,14 @@ export default () => {
 
     const selectedEvent = events.find((e) => {
       const ids = e.resourceId.toString().split('-');
-      return ids && ids[0] && ids[0].toString() === shiftId.toString() && (!employeeId  || employeeId.toString() === (e?.employee_id || '' ).toString()) && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
+      const check = ids && ids[0] && ids[0].toString() === shiftId.toString() && (!employeeId  || employeeId.toString() === (e?.employee_id || '' ).toString()) && e.employee_id && !e.empty_employee && !e.empty_event && !e.empty_manual
+      if (check) {
+        //temporary fix for automatic schedule
+        if (e.start === e.end) {
+          return false;
+        }
+      }
+      return check;
     });
     
     return !!selectedEvent;
