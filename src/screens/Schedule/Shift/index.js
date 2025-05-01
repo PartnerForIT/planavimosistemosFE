@@ -660,7 +660,7 @@ export default () => {
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
         {
-          permissions.hybrid_mode && modules?.manual_mode && isCreate && (
+          (permissions.hybrid_mode && isCreate) ? (
             <div className={classes.checkButton}>
               <Label text={t('Use automatic schedule')} />
               <Switch
@@ -675,7 +675,7 @@ export default () => {
                 width={40}
               />
             </div>
-          )
+          ) : null
         }
         <Input
           placeholder={t('Enter Shift Name')}
