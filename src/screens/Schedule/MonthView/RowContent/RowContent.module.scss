@@ -1,7 +1,9 @@
 .rowContent {
-  display: flex;
+  // display: flex;
   border-bottom: 1px solid #d9dfe3;
   height: 41px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
 
   & > * {
     border-left: 1px solid #d9dfe3;

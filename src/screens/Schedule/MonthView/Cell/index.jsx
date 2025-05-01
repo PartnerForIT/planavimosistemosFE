@@ -276,7 +276,7 @@ const CellHeader = ({title, marker, statistic, past, weekend, markerActive, toda
 
 const CellMemo = (props) => {
   return (
-    <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+    <div style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column'}}>
       {
         props.header ? <CellHeader {...props} /> : <Cell {...props} />
       }
