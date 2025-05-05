@@ -5,6 +5,15 @@ import classnames from 'classnames';
 
 import classes from './ResourcesCell.module.scss';
 import Section from '../../../Shift/Table/Section';
+import usePermissions from '../../../../../components/Core/usePermissions';
+
+const permissionsConfig = [
+  {
+    name: 'schedule_create_and_edit',
+    module: 'schedule_shift',
+    permission: 'schedule_create_and_edit',
+  },
+];
 
 const ResourceCell = ({
   // employees,
@@ -37,6 +46,8 @@ const ResourceCell = ({
   onClearTimes,
   onDeleteShift,
 }) => {
+
+  const permissions = usePermissions(permissionsConfig);
 
   const rowClasses = classnames(classes.resourcesCell, {
     [classes.resourcesCell_lastChild1]: lastChild1 && nestingLevel > 1,
@@ -80,7 +91,7 @@ const ResourceCell = ({
           withExpander={withExpander && !markerActive}
           withTemplate={withTemplate}
           nestingLevel={nestingLevel}
-          withMenu={nestingLevel === 1}
+          withMenu={nestingLevel === 1 && permissions?.schedule_create_and_edit}
           onEditShift={() => { onEditShift(withTemplate ? withTemplate : shiftId) }}
           onGenerateTimes={!checkIfEventsExist(shiftId || employeeShiftId, employeeId) ? () => { onGenerateTimes(shiftId || employeeShiftId, employeeId) } : null}
           onClearTimes={() => { onClearTimes(shiftId || employeeShiftId, employeeId) }}
