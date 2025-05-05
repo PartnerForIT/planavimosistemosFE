@@ -98,7 +98,7 @@ const Cell = ({
     const place_id = event?.place_id;
     const splited = event?.resourceId?.toString().split('-');
     const jobTypeId = splited && splited[1] ? splited[1] : null;
-    if (user?.employee?.place?.[0].id && user?.employee?.place?.[0].id === place_id) {
+    if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id === place_id) {
       if (user?.employee?.job_type_id) {
         if (jobTypeId && user?.employee?.job_type_id.toString() === jobTypeId.toString()) {
           return true;
