@@ -765,7 +765,7 @@ export default () => {
       const place_id = selectedEvent?.place_id;
       const splited = selectedEvent?.resourceId?.toString().split('-');
       const job_type_id = splited && splited[1] ? splited[1] : null;
-      if (user?.employee?.place?.[0].id && user?.employee?.place?.[0].id.toString() === place_id.toString()) {
+      if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id.toString() === place_id.toString()) {
         if (user?.employee?.job_type_id) {
           if (job_type_id && user?.employee?.job_type_id.toString() === job_type_id.toString()) {
             return true;
