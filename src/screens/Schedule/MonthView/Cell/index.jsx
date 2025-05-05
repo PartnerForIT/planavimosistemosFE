@@ -11,6 +11,7 @@ import { AdditionalRatesDataSelector,
   currencySelector,
   scheduleSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../../store/settings/selectors';
+import { userSelector } from '../../../../store/auth/selectors';
 
 const convertMinutesToHoursAndMinutes = function(minutes) {
   const hours = Math.floor(minutes / 60);
@@ -64,6 +65,7 @@ const Cell = ({
   const company = useSelector(settingCompanySelector);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const integrations = useSelector(IntegrationsDataSelector);
+  const user = useSelector(userSelector);
 
   const currency = useMemo(
     () => {
@@ -90,6 +92,27 @@ const Cell = ({
     [classes.cell_holiday_government]: (h.date && !h.company_work_time_id) ? true : false,
     [classes.cell_start_finish]: (scheduleSettings?.start_finish && startFinish),
   });
+
+  const editCellPermissions = useMemo(() => {
+    //check if user can control place or jobtype
+    const place_id = event?.place_id;
+    const splited = event?.resourceId?.toString().split('-');
+    const jobTypeId = splited && splited[1] ? splited[1] : null;
+    if (user?.employee?.place?.[0].id && user?.employee?.place?.[0].id === place_id) {
+      if (user?.employee?.job_type_id) {
+        if (jobTypeId && user?.employee?.job_type_id.toString() === jobTypeId.toString()) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+
+    return permissions?.schedule_create_and_edit
+  }, [permissions, event, user]);
 
   
   
@@ -227,7 +250,7 @@ const Cell = ({
               photo={resource?.photo}
               jobTypeName={resource?.job_type_name}
               withMenu={withMenu && !copyTool && permissions?.schedule_create_and_edit}
-              editPermissions={permissions?.schedule_create_and_edit}
+              editPermissions={editCellPermissions}
               isCompleted={isCompleted}
               unavailableEmployees={unEmployees}
               markers={markers}

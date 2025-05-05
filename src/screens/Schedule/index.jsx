@@ -35,6 +35,7 @@ import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
 
+
 import {
   getSchedule,
   deleteTimeline,
@@ -56,6 +57,7 @@ import { scheduleSelector, markersSelector, isLoadingSelector } from '../../stor
 import { copyToolHistorySelector } from '../../store/copyTool/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
+import { userSelector } from '../../store/auth/selectors';
 
 import EventContent from './EventContent';
 import MonthView from './MonthView';
@@ -131,6 +133,7 @@ export default () => {
   const [deletedShiftName,setDeletedShiftName] = useState('')
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
+  const user = useSelector(userSelector);
 
   moment.updateLocale('lt', {
     weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
@@ -710,7 +713,6 @@ export default () => {
       employeeName = resourceInfo.title;
       employee_Id = resourceInfo.extendedProps.employeeId
       shiftId = resourceInfo.extendedProps.shift_id ? resourceInfo.extendedProps.shift_id : shiftId
-      jobTypeId = resourceInfo.extendedProps.job_type_id
       endDay = event.endStr
     }
     
@@ -759,6 +761,26 @@ export default () => {
       }
     }
 
+    const editCellPermissions = () => {
+      const place_id = selectedEvent?.place_id;
+      const splited = selectedEvent?.resourceId?.toString().split('-');
+      const job_type_id = splited && splited[1] ? splited[1] : null;
+      if (user?.employee?.place?.[0].id && user?.employee?.place?.[0].id.toString() === place_id.toString()) {
+        if (user?.employee?.job_type_id) {
+          if (job_type_id && user?.employee?.job_type_id.toString() === job_type_id.toString()) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+  
+        return true;
+      }
+  
+  
+      return permissions?.schedule_create_and_edit
+    };
+
     return (
       <EventContent
         id={event.id}
@@ -797,7 +819,7 @@ export default () => {
         addEmployee={()=>addTempEmployees(shiftId,employee_Id,jobTypeId,event.id)}
         addTimeline={handleAddWorkingTime}
         endDay={endDay}
-        editPermissions={permissions.schedule_create_and_edit}
+        editPermissions={editCellPermissions()}
         isCompleted={isCompleted}
         activeDrag={activeDrag === resourceInfo.id}
         unavailableEmployees={unEmployees}
