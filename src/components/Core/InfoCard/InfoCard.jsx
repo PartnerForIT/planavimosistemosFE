@@ -156,7 +156,7 @@ const InfoCard = ({
         return t('Scheduled hours');
       case 'start_empty':
       case 'end_empty':
-        return <span className={styles.grayText}>{t('Empty hours')}</span>;
+        return <span className={styles.grayText}>{t('Unpaid hours')}</span>;
       case 'working':
         return t('Working hours');
       case 'holiday':

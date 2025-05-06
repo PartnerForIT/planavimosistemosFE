@@ -179,6 +179,10 @@ const permissionsConfig = [
     name: 'custom_category',
     module: 'custom_category',
   },
+  {
+    name: 'logbook_edit_logs',
+    permission: 'logbook_edit_logs',
+  },
 ];
 
 export default () => {
@@ -842,9 +846,13 @@ export default () => {
     return (
       <div className={styles.employeeInfo}>
         <div className={styles.hero}>
-          <Button onClick={() => setIsOpenEditEntry(true)} inverse inline size='small'>
-            {t('Edit')}
-          </Button>
+          {
+            permissions.logbook_edit_logs && (
+              <Button onClick={() => setIsOpenEditEntry(true)} inverse inline size='small'>
+                {t('Edit')}
+              </Button>
+            )
+          }
           <img src={selectedItem.photo || avatar} className={styles.avatar} alt={selectedItem.employee} width='71' height='72' />
           <div className={styles.employeeName}>{selectedItem.employee}</div>
           <div className={styles.date}>
@@ -941,7 +949,7 @@ export default () => {
                           type='start_empty'
                           time={selectedItem}
                           durationSec={selectedItem.start_minutes_difference*60}
-                          onApproveEmpty={() => handleApproveEmpty(selectedItem.id, 'start')}
+                          onApproveEmpty={permissions.logbook_edit_logs ? () => handleApproveEmpty(selectedItem.id, 'start') : false}
                         />
                         <Delimiter />
                       </>
@@ -960,7 +968,7 @@ export default () => {
                           type='end_empty'
                           time={selectedItem}
                           durationSec={selectedItem.end_minutes_difference*60}
-                          onApproveEmpty={() => handleApproveEmpty(selectedItem.id, 'end')}
+                          onApproveEmpty={permissions.logbook_edit_logs ? () => handleApproveEmpty(selectedItem.id, 'end') : false}
                         />
                         <Delimiter />
                       </>

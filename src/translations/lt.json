@@ -1354,5 +1354,6 @@
         "Are you sure you want to proceed? The process is not reversible.": "Ar esate tikri, kad norite tęsti? Procesas yra negrįžtamas.",
         "Assign": "Priskirti",
         "Add Employee": "Pridėti darbuotoją",
-        "-1h before holidays": "-1val prieš šventes"
+        "-1h before holidays": "-1val prieš šventes",
+        "Unpaid hours": "Neapmokamos val."
 }
