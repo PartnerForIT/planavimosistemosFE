@@ -97,21 +97,34 @@ const Cell = ({
     //check if user can control place or jobtype
     const place_id = event?.place_id;
     const splited = event?.resourceId?.toString().split('-');
-    const jobTypeId = splited && splited[1] ? splited[1] : null;
-    if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id === place_id) {
-      if (user?.employee?.job_type_id) {
-        if (jobTypeId && user?.employee?.job_type_id.toString() === jobTypeId.toString()) {
-          return permissions?.schedule_create_and_edit;
+    const job_type_id = splited && splited[1] ? splited[1] : null;
+    const shift_id = splited && splited[0] ? splited[0] : null;
+    if (user?.employee?.place?.[0]?.id) {
+      if (place_id && user?.employee?.place?.[0]?.id.toString() === place_id.toString()) {
+        if (user?.employee?.shift_id) {
+          if (shift_id && user?.employee?.shift_id.toString() === shift_id.toString()) {
+            if (user?.employee?.job_type_id) {
+              if (job_type_id && user?.employee?.job_type_id.toString() === job_type_id.toString()) {
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return true;
+            }
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          return true;
         }
+      } else {
+        return false
       }
-
-      return permissions?.schedule_create_and_edit;
     }
 
-
     return permissions?.schedule_create_and_edit
+
   }, [permissions, event, user]);
 
   
