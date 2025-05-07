@@ -112,7 +112,7 @@ export default () => {
 
   const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
   const { currentEmployees } = currentEmployeeIds
-  .filter(id => display_employee_ids?.includes(id)) // filter by display_employee_ids
+  .filter(id => display_employee_ids?.length ? display_employee_ids?.includes(id) : true) // filter by display_employee_ids
   .map(id => employeesData[id])
   .reduce(
     (acc, employee) => {
