@@ -92,6 +92,7 @@ export default () => {
   
   const applyingFilters = useRef(false)
   const sheetResources = sheet?.resources
+  const display_employee_ids = sheet?.display_employee_ids
   const onPage = 20;
 
   const totalPages = Math.ceil(employees.length / onPage)
@@ -110,24 +111,26 @@ export default () => {
   }, [users])
 
   const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
-  const {currentEmployees} = currentEmployeeIds.map(id => {
-    return employeesData[id]
-  }).reduce((acc, employee) => {
-    const existInResources = acc.resources.filter(res => res.employeeId === employee.id)
-    if (existInResources.length) {
-      return {
-        currentEmployees: [...acc.currentEmployees, ...existInResources],
-        resources: acc.resources.filter(res => res.employeeId !== employee.id)
+  const { currentEmployees } = currentEmployeeIds
+  .filter(id => display_employee_ids?.includes(id)) // filter by display_employee_ids
+  .map(id => employeesData[id])
+  .reduce(
+    (acc, employee) => {
+      const existInResources = acc.resources.filter(res => res.employeeId === employee.id);
+      if (existInResources.length) {
+        return {
+          currentEmployees: [...acc.currentEmployees, ...existInResources],
+          resources: acc.resources.filter(res => res.employeeId !== employee.id),
+        };
       }
-    }
-    if (filter.place.length) {
-      return acc
-    }
-    return {
-      ...acc,
-      currentEmployees: [...acc.currentEmployees, employee]
-    }
-  }, {currentEmployees: [], resources: sheetResources || []})
+      if (filter.place.length) return acc;
+      return {
+        ...acc,
+        currentEmployees: [...acc.currentEmployees, employee],
+      };
+    },
+    { currentEmployees: [], resources: sheetResources || [] }
+  );
 
   useEffect(() => {
     ReactTooltip.rebuild();
