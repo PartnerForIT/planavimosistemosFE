@@ -768,13 +768,13 @@ export default () => {
       if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id.toString() === place_id.toString()) {
         if (user?.employee?.job_type_id) {
           if (job_type_id && user?.employee?.job_type_id.toString() === job_type_id.toString()) {
-            return true;
+            return permissions?.schedule_create_and_edit;
           } else {
             return false;
           }
         }
   
-        return true;
+        return permissions?.schedule_create_and_edit;
       }
   
   

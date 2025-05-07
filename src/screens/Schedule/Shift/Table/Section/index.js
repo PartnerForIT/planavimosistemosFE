@@ -33,7 +33,6 @@ export default ({
   onGenerateTimes,
   onClearTimes,
   onDeleteShift,
-  permissions,
 }) => {
   const { t } = useTranslation();
   const { getDateFormat } = useCompanyInfo();

@@ -101,13 +101,13 @@ const Cell = ({
     if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id === place_id) {
       if (user?.employee?.job_type_id) {
         if (jobTypeId && user?.employee?.job_type_id.toString() === jobTypeId.toString()) {
-          return true;
+          return permissions?.schedule_create_and_edit;
         } else {
           return false;
         }
       }
 
-      return true;
+      return permissions?.schedule_create_and_edit;
     }
 
 

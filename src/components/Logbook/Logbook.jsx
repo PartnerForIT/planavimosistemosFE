@@ -356,7 +356,6 @@ export default () => {
  
     switch (status) {
       case 0: {
-        console.log(stoped);
         if (stoped === 'manager') {
           return 'Stopped by Manager';
         } else if (stoped === 'geolocation_leave') {

@@ -1,11 +1,13 @@
 import React, {
-  useCallback,
+  useCallback, useMemo,
 } from 'react';
 import classnames from 'classnames';
 
 import classes from './ResourcesCell.module.scss';
 import Section from '../../../Shift/Table/Section';
 import usePermissions from '../../../../../components/Core/usePermissions';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../../../../store/auth/selectors';
 
 const permissionsConfig = [
   {
@@ -48,12 +50,31 @@ const ResourceCell = ({
 }) => {
 
   const permissions = usePermissions(permissionsConfig);
+  const user = useSelector(userSelector);
 
   const rowClasses = classnames(classes.resourcesCell, {
     [classes.resourcesCell_lastChild1]: lastChild1 && nestingLevel > 1,
     [classes.resourcesCell_lastChild2]: lastChild2 && nestingLevel > 2,
     [classes.resourcesCell__empty]: isEmpty,
   });
+
+  const editShiftPermission = useMemo(() => {
+    const place_id = item?.place_id;
+    const jobTypeId = item?.jobTypeId;
+    if (user?.employee?.place?.[0]?.id && user?.employee?.place?.[0]?.id === place_id) {
+      if (user?.employee?.job_type_id) {
+        if (jobTypeId && user?.employee?.job_type_id.toString() === jobTypeId.toString()) {
+          return permissions?.schedule_create_and_edit;
+        } else {
+          return false;
+        }
+      }
+
+      return permissions?.schedule_create_and_edit;
+    }
+
+    return permissions?.schedule_create_and_edit
+  }, [permissions, item, user]);
 
   // const handleChangeNumber = useCallback((value) => {
   //   onChangeNumber({ rowId, value });
@@ -89,9 +110,9 @@ const ResourceCell = ({
           employeeId={employeeId}
           expander={expander}
           withExpander={withExpander && !markerActive}
-          withTemplate={withTemplate}
+          withTemplate={withTemplate && editShiftPermission}
           nestingLevel={nestingLevel}
-          withMenu={nestingLevel === 1 && permissions?.schedule_create_and_edit}
+          withMenu={nestingLevel === 1 && editShiftPermission}
           onEditShift={() => { onEditShift(withTemplate ? withTemplate : shiftId) }}
           onGenerateTimes={!checkIfEventsExist(shiftId || employeeShiftId, employeeId) ? () => { onGenerateTimes(shiftId || employeeShiftId, employeeId) } : null}
           onClearTimes={() => { onClearTimes(shiftId || employeeShiftId, employeeId) }}
