@@ -95,7 +95,13 @@ export default () => {
   const display_employee_ids = sheet?.display_employee_ids
   const onPage = 20;
 
-  const totalPages = Math.ceil(employees.length / onPage)
+  const filteredEmployees = useMemo(() => {
+    return display_employee_ids?.length
+      ? employees.filter(emp => display_employee_ids.includes(emp.id))
+      : employees;
+  }, [employees, display_employee_ids]);
+
+  const totalPages = Math.ceil(filteredEmployees.length / onPage)
 
   const employeesData = useMemo(() => {
     return users.reduce((acc, employee) => {
@@ -110,27 +116,30 @@ export default () => {
     }, {})
   }, [users])
 
-  const currentEmployeeIds = employees.map(({id}) => id).slice((page-1) * onPage, (page-1) * onPage + onPage)
+  const currentEmployeeIds = filteredEmployees
+    .map(({ id }) => id)
+    .slice((page - 1) * onPage, page * onPage);
+
   const { currentEmployees } = currentEmployeeIds
-  .filter(id => display_employee_ids?.length ? display_employee_ids?.includes(id) : true) // filter by display_employee_ids
-  .map(id => employeesData[id])
-  .reduce(
-    (acc, employee) => {
-      const existInResources = acc.resources.filter(res => res.employeeId === employee.id);
-      if (existInResources.length) {
+    .filter(id => display_employee_ids?.length ? display_employee_ids?.includes(id) : true) // filter by display_employee_ids
+    .map(id => employeesData[id])
+    .reduce(
+      (acc, employee) => {
+        const existInResources = acc.resources.filter(res => res.employeeId === employee.id);
+        if (existInResources.length) {
+          return {
+            currentEmployees: [...acc.currentEmployees, ...existInResources],
+            resources: acc.resources.filter(res => res.employeeId !== employee.id),
+          };
+        }
+        if (filter.place.length) return acc;
         return {
-          currentEmployees: [...acc.currentEmployees, ...existInResources],
-          resources: acc.resources.filter(res => res.employeeId !== employee.id),
+          ...acc,
+          currentEmployees: [...acc.currentEmployees, employee],
         };
-      }
-      if (filter.place.length) return acc;
-      return {
-        ...acc,
-        currentEmployees: [...acc.currentEmployees, employee],
-      };
-    },
-    { currentEmployees: [], resources: sheetResources || [] }
-  );
+      },
+      { currentEmployees: [], resources: sheetResources || [] }
+    );
 
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -175,10 +184,18 @@ export default () => {
     // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
   }), []);
 
-  const allSortedEmployees = useGroupingEmployees(users, employToCheck);
+  const visibleUsers = useMemo(() => {
+    return display_employee_ids?.length
+      ? users.filter(u => display_employee_ids.includes(u.id))
+      : users;
+  }, [users, display_employee_ids]);
+  
+  const allSortedEmployees = useGroupingEmployees(visibleUsers, employToCheck);
 
   const pageEmployeeIds = (pageNumber = page) => {
-    return employees.map(({id}) => id).splice((pageNumber - 1) * onPage, onPage);
+    return filteredEmployees
+      .map(({ id }) => id)
+      .slice((pageNumber - 1) * onPage, pageNumber * onPage);
   };
 
   const downloadIntegrationFile = (type) => {
