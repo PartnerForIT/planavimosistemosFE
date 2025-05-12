@@ -322,12 +322,12 @@ const InfoCard = ({
 
           { type === 'start_empty' && (
             <div className={styles.grayText}>
-              {`${moment(time.work_started_at).format('HH:mm')} - ${moment(time.event_started_at).format('HH:mm')}`}
+              {`${moment(time.work_started_at).format('HH:mm')} - ${moment(time?.empty?.find((item) => item.type === 'start')?.finished_at || time.event_started_at).format('HH:mm')}`}
             </div>
           ) }
           { type === 'end_empty' && (
             <div className={styles.grayText}>
-              {`${moment(time.event_finished_at).format('HH:mm')} - ${moment(time.work_finished_at).format('HH:mm')}`}
+              {`${moment(time?.empty?.find((item) => item.type === 'end')?.started_at || time.event_finished_at).format('HH:mm')} - ${moment(time.work_finished_at).format('HH:mm')}`}
             </div>
           ) }
 
