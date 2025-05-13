@@ -226,6 +226,7 @@ const MonthView = ({
             <div className={classes.sheetmonthView__content__srollPanel} />
           </div>
         </Scrollbar>
+        {/* <div className={classes.sheetmonthView__content__fakeScroll}></div> */}
       </div>
       <ReactTooltip
         id='title'
