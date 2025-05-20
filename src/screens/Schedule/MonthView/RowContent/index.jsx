@@ -31,6 +31,7 @@ const RowContent = ({
   handleAddHistory,
   addTempEmployees,
   currentMonth,
+  firstRenderFinished,
 }) => {
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -116,6 +117,7 @@ const RowContent = ({
                 handleCopyTool={handleCopyTool}
                 handleAddHistory={handleAddHistory}
                 addTempEmployees={addTempEmployees}
+                firstRenderFinished={firstRenderFinished}
             />)
           }
           )
@@ -150,6 +152,7 @@ const RowContent = ({
             handleAddHistory={handleAddHistory}
             addTempEmployees={addTempEmployees}
             currentMonth={currentMonth}
+            firstRenderFinished={firstRenderFinished}
           />
         ))
       }

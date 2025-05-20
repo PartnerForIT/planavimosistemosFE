@@ -28,6 +28,29 @@ const trackYProps = {
   ),
 };
 
+const getAllResourceIds = (items) => {
+  let ids = [];
+  const traverse = (arr) => {
+    arr.forEach((item) => {
+      ids.push(item.id);
+      if (item.children?.length) {
+        traverse(item.children);
+      }
+    });
+  };
+
+  traverse(items);
+  return ids;
+};
+
+const applyExpanders = (items, expandedIds) => {
+  return items.map(item => ({
+    ...item,
+    expander: expandedIds.includes(item.id),
+    children: item.children ? applyExpanders(item.children, expandedIds) : [],
+  }));
+};
+
 export default ({
   resources: externalResources,
   events,
@@ -62,67 +85,36 @@ export default ({
   const { id: companyId } = useParams();
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
   const [resources, setResources] = useState([]);
-  const getAllResourceIds = (items) => {
-    let ids = [];
+  const [firstRenderFinished, setFirstRenderFinished] = useState(false)
   
-    const traverse = (arr) => {
-      arr.forEach((item) => {
-        ids.push(item.id);
-        if (item.children?.length) {
-          traverse(item.children);
-        }
-      });
-    };
-  
-    traverse(items);
-    return ids;
-  };
   const [expandedIds, setExpandedIds] = useState(() => {
     const stored = localStorage.getItem('resourcesExpandersIds'+companyId);
-  
     if (stored && stored !== 'undefined') {
       return JSON.parse(stored);
     }
-  
-    // Default: all open
     return getAllResourceIds(externalResources);
   });
 
   useEffect(() => {
+    console.log('MOUNT')
+    requestAnimationFrame(() => {
+      console.log("First frame painted");
+      setFirstRenderFinished(true)
+    });
+    requestIdleCallback(() => {
+      console.log("Browser is idle after render");
+      ReactTooltip.rebuild()
+      
+    });
+  }, [])
+
+  useEffect(() => {
     localStorage.setItem('resourcesExpandersIds'+companyId, JSON.stringify(expandedIds));
   }, [expandedIds, companyId]);
-
-  const applyExpanders = (items, expandedIds) => {
-    return items.map(item => ({
-      ...item,
-      expander: expandedIds.includes(item.id),
-      children: item.children ? applyExpanders(item.children, expandedIds) : [],
-    }));
-  };
   
   useEffect(() => {
-    setResources(applyExpanders(externalResources, expandedIds));
-    // eslint-disable-next-line 
-  }, [externalResources, expandedIds]);
-
-  const handleExpander = ({ rowId }) => {
-    setExpandedIds(prev => {
-      return prev.includes(rowId)
-        ? prev.filter(id => id !== rowId)
-        : [...prev, rowId];
-    });
-  };
-
-  const handleClickPrevMonth = () => {
-    const nextMonth = currentMonth.clone().add(-1, 'months');
-    setCurrentMonth(nextMonth);
-    onChangeMonth({ fromDate: nextMonth });
-  };
-  const handleClickNextMonth = () => {
-    const nextMonth = currentMonth.clone().add(1, 'months');
-    setCurrentMonth(nextMonth);
-    onChangeMonth({ fromDate: nextMonth });
-  };
+    setResources(applyExpanders(externalResources, expandedIds))
+  }, [externalResources, expandedIds])
 
   const daysOfMonth = useMemo(() => {
     const day = currentMonth.clone().add(-1, 'days');
@@ -156,6 +148,7 @@ export default ({
     return arr;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language, currentMonth, withCost, holidays, markers]);
+
   const backgroundArr = useMemo(() => {
     const getCount = (items) => {
       if (!items?.length) {
@@ -175,6 +168,7 @@ export default ({
         id: `row-background-${index}`,
       }));
   }, [resources]);
+
   const flexBackground = useMemo(() => {
     const currentDay = moment();
 
@@ -199,17 +193,25 @@ export default ({
     return { past: 0, future: 0 };
   }, [currentMonth]);
 
-  useEffect(() => {
-    const applyExpanders = (items, expandedIds) => {
-      return items.map(item => ({
-        ...item,
-        expander: expandedIds.includes(item.id),
-        children: item.children ? applyExpanders(item.children, expandedIds) : [],
-      }));
-    };
+  const handleExpander = ({ rowId }) => {
+    setExpandedIds(prev => {
+      return prev.includes(rowId)
+        ? prev.filter(id => id !== rowId)
+        : [...prev, rowId];
+    });
+  };
 
-    setResources(applyExpanders(externalResources, expandedIds));
-  }, [externalResources, expandedIds]);
+  const handleClickPrevMonth = () => {
+    const nextMonth = currentMonth.clone().add(-1, 'months');
+    setCurrentMonth(nextMonth);
+    onChangeMonth({ fromDate: nextMonth });
+  };
+
+  const handleClickNextMonth = () => {
+    const nextMonth = currentMonth.clone().add(1, 'months');
+    setCurrentMonth(nextMonth);
+    onChangeMonth({ fromDate: nextMonth });
+  };
 
   const onHandleMarker = (employeeId, day) => {
     if (employeeId && day && markerActive) {
@@ -245,6 +247,7 @@ export default ({
                   today={item.today}
                   holiday={item.holiday}
                   handleMarker={() => { onClickDay(item.title) }}
+                  firstRenderFinished={true}
                   header
                 />
               ))
@@ -272,19 +275,6 @@ export default ({
             />
             <div className={classes.monthView__content__data}>
               {
-                // <div className={classes.monthView__content__data__divideRow}>
-                //   {
-                //     daysOfMonth.map((item) => (
-                //         <Cell
-                //             key={item.id}
-                //             statistic={item.statistic}
-                //             weekend={item.weekend}
-                //         />
-                //     ))
-                //   }
-                // </div>
-              }
-              {
                 resources.map((item) => (
                   <RowContent
                     key={item.id}
@@ -310,6 +300,7 @@ export default ({
                     handleAddHistory={handleAddHistory}
                     addTempEmployees={addTempEmployees}
                     currentMonth={currentMonth}
+                    firstRenderFinished={firstRenderFinished}
                   />
                 ))
               }

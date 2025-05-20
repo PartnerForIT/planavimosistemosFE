@@ -311,6 +311,10 @@ const CellHeader = ({title, marker, statistic, past, weekend, markerActive, toda
 }
 
 const CellMemo = (props) => {
+  if (!props.firstRenderFinished) {
+    return null
+  }
+
   return (
     <div style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column'}}>
       {
