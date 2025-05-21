@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import moment from 'moment';
+import _ from 'lodash';
 
 import Cell from '../Cell';
 import classes from './RowContent.module.scss';
@@ -33,6 +34,7 @@ const RowContent = ({
   currentMonth,
   firstRenderFinished,
 }) => {
+
   useEffect(() => {
     ReactTooltip.rebuild();
   }, []);
@@ -160,4 +162,21 @@ const RowContent = ({
   );
 };
 
-export default RowContent;
+export default React.memo(RowContent, (prevProps, nextProps) => {
+  return _.isEqual(prevProps.resourceId, nextProps.resourceId) &&
+  _.isEqual(prevProps.employeeId, nextProps.employeeId) &&
+  _.isEqual(prevProps.events, nextProps.events) &&
+  _.isEqual(prevProps.daysOfMonth, nextProps.daysOfMonth) &&
+  _.isEqual(prevProps.expander, nextProps.expander) &&
+  _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
+  _.isEqual(prevProps.pastDay, nextProps.pastDay) &&
+  _.isEqual(prevProps.scheduleSettings, nextProps.scheduleSettings) &&
+  _.isEqual(prevProps.currentResource, nextProps.currentResource) &&
+  _.isEqual(prevProps.copyTool, nextProps.copyTool) &&
+  _.isEqual(prevProps.workTime, nextProps.workTime) &&
+  _.isEqual(prevProps.resource, nextProps.resource) &&
+  _.isEqual(prevProps.permissions, nextProps.permissions) &&
+  _.isEqual(prevProps.markers, nextProps.markers) &&
+  _.isEqual(prevProps.currentMonth, nextProps.currentMonth) &&
+  _.isEqual(prevProps.firstRenderFinished, nextProps.firstRenderFinished)
+});

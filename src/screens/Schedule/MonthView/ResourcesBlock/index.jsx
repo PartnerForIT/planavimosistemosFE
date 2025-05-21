@@ -1,9 +1,10 @@
 import React from 'react';
+import _ from 'lodash';
 
 import ResourcesCell from './ResourcesCell';
 import classes from './ResourcesBlock.module.scss';
 
-export default ({
+const ResourceBlock = ({
   resources,
   onExpander,
   markerActive,
@@ -49,3 +50,9 @@ export default ({
     </div>
   );
 }
+
+export default React.memo(ResourceBlock, (prevProps, nextProps) => {
+  return _.isEqual(prevProps.resources, nextProps.resources) &&
+    _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
+    _.isEqual(prevProps.accumulatedHours, nextProps.accumulatedHours);
+});

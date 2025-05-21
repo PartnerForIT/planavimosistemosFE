@@ -2,6 +2,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useCallback,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,7 @@ import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
 import ReactTooltip from 'react-tooltip';
 import classNames from 'classnames';
+import _ from 'lodash';
 
 import ResourceAreaHeader from '../ResourceAreaHeader';
 import Footer from '../Footer';
@@ -70,7 +72,7 @@ const applyExpanders = (items, expandedIds) => {
   }));
 };
 
-export default ({
+const MonthView = ({
   resources: externalResources,
   events,
   holidays,
@@ -100,10 +102,11 @@ export default ({
   onClearTimes,
   onDeleteShift,
 }) => {
+  console.log('RENDER MONTH VIEW');
   const { t, i18n } = useTranslation();
   const { id: companyId } = useParams();
   const [currentMonth, setCurrentMonth] = useState(moment().startOf('month'));
-  const [resources, setResources] = useState([]);
+  // const [resources, setResources] = useState([]);
   const [firstRenderFinished, setFirstRenderFinished] = useState(false)
   
   const [expandedIds, setExpandedIds] = useState(() => {
@@ -114,6 +117,10 @@ export default ({
     return getAllResourceIds(externalResources);
   });
 
+  const resources = useMemo(() => {
+    return applyExpanders(externalResources, expandedIds)
+  }, [expandedIds, externalResources])
+
   useEffect(() => {
     console.log('MOUNT')
     requestAnimationFrame(() => {
@@ -123,7 +130,6 @@ export default ({
     requestIdleCallback(() => {
       console.log("Browser is idle after render");
       ReactTooltip.rebuild()
-      
     });
   }, [])
 
@@ -131,9 +137,9 @@ export default ({
     localStorage.setItem('resourcesExpandersIds'+companyId, JSON.stringify(expandedIds));
   }, [expandedIds, companyId]);
   
-  useEffect(() => {
-    setResources(applyExpanders(externalResources, expandedIds))
-  }, [externalResources, expandedIds])
+  // useEffect(() => {
+  //   setResources(applyExpanders(externalResources, expandedIds))
+  // }, [externalResources, expandedIds])
 
   const daysOfMonth = useMemo(() => {
     const day = currentMonth.clone().add(-1, 'days');
@@ -212,39 +218,39 @@ export default ({
     return { past: 0, future: 0 };
   }, [currentMonth]);
 
-  const handleExpander = ({ rowId }) => {
+  const handleExpander = useCallback(({ rowId }) => {
     setExpandedIds(prev => {
       return prev.includes(rowId)
         ? prev.filter(id => id !== rowId)
         : [...prev, rowId];
-    });
-  };
+    })
+  }, [])
 
-  const handleClickPrevMonth = () => {
+  const handleClickPrevMonth = useCallback(() => {
     const nextMonth = currentMonth.clone().add(-1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
-  };
+  }, [currentMonth, onChangeMonth])
 
-  const handleClickNextMonth = () => {
+  const handleClickNextMonth = useCallback(() => {
     const nextMonth = currentMonth.clone().add(1, 'months');
     setCurrentMonth(nextMonth);
     onChangeMonth({ fromDate: nextMonth });
-  };
+  }, [currentMonth, onChangeMonth])
 
-  const onHandleMarker = (employeeId, day) => {
+  const onHandleMarker = useCallback((employeeId, day) => {
     if (employeeId && day && markerActive) {
       const date = currentMonth.clone().set('date', day);
       handleMarker(employeeId, date);
     }
-  };
+  }, [currentMonth, handleMarker, markerActive])
 
-  const onClickDay = (day) => {
+  const onClickDay = useCallback((day) => {
     if (day) {
       const date = currentMonth.clone().set('date', day);
       handleChangeTimeline(TIMELINE.DAY, date);
     }
-  }
+  }, [currentMonth, handleChangeTimeline])
 
   return (
     <>
@@ -387,3 +393,31 @@ export default ({
     </>
   );
 };
+
+export default React.memo(MonthView, (prevProps, nextProps) => {
+  // console.log('resources', _.isEqual(prevProps.resources, nextProps.resources))
+  // console.log('events', _.isEqual(prevProps.events, nextProps.events))
+  // console.log('holidays', _.isEqual(prevProps.holidays, nextProps.holidays))
+  // console.log('markers', _.isEqual(prevProps.markers, nextProps.markers))
+  // console.log('withCost', _.isEqual(prevProps.withCost, nextProps.withCost))
+  // console.log('timesPanel', _.isEqual(prevProps.timesPanel, nextProps.timesPanel))
+  // console.log('accumulatedHours', _.isEqual(prevProps.accumulatedHours, nextProps.accumulatedHours))
+  // console.log('markerActive', _.isEqual(prevProps.markerActive, nextProps.markerActive))
+  // console.log('scheduleSettings', _.isEqual(prevProps.scheduleSettings, nextProps.scheduleSettings))
+  // console.log('copyTool', _.isEqual(prevProps.copyTool, nextProps.copyTool))
+  // console.log('workTime', _.isEqual(prevProps.workTime, nextProps.workTime))
+  // console.log('permissions', _.isEqual(prevProps.permissions, nextProps.permissions))
+
+  return _.isEqual(prevProps.resources, nextProps.resources) &&
+  _.isEqual(prevProps.events, nextProps.events) &&
+  _.isEqual(prevProps.holidays, nextProps.holidays) &&
+  _.isEqual(prevProps.markers, nextProps.markers) &&
+  _.isEqual(prevProps.withCost, nextProps.withCost) &&
+  _.isEqual(prevProps.timesPanel, nextProps.timesPanel) &&
+  _.isEqual(prevProps.accumulatedHours, nextProps.accumulatedHours) &&
+  _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
+  _.isEqual(prevProps.scheduleSettings, nextProps.scheduleSettings) &&
+  _.isEqual(prevProps.copyTool, nextProps.copyTool) &&
+  _.isEqual(prevProps.workTime, nextProps.workTime) &&
+  _.isEqual(prevProps.permissions, nextProps.permissions)
+})
