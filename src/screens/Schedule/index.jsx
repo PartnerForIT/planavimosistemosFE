@@ -111,12 +111,22 @@ export default () => {
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
   //const employees = useSelector(employeesSelector);
+  // const schedule = useSelector(scheduleSelector);
+  // const markers = useSelector(markersSelector);
+  // const isLoading = useSelector(isLoadingSelector);
+
+const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
+    schedule: schedule.schedule,
+    markers: schedule.markers,
+    isLoading: schedule.loading,
+  }));
+
   const { users: employees } = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
   const shiftsTypes = useSelector(shiftTypesSelector);
-  const schedule = useSelector(scheduleSelector);
-  const markers = useSelector(markersSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  
+  
+  
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
   const scheduleSettings=useSelector(scheduleSettingSelector);
@@ -399,16 +409,15 @@ export default () => {
     handleGetSchedule({ fromDate: fromDateRef.current });
   }
 
-  const handleMarker = (employeeId, date) => {
+  const handleMarker = useCallback((employeeId, date) => {
     dispatch(patchMarker({
       companyId,
-
       data: {
         employeeId,
         date: date.format('YYYY-MM-DD'),
       },
     }));
-  };
+  }, [dispatch, companyId])
 
   const onPlaceSelectFilter = (place) => {
     const arrChecked = place?.filter((i) => i.checked);
@@ -1304,128 +1313,119 @@ export default () => {
           }
         </div>
         {
-          (!schedule) ? (
-            // <Progress />
-              <></>
-          ) : (
-            <>
-              {
-                timeline === TIMELINE.MONTH ? (
-                  <MonthView
-                    resources={Object.values(resources) || resourcesMock}
+          (timeline === TIMELINE.MONTH) && schedule ? (
+            <MonthView
+              resources={Object.values(resources) || resourcesMock}
+              events={events}
+              holidays={schedule?.holidays}
+              accumulatedHours={accumulatedHours}
+              markers={markers}
+              markerActive={toolsActive['marking']}
+              handleMarker={handleMarker}
+              onChangeMonth={handleChangeMonth}
+              timesPanel={schedule.timesPanel}
+              withCost={permissions.cost && permissions.schedule_costs}
+              permissions={permissions}
+              scheduleSettings={scheduleSettings}
+              copyTool={copyTool}
+              workTime={workTime}
+              handleChangeEmployee={handleChangeEmployee}
+              handleChangeWorkingTime={handleChangeWorkingTime}
+              handleDeleteTimeline={handleDeleteTimeline}
+              handleEmptyTimeline={handleEmptyTimeline}
+              handleAddWorkingTime={handleAddWorkingTime}
+              handleCopyTool={handleCopyTool}
+              handleAddHistory={handleAddHistory}
+              addTempEmployees={addTempEmployees}
+              handleChangeTimeline={handleChangeTimeline}
+              onEditShift={(shiftId) => handleEditShift(shiftId)}
+              checkIfEventsExist={checkIfEventsExist}
+              onGenerateTimes={(shiftId, employeeId) => handleGenerateTimes(shiftId, employeeId)}
+              onClearTimes={(shiftId, employeeId) => setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
+              onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
+            />
+          ) : schedule
+              ? <>
+                  <FullCalendar
+                    firstDay={1}
+                    ref={calendarRef}
+                    plugins={[resourceTimelinePlugin, interactionPlugin, momentPlugin]}
+                    initialView={timeline}
+                    views={{
+                      day: {
+                        type: 'resourceTimelineDay',
+                        title: 'ddd MMM, DD, YYYY',
+                        slotLabelFormat: 'HH:mm',
+                        slotDuration: '1:00',
+                        snapDuration: '00:30',
+                      },
+                      week: {
+                        type: 'resourceTimelineWeek',
+                        // duration: {
+                        //   days: 7,
+                        // },
+                        slotLabelFormat: renderWeekHeader,
+                        slotDuration: '24:00',
+                        snapDuration: '6:00',
+                      },
+                    }}
+                    slotMinTime={timeline === TIMELINE.WEEK ? '00:00:00' : (scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00')}
+                    slotMaxTime={timeline === TIMELINE.WEEK ? '24:00:00' : workAtNightMode()}
+                    resourceOrder='sort'
+                    headerToolbar={false}
+                    aspectRatio={1}
+                    height='100%'
+                    //agendaEventMinHeight={90}
+                    schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
+                    resources={resources}
                     events={events}
-                    holidays={schedule?.holidays}
-                    accumulatedHours={accumulatedHours}
-                    markers={markers}
-                    markerActive={toolsActive['marking']}
-                    handleMarker={handleMarker}
-                    onChangeMonth={handleChangeMonth}
-                    timesPanel={schedule.timesPanel}
-                    withCost={permissions.cost && permissions.schedule_costs}
-                    permissions={permissions}
-                    scheduleSettings={scheduleSettings}
-                    copyTool={copyTool}
-                    workTime={workTime}
-                    handleChangeEmployee={handleChangeEmployee}
-                    handleChangeWorkingTime={handleChangeWorkingTime}
-                    handleDeleteTimeline={handleDeleteTimeline}
-                    handleEmptyTimeline={handleEmptyTimeline}
-                    handleAddWorkingTime={handleAddWorkingTime}
-                    handleCopyTool={handleCopyTool}
-                    handleAddHistory={handleAddHistory}
-                    addTempEmployees={addTempEmployees}
-                    handleChangeTimeline={handleChangeTimeline}
-                    onEditShift={(shiftId) => handleEditShift(shiftId)}
-                    checkIfEventsExist={checkIfEventsExist}
-                    onGenerateTimes={(shiftId, employeeId) => handleGenerateTimes(shiftId, employeeId)}
-                    onClearTimes={(shiftId, employeeId) => setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})}
-                    onDeleteShift={(shiftId, fieldValue) => { setOpenDialog(shiftId); setDeletedShiftName(fieldValue) } }
+                    eventStartEditable={false}
+                    eventDurationEditable={timeline === TIMELINE.DAY}
+                    eventContent={renderEventContent}
+                    eventClassNames={handleEventClassNames}
+                    resourceAreaHeaderContent={renderResourceAreaHeaderContent}
+                    viewDidMount={handleViewDidMount}
+                    resourceLabelClassNames={handleResourceLabelClassNames}
+                    resourceLabelContent={renderResourceLabelContent}
+                    eventResize={handleEventChange}
+                    eventResizeStart={handleEventChangeStart}
+                    eventResizeStop={handleEventChangeStop}
+                    slotLaneClassNames={handeSlotLaneClassNames}
+                    resourceLaneDidMount={handleSetupMarkersWidth}
+                    resourceLaneContent={renderResourceLaneContent}
+                    resourceLaneClassNames={handeResourceLaneClassNames}
+                    locale={localStorage.getItem('i18nextLng') || 'en'}
+                    // nowIndicator
                   />
-                ) : (
-                  <>
-                    <FullCalendar
-                      firstDay={1}
-                      ref={calendarRef}
-                      plugins={[resourceTimelinePlugin, interactionPlugin, momentPlugin]}
-                      initialView={timeline}
-                      views={{
-                        day: {
-                          type: 'resourceTimelineDay',
-                          title: 'ddd MMM, DD, YYYY',
-                          slotLabelFormat: 'HH:mm',
-                          slotDuration: '1:00',
-                          snapDuration: '00:30',
-                        },
-                        week: {
-                          type: 'resourceTimelineWeek',
-                          // duration: {
-                          //   days: 7,
-                          // },
-                          slotLabelFormat: renderWeekHeader,
-                          slotDuration: '24:00',
-                          snapDuration: '6:00',
-                        },
-                      }}
-                      slotMinTime={timeline === TIMELINE.WEEK ? '00:00:00' : (scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00')}
-                      slotMaxTime={timeline === TIMELINE.WEEK ? '24:00:00' : workAtNightMode()}
-                      resourceOrder='sort'
-                      headerToolbar={false}
-                      aspectRatio={1}
-                      height='100%'
-                      //agendaEventMinHeight={90}
-                      schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-                      resources={resources}
-                      events={events}
-                      eventStartEditable={false}
-                      eventDurationEditable={timeline === TIMELINE.DAY}
-                      eventContent={renderEventContent}
-                      eventClassNames={handleEventClassNames}
-                      resourceAreaHeaderContent={renderResourceAreaHeaderContent}
-                      viewDidMount={handleViewDidMount}
-                      resourceLabelClassNames={handleResourceLabelClassNames}
-                      resourceLabelContent={renderResourceLabelContent}
-                      eventResize={handleEventChange}
-                      eventResizeStart={handleEventChangeStart}
-                      eventResizeStop={handleEventChangeStop}
-                      slotLaneClassNames={handeSlotLaneClassNames}
-                      resourceLaneDidMount={handleSetupMarkersWidth}
-                      resourceLaneContent={renderResourceLaneContent}
-                      resourceLaneClassNames={handeResourceLaneClassNames}
-                      locale={localStorage.getItem('i18nextLng') || 'en'}
-                      // nowIndicator
-                    />
-                    <ReactTooltip
-                      id='holiday'
-                      className='schedule-screen__tooltip'
-                      effect='solid'
-                    />
-                    <ReactTooltip
-                      id='user_marker'
-                      className='schedule-screen__tooltip schedule-screen__tooltip__marker'
-                      effect='solid'
-                    />
-                    <ReactTooltip
-                      id='demand_hours'
-                      className='schedule-screen__tooltip schedule-screen__tooltip__demand'
-                      effect='solid'
-                    />
-                    {
-                      timeline === TIMELINE.WEEK && (
-                        <Background
-                          startDay={fromDateRef.current}
-                        />
-                      )
-                    }
-                    <Footer
-                      timeline={timeline}
-                      data={schedule.timesPanel}
-                      withCost={permissions.cost && permissions.schedule_costs}
-                    />
-                  </>
-                )
-              }
-            </>
-          )
+                  <ReactTooltip
+                    id='holiday'
+                    className='schedule-screen__tooltip'
+                    effect='solid'
+                  />
+                  <ReactTooltip
+                    id='user_marker'
+                    className='schedule-screen__tooltip schedule-screen__tooltip__marker'
+                    effect='solid'
+                  />
+                  <ReactTooltip
+                    id='demand_hours'
+                    className='schedule-screen__tooltip schedule-screen__tooltip__demand'
+                    effect='solid'
+                  />
+                  {
+                    timeline === TIMELINE.WEEK && (
+                      <Background
+                        startDay={fromDateRef.current}
+                      />
+                    )
+                  }
+                  <Footer
+                    timeline={timeline}
+                    data={schedule.timesPanel}
+                    withCost={permissions.cost && permissions.schedule_costs}
+                  />
+                </>
+              : null
         }
         {
           (modalAddTempEmployee)
