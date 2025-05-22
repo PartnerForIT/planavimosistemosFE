@@ -28,6 +28,9 @@ import {
   updatePolicy,
   updatePolicySettings,
   updatePolicyEmployees,
+  createRequestBehalf,
+  createAdjustBalance,
+  createAdjustTimeUsed,
   duplicatePolicy,
   getPolicies,
   getAccountGroups,
@@ -166,6 +169,18 @@ export default () => {
     setActiveDataManagement(activePolicy);
   }
 
+  const onRequestBehalf = (data) => {
+    dispatch(createRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  }
+
+  const onAdjustBalance = (data) => {
+    dispatch(createAdjustBalance(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  }
+
+  const onAdjustTimeUsed = (data) => {
+    dispatch(createAdjustTimeUsed(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  }
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -177,6 +192,9 @@ export default () => {
               activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
               employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
               handleEditPolicyEmployees={handleEditPolicyEmployees}
+              onRequestBehalf={onRequestBehalf}
+              onAdjustBalance={onAdjustBalance}
+              onAdjustTimeUsed={onAdjustTimeUsed}
             />
           ) : (
           <>

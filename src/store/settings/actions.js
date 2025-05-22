@@ -159,6 +159,15 @@ import {
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_SUCCESS,
   DUPLICATE_POLICY_ERROR,
+  CREATE_REQUEST_BEHALF,
+  CREATE_REQUEST_BEHALF_SUCCESS,
+  CREATE_REQUEST_BEHALF_ERROR,
+  CREATE_ADJUST_BALANCE,
+  CREATE_ADJUST_BALANCE_SUCCESS,
+  CREATE_ADJUST_BALANCE_ERROR,
+  CREATE_ADJUST_TIME_USED,
+  CREATE_ADJUST_TIME_USED_SUCCESS,
+  CREATE_ADJUST_TIME_USED_ERROR,
   LOAD_PERMISSIONS,
   LOAD_PERMISSIONS_SUCCESS,
   LOAD_PERMISSIONS_ERROR,
@@ -1144,6 +1153,64 @@ export const duplicatePolicyError = (data) => ({
   type: DUPLICATE_POLICY_ERROR,
   data,
 });
+
+
+export const createRequestBehalf = (companyId, timeOffId, policyId, data) => ({
+  type: CREATE_REQUEST_BEHALF,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const createRequestBehalfSuccess = (data) => ({
+  type: CREATE_REQUEST_BEHALF_SUCCESS,
+  data,
+});
+
+export const createRequestBehalfError = (data) => ({
+  type: CREATE_REQUEST_BEHALF_ERROR,
+  data,
+});
+
+
+export const createAdjustBalance = (companyId, timeOffId, policyId, data) => ({
+  type: CREATE_ADJUST_BALANCE,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const createAdjustBalanceSuccess = (data) => ({
+  type: CREATE_ADJUST_BALANCE_SUCCESS,
+  data,
+});
+
+export const createAdjustBalanceError = (data) => ({
+  type: CREATE_ADJUST_BALANCE_ERROR,
+  data,
+});
+
+
+export const createAdjustTimeUsed = (companyId, timeOffId, policyId, data) => ({
+  type: CREATE_ADJUST_TIME_USED,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const createAdjustTimeUsedSuccess = (data) => ({
+  type: CREATE_ADJUST_TIME_USED_SUCCESS,
+  data,
+});
+
+export const createAdjustTimeUsedError = (data) => ({
+  type: CREATE_ADJUST_TIME_USED_ERROR,
+  data,
+});
+
 
 export const loadPermissions = (companyId) => ({
   type: LOAD_PERMISSIONS,

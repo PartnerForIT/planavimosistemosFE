@@ -10,6 +10,8 @@ import usePermissions from '../../Core/usePermissions';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import Filter from './TimeOffDetails/Filter';
 import RequestBehalf from '../../Core/Dialog/RequestBehalf';
+import AdjustBalance from '../../Core/Dialog/AdjustBalance';
+import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed';
 
 import classes from './timeoff.module.scss';
 import Button from '../../Core/Button/Button';
@@ -116,6 +118,9 @@ function UserDataManagement({
   activePolicy,
   employeesList,
   handleEditPolicyEmployees,
+  onRequestBehalf,
+  onAdjustBalance,
+  onAdjustTimeUsed,
 }) {
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
@@ -127,6 +132,8 @@ function UserDataManagement({
   const [all, setAll] = useState(false);
   const [selected, setSelected] = useState({});
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
+  const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false);
+  const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false);
 
   const { getDateFormat } = useCompanyInfo();
   const dateFormat = getDateFormat({
@@ -329,6 +336,8 @@ function UserDataManagement({
           checkedItems={checkedItems ?? []}
           handleUnassign={handleUnassign}
           handleRequestBehalf={() => setRequestBehalfOpen(true)}
+          handleAdjustBalance={() => setAdjustBalanceOpen(true)}
+          handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
           selectedItem={selected}
           setSearch={setSearch}
           search={search}
@@ -368,7 +377,40 @@ function UserDataManagement({
           setRequestBehalfOpen(false);
         }}
         title={t('Request on behalf')}
-        onSubmit={() => {}}
+        onSubmit={(data) => {
+          setRequestBehalfOpen(false);
+          onRequestBehalf(data);
+        }}
+        buttonTitle={t('Submit')}
+        employees={selectedEmployees}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id}}
+      />
+      <AdjustBalance
+        open={adjustBalanceOpen}
+        handleClose={() => {
+          setAdjustBalanceOpen(false);
+        }}
+        title={t('Adjust balance')}
+        onSubmit={(data) => {
+          setAdjustBalanceOpen(false);
+          onAdjustBalance(data);
+        }}
+        buttonTitle={t('Submit')}
+        employees={selectedEmployees}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id}}
+      />
+      <AdjustTimeUsed
+        open={adjustTimeUsedOpen}
+        handleClose={() => {
+          setAdjustTimeUsedOpen(false);
+        }}
+        title={t('Adjust time used')}
+        onSubmit={(data) => {
+          setAdjustTimeUsedOpen(false);
+          onAdjustTimeUsed(data);
+        }}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
         policies={activeTimeOff.policies}

@@ -74,6 +74,9 @@ import {
   UPDATE_POLICY_SETTINGS,
   UPDATE_POLICY_EMPLOYEES,
   DUPLICATE_POLICY,
+  CREATE_REQUEST_BEHALF,
+  CREATE_ADJUST_BALANCE,
+  CREATE_ADJUST_TIME_USED,
   LOAD_PERMISSIONS,
   GET_SETTINGS_EMPLOYEES_QUERY,
   ADD_INFO_SETTING_SNACKBAR, SEND_IMPORTED_EMPLOYEES, CHANGE_PASSWORD,
@@ -167,6 +170,9 @@ import {
   updatePolicySettingsError,
   updatePolicySettingsSuccess,
   duplicatePolicyError,
+  createRequestBehalfError,
+  createAdjustBalanceError,
+  createAdjustTimeUsedError,
   loadEmployeesError,
   loadEmployeesEditSuccess,
   loadEmployeesEditError,
@@ -1572,6 +1578,75 @@ function* duplicatePolicy(action) {
   }
 }
 
+function* createRequestBehalf(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      policyId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/store`, data, token());
+
+    yield put(addSnackbar('Added Request Behalf successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createRequestBehalfError(e));
+    yield put(addSnackbar('An error occurred while removing Request Behalf', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createAdjustBalance(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      policyId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/adjust-balance/store`, data, token());
+
+    yield put(addSnackbar('Added Adjust Balance successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createAdjustBalanceError(e));
+    yield put(addSnackbar('An error occurred while removing Adjust Balance', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* createAdjustTimeUsed(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      policyId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/adjust-time-used/store`, data, token());
+
+    yield put(addSnackbar('Added Adjust Time Used successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(createAdjustTimeUsedError(e));
+    yield put(addSnackbar('An error occurred while removing Adjust Time Used', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* getEmployeeEdit(action) {
   try {
     const { data } = yield call(axios.get,
@@ -2159,13 +2234,16 @@ export default function* SettingsWatcher() {
   yield takeLatest(CREATE_TIME_OFF, createTimeOff);
   yield takeLatest(DELETE_TIME_OFF, removeTimeOff);
   yield takeLatest(UPDATE_TIME_OFF, patchTimeOff);
-yield takeLeading(GET_POLICIES, loadPolicies);
-yield takeLatest(CREATE_POLICY, createPolicy);
+  yield takeLeading(GET_POLICIES, loadPolicies);
+  yield takeLatest(CREATE_POLICY, createPolicy);
   yield takeLatest(DELETE_POLICY, removePolicy);
   yield takeLatest(UPDATE_POLICY, patchPolicy);
   yield takeLatest(UPDATE_POLICY_SETTINGS, patchPolicySettings);
   yield takeLatest(UPDATE_POLICY_EMPLOYEES, patchPolicyEmployees);
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
+  yield takeLatest(CREATE_REQUEST_BEHALF, createRequestBehalf);
+  yield takeLatest(CREATE_ADJUST_BALANCE, createAdjustBalance);
+  yield takeLatest(CREATE_ADJUST_TIME_USED, createAdjustTimeUsed);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);
   yield takeLatest(ADD_INFO_SETTING_SNACKBAR, showSnackBar);
   yield takeLatest(SEND_IMPORTED_EMPLOYEES, sendImportedEmployees);

@@ -12,6 +12,8 @@ export default function Filter({
   changeUserStatus = () => ({}),
   handleUnassign,
   handleRequestBehalf,
+  handleAdjustBalance,
+  handleAdjustTimeUsed,
   checkedItems,
   selectedItem,
   setSearch,
@@ -46,13 +48,13 @@ export default function Filter({
           {t('Request on behalf')}
         </Button>
         <Button
-          onClick={() => changeUserStatus('adjust_balance')}
+          onClick={handleAdjustBalance}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Adjust balance')}
         </Button>
         <Button
-          onClick={() => changeUserStatus('adjust_time')}
+          onClick={handleAdjustTimeUsed}
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Adjust time used')}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import DialogClear from '../DialogClear';
 import Button from '../../Button/Button';
-//import Input from '../../Input/Input';
 import Select from '../../../Core/SimpleSelect';
 import Textarea from '../../Textarea/Textarea';
 import Label from '../../InputLabel';
+import Input from '../../Input/Input';
 import style from '../Dialog.module.scss';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,8 +14,9 @@ import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
   name: '',
-  from: null,
-  to: null,
+  cycle_period: null,
+  adjustment_type: '',
+  days: '',
   note: '',
 };
 
@@ -117,35 +118,48 @@ export default ({
           <div className={style.formRow}>
             <div className={style.formControl}>
               <div className={style.labelBlock}>
-                <Label text={t('From')} htmlFor='From' />
+                <Label text={t('Cycle period')} htmlFor='cycle_period' />
               </div>
               <div className={style.dateInput}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DatePicker
-                    label={t('Start date')}
-                    value={values.from}
-                    onChange={(date) => handleChange({target: {name: 'from', value: date}})}
+                    label={t('Cycle period')}
+                    value={values.cycle_period}
+                    onChange={(date) => handleChange({target: {name: 'cycle_period', value: date}})}
                     format='MMM, DD, YYYY'
-                    name="from"
+                    name="cycle_period"
                   />
                 </MuiPickersUtilsProvider>
               </div>
             </div>
+            <div>
+            </div>
+          </div>
+
+          <div className={style.formRow}>
             <div className={style.formControl}>
               <div className={style.labelBlock}>
-                <Label text={t('To')} htmlFor='to' />
+                <Label text={t('Adjustment type')} htmlFor='adjustment_type' />
               </div>
-              <div className={style.dateInput}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <DatePicker
-                    label={t('To date')}
-                    value={values.to}
-                    onChange={(date) => handleChange({target: {name: 'to', value: date}})}
-                    format='MMM, DD, YYYY'
-                    name="to"
-                  />
-                </MuiPickersUtilsProvider>
+              <Input
+                placeholder={t('Adjustment type')}
+                value={values.adjustment_type}
+                name='adjustment_type'
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+            <div className={style.formControl}>
+              <div className={style.labelBlock}>
+                <Label text={t('Days')} htmlFor='days' />
               </div>
+              <Input
+                placeholder={t('Days')}
+                value={values.days}
+                name='days'
+                fullWidth
+                onChange={handleChange}
+              />
             </div>
           </div>
 

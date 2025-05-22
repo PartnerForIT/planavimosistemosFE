@@ -119,6 +119,15 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   UPDATE_POLICY_EMPLOYEES_ERROR,
   UPDATE_POLICY_EMPLOYEES_SUCCESS,
+  CREATE_REQUEST_BEHALF,
+  CREATE_REQUEST_BEHALF_SUCCESS,
+  CREATE_REQUEST_BEHALF_ERROR,
+  CREATE_ADJUST_BALANCE,
+  CREATE_ADJUST_BALANCE_SUCCESS,
+  CREATE_ADJUST_BALANCE_ERROR,
+  CREATE_ADJUST_TIME_USED,
+  CREATE_ADJUST_TIME_USED_SUCCESS,
+  CREATE_ADJUST_TIME_USED_ERROR,
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_ERROR,
   DUPLICATE_POLICY_SUCCESS,
@@ -894,6 +903,9 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_POLICY:
     case UPDATE_POLICY:
     case DUPLICATE_POLICY:
+    case CREATE_REQUEST_BEHALF:
+    case CREATE_ADJUST_BALANCE:
+    case CREATE_ADJUST_TIME_USED:
       return {
         ...state,
         policiesLoading: true,
@@ -905,6 +917,9 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_POLICY_SUCCESS:
     case UPDATE_POLICY_SUCCESS:
     case DUPLICATE_POLICY_SUCCESS:
+    case CREATE_REQUEST_BEHALF_SUCCESS:
+    case CREATE_ADJUST_BALANCE_SUCCESS:
+    case CREATE_ADJUST_TIME_USED_SUCCESS:
       return {
         ...state,
         policiesLoading: false,
@@ -916,6 +931,9 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_POLICY_ERROR:
     case UPDATE_POLICY_ERROR:
     case DUPLICATE_POLICY_ERROR:
+    case CREATE_REQUEST_BEHALF_ERROR:
+    case CREATE_ADJUST_BALANCE_ERROR:
+    case CREATE_ADJUST_TIME_USED_ERROR:
       return {
         ...state,
         policiesLoading: false,
