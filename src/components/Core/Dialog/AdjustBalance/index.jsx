@@ -37,7 +37,7 @@ export default ({
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const handleSubmit = () => {
-    onSubmit(values);
+    onSubmit({...values, employees: employees.map((item) => item.id)});
   };
   const handleExited = () => {
     setValues(defaultValues);

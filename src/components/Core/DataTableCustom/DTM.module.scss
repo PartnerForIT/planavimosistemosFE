@@ -444,7 +444,7 @@ header {
   align-items: center;
   height: 100%;
 
-  button {
+  button:not(.openButtonRow) {
     border: unset;
     background: unset;
     padding: unset;

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import styles from './DTM.module.scss';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import SimpleTable from './SimpleTable';
+import Button from '../../Core/Button/Button';
 import TriangleIcon from '../../Icons/TriangleIcon';
 import ApprovedIcon from '../../Icons/ApprovedIcon';
 import SuspendedIcon from '../../Icons/SuspendedIcon';
@@ -20,7 +21,7 @@ const Row = ({
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
-  withoutShitCode, duplicateRow, tallRows,
+  withoutShitCode, duplicateRow, tallRows, openButton,
 }) => {
   const { t } = useTranslation();
   const selected = useMemo(() => {
@@ -197,6 +198,7 @@ const Row = ({
             editRow={editRow}
             removeRow={removeRow}
             duplicateRow={duplicateRow}
+            openButton={openButton}
             visible={actionsVisible || (selected && selected.id === row.id && !reports)}
             absolute
             id={row.id}
@@ -326,7 +328,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                    <RowActions editRow={editRow} removeRow={removeRow} duplicateRow={duplicateRow} id={row.id} />
+                    <RowActions editRow={editRow} removeRow={removeRow} duplicateRow={duplicateRow} openButton={openButton} id={row.id} />
                   )
                 }
               </div>
@@ -354,8 +356,9 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, duplicateRow, absolute = false, visible = true,
+  id, editRow, removeRow, duplicateRow, openButton, absolute = false, visible = true,
 }) => {
+  const { t } = useTranslation();
   const actionsClasses = classNames(
     styles.ActionsTable,
     (visible ? styles.actionsVisible : styles.actionsHidden),
@@ -386,6 +389,17 @@ const RowActions = ({
           <button onClick={() => removeRow(id)}>
             <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
           </button>
+        )
+      }
+      {
+        openButton && (
+          <Button
+            className={styles.openButtonRow}
+            onClick={() => openButton(id)}
+            size='little'
+          >
+            {t('Open')}
+          </Button>
         )
       }
     </div>

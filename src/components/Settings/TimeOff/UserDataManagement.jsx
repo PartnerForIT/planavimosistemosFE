@@ -121,6 +121,7 @@ function UserDataManagement({
   onRequestBehalf,
   onAdjustBalance,
   onAdjustTimeUsed,
+  handleOpenEmployee,
 }) {
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
@@ -363,6 +364,7 @@ function UserDataManagement({
           accountList
           colSearch={colSearch}
           onSearch={onColumnSearch}
+          openButton={handleOpenEmployee}
         />
       </PageLayout>
       <ReactTooltip

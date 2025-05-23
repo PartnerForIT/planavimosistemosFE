@@ -45,6 +45,7 @@ export default function DataTable({
   onEditAddress,
   onSearch = false,
   colSearch = {},
+  openButton = false,
 }) {
   const { t } = useTranslation();
   const [tableData, setTableData] = useState(data);
@@ -343,6 +344,7 @@ export default function DataTable({
                 onEditAddress={onEditAddress}
                 onOpenAssignGroup={onOpenAssignGroup}
                 onOpenWorkTime={onOpenWorkTime}
+                openButton={openButton}
               />
             )) : null
           }
