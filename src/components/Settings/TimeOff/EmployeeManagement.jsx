@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
@@ -73,6 +73,18 @@ function EmployeeManagement({
                 {t('Request on behalf')}
               </Button>
             </div>
+          </div>
+        </div>
+
+        <div className={classes.container}>
+          <div className={classes.containerTitle}>
+            {t('Upcoming requests')}
+          </div>
+        </div>
+
+        <div className={classes.container}>
+          <div className={classes.containerTitle}>
+            {t(' Policies')}
           </div>
         </div>
       </PageLayout>
