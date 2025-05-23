@@ -75,6 +75,7 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   DUPLICATE_POLICY,
   CREATE_REQUEST_BEHALF,
+  GET_REQUEST_BEHALF,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_TIME_USED,
   LOAD_PERMISSIONS,
@@ -171,6 +172,8 @@ import {
   updatePolicySettingsSuccess,
   duplicatePolicyError,
   createRequestBehalfError,
+  getRequestBehalfSuccess,
+  getRequestBehalfError,
   createAdjustBalanceError,
   createAdjustTimeUsedError,
   loadEmployeesError,
@@ -1601,6 +1604,15 @@ function* createRequestBehalf(action) {
   }
 }
 
+function* loadRequestBehalf(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy/${action.policyId}/request-behalf/employee/${action.employeeId}`, token());
+    yield put(getRequestBehalfSuccess(data));
+  } catch (e) {
+    yield put(getRequestBehalfError(e));
+  }
+}
+
 function* createAdjustBalance(action) {
   try {
     const {
@@ -2242,6 +2254,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_POLICY_EMPLOYEES, patchPolicyEmployees);
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLatest(CREATE_REQUEST_BEHALF, createRequestBehalf);
+  yield takeLatest(GET_REQUEST_BEHALF, loadRequestBehalf);
   yield takeLatest(CREATE_ADJUST_BALANCE, createAdjustBalance);
   yield takeLatest(CREATE_ADJUST_TIME_USED, createAdjustTimeUsed);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);

@@ -34,6 +34,7 @@ import {
   createAdjustTimeUsed,
   duplicatePolicy,
   getPolicies,
+  getRequestBehalf,
   getAccountGroups,
   loadEmployeesAll,
   loadPermissions,
@@ -185,6 +186,7 @@ export default () => {
 
   const onOpenEmployee = (employeeId) => {
     setActiveEmployee(employees.find(({id}) => id === employeeId));
+    dispatch(getRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, employeeId));
   }
 
   return (

@@ -122,6 +122,9 @@ import {
   CREATE_REQUEST_BEHALF,
   CREATE_REQUEST_BEHALF_SUCCESS,
   CREATE_REQUEST_BEHALF_ERROR,
+  GET_REQUEST_BEHALF,
+  GET_REQUEST_BEHALF_SUCCESS,
+  GET_REQUEST_BEHALF_ERROR,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_BALANCE_SUCCESS,
   CREATE_ADJUST_BALANCE_ERROR,
@@ -213,7 +216,9 @@ const initialState = {
   roleDetails: {},
   time_offs: [],
   policies: [],
+  requestBehalf: null,
   policiesLoading: false,
+  requestBehalfLoading: false,
   permissions: [],
   import: {},
   importPlaces: {},
@@ -903,9 +908,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_POLICY:
     case UPDATE_POLICY:
     case DUPLICATE_POLICY:
-    case CREATE_REQUEST_BEHALF:
-    case CREATE_ADJUST_BALANCE:
-    case CREATE_ADJUST_TIME_USED:
       return {
         ...state,
         policiesLoading: true,
@@ -917,9 +919,6 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case DELETE_POLICY_SUCCESS:
     case UPDATE_POLICY_SUCCESS:
     case DUPLICATE_POLICY_SUCCESS:
-    case CREATE_REQUEST_BEHALF_SUCCESS:
-    case CREATE_ADJUST_BALANCE_SUCCESS:
-    case CREATE_ADJUST_TIME_USED_SUCCESS:
       return {
         ...state,
         policiesLoading: false,
@@ -931,13 +930,54 @@ export const reducerOrganizationList = (state = initialState, action) => {
     case CREATE_POLICY_ERROR:
     case UPDATE_POLICY_ERROR:
     case DUPLICATE_POLICY_ERROR:
+      return {
+        ...state,
+        policiesLoading: false,
+        error: action.data.policies,
+      };
+
+    case GET_REQUEST_BEHALF:
+      return {
+        ...state,
+        requestBehalfLoading: true,
+        requestBehalf: null,
+        error: null,
+      };
+    case GET_REQUEST_BEHALF_SUCCESS:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+        requestBehalf: action.data,
+      };
+    case GET_REQUEST_BEHALF_ERROR:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+        error: action.data,
+      };
+
+    case CREATE_REQUEST_BEHALF:
+    case CREATE_ADJUST_BALANCE:
+    case CREATE_ADJUST_TIME_USED:
+      return {
+        ...state,
+        requestBehalfLoading: true,
+        error: null,
+      };
+    case CREATE_REQUEST_BEHALF_SUCCESS:
+    case CREATE_ADJUST_BALANCE_SUCCESS:
+    case CREATE_ADJUST_TIME_USED_SUCCESS:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+      };
     case CREATE_REQUEST_BEHALF_ERROR:
     case CREATE_ADJUST_BALANCE_ERROR:
     case CREATE_ADJUST_TIME_USED_ERROR:
       return {
         ...state,
-        policiesLoading: false,
-        error: action.data.policies,
+        requestBehalfLoading: false,
+        error: action.data,
       };
 
     case UPDATE_POLICY_SETTINGS:

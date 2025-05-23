@@ -162,6 +162,9 @@ import {
   CREATE_REQUEST_BEHALF,
   CREATE_REQUEST_BEHALF_SUCCESS,
   CREATE_REQUEST_BEHALF_ERROR,
+  GET_REQUEST_BEHALF,
+  GET_REQUEST_BEHALF_SUCCESS,
+  GET_REQUEST_BEHALF_ERROR,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_BALANCE_SUCCESS,
   CREATE_ADJUST_BALANCE_ERROR,
@@ -1170,6 +1173,24 @@ export const createRequestBehalfSuccess = (data) => ({
 
 export const createRequestBehalfError = (data) => ({
   type: CREATE_REQUEST_BEHALF_ERROR,
+  data,
+});
+
+export const getRequestBehalf = (companyId, timeOffId, policyId, employeeId) => ({
+  type: GET_REQUEST_BEHALF,
+  companyId,
+  timeOffId,
+  policyId,
+  employeeId,
+});
+
+export const getRequestBehalfSuccess = (data) => ({
+  type: GET_REQUEST_BEHALF_SUCCESS,
+  data,
+});
+
+export const getRequestBehalfError = (data) => ({
+  type: GET_REQUEST_BEHALF_ERROR,
   data,
 });
 
