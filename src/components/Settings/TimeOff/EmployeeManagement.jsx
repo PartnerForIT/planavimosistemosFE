@@ -41,7 +41,40 @@ function EmployeeManagement({
         </Button>
       </TitleBlock>
       <PageLayout>
-        123
+        <div className={classes.container}>
+          <div className={classes.containerTitle}>
+            {t('Employee')}
+          </div>
+          <div className={classes.employeeBlock}>
+            {
+              employee.photo && (
+                <div className={classes.avatarBlock}>
+                  <img
+                    src={employee.photo}
+                    alt='avatar'
+                    className={classes.avatar}
+                  />
+                </div>
+              )
+            }
+            <div>
+              <div className={classes.employeeName}>{employee.name}</div>
+              <div className={classes.skillName}>{employee.skills}</div>
+            </div>
+
+            <div className={classes.buttonBlock}>
+              <Button
+                className={classes.button}
+                size="large"
+                onClick={() => {
+                  setRequestBehalfOpen(true);
+                }}
+              >
+                {t('Request on behalf')}
+              </Button>
+            </div>
+          </div>
+        </div>
       </PageLayout>
       <ReactTooltip
         id='back_button'
