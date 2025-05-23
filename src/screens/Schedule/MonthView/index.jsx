@@ -136,10 +136,6 @@ const MonthView = ({
   useEffect(() => {
     localStorage.setItem('resourcesExpandersIds'+companyId, JSON.stringify(expandedIds));
   }, [expandedIds, companyId]);
-  
-  // useEffect(() => {
-  //   setResources(applyExpanders(externalResources, expandedIds))
-  // }, [externalResources, expandedIds])
 
   const daysOfMonth = useMemo(() => {
     const day = currentMonth.clone().add(-1, 'days');
@@ -305,6 +301,7 @@ const MonthView = ({
                     key={item.id}
                     resourceId={item.id}
                     resources={item.children}
+                    expandedIds={expandedIds}
                     expander={item.expander}
                     markerActive={markerActive}
                     handleMarker={onHandleMarker}

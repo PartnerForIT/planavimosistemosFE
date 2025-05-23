@@ -61,6 +61,7 @@ export default ({
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const buttonRef = useRef(null);
   const contentBoxRef = useRef(null);
+  const dropdownRef = useRef(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const sectionClass = classnames('section', classes.section, {
@@ -220,7 +221,7 @@ export default ({
       }
       {
         (withMenu || withTemplate) && (
-          <Dropdown onToggle={setIsDropdownOpen} buttonClass={classes.section__buttonDots}>
+          <Dropdown onToggle={setIsDropdownOpen} buttonClass={classes.section__buttonDots} ref={dropdownRef}>
             <div className={classes.section__title}>
               {title}
             </div>
@@ -228,7 +229,10 @@ export default ({
               withTemplate && onGenerateTimes && (
                 <Dropdown.ItemMenu
                   title={t('Generate Work Times')}
-                  onClick={onGenerateTimes}
+                  onClick={() => {
+                    onGenerateTimes()
+                    dropdownRef.current.close()
+                  }}
                 />
               )   
             } 
@@ -236,7 +240,10 @@ export default ({
               withTemplate && !onGenerateTimes && (
                 <Dropdown.ItemMenu
                   title={t('Clear Work Times')}
-                  onClick={onClearTimes}
+                  onClick={() => {
+                    onClearTimes()
+                    dropdownRef.current.close()
+                  }}
                 />
               )   
             }

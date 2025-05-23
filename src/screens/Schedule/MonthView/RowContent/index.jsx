@@ -10,6 +10,7 @@ const RowContent = ({
   resourceId,
   employeeId,
   resources,
+  expandedIds,
   events,
   daysOfMonth,
   expander,
@@ -40,14 +41,18 @@ const RowContent = ({
   }, []);
 
   const newFoundItem = (day) => {
-    const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
+    // TODO: CHECK IF NEED THIS FILTER
+    const ev = events.filter(e => !e.empty_manual).find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
       return {id: ev.id};
     }
 
     if (ev?.copy_event) {
-      ev.title = `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`;
-      ev.hours = Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10;
+      return {
+        ...ev,
+        title: `${moment(ev.start).format("HH:mm")}-${moment(ev.end).format("HH:mm")}`,
+        hours: Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10,
+      }
     }
     
     return ev;
@@ -135,6 +140,7 @@ const RowContent = ({
             resourceId={item.id}
             resource={item}
             resources={item.children}
+            expandedIds={expandedIds}
             expander={item.expander}
             currentResource={item}
             markerActive={markerActive}
@@ -178,5 +184,6 @@ export default React.memo(RowContent, (prevProps, nextProps) => {
   _.isEqual(prevProps.permissions, nextProps.permissions) &&
   _.isEqual(prevProps.markers, nextProps.markers) &&
   _.isEqual(prevProps.currentMonth, nextProps.currentMonth) &&
-  _.isEqual(prevProps.firstRenderFinished, nextProps.firstRenderFinished)
+  _.isEqual(prevProps.firstRenderFinished, nextProps.firstRenderFinished) && 
+  _.isEqual(prevProps.expandedIds, nextProps.expandedIds)
 });

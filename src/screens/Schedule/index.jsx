@@ -11,7 +11,7 @@ import momentPlugin from '@fullcalendar/moment';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import cloneDeep from 'lodash';
+import cloneDeep, { set } from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
@@ -53,7 +53,7 @@ import {
   postSchedule as postScheduleSetting,
   loadIntegrations,
 } from '../../store/settings/actions';
-import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
+// import { scheduleSelector, markersSelector, isLoadingSelector } from '../../store/schedule/selectors';
 import { copyToolHistorySelector } from '../../store/copyTool/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
 import { jobTypesSelector } from '../../store/jobTypes/selectors';
@@ -99,6 +99,19 @@ const permissionsConfig = [
   },
 ];
 
+moment.updateLocale('lt', {
+  weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
+  months: [
+    "Sausis", "Vasaris", "Kovas", "Balandis", "Gegužė", "Birželis", "Liepa", "Rugpjūtis", "Rugsėjis", "Spalis", "Lapkritis", "Gruodis"
+  ],
+  monthsShort: [
+    "Sau", "Vas", "Kov", "Bal", "Geg", "Bir", "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"
+  ],
+  // Add any additional locale settings as needed
+});
+
+moment.locale(localStorage.getItem('i18nextLng') || 'en');
+
 export default () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -115,17 +128,16 @@ export default () => {
   // const markers = useSelector(markersSelector);
   // const isLoading = useSelector(isLoadingSelector);
 
-const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { schedule, markers } = useSelector(({schedule}) => ({
     schedule: schedule.schedule,
     markers: schedule.markers,
-    isLoading: schedule.loading,
   }));
 
   const { users: employees } = useSelector(employeesSelector);
   const jobTypes = useSelector(jobTypesSelector);
   const shiftsTypes = useSelector(shiftTypesSelector);
-  
-  
   
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
@@ -145,18 +157,66 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const user = useSelector(userSelector);
 
-  moment.updateLocale('lt', {
-    weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
-    months: [
-      "Sausis", "Vasaris", "Kovas", "Balandis", "Gegužė", "Birželis", "Liepa", "Rugpjūtis", "Rugsėjis", "Spalis", "Lapkritis", "Gruodis"
-    ],
-    monthsShort: [
-      "Sau", "Vas", "Kov", "Bal", "Geg", "Bir", "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"
-    ],
-    // Add any additional locale settings as needed
-  });
+  useEffect(() => {
+    dispatch(getEmployees(companyId));
+    dispatch(getJobTypes(companyId));
+    dispatch(getSettingWorkTime(companyId));
+    handleGetSchedule({ timeline: timeline, fromDate: moment(new Date()).format('YYYY-MM-DD') });
+    // dispatch(getSchedule({
+    //   companyId,
 
-  moment.locale(localStorage.getItem('i18nextLng') || 'en');
+    //   timeline,
+    //   fromDate: moment(new Date()).format('YYYY-MM-DD'),
+    //   firstLoading: true,
+    // }));
+    dispatch(getscheduleSetting(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'schedule'}));
+    dispatch(getShiftTypes(companyId));
+    dispatch(loadIntegrations(companyId));
+
+    return () => {
+      // eslint-disable-next-line no-unused-expressions
+      resizeObserverRef.current?.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    filteringResource(filter);
+    // eslint-disable-next-line
+  }, [filter]);
+
+  useEffect(() => {
+    if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
+      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
+    }
+    // eslint-disable-next-line
+  }, [scheduleSettings]);
+
+  useEffect(() => {
+    switch (timeline) {
+
+      case TIMELINE.DAY:
+      case TIMELINE.WEEK: {
+        const calendarApi = calendarRef.current?.getApi();
+
+        if (calendarApi) {
+          calendarApi.changeView(timeline);
+        }
+
+        if (timeline === TIMELINE.WEEK) {
+          setTimeout(() => {
+            const container = document.getElementsByClassName('fc-timeline-slots');
+            const rows = container?.[0]?.firstChild?.children?.[1]?.children?.[0]?.children;
+            updateWidthCell(rows);
+          });
+        }
+
+        break;
+      }
+      default: break;
+    }
+  }, [timeline]);
 
   const employToCheck = useCallback(({
     id,
@@ -266,7 +326,7 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
     }
 
     if (schedule?.resources) {
-      return updateChildren(schedule.resources);
+      return updateChildren(schedule?.resources);
     }
 
     // schedule.resources
@@ -280,7 +340,7 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
     if (schedule?.events) {
       if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
         // Make fake time for remove_timelines
-        result = schedule.events.map((e) => ({
+        result = schedule?.events.map((e) => ({
           ...e,
           realStart: e.start,
           realEnd: e.end,
@@ -288,14 +348,14 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
           end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         }));
       } else if (timeline === TIMELINE.DAY) {
-        result = schedule.events.filter((e) => {
+        result = schedule?.events.filter((e) => {
           if (!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')) {
             return false;
           }
           return true;
         });
       } else {
-        result = schedule.events;
+        result = schedule?.events;
       }
     }
   
@@ -314,7 +374,6 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
     ];
     // eslint-disable-next-line
   }, [filterData, schedule?.events, copyToolHistory]);
-  
 
   const accumulatedHours = useMemo(() => {
     let accumulatedHours = schedule?.accumulatedHours || {};
@@ -330,12 +389,12 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
 
     return accumulatedHours;
     // eslint-disable-next-line
-  }, [events]);
+  }, [events, schedule?.accumulatedHours]);
 
   const filteringResource = (data) => {
     if (schedule?.resources) {
       handleGetSchedule({ fromDate: fromDateRef.current });
-      const copyObject = cloneDeep(schedule.resources).__wrapped__;
+      const copyObject = cloneDeep(schedule?.resources).__wrapped__;
       const a = copyObject.filter((i) => {
         i.children=i.children.filter((j) => {
           let checkShift = false;
@@ -388,20 +447,26 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
     }
   };
 
-  const handleGetSchedule = ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
+  const handleGetSchedule = async ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
     if (nextTimeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
 
-    dispatch(getSchedule({
-      companyId,
-      shiftTypeArr: filter?.shiftType.map(({id}) => id),
-      employeesArr: filter?.employers.map(({id}) => id),
-      placesArr: filter?.place.map(({id}) => id),
-      timeline: nextTimeline,
-      fromDate: nextFromDate.format('YYYY-MM-DD'),
-    }));
+    setIsLoading(true)
+
+    const res = await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift?type=${nextTimeline}&from_date=${nextFromDate.format('YYYY-MM-DD')}&shiftTypeArr=${filter?.shiftType.map(({id}) => id)}&employeesArr=${filter?.employers.map(({id}) => id)}&placesArr=${filter?.place.map(({id}) => id)}`,
+      {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      }
+    )
+    const data = await res.json();
+    if (data.success) {
+      dispatch({type: 'GET_SCHEDULE_SUCCESS', data: data})
+      setIsLoading(false);
+    }
   };
 
   const handleChangeMonth = (data) => {
@@ -467,19 +532,7 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
       employers: arrChecked,
     }));
   };
-  useEffect(() => {
-    filteringResource(filter);
-    // eslint-disable-next-line
-  }, [filter]);
-  useEffect(() => {
-    
-  }, [markers]);
-  useEffect(() => {
-    if (scheduleSettings.start_finish || scheduleSettings.remove_timelines) {
-      setToolsActive({ ...toolsActive, start_finish: scheduleSettings.start_finish, remove_timelines: scheduleSettings.remove_timelines })
-    }
-    // eslint-disable-next-line
-  }, [scheduleSettings]);
+
   const handleChangeTimeline = (value, date) => {
     setTimeline(value);
     
@@ -553,39 +606,74 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
   const handleEditShift = (shiftId) => {
     history.push(`/${companyId}/schedule/shift/${shiftId}`);
   };
-  const handleGenerateTimes = (shiftId, employeeId) => {
+  const handleGenerateTimes = async (shiftId, employeeId) => {
     let nextFromDate = moment(fromDateRef.current);
     if (timeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
-    dispatch(patchGenerateTimes({
-      companyId,
-      shiftId,
-      data: {
-        from_date: nextFromDate.format('YYYY-MM-DD'),
-        type: timeline,
-        employee_id: employeeId,
-      },
-      body: getBodyForGetSchedule(),
-    }));
+    setIsLoading(true)
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/generate-times`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from_date: nextFromDate.format('YYYY-MM-DD'),
+          type: timeline,
+          employee_id: employeeId,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
   };
-  const handleClearTimes = (shiftId, employeeId) => {
+  const handleClearTimes = async (shiftId, employeeId) => {
     let nextFromDate = moment(fromDateRef.current);
     if (timeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
     setClearConfirmation(false);
-    dispatch(patchClearTimes({
-      companyId,
-      shiftId,
-      data: {
-        from_date: nextFromDate.format('YYYY-MM-DD'),
-        type: timeline,
-        employee_id: employeeId,
-      },
-      body: getBodyForGetSchedule(),
-    }));
+    setIsLoading(true)
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/clear-times`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from_date: nextFromDate.format('YYYY-MM-DD'),
+          type: timeline,
+          employee_id: employeeId,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
   };
+  const handleAddTimelinesHistory = async history => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    setIsLoading(true)
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/add_timelines`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: history,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
+  }
   const getBodyForGetSchedule = () => {
     let nextFromDate = moment(fromDateRef.current);
     if (timeline === TIMELINE.WEEK) {
@@ -610,53 +698,103 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
       body: getBodyForGetSchedule(),
     }));
   };
-  const handleChangeEmployee = ({ employeeId, shiftId, id }) => {
-    dispatch(patchChangeEmployee({
-      companyId,
-      shiftId,
-      data: {
-        employee_id: employeeId,
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+  const handleChangeEmployee = async ({ employeeId, shiftId, id }) => {
+    setIsLoading(true)
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/change/employee`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          employee_id: employeeId,
+          data: id,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
   };
-  const handleChangeWorkingTime = ({ shiftId, id, time }) => {
-    dispatch(patchChangeTimeline({
-      companyId,
-      shiftId,
+  const handleChangeWorkingTime = async ({ shiftId, id, time }) => {
+    setIsLoading(true)
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/change/timeline`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
+          dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+          data: id,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
+  };
+  const handleAddWorkingTime = async ({ shiftId, id, time }) => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    setIsLoading(true)
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/add/timeline`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
+          dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+          data: id,
+        }),
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
+    // dispatch(patchAddTimeline({
+    //   companyId,
+    //   shiftId,
 
-      data: {
-        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
-        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+    //   data: {
+    //     dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
+    //     dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
+    //     data: id,
+    //   },
+    //   body: getBodyForGetSchedule(),
+    //   id,
+    // }));
   };
-  const handleAddWorkingTime = ({ shiftId, id, time }) => {
-    dispatch(patchAddTimeline({
-      companyId,
-      shiftId,
-
-      data: {
-        dateTime_start: time.start.format('YYYY-MM-DD HH:mm'),
-        dateTime_end: time.end.format('YYYY-MM-DD HH:mm'),
-        data: id,
-      },
-      body: getBodyForGetSchedule(),
-      id,
-    }));
-  };
-  const handleDeleteTimeline = ({ id, shiftId }) => {
-    dispatch(deleteTimeline({
-      companyId,
-      shiftId,
-      body: getBodyForGetSchedule(),
-      id,
-    }));
+  const handleDeleteTimeline = async ({ id, shiftId }) => {
+    let nextFromDate = moment(fromDateRef.current);
+    if (timeline === TIMELINE.WEEK) {
+      nextFromDate = nextFromDate.startOf('isoWeek');
+    }
+    setIsLoading(true)
+    await fetch(
+      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/delete/timeline/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    handleGetSchedule({ fromDate: nextFromDate, nextTimeline: timeline });
   };
   const handleEmptyTimeline = ({ id, shiftId }) => {
     dispatch(emptyTimeline({
@@ -1132,54 +1270,6 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
     );
   };
 
-  useEffect(() => {
-    dispatch(getEmployees(companyId));
-    dispatch(getJobTypes(companyId));
-    dispatch(getSettingWorkTime(companyId));
-
-    dispatch(getSchedule({
-      companyId,
-
-      timeline,
-      fromDate: moment(new Date()).format('YYYY-MM-DD'),
-      firstLoading: true,
-    }));
-    dispatch(getscheduleSetting(companyId));
-    dispatch(loadEmployeesAll(companyId, {page: 'schedule'}));
-    dispatch(getShiftTypes(companyId));
-    dispatch(loadIntegrations(companyId));
-
-    return () => {
-      // eslint-disable-next-line no-unused-expressions
-      resizeObserverRef.current?.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    switch (timeline) {
-
-      case TIMELINE.DAY:
-      case TIMELINE.WEEK: {
-        const calendarApi = calendarRef.current?.getApi();
-
-        if (calendarApi) {
-          calendarApi.changeView(timeline);
-        }
-
-        if (timeline === TIMELINE.WEEK) {
-          setTimeout(() => {
-            const container = document.getElementsByClassName('fc-timeline-slots');
-            const rows = container?.[0]?.firstChild?.children?.[1]?.children?.[0]?.children;
-            updateWidthCell(rows);
-          });
-        }
-
-        break;
-      }
-      default: break;
-    }
-  }, [timeline]);
-
   const workAtNightMode = () => {
     if (scheduleSettings.working_at_night) {
       return `${+scheduleSettings.time_view_stats.split(':')[0] + 24}:00:00`;
@@ -1321,14 +1411,14 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
               accumulatedHours={accumulatedHours}
               markers={markers}
               markerActive={toolsActive['marking']}
-              handleMarker={handleMarker}
-              onChangeMonth={handleChangeMonth}
               timesPanel={schedule.timesPanel}
               withCost={permissions.cost && permissions.schedule_costs}
               permissions={permissions}
               scheduleSettings={scheduleSettings}
               copyTool={copyTool}
               workTime={workTime}
+              handleMarker={handleMarker}
+              onChangeMonth={handleChangeMonth}
               handleChangeEmployee={handleChangeEmployee}
               handleChangeWorkingTime={handleChangeWorkingTime}
               handleDeleteTimeline={handleDeleteTimeline}
@@ -1490,6 +1580,7 @@ const { schedule, markers, isLoading } = useSelector(({schedule}) => ({
               start={copyToolTime.start || null}
               end={copyToolTime.end || null}
               onClose={handleCopyTool}
+              onAddTimelines={handleAddTimelinesHistory}
               getBodyForGetSchedule={getBodyForGetSchedule}
             />
           )

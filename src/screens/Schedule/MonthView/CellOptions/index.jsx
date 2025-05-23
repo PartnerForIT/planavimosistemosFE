@@ -84,8 +84,11 @@ export default ({
     if (modalAddRef.current) {
       modalAddRef.current.close();
     }
+    modalRef.current.close();
     setContent('menu');
-    handleCopyTool({start, end});
+    setTimeout(() => {
+      handleCopyTool({start, end});
+    }, 0)
   };
   const openAddWorkingTime = () => {
     setContent('addWorkingTime');
@@ -95,7 +98,7 @@ export default ({
     if (!start) {
       start_day = moment(currentMonth).date(currentDay).format('YYYY-MM-DD');
     }
-    handleAddHistory({resourceId: resourceId, day: currentDay, start: start_day, end: start_day});
+    handleAddHistory({resourceId: resourceId, day: currentDay, start: start_day, end: start_day, copy_event: true});
   };
   const handleCancel = () => {
     if (modalAddRef.current) {
@@ -105,6 +108,7 @@ export default ({
   };
   const handleDeleteTimeline = () => {
     onDeleteTimeline({ id, shiftId });
+    modalRef.current.close();
   };
   const handleEmptyTimeline = () => {
     onEmptyTimeline({ id, shiftId });
@@ -127,6 +131,7 @@ export default ({
     }
 
     onChangeWorkingTime({ id, shiftId, time });
+    modalRef.current.close();
   };
   const handleAddWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -154,6 +159,7 @@ export default ({
       employeeId: nextEmployeeId,
       id,
     });
+    modalRef.current.close();
   };
 
   const [isShown, setIsShown] = useState(false);
@@ -178,21 +184,17 @@ export default ({
               ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
               : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={styles.cellOptions__title} >
-              {
-                copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
-              }
-              {
-                (!!newEmployee?.name)
-
-                  ? null
-                    :(employeeName === 'Empty' || empty)
-                    ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    :null
-
-                
-              }
-            </span>
-          
+                {
+                  copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
+                }
+                {
+                  (!!newEmployee?.name)
+                    ? null
+                    : (employeeName === 'Empty' || empty)
+                      ? <span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      : null
+                }
+              </span>
         )
       }
 

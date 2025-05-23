@@ -325,29 +325,31 @@ const CellMemo = (props) => {
   )
 }
 
+export default CellMemo
 
-export default React.memo(CellMemo, (prevProps, nextProps) => {
-  return _.isEqual(prevProps.title, nextProps.title) &&
-  _.isEqual(prevProps.startFinish, nextProps.startFinish) &&
-  _.isEqual(prevProps.statistic, nextProps.statistic) &&
-  _.isEqual(prevProps.weekend, nextProps.weekend) &&
-  _.isEqual(prevProps.past, nextProps.past) &&
-  _.isEqual(prevProps.marker, nextProps.marker) &&
-  _.isEqual(prevProps.today, nextProps.today) &&
-  _.isEqual(prevProps.header, nextProps.header) &&
-  _.isEqual(prevProps.holiday, nextProps.holiday) &&
-  _.isEqual(prevProps.night_duration, nextProps.night_duration) &&
-  _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
-  _.isEqual(prevProps.scheduleSettings, nextProps.scheduleSettings) &&
-  _.isEqual(prevProps.borderColor, nextProps.borderColor) &&
-  _.isEqual(prevProps.event, nextProps.event) &&
-  _.isEqual(prevProps.copyTool, nextProps.copyTool) &&
-  _.isEqual(prevProps.workTime, nextProps.workTime) &&
-  _.isEqual(prevProps.resource, nextProps.resource) &&
-  _.isEqual(prevProps.permissions, nextProps.permissions) &&
-  _.isEqual(prevProps.events, nextProps.events) &&
-  _.isEqual(prevProps.markers, nextProps.markers) &&
-  _.isEqual(prevProps.currentDay, nextProps.currentDay) &&
-  _.isEqual(prevProps.currentMonth, nextProps.currentMonth) &&
-  _.isEqual(prevProps.handleMarker, nextProps.handleMarker)
-})
+
+// export default React.memo(CellMemo, (prevProps, nextProps) => {
+//   return _.isEqual(prevProps.title, nextProps.title) &&
+//   _.isEqual(prevProps.startFinish, nextProps.startFinish) &&
+//   _.isEqual(prevProps.statistic, nextProps.statistic) &&
+//   _.isEqual(prevProps.weekend, nextProps.weekend) &&
+//   _.isEqual(prevProps.past, nextProps.past) &&
+//   _.isEqual(prevProps.marker, nextProps.marker) &&
+//   _.isEqual(prevProps.today, nextProps.today) &&
+//   _.isEqual(prevProps.header, nextProps.header) &&
+//   _.isEqual(prevProps.holiday, nextProps.holiday) &&
+//   _.isEqual(prevProps.night_duration, nextProps.night_duration) &&
+//   _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
+//   _.isEqual(prevProps.scheduleSettings, nextProps.scheduleSettings) &&
+//   _.isEqual(prevProps.borderColor, nextProps.borderColor) &&
+//   _.isEqual(prevProps.event, nextProps.event) &&
+//   _.isEqual(prevProps.copyTool, nextProps.copyTool) &&
+//   _.isEqual(prevProps.workTime, nextProps.workTime) &&
+//   _.isEqual(prevProps.resource, nextProps.resource) &&
+//   _.isEqual(prevProps.permissions, nextProps.permissions) &&
+//   _.isEqual(prevProps.events, nextProps.events) &&
+//   _.isEqual(prevProps.markers, nextProps.markers) &&
+//   _.isEqual(prevProps.currentDay, nextProps.currentDay) &&
+//   _.isEqual(prevProps.currentMonth, nextProps.currentMonth) &&
+//   _.isEqual(prevProps.handleMarker, nextProps.handleMarker)
+// })
