@@ -19,7 +19,8 @@ export default forwardRef(({
   getBodyForGetSchedule,
   onClose,
   onSave,
-  shiftEdit
+  shiftEdit,
+  onAddTimelines,
 }, ref) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -66,15 +67,22 @@ export default forwardRef(({
         onSave(history);
       }
     } else {
-      dispatch(setLoader());
-      dispatch(addTimelines({
-        companyId,
-        data: history,
-        body: getBodyForGetSchedule(),
-      }));
+      if (onAddTimelines) {
+        onAddTimelines(history);
+      } else {
+        dispatch(setLoader());
+        dispatch(addTimelines({
+          companyId,
+          data: history,
+          body: getBodyForGetSchedule(),
+        }));
+      }
     }
 
-    handleDeleteChanges();
+    setTimeout(() => {
+      handleDeleteChanges()
+    }, 100);
+
     onClose();
   }
   

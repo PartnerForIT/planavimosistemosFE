@@ -51,8 +51,10 @@ const ResourceBlock = ({
   );
 }
 
-export default React.memo(ResourceBlock, (prevProps, nextProps) => {
-  return _.isEqual(prevProps.resources, nextProps.resources) &&
-    _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
-    _.isEqual(prevProps.accumulatedHours, nextProps.accumulatedHours);
-});
+export default ResourceBlock
+
+// export default React.memo(ResourceBlock, (prevProps, nextProps) => {
+//   return _.isEqual(prevProps.resources, nextProps.resources) &&
+//     _.isEqual(prevProps.markerActive, nextProps.markerActive) &&
+//     _.isEqual(prevProps.accumulatedHours, nextProps.accumulatedHours);
+// });
