@@ -41,8 +41,7 @@ const RowContent = ({
   }, []);
 
   const newFoundItem = (day) => {
-    // TODO: CHECK IF NEED THIS FILTER
-    const ev = events.filter(e => !e.empty_manual).find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
+    const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
       return {id: ev.id};
     }

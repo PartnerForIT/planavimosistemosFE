@@ -197,7 +197,6 @@ export default ({
               </span>
         )
       }
-
       {
         !copy_event && newEmployee?.name !== oldEmployee?.name && (
           <ReplacedEmployee
