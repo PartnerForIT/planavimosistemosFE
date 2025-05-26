@@ -30,6 +30,7 @@ import {
   updatePolicySettings,
   updatePolicyEmployees,
   createRequestBehalf,
+  updateRequestBehalf,
   createAdjustBalance,
   createAdjustTimeUsed,
   duplicatePolicy,
@@ -173,8 +174,12 @@ export default () => {
     setActiveDataManagement(activePolicy);
   }
 
-  const onRequestBehalf = (data) => {
-    dispatch(createRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  const onRequestBehalf = (data, requestBehalfId) => {
+    if (requestBehalfId) {
+      dispatch(updateRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data, requestBehalfId));
+    } else {
+      dispatch(createRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+    }
   }
 
   const onAdjustBalance = (data) => {

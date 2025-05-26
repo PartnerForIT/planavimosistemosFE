@@ -75,6 +75,7 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   DUPLICATE_POLICY,
   CREATE_REQUEST_BEHALF,
+  UPDATE_REQUEST_BEHALF,
   GET_REQUEST_BEHALF,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_TIME_USED,
@@ -172,6 +173,8 @@ import {
   updatePolicySettingsSuccess,
   duplicatePolicyError,
   createRequestBehalfError,
+  updateRequestBehalfError,
+  getRequestBehalf,
   getRequestBehalfSuccess,
   getRequestBehalfError,
   createAdjustBalanceError,
@@ -207,6 +210,7 @@ import { updateCompanyInfo } from '../company/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 import getToken from '../getToken';
+import { get } from 'lodash';
 
 axios.defaults.timeout = 10000 * 10;
 
@@ -1593,12 +1597,41 @@ function* createRequestBehalf(action) {
     yield call(axios.post,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/store`, data, token());
 
+    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
+
     yield put(addSnackbar('Added Request Behalf successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(createRequestBehalfError(e));
-    yield put(addSnackbar('An error occurred while removing Request Behalf', 'error'));
+    yield put(addSnackbar('An error occurred while adding Request Behalf', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+
+function* updateRequestBehalf(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      policyId,
+      data,
+      requestBehalfId
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestBehalfId}`, data, token());
+
+    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
+    
+    yield put(addSnackbar('Updated Request Behalf successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updateRequestBehalfError(e));
+    yield put(addSnackbar('An error occurred while update Request Behalf', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -2254,6 +2287,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_POLICY_EMPLOYEES, patchPolicyEmployees);
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLatest(CREATE_REQUEST_BEHALF, createRequestBehalf);
+  yield takeLatest(UPDATE_REQUEST_BEHALF, updateRequestBehalf);
   yield takeLatest(GET_REQUEST_BEHALF, loadRequestBehalf);
   yield takeLatest(CREATE_ADJUST_BALANCE, createAdjustBalance);
   yield takeLatest(CREATE_ADJUST_TIME_USED, createAdjustTimeUsed);

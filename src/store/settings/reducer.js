@@ -122,6 +122,9 @@ import {
   CREATE_REQUEST_BEHALF,
   CREATE_REQUEST_BEHALF_SUCCESS,
   CREATE_REQUEST_BEHALF_ERROR,
+  UPDATE_REQUEST_BEHALF,
+  UPDATE_REQUEST_BEHALF_SUCCESS,
+  UPDATE_REQUEST_BEHALF_ERROR,
   GET_REQUEST_BEHALF,
   GET_REQUEST_BEHALF_SUCCESS,
   GET_REQUEST_BEHALF_ERROR,
@@ -957,6 +960,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
 
     case CREATE_REQUEST_BEHALF:
+    case UPDATE_REQUEST_BEHALF:
     case CREATE_ADJUST_BALANCE:
     case CREATE_ADJUST_TIME_USED:
       return {
@@ -965,6 +969,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: null,
       };
     case CREATE_REQUEST_BEHALF_SUCCESS:
+    case UPDATE_REQUEST_BEHALF_SUCCESS:
     case CREATE_ADJUST_BALANCE_SUCCESS:
     case CREATE_ADJUST_TIME_USED_SUCCESS:
       return {
@@ -972,6 +977,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         requestBehalfLoading: false,
       };
     case CREATE_REQUEST_BEHALF_ERROR:
+    case UPDATE_REQUEST_BEHALF_ERROR:
     case CREATE_ADJUST_BALANCE_ERROR:
     case CREATE_ADJUST_TIME_USED_ERROR:
       return {

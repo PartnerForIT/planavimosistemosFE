@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MomentUtils from '@date-io/moment';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 const defaultValues = {
   name: '',
@@ -36,7 +37,7 @@ export default ({
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const handleSubmit = () => {
-    onSubmit({...values, employees: employees.map((item) => item.id)});
+    onSubmit({...values, employees: employees.map((item) => item.id), from: values.from ? moment(values.from).format('YYYY-MM-DD') : null, to: values.to ? moment(values.to).format('YYYY-MM-DD') : null });
   };
   const handleExited = () => {
     setValues(defaultValues);
