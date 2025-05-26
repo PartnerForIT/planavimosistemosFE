@@ -11,7 +11,7 @@ import momentPlugin from '@fullcalendar/moment';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import cloneDeep, { set } from 'lodash';
+import cloneDeep from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from 'react-tooltip';
@@ -34,17 +34,18 @@ import { resourcesMock } from '../../const/mock';
 import { getJobTypes } from '../../store/jobTypes/actions';
 import { getEmployees } from '../../store/employees/actions';
 import useGroupingEmployees from '../../hooks/useGroupingEmployees';
+import config from '../../config';
 
 
 import {
-  getSchedule,
-  deleteTimeline,
+  // getSchedule,
+  // deleteTimeline,
   emptyTimeline,
-  patchChangeTimeline,
-  patchAddTimeline,
-  patchChangeEmployee,
-  patchGenerateTimes,
-  patchClearTimes,
+  // patchChangeTimeline,
+  // patchAddTimeline,
+  // patchChangeEmployee,
+  // patchGenerateTimes,
+  // patchClearTimes,
   deleteShift, addTempemployee, patchMarker, downloadSchedule
 } from '../../store/schedule/actions';
 import {
@@ -305,7 +306,7 @@ export default () => {
             eventBackgroundColor,
             eventBorderColor,
             lineColor,
-            eventDurationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
+            durationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
           if (lastShift) {
@@ -586,7 +587,7 @@ export default () => {
       classes.push('fc-datagrid-cell-last-job-type');
     }
 
-    if (props.place_id) {
+    if (props.place_id && !props.employeeId) {
       classes.push('fc-datagrid-cell-place');
     } else if (props.shiftId) {
       classes.push('fc-datagrid-cell-shift');
@@ -613,7 +614,7 @@ export default () => {
     }
     setIsLoading(true)
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/generate-times`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/generate-times`,
       {
         method: 'PATCH',
         headers: {
@@ -637,7 +638,7 @@ export default () => {
     setClearConfirmation(false);
     setIsLoading(true)
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/clear-times`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/clear-times`,
       {
         method: 'PATCH',
         headers: {
@@ -660,7 +661,7 @@ export default () => {
     }
     setIsLoading(true)
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/add_timelines`,
+      `${config.api.url}/company/${companyId}/add_timelines`,
       {
         method: 'PATCH',
         headers: {
@@ -705,7 +706,7 @@ export default () => {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/change/employee`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/change/employee`,
       {
         method: 'PATCH',
         headers: {
@@ -727,7 +728,7 @@ export default () => {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/change/timeline`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/change/timeline`,
       {
         method: 'PATCH',
         headers: {
@@ -750,7 +751,7 @@ export default () => {
     }
     setIsLoading(true)
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/add/timeline`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/add/timeline`,
       {
         method: 'PATCH',
         headers: {
@@ -785,7 +786,7 @@ export default () => {
     }
     setIsLoading(true)
     await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift/${shiftId}/delete/timeline/${id}`,
+      `${config.api.url}/company/${companyId}/shift/${shiftId}/delete/timeline/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -1470,7 +1471,7 @@ export default () => {
                     resources={resources}
                     events={events}
                     eventStartEditable={false}
-                    eventDurationEditable={timeline === TIMELINE.DAY}
+                    eventDurationEditable={timeline == TIMELINE.DAY}
                     eventContent={renderEventContent}
                     eventClassNames={handleEventClassNames}
                     resourceAreaHeaderContent={renderResourceAreaHeaderContent}
