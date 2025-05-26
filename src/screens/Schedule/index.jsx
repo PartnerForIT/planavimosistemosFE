@@ -457,7 +457,7 @@ export default () => {
     setIsLoading(true)
 
     const res = await fetch(
-      `https://app.grownu.com/api/company/${companyId}/shift?type=${nextTimeline}&from_date=${nextFromDate.format('YYYY-MM-DD')}&shiftTypeArr=${filter?.shiftType.map(({id}) => id)}&employeesArr=${filter?.employers.map(({id}) => id)}&placesArr=${filter?.place.map(({id}) => id)}`,
+      `${config.api.url}/company/${companyId}/shift?type=${nextTimeline}&from_date=${nextFromDate.format('YYYY-MM-DD')}&shiftTypeArr=${filter?.shiftType.map(({id}) => id)}&employeesArr=${filter?.employers.map(({id}) => id)}&placesArr=${filter?.place.map(({id}) => id)}`,
       {
         method: 'GET',
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
