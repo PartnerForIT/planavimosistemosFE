@@ -171,6 +171,8 @@ $arrow-size: 21px;
   svg {
     margin: 0;
     padding: 0;
+    width: 18px;
+    height: 18px;
 
     path {
       stroke: white;
@@ -500,4 +502,146 @@ $arrow-size: 21px;
   .buttonBlock {
     margin-left: auto;
   }
+}
+
+.upcomingRequests {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #E6EEF6;
+  border-radius: 12px;
+}
+
+.upcomingRequestsHeader,
+.upcomingRequestsRow {
+  display: grid;
+  grid-template-columns: 4fr 4fr 3fr 2fr 100px;
+  padding: 8px 12px;
+  align-items: center;
+}
+
+.upcomingRequestsHeader {
+  font-weight: bold;
+  color: #808F94;
+  border-bottom: 1px solid #E6EEF6;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.upcomingRequestsRow {
+  border-bottom: 1px solid #E6EEF6;
+  &:hover {
+    background-color: #fafafa;
+  }
+}
+
+.upcomingRequestsCol,
+.upcomingRequestsHeaderCol {
+  padding: 6px 24px;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.upcomingRequestsStatus {
+  height: 24px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+
+  &.requestStatusApproved {
+    background: #E1F5F0;
+  }
+
+  &.requestStatusPending {
+    background: #E2EFFF;
+  }
+
+  &.requestStatusRejected {
+    background: #F5E1E1;
+  }
+
+  &.requestStatusCancelled {
+    background: #808F94;
+  }
+}
+
+.upcomingRequestsButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  button {
+    min-width: 24px !important;
+    min-height: 24px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .buttonEdit {
+    svg {
+      path {
+        fill: #fff;
+      }
+    }
+  }
+
+  .buttonApprove {
+    background: #E1F5F0;
+    color: #068968;
+  }
+
+  .buttonReject {
+    background: #F5E1E1;
+    color: #890606;
+  }
+}
+
+
+.policiesTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #E6EEF6;
+  border-radius: 12px;
+}
+
+.policiesTableHeader,
+.policiesTableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 8px 12px;
+  align-items: center;
+}
+
+.policiesTableHeader {
+  font-weight: bold;
+  color: #808F94;
+  border-bottom: 1px solid #E6EEF6;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.policiesTableRow {
+  border-bottom: 1px solid #E6EEF6;
+  &:hover {
+    background-color: #fafafa;
+  }
+}
+
+.policiesTableCol,
+.policiesTableHeaderCol {
+  padding: 6px 24px;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 500;
 }

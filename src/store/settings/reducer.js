@@ -216,7 +216,7 @@ const initialState = {
   roleDetails: {},
   time_offs: [],
   policies: [],
-  requestBehalf: null,
+  requestBehalf: [],
   policiesLoading: false,
   requestBehalfLoading: false,
   permissions: [],
@@ -940,14 +940,14 @@ export const reducerOrganizationList = (state = initialState, action) => {
       return {
         ...state,
         requestBehalfLoading: true,
-        requestBehalf: null,
+        requestBehalf: [],
         error: null,
       };
     case GET_REQUEST_BEHALF_SUCCESS:
       return {
         ...state,
         requestBehalfLoading: false,
-        requestBehalf: action.data,
+        requestBehalf: action.data.request_behalf,
       };
     case GET_REQUEST_BEHALF_ERROR:
       return {

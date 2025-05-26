@@ -246,7 +246,7 @@ const PolicySettings = React.memo(({
               </div>
               <Textarea
                 placeholder={`${t('Write a description')} (${t('optional')})`}
-                value={values.description}
+                value={values.description ?? ''}
                 className={classes.textarea}
                 name='description'
                 onChange={handleChange}
@@ -489,7 +489,7 @@ const PolicySettings = React.memo(({
                     </div>
                     <Input
                       placeholder={t('Enter maximum amount')}
-                      value={values.allowance_carryover_amount}
+                      value={values.allowance_carryover_amount ?? ''}
                       name='allowance_carryover_amount'
                       fullWidth
                       onChange={handleChange}

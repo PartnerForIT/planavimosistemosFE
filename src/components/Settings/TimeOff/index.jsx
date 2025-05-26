@@ -14,7 +14,7 @@ import UserDataManagement from './UserDataManagement';
 import EmployeeManagement from './EmployeeManagement';
 import {
   AccountGroupsSelector, employeesSelector,
-  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, snackbarText, snackbarType,
+  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
 } from '../../../store/settings/selectors';
 import { userSelector } from '../../../store/auth/selectors';
 import TimeOffIcon from '../../Icons/TimeOff';
@@ -75,6 +75,7 @@ export default () => {
   const user = useSelector(userSelector);
   const time_offs = useSelector(timeOffsSelector);
   const policies = useSelector(policiesSelector);
+  const requestBehalf = useSelector(requestBehalfSelector);
   const loading = useSelector(policiesLoading);
   const allPermissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
@@ -193,13 +194,15 @@ export default () => {
     <MaynLayout>
       <Dashboard>
         {
-          activeDataManagement ? (
+          activeDataManagement && !loading ? (
             activeEmployee ? (
               <EmployeeManagement
                 handleClose={() => setActiveEmployee(null)}
                 activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
                 activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
                 employee={activeEmployee}
+                requestBehalf={requestBehalf}
+                policies={policies}
                 onRequestBehalf={onRequestBehalf}
               />
             ) : (
