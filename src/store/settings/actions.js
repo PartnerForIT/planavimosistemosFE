@@ -165,6 +165,9 @@ import {
   UPDATE_REQUEST_BEHALF,
   UPDATE_REQUEST_BEHALF_SUCCESS,
   UPDATE_REQUEST_BEHALF_ERROR,
+  CHANGE_REQUEST_BEHALF_STATUS,
+  CHANGE_REQUEST_BEHALF_STATUS_SUCCESS,
+  CHANGE_REQUEST_BEHALF_STATUS_ERROR,
   GET_REQUEST_BEHALF,
   GET_REQUEST_BEHALF_SUCCESS,
   GET_REQUEST_BEHALF_ERROR,
@@ -1195,6 +1198,25 @@ export const updateRequestBehalfSuccess = (data) => ({
 
 export const updateRequestBehalfError = (data) => ({
   type: UPDATE_REQUEST_BEHALF_ERROR,
+  data,
+});
+
+export const changeRequestBehalfStatus = (companyId, timeOffId, policyId, requestBehalfId, data) => ({
+  type: CHANGE_REQUEST_BEHALF_STATUS,
+  companyId,
+  timeOffId,
+  policyId,
+  requestBehalfId,
+  data,
+});
+
+export const changeRequestBehalfStatusSuccess = (data) => ({
+  type: CHANGE_REQUEST_BEHALF_STATUS_SUCCESS,
+  data,
+});
+
+export const changeRequestBehalfStatusError = (data) => ({
+  type: CHANGE_REQUEST_BEHALF_STATUS_ERROR,
   data,
 });
 

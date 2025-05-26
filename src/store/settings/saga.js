@@ -76,6 +76,7 @@ import {
   DUPLICATE_POLICY,
   CREATE_REQUEST_BEHALF,
   UPDATE_REQUEST_BEHALF,
+  CHANGE_REQUEST_BEHALF_STATUS,
   GET_REQUEST_BEHALF,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_TIME_USED,
@@ -174,6 +175,7 @@ import {
   duplicatePolicyError,
   createRequestBehalfError,
   updateRequestBehalfError,
+  changeRequestBehalfStatusError,
   getRequestBehalf,
   getRequestBehalfSuccess,
   getRequestBehalfError,
@@ -1610,7 +1612,6 @@ function* createRequestBehalf(action) {
   }
 }
 
-
 function* updateRequestBehalf(action) {
   try {
     const {
@@ -1625,12 +1626,38 @@ function* updateRequestBehalf(action) {
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestBehalfId}`, data, token());
 
     yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
-    
+
     yield put(addSnackbar('Updated Request Behalf successfully', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
     yield put(updateRequestBehalfError(e));
+    yield put(addSnackbar('An error occurred while update Request Behalf', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* changeRequestBehalfStatus(action) {
+  try {
+    const {
+      companyId,
+      timeOffId,
+      policyId,
+      requestBehalfId,
+      data,
+    } = action;
+
+    yield call(axios.post,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestBehalfId}/status`, data, token());
+
+    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
+
+    yield put(addSnackbar('Updated Request Behalf successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(changeRequestBehalfStatusError(e));
     yield put(addSnackbar('An error occurred while update Request Behalf', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
@@ -2288,6 +2315,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLatest(CREATE_REQUEST_BEHALF, createRequestBehalf);
   yield takeLatest(UPDATE_REQUEST_BEHALF, updateRequestBehalf);
+  yield takeLatest(CHANGE_REQUEST_BEHALF_STATUS, changeRequestBehalfStatus);
   yield takeLatest(GET_REQUEST_BEHALF, loadRequestBehalf);
   yield takeLatest(CREATE_ADJUST_BALANCE, createAdjustBalance);
   yield takeLatest(CREATE_ADJUST_TIME_USED, createAdjustTimeUsed);

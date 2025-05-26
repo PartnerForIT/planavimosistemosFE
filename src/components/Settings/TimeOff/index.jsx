@@ -31,6 +31,7 @@ import {
   updatePolicyEmployees,
   createRequestBehalf,
   updateRequestBehalf,
+  changeRequestBehalfStatus,
   createAdjustBalance,
   createAdjustTimeUsed,
   duplicatePolicy,
@@ -195,6 +196,10 @@ export default () => {
     dispatch(getRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, employeeId));
   }
 
+  const onChangeRequestStatus = (requestBehalfId, status) => {
+    dispatch(changeRequestBehalfStatus(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, requestBehalfId, {status: status, employees: [activeEmployee.id]}));
+  }
+
   return (
     <MaynLayout>
       <Dashboard>
@@ -209,6 +214,7 @@ export default () => {
                 requestBehalf={requestBehalf}
                 policies={policies}
                 onRequestBehalf={onRequestBehalf}
+                onChangeRequestStatus={onChangeRequestStatus}
               />
             ) : (
               <UserDataManagement

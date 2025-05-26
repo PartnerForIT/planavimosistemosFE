@@ -32,6 +32,7 @@ function EmployeeManagement({
   requestBehalf,
   policies,
   onRequestBehalf,
+  onChangeRequestStatus = Function.prototype,
 }) {
   const { t } = useTranslation();
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
@@ -153,7 +154,7 @@ function EmployeeManagement({
                           <Button
                             className={classes.buttonApprove}
                             size="little"
-                            onClick={() => {}}
+                            onClick={() => {onChangeRequestStatus(request.id, 'approved')}}
                           >
                             <CheckIcon />
                           </Button>
@@ -162,7 +163,7 @@ function EmployeeManagement({
                           <Button
                             className={classes.buttonReject}
                             size="little"
-                            onClick={() => {}}
+                            onClick={() => {onChangeRequestStatus(request.id, 'rejected')}}
                           >
                             <RejectIcon />
                           </Button>
