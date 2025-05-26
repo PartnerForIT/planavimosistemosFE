@@ -228,16 +228,16 @@ const Cell = ({
         <div
           data-for={tooltipType()}
           data-html={true}
-          data-tip={title && !copyTool ? tooltipContent() : null}
+          data-tip={title && !copyTool && !event?.empty_manual ? tooltipContent() : null}
           onClick={handleMarker}
           className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
         >
-          { title ? (
+          { title && !event?.empty_manual ? (
               <span className={classes.cell_day} style={{borderColor: borderColor ? borderColor : null}}dangerouslySetInnerHTML={{ __html: scheduleSettings?.start_finish && startFinish ? startFinish.replace('-', '<br />') : title }} />
             ) : null
           }
           {
-            title && night_duration && night_duration > 0 ? (
+            (title && !event?.empty_manual) && night_duration && night_duration > 0 ? (
               <span className={classes.cell_night}>
                 {night_duration}h
               </span>
