@@ -840,8 +840,10 @@ export default () => {
   const handleAddHistory = (data) => {
     copyToolRef.current.addHistory(data);
   }
-  const renderEventContent = ({ event, timeText, view }) => {
 
+
+
+  const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
 
     let shiftId;
@@ -1471,7 +1473,7 @@ export default () => {
                     resources={resources}
                     events={events}
                     eventStartEditable={false}
-                    eventDurationEditable={timeline == TIMELINE.DAY}
+                    eventDurationEditable={timeline === TIMELINE.DAY}
                     eventContent={renderEventContent}
                     eventClassNames={handleEventClassNames}
                     resourceAreaHeaderContent={renderResourceAreaHeaderContent}

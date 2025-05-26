@@ -28,7 +28,7 @@ const permissionsConfig = [
   },
 ];
 
-export default ({
+const EventContent = ({
   id,
   shiftId,
   employeeId,
@@ -87,7 +87,19 @@ export default ({
 
   useEffect(() => {
     Tooltip.rebuild();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (content === 'addWorkingTime') {
+      if (modalAddRef.current) {
+        modalAddRef.current.open();
+      }
+    } else {
+      if (modalAddRef.current) {
+        modalAddRef.current.close();
+      }
+    }
+  }, [content]);
 
   const classes = classNames(
     styles.eventContent,
@@ -176,18 +188,6 @@ export default ({
     // If not, there is no overlap.
     return overlap > 0 ? overlap : 0;
   }
-
-  useEffect(() => {
-    if (content === 'addWorkingTime') {
-      if (modalAddRef.current) {
-        modalAddRef.current.open();
-      }
-    } else {
-      if (modalAddRef.current) {
-        modalAddRef.current.close();
-      }
-    }
-  }, [content]);
 
   const openChangeEmployee = () => {
     modalRef.current.open();
@@ -544,4 +544,8 @@ export default ({
   );
 
 };
+
+export default React.memo(EventContent, (prevProps, nextProps) => {
+  return true
+})
 

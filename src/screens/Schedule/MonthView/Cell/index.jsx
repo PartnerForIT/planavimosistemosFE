@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import HolidayIcon from '../../../../components/Core/HolidayIcon/HolidayIcon';
 import CellOptions from '../CellOptions';
 import moment from 'moment';
-import _ from 'lodash';
 
 import classes from './Cell.module.scss';
 import { AdditionalRatesDataSelector,

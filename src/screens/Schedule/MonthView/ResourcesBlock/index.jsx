@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 
 import ResourcesCell from './ResourcesCell';
 import classes from './ResourcesBlock.module.scss';
