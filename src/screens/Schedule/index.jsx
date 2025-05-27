@@ -306,7 +306,10 @@ export default () => {
             eventBackgroundColor,
             eventBorderColor,
             lineColor,
+            order: index,
             durationEditable: schedule?.events[0]?.is_completed ? false : !!item.employeeId  ,
+            // lastShift: lastShift,
+            // lastJobType: lastJobType,
             children: updateChildren(item.children, lastShift, lastJobType, customTime),
           };
           if (lastShift) {
@@ -596,9 +599,6 @@ export default () => {
     } else if (props.employeeId || props.employeeId === 0) {
       classes.push('fc-datagrid-cell-employee');
     }
-    if (props.lastJobType) {
-      classes.push('fc-datagrid-cell-last-job-type');
-    }
     if (props.employee_type === 3 || props.employee_type === 2){
       classes.push('fc-datagrid-cell-empty');
     }
@@ -840,8 +840,6 @@ export default () => {
   const handleAddHistory = (data) => {
     copyToolRef.current.addHistory(data);
   }
-
-
 
   const renderEventContent = ({ event, timeText, view }) => {
     const resourceInfo = event.getResources()[0];
@@ -1330,6 +1328,8 @@ export default () => {
     
     return [];
   };
+
+  console.log(resources)
   
   return (
     <MainLayout>
@@ -1464,7 +1464,7 @@ export default () => {
                     }}
                     slotMinTime={timeline === TIMELINE.WEEK ? '00:00:00' : (scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00')}
                     slotMaxTime={timeline === TIMELINE.WEEK ? '24:00:00' : workAtNightMode()}
-                    resourceOrder='sort'
+                    resourceOrder='order'
                     headerToolbar={false}
                     aspectRatio={1}
                     height='100%'

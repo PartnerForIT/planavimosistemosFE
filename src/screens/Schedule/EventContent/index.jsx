@@ -85,6 +85,9 @@ const EventContent = ({
   const permissions = usePermissions(permissionsConfig);
   const integrations = useSelector(IntegrationsDataSelector);
 
+  const [isShown, setIsShown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     Tooltip.rebuild();
   }, []);
@@ -279,9 +282,6 @@ const EventContent = ({
       
     return type;
   }
-
-  const [isShown, setIsShown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const markerComment = () => {
     const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request);
