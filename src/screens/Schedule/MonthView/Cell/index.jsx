@@ -316,7 +316,7 @@ const CellMemo = (props) => {
   }
 
   return (
-    <div style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column'}}>
+    <div style={{flex: props.statistic ? 2 : 1, gridColumn: props.statistic ? 'span 2' : 'span 1', display: 'flex', flexDirection: 'column'}}>
       {
         props.header ? <CellHeader {...props} /> : <Cell {...props} />
       }
