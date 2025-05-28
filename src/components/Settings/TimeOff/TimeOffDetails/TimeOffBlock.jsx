@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import classes from '../timeoff.module.scss';
@@ -8,6 +8,7 @@ import PoliciesTable from './PoliciesTable';
 import PoliciesDetails from './PoliciesDetails';
 import CardItem from '../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
+import ReactTooltip from 'react-tooltip';
 
 function TimeOffBlock({
   time_offs = [],
@@ -33,6 +34,10 @@ function TimeOffBlock({
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
   const [removePolicyVisible, setRemovePolicyVisible] = useState(false);
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
   
   return (
     <div className={classes.timeoff}>
@@ -42,6 +47,7 @@ function TimeOffBlock({
           itemName='Policy Type'
           descriptionName={'Create a new time off policy type'}
           onClick={createNewTimeOff}
+          tall={true}
         />
         {/* roles board */}
         {
@@ -63,6 +69,8 @@ function TimeOffBlock({
                 ariaLabel='user policy type'
                 descriptionCount='users have this policy type'
                 descriptionPolicies='active policies'
+                additionalDescription={'Measured in ' + (time_off.unit === 'days' ? t('days') : t('hours'))}
+                description={time_off.description || ''}
               />
               {/* Time off details */}
               {
@@ -110,6 +118,11 @@ function TimeOffBlock({
           name={policies?.find((policy) => policy.id === removePolicyVisible)?.name}
           buttonTitle={t('Delete')}
           remove={() => onDeletePolicy(removePolicyVisible)}
+        />
+        <ReactTooltip
+          id='timeoff_description'
+          className={classes.tooltip}
+          effect='solid'
         />
       </>
     </div>

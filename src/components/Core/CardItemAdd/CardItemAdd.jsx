@@ -9,13 +9,14 @@ import classes from './CardItemAdd.module.scss';
 const CardItemAdd = ({
   onClick,
   itemName,
-  descriptionName
+  descriptionName,
+  tall = false,
 }) => {
   const { t } = useTranslation();
 
   return (
     <div
-      className={classnames(classes.card, classes.default)}
+      className={classnames(classes.card, classes.default, tall ? classes.tall : '')}
       onClick={onClick}
       onKeyDown={(e) => onKeyDown(e, onClick)}
       role='option'

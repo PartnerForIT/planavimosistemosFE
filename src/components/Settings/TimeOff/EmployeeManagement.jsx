@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TitleBackIcon from '../../Icons/TitleBackIcon';
-import ReactTooltip from 'react-tooltip';
 import RequestBehalf from '../../Core/Dialog/RequestBehalf';
 
 import classes from './timeoff.module.scss';
@@ -40,25 +39,21 @@ function EmployeeManagement({
   const requests = Array.isArray(requestBehalf) ? requestBehalf : [];
   const policiesArray = Array.isArray(policies) ? policies.filter((policy) => policy.employees.find((emp) => emp.id === employee.id)) : [];
 
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  }, []);
-
   return (
     <>
       <TitleBlock
         title={`${activeTimeOff.name} / ${activePolicy.name}`}
       >
         <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
-        <Button
+        <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          inline 
+          data-tip={t('Back')} data-for='back_button'
         >
-          <div data-tip={t('Back')} data-for='back_button'>
+          <div>
             <TitleBackIcon />
           </div>
-        </Button>
+        </div>
       </TitleBlock>
       <PageLayout>
         <div className={classes.container}>
@@ -246,12 +241,6 @@ function EmployeeManagement({
           }
         </div>
       </PageLayout>
-      <ReactTooltip
-        id='back_button'
-        className={classes.selectdisabled__tooltip}
-        effect='solid'
-        placement='bottom'
-      />
       <RequestBehalf
         open={!!(requestBehalfOpen || requestBehalfEditOpen)}
         handleClose={() => {

@@ -271,6 +271,28 @@ $arrow-size: 21px;
   }
 }
 
+.tooltip {
+  background-color: #fff !important;
+  border-radius: 4px !important;
+  border: none !important;
+  opacity: 1 !important;
+  padding: 7px 14px !important;
+  color: #333945 !important;
+  font-family: Helvetica Neue, sans-serif !important;
+  font-size: 12px !important;
+  box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+
+  &::after {
+    border-top-color: #fff !important;
+  }
+
+  &::before {
+    border-left: 8px solid transparent !important;
+    border-right: 8px solid transparent !important;
+    margin-left: -8px !important;
+  }
+}
+
 .hr {
   border: none;
   height: 1px;
@@ -529,6 +551,9 @@ $arrow-size: 21px;
 
 .upcomingRequestsRow {
   border-bottom: 1px solid #E6EEF6;
+  &:last-child {
+    border-bottom: none;
+  }
   &:hover {
     background-color: #fafafa;
   }
@@ -582,6 +607,10 @@ $arrow-size: 21px;
     justify-content: center;
     align-items: center;
 
+    &:hover {
+      opacity: 0.7;
+    }
+
     svg {
       width: 16px;
       height: 16px;
@@ -633,6 +662,9 @@ $arrow-size: 21px;
 
 .policiesTableRow {
   border-bottom: 1px solid #E6EEF6;
+  &:last-child {
+    border-bottom: none;
+  }
   &:hover {
     background-color: #fafafa;
   }
@@ -644,4 +676,14 @@ $arrow-size: 21px;
   overflow-wrap: anywhere;
   font-size: 14px;
   font-weight: 500;
+}
+
+.tooltip_back {
+  background-color: black !important;
+  color: white !important;
+
+  &::after,
+  &::before {
+    border-top-color: black !important;
+  }
 }

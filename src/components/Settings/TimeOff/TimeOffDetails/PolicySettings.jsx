@@ -387,7 +387,7 @@ const PolicySettings = React.memo(({
                     </div>
                     <Input
                       placeholder={t('Enter allowance amount')}
-                      value={values.allowance_amount}
+                      value={values.allowance_amount ?? ''}
                       name='allowance_amount'
                       fullWidth
                       onChange={handleChange}
@@ -829,7 +829,7 @@ const PolicySettings = React.memo(({
                         </div>
                         <Input
                           placeholder={t('Enter value')}
-                          value={values.value_in_time_sheet_excel}
+                          value={values.value_in_time_sheet_excel ?? ''}
                           name='value_in_time_sheet_excel'
                           fullWidth
                           onChange={handleChange}
@@ -903,6 +903,7 @@ const PolicySettings = React.memo(({
                             value={values.color}
                             handleInputChange={(color) => handleChange({ target: { name: 'color', value: color } })}
                             placeholder={t('Choose the colour')}
+                            placement='top'
                           />
                         </div>
                       </div>

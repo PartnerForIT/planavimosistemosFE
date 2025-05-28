@@ -20,6 +20,10 @@ $arrow-size: 21px;
 
   @include focusVisible();
 
+  &.tall {
+    height: 107px;
+  }
+
   &_title {
     font-weight: bold;
     padding: 0 calc(1em + 5px) 0 0;

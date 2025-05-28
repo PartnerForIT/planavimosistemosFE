@@ -4,7 +4,6 @@ import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TitleBackIcon from '../../Icons/TitleBackIcon';
-import ReactTooltip from 'react-tooltip';
 import DataTable from '../../Core/DataTableCustom/OLT';
 import usePermissions from '../../Core/usePermissions';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
@@ -14,7 +13,6 @@ import AdjustBalance from '../../Core/Dialog/AdjustBalance';
 import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed';
 
 import classes from './timeoff.module.scss';
-import Button from '../../Core/Button/Button';
 import moment from 'moment';
 
 const permissionsConfig = [
@@ -142,10 +140,6 @@ function UserDataManagement({
     'DD.MM.YY': 'DD MMM, YYYY',
     'MM.DD.YY': 'MMM DD, YYYY',
   });
-
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  }, []);
 
   useEffect(() => {
     if (Array.isArray(employeesList)) {
@@ -304,8 +298,10 @@ function UserDataManagement({
 
   const handleUnassign = () => {
     const ids = selectedEmployees.map(({ id }) => id);
+    const notSelectedIds = employees.filter((item) => !ids.includes(item.id)).map(({ id }) => id);
+    setSelected({});
 
-    handleEditPolicyEmployees(ids);
+    handleEditPolicyEmployees(notSelectedIds);
     setCheckedItems([]);
   }
   
@@ -321,15 +317,15 @@ function UserDataManagement({
         handleButtonImport={() => { console.log('go'); }}
       >
         <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
-        <Button
+        <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          inline 
+          data-tip={t('Back')} data-for='back_button'
         >
-          <div data-tip={t('Back')} data-for='back_button'>
+          <div>
             <TitleBackIcon />
           </div>
-        </Button>
+        </div>
       </TitleBlock>
       <PageLayout>
         <Filter
@@ -367,12 +363,6 @@ function UserDataManagement({
           openButton={handleOpenEmployee}
         />
       </PageLayout>
-      <ReactTooltip
-        id='back_button'
-        className={classes.selectdisabled__tooltip}
-        effect='solid'
-        placement='bottom'
-      />
       <RequestBehalf
         open={requestBehalfOpen}
         handleClose={() => {

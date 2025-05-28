@@ -212,7 +212,6 @@ import { updateCompanyInfo } from '../company/actions';
 
 import { makeQueryString } from '../../components/Helpers';
 import getToken from '../getToken';
-import { get } from 'lodash';
 
 axios.defaults.timeout = 10000 * 10;
 
