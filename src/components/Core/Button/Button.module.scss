@@ -26,6 +26,14 @@
   }
 }
 
+.primary,
+%primary {
+  @extend %button;
+
+  @extend %transition;
+  @extend %button-hover;
+}
+
 .inverse,
 %inverse {
   color: #4080fc;

@@ -14,6 +14,7 @@ import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed';
 
 import classes from './timeoff.module.scss';
 import moment from 'moment';
+import ReactTooltip from 'react-tooltip';
 
 const permissionsConfig = [
   {
@@ -133,6 +134,10 @@ function UserDataManagement({
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
   const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false);
   const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false);
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  }, []);
 
   const { getDateFormat } = useCompanyInfo();
   const dateFormat = getDateFormat({
@@ -407,6 +412,11 @@ function UserDataManagement({
         employees={selectedEmployees}
         policies={activeTimeOff.policies}
         initialValue={{policy_id: activePolicy.id}}
+      />
+      <ReactTooltip
+        id='back_button'
+        effect='solid'
+        className={classes.tooltip_back}
       />
     </>
   );

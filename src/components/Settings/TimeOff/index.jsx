@@ -19,7 +19,6 @@ import {
 import { userSelector } from '../../../store/auth/selectors';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TimeOffBlock from './TimeOffDetails/TimeOffBlock';
-import ReactTooltip from 'react-tooltip';
 import {
   createTimeOff,
   deleteTimeOff,
@@ -96,7 +95,6 @@ export default () => {
     dispatch(getTimeOffs(id));
     dispatch(loadEmployeesAll(id));
     dispatch(getAccountGroups(id));
-    ReactTooltip.rebuild();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -323,10 +321,7 @@ export default () => {
           </>
         )
       }
-      <ReactTooltip
-        id='back_button'
-        effect='solid'
-      />
+      
       </Dashboard>
     </MaynLayout>
   );

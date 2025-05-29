@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
@@ -22,6 +22,7 @@ import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7';
 import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8';
 import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9';
 
+import ReactTooltip from 'react-tooltip';
 
 function EmployeeManagement({
   handleClose,
@@ -38,6 +39,10 @@ function EmployeeManagement({
   const [requestBehalfEditOpen, setRequestBehalfEditOpen] = useState(null);
   const requests = Array.isArray(requestBehalf) ? requestBehalf : [];
   const policiesArray = Array.isArray(policies) ? policies.filter((policy) => policy.employees.find((emp) => emp.id === employee.id)) : [];
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  }, []);
 
   return (
     <>
@@ -81,6 +86,7 @@ function EmployeeManagement({
               <Button
                 className={classes.button}
                 size="large"
+                primary
                 onClick={() => {
                   setRequestBehalfOpen(true);
                 }}
@@ -257,6 +263,11 @@ function EmployeeManagement({
         employees={[employee]}
         policies={activeTimeOff.policies}
         initialValue={{policy_id: activePolicy.id, ...requestBehalfEditOpen}}
+      />
+      <ReactTooltip
+        id='back_button'
+        effect='solid'
+        className={classes.tooltip_back}
       />
     </>
   );

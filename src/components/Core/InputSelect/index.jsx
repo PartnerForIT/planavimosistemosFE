@@ -93,36 +93,39 @@ export default ({
   }, [options, searchValue, labelKey]);
 
   useEffect(() => {
-    if (open) {
-      try {
-        const buttonBounding = buttonRef.current.getBoundingClientRect();
-        const parentBounding = getOverflowParent(buttonRef.current).getBoundingClientRect();
-        const offsetTop = buttonBounding.top - parentBounding.top;
-        const offsetBottom = parentBounding.height - buttonBounding.top - buttonBounding.height - 30;
+    if (!open || !buttonRef.current || !contentBox.current) return;
 
-        const menuPlacement = offsetTop < offsetBottom ? 'bottom' : 'top';
-        const menuPlacementHeight = (menuPlacement === 'bottom' ? offsetBottom : (offsetTop - 36)) - 20;
+    try {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const overflowParent = getOverflowParent(buttonRef.current);
+      const parentRect = overflowParent.getBoundingClientRect();
 
-        const fullHeight = options.length * 36;
-        const minHeight = menuPlacementHeight > fullHeight
-          ? (fullHeight + 2)
-          : (Math.trunc(menuPlacementHeight / 36) * 36);
-        contentBox.current.style.minHeight = `${minHeight}px`;
+      const dropdownHeightPerOption = 36;
+      const offsetTop = buttonRect.top - parentRect.top;
+      const offsetBottom = parentRect.bottom - buttonRect.bottom;
 
-        if (scrollBar.current) {
-          // eslint-disable-next-line
-          scrollBar.current.scrollTo(0, options.findIndex(obj => obj[valueKey] == value) * 36 - (minHeight/2-18));
-        }
+      const menuPlacement = offsetBottom >= offsetTop ? 'bottom' : 'top';
+      const maxVisibleOptions = Math.floor(
+        (menuPlacement === 'bottom' ? offsetBottom : offsetTop - 36) / dropdownHeightPerOption
+      );
 
-        if (menuPlacement === 'top') {
-          contentBox.current.classList.add('input-select__content-box_top');
-        }
-      } catch (e) {
-        console.error(e);
+      const visibleOptionsCount = Math.min(options.length, maxVisibleOptions);
+      const dropdownHeight = visibleOptionsCount * dropdownHeightPerOption + 2;
+
+      // Apply height and placement
+      contentBox.current.style.minHeight = `${dropdownHeight}px`;
+      contentBox.current.style.maxHeight = `${dropdownHeight}px`;
+
+      contentBox.current.classList.toggle('input-select__content-box_top', menuPlacement === 'top');
+
+      if (scrollBar.current) {
+        const scrollToIndex = options.findIndex(obj => obj[valueKey] === value);
+        scrollBar.current.scrollTo(0, scrollToIndex * dropdownHeightPerOption - (dropdownHeight / 2 - 18));
       }
+    } catch (e) {
+      console.error('Dropdown positioning error:', e);
     }
-    // eslint-disable-next-line
-  }, [options, open]);
+  }, [options, open, value, valueKey]);
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
