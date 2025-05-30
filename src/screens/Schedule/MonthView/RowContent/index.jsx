@@ -38,7 +38,8 @@ const RowContent = ({
 
   useEffect(() => {
     ReactTooltip.rebuild();
-  }, []);
+    console.log('RowContent re-rendered');
+  });
 
   const newFoundItem = (day) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
@@ -184,5 +185,6 @@ export default React.memo(RowContent, (prevProps, nextProps) => {
   _.isEqual(prevProps.markers, nextProps.markers) &&
   _.isEqual(prevProps.currentMonth, nextProps.currentMonth) &&
   _.isEqual(prevProps.firstRenderFinished, nextProps.firstRenderFinished) && 
-  _.isEqual(prevProps.expandedIds, nextProps.expandedIds)
+  _.isEqual(prevProps.expandedIds, nextProps.expandedIds) &&
+  _.isEqual(prevProps.toolsActive, nextProps.toolsActive)
 });
