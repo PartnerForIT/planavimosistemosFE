@@ -78,6 +78,8 @@ const Cell = ({
     },
     [company.currency, currencies],
   );
+  if (marker)
+    console.log('marker', marker, !title);
 
   const cellClasses = classnames(classes.cell, 'monthCell', {
     [classes.cell_statistic]: statistic,
