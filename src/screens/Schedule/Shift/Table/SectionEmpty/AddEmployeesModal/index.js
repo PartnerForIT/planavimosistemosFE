@@ -31,8 +31,7 @@ export default ({
 }) => {
   const { t } = useTranslation();
 
-  const [allItems, setAllItems] = useState(() => items.filter((item) => !relatives
-    .some((itemJ) => itemJ.employeeId === item.id)));
+  const [allItems, setAllItems] = useState(() => items.filter((item) => !(relatives || []).some((itemJ) => itemJ.employeeId === item.id)));
   const [searchValue, setSearchValue] = useState('');
 
   const filteredItems = useMemo(() => {
