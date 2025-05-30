@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import style from './InputColor.module.scss';
 import { useTranslation } from 'react-i18next';
 
-const InputColor = ({ value, handleInputChange, placeholder }) => {
+const InputColor = ({ value, handleInputChange, placeholder, placement }) => {
   const { t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +35,9 @@ const InputColor = ({ value, handleInputChange, placeholder }) => {
         </button>
 
         {isOpen && (
-          <div className={style.color_picker__dropdown}>
+          <div className={classNames(style.color_picker__dropdown, {
+            [style[placement]]: placement
+          })}>
             <p className={style.color_picker__header}>{placeholder}</p>
             <p className={style.color_picker__category}>{t('Bright')}</p>
             {bright_colors.map((row, rowIndex) => (

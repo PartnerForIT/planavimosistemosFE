@@ -23,7 +23,7 @@ export default ({
   const buttonRef = useRef(null);
   const contentBoxRef = useRef(null);
 
-  const total = useMemo(() => relatives.reduce((acc, item) => {
+  const total = useMemo(() => (relatives || []).reduce((acc, item) => {
     if (!item.title || item.title === 'Empty') {
       return acc + 1;
     }

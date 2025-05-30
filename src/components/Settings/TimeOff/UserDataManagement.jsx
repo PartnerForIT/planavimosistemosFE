@@ -4,16 +4,17 @@ import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TitleBackIcon from '../../Icons/TitleBackIcon';
-import ReactTooltip from 'react-tooltip';
 import DataTable from '../../Core/DataTableCustom/OLT';
 import usePermissions from '../../Core/usePermissions';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import Filter from './TimeOffDetails/Filter';
 import RequestBehalf from '../../Core/Dialog/RequestBehalf';
+import AdjustBalance from '../../Core/Dialog/AdjustBalance';
+import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed';
 
 import classes from './timeoff.module.scss';
-import Button from '../../Core/Button/Button';
 import moment from 'moment';
+import ReactTooltip from 'react-tooltip';
 
 const permissionsConfig = [
   {
@@ -116,6 +117,10 @@ function UserDataManagement({
   activePolicy,
   employeesList,
   handleEditPolicyEmployees,
+  onRequestBehalf,
+  onAdjustBalance,
+  onAdjustTimeUsed,
+  handleOpenEmployee,
 }) {
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
@@ -127,6 +132,12 @@ function UserDataManagement({
   const [all, setAll] = useState(false);
   const [selected, setSelected] = useState({});
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
+  const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false);
+  const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false);
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  }, []);
 
   const { getDateFormat } = useCompanyInfo();
   const dateFormat = getDateFormat({
@@ -134,10 +145,6 @@ function UserDataManagement({
     'DD.MM.YY': 'DD MMM, YYYY',
     'MM.DD.YY': 'MMM DD, YYYY',
   });
-
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  }, []);
 
   useEffect(() => {
     if (Array.isArray(employeesList)) {
@@ -296,8 +303,10 @@ function UserDataManagement({
 
   const handleUnassign = () => {
     const ids = selectedEmployees.map(({ id }) => id);
+    const notSelectedIds = employees.filter((item) => !ids.includes(item.id)).map(({ id }) => id);
+    setSelected({});
 
-    handleEditPolicyEmployees(ids);
+    handleEditPolicyEmployees(notSelectedIds);
     setCheckedItems([]);
   }
   
@@ -313,15 +322,15 @@ function UserDataManagement({
         handleButtonImport={() => { console.log('go'); }}
       >
         <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
-        <Button
+        <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          inline 
+          data-tip={t('Back')} data-for='back_button'
         >
-          <div data-tip={t('Back')} data-for='back_button'>
+          <div>
             <TitleBackIcon />
           </div>
-        </Button>
+        </div>
       </TitleBlock>
       <PageLayout>
         <Filter
@@ -329,6 +338,8 @@ function UserDataManagement({
           checkedItems={checkedItems ?? []}
           handleUnassign={handleUnassign}
           handleRequestBehalf={() => setRequestBehalfOpen(true)}
+          handleAdjustBalance={() => setAdjustBalanceOpen(true)}
+          handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
           selectedItem={selected}
           setSearch={setSearch}
           search={search}
@@ -354,25 +365,58 @@ function UserDataManagement({
           accountList
           colSearch={colSearch}
           onSearch={onColumnSearch}
+          openButton={handleOpenEmployee}
         />
       </PageLayout>
-      <ReactTooltip
-        id='back_button'
-        className={classes.selectdisabled__tooltip}
-        effect='solid'
-        placement='bottom'
-      />
       <RequestBehalf
         open={requestBehalfOpen}
         handleClose={() => {
           setRequestBehalfOpen(false);
         }}
         title={t('Request on behalf')}
-        onSubmit={() => {}}
+        onSubmit={(data) => {
+          setRequestBehalfOpen(false);
+          onRequestBehalf(data);
+        }}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
         policies={activeTimeOff.policies}
         initialValue={{policy_id: activePolicy.id}}
+      />
+      <AdjustBalance
+        open={adjustBalanceOpen}
+        handleClose={() => {
+          setAdjustBalanceOpen(false);
+        }}
+        title={t('Adjust balance')}
+        onSubmit={(data) => {
+          setAdjustBalanceOpen(false);
+          onAdjustBalance(data);
+        }}
+        buttonTitle={t('Submit')}
+        employees={selectedEmployees}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id}}
+      />
+      <AdjustTimeUsed
+        open={adjustTimeUsedOpen}
+        handleClose={() => {
+          setAdjustTimeUsedOpen(false);
+        }}
+        title={t('Adjust time used')}
+        onSubmit={(data) => {
+          setAdjustTimeUsedOpen(false);
+          onAdjustTimeUsed(data);
+        }}
+        buttonTitle={t('Submit')}
+        employees={selectedEmployees}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id}}
+      />
+      <ReactTooltip
+        id='back_button'
+        effect='solid'
+        className={classes.tooltip_back}
       />
     </>
   );

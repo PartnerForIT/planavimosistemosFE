@@ -262,7 +262,8 @@ export default function ButtonAppBar({ logOut }) {
         Icon: TimeOffIcon,
         title: t('Time Off'),
         name: 'time-off',
-        to: `/${companyId}/time-off`,
+        to: `#`,
+        //to: `/${companyId}/time-off`,
       });
     }
 

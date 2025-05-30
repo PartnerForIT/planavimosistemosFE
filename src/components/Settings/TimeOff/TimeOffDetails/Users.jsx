@@ -105,6 +105,7 @@ const Users = React.memo(({
           onClick={handleUsersDataManagement}
           className={classes.managementButton}
           fillWidth
+          primary
         >
           {t('Assigned users data management')}
         </Button>

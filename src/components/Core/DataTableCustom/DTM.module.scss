@@ -74,6 +74,7 @@ header {
 .simpleTable {
   @extend .headerWrapper;
 
+  margin-bottom: 0;
   background: #fff;
   box-shadow: none;
   border-bottom: 1px solid $row-bg;
@@ -444,7 +445,7 @@ header {
   align-items: center;
   height: 100%;
 
-  button {
+  button:not(.openButtonRow) {
     border: unset;
     background: unset;
     padding: unset;
@@ -483,7 +484,7 @@ header {
 
 .duplicateActions {
   width: auto !important;
-  padding: 0 !important;
+  padding: 0 20px !important;
 }
 
 .opacityText {
@@ -863,6 +864,10 @@ div {
   &:last-child {
     margin-left: 5px;
   }
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 // global style table
@@ -954,7 +959,7 @@ div {
   }
 
   .row.rowSelected .rowWrapper {
-    background-color: #ecf1f9;
+    background-color: #ECF6FF;
   }
 
   .scrollableContentWithoutRightPanel {
@@ -964,14 +969,14 @@ div {
       right: 10px !important;
     }
 
-    & .absoluteActions {
-      background: white;
-      width: 70px;
-    }
+    // & .absoluteActions {
+    //   background: white;
+    //   width: 70px;
+    // }
 
-    .rowSelected .absoluteActions {
-      background-color: #ecf1f9;
-    }
+    // .rowSelected .absoluteActions {
+    //   background-color: transparent;
+    // }
 
     .flexRowGroup {
       &:last-of-type {
@@ -1010,7 +1015,7 @@ div {
       }
 
       .rowSelected .absoluteActions {
-        background-color: #ecf1f9 !important;
+        background-color: #ECF6FF !important;
       }
     }
   }

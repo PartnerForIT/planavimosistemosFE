@@ -11,9 +11,10 @@ import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
 import UserDataManagement from './UserDataManagement';
+import EmployeeManagement from './EmployeeManagement';
 import {
   AccountGroupsSelector, employeesSelector,
-  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, snackbarText, snackbarType,
+  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
 } from '../../../store/settings/selectors';
 import { userSelector } from '../../../store/auth/selectors';
 import TimeOffIcon from '../../Icons/TimeOff';
@@ -28,8 +29,14 @@ import {
   updatePolicy,
   updatePolicySettings,
   updatePolicyEmployees,
+  createRequestBehalf,
+  updateRequestBehalf,
+  changeRequestBehalfStatus,
+  createAdjustBalance,
+  createAdjustTimeUsed,
   duplicatePolicy,
   getPolicies,
+  getRequestBehalf,
   getAccountGroups,
   loadEmployeesAll,
   loadPermissions,
@@ -70,6 +77,7 @@ export default () => {
   const user = useSelector(userSelector);
   const time_offs = useSelector(timeOffsSelector);
   const policies = useSelector(policiesSelector);
+  const requestBehalf = useSelector(requestBehalfSelector);
   const loading = useSelector(policiesLoading);
   const allPermissions = useSelector(permissionsSelector);
   const { users: employees } = useSelector(employeesSelector);
@@ -81,6 +89,7 @@ export default () => {
   const [editVisible, setEditVisible] = useState(false);
   const [activePolicy, setActivePolicy] = useState(null);
   const [activeDataManagement, setActiveDataManagement] = useState(null);
+  const [activeEmployee, setActiveEmployee] = useState(null);
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
@@ -166,18 +175,60 @@ export default () => {
     setActiveDataManagement(activePolicy);
   }
 
+  const onRequestBehalf = (data, requestBehalfId) => {
+    if (requestBehalfId) {
+      dispatch(updateRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data, requestBehalfId));
+    } else {
+      dispatch(createRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+    }
+  }
+
+  const onAdjustBalance = (data) => {
+    dispatch(createAdjustBalance(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  }
+
+  const onAdjustTimeUsed = (data) => {
+    dispatch(createAdjustTimeUsed(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+  }
+
+  const onOpenEmployee = (employeeId) => {
+    setActiveEmployee(employees.find(({id}) => id === employeeId));
+    dispatch(getRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, employeeId));
+  }
+
+  const onChangeRequestStatus = (requestBehalfId, status) => {
+    dispatch(changeRequestBehalfStatus(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, requestBehalfId, {status: status, employees: [activeEmployee.id]}));
+  }
+
   return (
     <MaynLayout>
       <Dashboard>
         {
-          activeDataManagement ? (
-            <UserDataManagement
-              handleClose={() => setActiveDataManagement(null)}
-              activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
-              activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
-              employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
-              handleEditPolicyEmployees={handleEditPolicyEmployees}
-            />
+          activeDataManagement && !loading ? (
+            activeEmployee ? (
+              <EmployeeManagement
+                handleClose={() => setActiveEmployee(null)}
+                activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
+                activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
+                employee={activeEmployee}
+                requestBehalf={requestBehalf}
+                policies={policies}
+                onRequestBehalf={onRequestBehalf}
+                onChangeRequestStatus={onChangeRequestStatus}
+              />
+            ) : (
+              <UserDataManagement
+                handleClose={() => setActiveDataManagement(null)}
+                activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
+                activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
+                employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
+                handleEditPolicyEmployees={handleEditPolicyEmployees}
+                onRequestBehalf={onRequestBehalf}
+                onAdjustBalance={onAdjustBalance}
+                onAdjustTimeUsed={onAdjustTimeUsed}
+                handleOpenEmployee={onOpenEmployee}
+              />
+            )
           ) : (
           <>
             <TitleBlock
@@ -270,6 +321,7 @@ export default () => {
           </>
         )
       }
+      
       </Dashboard>
     </MaynLayout>
   );

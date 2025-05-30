@@ -10,12 +10,13 @@ import styles from './Button.module.scss';
 const Button = ({
   children, cancel, yellow, green, inverse, inverseblack, white, loading, className,
   onClick, fillWidth, type = 'button', size = 'normal',
-  disabled = false, danger, black, navyBlue, darkBlue, inline, transparent,
+  disabled = false, danger, black, navyBlue, darkBlue, inline, transparent, primary,
 }) => {
   const classes = classNames(
     styles.button,
     styles[size],
     {
+      [styles.primary]: primary,
       [styles.inverse]: inverse,
       [styles.inverseblack]: inverseblack,
       [styles.white]: white,

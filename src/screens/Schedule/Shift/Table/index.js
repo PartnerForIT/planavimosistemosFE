@@ -235,7 +235,7 @@ const RowContent = ({
   }, [resourceId, onNotWorkToday]);
 
   // eslint-disable-next-line
-  const foundItem = useMemo(() => items ? items.find((item) => resourceId.toString() === item.resourceId.toString()) : {}, [items]);
+  const foundItem = useMemo(() => items ? items.find((item) => resourceId?.toString() === item.resourceId?.toString()) : {}, [items, resourceId]);
   //console.log('foundItem', foundItem, items, resourceId);
 
   const rowClasses = classnames(classes.table__content__data__row, {

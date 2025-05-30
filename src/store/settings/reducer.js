@@ -119,6 +119,24 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   UPDATE_POLICY_EMPLOYEES_ERROR,
   UPDATE_POLICY_EMPLOYEES_SUCCESS,
+  CREATE_REQUEST_BEHALF,
+  CREATE_REQUEST_BEHALF_SUCCESS,
+  CREATE_REQUEST_BEHALF_ERROR,
+  UPDATE_REQUEST_BEHALF,
+  UPDATE_REQUEST_BEHALF_SUCCESS,
+  UPDATE_REQUEST_BEHALF_ERROR,
+  CHANGE_REQUEST_BEHALF_STATUS,
+  CHANGE_REQUEST_BEHALF_STATUS_SUCCESS,
+  CHANGE_REQUEST_BEHALF_STATUS_ERROR,
+  GET_REQUEST_BEHALF,
+  GET_REQUEST_BEHALF_SUCCESS,
+  GET_REQUEST_BEHALF_ERROR,
+  CREATE_ADJUST_BALANCE,
+  CREATE_ADJUST_BALANCE_SUCCESS,
+  CREATE_ADJUST_BALANCE_ERROR,
+  CREATE_ADJUST_TIME_USED,
+  CREATE_ADJUST_TIME_USED_SUCCESS,
+  CREATE_ADJUST_TIME_USED_ERROR,
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_ERROR,
   DUPLICATE_POLICY_SUCCESS,
@@ -204,7 +222,9 @@ const initialState = {
   roleDetails: {},
   time_offs: [],
   policies: [],
+  requestBehalf: [],
   policiesLoading: false,
+  requestBehalfLoading: false,
   permissions: [],
   import: {},
   importPlaces: {},
@@ -920,6 +940,56 @@ export const reducerOrganizationList = (state = initialState, action) => {
         ...state,
         policiesLoading: false,
         error: action.data.policies,
+      };
+
+    case GET_REQUEST_BEHALF:
+      return {
+        ...state,
+        requestBehalfLoading: true,
+        requestBehalf: [],
+        error: null,
+      };
+    case GET_REQUEST_BEHALF_SUCCESS:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+        requestBehalf: action.data.request_behalf,
+      };
+    case GET_REQUEST_BEHALF_ERROR:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+        error: action.data,
+      };
+
+    case CREATE_REQUEST_BEHALF:
+    case UPDATE_REQUEST_BEHALF:
+    case CHANGE_REQUEST_BEHALF_STATUS:
+    case CREATE_ADJUST_BALANCE:
+    case CREATE_ADJUST_TIME_USED:
+      return {
+        ...state,
+        requestBehalfLoading: true,
+        error: null,
+      };
+    case CREATE_REQUEST_BEHALF_SUCCESS:
+    case UPDATE_REQUEST_BEHALF_SUCCESS:
+    case CHANGE_REQUEST_BEHALF_STATUS_SUCCESS: 
+    case CREATE_ADJUST_BALANCE_SUCCESS:
+    case CREATE_ADJUST_TIME_USED_SUCCESS:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+      };
+    case CREATE_REQUEST_BEHALF_ERROR:
+    case UPDATE_REQUEST_BEHALF_ERROR:
+    case CHANGE_REQUEST_BEHALF_STATUS_ERROR:
+    case CREATE_ADJUST_BALANCE_ERROR:
+    case CREATE_ADJUST_TIME_USED_ERROR:
+      return {
+        ...state,
+        requestBehalfLoading: false,
+        error: action.data,
       };
 
     case UPDATE_POLICY_SETTINGS:

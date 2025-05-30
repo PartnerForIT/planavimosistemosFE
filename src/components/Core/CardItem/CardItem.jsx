@@ -6,6 +6,7 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import EditIcon from '../../Icons/EditIcon';
 import RemoveRoleIcon from '../../Icons/RemoveRoleIcon';
 import CreatePolicyIcon from '../../Icons/CreatePolicyIcon';
+import DescriptionIcon from '../../Icons/DescriptionIcon';
 
 import classes from './CardItem.module.scss';
 
@@ -27,6 +28,8 @@ const CardItem = ({
   descriptionCount,
   policiesCount,
   descriptionPolicies,
+  additionalDescription,
+  description,
 }) => {
   const { t } = useTranslation();
 
@@ -39,10 +42,13 @@ const CardItem = ({
   const handleClickRemove = () => {
     onClickRemove({ name, id });
   };
+  const nltobr = (str) => {
+    return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+  }
 
   return (
     <div
-      className={classnames(classes.card, selected ? classes.active : '')}
+      className={classnames(classes.card, selected ? classes.active : '', additionalDescription ? classes.tall : '')}
       onClick={handleClick}
       onKeyDown={handleClick}
       role='option'
@@ -53,6 +59,7 @@ const CardItem = ({
       <p className={classes.card_title}>{name}</p>
       <small>{`${userCount} ${t(descriptionCount)}`}</small>
       { descriptionPolicies ? ( <><br /><small>{`${policiesCount} ${t(descriptionPolicies)}`}</small></>) : null }
+      { additionalDescription ? ( <><br /><small>{`${t(additionalDescription)}`}</small></>) : null }
       {
         !!onChangeDefault && (!!isDefault || selected) && (
           <div className={classes.card_check}>
@@ -64,6 +71,20 @@ const CardItem = ({
             />
           </div>
         )
+      }
+      {
+        description ? (
+          <div>
+            <span
+              className={classes.comment}
+              data-tip={nltobr(description)}
+              data-for='timeoff_description'
+              data-html={true}
+            >
+              <DescriptionIcon />
+            </span>
+          </div>
+        ) : null
       }
 
       <div className={classes.card_actions}>

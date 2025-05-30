@@ -102,7 +102,8 @@ const PolicySettings = React.memo(({
     setValues((prev) => {
       const updatedValues = {
         ...prev,
-        [name]: value,
+        //if name ! extra_amounts
+        [name]: name !== 'extra_amounts' ? value : prev.extra_amounts,
       };
   
       const requiredFields = [
@@ -185,6 +186,12 @@ const PolicySettings = React.memo(({
         extra_amounts: updatedExtraAmounts,
       };
     });
+
+    handleChange({
+      target: {
+        name: 'extra_amounts',
+      },
+    });
   };
 
   const handleRemoveExtraAmount = (index) => {
@@ -195,6 +202,12 @@ const PolicySettings = React.memo(({
         ...prev,
         extra_amounts: updatedExtraAmounts,
       };
+    });
+
+    handleChange({
+      target: {
+        name: 'extra_amounts',
+      },
     });
   };
 
@@ -218,7 +231,7 @@ const PolicySettings = React.memo(({
               </div>
               <Input
                 placeholder={t('Enter policy name')}
-                value={values.name}
+                value={values.name ?? ''}
                 name='name'
                 fullWidth
                 onChange={handleChange}
@@ -231,7 +244,7 @@ const PolicySettings = React.memo(({
               </div>
               <Input
                 placeholder={t('Policy type')}
-                value={values.type}
+                value={values.type ?? ''}
                 name='type'
                 fullWidth
                 disabled
@@ -246,7 +259,7 @@ const PolicySettings = React.memo(({
               </div>
               <Textarea
                 placeholder={`${t('Write a description')} (${t('optional')})`}
-                value={values.description}
+                value={values.description ?? ''}
                 className={classes.textarea}
                 name='description'
                 onChange={handleChange}
@@ -339,7 +352,7 @@ const PolicySettings = React.memo(({
               <Select
                 handleInputChange={handleChange}
                 name='allowance_type'
-                value={values.allowance_type}
+                value={values.allowance_type ?? ''}
                 options={allowance_type_arr.map((item) => { return {...item}})}
               />
             </div>
@@ -376,7 +389,7 @@ const PolicySettings = React.memo(({
                     <Select
                       handleInputChange={handleChange}
                       name='allowance_calculation_period'
-                      value={values.allowance_calculation_period}
+                      value={values.allowance_calculation_period ?? ''}
                       options={allowance_calculation_period_arr.map((item) => { return {...item}})}
                     />
                   </div>
@@ -387,7 +400,7 @@ const PolicySettings = React.memo(({
                     </div>
                     <Input
                       placeholder={t('Enter allowance amount')}
-                      value={values.allowance_amount}
+                      value={values.allowance_amount ?? ''}
                       name='allowance_amount'
                       fullWidth
                       onChange={handleChange}
@@ -420,7 +433,7 @@ const PolicySettings = React.memo(({
                     <Select
                       handleInputChange={handleChange}
                       name='proration_type'
-                      value={values.proration_type}
+                      value={values.proration_type ?? ''}
                       options={proration_type_arr.map((item) => { return {...item}})}
                     />
                   </div>
@@ -478,7 +491,7 @@ const PolicySettings = React.memo(({
                     <Select
                       handleInputChange={handleChange}
                       name='allowance_carryover_type'
-                      value={values.allowance_carryover_type}
+                      value={values.allowance_carryover_type ?? ''}
                       options={allowance_carryover_type_arr.map((item) => { return {...item}})}
                     />
                   </div>
@@ -489,7 +502,7 @@ const PolicySettings = React.memo(({
                     </div>
                     <Input
                       placeholder={t('Enter maximum amount')}
-                      value={values.allowance_carryover_amount}
+                      value={values.allowance_carryover_amount ?? ''}
                       name='allowance_carryover_amount'
                       fullWidth
                       onChange={handleChange}
@@ -575,7 +588,7 @@ const PolicySettings = React.memo(({
                         <Select
                           handleInputChange={handleChange}
                           name='allowance_carryover_expiration_period'
-                          value={values.allowance_carryover_expiration_period}
+                          value={values.allowance_carryover_expiration_period ?? ''}
                           options={allowance_carryover_expiration_period_arr.map((item) => { return {...item}})}
                         />
                       </div>
@@ -627,7 +640,7 @@ const PolicySettings = React.memo(({
                         </div>
                         <Input
                           placeholder={t('Enter maximum balance')}
-                          value={values.maximum_balance}
+                          value={values.maximum_balance ?? ''}
                           name='maximum_balance'
                           fullWidth
                           onChange={handleChange}
@@ -681,11 +694,12 @@ const PolicySettings = React.memo(({
                         </div>
                         <Input
                           placeholder={t('Enter negative balance')}
-                          value={values.maximum_negative_balance}
+                          value={values.maximum_negative_balance ?? ''}
                           name='maximum_negative_balance'
                           fullWidth
                           type='number'
-                          onChange={handleChange}
+                          min='0'
+                          onChange={(e) => handleChange({ target: { name: 'maximum_negative_balance', value: e.target.value < 0 ? Math.abs(e.target.value) : e.target.value } })}
                         />
                       </div>
                       <div></div>
@@ -731,8 +745,8 @@ const PolicySettings = React.memo(({
                     <>
                       {
                         values.extra_amounts && values.extra_amounts.map((item, index) => (
-                          <div key={index} className={classes.policyForm_row}>
-                            <div key={index} className={classNames(classes.policyForm_row, classes.policyForm_rowLast)}>
+                          <div key={index+'-ps'} className={classes.policyForm_row}>
+                            <div key={index+'-ps1'} className={classNames(classes.policyForm_row, classes.policyForm_rowLast)}>
                               <div className={classes.formControl}>
                                 <div className={classes.labelBlock}>
                                   <Label text={t('Number of years at work')} htmlFor='years' />
@@ -740,7 +754,7 @@ const PolicySettings = React.memo(({
                                 </div>
                                 <Input
                                   placeholder={t('Enter years of work')}
-                                  value={item.years}
+                                  value={item.years ?? ''}
                                   name='years'
                                   fullWidth
                                   type='number'
@@ -751,7 +765,7 @@ const PolicySettings = React.memo(({
                                 <DeleteIcon fill='#fd0d1b' className={classes.iconButtonRow} />
                               </button>
                             </div>
-                            <div key={index} className={classes.policyForm_row}>
+                            <div key={index+'-ps2'} className={classes.policyForm_row}>
                               <div className={classes.formControl}>
                                 <div className={classes.labelBlock}>
                                   <Label text={t('Extra amount')} htmlFor='amount' />
@@ -759,7 +773,7 @@ const PolicySettings = React.memo(({
                                 </div>
                                 <Input
                                   placeholder={t('Enter extra amount')}
-                                  value={item.amount}
+                                  value={item.amount ?? ''}
                                   name='amount'
                                   fullWidth
                                   type='number'
@@ -768,7 +782,7 @@ const PolicySettings = React.memo(({
                                 />
                               </div>
                               <span className={classes.formCalcValue}>
-                                {item.years && item.amount && Math.round(item.years * item.amount * 100) / 100}
+                                {item.years && item.amount && ((values.allowance_amount ?? 0)*1 + item.amount*1)}
                               </span>
                             </div>
                           </div>
@@ -829,7 +843,7 @@ const PolicySettings = React.memo(({
                         </div>
                         <Input
                           placeholder={t('Enter value')}
-                          value={values.value_in_time_sheet_excel}
+                          value={values.value_in_time_sheet_excel ?? ''}
                           name='value_in_time_sheet_excel'
                           fullWidth
                           onChange={handleChange}
@@ -903,6 +917,7 @@ const PolicySettings = React.memo(({
                             value={values.color}
                             handleInputChange={(color) => handleChange({ target: { name: 'color', value: color } })}
                             placeholder={t('Choose the colour')}
+                            placement='top'
                           />
                         </div>
                       </div>
