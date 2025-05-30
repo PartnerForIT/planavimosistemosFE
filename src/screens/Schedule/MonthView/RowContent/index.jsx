@@ -76,7 +76,8 @@ const RowContent = ({
 
   const checkMarked = (item) => {
     if (!item.statistic && employeeId){
-      return item.markers.find(m => m.employee_id*1 === employeeId*1);
+      console.log(item.markers, employeeId);
+      return item.markers.find(m => m.employee_id?.toString() === employeeId?.toString());
     }
 
     return false;
