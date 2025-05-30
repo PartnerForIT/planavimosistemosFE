@@ -166,7 +166,9 @@ export default ({
   const [isOpen, setIsOpen] = useState(false);
 
   const markerComment = () => {
-    const current = markers ? markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request) : false;
+    const current = markers
+      ? markers.find(e => moment.utc(e.date).isSame(moment.utc(start), 'day') && e.employee_id?.toString() === employeeId?.toString() && e.user_request)
+      : false;
     return current ? current.comment : false;
   }
   
