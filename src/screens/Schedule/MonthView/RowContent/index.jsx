@@ -40,7 +40,7 @@ const RowContent = ({
     ReactTooltip.rebuild();
   }, []);
 
-  const newFoundItem = (day) => {
+  const newFoundItem = (day, a) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);
     if (ev?.old_employee && ev?.new_employee && ev?.empty_employee && !ev?.copy_event) {
       return {id: ev.id};
@@ -53,6 +53,9 @@ const RowContent = ({
         hours: Math.round((moment(ev.end).diff(moment(ev.start), 'hours', true)) * 10) / 10,
       }
     }
+
+    if (a)
+      console.log('here', ev);
     
     return ev;
   }
@@ -98,7 +101,7 @@ const RowContent = ({
                 currentDay={index+1}
                 currentMonth={currentMonth}
                 key={item.id}
-                title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title)?.hours ?? '')}
+                title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title, checkMarked(item))?.hours ?? '')}
                 startFinish={item.statistic || !employeeId ? '' : (newFoundItem(item.title)?.title ?? '')}
                 statistic={item.statistic}
                 borderColor={currentResource?.eventBorderColor}
