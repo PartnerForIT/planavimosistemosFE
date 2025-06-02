@@ -1355,5 +1355,7 @@
         "Assign": "Priskirti",
         "Add Employee": "Pridėti darbuotoją",
         "-1h before holidays": "-1val prieš šventes",
-        "Unpaid hours": "Neapmokamos val."
+        "Unpaid hours": "Neapmokamos val.",
+
+        "Reject": "Atmesti"
 }

@@ -42,7 +42,7 @@ function EmployeeManagement({
 
   useEffect(() => {
     ReactTooltip.rebuild();
-  }, []);
+  });
 
   return (
     <>
@@ -142,32 +142,38 @@ function EmployeeManagement({
                     </div>
                     <div className={classes.upcomingRequestsCol}>
                       <div className={classes.upcomingRequestsButtons}>
-                        <Button
-                          className={classes.buttonEdit}
-                          size="little"
-                          onClick={() => {
-                            setRequestBehalfEditOpen(request)
-                          }}
-                        >
-                          <EditIconFixedFill />
-                        </Button>
-                        { request.status !== 'approved' && (
+                        <div data-tip={t("Edit")} data-for="tip_request">
                           <Button
-                            className={classes.buttonApprove}
+                            className={classes.buttonEdit}
                             size="little"
-                            onClick={() => {onChangeRequestStatus(request.id, 'approved')}}
+                            onClick={() => {
+                              setRequestBehalfEditOpen(request)
+                            }}
                           >
-                            <CheckIcon />
+                            <EditIconFixedFill />
                           </Button>
+                        </div>
+                        { request.status !== 'approved' && (
+                          <div data-tip={t("Approve")} data-for="tip_request">
+                            <Button
+                              className={classes.buttonApprove}
+                              size="little"
+                              onClick={() => {onChangeRequestStatus(request.id, 'approved')}}
+                            >
+                              <CheckIcon />
+                            </Button>
+                          </div>
                         )}
                         { request.status !== 'rejected' && (
-                          <Button
-                            className={classes.buttonReject}
-                            size="little"
-                            onClick={() => {onChangeRequestStatus(request.id, 'rejected')}}
-                          >
-                            <RejectIcon />
-                          </Button>
+                          <div data-tip={t("Reject")} data-for="tip_request">
+                            <Button
+                              className={classes.buttonReject}
+                              size="little"
+                              onClick={() => {onChangeRequestStatus(request.id, 'rejected')}}
+                            >
+                              <RejectIcon />
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -266,6 +272,11 @@ function EmployeeManagement({
       />
       <ReactTooltip
         id='back_button'
+        effect='solid'
+        className={classes.tooltip_back}
+      />
+      <ReactTooltip
+        id='tip_request'
         effect='solid'
         className={classes.tooltip_back}
       />
