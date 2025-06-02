@@ -223,17 +223,18 @@ export default function ImportAccounts({
           // TODO error on unsuccessful import
           if (emp.data.length !== order.length) {
             emp.data.forEach((field, idx) => {
-              temp[order[idx]] = field;
+                temp[order[idx]] = field.trim();
             });
             temp.warning = true;
             return temp;
           }
 
           emp.data.forEach((field, idx) => {
-            temp[order[idx]] = field;
-            if (!field.trim()) {
-              temp.warning = true;
-            }
+              const trimmed = field.trim();
+              temp[order[idx]] = trimmed;
+              if (!trimmed) {
+                temp.warning = true;
+              }
           });
 
           if (employees.some(({ email }) => email === temp.email) && !updateCurrent) {
