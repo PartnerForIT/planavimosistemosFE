@@ -26,6 +26,8 @@ import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
 import CustomSelect from '../../Select/Select';
 import ReactTooltip from 'react-tooltip';
+import MomentUtils from '@date-io/moment';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import {
   getSchedule,
 } from '../../../../store/settings/actions';
@@ -55,6 +57,20 @@ const defaultSkill = {
   earn: '',
   rates: true,
 };
+
+const childrensOpt = [
+  { id: '0', name: '0' },
+  { id: '1', name: '1' },
+  { id: '2', name: '2' },
+  { id: '3', name: '3' },
+  { id: '4', name: '4' },
+  { id: '5', name: '5' },
+  { id: '6', name: '6' },
+  { id: '7', name: '7' },
+  { id: '8', name: '8' },
+  { id: '9', name: '9' },
+  { id: '10', name: '10' },
+];
 
 const permissionsConfig = [
   {
@@ -153,7 +169,7 @@ export default function EditAccount({
         // eslint-disable-next-line camelcase
         email,
         // eslint-disable-next-line camelcase,no-shadow
-        name, surname, phone, speciality_id, external_id, hours_demand, approver_1, approver_2, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
+        name, surname, phone, speciality_id, external_id, hours_demand, approver_1, approver_2, effective_date, childrens, child_born_1, child_born_2, child_born_3, child_born_4, child_born_5, child_born_6, child_born_7, child_born_8, child_born_9, child_born_10, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups, em_status,
       } = employee;
@@ -167,6 +183,18 @@ export default function EditAccount({
         hours_demand,
         approver_1,
         approver_2,
+        effective_date,
+        childrens,
+        child_born_1,
+        child_born_2,
+        child_born_3,
+        child_born_4,
+        child_born_5,
+        child_born_6,
+        child_born_7,
+        child_born_8,
+        child_born_9,
+        child_born_10,
         shift_id,
         job_type_id,
         assign_shift_id,
@@ -503,7 +531,8 @@ export default function EditAccount({
   }, [errors, onSubmit, ready, user]);
 
   const formClasses = classnames(style.form, {
-    [style.form_three]: (permissions.groups || permissions.places),
+    [style.form_three]: ((permissions.groups || permissions.places) && !permissions.time_off) || (!(permissions.groups || permissions.places) && permissions.time_off),
+    [style.form_four]: (permissions.groups || permissions.places) && permissions.time_off,
     [style.form_margin]: true,
   });
 
@@ -530,7 +559,7 @@ export default function EditAccount({
                 </div>
 
                 <form className={formClasses}>
-                  <div className={classnames(style.left, style.bordered)}>
+                  <div className={classnames(style.column)}>
                     <div className={classes.formItem}>
                       <Label htmlFor='email' text={t('Email')} />
                       <Input
@@ -603,7 +632,7 @@ export default function EditAccount({
 
                   </div>
 
-                  <div className={style.center}>
+                  <div className={classnames(style.column)}>
                     
                     <div className={classes.formItem}>
                       <Label text={t('Roles')} htmlFor='roles' />
@@ -691,47 +720,12 @@ export default function EditAccount({
                        </div>
                      )
                     }
-                    {
-                      permissions.time_off && (
-                        <>
-                          <hr className={classes.horSep} />
-                          <div className={classes.formItem}>
-                            <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
-                            <CustomSelect
-                              placeholder={t('Select 1st level approver')}
-                              items={allSortedEmployees ?? []}
-                              onChange={onEmployeesSelectChange}
-                              width='100%'
-                              fullWidth
-                              choiceOfOnlyOne={true}
-                              type='employees'
-                              withSearch={true}
-                              disabled={false}
-                            />
-                          </div>
-                          <div className={classes.formItem}>
-                            <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
-                            <CustomSelect
-                              placeholder={t('Select 2nd level approver')}
-                              items={allSortedEmployees2 ?? []}
-                              onChange={onEmployeesSelectChange2}
-                              width='100%'
-                              fullWidth
-                              choiceOfOnlyOne={true}
-                              type='employees'
-                              withSearch={true}
-                              disabled={!user.approver_1}
-                            />
-                          </div>
-                        </>
-                      )
-                    }
                   </div>
 
                   {
                     (permissions.places || permissions.groups) && (
                       <div
-                        className={classnames(style.right, style.bordered)}
+                        className={classnames(style.column)}
                       >
                         {
                           permissions.groups && (
@@ -837,50 +831,114 @@ export default function EditAccount({
                           )
                         }
 
-                        {/* {
-                          permissions.schedule_shift && (
-                            <div className={classes.formItem}>
-                              <Label htmlFor='assign_shift_id' text={t('Assign to shift')} />
-                              <AddEditSelectOptions
-                                id='assign_shift_id'
-                                options={shiftsOptions}
-                                user={user}
-                                placeholder={t('Select a shift')}
-                                name='assign_shift_id'
-                                handleInput={handleInput}
-                                disabled={!shiftsOptions.length || !user.place}
-                              />
-                            </div>
-                          )
-                        }
-
-                        {
-                          permissions.schedule_shift && (
-                            <div className={classes.formItem}>
-                              <Label htmlFor='assign_job_type_id' text={t('Assign to Job Type')} />
-                              <AddEditSelectOptions
-                                id='assign_job_type_id'
-                                options={assignjobTypesOptions}
-                                user={user}
-                                placeholder={t('Select a job type')}
-                                name='assign_job_type_id'
-                                handleInput={handleInput}
-                                disabled={!assignjobTypesOptions.length || !user.assign_shift_id}
-                                wrong={user.assign_shift_id && !user.assign_job_type_id}
-                              />
-                            </div>
-                          )
-                        } */}
                       </div>
                     )
                   }
-                  <ReactTooltip
-                    id='selectdisabled'
-                    className={classes.selectdisabled__tooltip}
-                    effect='solid'
-                    placement='bottom'
-                  />
+                  {
+                      permissions.time_off && (
+                        <div
+                          className={classnames(style.column)}
+                        >
+                          <div className={classes.formItem}>
+                            <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
+                            <CustomSelect
+                              placeholder={t('Select 1st level approver')}
+                              items={allSortedEmployees ?? []}
+                              onChange={onEmployeesSelectChange}
+                              width='100%'
+                              fullWidth
+                              choiceOfOnlyOne={true}
+                              type='employees'
+                              withSearch={true}
+                              disabled={false}
+                            />
+                          </div>
+                          <div className={classes.formItem}>
+                            <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
+                            <div
+                              data-for='selectdisabled'
+                              data-tip={(!user.approver_1) ? t('Please select 1st level approver') : undefined}
+                            >
+                              <CustomSelect
+                                placeholder={t('Select 2nd level approver')}
+                                items={allSortedEmployees2 ?? []}
+                                onChange={onEmployeesSelectChange2}
+                                width='100%'
+                                fullWidth
+                                choiceOfOnlyOne={true}
+                                type='employees'
+                                withSearch={true}
+                                disabled={!user.approver_1}
+                              />
+                            </div>
+                          </div>
+                          <div className={classes.formItem}>
+                            <div className={classes.labelSpan}>
+                              <Label text={t('Effective date')} htmlFor='effective_date' />
+                            </div>
+                            <div className={style.dateInput}>
+                              <MuiPickersUtilsProvider utils={MomentUtils}>
+                                <DatePicker
+                                  label={t('Effective date')}
+                                  value={user.effective_date || null}
+                                  onChange={(date) => handleInput({target: {name: 'effective_date', value: date}})}
+                                  format='MMM, DD, YYYY'
+                                  name="effective_date"
+                                />
+                              </MuiPickersUtilsProvider>
+                            </div>
+                          </div>
+                          <div className={classes.formItem}>
+                            <Label htmlFor='childrens' text={t('Number of Children')} />
+                            <InputSelect
+                              id='childrens'
+                              placeholder={t('Number of Children')}
+                              options={childrensOpt}
+                              value={user.childrens}
+                              name='childrens'
+                              onChange={handleInput}
+                              valueKey='id'
+                              labelKey='name'
+                            />
+                          </div>
+                          {
+                            user.childrens && user.childrens > 0 && (
+                              //inputs for each child born based on number of children
+                              <div className={classes.childrenBlock}>
+                                {
+                                  Array.from({ length: user.childrens }, (_, index) => (
+                                    <div key={index} className={classes.formItem}>
+                                      <div className={classes.labelSpan}>
+                                        <Label text={`${index + 1} ${t('children born')}`} htmlFor={`child_born_${index + 1}`} />
+                                      </div>
+                                      <div className={style.dateInput}>
+                                        <MuiPickersUtilsProvider utils={MomentUtils}>
+                                          <DatePicker
+                                            label={`${index + 1} ${t('children born')}`}
+                                            value={user[`child_born_${index + 1}`] || null}
+                                            onChange={(date) => handleInput({target: {name: `child_born_${index + 1}`, value: date}})}
+                                            format='MMM, DD, YYYY'
+                                            name={`child_born_${index + 1}`}
+                                          />
+                                        </MuiPickersUtilsProvider>
+                                      </div>
+                                    </div>
+                                  ))
+                                }
+                              </div>
+                              )
+                          }   
+                              
+                        </div>
+                      )
+                    }
                 </form>
+                <ReactTooltip
+                  id='selectdisabled'
+                  className={classes.selectdisabled__tooltip}
+                  effect='solid'
+                  placement='bottom'
+                />
                 <div className={style.buttonBlock}>
                   <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>
                   <Button

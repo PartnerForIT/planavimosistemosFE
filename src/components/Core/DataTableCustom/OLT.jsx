@@ -33,7 +33,7 @@ export default function DataTable({
   footerButton, minHeight, tallRows,
   downloadExcel, downloadPdf, verticalOffset = '0px',
   columnsWidth = columnsWidthInitial, simpleTable, editRow,
-  duplicateRow, removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
+  duplicateRow, timeOffRow, removeRow, multiselect = false, hoverActions = false, hoverable = false, id = 'first', grey, greyTitle,
   withoutFilterColumns = false,
   selectAllItems = null, colored = { warning: false, error: false },
   all = false, setAll = () => ({}), statusIcon = true,
@@ -334,6 +334,7 @@ export default function DataTable({
                 editRow={editRow}
                 removeRow={removeRow}
                 duplicateRow={duplicateRow}
+                timeOffRow={timeOffRow}
                 multiselect={multiselect}
                 hoverActions={hoverActions}
                 hoverable={hoverable}
@@ -443,6 +444,11 @@ export default function DataTable({
       <ReactTooltip
         id='cell_description'
         className={styles.tooltip}
+        effect='solid'
+      />
+      <ReactTooltip
+        id='tooltip_button'
+        className={styles.tooltip_black}
         effect='solid'
       />
     </div>

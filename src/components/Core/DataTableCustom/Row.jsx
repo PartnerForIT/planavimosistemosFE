@@ -14,6 +14,7 @@ import CheckStatus from '../../Icons/CheckStatus';
 import DeleteIcon from '../../Icons/DeleteIcon';
 import DuplicateIcon from '../../Icons/DuplicateIcon';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
+import TimeOffIcon from '../../Icons/TimeOff';
 import { useTranslation } from 'react-i18next';
 
 const Row = ({
@@ -21,7 +22,7 @@ const Row = ({
   columnsWidth, totalCustomColumns, totalCustomWidthColumns, statysIcon, editRow, removeRow, multiselect,
   hoverActions, hoverable = false, colored = { warning: false, error: false, success: false },
   withoutRightPanel = false, tableRef = null, onEditBreak, onOpenAssignGroup, onOpenWorkTime, onEditAddress,
-  withoutShitCode, duplicateRow, tallRows, openButton,
+  withoutShitCode, duplicateRow, timeOffRow, tallRows, openButton,
 }) => {
   const { t } = useTranslation();
   const selected = useMemo(() => {
@@ -198,6 +199,7 @@ const Row = ({
             editRow={editRow}
             removeRow={removeRow}
             duplicateRow={duplicateRow}
+            timeOffRow={timeOffRow}
             openButton={openButton}
             visible={actionsVisible || (selected && selected.id === row.id && !reports)}
             absolute
@@ -328,7 +330,7 @@ const Row = ({
                 {
                   row[column.field] === 'tableActions'
                   && (
-                    <RowActions editRow={editRow} removeRow={removeRow} duplicateRow={duplicateRow} openButton={openButton} id={row.id} />
+                    <RowActions editRow={editRow} removeRow={removeRow} duplicateRow={duplicateRow} timeOffRow={timeOffRow} openButton={openButton} id={row.id} />
                   )
                 }
               </div>
@@ -356,7 +358,7 @@ const Row = ({
 export default Row;
 
 const RowActions = ({
-  id, editRow, removeRow, duplicateRow, openButton, absolute = false, visible = true,
+  id, editRow, removeRow, duplicateRow, timeOffRow, openButton, absolute = false, visible = true,
 }) => {
   const { t } = useTranslation();
   const actionsClasses = classNames(
@@ -372,23 +374,32 @@ const RowActions = ({
     <div className={actionsClasses}>
       {
         duplicateRow && (
-          <button onClick={() => duplicateRow(id)}>
+          <button onClick={() => duplicateRow(id)} data-tip={t('Duplicate')} data-for="tooltip_button">
             <DuplicateIcon className={styles.iconButtonRow} />
           </button>
         )
       }
       { 
         editRow && (
-          <button onClick={() => editRow(id)}>
+          <button onClick={() => editRow(id)} data-tip={t('Edit')} data-for="tooltip_button">
             <EditIconFixedFill className={styles.iconButtonRow} />
           </button>
         )
       }
       {
+        timeOffRow && (
+          <button onClick={() => timeOffRow(id)} data-tip={t('Time Off')} data-for="tooltip_button">
+            <TimeOffIcon className={styles.iconButtonRow} fill="rgb(105, 118, 122)" />
+          </button>
+        )
+      }
+      {
         removeRow && (
-          <button onClick={() => removeRow(id)}>
+          <div data-tip={t('Delete')} data-for="tooltip_button">
+          <button onClick={() => removeRow(id)} >
             <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
           </button>
+          </div>
         )
       }
       {

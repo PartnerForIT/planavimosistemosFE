@@ -177,6 +177,11 @@ small.error {
     grid-template-columns: 1fr 1fr 1fr;
   }
 
+  &_four {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
   .info {
     padding-right: $padding-size;
   }
@@ -188,6 +193,16 @@ small.error {
 
   .right {
     padding-left: $padding-size;
+  }
+  
+  .column {
+    padding-right: $padding-size;
+    border-right: 1px solid $light-blue;
+
+    &:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
   }
 }
 

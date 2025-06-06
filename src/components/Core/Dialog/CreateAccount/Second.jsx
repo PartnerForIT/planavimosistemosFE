@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 
 import style from './CreateAccount.module.scss';
+import classes from '../Dialog.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
 import Tooltip from '../../../Core/Tooltip';
@@ -20,6 +21,9 @@ import CustomSelect from '../../Select/Select';
 import NextStepButton from './NextStepButton';
 import UserCard from './UserCard';
 import usePermissions from '../../usePermissions';
+import InputSelect from '../../InputSelect';
+import MomentUtils from '@date-io/moment';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import {
   getSchedule,
 } from '../../../../store/settings/actions';
@@ -28,6 +32,20 @@ import {
   employeesSelector,
 } from '../../../../store/settings/selectors';
 import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
+
+const childrensOpt = [
+  { id: '0', name: '0' },
+  { id: '1', name: '1' },
+  { id: '2', name: '2' },
+  { id: '3', name: '3' },
+  { id: '4', name: '4' },
+  { id: '5', name: '5' },
+  { id: '6', name: '6' },
+  { id: '7', name: '7' },
+  { id: '8', name: '8' },
+  { id: '9', name: '9' },
+  { id: '10', name: '10' },
+];
 
 const permissionsConfig = [
   {
@@ -248,21 +266,19 @@ const SecondStep = ({
   const allSortedEmployees2 = useGroupingEmployees(filteredEmployees2, employToCheck2);
 
   const containerClasses = classnames(style.secondForm, {
-    [style.secondForm_three]: (permissions.create_groups || permissions.create_places),
-  });
-  const rowTwoClasses = classnames(style.center, {
-    [style.borderRight]: (permissions.create_groups || permissions.create_places),
+    [style.secondForm_three]: ((permissions.create_groups || permissions.create_places) && !permissions.time_off) || (!(permissions.create_groups || permissions.create_places) && permissions.time_off),
+    [style.secondForm_four]: (permissions.create_groups || permissions.create_places) && permissions.time_off,
   });
 
   return (
     <>
       <div className={containerClasses}>
 
-        <div className={classnames(style.info, style.border, style.borderRight)}>
+        <div className={classnames(style.column)}>
           <UserCard user={user} groups={groups} places={places} skills={skills} />
         </div>
 
-        <div className={rowTwoClasses}>
+        <div className={style.column}>
           <div className={classnames(style.skill, style.formItem)}>
             <Label text={t('Role')} htmlFor='role' />
             <AddEditSelectOptions
@@ -349,46 +365,101 @@ const SecondStep = ({
               </div>
             )
           }
-          {
-            permissions.time_off && (
-              <>
-                <hr className={style.horSep} />
-                <div className={style.formItem}>
-                  <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
-                  <CustomSelect
-                    placeholder={t('Select 1st level approver')}
-                    items={allSortedEmployees ?? []}
-                    onChange={onEmployeesSelectChange}
-                    width='100%'
-                    fullWidth
-                    choiceOfOnlyOne={true}
-                    type='employees'
-                    withSearch={true}
-                    disabled={false}
-                  />
-                </div>
-                <div className={style.formItem}>
-                  <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
-                  <CustomSelect
-                    placeholder={t('Select 2nd level approver')}
-                    items={allSortedEmployees2 ?? []}
-                    onChange={onEmployeesSelectChange2}
-                    width='100%'
-                    fullWidth
-                    choiceOfOnlyOne={true}
-                    type='employees'
-                    withSearch={true}
-                    disabled={!user.approver_1}
-                  />
-                </div>
-              </>
-            )
-          }
         </div>
 
         {
+          permissions.time_off && (
+            <div className={style.column}>
+              <div className={style.formItem}>
+                <Label text={t('Select 1st level approver')} htmlFor='approver_1' />
+                <CustomSelect
+                  placeholder={t('Select 1st level approver')}
+                  items={allSortedEmployees ?? []}
+                  onChange={onEmployeesSelectChange}
+                  width='100%'
+                  fullWidth
+                  choiceOfOnlyOne={true}
+                  type='employees'
+                  withSearch={true}
+                  disabled={false}
+                />
+              </div>
+              <div className={style.formItem}>
+                <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
+                <CustomSelect
+                  placeholder={t('Select 2nd level approver')}
+                  items={allSortedEmployees2 ?? []}
+                  onChange={onEmployeesSelectChange2}
+                  width='100%'
+                  fullWidth
+                  choiceOfOnlyOne={true}
+                  type='employees'
+                  withSearch={true}
+                  disabled={!user.approver_1}
+                />
+              </div>
+              <div className={style.formItem}>
+                <div className={style.labelSpan}>
+                  <Label text={t('Effective date')} htmlFor='effective_date' />
+                </div>
+                <div className={classes.dateInput}>
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <DatePicker
+                      label={t('Effective date')}
+                      value={user.effective_date || null}
+                      onChange={(date) => handleInput({target: {name: 'effective_date', value: date}})}
+                      format='MMM, DD, YYYY'
+                      name="effective_date"
+                    />
+                  </MuiPickersUtilsProvider>
+                </div>
+              </div>
+              <div className={style.formItem}>
+                <Label htmlFor='childrens' text={t('Number of Children')} />
+                <InputSelect
+                  id='childrens'
+                  placeholder={t('Number of Children')}
+                  options={childrensOpt}
+                  name='childrens'
+                  onChange={handleInput}
+                  valueKey='id'
+                  labelKey='name'
+                />
+              </div>
+              {
+                user.childrens && user.childrens > 0 && (
+                  //inputs for each child born based on number of children
+                  <div className={style.childrenBlock}>
+                    {
+                      Array.from({ length: user.childrens }, (_, index) => (
+                        <div key={index} className={style.formItem}>
+                          <div className={style.labelSpan}>
+                            <Label text={`${index + 1} ${t('children born')}`} htmlFor={`child_born_${index + 1}`} />
+                          </div>
+                          <div className={classes.dateInput}>
+                            <MuiPickersUtilsProvider utils={MomentUtils}>
+                              <DatePicker
+                                label={`${index + 1} ${t('children born')}`}
+                                value={user[`child_born_${index + 1}`] || null}
+                                onChange={(date) => handleInput({target: {name: `child_born_${index + 1}`, value: date}})}
+                                format='MMM, DD, YYYY'
+                                name={`child_born_${index + 1}`}
+                              />
+                            </MuiPickersUtilsProvider>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  )
+              }   
+            </div>
+          )
+        }
+
+        {
           (permissions.create_groups || permissions.create_places) && (
-            <div className={style.right}>
+            <div className={style.column}>
               {
                 permissions.create_groups && (
                   <>
@@ -543,24 +614,24 @@ const SecondStep = ({
             </div>
           )
         }
-
-        <DialogCreateSkill
-          open={skillOpen}
-          handleClose={() => {
-            setSkillOpen(false);
-          }}
-          title={t('Create new skill')}
-          buttonTitle={t('Create new skill')}
-          createSkill={createNewSkill}
-          permissions={permissions}
-        />
-        <ReactTooltip
-          id='selectdisabled'
-          className={style.selectdisabled__tooltip}
-          effect='solid'
-          placement='bottom'
-        />
       </div>
+
+      <DialogCreateSkill
+        open={skillOpen}
+        handleClose={() => {
+          setSkillOpen(false);
+        }}
+        title={t('Create new skill')}
+        buttonTitle={t('Create new skill')}
+        createSkill={createNewSkill}
+        permissions={permissions}
+      />
+      <ReactTooltip
+        id='selectdisabled'
+        className={style.selectdisabled__tooltip}
+        effect='solid'
+        placement='bottom'
+      />
 
       <div className={style.buttons}>
         <Button

@@ -93,6 +93,31 @@ const columns = [
     field: 'rfid',
     checked: true,
   },
+  {
+    label: 'Effective date',
+    field: 'effective_date',
+    checked: true,
+  },
+  {
+    label: '1st level approver',
+    field: 'approver_1',
+    checked: true,
+  },
+  {
+    label: '2nd level approver',
+    field: 'approver_2',
+    checked: true,
+  },
+  {
+    label: 'Number of Children',
+    field: 'childrens',
+    checked: true,
+  },
+  {
+    label: 'Children born',
+    field: 'child_born',
+    checked: true,
+  },
 ];
 
 const columnsWidth = {
@@ -109,9 +134,14 @@ const columnsWidth = {
   cost: 80,
   kiosk: 80,
   rfid: 150,
+  effective_date: 150,
+  approver_1: 200,
+  approver_2: 200,
+  childrens: 80,
+  child_born: 200,
 };
 const order = [
-  'status', 'name', 'surname', 'external_id', 'em_status', 'role', 'email', 'skill', 'group', 'subgroup', 'place', 'cost', 'kiosk', 'rfid',
+  'status', 'name', 'surname', 'external_id', 'em_status', 'role', 'email', 'skill', 'group', 'subgroup', 'place', 'cost', 'kiosk', 'rfid', 'effective_date', 'approver_1', 'approver_2', 'childrens', 'child_born'
 ];
 
 const useStyles = makeStyles(() => ({
@@ -477,13 +507,13 @@ export default function ImportAccounts({
         <div className={style.formControl}>
           <Label text={t('Example of CSV file contents')} />
           <div className={classes.textarea} style={{ backgroundColor }}>
-            <p>{`${t('status')};${t('name')};${t('surname')};${t('external_id')};${t('employment_status')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};${t('cost')};${t('kiosk')};${t('rfid')};`}</p>
+            <p>{`${t('status')};${t('name')};${t('surname')};${t('external_id')};${t('employment_status')};${t('role')};${t('email')};${t('skill')};${t('group')};${t('sub-group')};${t('assigned_place')};${t('cost')};${t('kiosk')};${t('rfid')};${t('effective_date')};${t('1st_level_approver')};${t('2nd_level_approver')};${t('number_of_children')};${t('children_born')}`}</p>
             <span>
               {t('EXAMPLE')}
               {':'}
             </span>
             {' '}
-            {`${t('active')};John;Doe;${t('123456')};${t('0.5')};${t('manager')};example@email.com;${t('test') + t('skill')};${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};${t('11,4')};${t('yes')};${t('rfidvalue')};`}
+            {`${t('active')};John;Doe;${t('123456')};${t('0.5')};${t('manager')};example@email.com;${t('test') + t('skill')};${t('test') + t('group')};${t('test') + t('subgroup') + t('name')};${t('Test') + t('Place')};${t('11,4')};${t('yes')};${t('rfidvalue')};${t('2023-01-01')};${t('approver1')};${t('approver2')};${t('2')};${t('2023-01-01')}, ${t('2023-02-01')}, ${t('2023-03-01')}`}
           </div>
         </div>
 

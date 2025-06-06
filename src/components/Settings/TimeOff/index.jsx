@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
@@ -12,6 +12,7 @@ import PageLayout from '../../Core/PageLayout';
 import Progress from '../../Core/Progress';
 import UserDataManagement from './UserDataManagement';
 import EmployeeManagement from './EmployeeManagement';
+import EmployeeManagementPolicy from './EmployeeManagementPolicy';
 import {
   AccountGroupsSelector, employeesSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
@@ -68,6 +69,7 @@ export default () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const history = useHistory();
   //const permissions = usePermissions(permissionsConfig);
 
   const isLoading = useSelector(isLoadingSelector);
@@ -98,6 +100,22 @@ export default () => {
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //check in url if here ?employee= parameter is present then set activeEmployee
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const employeeParam = params.get('employee');
+    if (employeeParam && employees?.length) {
+      const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
+      if (employee) {
+        dispatch(getPolicies(id, 'all', employee.id));
+        setActiveEmployee(employee);
+        dispatch(getRequestBehalf(id, 'all', 'all', employee.id));
+      }
+    }
+    // eslint-disable-next-line 
+  }, [employees]);
+
 
   useEffect(() => {
     if (!allPermissions?.length) {
@@ -176,10 +194,13 @@ export default () => {
   }
 
   const onRequestBehalf = (data, requestBehalfId) => {
-    if (requestBehalfId) {
-      dispatch(updateRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data, requestBehalfId));
-    } else {
-      dispatch(createRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, data));
+    const selectedPolicy = policies.find(({id}) => id === data.policy_id);
+    if (selectedPolicy) {
+      if (requestBehalfId) {
+        dispatch(updateRequestBehalf(id, selectedPolicy.time_off_id, data.policy_id, data, requestBehalfId));
+      } else {
+        dispatch(createRequestBehalf(id, selectedPolicy.time_off_id, data.policy_id, data));
+      }
     }
   }
 
@@ -204,9 +225,8 @@ export default () => {
     <MaynLayout>
       <Dashboard>
         {
-          activeDataManagement && !loading ? (
-            activeEmployee ? (
-              <EmployeeManagement
+          activeDataManagement && activeEmployee && !loading ? (
+              <EmployeeManagementPolicy
                 handleClose={() => setActiveEmployee(null)}
                 activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
                 activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
@@ -216,7 +236,22 @@ export default () => {
                 onRequestBehalf={onRequestBehalf}
                 onChangeRequestStatus={onChangeRequestStatus}
               />
-            ) : (
+          ) : null
+        }
+        {
+          !activeDataManagement && activeEmployee && !loading ? (
+              <EmployeeManagement
+                handleClose={() => { setActiveEmployee(null); history.push(`/${id}/settings/accounts/accounts-list`); }}
+                employee={activeEmployee}
+                requestBehalf={requestBehalf}
+                policies={policies}
+                onRequestBehalf={onRequestBehalf}
+                onChangeRequestStatus={onChangeRequestStatus}
+              />
+          ) : null
+        }
+        {
+          activeDataManagement && !activeEmployee && !loading ? (
               <UserDataManagement
                 handleClose={() => setActiveDataManagement(null)}
                 activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
@@ -228,98 +263,100 @@ export default () => {
                 onAdjustTimeUsed={onAdjustTimeUsed}
                 handleOpenEmployee={onOpenEmployee}
               />
-            )
-          ) : (
-          <>
-            <TitleBlock
-              title={t('Time Off')}
-            >
-              <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
-            </TitleBlock>
-            <PageLayout>
-              {
-                isLoading ? <Progress />
-                  : (
-                    <TimeOffBlock
-                      time_offs={time_offs}
-                      activeTimeOff={time_offs.find(({id}) => id === activeTimeOff.id)}
-                      activePolicy={policies.find(({id}) => id === activePolicy?.id)}
-                      setActiveTimeOff={setActiveTimeOff}
-                      createNewTimeOff={() => setNewTimeOffOpen(true)}
-                      setActivePolicy={setActivePolicy}
-                      createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
-                      remove={removeTimeOff}
-                      loading={loading}
-                      policies={policies}
-                      setEditVisible={setEditVisible}
-                      user={user}
-                      onEditPolicy={onEditPolicy}
-                      onDeletePolicy={removePolicy}
-                      onDuplicatePolicy={handleDuplicatePolicy}
-                      handleEditPolicy={handleEditPolicy}
-                      handleEditPolicyEmployees={handleEditPolicyEmployees}
-                      handleUsersDataManagement={handleUsersDataManagement}
-                      employees={employees}
-                      groups={groups}
-                    />
-                  )
-              }
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                ContentProps={{
-                  classes: {
-                    root: typeSnackbar === 'error' ? classes.error : classes.success,
-                  },
-                }}
-                severity='error'
-                open={isSnackbar}
-                message={textSnackbar}
-                key='rigth'
-              />
-              <AddEditTimeOff
-                open={editVisible}
-                handleClose={() => {
-                  setEditVisible(false);
-                }}
-                initialValue={activeTimeOff ? activeTimeOff : {}}
-                title={`${t('Edit')} ${activeTimeOff ? activeTimeOff.name : ''} ${t('Policy Type')}`}
-                buttonTitle={t('Save Changes')}
-                onSubmit={changeTimeOff}
-              />
-              <AddEditTimeOff
-                open={newTimeOffOpen}
-                handleClose={() => {
-                  setNewTimeOffOpen(false);
-                }}
-                title={t('Create New Policy Type')}
-                onSubmit={createNewTimeOff}
-                buttonTitle={t('Submit')}
-              />
-              <AddEditPolicy
-                open={newPolicyOpen}
-                handleClose={() => {
-                  setNewPolicyOpen(false);
-                }}
-                initialValue={{ ...(activePolicy || {}), type: activeTimeOff?.name }}
-                title={activePolicy ? `${t('Edit')} ${activePolicy.name} ${t('Policy')}` : t('Create New Policy')}
-                onSubmit={activePolicy ? editPolicy : createNewPolicy}
-                buttonTitle={activePolicy ? t('Save Changes') : t('Submit')}
-              />
-              <DuplicatePolicy
-                open={duplicatePolicyOpen}
-                handleClose={() => {
-                  setDuplicatePolicyOpen(false);
-                }}
-                title={`${t('Duplicate')} ${activePolicy?.name} ${t('Policy')}`}
-                onSubmit={onDuplicatePolicy}
-                buttonTitle={t('Duplicate')}
-              />
-            </PageLayout>
+            ) : null
+        }
+        {
+          !activeDataManagement && !activeEmployee ? (
+            <>
+              <TitleBlock
+                title={t('Time Off')}
+              >
+                <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
+              </TitleBlock>
+              <PageLayout>
+                {
+                  isLoading ? <Progress />
+                    : (
+                      <TimeOffBlock
+                        time_offs={time_offs}
+                        activeTimeOff={time_offs.find(({id}) => id === activeTimeOff.id)}
+                        activePolicy={policies.find(({id}) => id === activePolicy?.id)}
+                        setActiveTimeOff={setActiveTimeOff}
+                        createNewTimeOff={() => setNewTimeOffOpen(true)}
+                        setActivePolicy={setActivePolicy}
+                        createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
+                        remove={removeTimeOff}
+                        loading={loading}
+                        policies={policies}
+                        setEditVisible={setEditVisible}
+                        user={user}
+                        onEditPolicy={onEditPolicy}
+                        onDeletePolicy={removePolicy}
+                        onDuplicatePolicy={handleDuplicatePolicy}
+                        handleEditPolicy={handleEditPolicy}
+                        handleEditPolicyEmployees={handleEditPolicyEmployees}
+                        handleUsersDataManagement={handleUsersDataManagement}
+                        employees={employees}
+                        groups={groups}
+                      />
+                    )
+                }
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  ContentProps={{
+                    classes: {
+                      root: typeSnackbar === 'error' ? classes.error : classes.success,
+                    },
+                  }}
+                  severity='error'
+                  open={isSnackbar}
+                  message={textSnackbar}
+                  key='rigth'
+                />
+                <AddEditTimeOff
+                  open={editVisible}
+                  handleClose={() => {
+                    setEditVisible(false);
+                  }}
+                  initialValue={activeTimeOff ? activeTimeOff : {}}
+                  title={`${t('Edit')} ${activeTimeOff ? activeTimeOff.name : ''} ${t('Policy Type')}`}
+                  buttonTitle={t('Save Changes')}
+                  onSubmit={changeTimeOff}
+                />
+                <AddEditTimeOff
+                  open={newTimeOffOpen}
+                  handleClose={() => {
+                    setNewTimeOffOpen(false);
+                  }}
+                  title={t('Create New Policy Type')}
+                  onSubmit={createNewTimeOff}
+                  buttonTitle={t('Submit')}
+                />
+                <AddEditPolicy
+                  open={newPolicyOpen}
+                  handleClose={() => {
+                    setNewPolicyOpen(false);
+                  }}
+                  initialValue={{ ...(activePolicy || {}), type: activeTimeOff?.name }}
+                  title={activePolicy ? `${t('Edit')} ${activePolicy.name} ${t('Policy')}` : t('Create New Policy')}
+                  onSubmit={activePolicy ? editPolicy : createNewPolicy}
+                  buttonTitle={activePolicy ? t('Save Changes') : t('Submit')}
+                />
+                <DuplicatePolicy
+                  open={duplicatePolicyOpen}
+                  handleClose={() => {
+                    setDuplicatePolicyOpen(false);
+                  }}
+                  title={`${t('Duplicate')} ${activePolicy?.name} ${t('Policy')}`}
+                  onSubmit={onDuplicatePolicy}
+                  buttonTitle={t('Duplicate')}
+                />
+              </PageLayout>
           </>
-        )
+        ) : null
       }
       
       </Dashboard>

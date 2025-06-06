@@ -1,13 +1,13 @@
 import React, {
   useState, useEffect, useMemo, useCallback,
 } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import moment from 'moment';
-import _ from 'lodash';
+import _, { max } from 'lodash';
 
 import MaynLayout from '../../../Core/MainLayout';
 import PageLayout from '../../../Core/PageLayout';
@@ -119,6 +119,21 @@ const columns = [
     checked: true,
   },
   { label: 'Created on', field: 'created_at', checked: true },
+
+  { label: 'Effective date', field: 'effective_date', checked: true },
+  { label: 'Years in service', field: 'years_in_service', checked: true },
+  { label: 'Number of children', field: 'childrens', checked: true },
+  { label: '1 children born', field: 'child_born_1', checked: true },
+  { label: '2 children born', field: 'child_born_2', checked: true },
+  { label: '3 children born', field: 'child_born_3', checked: true },
+  { label: '4 children born', field: 'child_born_4', checked: true },
+  { label: '5 children born', field: 'child_born_5', checked: true },
+  { label: '6 children born', field: 'child_born_6', checked: true },
+  { label: '7 children born', field: 'child_born_7', checked: true },
+  { label: '8 children born', field: 'child_born_8', checked: true },
+  { label: '9 children born', field: 'child_born_9', checked: true },
+  { label: '10 children born', field: 'child_born_10', checked: true },
+
   { label: 'Status change', field: 'updated_at', checked: true },
 ];
 
@@ -174,6 +189,7 @@ export default function AccountsList() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const history = useHistory();
 
   const isLoading = useSelector(isLoadingSelector);
   const isSnackbar = useSelector(isShowSnackbar);
@@ -321,8 +337,33 @@ export default function AccountsList() {
       if ((!permissions.schedule_shift || !schedule.use_accumulated || schedule.accumulated_from_country) && column.field === 'hours_demand') {
         return false;
       }
-      if ((column.field === 'approver_1' || column.field === 'approver_2') && !permissions.time_off) {
+      if ((
+          column.field === 'approver_1' ||
+          column.field === 'approver_2' ||
+          column.field === 'effective_date' ||
+          column.field === 'years_in_service' ||
+          column.field === 'childrens' ||
+          column.field === 'child_born_1' ||
+          column.field === 'child_born_2' ||
+          column.field === 'child_born_3' ||
+          column.field === 'child_born_4' ||
+          column.field === 'child_born_5' ||
+          column.field === 'child_born_6' ||
+          column.field === 'child_born_7' ||
+          column.field === 'child_born_8' ||
+          column.field === 'child_born_9' ||
+          column.field === 'child_born_10'
+        ) && !permissions.time_off) {
         return false;
+      } else {
+        //check if child_born_X less than childrens
+        if (column.field.startsWith('child_born_')) {
+          const childIndex = parseInt(column.field.split('_')[2], 10);
+          const childrensCount = max(employeesAll.map((empl) => empl.childrens)) || 0;
+          if (childIndex > childrensCount) {
+            return false;
+          }
+        }
       }
       if (column.field === 'external_id' && !exist_external_id) {
         return false;
@@ -531,6 +572,11 @@ export default function AccountsList() {
     setColSearch({ ...colSearch, [column]: value });
   }
 
+  const onOpenTimeOff = (employeeId) => {
+    const mainPath = `/${id}/settings`;
+    history.push(`${mainPath}/time-off?employee=${employeeId}`);
+  }
+
   useEffect(() => {
     if (employees.length && checkedItems.length === employees.length) {
       setAll(true);
@@ -595,6 +641,7 @@ export default function AccountsList() {
                     accountList
                     colSearch={colSearch}
                     onSearch={onColumnSearch}
+                    timeOffRow={permissions.time_off ? onOpenTimeOff : undefined}
                   />
                 </>
               )

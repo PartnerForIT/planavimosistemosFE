@@ -63,6 +63,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  &[disabled]::placeholder {
+    color: #bec5ce;
+  }
 }
 
 .customSelectOpened {

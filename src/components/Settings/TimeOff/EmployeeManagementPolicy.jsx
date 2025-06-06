@@ -24,8 +24,10 @@ import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9';
 
 import ReactTooltip from 'react-tooltip';
 
-function EmployeeManagement({
+function EmployeeManagementPolicy({
   handleClose,
+  activeTimeOff,
+  activePolicy,
   employee,
   requestBehalf,
   policies,
@@ -44,7 +46,9 @@ function EmployeeManagement({
 
   return (
     <>
-      <TitleBlock>
+      <TitleBlock
+        title={`${activeTimeOff.name} / ${activePolicy.name}`}
+      >
         <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
         <div
           className={classes.titleBackButton}
@@ -263,8 +267,8 @@ function EmployeeManagement({
         }}
         buttonTitle={t('Submit')}
         employees={[employee]}
-        policies={policies}
-        initialValue={{...requestBehalfEditOpen}}
+        policies={activeTimeOff.policies}
+        initialValue={{policy_id: activePolicy.id, ...requestBehalfEditOpen}}
       />
       <ReactTooltip
         id='back_button'
@@ -280,4 +284,4 @@ function EmployeeManagement({
   );
 }
 
-export default EmployeeManagement;
+export default EmployeeManagementPolicy;

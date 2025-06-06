@@ -1357,5 +1357,12 @@
         "-1h before holidays": "-1val prieš šventes",
         "Unpaid hours": "Neapmokamos val.",
 
-        "Reject": "Atmesti"
+        "Reject": "Atmesti",
+
+        "Effective date": "Įsidarbinimo data",
+        "Years in service": "Išdirbti metai",
+        "Number of children": "Vaikų skaičius",
+        "children born": "vaikas gimė",
+        "Number of Children": "Vaikų skaičius",
+        "Please select 1st level approver": "Pirma pasirinkite 1o lygio tvirtintoją"
 }

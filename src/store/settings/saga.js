@@ -1427,7 +1427,7 @@ function* patchTimeOff(action) {
 
 function* loadPolicies(action) {
   try {
-    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy`, token());
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy${action.employeeId ? '/employee/'+action.employeeId : ''}`, token());
     yield put(getPoliciesSuccess(data));
   } catch (e) {
     yield put(getPoliciesError(e));

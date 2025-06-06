@@ -1041,10 +1041,11 @@ export const updateTimeOffError = (data) => ({
 });
 
 
-export const getPolicies = (companyId, timeOffId) => ({
+export const getPolicies = (companyId, timeOffId, employeeId) => ({
   type: GET_POLICIES,
   companyId,
   timeOffId,
+  employeeId,
 });
 
 export const getPoliciesSuccess = (data) => ({
