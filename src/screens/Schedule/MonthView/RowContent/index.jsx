@@ -38,7 +38,6 @@ const RowContent = ({
 
   useEffect(() => {
     ReactTooltip.rebuild();
-    console.log('RowContent re-rendered');
   });
 
   const newFoundItem = (day) => {
