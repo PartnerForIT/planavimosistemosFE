@@ -1364,5 +1364,11 @@
         "Number of children": "Vaikų skaičius",
         "children born": "vaikas gimė",
         "Number of Children": "Vaikų skaičius",
-        "Please select 1st level approver": "Pirma pasirinkite 1o lygio tvirtintoją"
+        "Please select 1st level approver": "Pirma pasirinkite 1o lygio tvirtintoją",
+
+        "Incease balance": "Padidinti balansą",
+        "Decrease balance": "Sumažinti balansą",
+
+        "Add to used": "Pridėti prie panaudoto",
+        "Subtract from used": "Atimti iš panaudoto"
 }

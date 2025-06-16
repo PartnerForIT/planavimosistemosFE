@@ -407,7 +407,7 @@ const SecondStep = ({
                     <DatePicker
                       label={t('Effective date')}
                       value={user.effective_date || null}
-                      onChange={(date) => handleInput({target: {name: 'effective_date', value: date}})}
+                      onChange={(date) => handleInput({target: {name: 'effective_date', value: date.format('YYYY-MM-DD')}})}
                       format='MMM, DD, YYYY'
                       name="effective_date"
                     />
@@ -441,7 +441,7 @@ const SecondStep = ({
                               <DatePicker
                                 label={`${index + 1} ${t('children born')}`}
                                 value={user[`child_born_${index + 1}`] || null}
-                                onChange={(date) => handleInput({target: {name: `child_born_${index + 1}`, value: date}})}
+                                onChange={(date) => handleInput({target: {name: `child_born_${index + 1}`, value: date.format('YYYY-MM-DD')}})}
                                 format='MMM, DD, YYYY'
                                 name={`child_born_${index + 1}`}
                               />

@@ -43,18 +43,21 @@ export default function Filter({
         
         <Button
           onClick={handleRequestBehalf}
+          primary
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Request on behalf')}
         </Button>
         <Button
           onClick={handleAdjustBalance}
+          primary
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Adjust balance')}
         </Button>
         <Button
           onClick={handleAdjustTimeUsed}
+          primary
           disabled={!checkedItems.length > 0 && !selectedItem.id}
         >
           {t('Adjust time used')}

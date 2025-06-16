@@ -125,7 +125,7 @@ export default ({
                   <DatePicker
                     label={t('Start date')}
                     value={values.from}
-                    onChange={(date) => handleChange({target: {name: 'from', value: date}})}
+                    onChange={(date) => handleChange({target: {name: 'from', value: date.format('YYYY-MM-DD')}})}
                     format='MMM, DD, YYYY'
                     name="from"
                   />
@@ -141,7 +141,7 @@ export default ({
                   <DatePicker
                     label={t('To date')}
                     value={values.to}
-                    onChange={(date) => handleChange({target: {name: 'to', value: date}})}
+                    onChange={(date) => handleChange({target: {name: 'to', value: date.format('YYYY-MM-DD')}})}
                     format='MMM, DD, YYYY'
                     name="to"
                   />
