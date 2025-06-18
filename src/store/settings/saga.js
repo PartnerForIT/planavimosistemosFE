@@ -1680,9 +1680,13 @@ function* createAdjustBalance(action) {
       policyId,
       data,
     } = action;
+    const policies = yield select((state) => state.settings.policies ?? []);
 
-    yield call(axios.post,
+    const { data: responseData } = yield call(axios.post,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/adjust-balance/store`, data, token());
+      
+    yield put(authCheck());
+    yield put(getPoliciesSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, employees: responseData?.employees || [] } : policy))));
 
     yield put(addSnackbar('Added Adjust Balance successfully', 'success'));
     yield delay(4000);

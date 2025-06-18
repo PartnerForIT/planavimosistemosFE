@@ -128,7 +128,7 @@ export default ({
         return arr;
       }
     );
-  }, [initialValue, open]);
+  }, [initialValue, open, employees, policies, formatDate]);
 
   return (
     <DialogClear

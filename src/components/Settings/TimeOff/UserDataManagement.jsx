@@ -150,6 +150,7 @@ function UserDataManagement({
     if (Array.isArray(employeesList)) {
       setEmployeesAll([...employeesList]);
     }
+    setCheckedItems([]);
   }, [employeesList]);
 
   const employees = useMemo(() => {
