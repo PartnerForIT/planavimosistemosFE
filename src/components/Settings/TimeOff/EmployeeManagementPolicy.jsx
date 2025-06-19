@@ -12,17 +12,9 @@ import classsnames from 'classnames';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 import CheckIcon from '../../Icons/CheckIcon';
 import RejectIcon from '../../Icons/RejectIcon';
-import TimeOffSymbol1 from '../../Icons/TimeOffSymbol1';
-import TimeOffSymbol2 from '../../Icons/TimeOffSymbol2';
-import TimeOffSymbol3 from '../../Icons/TimeOffSymbol3';
-import TimeOffSymbol4 from '../../Icons/TimeOffSymbol4';
-import TimeOffSymbol5 from '../../Icons/TimeOffSymbol5';
-import TimeOffSymbol6 from '../../Icons/TimeOffSymbol6';
-import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7';
-import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8';
-import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9';
 
 import ReactTooltip from 'react-tooltip';
+import PoliciesActivityTable from './TimeOffDetails/PoliciesActivityTable';
 
 function EmployeeManagementPolicy({
   handleClose,
@@ -38,7 +30,6 @@ function EmployeeManagementPolicy({
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
   const [requestBehalfEditOpen, setRequestBehalfEditOpen] = useState(null);
   const requests = Array.isArray(requestBehalf) ? requestBehalf : [];
-  const policiesArray = Array.isArray(policies) ? policies.filter((policy) => policy.employees.find((emp) => emp.id === employee.id)) : [];
 
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -183,75 +174,9 @@ function EmployeeManagementPolicy({
             ) : null
           }   
         </div>
-
-        <div className={classes.container}>
-          <div className={classes.containerTitle}>
-            {t(' Policies')}
-          </div>
-          {
-            policiesArray.length > 0 ? (
-              <div className={classes.policiesTable}>
-                <div className={classes.policiesTableHeader}>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Policy')}
-                  </div>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Current cycle')}
-                  </div>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Cycle allowance')}
-                  </div>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Accrued')}
-                  </div>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Taken')}
-                  </div>
-                  <div className={classes.policiesTableHeaderCol}>
-                    {t('Balance')}
-                  </div>
-                </div>
-                {policiesArray.map((policy) => (
-                  <div key={policy.id} className={classes.policiesTableRow}>
-                    <div className={classes.policiesTableCol}>
-                      <div className={classes.tableName}>
-                        { (policy.ready && policy.symbol && policy.color) ? (
-                          <span className={classes.tableSymbol} style={{ backgroundColor: policy.color }}>
-                            {policy.symbol === '1' && <TimeOffSymbol1 />}
-                            {policy.symbol === '2' && <TimeOffSymbol2 />}
-                            {policy.symbol === '3' && <TimeOffSymbol3 />}
-                            {policy.symbol === '4' && <TimeOffSymbol4 />}
-                            {policy.symbol === '5' && <TimeOffSymbol5 />}
-                            {policy.symbol === '6' && <TimeOffSymbol6 />}
-                            {policy.symbol === '7' && <TimeOffSymbol7 />}
-                            {policy.symbol === '8' && <TimeOffSymbol8 />}
-                            {policy.symbol === '9' && <TimeOffSymbol9 />}
-                          </span>
-                        ) : null }
-                        {policy.name}
-                      </div>
-                    </div>
-                    <div className={classes.policiesTableCol}>
-                      
-                    </div>
-                    <div className={classes.policiesTableCol}>
-                      
-                    </div>
-                    <div className={classes.policiesTableCol}>
-
-                    </div>
-                    <div className={classes.policiesTableCol}>
-                      
-                    </div>
-                    <div className={classes.policiesTableCol}>
-                      
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : null
-          }
-        </div>
+        <PoliciesActivityTable
+          employee={employee}
+        />
       </PageLayout>
       <RequestBehalf
         open={!!(requestBehalfOpen || requestBehalfEditOpen)}

@@ -76,7 +76,7 @@ const units = [
   { code: 'days', name: 'Days' },
 ];
 
-function TimeOffDetails({
+function PoliciesTable({
   activeTimeOff,
   loading,
   createNewPolicy,
@@ -172,4 +172,4 @@ function TimeOffDetails({
   );
 }
 
-export default TimeOffDetails;
+export default PoliciesTable;

@@ -652,7 +652,7 @@ $arrow-size: 21px;
 .policiesTableHeader,
 .policiesTableRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 24px 2fr 2fr 1fr 1fr 1fr 1fr;
   padding: 8px 12px;
   align-items: center;
 }
@@ -677,10 +677,18 @@ $arrow-size: 21px;
 
 .policiesTableCol,
 .policiesTableHeaderCol {
-  padding: 6px 24px;
+  padding: 6px 12px;
   overflow-wrap: anywhere;
   font-size: 14px;
   font-weight: 500;
+
+  &.policiesTableColExpand {
+    padding: 6px 0;
+  }
+
+  &.policiesTableColGray {
+    color: #808F94;
+  }
 }
 
 .tooltip_back {
@@ -689,4 +697,85 @@ $arrow-size: 21px;
 
 .tooltip {
   opacity: 1 !important;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.policiesTableExpand {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  svg {
+    width: 28px;
+    height: 28px;
+
+    rect {
+      display: none;
+    }
+
+    path {
+      stroke: #69767A;
+    }
+  }
+
+  &.active {
+    transform: rotate(90deg);
+  }
+}
+
+.expandedRow {
+  padding: 16px 24px;
+  border-bottom: 1px solid #E6EEF6;
+}
+
+.expandedContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expandedInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  strong {
+    color: #808F94;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  div {
+    font-weight: 500;
+    font-size: 14px;
+    color: #303030;
+    margin-bottom: 10px;
+  }
+}
+
+.actionsRow {
+  margin-top: 12px;
+  display: flex;
+
+  div {
+    flex: 1;
+  }
+  
+  &Buttons {
+    margin-top: 12px;
+    padding-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: 1px solid #E6EEF6;
+  }
 }
