@@ -13,10 +13,10 @@ jobs:
         working-directory: /grownu-app
     steps:
     - name: Change branch to staging
-      run: cd grownu-fe && sudo git checkout staging
+      run: cd grownu-fe && GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe" sudo git checkout staging
 
     - name: Code update
-      run: sudo git pull origin staging
+      run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe" sudo git pull origin staging
 
     - name: Run build process for FrontEnd app
       run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app node:12.16.1-alpine npm run build
