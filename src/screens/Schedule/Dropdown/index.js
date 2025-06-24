@@ -13,12 +13,13 @@ import ItemMenu from './MenuItem';
 const Dropdown = forwardRef(({
   children,
   light,
+  initalValue = false,
   cancel,
   onCancel,
   buttonClass,
   onToggle,
 }, ref) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initalValue);
 
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);

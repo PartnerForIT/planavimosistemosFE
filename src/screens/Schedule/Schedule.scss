@@ -198,7 +198,7 @@
     bottom: 0;
 
     &.marked {
-      background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(59,59,59, 0.3) 5px, rgba(59,59,59, 0.3) 10px);
+      background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(59,59,59, 0.1) 5px, rgba(59,59,59, 0.1) 10px);
       //z-index: 4;
     }
 
@@ -321,7 +321,7 @@
     font-weight: normal;
   }
 
-  .fc-week-view {
+  .fc-week-view, .fc-month-view {
     .fc-timeline-slot-cushion {
       &:hover {
         cursor: pointer;
@@ -401,6 +401,10 @@
           div#dropdownButton {
             visibility: visible;
           }
+        }
+
+        &.is-last-day-of-month {
+          // width: 100px;
         }
 
         &.is-empty-manual {
@@ -1077,6 +1081,20 @@
   }
 }
 .cell {
+  position: relative;
+  overflow: hidden;
+  &_past_day:after {
+    content: '';
+    display: block;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
+    z-index: 2;
+    opacity: 0.2;
+  }
   &_holiday {
     overflow: hidden;
     

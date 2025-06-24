@@ -200,7 +200,7 @@ export default ({
                 ))
               }
             </div>
-            <div className={classes.footer__empty} />
+            {/* <div className={classes.footer__empty} /> */}
           </>
         )
       }

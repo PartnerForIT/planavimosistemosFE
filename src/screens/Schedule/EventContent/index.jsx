@@ -28,6 +28,17 @@ const permissionsConfig = [
   },
 ];
 
+const convertMinutesToHoursAndMinutes = function(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  
+  // Format the result as "hh:mm"
+  const formattedHours = hours < 10 ? `0${hours}` : hours;
+  const formattedMinutes = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+  
+  return `${formattedHours}:${formattedMinutes}`;
+}
+
 const EventContent = ({
   id,
   shiftId,
@@ -69,7 +80,10 @@ const EventContent = ({
   lineColor,
   handleCopyTool,
   copyTool,
-  handleAddHistory
+  handleAddHistory,
+  nightDuration,
+  title,
+  showHoursCount,
 }) => {
 
   const { t } = useTranslation();
@@ -88,9 +102,9 @@ const EventContent = ({
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    Tooltip.rebuild();
-  }, []);
+  // useEffect(() => {
+  //   Tooltip.rebuild();
+  // }, []);
 
   useEffect(() => {
     if (content === 'addWorkingTime') {
@@ -112,6 +126,7 @@ const EventContent = ({
       [styles.activeDrag]: activeDrag,
       'activeDrag': activeDrag,
       [styles.eventContent__removeTimelines]: removeTimelines,
+      [styles.monthCell]: viewType === TIMELINE.MONTH,
     },
   );
 
@@ -205,6 +220,7 @@ const EventContent = ({
     }
     setContent('menu');
     handleCopyTool({start, end});
+    modalRef.current.close();
   };
   const openAddWorkingTime = () => {
     setContent('addWorkingTime');
@@ -220,6 +236,7 @@ const EventContent = ({
   };
   const handleDeleteTimeline = () => {
     onDeleteTimeline({ id, shiftId });
+    modalRef.current.close()
   };
   const handleEmptyTimeline = () => {
     onEmptyTimeline({ id, shiftId });
@@ -242,6 +259,7 @@ const EventContent = ({
     }
 
     onChangeWorkingTime({ id, shiftId, time });
+    modalRef.current.close();
   };
   const handleAddWorkingTime = (value) => {
     const timeStart = value.start.split(':');
@@ -261,6 +279,7 @@ const EventContent = ({
     }
 
     addTimeline({ id, shiftId, time });
+    modalAddRef.current.close()
   };
   const handleChangeEmployee = (nextEmployeeId) => {
     onChangeEmployee({
@@ -268,6 +287,7 @@ const EventContent = ({
       employeeId: nextEmployeeId,
       id,
     });
+    modalRef.current.close();
   };
   const tooltipType = () => {
     let type = 'time';
@@ -288,16 +308,7 @@ const EventContent = ({
     return current ? current.comment : false;
   }
 
-  const convertMinutesToHoursAndMinutes = function(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    
-    // Format the result as "hh:mm"
-    const formattedHours = hours < 10 ? `0${hours}` : hours;
-    const formattedMinutes = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
-    
-    return `${formattedHours}:${formattedMinutes}`;
-  }
+  
 
   const currency = useMemo(
     () => {
@@ -309,7 +320,7 @@ const EventContent = ({
       return '';
     },
     [company.currency, currencies],
-  );
+  )
 
   const tooltipContent = () => {
     return (
@@ -322,7 +333,13 @@ const EventContent = ({
       + `</div>`
     )
   }
+
+  // if (nightDuration && !empty_manual) {
+  //   console.log(employeeId, title, resourceId, employeeName, minutes, empty)
+  // }
+
   
+
   return (
     <div
       className={classes}
@@ -333,212 +350,230 @@ const EventContent = ({
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
-      { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
+      <div style={{display: 'flex', alignItems: 'flex-start', flex: 1, width: '100%'}}>
+        { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div
             className={styles.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
-        )
-      }
-      { !copy_event && !activeDrag && !empty_manual && startOverlap() > 0 && (
-          <div
-            className={styles.eventContent__night_start}
-            style={{ width: `${startOverlap()}%` }}
-          ></div>
-        )
-      }
-      {/* {
-        !empty_manual && (
-        (!!newEmployee?.name || empty)
-          ? (newEmployee?.photo === null || empty)
-            ? ''
-            :<img
-                    alt='avatar'
-                    src={newEmployee?.photo}
-                    className={styles.eventContent__avatar}
-                />
-            :photo && (
-            <img
-                alt='avatar'
-                src={photo}
-                className={styles.eventContent__avatar}
-            />
-       
-        )
-        )
-      } */}
-      { !copy_event && removeTimelines && !empty_manual && (
-          <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
-        )
-      }
-      {
-          (viewType === TIMELINE.DAY || viewType === TIMELINE.WEEK) && employeeName && (
+          )
+        }
+        { !copy_event && !activeDrag && !empty_manual && startOverlap() > 0 && (
+            <div
+              className={styles.eventContent__night_start}
+              style={{ width: `${startOverlap()}%` }}
+            ></div>
+          )
+        }
+        {/* {
+          night_minutes
+            ? (
+              <div className={styles.eventContent__night_minutes}>
+                {convertMinutesToHoursAndMinutes(night_minutes)}
+              </div>
+            )
+            : null
+        } */}
+        {/* {
+          !empty_manual && (
+          (!!newEmployee?.name || empty)
+            ? (newEmployee?.photo === null || empty)
+              ? ''
+              :<img
+                      alt='avatar'
+                      src={newEmployee?.photo}
+                      className={styles.eventContent__avatar}
+                  />
+              :photo && (
+              <img
+                  alt='avatar'
+                  src={photo}
+                  className={styles.eventContent__avatar}
+              />
+        
+          )
+          )
+        } */}
+        { !copy_event && removeTimelines && !empty_manual && employeeName !== 'Empty' && !showHoursCount && (
+            <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
+          )
+        }
+        {
+            employeeName && (
+              (empty_manual)
+              ? (copyTool)
+                ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span> : null
+                : (editPermissions && moment(start).isSameOrAfter(moment().subtract(1, 'day')) && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+              : <span className={styles.eventContent__title} >
+                {
+                  copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+                }
+                {
+                  (!!newEmployee?.name)
+                    ? showHoursCount
+                      ? <span>{minutes / 60}</span>
+                      : <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
+                    : (employeeName === 'Empty' || empty)
+                        ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> : null
+                        :<>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
 
-            (empty_manual)
-            ? (copyTool)
-              ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span>
-              : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
-            : <span className={styles.eventContent__title} >
+                  
+                }
+              </span>
+          )
+        }
+
+        <div className={styles.eventContent__leftSpace} />
+        {
+          !copy_event && newEmployee?.name !== oldEmployee?.name && (
+            <ReplacedEmployee
+              newEmployee={newEmployee}
+              oldEmployee={oldEmployee}
+              onDelete={handleDeleteTimeline}
+              onChangeEmployee={openChangeEmployee}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              isShown={isCompleted ? isShown : isOpen}
+              isToday={isCompleted}
+            />
+          )
+        }
+        {
+          content === 'addWorkingTime' && (
+            <Dropdown
+              cancel={content !== 'menu'}
+              onCancel={() => setContent('menu')}
+              ref={modalAddRef}
+              // buttonClass={styles.eventContent__invisible}
+            >
+              <AddWorkingTime
+                onClose={() => setContent('menu')}
+                photo={photo}
+                jobTypeName={jobTypeName}
+                employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                start={start}
+                end={end}
+                onChangeTime={handleAddWorkingTime}
+              />
+            </Dropdown>
+          )
+        }
+        {
+          !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
+            <Dropdown
+              light
+              cancel={content !== 'menu'}
+              onCancel={handleCancel}
+              ref={modalRef}
+            >
               {
-                copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
+                content === 'changeEmployee' && (
+                  <ChangeEmployee
+                    photo={photo}
+                    jobTypeName={jobTypeName}
+                    employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                    onChangeEmployee={handleChangeEmployee}
+                    unavailableEmployees={unavailableEmployees}
+                  />
+                )
               }
               {
-                (!!newEmployee?.name)
-
-                  ? <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
-                    :(employeeName === 'Empty' || empty)
-                    ?<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    :<>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
-
-                
+                content === 'changeWorkingTime' && (
+                  <ChangeWorkingTime
+                    photo={photo}
+                    jobTypeName={jobTypeName}
+                    employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
+                    start={start}
+                    end={end}
+                    onChangeTime={handleChangeWorkingTime}
+                  />
+                )
               }
-            </span>
-          
-        )
-      }
-
-      <div className={styles.eventContent__leftSpace} />
-      {
-        !copy_event && newEmployee?.name !== oldEmployee?.name && (
-          <ReplacedEmployee
-            newEmployee={newEmployee}
-            oldEmployee={oldEmployee}
-            onDelete={handleDeleteTimeline}
-            onChangeEmployee={openChangeEmployee}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            isShown={isCompleted ? isShown : isOpen}
-            isToday={isCompleted}
-          />
-        )
-      }
-      {
-        content === 'addWorkingTime' && (
-          <Dropdown
-            cancel={content !== 'menu'}
-            onCancel={() => setContent('menu')}
-            ref={modalAddRef}
-            buttonClass={styles.eventContent__invisible}
-          >
-            <AddWorkingTime
-              onClose={() => setContent('menu')}
-              photo={photo}
-              jobTypeName={jobTypeName}
-              employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-              start={start}
-              end={end}
-              onChangeTime={handleAddWorkingTime}
-            />
-          </Dropdown>
-        )
-      }
-      {
-        !copy_event && withMenu && !empty && !empty_manual && (employeeName !== 'Empty' || newEmployee?.name) ? (
-          <Dropdown
-            light
-            cancel={content !== 'menu'}
-            onCancel={handleCancel}
-            ref={modalRef}
-          >
-            {
-              content === 'changeEmployee' && (
-                <ChangeEmployee
-                  photo={photo}
-                  jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-                  onChangeEmployee={handleChangeEmployee}
-                  unavailableEmployees={unavailableEmployees}
-                />
-              )
-            }
-            {
-              content === 'changeWorkingTime' && (
-                <ChangeWorkingTime
-                  photo={photo}
-                  jobTypeName={jobTypeName}
-                  employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-                  start={start}
-                  end={end}
-                  onChangeTime={handleChangeWorkingTime}
-                />
-              )
-            }
-            {
-              content === 'menu' && (
-                <>
-                  <div className={styles.eventContent__userInfo}>
-                    {
-                      (!!newEmployee?.name || empty)
-                        ? (newEmployee?.photo === null || empty)
-                          ? ''
-                          :<img
-                                  alt='avatar'
-                                  src={newEmployee?.photo}
-                                  className={styles.eventContent__userInfo__avatar}
-                              />
-                          :photo && (
-                          <img
-                              alt='avatar'
-                              src={photo}
-                              className={styles.eventContent__userInfo__avatar}
-                          />
-                      )
-                    }
-                    <div className={styles.eventContent__userInfo__right}>
-                      <div className={styles.eventContent__userInfo__right__fullName}>
-                        {newEmployee?.name ? newEmployee?.name : employeeName}
-                      </div>
-                      <div className={styles.eventContent__userInfo__right__jobType}>
-                        {jobTypeName}
+              {
+                content === 'menu' && (
+                  <>
+                    <div className={styles.eventContent__userInfo}>
+                      {
+                        (!!newEmployee?.name || empty)
+                          ? (newEmployee?.photo === null || empty)
+                            ? ''
+                            :<img
+                                    alt='avatar'
+                                    src={newEmployee?.photo}
+                                    className={styles.eventContent__userInfo__avatar}
+                                />
+                            :photo && (
+                            <img
+                                alt='avatar'
+                                src={photo}
+                                className={styles.eventContent__userInfo__avatar}
+                            />
+                        )
+                      }
+                      <div className={styles.eventContent__userInfo__right}>
+                        <div className={styles.eventContent__userInfo__right__fullName}>
+                          {newEmployee?.name ? newEmployee?.name : employeeName}
+                        </div>
+                        <div className={styles.eventContent__userInfo__right__jobType}>
+                          {jobTypeName}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={styles.eventContent__label}>
-                    {t('Working Time')}
-                  </div>
-                  <div className={styles.eventContent__value}>
-                    {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
-                  </div>
-                  {/* Edgaras suggestion 2022-05-25 FOR REMOVE */}
-                  {/* Edgaras suggestion 2025-04-17 FOR RETURN */}
-                  {/* { !modules.manual_mode && ( */}
-                  <Dropdown.ItemMenu
-                    title={t('Change Employee')}
-                    onClick={openChangeEmployee}
-                  />
-                  <Dropdown.ItemMenu
-                    title={t('Change Working Time')}
-                    onClick={openChangeWorkingTime}
-                  />
-                  { modules.manual_mode ? (
+                    <div className={styles.eventContent__label}>
+                      {t('Working Time')}
+                    </div>
+                    <div className={styles.eventContent__value}>
+                      {`${moment(start).format('HH:mm')} – ${moment(end).format('HH:mm')}`}
+                    </div>
+                    {/* Edgaras suggestion 2022-05-25 FOR REMOVE */}
+                    {/* Edgaras suggestion 2025-04-17 FOR RETURN */}
+                    {/* { !modules.manual_mode && ( */}
                     <Dropdown.ItemMenu
-                      title={t('Run Copy Mode')}
-                      onClick={openCopyMode}
+                      title={t('Change Employee')}
+                      onClick={openChangeEmployee}
                     />
-                    ) : null
-                  }
-                  { !modules.manual_mode ? (
+                    <Dropdown.ItemMenu
+                      title={t('Change Working Time')}
+                      onClick={openChangeWorkingTime}
+                    />
+                    { modules.manual_mode ? (
                       <Dropdown.ItemMenu
-                        title={t('Empty Timeline')}
-                        onClick={handleEmptyTimeline}
-                        remove
+                        title={t('Run Copy Mode')}
+                        onClick={openCopyMode}
                       />
-                    ) : (
-                      <Dropdown.ItemMenu
-                        title={t('Delete Timeline')}
-                        onClick={handleDeleteTimeline}
-                        remove
-                      />
-                    )
-                  }
-                </>
-              )
-            }
-            <div className={styles.eventContent__space} />
-          </Dropdown>
-        ) : (
-          <div className={styles.eventContent__rightSpace} />
-        )
+                      ) : null
+                    }
+                    { !modules.manual_mode ? (
+                        <Dropdown.ItemMenu
+                          title={t('Empty Timeline')}
+                          onClick={handleEmptyTimeline}
+                          remove
+                        />
+                      ) : (
+                        <Dropdown.ItemMenu
+                          title={t('Delete Timeline')}
+                          onClick={handleDeleteTimeline}
+                          remove
+                        />
+                      )
+                    }
+                  </>
+                )
+              }
+              <div className={styles.eventContent__space} />
+            </Dropdown>
+          ) : (
+            <div className={styles.eventContent__rightSpace} />
+          )
+        }
+      </div>
+      
+      {
+        nightDuration && !empty_manual && title && employeeName !== 'Empty'
+          ? <div style={{width: '100%', borderLeft: '3px solid #db894f', color: '#333945', fontSize: 11}}>
+              { nightDuration }h
+            </div>
+          : null
       }
     </div>
   );
@@ -546,6 +581,6 @@ const EventContent = ({
 };
 
 export default React.memo(EventContent, (prevProps, nextProps) => {
-  return true
+  return prevProps.copyTool === nextProps.copyTool
 })
 
