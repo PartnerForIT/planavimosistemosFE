@@ -573,11 +573,6 @@ const ScheduleV2 = () => {
     return classes
   }
 
-  const handeResourceLaneClassNames = (info) => {
-    let result = toolsActive['marking'] ? 'marker_activated' : '';
-    return ''
-  }
-
   const handeSlotLaneClassNames = (info) => {
     const date = moment(info.date);
     const holiday = (schedule?.holidays) ? schedule?.holidays[date.date()] : false;
@@ -1322,7 +1317,6 @@ const ScheduleV2 = () => {
                 resourceAreaHeaderClassNames={() => ['resource-area-header']}
                 resourceAreaHeaderContent={renderResourceAreaHeaderContent}
                 resourceLaneContent={renderResourceLaneContent}
-                resourceLaneClassNames={handeResourceLaneClassNames}
                 resourceLabelClassNames={handleResourceLabelClassNames}
                 resourceLabelContent={renderResourceLabelContent}
                 locale={localStorage.getItem('i18nextLng') || 'en'}
