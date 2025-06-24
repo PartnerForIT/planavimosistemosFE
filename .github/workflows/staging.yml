@@ -19,5 +19,5 @@ jobs:
       run: sudo git pull origin staging
 
     - name: Run build process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -it -v ./grownu-fe/:/app node:12.16.1-alpine npm run build
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app node:12.16.1-alpine npm run build
 
