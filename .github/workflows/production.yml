@@ -19,6 +19,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: NPM Install
       run: |
+        mkdir ~/.ssh
+        echo "${{ secrets.FE_DP_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
         npm install
     - name: Unit Tests
       run: |
