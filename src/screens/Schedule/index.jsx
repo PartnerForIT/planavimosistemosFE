@@ -145,7 +145,7 @@ export default () => {
   const scheduleSettings=useSelector(scheduleSettingSelector);
   const [modalAddTempEmployee,setmodalAddTempEmployee] = useState(null)
   const [tempShiftID,setTempShiftID] = useState(0)
-  const [activeDrag,setActiveDrag] = useState('')
+  const [activeDrag, setActiveDrag] = useState('')
   const copyToolRef = useRef();
   const copyToolHistory = useSelector(copyToolHistorySelector);
   const [copyTool,setCopyTool] = useState(false)
@@ -1144,7 +1144,7 @@ export default () => {
     }
 
     return result;
-  };
+  }
 
   const handeResourceLaneClassNames = (info) => {
     let result = toolsActive['marking'] ? 'marker_activated' : '';
@@ -1328,8 +1328,6 @@ export default () => {
     
     return [];
   };
-
-  console.log(resources)
   
   return (
     <MainLayout>

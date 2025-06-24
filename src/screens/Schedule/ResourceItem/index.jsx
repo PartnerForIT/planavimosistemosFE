@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown from '../Dropdown';
@@ -14,11 +14,15 @@ export default ({
   accumulatedHours,
   employeeId,
   withMenu,
+  shiftId,
   onEditShift,
   onDeleteShift,
+  onGenerateTimes,
+  onClearTimes,
 }) => {
   const { t } = useTranslation();
   const { getDateFormat } = useCompanyInfo();
+  const dropdownRef = useRef(null);
   const formatDate = getDateFormat({
     'YY.MM.DD': 'yyyy.MM.DD',
     'DD.MM.YY': 'DD.MM.yyyy',
@@ -138,19 +142,42 @@ export default ({
       }
       {
         withMenu && (
-          <Dropdown buttonClass={classes.resourceItem__buttonDots}>
+          <Dropdown ref={dropdownRef} buttonClass={classes.resourceItem__buttonDots}>
             <div className={classes.resourceItem__title}>
               {title}
             </div>
-            <Dropdown.ItemMenu
-              title={t('Edit Shift')}
-              onClick={onEditShift}
-            />
-            <Dropdown.ItemMenu
-              title={t('Delete Shift')}
-              onClick={onDeleteShift}
-              remove
-            />
+            {
+              shiftId
+                ? <>
+                    <Dropdown.ItemMenu
+                      title={t('Edit Shift')}
+                      onClick={onEditShift}
+                    />
+                    <Dropdown.ItemMenu
+                      title={t('Delete Shift')}
+                      onClick={() => {
+                        dropdownRef.current.close()
+                        onDeleteShift()
+                      }}
+                      remove
+                    />
+                  </>
+                : onGenerateTimes
+                  ? <Dropdown.ItemMenu
+                      title={t('Generate Work Times')}
+                      onClick={() => {
+                        onGenerateTimes()
+                        dropdownRef.current.close()
+                      }}
+                    />
+                  : <Dropdown.ItemMenu
+                      title={t('Clear Work Times')}
+                      onClick={() => {
+                        onClearTimes()
+                        dropdownRef.current.close()
+                      }}
+                    />
+            }
             <div className={classes.resourceItem__space} />
           </Dropdown>
         )
