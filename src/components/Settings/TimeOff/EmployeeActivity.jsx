@@ -21,11 +21,11 @@ function EmployeeActivity({
 }) {
   const { t } = useTranslation();
   const [rejectedRequests, setRejectedRequests] = useState(true);
-  const [expandedCycles, setExpandedCycles] = useState([]);
+  const currentYear = new Date().getFullYear();
+  const [expandedCycles, setExpandedCycles] = useState([currentYear]);
   
   const cycleYears = [];
   const startYear = new Date(activePolicy.created_at).getFullYear();
-  const currentYear = new Date().getFullYear();
   for (let year = startYear; year <= currentYear; year++) {
     cycleYears.push(year);
   }
@@ -159,10 +159,10 @@ function EmployeeActivity({
                             todo
                           </div>
                           <div className={classes.cyclesTableCol}>
-                            todo
+                            {activity.change_type === 'increase' ? '+' : '-'}{(activity.balance_after - activity.balance_before).toFixed(2)}
                           </div>
                           <div className={classes.cyclesTableCol}>
-                            todo
+                            {activity.balance_after}
                           </div>
                         </div>
                       ))}
