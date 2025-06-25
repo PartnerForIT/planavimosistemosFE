@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import _ from 'lodash';
+import _, { set } from 'lodash';
 import MaynLayout from '../../Core/MainLayout';
 import Dashboard from '../../Core/Dashboard';
 import TitleBlock from '../../Core/TitleBlock';
@@ -13,6 +13,7 @@ import Progress from '../../Core/Progress';
 import UserDataManagement from './UserDataManagement';
 import EmployeeManagement from './EmployeeManagement';
 import EmployeeManagementPolicy from './EmployeeManagementPolicy';
+import EmployeeActivity from './EmployeeActivity';
 import {
   AccountGroupsSelector, employeesSelector,
   isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
@@ -30,6 +31,7 @@ import {
   updatePolicy,
   updatePolicySettings,
   updatePolicyEmployees,
+  unasignPolicyEmployees,
   createRequestBehalf,
   updateRequestBehalf,
   changeRequestBehalfStatus,
@@ -92,6 +94,7 @@ export default () => {
   const [activePolicy, setActivePolicy] = useState(null);
   const [activeDataManagement, setActiveDataManagement] = useState(null);
   const [activeEmployee, setActiveEmployee] = useState(null);
+  const [activeEmployeeActivity, setActiveEmployeeActivity] = useState(null);
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
@@ -105,16 +108,44 @@ export default () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const employeeParam = params.get('employee');
-    if (employeeParam && employees?.length) {
-      const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
-      if (employee) {
-        dispatch(getPolicies(id, 'all', employee.id));
-        setActiveEmployee(employee);
-        dispatch(getRequestBehalf(id, 'all', 'all', employee.id));
+    const pageParam = params.get('page');
+    if (pageParam !== 'activity') {
+      if (employeeParam && employees?.length) {
+        const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
+        if (employee) {
+          dispatch(getPolicies(id, 'all', employee.id));
+          setActiveEmployee(employee);
+          dispatch(getRequestBehalf(id, 'all', 'all', employee.id));
+        }
       }
     }
     // eslint-disable-next-line 
   }, [employees]);
+
+  //check in url if here ?employee= parameter is present then set activeEmployee
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const employeeParam = params.get('employee');
+    const pageParam = params.get('page');
+    const policyParam = params.get('policy');
+    const timeOffParam = params.get('time_off');
+    if (pageParam === 'activity' && !activeEmployeeActivity) {
+      if (employeeParam && policyParam && timeOffParam) {
+        const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
+        const policy = policies.find(({ id }) => id.toString() === policyParam.toString());
+        const time_off = time_offs.find(({ id }) => id.toString() === timeOffParam.toString());
+        if (time_off) {
+          setActiveTimeOff(time_off);
+        }
+        if (employee && policy && time_off) {
+          setActiveEmployee(employee);
+          setActivePolicy(policy);
+          setActiveEmployeeActivity(true);
+        }
+      }
+    }
+    // eslint-disable-next-line 
+  }, [employees, policies, time_offs]);
 
 
   useEffect(() => {
@@ -221,12 +252,44 @@ export default () => {
     dispatch(changeRequestBehalfStatus(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, requestBehalfId, {status: status, employees: [activeEmployee.id]}));
   }
 
+  const onUnassingPolicyEmployees = (employeeId, policyId) => {
+    const timeOffId = activeTimeOff?.id ? activeTimeOff.id : policies.find(({id}) => id === policyId)?.time_off_id;
+    dispatch(unasignPolicyEmployees(id, timeOffId, policyId, {employees: [employeeId]}));
+  };
+
+  const onOpenEmployeeActivity = (timeOffId, policyId, employeeId) => {
+    history.push(`/${id}/settings/time-off?page=activity&policy=${policyId}&time_off=${timeOffId}&employee=${employeeId}`);
+    const time_off = time_offs.find(({id}) => id === timeOffId);
+    const policy = policies.find(({id}) => id === policyId);
+    const employee = employees.find(({id}) => id === employeeId);
+    if (!time_off || !policy || !employee) return;
+    setActiveTimeOff(time_off);
+    setActiveEmployee(employee);
+    setActivePolicy(policy);
+    setActiveEmployeeActivity(true);
+  };
+
   return (
     <MaynLayout>
       <Dashboard>
         {
-          activeDataManagement && activeEmployee && !loading ? (
+          activeEmployeeActivity && activeTimeOff && activePolicy && activeEmployee && !loading ? (
+            <EmployeeActivity
+              handleClose={() => {
+                setActiveEmployeeActivity(false);
+                history.push(`/${id}/settings/time-off`);
+              }}
+              employee={activeEmployee}
+              activeTimeOff={activeTimeOff}
+              activePolicy={activePolicy}
+            />
+          ) : null
+        }
+        {
+          !activeEmployeeActivity && activeDataManagement && activeEmployee && !loading ? (
               <EmployeeManagementPolicy
+                goEmployeeActivity={onOpenEmployeeActivity}
+                onUnassingPolicyEmployees={onUnassingPolicyEmployees}
                 handleClose={() => setActiveEmployee(null)}
                 activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
                 activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
@@ -239,8 +302,10 @@ export default () => {
           ) : null
         }
         {
-          !activeDataManagement && activeEmployee && !loading ? (
+          !activeEmployeeActivity && !activeDataManagement && activeEmployee && !loading ? (
               <EmployeeManagement
+                goEmployeeActivity={onOpenEmployeeActivity}
+                onUnassingPolicyEmployees={onUnassingPolicyEmployees}
                 handleClose={() => { setActiveEmployee(null); history.push(`/${id}/settings/accounts/accounts-list`); }}
                 employee={activeEmployee}
                 requestBehalf={requestBehalf}
@@ -251,7 +316,7 @@ export default () => {
           ) : null
         }
         {
-          activeDataManagement && !activeEmployee && !loading ? (
+          !activeEmployeeActivity && activeDataManagement && !activeEmployee && !loading ? (
               <UserDataManagement
                 handleClose={() => setActiveDataManagement(null)}
                 activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
@@ -266,7 +331,7 @@ export default () => {
             ) : null
         }
         {
-          !activeDataManagement && !activeEmployee ? (
+          !activeEmployeeActivity && !activeDataManagement && !activeEmployee ? (
             <>
               <TitleBlock
                 title={t('Time Off')}

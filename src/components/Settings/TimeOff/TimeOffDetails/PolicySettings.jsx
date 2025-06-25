@@ -87,6 +87,7 @@ const allowance_carryover_expiration_period_arr = [
   { code: '6_months', name: '6 months' },
   { code: '12_months', name: '12 months' },
   { code: '24_months', name: '24 months' },
+  { code: '36_months', name: '36 months' },
 ];
 
 const PolicySettings = React.memo(({
@@ -549,7 +550,7 @@ const PolicySettings = React.memo(({
             ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') ? (
+            ((values.allowance_type === 'earned' || values.allowance_type === 'annual_grant') && values.allowance_carryover_type === 'yes') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>

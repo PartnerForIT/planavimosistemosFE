@@ -779,3 +779,79 @@ $arrow-size: 21px;
     border-top: 1px solid #E6EEF6;
   }
 }
+
+.cycleTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+
+  &Dates {
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+      color: #808F94;
+    }
+  }
+
+  &Info {
+    font-weight: 500;
+    font-size: 16px;
+    color: #808F94;
+  }
+
+  svg {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+
+    path {
+      stroke: #0085FF;
+    }
+  }
+}
+
+.cyclesTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #E6EEF6;
+  border-radius: 12px;
+}
+
+.cyclesTableHeader,
+.cyclesTableRow {
+  display: grid;
+  grid-template-columns: 1fr 3fr 3fr 4fr 1fr 1fr;
+  padding: 8px 12px;
+  align-items: center;
+}
+
+.cyclesTableHeader {
+  font-weight: bold;
+  color: #808F94;
+  border-bottom: 1px solid #E6EEF6;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cyclesTableRow {
+  border-bottom: 1px solid #E6EEF6;
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background-color: #fafafa;
+  }
+}
+
+.cyclesTableCol,
+.cyclesTableHeaderCol {
+  padding: 6px 12px;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 500;
+}

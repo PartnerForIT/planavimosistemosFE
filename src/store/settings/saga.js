@@ -73,6 +73,7 @@ import {
   UPDATE_POLICY,
   UPDATE_POLICY_SETTINGS,
   UPDATE_POLICY_EMPLOYEES,
+  UNASIGN_POLICY_EMPLOYEES,
   DUPLICATE_POLICY,
   CREATE_REQUEST_BEHALF,
   UPDATE_REQUEST_BEHALF,
@@ -1558,6 +1559,33 @@ function* patchPolicyEmployees(action) {
   }
 }
 
+function* unasignPolicyEmployees(action) {
+  try {
+    const { data, timeOffId, policyId } = action;
+
+    const policies = yield select((state) => state.settings.policies ?? []);
+    const time_offs = yield select((state) => state.settings.time_offs ?? []);
+    
+    // eslint-disable-next-line no-unused-vars
+    const { data: responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${action.companyId}/time-off/${timeOffId}/policy/${policyId}/unasign-employees`,
+      data,
+      token());
+
+    //yield put(authCheck());
+    yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+
+    //yield delay(4000);
+    //yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updatePolicySettingsError(e));
+    yield put(addSnackbar('An error occurred while updating Policy', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
 function* duplicatePolicy(action) {
   try {
     const { data, timeOffId, policyId } = action;
@@ -2315,6 +2343,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_POLICY, patchPolicy);
   yield takeLatest(UPDATE_POLICY_SETTINGS, patchPolicySettings);
   yield takeLatest(UPDATE_POLICY_EMPLOYEES, patchPolicyEmployees);
+  yield takeLatest(UNASIGN_POLICY_EMPLOYEES, unasignPolicyEmployees);
   yield takeLatest(DUPLICATE_POLICY, duplicatePolicy);
   yield takeLatest(CREATE_REQUEST_BEHALF, createRequestBehalf);
   yield takeLatest(UPDATE_REQUEST_BEHALF, updateRequestBehalf);

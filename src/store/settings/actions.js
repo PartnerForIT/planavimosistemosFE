@@ -156,6 +156,9 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   UPDATE_POLICY_EMPLOYEES_SUCCESS,
   UPDATE_POLICY_EMPLOYEES_ERROR,
+  UNASIGN_POLICY_EMPLOYEES,
+  UNASIGN_POLICY_EMPLOYEES_SUCCESS,
+  UNASIGN_POLICY_EMPLOYEES_ERROR,
   DUPLICATE_POLICY,
   DUPLICATE_POLICY_SUCCESS,
   DUPLICATE_POLICY_ERROR,
@@ -1143,6 +1146,24 @@ export const updatePolicyEmployeesSuccess = (data) => ({
 
 export const updatePolicyEmployeesError = (data) => ({
   type: UPDATE_POLICY_EMPLOYEES_ERROR,
+  data,
+});
+
+export const unasignPolicyEmployees = (companyId, timeOffId, policyId, data) => ({
+  type: UNASIGN_POLICY_EMPLOYEES,
+  companyId,
+  timeOffId,
+  policyId,
+  data,
+});
+
+export const unasignPolicyEmployeesSuccess = (data) => ({
+  type: UNASIGN_POLICY_EMPLOYEES_SUCCESS,
+  data,
+});
+
+export const unasignPolicyEmployeesError = (data) => ({
+  type: UNASIGN_POLICY_EMPLOYEES_ERROR,
   data,
 });
 

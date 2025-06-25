@@ -1370,5 +1370,30 @@
         "Decrease balance": "Sumažinti balansą",
 
         "Add to used": "Pridėti prie panaudoto",
-        "Subtract from used": "Atimti iš panaudoto"
+        "Subtract from used": "Atimti iš panaudoto",
+
+
+        "balance activity": "balanso veikla",
+        "Exclude rejected request": "Neįtraukti atmestų prašymų",
+        "Current cycle": "Einamasis periodas",
+        "Booked": "Rezervuota",
+        "Taken": "Panaudota",
+        "Accrued": "Sukaupta",
+        "Who?": "Kas?",
+        "Activity type": "Veiksmo tipas",
+        "Approver": "Tvirtintojas",
+        "Change": "Pokytis",
+        "Previous Cycle": "Ankstesnis Periodas",
+        "Assigned to Policy": "Priskirta prie Politikos",
+        "Balance Adjustment": "Balanso Pakitimai",
+        "Imported": "Importuota",
+        "Accrue": "Priskaičiuota",
+        "Adjusted": "Pakeitė",
+        "Request": "Prašymas",
+        "Requested": "Išsiuntė",
+        "Rejected": "Atmestas",
+        "Auto Approved": "Auto Patvirtintas",
+        "Taken Adjustment": "Panaudoto Koregavimas",
+        "Carryover": "Perkėlimas",
+        "Expired": "Pasibaigęs likutis"
 }

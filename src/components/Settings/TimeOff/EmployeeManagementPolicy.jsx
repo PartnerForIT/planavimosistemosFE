@@ -17,12 +17,13 @@ import ReactTooltip from 'react-tooltip';
 import PoliciesActivityTable from './TimeOffDetails/PoliciesActivityTable';
 
 function EmployeeManagementPolicy({
+  goEmployeeActivity,
+  onUnassingPolicyEmployees,
   handleClose,
   activeTimeOff,
   activePolicy,
   employee,
   requestBehalf,
-  policies,
   onRequestBehalf,
   onChangeRequestStatus = Function.prototype,
 }) {
@@ -175,6 +176,8 @@ function EmployeeManagementPolicy({
           }   
         </div>
         <PoliciesActivityTable
+          goEmployeeActivity={goEmployeeActivity}
+          onUnassingPolicyEmployees={onUnassingPolicyEmployees}
           employee={employee}
         />
       </PageLayout>

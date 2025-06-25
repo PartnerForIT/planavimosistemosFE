@@ -119,6 +119,9 @@ import {
   UPDATE_POLICY_EMPLOYEES,
   UPDATE_POLICY_EMPLOYEES_ERROR,
   UPDATE_POLICY_EMPLOYEES_SUCCESS,
+  UNASIGN_POLICY_EMPLOYEES,
+  UNASIGN_POLICY_EMPLOYEES_SUCCESS,
+  UNASIGN_POLICY_EMPLOYEES_ERROR,
   CREATE_REQUEST_BEHALF,
   CREATE_REQUEST_BEHALF_SUCCESS,
   CREATE_REQUEST_BEHALF_ERROR,
@@ -994,12 +997,14 @@ export const reducerOrganizationList = (state = initialState, action) => {
 
     case UPDATE_POLICY_SETTINGS:
     case UPDATE_POLICY_EMPLOYEES:
+    case UNASIGN_POLICY_EMPLOYEES:
       return {
         ...state,
         error: null,
       };
     case UPDATE_POLICY_SETTINGS_SUCCESS:
     case UPDATE_POLICY_EMPLOYEES_SUCCESS:
+    case UNASIGN_POLICY_EMPLOYEES_SUCCESS:
       return {
         ...state,
         policies: action.data,
@@ -1007,6 +1012,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
       };
     case UPDATE_POLICY_SETTINGS_ERROR:
     case UPDATE_POLICY_EMPLOYEES_ERROR:
+    case UNASIGN_POLICY_EMPLOYEES_ERROR:
       return {
         ...state,
         error: action.data,
