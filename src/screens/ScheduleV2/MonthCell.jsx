@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import classNames from 'classnames'
 
 import styles from '../Schedule/EventContent/EventContent.module.scss'
 import css from './MonthCell.module.scss'
@@ -76,7 +75,7 @@ const MonthCell = ({
   const modalAddRef = useRef(null)
 
   const [content, setContent] = useState('menu')
-  const [isShown, setIsShown] = useState(false)
+  // const [isShown, setIsShown] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
@@ -114,7 +113,7 @@ const MonthCell = ({
   }
 
   const markerComment = () => {
-    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId && e.user_request);
+    const current = markers.find(e => moment(e.date).isSame(moment(start), 'day') && e.employee_id === employeeId)
     return current ? current.comment : null
   }
 
@@ -202,6 +201,7 @@ const MonthCell = ({
   }
 
   const marker = markerComment()
+  const isMarkerExist = marker !== null
 
   return (
     <div
@@ -220,8 +220,10 @@ const MonthCell = ({
                   { moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm') }
                 </div>
             : editPermissions && !isCompleted && (empty_manual || employeeName === 'Empty')
-              ? isMarkerMode && marker
-                ? <div className={css.removeMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
+              ? isMarkerMode && employeeName !== 'Empty'
+                ? isMarkerExist
+                  ? <div className={css.removeMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
+                  : <div className={css.addMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
                 : <div className={css.addButton} onClick={(employeeName === 'Empty' || empty) ? addEmployee : openAddWorkingTime}>
                   </div>
               : null
@@ -244,7 +246,7 @@ const MonthCell = ({
                 onChangeEmployee={openChangeEmployee}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                isShown={isCompleted ? isShown : isOpen}
+                isShown={isCompleted ? false : isOpen}
                 isToday={isCompleted}
               />
             </div>

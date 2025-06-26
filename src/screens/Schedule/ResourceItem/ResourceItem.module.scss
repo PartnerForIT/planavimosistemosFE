@@ -22,6 +22,20 @@
     margin-top: -7px;
   }
 
+  &__template {
+    width: 24px;
+    height: 24px;
+    background: rgba(64, 195, 226, .06274509803921569);
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #40c3e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 24px;
+  }
+
   &__demand {
     position: static !important;
     width: auto !important;

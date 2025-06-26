@@ -13,6 +13,7 @@ export default ({
   photo,
   accumulatedHours,
   employeeId,
+  templateId,
   withMenu,
   shiftId,
   onEditShift,
@@ -139,6 +140,11 @@ export default ({
             src={photo}
           />
         )
+      }
+      {
+        templateId && shiftId
+          ? <div className={classes.resourceItem__template}>A</div>
+          : null
       }
       {
         withMenu && (

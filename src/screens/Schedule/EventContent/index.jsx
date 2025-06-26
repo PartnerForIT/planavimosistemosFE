@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Tooltip from 'react-tooltip';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
