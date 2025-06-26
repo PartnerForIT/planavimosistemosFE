@@ -16,7 +16,7 @@ jobs:
       run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sudo git checkout -f staging
 
     - name: Code update
-      needs: 
+      needs: "Change branch to staging"
       run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sleep 5 && sudo git pull origin staging
 
     - name: Run build process for FrontEnd app
