@@ -13,10 +13,10 @@ jobs:
         working-directory: /grownu-app/grownu-fe
     steps:
     - name: Change branch to staging
-      run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sudo git checkout -f staging
+      run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" git checkout -f staging
 
     - name: Code update
-      run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sleep 5 && sudo git pull origin staging
+      run: GIT_SSH_COMMAND="ssh -i /home/deployment/.ssh/id_rsa_staging_deployment -o StrictHostKeychecking=no" git pull origin staging 
 
     - name: Run build process for FrontEnd app
       run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app -v "./grownu-fe/fe-dp:/root/.ssh/id_rsa" febuild:v1 npm install
