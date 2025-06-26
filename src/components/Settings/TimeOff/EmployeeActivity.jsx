@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
@@ -7,7 +7,6 @@ import TitleBackIcon from '../../Icons/TitleBackIcon';
 import ArrowRightButton from '../../Icons/ArrowRightButton';
 
 import classes from './timeoff.module.scss';
-import Button from '../../Core/Button/Button';
 import Label from '../../Core/InputLabel';
 import Switch from 'react-switch';
 import classnames from 'classnames';

@@ -1546,7 +1546,7 @@ function* patchPolicyEmployees(action) {
       token());
 
     //yield put(authCheck());
-    yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
+    yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy))));
     yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
 
     //yield delay(4000);

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import _, { set } from 'lodash';
+import _ from 'lodash';
 import MaynLayout from '../../Core/MainLayout';
 import Dashboard from '../../Core/Dashboard';
 import TitleBlock from '../../Core/TitleBlock';
@@ -47,6 +47,9 @@ import {
 import AddEditTimeOff from '../../Core/Dialog/AddEditTimeOff';
 import AddEditPolicy from '../../Core/Dialog/AddEditPolicy';
 import DuplicatePolicy from '../../Core/Dialog/DuplicatePolicy';
+import { set } from 'date-fns';
+import { act } from 'react';
+import { SignalCellularNull } from '@material-ui/icons';
 //import usePermissions from '../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
@@ -159,9 +162,11 @@ export default () => {
   useEffect(() => {
     if (time_offs?.length && !_.isEmpty(activeTimeOff)) {
       // eslint-disable-next-line no-shadow
-      const time_off = time_offs.find(({id}) => id === activeTimeOff.id);
-      setActiveTimeOff(time_off);
-      setActivePolicy(null);
+      //const time_off = time_offs.find(({id}) => id === activeTimeOff.id);
+      //setActiveTimeOff(time_off);
+      if (activePolicy && activePolicy.time_off_id !== activeTimeOff.id) {
+        setActivePolicy(null);
+      }
 
       dispatch(getPolicies(id, activeTimeOff.id));
     }
@@ -277,6 +282,7 @@ export default () => {
             <EmployeeActivity
               handleClose={() => {
                 setActiveEmployeeActivity(false);
+                setActiveDataManagement(activePolicy);
                 history.push(`/${id}/settings/time-off`);
               }}
               employee={activeEmployee}
