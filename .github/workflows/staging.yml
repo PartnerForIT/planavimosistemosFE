@@ -19,8 +19,8 @@ jobs:
       run: GIT_SSH_COMMAND="ssh -i /home/deployment/.ssh/id_rsa_staging_deployment -o StrictHostKeychecking=no" git pull origin staging 
 
     - name: Run build process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app -v "./grownu-fe/fe-dp:/root/.ssh/id_rsa" febuild:v1 npm install
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app febuild:v1 npm install
 
     - name: Run build process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app node:12.16.1-alpine npm run build
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app node:12.16.1-alpine npm run build
 
