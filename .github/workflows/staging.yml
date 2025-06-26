@@ -10,10 +10,10 @@ jobs:
     runs-on: self-hosted
     defaults:
       run:
-        working-directory: /grownu-app
+        working-directory: /grownu-app/grownu-fe
     steps:
     - name: Change branch to staging
-      run: cd grownu-fe && GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sudo git checkout staging
+      run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sudo git checkout staging
 
     - name: Code update
       run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe -o StrictHostKeychecking=no" sudo git pull origin staging
