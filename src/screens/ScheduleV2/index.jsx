@@ -39,7 +39,6 @@ import ExcelIcon from '../../components/Icons/ExcelIcon'
 import Button from '../../components/Core/Button/Button'
 import MonthCell from './MonthCell'
 import AddTempEmployee from '../Schedule/AddTempEmployee'
-import { fi } from 'date-fns/locale'
 
 const CALENDAR_VIEWS_CONFIG = {
   day: {
@@ -47,7 +46,7 @@ const CALENDAR_VIEWS_CONFIG = {
     title: 'ddd MMM, DD, YYYY',
     slotLabelFormat: 'HH:mm',
     slotDuration: '1:00',
-    snapDuration: '00:30',
+    snapDuration: '00:15',
   },
   week: {
     type: 'resourceTimelineWeek',
@@ -328,7 +327,7 @@ const ScheduleV2 = () => {
             eventBackgroundColor = fade(COLORS_JOB_TYPE[colorType][216], 0.5);
           }
 
-          if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK || timeline === TIMELINE.MONTH) {
+          if ((scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) || timeline === TIMELINE.MONTH) {
             lineColor = eventBackgroundColor
             eventBorderColor = 'transparent'
             eventBackgroundColor = 'transparent'
@@ -434,7 +433,7 @@ const ScheduleV2 = () => {
 
   useEffect(() => {
     getSchedule({type: timeline, formDate: currentStartDate})
-  }, [companyId, timeline, currentStartDate])
+  }, [companyId, timeline, currentStartDate, filter])
 
   useEffect(() => {
     if (timeline === TIMELINE.WEEK || timeline === TIMELINE.MONTH) {
@@ -489,9 +488,9 @@ const ScheduleV2 = () => {
     const params = {
       type: type,
       from_date: formDate,
-      shiftTypeArr: filter?.shiftType.map(({id}) => id),
-      employeesArr: filter?.employers.map(({id}) => id),
-      placesArr: filter?.place.map(({id}) => id),
+      shiftTypeArr: filter.shiftType.map(({id}) => id),
+      employeesArr: filter.employers.map(({id}) => id),
+      placesArr: filter.place.map(({id}) => id),
     }
     setSchedule(prev => ({...prev, loading: true}))
     const res = await request(`${companyId}/shift`, 'GET', params)
@@ -544,16 +543,28 @@ const ScheduleV2 = () => {
     }
   }
 
-  const onPlaceSelectFilter = () => {
-
+  const onPlaceSelectFilter = (place) => {
+    const arrChecked = place?.filter((i) => i.checked)
+    setFilter((prevState) => ({
+      ...prevState,
+      place: arrChecked,
+    }))
   }
 
-  const onShiftSelectFilter = () => {
-
+  const onShiftSelectFilter = (shift) => {
+    const arrChecked = shift?.filter((i) => i.checked)
+    setFilter((prevState) => ({
+      ...prevState,
+      shiftType: arrChecked,
+    }))
   }
 
-  const onEmployeesSelectFilter = () => {
-
+  const onEmployeesSelectFilter = (emp) => {
+    const arrChecked = emp?.filter((i) => i.checked)
+    setFilter((prevState) => ({
+      ...prevState,
+      employers: arrChecked,
+    }))
   }
 
   const handleChangeTimeline = (view) => {
@@ -833,7 +844,7 @@ const ScheduleV2 = () => {
           return ( 
             <React.Fragment key={child.id+'__'+index+'_'+i}>
               { (marked) ?
-                (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
+                (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width-1, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
                 ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
               }
             </React.Fragment>
@@ -897,7 +908,7 @@ const ScheduleV2 = () => {
         // return contains
       })
     )
-  }, [toolsActive.marking])
+  }, [toolsActive.marking, schedule])
 
   const renderResourceLaneContent = useCallback(({resource}) => {
     const current_markers = schedule.markers.filter(m => m.employee_id*1 === resource.extendedProps.employeeId*1)
@@ -1004,14 +1015,15 @@ const ScheduleV2 = () => {
       employeeId,
       employeesCount,
       jobTypeId,
-    } = resource.extendedProps;
-    const realCount = employeesCount;
+    } = resource.extendedProps
+    const realCount = employeesCount
     const accumulatedHoursDetected = schedule.accumulatedHours[employeeId+'-'+jobTypeId] ? schedule.accumulatedHours[employeeId+'-'+jobTypeId] : (schedule.accumulatedHours[employeeId] ? schedule.accumulatedHours[employeeId] : []);
     const [employeeShiftId] = resource._resource.id.toString().split('-')
     return (
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
         photo={photo}
+        templateId={resource.extendedProps.template_id}
         accumulatedHours={accumulatedHoursDetected}
         shiftId={shiftId}
         withMenu={(employeeId || shiftId) && permissions.schedule_create_and_edit}
@@ -1285,7 +1297,7 @@ const ScheduleV2 = () => {
                 height="100%"
                 eventStartEditable={false}
                 eventDurationEditable={timeline === TIMELINE.DAY}
-                resourceAreaWidth={'20%'}
+                resourceAreaWidth={'25%'}
                 views={{
                   ...CALENDAR_VIEWS_CONFIG,
                   week: {

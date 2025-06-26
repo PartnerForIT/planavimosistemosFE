@@ -66,7 +66,7 @@
 
     & > *:first-child {
       border-right: 1px solid #ddd;
-      width: 20%;
+      width: 25%;
       border-left: none;
     }
 
@@ -82,7 +82,7 @@
 
   &_month {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 25% 4fr;
 
     & > *:first-child {
       border-right: 1px solid #d9dfe3;
