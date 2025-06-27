@@ -32,6 +32,10 @@
     }
   }
 
+  &.cellNoMonth {
+    padding: 3px 6px;
+  }
+
   &__night_end {
     position: absolute;
     visibility: visible;

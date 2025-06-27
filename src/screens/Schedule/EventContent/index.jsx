@@ -126,6 +126,7 @@ const EventContent = ({
       'activeDrag': activeDrag,
       [styles.eventContent__removeTimelines]: removeTimelines,
       [styles.monthCell]: viewType === TIMELINE.MONTH,
+      [styles.cellNoMonth]: viewType !== TIMELINE.MONTH,
     },
   );
 
@@ -580,6 +581,6 @@ const EventContent = ({
 };
 
 export default React.memo(EventContent, (prevProps, nextProps) => {
-  return prevProps.copyTool === nextProps.copyTool
+  return prevProps.copyTool === nextProps.copyTool && prevProps.title === nextProps.title && prevProps.start === nextProps.start && prevProps.end === nextProps.end
 })
 

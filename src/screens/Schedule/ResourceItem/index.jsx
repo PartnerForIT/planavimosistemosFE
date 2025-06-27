@@ -20,6 +20,7 @@ export default ({
   onDeleteShift,
   onGenerateTimes,
   onClearTimes,
+  canClearTimesForShift,
 }) => {
   const { t } = useTranslation();
   const { getDateFormat } = useCompanyInfo();
@@ -155,6 +156,17 @@ export default ({
             {
               shiftId
                 ? <>
+                    {
+                      canClearTimesForShift && (
+                        <Dropdown.ItemMenu
+                          title={t('Clear Work Times')}
+                          onClick={() => {
+                            onClearTimes(true)
+                            dropdownRef.current.close()
+                          }}
+                        />
+                      )   
+                    }
                     <Dropdown.ItemMenu
                       title={t('Edit Shift')}
                       onClick={onEditShift}
