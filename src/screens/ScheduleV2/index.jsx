@@ -363,7 +363,7 @@ const ScheduleV2 = () => {
         end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
       }));
     } else if (timeline === TIMELINE.DAY) {
-      result = schedule?.events.filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
+      result = schedule?.events.filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day'))).map(e => ({...e, identifier: e.id}))
     } else {
       result = schedule?.events
     }
@@ -595,6 +595,12 @@ const ScheduleV2 = () => {
       return 'statistic-slot'
     }
 
+    const isWeekend = date.day() === 6 || date.day() === 0
+
+    if (isWeekend) {
+      result += ' cell_wkd ';
+    }
+
     if (timeline !== TIMELINE.DAY && h.date) {
       result += 'cell_holiday ';
       if (h.company_work_time_id) {
@@ -611,6 +617,26 @@ const ScheduleV2 = () => {
     }
     
     return result;
+  }
+
+  const eventListener = (dropInfo, event) => {
+    const start = moment(dropInfo.start)
+    const end = moment(dropInfo.end)
+    setSchedule(prev => ({
+      ...prev,
+      events: prev.events.map(e => {
+        if (event.extendedProps.identifier === e.id) {
+          return {
+            ...e,
+            title: `${start.format('HH:mm')}-${end.format('HH:mm')}`,
+            start: start.format('YYYY-MM-DD HH:mm'),
+            end: end.format('YYYY-MM-DD HH:mm'),
+          }
+        }
+        return e
+      })
+    }))
+    return true
   }
 
   const handleEventChange = ({ event }) => {
@@ -1008,6 +1034,17 @@ const ScheduleV2 = () => {
     )
   }, [schedule.holidays, timeline, currentStartDate])
 
+  const renderSlotLaneContent = useCallback(({date}) => {
+    const d = moment(date)
+    const isWeekend = d.day() === 6 || d.day() === 0
+    if (isWeekend) {
+      return (
+        <div style={{position: 'absolute', backgroundColor: 'rgba(245, 247, 250, 0.6)', width: '100%', height: '100%', zIndex: -1}}></div>
+      )
+    }
+    return <div />
+  }, [])
+
   const renderResourceLabelContent = useCallback(({fieldValue, resource}) => {
     const {
       photo,
@@ -1033,8 +1070,13 @@ const ScheduleV2 = () => {
           setOpenDialog(shiftId)
           setDeletedShiftName(fieldValue)
         }}
+        canClearTimesForShift={shiftId && resource.extendedProps.template_id && checkIfEventsExist(shiftId, employeeId)}
         onGenerateTimes={checkIfEventsExist(employeeShiftId, employeeId) ? false : () => handleGenerateTimes(employeeShiftId, employeeId)}
-        onClearTimes={() => {
+        onClearTimes={(fullShift) => {
+          if (fullShift) {
+            setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})
+            return
+          }
           setClearConfirmation({shiftId: employeeShiftId, employeeId: employeeId, shift: getShiftName(employeeShiftId), month: moment(fromDateRef.current).format('MMMM')})
         }}
       />
@@ -1091,7 +1133,7 @@ const ScheduleV2 = () => {
       }
       return acc
     }, [])
-    const isNextMonth = moment(start).isAfter(moment(view.getCurrentData().currentDate).endOf('month'))
+    const isNextMonth = moment(start).isAfter(moment(currentStartDate).endOf('month'))
     if (isNextMonth) {
       if (moment(start).date() === 1 && 'totalHours' in (selectedEvent.accumulatedData || {})) {
         return (
@@ -1165,58 +1207,55 @@ const ScheduleV2 = () => {
           handleMarker={handleMarker} />
       )
     }
-    
     return (
-      <>
-        <EventContent
-          id={event.id}
-          shiftId={shiftId}
-          employeeId={resourceInfo?.extendedProps?.employeeId}
-          title={event.title}
-          employeeName={employeeName}
-          timeText={timeText}
-          start={start}
-          end={end}
-          resourceId={resourceInfo.id}
-          copy_event={event.extendedProps.copy_event}
-          empty={event.extendedProps.empty_event}
-          empty_manual={event.extendedProps.empty_manual}
-          nightDuration={timeline === TIMELINE.MONTH && selectedEvent.night_duration}
-          newEmployee={event.extendedProps.new_employee}
-          oldEmployee={event.extendedProps.old_employee}
-          cost={event.extendedProps.cost}
-          night_minutes={event.extendedProps.night_minutes}
-          break_minutes={event.extendedProps.break_minutes}
-          work_minutes={event.extendedProps.work_minutes}
-          minutes={event.extendedProps.minutes}
-          costPermission={permissions.cost && permissions.schedule_costs}
-          nightPermission={permissions.night_rates && additionalRates.night_time}
-          viewType={view.type}
-          photo={resourceInfo.extendedProps.photo}
-          withMenu={withMenu && !copyTool && isCanEdit}
-          jobTypeName={resourceInfo.extendedProps.job_type_name}
-          copyTool={copyTool}
-          endDay={event.endStr}
-          editPermissions={isCanEdit}
-          isCompleted={event?._def?.extendedProps?.is_completed}
-          activeDrag={activeDrag === resourceInfo.id}
-          unavailableEmployees={unEmployees}
-          markers={schedule.markers}
-          removeTimelines={(scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) || timeline === TIMELINE.MONTH}
-          showHoursCount={timeline === TIMELINE.MONTH && !scheduleSettings.start_finish}
-          lineColor={resourceInfo?.extendedProps?.lineColor}
-          onChangeWorkingTime={handleChangeWorkingTime}
-          onChangeEmployee={handleChangeEmployee}
-          addTimeline={handleAddWorkingTime}
-          onDeleteTimeline={handleDeleteTimeline}
-          handleCopyTool={handleCopyTool}
-          handleAddHistory={handleAddHistory}
-          addEmployee={() => addTempEmployees(shiftId, event.id)}
-          // onEmptyTimeline={handleEmptyTimeline}
-          // modalAddTempEmployee={modalAddTempEmployee}
-          // addTimeline={handleAddWorkingTime}
-        />
-      </>
+      <EventContent
+        id={event.id}
+        shiftId={shiftId}
+        employeeId={resourceInfo?.extendedProps?.employeeId}
+        title={event.title}
+        employeeName={employeeName}
+        timeText={timeText}
+        start={start}
+        end={end}
+        resourceId={resourceInfo.id}
+        copy_event={event.extendedProps.copy_event}
+        empty={event.extendedProps.empty_event}
+        empty_manual={event.extendedProps.empty_manual}
+        nightDuration={timeline === TIMELINE.MONTH && selectedEvent.night_duration}
+        newEmployee={event.extendedProps.new_employee}
+        oldEmployee={event.extendedProps.old_employee}
+        cost={event.extendedProps.cost}
+        night_minutes={event.extendedProps.night_minutes}
+        break_minutes={event.extendedProps.break_minutes}
+        work_minutes={event.extendedProps.work_minutes}
+        minutes={event.extendedProps.minutes}
+        costPermission={permissions.cost && permissions.schedule_costs}
+        nightPermission={permissions.night_rates && additionalRates.night_time}
+        viewType={view.type}
+        photo={resourceInfo.extendedProps.photo}
+        withMenu={withMenu && !copyTool && isCanEdit}
+        jobTypeName={resourceInfo.extendedProps.job_type_name}
+        copyTool={copyTool}
+        endDay={event.endStr}
+        editPermissions={isCanEdit}
+        isCompleted={event?._def?.extendedProps?.is_completed}
+        activeDrag={activeDrag === resourceInfo.id}
+        unavailableEmployees={unEmployees}
+        markers={schedule.markers}
+        removeTimelines={(scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) || timeline === TIMELINE.MONTH}
+        showHoursCount={timeline === TIMELINE.MONTH && !scheduleSettings.start_finish}
+        lineColor={resourceInfo?.extendedProps?.lineColor}
+        onChangeWorkingTime={handleChangeWorkingTime}
+        onChangeEmployee={handleChangeEmployee}
+        addTimeline={handleAddWorkingTime}
+        onDeleteTimeline={handleDeleteTimeline}
+        handleCopyTool={handleCopyTool}
+        handleAddHistory={handleAddHistory}
+        addEmployee={() => addTempEmployees(shiftId, event.id)}
+        // onEmptyTimeline={handleEmptyTimeline}
+        // modalAddTempEmployee={modalAddTempEmployee}
+        // addTimeline={handleAddWorkingTime}
+      />
     )
   }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking])
 
@@ -1326,6 +1365,7 @@ const ScheduleV2 = () => {
                 eventContent={renderEventContent}
                 eventClassNames={handleEventClassNames}
                 slotLaneClassNames={handeSlotLaneClassNames}
+                slotLaneContent={renderSlotLaneContent}
                 resourceAreaHeaderClassNames={() => ['resource-area-header']}
                 resourceAreaHeaderContent={renderResourceAreaHeaderContent}
                 resourceLaneContent={renderResourceLaneContent}
@@ -1333,6 +1373,7 @@ const ScheduleV2 = () => {
                 resourceLabelContent={renderResourceLabelContent}
                 locale={localStorage.getItem('i18nextLng') || 'en'}
                 eventResize={handleEventChange}
+                eventAllow={eventListener}
                 eventResizeStart={handleEventChangeStart}
                 eventResizeStop={handleEventChangeStop}
                 viewDidMount={handleViewDidMount}

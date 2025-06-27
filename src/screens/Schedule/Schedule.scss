@@ -1080,6 +1080,22 @@
     visibility: visible;
   }
 }
+// .cell_wkd {
+//   position: relative;
+//   overflow: hidden;
+  
+//   &:before {
+//     content: '';
+//     display: block;
+//     top: 0px;
+//     right: 0;
+//     left: 0;
+//     bottom: 0px;
+//     position: absolute;
+//     background: #f5f7fa;
+//     z-index: 2;
+//   }
+// }
 .cell {
   position: relative;
   overflow: hidden;
@@ -1094,6 +1110,23 @@
     background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #e5e5ed 5px, #e5e5ed 10px);
     z-index: 2;
     opacity: 0.2;
+  }
+  &_weekend {
+    overflow: hidden;
+
+    // &:after {
+    //   content: '';
+    //   display: block;
+    //   top: 0;
+    //   right: 0;
+    //   left: 0;
+    //   bottom: 0;
+    //   position: absolute;
+    //   background: repeating-linear-gradient(-45deg, #fff, #fff 5px, #40c3e2 5px, #40c3e2 10px);
+    //   z-index: 2;
+    //   opacity: 0.1;
+    //   pointer-events: none;
+    // }
   }
   &_holiday {
     overflow: hidden;
