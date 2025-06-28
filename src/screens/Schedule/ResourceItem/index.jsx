@@ -157,15 +157,23 @@ export default ({
               shiftId
                 ? <>
                     {
-                      canClearTimesForShift && (
-                        <Dropdown.ItemMenu
-                          title={t('Clear Work Times')}
-                          onClick={() => {
-                            onClearTimes(true)
-                            dropdownRef.current.close()
-                          }}
-                        />
-                      )   
+                      canClearTimesForShift && templateId
+                        ? <Dropdown.ItemMenu
+                            title={t('Clear Work Times')}
+                            onClick={() => {
+                              onClearTimes(true)
+                              dropdownRef.current.close()
+                            }}
+                          />
+                        : templateId
+                          ? <Dropdown.ItemMenu
+                              title={t('Generate Work Times')}
+                              onClick={() => {
+                                onGenerateTimes()
+                                dropdownRef.current.close()
+                              }}
+                            />
+                          : null
                     }
                     <Dropdown.ItemMenu
                       title={t('Edit Shift')}

@@ -443,12 +443,12 @@ const ScheduleV2 = () => {
 
   useEffect(() => {
     if (!schedule.loading) {
-      setTimeout(Tooltip.rebuild, 1000)
+      setTimeout(Tooltip.rebuild, 500)
     }
   }, [schedule.loading])
 
   useEffect(() => {
-    setTimeout(Tooltip.rebuild, 1000)
+    setTimeout(Tooltip.rebuild, 500)
   }, [toolsActive.marking])
 
   useEffect(() => {
@@ -519,7 +519,7 @@ const ScheduleV2 = () => {
     }
   }
   
-  const handleViewDidMount = () => {
+  const handleViewDidMount = (info) => {
     const container = document.getElementsByClassName('fc-timeline-slots')
     resizeObserverRef.current = new ResizeObserver((item) => {
       const rows = item[0].target.children[0].children[1].children[0].children
@@ -595,11 +595,11 @@ const ScheduleV2 = () => {
       return 'statistic-slot'
     }
 
-    const isWeekend = date.day() === 6 || date.day() === 0
+    // const isWeekend = date.day() === 6 || date.day() === 0
 
-    if (isWeekend) {
-      result += ' cell_wkd ';
-    }
+    // if (isWeekend) {
+    //   result += ' cell_wkd ';
+    // }
 
     if (timeline !== TIMELINE.DAY && h.date) {
       result += 'cell_holiday ';
@@ -866,12 +866,12 @@ const ScheduleV2 = () => {
             }
           }
           const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
-          
           return ( 
             <React.Fragment key={child.id+'__'+index+'_'+i}>
-              { (marked) ?
-                (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width-1, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
-                ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
+              { 
+                marked
+                  ? ((!exist_event || exist_event?.empty_employee) ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width-1, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null)
+                  : ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
               }
             </React.Fragment>
           )
@@ -1039,7 +1039,7 @@ const ScheduleV2 = () => {
     const isWeekend = d.day() === 6 || d.day() === 0
     if (isWeekend) {
       return (
-        <div style={{position: 'absolute', backgroundColor: 'rgba(245, 247, 250, 0.6)', width: '100%', height: '100%', zIndex: -1}}></div>
+        <div style={{position: 'absolute', backgroundColor: 'rgba(245, 247, 250, 0.6)', width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none'}}></div>
       )
     }
     return <div />
@@ -1063,7 +1063,7 @@ const ScheduleV2 = () => {
         templateId={resource.extendedProps.template_id}
         accumulatedHours={accumulatedHoursDetected}
         shiftId={shiftId}
-        withMenu={(employeeId || shiftId) && permissions.schedule_create_and_edit}
+        withMenu={permissions.schedule_create_and_edit && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
         employeeId={employeeId}
         onEditShift={() => history.push(`/${companyId}/schedule/shift/${shiftId}`)}
         onDeleteShift={() => {
@@ -1071,7 +1071,7 @@ const ScheduleV2 = () => {
           setDeletedShiftName(fieldValue)
         }}
         canClearTimesForShift={shiftId && resource.extendedProps.template_id && checkIfEventsExist(shiftId, employeeId)}
-        onGenerateTimes={checkIfEventsExist(employeeShiftId, employeeId) ? false : () => handleGenerateTimes(employeeShiftId, employeeId)}
+        onGenerateTimes={checkIfEventsExist(employeeShiftId, employeeId) ? false : () => handleGenerateTimes(shiftId || employeeShiftId, employeeId)}
         onClearTimes={(fullShift) => {
           if (fullShift) {
             setClearConfirmation({shiftId: shiftId, employeeId: employeeId, shift: getShiftName(shiftId), month: moment(fromDateRef.current).format('MMMM')})
@@ -1081,7 +1081,7 @@ const ScheduleV2 = () => {
         }}
       />
     );
-  }, [schedule.accumulatedHours, permissions.schedule_create_and_edit])
+  }, [schedule.accumulatedHours, permissions.schedule_create_and_edit, timeline])
 
   const renderEventContent = useCallback(({event, timeText, view}) => {
     if (schedule.loading) {

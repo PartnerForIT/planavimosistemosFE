@@ -8,6 +8,10 @@
   position: relative;
   //position: relative;
 
+  .marker-tooltip {
+    border: 1px solid #1AA1FD !important;
+  }
+
   &__header {
     display: flex;
     padding: 13px 15px;
