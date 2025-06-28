@@ -207,7 +207,7 @@ const MonthCell = ({
     <div
       className={css.container}
       style={{opacity: isCompleted ? 0.5 : 1}}
-      data-for={tooltipType()}
+      data-for={marker ? 'user_marker' : tooltipType()}
       data-html={true}
       data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? marker : tooltipContent()}
       id='dropdownButton'>
@@ -220,7 +220,7 @@ const MonthCell = ({
                   { moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm') }
                 </div>
             : editPermissions && !isCompleted && (empty_manual || employeeName === 'Empty')
-              ? isMarkerMode && employeeName !== 'Empty'
+              ? isMarkerMode // && employeeName !== 'Empty'
                 ? isMarkerExist
                   ? <div className={css.removeMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
                   : <div className={css.addMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
