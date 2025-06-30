@@ -371,6 +371,22 @@ const ScheduleV2 = () => {
         .map(e => {
           const startOfDay = moment().startOf('day')
           const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay)
+          if (e.empty_manual && scheduleSettings.working_at_night) {
+            const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
+            const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
+            const endStr = `${moment(startStr).add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')}`
+            const times = {
+              start: startStr,
+              end: endStr,
+            }
+            
+            return {
+              ...e,
+              identifier: e.id,
+              durationEditable: editable,
+              ...times,
+            }
+          }
           return {
             ...e,
             identifier: e.id,
@@ -402,7 +418,7 @@ const ScheduleV2 = () => {
       }),
       ...copyToolHistory.map((e) => ({...e, copy_event: true})),
     ]
-  }, [schedule.events, copyToolHistory, timeline, scheduleSettings.remove_timelines])
+  }, [schedule.events, copyToolHistory, timeline, scheduleSettings])
 
   const daysOfMonth = useMemo(() => {
     const currentMonth = moment().startOf('month')
@@ -955,7 +971,7 @@ const ScheduleV2 = () => {
     return renderSlotResourceItem(resources, current_markers, resource.extendedProps.employeeId)
   }, [schedule.markers])
 
-  const renderMonthHeader = useCallback(({date: monthDate, view}) => {
+  const renderMonthHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
     const holiday = schedule.holidays[date.date()]
     const isNextMonth = date.isAfter(moment(currentStartDate).endOf('month'))
@@ -1282,6 +1298,8 @@ const ScheduleV2 = () => {
     )
   }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking])
 
+  
+
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -1362,6 +1380,11 @@ const ScheduleV2 = () => {
                 resourceAreaWidth={timeline === TIMELINE.MONTH ? '20%' : '25%'}
                 views={{
                   ...CALENDAR_VIEWS_CONFIG,
+                  day: {
+                    ...CALENDAR_VIEWS_CONFIG.day,
+                    slotMinTime: scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00',
+                    slotMaxTime: scheduleSettings.working_at_night ? `${+scheduleSettings.time_view_stats.split(':')[0] + 24}:00:00` : '24:00:00', 
+                  },
                   week: {
                     ...CALENDAR_VIEWS_CONFIG.week,
                     slotLabelFormat: renderWeekHeader,
