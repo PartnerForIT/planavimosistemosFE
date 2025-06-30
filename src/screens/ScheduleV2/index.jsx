@@ -1005,7 +1005,8 @@ const ScheduleV2 = () => {
       view.calendar.prev()
       const targetDate = view.getCurrentData().currentDate
       if (timeline === TIMELINE.MONTH) {
-        const date = moment(targetDate).startOf('month').subtract(1, 'days').startOf('month')
+        
+        const date = moment(fromDateRef.current).startOf('month').subtract(1, 'days').startOf('month')
         fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
@@ -1018,7 +1019,7 @@ const ScheduleV2 = () => {
       view.calendar.next()
       const targetDate = view.getCurrentData().currentDate
       if (timeline === TIMELINE.MONTH) {
-        const date = moment(targetDate).endOf('month').add(1, 'days')
+        const date = moment(fromDateRef.current).endOf('month').add(1, 'days')
         fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
