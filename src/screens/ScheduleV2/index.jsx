@@ -138,12 +138,14 @@ const updateWidthCell = (rows) => {
       }
     })
   }
+
+  const allElements = document.querySelectorAll('.fc-timeline-slot')
+  allElements.forEach((el) => {
+    el.colSpan = 1
+  })
   
   if (scheduleFooter?.getAttribute('data-timeline') === TIMELINE.MONTH) {
-    const allElements = document.querySelectorAll('.fc-timeline-slot')
-    allElements.forEach((el) => {
-      el.colSpan = 1
-    })
+    
     const elments = document.querySelectorAll('.statistic-slot')
     elments.forEach((el) => {
       el.colSpan = 2
@@ -363,14 +365,24 @@ const ScheduleV2 = () => {
         end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
       }));
     } else if (timeline === TIMELINE.DAY) {
-      result = schedule?.events.filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day'))).map(e => ({...e, identifier: e.id}))
+      result = schedule?.events
+        .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
+        .map(e => {
+          const startOfDay = moment().startOf('day')
+          const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay)
+          return {
+            ...e,
+            identifier: e.id,
+            durationEditable: editable
+          }
+        })
     } else {
       result = schedule?.events
     }
 
-    const statisticEvents = generateStatisticEvents(fromDateRef.current, schedule.events)
-
-    result = [...result, ...statisticEvents]
+    if (timeline === TIMELINE.MONTH) {
+      result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)]
+    }
 
     return [
       ...result.filter((resultItem) => {
@@ -594,12 +606,6 @@ const ScheduleV2 = () => {
     if (isNextMonth) {
       return 'statistic-slot'
     }
-
-    // const isWeekend = date.day() === 6 || date.day() === 0
-
-    // if (isWeekend) {
-    //   result += ' cell_wkd ';
-    // }
 
     if (timeline !== TIMELINE.DAY && h.date) {
       result += 'cell_holiday ';
@@ -1039,7 +1045,9 @@ const ScheduleV2 = () => {
     const isWeekend = d.day() === 6 || d.day() === 0
     if (isWeekend) {
       return (
-        <div style={{position: 'absolute', backgroundColor: 'rgba(245, 247, 250, 0.6)', width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none'}}></div>
+        <div
+          className="weekend-slot"
+        />
       )
     }
     return <div />
@@ -1056,6 +1064,7 @@ const ScheduleV2 = () => {
     const realCount = employeesCount
     const accumulatedHoursDetected = schedule.accumulatedHours[employeeId+'-'+jobTypeId] ? schedule.accumulatedHours[employeeId+'-'+jobTypeId] : (schedule.accumulatedHours[employeeId] ? schedule.accumulatedHours[employeeId] : []);
     const [employeeShiftId] = resource._resource.id.toString().split('-')
+
     return (
       <ResourceItem
         title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
@@ -1065,7 +1074,7 @@ const ScheduleV2 = () => {
         shiftId={shiftId}
         withMenu={permissions.schedule_create_and_edit && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
         employeeId={employeeId}
-        onEditShift={() => history.push(`/${companyId}/schedule/shift/${shiftId}`)}
+        onEditShift={() => history.push(`/${companyId}/schedule/shift/${resource.extendedProps.template_id || shiftId}`)}
         onDeleteShift={() => {
           setOpenDialog(shiftId)
           setDeletedShiftName(fieldValue)
@@ -1152,7 +1161,9 @@ const ScheduleV2 = () => {
           </div>
         )
       }
-      return <div />
+      if (timeline === TIMELINE.MONTH) {
+        return <div />
+      }
     }
 
     if (timeline === TIMELINE.MONTH) {
@@ -1336,7 +1347,7 @@ const ScheduleV2 = () => {
                 height="100%"
                 eventStartEditable={false}
                 eventDurationEditable={timeline === TIMELINE.DAY}
-                resourceAreaWidth={'25%'}
+                resourceAreaWidth={timeline === TIMELINE.MONTH ? '20%' : '25%'}
                 views={{
                   ...CALENDAR_VIEWS_CONFIG,
                   week: {

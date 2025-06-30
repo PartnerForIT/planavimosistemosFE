@@ -12,6 +12,23 @@
     border: 1px solid #1AA1FD !important;
   }
 
+  .fc-day-sat:not(.statistic-slot), .fc-day-sun:not(.statistic-slot) {
+    .weekend-slot {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        #f9fbfc,
+        #f9fbfc 44px,
+        transparent 44px,
+        transparent 45px
+      );
+    }
+  }
+
   &__header {
     display: flex;
     padding: 13px 15px;
