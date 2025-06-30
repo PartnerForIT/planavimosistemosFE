@@ -234,14 +234,14 @@ export default () => {
           <Route exact path='/:id/time-sheet' component={TimeSheet} />
         )
       }
-      {
+      {/* {
         (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
           <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : Schedule} />
         )
-      }
+      } */}
       {
         (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule-v2' component={permissions.schedule_simple_access ? SimpleSchedule : ScheduleV2} />
+          <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : ScheduleV2} />
         )
       }
       {
