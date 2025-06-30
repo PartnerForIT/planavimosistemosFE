@@ -55,6 +55,7 @@ const CALENDAR_VIEWS_CONFIG = {
   },
   month: {
     type: 'resourceTimeline',
+    // slotDuration: '12:00',
   }
 }
 
@@ -381,7 +382,14 @@ const ScheduleV2 = () => {
     }
 
     if (timeline === TIMELINE.MONTH) {
-      result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)]
+      result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)].map(e => {
+        return {
+          ...e,
+          realStart: e.start,
+          realEnd: e.end,
+          end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        }
+      })
     }
 
     return [
@@ -1163,7 +1171,10 @@ const ScheduleV2 = () => {
         )
       }
       if (timeline === TIMELINE.MONTH) {
-        return <div />
+        return (
+          <div />
+        )
+
       }
     }
 
