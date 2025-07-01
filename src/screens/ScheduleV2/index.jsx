@@ -1298,8 +1298,6 @@ const ScheduleV2 = () => {
     )
   }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking])
 
-  
-
   return (
     <MainLayout>
       <div className='schedule-screen'>
@@ -1392,9 +1390,12 @@ const ScheduleV2 = () => {
                   month: {
                     ...CALENDAR_VIEWS_CONFIG.month,
                     slotLabelContent: renderMonthHeader,
-                    slotLabelClassNames: ({date, view}) => {
-                      const isNextMonth = moment(date).isAfter(moment(currentStartDate).endOf('month'))
-                      return isNextMonth ? ['statistic-slot'] : []
+                    slotLabelClassNames: ({date: monthDate, view}) => {
+                      const isNextMonth = moment(monthDate).isAfter(moment(currentStartDate).endOf('month'))
+                      const date = moment(monthDate)
+                      const holiday = schedule.holidays[date.date()]
+                      const isWeekend = date.day() === 6 || date.day() === 0
+                      return isNextMonth ? ['statistic-slot'] : holiday ? [isWeekend ? 'header-holiday-slot-weekend' : 'header-holiday-slot'] : []
                     },
                     visibleRange: () => {
                       const visibleRange = {

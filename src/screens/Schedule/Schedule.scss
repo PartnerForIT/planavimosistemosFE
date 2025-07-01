@@ -12,6 +12,19 @@
     border: 1px solid #1AA1FD !important;
   }
 
+  .schedule-screen .fc td.fc-datagrid-cell.fc-resource .fc-datagrid-cell-cushion > .fc-icon {
+    margin-left: 0px;
+    width: 8px;
+  }
+
+  .header-holiday-slot {
+    background: repeating-linear-gradient(-45deg, #fff, #fff 5px, rgba(64, 195, 226, .1) 5px, rgba(64, 195, 226, .1) 10px);
+  }
+
+  .header-holiday-slot-weekend {
+    background: repeating-linear-gradient(-45deg, #f9fbfc, #f9fbfc 5px, rgba(64, 195, 226, .1) 5px, rgba(64, 195, 226, .1) 10px);
+  }
+
   .fc-day-sat:not(.statistic-slot), .fc-day-sun:not(.statistic-slot) {
     .weekend-slot {
       position: absolute;
