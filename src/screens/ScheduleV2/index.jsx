@@ -625,18 +625,17 @@ const ScheduleV2 = () => {
     const holiday = (schedule?.holidays) ? schedule?.holidays[date.date()] : false;
     const h = (holiday && holiday[0] && holiday[0]?.date) ? holiday[0] : {};
     let result = '';
-
     const isNextMonth = date.isAfter(moment(currentStartDate).endOf('month'))
-    if (isNextMonth) {
+    if (isNextMonth && timeline === TIMELINE.MONTH) {
       return 'statistic-slot'
     }
-
     if (timeline !== TIMELINE.DAY && h.date) {
       result += 'cell_holiday ';
       if (h.company_work_time_id) {
         result += 'cell_holiday_company';
       } else if ((h.date && !h.company_work_time_id)) {
         result += 'cell_holiday_government';
+        
       }
     }
 
@@ -645,6 +644,7 @@ const ScheduleV2 = () => {
     if (isPastDay) {
       result += ' cell_past_day'
     }
+    
     
     return result;
   }
