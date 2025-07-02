@@ -135,11 +135,14 @@ export default ({
       }
       {
         photo && (
-          <img
-            alt=''
-            // className={styles.cellNameWithAvatar__image}
-            src={photo}
-          />
+          <div
+            data-for='user_avatar'
+            data-tip={`<div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"><img alt="" style="width: 100%;" src="${photo}" /></div>`}
+            style={{width: 20, height: 20}}
+            className={classes.resourceItem__avatar_trigger}
+            data-html={true}>
+            <img alt='' src={photo} />
+          </div>
         )
       }
       {

@@ -880,96 +880,41 @@ const ScheduleV2 = () => {
     return []
   }, [events, tempShiftID, tempEventID])
 
-  const renderSlotResourceItem = useCallback((item, markers, employeeId) => {
-    return (
-      item.map((child, index) => {
-        return markers.map((marked, i) => {
-          let left = false;
-          let width = false;
-          if (marked.date) {
-            const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
-            if (date_header) {
-              date_header.forEach((e, i) => {
-                left = left === false ? e.offsetLeft : left;
-                width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
-              });
-            }
-          }
-          const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
-          return ( 
-            <React.Fragment key={child.id+'__'+index+'_'+i}>
-              { 
-                marked
-                  ? ((!exist_event || exist_event?.empty_employee) ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width-1, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null)
-                  : ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
-              }
-            </React.Fragment>
-          )
-        })
-        // let contains = [];
-        // if (!toolsActive.marking || true) {
-        //   contains = markers.map((marked, i) => {
-        //     let left = false;
-        //     let width = false;
-        //     if (marked.date) {
-        //       const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+moment(marked.date).format('yyyy-MM-DD')+'"]');
-        //       if (date_header) {
-        //         date_header.forEach((e, i) => {
-        //           left = left === false ? e.offsetLeft : left;
-        //           width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
-        //         });
-        //       }
-        //     }
-        //     const exist_event = schedule?.events ? schedule?.events.find(e => ((moment(e.start).isSame(moment(marked.date), 'date') || moment(e.end).isSame(moment(marked.date), 'date')) && e.employee_id*1 === employeeId*1 && !e.empty_manual)) : false;
-            
-        //     return ( 
-        //       <React.Fragment key={child.id+'__'+index+'_'+i}>
-        //         { (marked) ?
-        //           (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
-        //           ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
-        //         }
-        //       </React.Fragment>
-        //     )
-        //   });
-        // }
-
-        // if (toolsActive.marking && employeeId && false) {
-        //   const calendarApi = calendarRef.current?.getApi();
-          
-        //   if (calendarApi?.view?.currentEnd && calendarApi?.view?.currentStart) {
-
-        //     let currDate = moment(calendarApi?.view?.currentStart).subtract(1, 'days').startOf('day');
-        //     let lastDate = moment(calendarApi?.view?.currentEnd).startOf('day');
-            
-        //     while(currDate.isSameOrBefore(lastDate)) {
-        //       currDate.add(1, 'days');
-
-        //       let left = false;
-        //       let width = false;
-        //       const date_header = document.querySelectorAll('.fc-timeline-slot-label[data-date^="'+currDate.format('yyyy-MM-DD')+'"]');
-        //       if (date_header) {
-        //         date_header.forEach((e, i) => {
-        //           left = left === false ? e.offsetLeft : left;
-        //           width = width === false ? e.offsetWidth : e.offsetWidth + e.offsetLeft;
-        //         });
-        //       }
-
-        //       const same = markers.find(m => moment(m.date).isSame(currDate, 'date'));
-        //       const markDate = currDate.clone();
-
-        //       contains.push(<div data-for='user_marker' data-tip={same ? same.comment : ''} className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
-        //     }
-        //   }
-        // }
-        // return contains
-      })
-    )
-  }, [toolsActive.marking, schedule])
-
   const renderResourceLaneContent = useCallback(({resource}) => {
-    const current_markers = schedule.markers.filter(m => m.employee_id*1 === resource.extendedProps.employeeId*1)
-    return renderSlotResourceItem(resources, current_markers, resource.extendedProps.employeeId)
-  }, [schedule.markers])
+    if (resource.extendedProps.employeeId) {
+      const current_markers = schedule.markers.filter(m => m.employee_id*1 === resource.extendedProps.employeeId*1)
+      if (current_markers.length) {
+        const resourceEvents = schedule.events.filter(e => e.resourceId === resource.id && !e.empty_manual)
+        const eventsByDate = resourceEvents.reduce((acc, e) => {
+          return {
+            ...acc,
+            [moment(e.start).format('YYYY-MM-DD')]: true
+          }
+        }, {})
+        return (
+          <React.Fragment>
+            {
+              current_markers.map((marker, i) => {
+                const existEvent = eventsByDate[moment(marker.date).format('YYYY-MM-DD')]
+                if (existEvent) {
+                  return null
+                }
+                const date_header = document.querySelector('.fc-timeline-slot-label[data-date^="'+moment(marker.date).format('yyyy-MM-DD')+'"]')
+                if (!date_header) {
+                  return null
+                }
+                return (
+                  <div key={i} data-for='user_marker' data-tip={marker.comment} className="fc-markers-item marked" style={{ width: date_header.offsetWidth, left: date_header.offsetLeft+1 }} data-mark={moment(marker.date).format('yyyy-MM-DD')}>
+                  </div>
+                )
+              })
+            }
+          </React.Fragment>
+        )
+      }
+    }
+    return <React.Fragment />
+  }, [schedule.markers, schedule.events])
 
   const renderMonthHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
@@ -1190,7 +1135,6 @@ const ScheduleV2 = () => {
         return (
           <div />
         )
-
       }
     }
 
@@ -1291,9 +1235,6 @@ const ScheduleV2 = () => {
         handleCopyTool={handleCopyTool}
         handleAddHistory={handleAddHistory}
         addEmployee={() => addTempEmployees(shiftId, event.id)}
-        // onEmptyTimeline={handleEmptyTimeline}
-        // modalAddTempEmployee={modalAddTempEmployee}
-        // addTimeline={handleAddWorkingTime}
       />
     )
   }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking])
@@ -1469,6 +1410,15 @@ const ScheduleV2 = () => {
       <Tooltip
         id='user_marker'
         className='schedule-screen__tooltip schedule-screen__tooltip__marker'
+        effect='solid'
+      />
+      <Tooltip
+        id='user_avatar'
+        // className='schedule-screen__tooltip schedule-screen__tooltip__demand'
+        backgroundColor='transparent'
+        borderColor='transparent'
+        arrowColor='transparent'
+        place="right"
         effect='solid'
       />
       <DialogDeleteShift

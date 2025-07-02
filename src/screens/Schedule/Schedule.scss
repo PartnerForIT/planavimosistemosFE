@@ -35,9 +35,9 @@
       background: repeating-linear-gradient(
         to bottom,
         #f9fbfc,
-        #f9fbfc 44px,
-        transparent 44px,
-        transparent 45px
+        #f9fbfc 40px,
+        transparent 40px,
+        transparent 41px
       );
     }
   }
@@ -225,15 +225,17 @@
   }
 
   .fc-markers-item {
-    height: 44px;
+    height: 40px;
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
+    right: 0;
+    // bottom: 0;
 
     &.marked {
+      // position: relative;
       background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(59,59,59, 0.1) 5px, rgba(59,59,59, 0.1) 10px);
-      //z-index: 4;
+      // z-index: 4;
     }
 
     &.marker_active:hover {
@@ -390,7 +392,7 @@
   }
 
   .fc-timeline-lane-frame {
-    height: 44px !important;
+    height: 40px !important;
     padding: 4px 0;
     box-sizing: border-box;
 
@@ -692,7 +694,7 @@
 
     &.fc-resource {
       .fc-datagrid-cell-frame {
-        height: 44px !important;
+        height: 40px !important;
       }
 
       .fc-datagrid-cell-cushion {
@@ -751,7 +753,7 @@
           }
         }
         .fc-datagrid-cell-main {
-          z-index: 1;
+          z-index: 2;
           padding: 4px 15px;
           display: flex;
           align-items: center;
@@ -846,7 +848,7 @@
 
     &.fc-resource {
       .fc-datagrid-cell-frame {
-        height: 44px !important;
+        height: 40px !important;
       }
 
       .fc-datagrid-cell-cushion {
