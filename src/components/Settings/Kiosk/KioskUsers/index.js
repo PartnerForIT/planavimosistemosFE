@@ -44,6 +44,7 @@ const columnsWidthArray = {
   is_kiosk: 150,
   rfid: 100,
   pin_code: 100,
+  status: 80,
   name: 140,
   place: 150,
   skills: 200,
@@ -154,6 +155,7 @@ export default () => {
           </button>
         ),
       },
+      { label: 'Status', field: 'status', checked: true, translate: true },
       { label: 'Employee', field: 'name', checked: true },
       { label: 'Role', field: 'role', checked: true },
       { label: 'Skill', field: 'skills', checked: true },
@@ -207,6 +209,7 @@ export default () => {
             place: place?.[0]?.name ?? '',
             role: permissions?.[0]?.account_roles?.name ?? '',
             name: `${name} ${surname}`,
+            status: status*1,
           };
         })
         .filter(empl => {

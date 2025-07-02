@@ -499,22 +499,6 @@ $arrow-size: 21px;
   align-items: center;
   gap: 24px;
 
-  .avatarBlock {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
   .employeeName {
     font-size: 24px;
     font-weight: 400;
@@ -530,6 +514,22 @@ $arrow-size: 21px;
     margin-left: auto;
   }
 }
+
+.avatarBlock {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
 .upcomingRequests {
   display: flex;
@@ -695,6 +695,10 @@ $arrow-size: 21px;
   opacity: 1 !important;
 }
 
+.tooltip_emp {
+  opacity: 1 !important;
+}
+
 .tooltip {
   opacity: 1 !important;
 }
@@ -854,4 +858,63 @@ $arrow-size: 21px;
   overflow-wrap: anywhere;
   font-size: 14px;
   font-weight: 500;
+}
+
+.dateGray {
+  color: #808F94;
+}
+
+.grayValue {
+  color: #CFD5D7;
+}
+
+.approverStatus {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 20px;
+
+  &.approverStatusApproved {
+    background: #E1F5F0;
+  }
+
+  &.approverStatusRejected {
+    background: #F5E1E1;
+  }
+
+  &.approverStatusPending {
+    background: #E2EFFF;
+  }
+}
+
+.approverBlock {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .approverAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &Pending {
+      opacity: 0.15;
+    }
+  }
+
+  svg {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+.inlineBlock {
+  display: inline-block;
 }

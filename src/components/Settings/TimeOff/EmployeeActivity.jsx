@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TitleBackIcon from '../../Icons/TitleBackIcon';
 import ArrowRightButton from '../../Icons/ArrowRightButton';
+import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar';
+import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar';
+import avatar from '../../Icons/avatar.png';
 
 import classes from './timeoff.module.scss';
 import Label from '../../Core/InputLabel';
 import Switch from 'react-switch';
 import classnames from 'classnames';
+import ReactTooltip from 'react-tooltip';
 
 
 function EmployeeActivity({
@@ -19,7 +23,7 @@ function EmployeeActivity({
   employee,
 }) {
   const { t } = useTranslation();
-  const [rejectedRequests, setRejectedRequests] = useState(true);
+  const [exclRejectedRequests, setExclRejectedRequests] = useState(true);
   const currentYear = new Date().getFullYear();
   const [expandedCycles, setExpandedCycles] = useState([currentYear]);
   
@@ -31,6 +35,10 @@ function EmployeeActivity({
 
   const activities = activePolicy.employees.find(emp => emp.id === employee.id)?.activities || [];
 
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
+
   const expandCycle = (year) => {
     setExpandedCycles((prev) => {
       if (prev.includes(year)) {
@@ -40,6 +48,229 @@ function EmployeeActivity({
       }
     });
   };  
+
+  const renderWho = (activity) => {
+    switch (activity.who) {
+      case 'employee':
+        return <div>
+            <div className={classes.avatarBlock} data-tip={`${activity?.creator?.name} ${activity?.creator?.surname}`} data-for='emp_name'>
+              <img
+                src={activity?.creator?.photo || avatar}
+                alt='avatar'
+                className={classes.avatar}
+              />
+            </div>
+          </div>;
+      case 'admin':
+        return <div className={classes.inlineBlock} data-tip={t('Grownu system')} data-for='emp_name'><GrownuAdminAvatar /></div>;
+      case 'system':
+        return <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuSystemAvatar /></div>;
+      default:
+        return null;
+    }
+  };
+
+  const renderActivityType = (activity) => {
+    switch (activity.type) {
+      case 'init':
+        return <div><div>{t('Assigned to Policy')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'manual':
+        return <div>{t('Balance Adjustment')}</div>
+      case 'request_behalf_pending':
+      case 'request_behalf_approved':
+      case 'request_behalf_rejected':
+        return <div><div>{t('Request')}</div><div className={classes.dateGray}>{activity.requested_from} - {activity.requested_to}</div></div>;
+      case 'accrue':
+        return <div><div>{t('Accrue')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'carryover_expired':
+        return <div><div>{t('Carryover')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'carryover':
+        return <div><div>{t('Carryover')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'imported':
+        return <div><div>{t('Imported')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      default:
+        return null;
+    }
+  };
+
+  const renderAction = (activity) => {
+    if (activity.type === 'manual') {
+      return <div><div>{t('Adjusted')}</div><div className={classes.dateGray}>{activity.created_at} {activity.created_at_time}</div></div>;
+    }
+
+    if (activity.type === 'imported') {
+      return <div><div>{t('Imported')}</div><div className={classes.dateGray}>{activity.created_at} {activity.created_at_time}</div></div>;
+    }
+
+    if (activity.type === 'request_behalf_pending' || activity.type === 'request_behalf_approved' || activity.type === 'request_behalf_rejected') {
+      return <div><div>{t('Requested')}</div><div className={classes.dateGray}>{activity.created_at} {activity.created_at_time}</div></div>;
+    }
+
+    if (activity.type === 'carryover') {
+      return <div><div>{t('Carryover')}</div><div className={classes.dateGray}>{activity.created_at} / {activity.created_at_time}</div></div>;
+    }
+
+    if (activity.type === 'carryover_expired') {
+      return <div><div>{t('Expired')}</div><div className={classes.dateGray}>{activity.created_at} / {activity.created_at_time}</div></div>;
+    }
+
+    return null;
+  };
+
+  const renderApprover = (activity) => {
+    if (activity.type === 'request_behalf_pending' || activity.type === 'request_behalf_approved' || activity.type === 'request_behalf_rejected') {
+      switch (activity.type) {
+        case 'request_behalf_approved':
+          return <div className={classes.approverBlock}>
+            {!activity.approved_1 && !activity.approved_2 ? (
+                <>
+                  <div className={classes.inlineBlock} data-tip={t('Grownu system')} data-for='emp_name'><GrownuSystemAvatar /></div>
+                  <span className={classnames(classes.approverStatus, classes.approverStatusApproved)}>{t('Auto Approved')}</span>
+                </>
+              ) : (
+                <>
+                  {activity.approved_1 ? (
+                    activity.approved_1.id === 'admin' ? (
+                      <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                    ) : (
+                      <div className={classes.approverAvatar} data-tip={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-for='emp_name'>
+                        <img
+                          src={activity.approved_1.photo || avatar}
+                          alt='approver'
+                          className={classes.avatar}
+                        />
+                      </div>
+                    )
+                  ) : null}
+                  {activity.approved_2 ? (
+                    activity.approved_2.id === 'admin' ? (
+                      <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                    ) : (
+                      <div className={classes.approverAvatar} data-tip={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-for='emp_name'>
+                        <img
+                          src={activity.approved_2.photo || avatar}
+                          alt='approver'
+                          className={classes.avatar}
+                        />
+                      </div>
+                    )
+                  ) : null}
+                  <span className={classnames(classes.approverStatus, classes.approverStatusApproved)}>{t('Approved')}</span>
+                </>
+              )}
+          </div>;
+        case 'request_behalf_rejected':
+          return <div>
+              <div className={classes.approverBlock}>
+              {activity.rejected_by ? (
+                activity.rejected_by.id === 'admin' ? (
+                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                ) : (
+                  <div className={classes.approverAvatar} data-tip={`${activity?.rejected_by?.name} ${activity?.rejected_by?.surname}`} data-for='emp_name'>
+                    <img
+                      src={activity.rejected_by.photo || avatar}
+                      alt='approver'
+                      className={classes.avatar}
+                    />
+                  </div>
+                )
+              ) : null}
+              <span className={classnames(classes.approverStatus, classes.approverStatusRejected)}>{t('Rejected')}</span>
+            </div>
+            <div className={classes.dateGray}>
+              {activity.rejected_at} / {activity.rejected_at_time}
+            </div>
+          </div>;
+        case 'request_behalf_pending':
+          return <div className={classes.approverBlock}>
+            {activity.approved_1 ? (
+              activity.approved_1.id === 'admin' ? (
+                <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+              ) : (
+                <div className={classes.approverAvatar} data-tip={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-for='emp_name'>
+                  <img
+                    src={activity.approved_1.photo || avatar}
+                    alt='approver'
+                    className={classes.avatar}
+                  />
+                </div>
+              )
+            ) : 
+              (activity.approver_1 ? (
+                activity.approver_1.id === 'admin' ? (
+                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                ) : (
+                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tip={`${activity?.approver_1?.name} ${activity?.approver_1?.surname}`} data-for='emp_name'>
+                    <img
+                      src={activity.approver_1.photo || avatar}
+                      alt='approver'
+                      className={classes.avatar}
+                    />
+                  </div>
+                )
+              ) : null)
+            }
+            {activity.approved_2 ? (
+              activity.approved_2.id === 'admin' ? (
+                <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+              ) : (
+                <div className={classes.approverAvatar} data-tip={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-for='emp_name'>
+                  <img
+                    src={activity.approved_2.photo || avatar}
+                    alt='approver'
+                    className={classes.avatar}
+                  />
+                </div>
+              )
+            ) : 
+              (activity.approver_2 ? (
+                activity.approver_2.id === 'admin' ? (
+                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                ) : (
+                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tip={`${activity?.approver_2?.name} ${activity?.approver_2?.surname}`} data-for='emp_name'>
+                    <img
+                      src={activity.approver_2.photo || avatar}
+                      alt='approver'
+                      className={classes.avatar}
+                    />
+                  </div>
+                )
+              ) : null)
+            }
+            <span className={classnames(classes.approverStatus, classes.approverStatusPending)}>{t('Pending')}</span>
+          </div>;
+        default:
+          return null;
+      }
+            
+    }
+
+    return null;
+  };
+
+  const renderChanged = (activity) => {
+    if (activity.type === 'manual'
+      || activity.type === 'imported'
+      || activity.type === 'request_behalf_pending'
+      || activity.type === 'request_behalf_approved'
+      || activity.type === 'request_behalf_rejected'
+      || activity.type === 'carryover'
+      || activity.type === 'carryover_expired') {
+      return (
+        <div>
+          {activity.changed ? (
+            <span className={classnames(classes.changeValue, {
+              [classes.increase]: activity.adjustment_type === 'increase',
+              [classes.decrease]: activity.adjustment_type === 'decrease',
+              [classes.grayValue]: activity.type === 'request_behalf_pending' || activity.type === 'request_behalf_rejected',
+            })}>
+              {activity.adjustment_type === 'increase' ? '+' : '-'}{activity.changed}
+            </span>
+          ) : null}
+        </div>
+      );
+    }
+  }
   
   return (
     <>
@@ -82,12 +313,12 @@ function EmployeeActivity({
             <div className={classes.buttonBlock}>
               <div className={classes.formControlSwhitchLine}>
                 <Switch
-                  onChange={(checked) => setRejectedRequests(checked)}
+                  onChange={(checked) => setExclRejectedRequests(checked)}
                   offColor='#808F94'
                   onColor='#0085FF'
                   uncheckedIcon={false}
                   checkedIcon={false}
-                  checked={rejectedRequests}
+                  checked={exclRejectedRequests}
                   height={21}
                   width={40}
                 />
@@ -144,26 +375,29 @@ function EmployeeActivity({
                       </div>
                       
                       {activities.map((activity) => (
-                        <div key={activity.id} className={classes.cyclesTableRow}>
-                          <div className={classes.cyclesTableCol}>
-                            todo
-                          </div>
-                          <div className={classes.cyclesTableCol}>
-                            todo
-                          </div>
-                          <div className={classes.cyclesTableCol}>
-                            todo
-                          </div>
-                          <div className={classes.cyclesTableCol}>
-                            todo
-                          </div>
-                          <div className={classes.cyclesTableCol}>
-                            {activity.change_type === 'increase' ? '+' : '-'}{(activity.balance_after - activity.balance_before).toFixed(2)}
-                          </div>
-                          <div className={classes.cyclesTableCol}>
-                            {activity.balance_after}
-                          </div>
-                        </div>
+                        (!exclRejectedRequests || activity.type !== 'request_behalf_rejected') &&
+                          <React.Fragment key={activity.id}>
+                            <div key={activity.id} className={classes.cyclesTableRow}>
+                              <div className={classes.cyclesTableCol}>
+                                {renderWho(activity)}
+                              </div>
+                              <div className={classes.cyclesTableCol}>
+                                {renderActivityType(activity)}
+                              </div>
+                              <div className={classes.cyclesTableCol}>
+                                {renderAction(activity)}
+                              </div>
+                              <div className={classes.cyclesTableCol}>
+                                {renderApprover(activity)}
+                              </div>
+                              <div className={classes.cyclesTableCol}>
+                                {renderChanged(activity)}
+                              </div>
+                              <div className={classes.cyclesTableCol}>
+                                {activity.balance_after}
+                              </div>
+                            </div>
+                          </React.Fragment>
                       ))}
                     </div>
                   </div>
@@ -173,7 +407,11 @@ function EmployeeActivity({
             })
           ) : null
         }
-        
+        <ReactTooltip
+          id='emp_name'
+          effect='solid'
+          className={classes.tooltip_emp}
+        />
       </PageLayout>
     </>
   );
