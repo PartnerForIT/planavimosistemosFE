@@ -21,6 +21,7 @@ const convertMinutesToHoursAndMinutes = (minutes) => {
 }
 
 const MonthCell = ({
+  selectedEvent,
   start,
   end,
   isCompleted,
@@ -211,10 +212,10 @@ const MonthCell = ({
       data-html={true}
       data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? marker : tooltipContent()}
       id='dropdownButton'>
-      <div className={css.content} style={{justifyContent: showHoursCount ? 'center' : 'flex-start'}}>
+      <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
-          !empty_manual && newEmployee?.name
-            ? showHoursCount
+          (!empty_manual && newEmployee?.name )|| selectedEvent.rId
+            ? showHoursCount || selectedEvent.rId
               ? <div style={{alignSelf: 'center', width: '100%', textAlign: 'center'}}>{ minutes / 60 }</div>
               : <div className={css.eventTime} style={{borderColor: lineColor}}>
                   { moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm') }

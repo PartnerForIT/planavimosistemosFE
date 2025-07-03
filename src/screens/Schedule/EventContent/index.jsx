@@ -39,6 +39,7 @@ const convertMinutesToHoursAndMinutes = function(minutes) {
 }
 
 const EventContent = ({
+  selectedEvent,
   id,
   shiftId,
   employeeId,
@@ -399,7 +400,7 @@ const EventContent = ({
           )
         }
         {
-            employeeName && (
+            employeeName && !selectedEvent.rId && (
               (empty_manual)
               ? (copyTool)
                 ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span> : null

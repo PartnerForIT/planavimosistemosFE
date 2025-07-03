@@ -370,7 +370,7 @@ const ScheduleV2 = () => {
         .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
         .map(e => {
           const startOfDay = moment().startOf('day')
-          const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay)
+          const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay) && !e.rId
           if (e.empty_manual && scheduleSettings.working_at_night) {
             const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
             const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
@@ -531,10 +531,16 @@ const ScheduleV2 = () => {
     setSchedule(prev => ({...prev, loading: true}))
     const res = await request(`${companyId}/shift`, 'GET', params)
     if (res.success) {
+      const events = res.events.map(e => {
+        if (e.rId) {
+          e.resourceId = e.rId
+        }
+        return e
+      })
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
         holidays: Object.keys(res.holidays).length ? res.holidays : state.holidays,
-        events: res.events,
+        events: events,
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
@@ -1037,7 +1043,7 @@ const ScheduleV2 = () => {
 
     return (
       <ResourceItem
-        title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`}
+        title={`${fieldValue} ${realCount ? `(${realCount})` : ''}`} // ${resource.id}
         photo={photo}
         templateId={resource.extendedProps.template_id}
         accumulatedHours={accumulatedHoursDetected}
@@ -1066,6 +1072,7 @@ const ScheduleV2 = () => {
     if (schedule.loading) {
       return <div></div>
     }
+    
     const resourceInfo = event.getResources()[0]
     const selectedEvent = event.extendedProps
     const start = (scheduleSettings.remove_timelines && timeline !== TIMELINE.DAY && selectedEvent.realStart) ? selectedEvent.realStart : event.start
@@ -1141,7 +1148,7 @@ const ScheduleV2 = () => {
     if (timeline === TIMELINE.MONTH) {
       return (
         <MonthCell
-          event={selectedEvent}
+          selectedEvent={selectedEvent}
           schedule={scheduleSettings}
           id={event.id}
           shiftId={shiftId}
@@ -1162,7 +1169,7 @@ const ScheduleV2 = () => {
           night_minutes={event.extendedProps.night_minutes}
           break_minutes={event.extendedProps.break_minutes}
           work_minutes={event.extendedProps.work_minutes}
-          minutes={event.extendedProps.minutes}
+          minutes={selectedEvent.minutes}
           costPermission={permissions.cost && permissions.schedule_costs}
           nightPermission={permissions.night_rates && additionalRates.night_time}
           viewType={view.type}
@@ -1193,6 +1200,7 @@ const ScheduleV2 = () => {
     return (
       <EventContent
         id={event.id}
+        selectedEvent={selectedEvent}
         shiftId={shiftId}
         employeeId={resourceInfo?.extendedProps?.employeeId}
         title={event.title}
