@@ -10,6 +10,7 @@ import style from './CreateAccount.module.scss';
 import classes from '../Dialog.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
+import Checkbox from '../../Checkbox/Checkbox2';
 import Tooltip from '../../../Core/Tooltip';
 import ReactTooltip from 'react-tooltip';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
@@ -274,20 +275,19 @@ const SecondStep = ({
     if (!user.childrens || user.childrens === '0') {
       return true;
     }
+
     const childrensCount = parseInt(user.childrens, 10);
-    const enteredBorns = [
-      user.child_born_1,
-      user.child_born_2,
-      user.child_born_3,
-      user.child_born_4,
-      user.child_born_5,
-      user.child_born_6,
-      user.child_born_7,
-      user.child_born_8,
-      user.child_born_9,
-      user.child_born_10,
-    ].slice(0, childrensCount).filter(born => born && born.length > 0).length;
-    return enteredBorns === childrensCount;
+
+    for (let i = 1; i <= childrensCount; i++) {
+      const born = user[`child_born_${i}`];
+      const disabled = user[`child_born_${i}_disabled`];
+
+      if (!disabled && (!born || born.length === 0)) {
+        return false;
+      }
+    }
+
+    return true;
   }, [user.childrens, user]);
 
   return (
@@ -468,6 +468,12 @@ const SecondStep = ({
                               />
                             </MuiPickersUtilsProvider>
                           </div>
+                          <Checkbox
+                            name={`child_born_${index + 1}_disabled`}
+                            checked={user[`child_born_${index + 1}_disabled`] || false}
+                            onChange={(e) => handleInput({target: {name: e.target.name, value: e.target.checked}})}
+                            label={t('Disabled')}
+                          />
                         </div>
                       ))
                     }

@@ -25,6 +25,7 @@ import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
 import CustomSelect from '../../Select/Select';
+import Checkbox from '../../Checkbox/Checkbox2';
 import ReactTooltip from 'react-tooltip';
 import MomentUtils from '@date-io/moment';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -170,6 +171,7 @@ export default function EditAccount({
         email,
         // eslint-disable-next-line camelcase,no-shadow
         name, surname, phone, speciality_id, external_id, hours_demand, approver_1, approver_2, effective_date, childrens, child_born_1, child_born_2, child_born_3, child_born_4, child_born_5, child_born_6, child_born_7, child_born_8, child_born_9, child_born_10, cost, charge, skills, place, shift_id, job_type_id, assign_shift_id, assign_job_type_id, role_id,
+        child_born_1_disabled, child_born_2_disabled, child_born_3_disabled, child_born_4_disabled, child_born_5_disabled, child_born_6_disabled, child_born_7_disabled, child_born_8_disabled, child_born_9_disabled, child_born_10_disabled,
         // eslint-disable-next-line no-shadow
         avatar, groups, subgroups, em_status,
       } = employee;
@@ -195,6 +197,16 @@ export default function EditAccount({
         child_born_8,
         child_born_9,
         child_born_10,
+        child_born_1_disabled,
+        child_born_2_disabled,
+        child_born_3_disabled,
+        child_born_4_disabled,
+        child_born_5_disabled,
+        child_born_6_disabled,
+        child_born_7_disabled,
+        child_born_8_disabled,
+        child_born_9_disabled,
+        child_born_10_disabled,
         shift_id,
         job_type_id,
         assign_shift_id,
@@ -548,20 +560,19 @@ export default function EditAccount({
     if (!user.childrens || user.childrens === '0') {
       return true;
     }
+
     const childrensCount = parseInt(user.childrens, 10);
-    const enteredBorns = [
-      user.child_born_1,
-      user.child_born_2,
-      user.child_born_3,
-      user.child_born_4,
-      user.child_born_5,
-      user.child_born_6,
-      user.child_born_7,
-      user.child_born_8,
-      user.child_born_9,
-      user.child_born_10,
-    ].slice(0, childrensCount).filter(born => born && born.length > 0).length;
-    return enteredBorns === childrensCount;
+
+    for (let i = 1; i <= childrensCount; i++) {
+      const born = user[`child_born_${i}`];
+      const disabled = user[`child_born_${i}_disabled`];
+
+      if (!disabled && (!born || born.length === 0)) {
+        return false;
+      }
+    }
+
+    return true;
   }, [user.childrens, user]);
 
   return (
@@ -942,6 +953,12 @@ export default function EditAccount({
                                           />
                                         </MuiPickersUtilsProvider>
                                       </div>
+                                      <Checkbox
+                                        name={`child_born_${index + 1}_disabled`}
+                                        checked={user[`child_born_${index + 1}_disabled`] || false}
+                                        onChange={(e) => handleInput({target: {name: e.target.name, value: e.target.checked}})}
+                                        label={t('Disabled')}
+                                      />
                                     </div>
                                   ))
                                 }
