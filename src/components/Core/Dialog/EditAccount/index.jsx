@@ -544,6 +544,26 @@ export default function EditAccount({
     handleClose();
   };
 
+  const checkAllBornsEntered = useMemo(() => {
+    if (!user.childrens || user.childrens === '0') {
+      return true;
+    }
+    const childrensCount = parseInt(user.childrens, 10);
+    const enteredBorns = [
+      user.child_born_1,
+      user.child_born_2,
+      user.child_born_3,
+      user.child_born_4,
+      user.child_born_5,
+      user.child_born_6,
+      user.child_born_7,
+      user.child_born_8,
+      user.child_born_9,
+      user.child_born_10,
+    ].slice(0, childrensCount).filter(born => born && born.length > 0).length;
+    return enteredBorns === childrensCount;
+  }, [user.childrens, user]);
+
   return (
     <Dialog handleClose={onClose} onExited={handleExited} open={!!open} title={title}>
       <div className={style.edit}>
@@ -944,7 +964,7 @@ export default function EditAccount({
                   <Button
                     onClick={handleSubmit}
                     size='big'
-                    disabled={user.assign_shift_id && !user.assign_job_type_id}
+                    disabled={(user.assign_shift_id && !user.assign_job_type_id) || !checkAllBornsEntered}
                   >
                     {t('Save an close')}
                   </Button>

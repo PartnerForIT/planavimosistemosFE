@@ -270,6 +270,26 @@ const SecondStep = ({
     [style.secondForm_four]: (permissions.create_groups || permissions.create_places) && permissions.time_off,
   });
 
+  const checkAllBornsEntered = useMemo(() => {
+    if (!user.childrens || user.childrens === '0') {
+      return true;
+    }
+    const childrensCount = parseInt(user.childrens, 10);
+    const enteredBorns = [
+      user.child_born_1,
+      user.child_born_2,
+      user.child_born_3,
+      user.child_born_4,
+      user.child_born_5,
+      user.child_born_6,
+      user.child_born_7,
+      user.child_born_8,
+      user.child_born_9,
+      user.child_born_10,
+    ].slice(0, childrensCount).filter(born => born && born.length > 0).length;
+    return enteredBorns === childrensCount;
+  }, [user.childrens, user]);
+
   return (
     <>
       <div className={containerClasses}>
@@ -419,6 +439,7 @@ const SecondStep = ({
                 <InputSelect
                   id='childrens'
                   placeholder={t('Number of Children')}
+                  value={user.childrens}
                   options={childrensOpt}
                   name='childrens'
                   onChange={handleInput}
@@ -647,7 +668,7 @@ const SecondStep = ({
         <NextStepButton
           className={style.nextButton}
           onClick={nextWithValidate}
-          disabled={user.assign_shift_id && !user.assign_job_type_id}
+          disabled={(user.assign_shift_id && !user.assign_job_type_id) || !checkAllBornsEntered}
         />
       </div>
     </>
