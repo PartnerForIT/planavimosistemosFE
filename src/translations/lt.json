@@ -1395,5 +1395,7 @@
         "Auto Approved": "Auto Patvirtintas",
         "Taken Adjustment": "Panaudoto Koregavimas",
         "Carryover": "Perkėlimas",
-        "Expired": "Pasibaigęs likutis"
+        "Expired": "Pasibaigęs likutis",
+
+        "{{days}} days carryover on {{when}} have an expiration date of {{expire}}": "{{days}} perkeltos dienos nuo {{when}} kurios baigs galioti {{expire}}"
 }

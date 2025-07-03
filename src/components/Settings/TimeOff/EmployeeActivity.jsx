@@ -8,12 +8,14 @@ import ArrowRightButton from '../../Icons/ArrowRightButton';
 import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar';
 import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar';
 import avatar from '../../Icons/avatar.png';
+import useCompanyInfo from '../../../hooks/useCompanyInfo';
 
 import classes from './timeoff.module.scss';
 import Label from '../../Core/InputLabel';
 import Switch from 'react-switch';
 import classnames from 'classnames';
 import ReactTooltip from 'react-tooltip';
+import moment from 'moment';
 
 
 function EmployeeActivity({
@@ -22,6 +24,13 @@ function EmployeeActivity({
   activePolicy,
   employee,
 }) {
+  const { getDateFormat } = useCompanyInfo();
+  const formatDate = getDateFormat({
+    'YY.MM.DD': 'yyyy.MM.DD',
+    'DD.MM.YY': 'DD.MM.yyyy',
+    'MM.DD.YY': 'MM.DD.yyyy',
+  });
+  
   const { t } = useTranslation();
   const [exclRejectedRequests, setExclRejectedRequests] = useState(true);
   const currentYear = new Date().getFullYear();
@@ -254,6 +263,7 @@ function EmployeeActivity({
       || activity.type === 'request_behalf_pending'
       || activity.type === 'request_behalf_approved'
       || activity.type === 'request_behalf_rejected'
+      || activity.type === 'accrue'
       || activity.type === 'carryover'
       || activity.type === 'carryover_expired') {
       return (
@@ -271,6 +281,35 @@ function EmployeeActivity({
       );
     }
   }
+
+  const calculateTotalBooked = (year) => {
+    return activities.reduce((total, activity) => {
+      //past approved
+      if (activity.type === 'request_behalf_approved' && new Date(activity.created_at).getFullYear() === year && moment(activity.requested_to, formatDate).isBefore(moment())) {
+        return total + (activity.changed || 0);
+      }
+      return total;
+    }, 0);
+  };
+
+  const calculateTotalTaken = (year) => {
+    return activities.reduce((total, activity) => {
+      //featture approved
+      if (activity.type === 'request_behalf_approved' && new Date(activity.created_at).getFullYear() === year && moment(activity.requested_to, formatDate).isAfter(moment())) {
+        return total + (activity.changed || 0);
+      }
+      return total;
+    }, 0);
+  };
+
+  const calculateTotalAccrued = (year) => {
+    return activities.reduce((total, activity) => {
+      if (activity.type === 'accrue' && new Date(activity.created_at).getFullYear() === year) {
+        return total + (activity.changed || 0);
+      }
+      return total;
+    }, 0);
+  };
   
   return (
     <>
@@ -348,7 +387,7 @@ function EmployeeActivity({
                     </button>
                     {t(year === currentYear ? 'Current cycle' : 'Previous Cycle')} <span>{year}.01.01 — {year}.12.31</span>
                   </div>
-                  { isExpanded && <div className={classes.cycleTitleInfo}><b>{t('Total')}:</b> {t('Booked')}: <b>todo</b>, {t('Taken')}: <b>todo</b>, {t('Accrued')}: <b>todo</b></div> }
+                  { isExpanded && <div className={classes.cycleTitleInfo}><b>{t('Total')}:</b> {t('Booked')}: <b>{calculateTotalBooked(year)}</b>, {t('Taken')}: <b>{calculateTotalTaken(year)}</b>, {t('Accrued')}: <b>{calculateTotalAccrued(year)}</b></div> }
                 </div>
                 { isExpanded && (
                   <div className={classes.cycleContent}>
@@ -375,7 +414,8 @@ function EmployeeActivity({
                       </div>
                       
                       {activities.map((activity) => (
-                        (!exclRejectedRequests || activity.type !== 'request_behalf_rejected') &&
+                        ((!exclRejectedRequests || activity.type !== 'request_behalf_rejected') &&
+                          (moment(activity.created_at, formatDate).format('YYYY') === String(year))) &&
                           <React.Fragment key={activity.id}>
                             <div key={activity.id} className={classes.cyclesTableRow}>
                               <div className={classes.cyclesTableCol}>

@@ -918,3 +918,22 @@ $arrow-size: 21px;
 .inlineBlock {
   display: inline-block;
 }
+
+.carryoverItem {
+  background: #DFEEFB;
+  border-radius: 5px;
+  color: #4080FC;
+  padding: 5px 10px;
+  font-weight: 500;
+  font-size: 14px;
+  min-height: 30px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -12,8 +12,11 @@ import TimeOffSymbol7 from '../../../Icons/TimeOffSymbol7';
 import TimeOffSymbol8 from '../../../Icons/TimeOffSymbol8';
 import TimeOffSymbol9 from '../../../Icons/TimeOffSymbol9';
 import ArrowRightButton from '../../../Icons/ArrowRightButton';
+import AlertCircle from '../../../Icons/AlertCircle';
 import Button from '../../../Core/Button/Button';
 import UnassignEmployee from '../../../Core/Dialog/UnassignEmployee';
+import useCompanyInfo from '../../../../hooks/useCompanyInfo';
+import moment from 'moment';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import {
@@ -25,6 +28,13 @@ function PoliciesActivityTable({
     onUnassingPolicyEmployees,
     employee,
 }) {
+    const { getDateFormat } = useCompanyInfo();
+    const formatDate = getDateFormat({
+      'YY.MM.DD': 'yyyy.MM.DD',
+      'DD.MM.YY': 'DD.MM.yyyy',
+      'MM.DD.YY': 'MM.DD.yyyy',
+    });
+
     const { t } = useTranslation();
     const policies = useSelector(policiesSelector);
     const [expandedPolicyIds, setExpandedPolicyIds] = useState([]);
@@ -43,6 +53,16 @@ function PoliciesActivityTable({
       onUnassingPolicyEmployees(employee.id, unasignVisible);
       setUnasignVisible(false);
     };
+
+    const calculateTotalBooked = (policy) => {
+        return policy?.activities.reduce((total, activity) => {
+          //past approved
+          if (activity.type === 'request_behalf_approved' && moment(activity.requested_to, formatDate).isBefore(moment())) {
+            return total + (activity.changed || 0);
+          }
+          return total;
+        }, 0);
+      };
 
     return (
       <div className={classes.container}>
@@ -163,10 +183,25 @@ function PoliciesActivityTable({
                                       </div>
                                       <div>
                                           <strong>{t('Adjusted by admin')}:</strong>
+                                          <div>todo</div>
                                       </div>
                                       <div>
                                           <strong>{t('Days booked')}:</strong>
+                                          <div>{calculateTotalBooked(policyEmployeeDetails)}</div>
                                       </div>
+                                  </div>
+                                  <div className={classes.carryoverInfo}>
+                                    {
+                                      policyEmployeeDetails.carryovers && policyEmployeeDetails.carryovers.length > 0 && (
+                                        <div className={classes.carryoverList}>
+                                          {policyEmployeeDetails.carryovers.map((carryover) => (
+                                            <div key={carryover.id} className={classes.carryoverItem}>
+                                              <AlertCircle /> {t("{{days}} days carryover on {{when}} have an expiration date of {{expire}}", { days: carryover.amount, when: carryover.carryover_date, expire: carryover.expire_at })}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )
+                                    }
                                   </div>
                                   <div className={classes.actionsRow}>
                                       <div></div>
