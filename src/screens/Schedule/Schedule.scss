@@ -17,6 +17,10 @@
     width: 8px;
   }
 
+    .schedule-screen .fc .fc-datagrid-cell-cushion {
+      padding: 4px;
+    }
+
   .header-holiday-slot {
     background: repeating-linear-gradient(-45deg, #fff, #fff 5px, rgba(64, 195, 226, .1) 5px, rgba(64, 195, 226, .1) 10px);
   }
@@ -393,7 +397,7 @@
 
   .fc-timeline-lane-frame {
     height: 40px !important;
-    padding: 4px 0;
+    padding: 2px 0;
     box-sizing: border-box;
 
     .fc-timeline-event-harness {
