@@ -452,6 +452,11 @@ function EmployeeActivity({
           effect='solid'
           className={classes.tooltip_emp}
         />
+        <ReactTooltip
+          id='back_button'
+          effect='solid'
+          className={classes.tooltip_back}
+        />
       </PageLayout>
     </>
   );

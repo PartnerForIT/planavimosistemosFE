@@ -408,6 +408,7 @@ const RowActions = ({
             className={styles.openButtonRow}
             onClick={() => openButton(id)}
             size='little'
+            primary
           >
             {t('Open')}
           </Button>
