@@ -17,6 +17,7 @@ const useStylesBootstrap = makeStyles(() => ({
 const useStyles = makeStyles(() => ({
   block: {
     width: '18px',
+    flex: '0 0 18px',
     height: '18px',
     fontSize: '14px',
     lineHeight: '18px',
