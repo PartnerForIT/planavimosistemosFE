@@ -204,6 +204,10 @@ const MonthCell = ({
   const marker = markerComment()
   const isMarkerExist = marker !== null
 
+  // if (employeeName === 'Empty') {
+  //   console.log(selectedEvent)
+  // }
+
   return (
     <div
       className={css.container}
@@ -214,7 +218,7 @@ const MonthCell = ({
       id='dropdownButton'>
       <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
-          (!empty_manual && newEmployee?.name) || selectedEvent.rId
+          (!empty_manual) || selectedEvent.rId
             ? showHoursCount || selectedEvent.rId
               ? <div style={{alignSelf: 'center', width: '100%', textAlign: 'center'}}>{ minutes / 60 }</div>
               : <div className={css.eventTime} style={{borderColor: lineColor}}>
@@ -274,7 +278,7 @@ const MonthCell = ({
           : null
       }
       {
-        !copy_event && withMenu && !empty && !empty_manual && !isCompleted && (employeeName !== 'Empty' || newEmployee?.name)
+        !copy_event && withMenu && !empty && !empty_manual && !isCompleted //&& (employeeName !== 'Empty' || newEmployee?.name)
           ? <div className={css.dropdownContainer}>
               <Dropdown ref={modalRef} light cancel={content !== 'menu'} onCancel={handleCancel}>
                 {
