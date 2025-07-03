@@ -1076,7 +1076,7 @@ const ScheduleV2 = () => {
     const resourceInfo = event.getResources()[0]
     const selectedEvent = event.extendedProps
     const start = (scheduleSettings.remove_timelines && timeline !== TIMELINE.DAY && selectedEvent.realStart) ? selectedEvent.realStart : event.start
-    const end = (scheduleSettings.remove_timelines && timeline !== TIMELINE.DAY && selectedEvent.realEnd) ? selectedEvent.realEnd : event.end
+    const end = (scheduleSettings.remove_timelines && timeline !== TIMELINE.DAY && selectedEvent.realEnd) ? selectedEvent.realEnd : (timeline === TIMELINE.MONTH ? selectedEvent.realEnd : event.end)
     const employeeName = resourceInfo.title
     const withMenu = resourceInfo.extendedProps.employeeId || resourceInfo?.extendedProps?.employeeId === 0
     const shiftId = resourceInfo.extendedProps.shift_id ? resourceInfo.extendedProps.shift_id : resourceInfo.id.split('-')[0]
