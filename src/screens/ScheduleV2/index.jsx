@@ -165,7 +165,7 @@ const generateStatisticEvents = (date, events) => {
   }, {})
 
   const temp = Object.entries(resourceEvents).flatMap(([resourceId, events]) => {
-    const accumulatedData = events.reduce((acc, e) => {
+    const accumulatedData = events.filter(e => !e.empty_event && !e.empty_manual).reduce((acc, e) => {
       return {
         totalHours: acc.totalHours + (e.hours || 0),
         nightHours: acc.nightHours + (e.night_duration || 0),

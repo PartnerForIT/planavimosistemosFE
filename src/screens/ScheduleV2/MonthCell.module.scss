@@ -10,7 +10,7 @@
   // border: 1px solid red;
   position: absolute;
   // overflow: hidden;
-  top: -5px;
+  top: -3px;
   left: -1px;
   right: 0;
   bottom: 0;
@@ -48,7 +48,8 @@
     cursor: pointer;
     margin-left: 2px;
     margin-top: 1px;
-    margin-bottom: 0px;
+    margin-right: -1px;
+    margin-bottom: -2px;
     display: none;
 
     &:before {
@@ -70,7 +71,7 @@
     display: none;
     z-index: 1;
     right: -2px;
-    bottom: -5px;
+    bottom: -3px;
     background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(59, 59, 59, 0.2) 5px, rgba(59, 59, 59, 0.2) 10px);
   }
 
