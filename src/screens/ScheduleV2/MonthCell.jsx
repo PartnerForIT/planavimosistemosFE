@@ -214,7 +214,7 @@ const MonthCell = ({
       id='dropdownButton'>
       <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
-          (!empty_manual && newEmployee?.name )|| selectedEvent.rId
+          (!empty_manual && newEmployee?.name) || selectedEvent.rId
             ? showHoursCount || selectedEvent.rId
               ? <div style={{alignSelf: 'center', width: '100%', textAlign: 'center'}}>{ minutes / 60 }</div>
               : <div className={css.eventTime} style={{borderColor: lineColor}}>
