@@ -483,9 +483,9 @@ const ScheduleV2 = () => {
     }
   }, [schedule.loading])
 
-  useEffect(() => {
-    setTimeout(Tooltip.rebuild, 500)
-  }, [toolsActive.marking])
+  // useEffect(() => {
+  //   setTimeout(Tooltip.rebuild, 500)
+  // }, [toolsActive.marking])
 
   useEffect(() => {
     fromDateRef.current = moment(currentStartDate).toDate()
@@ -1123,7 +1123,7 @@ const ScheduleV2 = () => {
     if (isNextMonth) {
       if (moment(start).date() === 1 && 'totalHours' in (selectedEvent.accumulatedData || {})) {
         return (
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontFamily: "Helvetica Neue Medium"}}>
             <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>{selectedEvent.accumulatedData.totalHours}</div>
             <div style={{color: '#db894f', fontSize: 11, fontWeight: 'bold', borderTop: '1px solid #db894f'}}>{selectedEvent.accumulatedData?.nightHours}h</div>
           </div>
@@ -1131,7 +1131,7 @@ const ScheduleV2 = () => {
       }
       if (moment(start).date() === 2 && 'cost' in (selectedEvent.accumulatedData || {})) {
         return (
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontFamily: "Helvetica Neue Medium"}}>
             <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>
               { selectedEvent.accumulatedData.cost.toFixed(2) }
             </div>
