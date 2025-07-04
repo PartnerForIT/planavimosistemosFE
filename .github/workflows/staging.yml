@@ -18,9 +18,9 @@ jobs:
     - name: Code update
       run: GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa_fe" sudo git pull origin staging
 
-    - name: Run build process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app -v "./grownu-fe/fe-dp:/root/.ssh/id_rsa" node:12.16.1-alpine npm install
+    - name: Run install node packages process for FrontEnd app
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app -v "./grownu-fe/fe-dp:/root/.ssh/id_rsa" node:12.16.1-alpine npm install --force
 
-    - name: Run build process for FrontEnd app
+    - name: Run BUILD process for FrontEnd app
       run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./grownu-fe/:/app node:12.16.1-alpine npm run build
 
