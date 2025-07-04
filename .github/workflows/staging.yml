@@ -18,9 +18,8 @@ jobs:
     - name: Code update
       run: GIT_SSH_COMMAND="ssh -i /home/deployment/.ssh/id_rsa_staging_deployment -o StrictHostKeychecking=no" git pull origin staging 
 
-    - name: Run build process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app febuild:v1 npm install
+    - name: Run install node packages process for FrontEnd app
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app febuild:v1 npm install --force
 
-    - name: Run build process for FrontEnd app
+    - name: Run BUILD process for FrontEnd app
       run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app node:12.16.1-alpine npm run build
-
