@@ -12,6 +12,7 @@ import Input from '../Input/Input';
 import Button from '../Button/Button';
 import styles from './Select.module.scss';
 import { useTranslation } from 'react-i18next';
+import Popper from '@material-ui/core/Popper';
 
 const initialItems = [];
 export default function CustomSelect({
@@ -34,6 +35,7 @@ export default function CustomSelect({
   const [search, setSearch] = useState('');
   const { t } = useTranslation();
   const searchInputRef = useRef(null);
+  const wrapperRef = useRef(null);
 
 
   useEffect(() => {
@@ -194,6 +196,7 @@ export default function CustomSelect({
         <div
           // eslint-disable-next-line jsx-a11y/aria-role
           role='input'
+           ref={wrapperRef}
           className={wrapperClasses}
           onClick={disabled ? () => {} : () => setOpen(!open)}
         >
@@ -207,7 +210,12 @@ export default function CustomSelect({
           />
         </div>
 
-        {open ? (
+        <Popper
+          open={open}
+          anchorEl={wrapperRef.current}
+          placement="bottom-start"
+          style={{ zIndex: 9999, width: widthLikeInput ? wrapperRef.current?.offsetWidth : 'auto' }}
+        >
           <div className={classNames(styles.contentBox, { [styles.fullContentWidth]: widthLikeInput })}>
             {withSearch && (
               <Input
@@ -284,7 +292,7 @@ export default function CustomSelect({
               )
             }
           </div>
-        ) : null}
+        </Popper>
       </div>
     </ClickAwayListener>
   );

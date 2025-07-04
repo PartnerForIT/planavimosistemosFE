@@ -10,6 +10,7 @@ import style from './CreateAccount.module.scss';
 import classes from '../Dialog.module.scss';
 import Button from '../../Button/Button';
 import Label from '../../InputLabel';
+import Checkbox from '../../Checkbox/Checkbox2';
 import Tooltip from '../../../Core/Tooltip';
 import {Tooltip as ReactTooltip} from 'react-tooltip';
 import AddEditSelectOptions from '../../../shared/AddEditSelectOptions';
@@ -270,6 +271,25 @@ const SecondStep = ({
     [style.secondForm_four]: (permissions.create_groups || permissions.create_places) && permissions.time_off,
   });
 
+  const checkAllBornsEntered = useMemo(() => {
+    if (!user.childrens || user.childrens === '0') {
+      return true;
+    }
+
+    const childrensCount = parseInt(user.childrens, 10);
+
+    for (let i = 1; i <= childrensCount; i++) {
+      const born = user[`child_born_${i}`];
+      const disabled = user[`child_born_${i}_disabled`];
+
+      if (!disabled && (!born || born.length === 0)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [user.childrens, user]);
+
   return (
     <>
       <div className={containerClasses}>
@@ -419,6 +439,7 @@ const SecondStep = ({
                 <InputSelect
                   id='childrens'
                   placeholder={t('Number of Children')}
+                  value={user.childrens}
                   options={childrensOpt}
                   name='childrens'
                   onChange={handleInput}
@@ -447,6 +468,12 @@ const SecondStep = ({
                               />
                             </MuiPickersUtilsProvider>
                           </div>
+                          <Checkbox
+                            name={`child_born_${index + 1}_disabled`}
+                            checked={user[`child_born_${index + 1}_disabled`] || false}
+                            onChange={(e) => handleInput({target: {name: e.target.name, value: e.target.checked}})}
+                            label={t('Disabled')}
+                          />
                         </div>
                       ))
                     }
@@ -647,7 +674,7 @@ const SecondStep = ({
         <NextStepButton
           className={style.nextButton}
           onClick={nextWithValidate}
-          disabled={user.assign_shift_id && !user.assign_job_type_id}
+          disabled={(user.assign_shift_id && !user.assign_job_type_id) || !checkAllBornsEntered}
         />
       </div>
     </>
