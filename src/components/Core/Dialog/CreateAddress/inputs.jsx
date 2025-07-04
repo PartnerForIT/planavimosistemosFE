@@ -68,7 +68,7 @@ export default function Inputs({
           places={placePredictions}
           width={'480px'}
         />
-        <div data-tip={t('Pick location')} data-for='google_marker' className={classes.createAddress__btnMarkerWrap}>
+        <div data-tooltip-html={t('Pick location')} data-tooltip-id='google_marker' className={classes.createAddress__btnMarkerWrap}>
           <FlatButton  onClick={() => setDragMarker(!dragMarker)} className={classes.createAddress__btnMarker}>
             <GoogleMarkerIcon active={dragMarker} />
           </FlatButton>

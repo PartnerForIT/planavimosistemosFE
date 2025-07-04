@@ -92,6 +92,7 @@
     font-family: Helvetica Neue, sans-serif !important;
     font-size: 12px !important;
     box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+    z-index: 1000;
 
     &::after {
       border-top-color: #fff !important;
@@ -101,6 +102,11 @@
       border-left: 8px solid transparent !important;
       border-right: 8px solid transparent !important;
       margin-left: -8px !important;
+    }
+
+    &__avatar {
+      background-color: transparent !important;
+      box-shadow: none !important;
     }
 
     &__past {

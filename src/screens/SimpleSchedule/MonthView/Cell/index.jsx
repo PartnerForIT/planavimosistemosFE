@@ -191,9 +191,8 @@ export default ({
       <div className={cellClasses} ref={refCell}>
         <div className={classes.cell__content} data-title={title ? title : null}>
           <div
-            data-for={tooltipType()}
-            data-html={true}
-            data-tip={title && !copyTool ? tooltipContent() : null}
+            data-tooltip-id={tooltipType()}
+            data-tooltip-html={title && !copyTool ? tooltipContent() : null}
             onClick={handleMarker}
             className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
           >
@@ -268,7 +267,7 @@ export default ({
     <>
     { title*1 > 0 ? 
      (
-      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
+      <div data-tooltip-id='user_marker' data-tooltip-html={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell} onClick={handleMarker}>
       <span>{t('Go')}</span>
       {title*1 !== 0 ? title : ''}
       <HolidayIcon
@@ -278,7 +277,7 @@ export default ({
       </div>
      ) :
      (
-      <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell}>
+      <div data-tooltip-id='user_marker' data-tooltip-html={marker && !title ? marker.comment : ''} className={cellClasses} ref={refCell}>
       {title*1 !== 0 ? title : ''}
       </div>
      )

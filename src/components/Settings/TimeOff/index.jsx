@@ -47,10 +47,6 @@ import {
 import AddEditTimeOff from '../../Core/Dialog/AddEditTimeOff';
 import AddEditPolicy from '../../Core/Dialog/AddEditPolicy';
 import DuplicatePolicy from '../../Core/Dialog/DuplicatePolicy';
-import { set } from 'date-fns';
-import { act } from 'react';
-import { SignalCellularNull } from '@material-ui/icons';
-//import usePermissions from '../../Core/usePermissions';
 
 const useStyles = makeStyles(() => ({
   error: {

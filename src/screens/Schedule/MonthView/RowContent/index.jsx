@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -35,10 +35,6 @@ const RowContent = ({
   currentMonth,
   firstRenderFinished,
 }) => {
-
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  });
 
   const newFoundItem = (day) => {
     const ev = events.find((item) => resourceId === item.resourceId && (item.day ? item.day*1 : item.day_number*1) === day*1);

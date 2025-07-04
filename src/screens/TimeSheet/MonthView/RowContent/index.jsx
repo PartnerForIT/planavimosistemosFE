@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import ReactTooltip from 'react-tooltip';
+import React from 'react'
 import CurrencySign from '../../../../components/shared/CurrencySign';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -26,10 +25,6 @@ const RowContent = ({
   pastDay,
 }) => {
   const { t } = useTranslation();
-  
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  });
 
   const foundItem = (day) => {
     const found = sheet.find((item) => resource.id === item.employeeId && item.day*1 === day*1 && resource.place_id === item.place_id);

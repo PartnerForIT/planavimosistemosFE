@@ -203,20 +203,21 @@ const MonthCell = ({
 
   const marker = markerComment()
   const isMarkerExist = marker !== null
-
   return (
     <div
       className={css.container}
       style={{opacity: isCompleted ? 0.5 : 1}}
-      data-for={marker ? 'user_marker' : tooltipType()}
-      data-html={true}
-      data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? marker : tooltipContent()}
-      id='dropdownButton'>
+      data-tooltip-id={marker ? 'user_marker' : tooltipType()}
+      data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : tooltipContent()}
+      >
       <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
           (!empty_manual && newEmployee?.name) || selectedEvent.rId
             ? showHoursCount || selectedEvent.rId
-              ? <div style={{alignSelf: 'center', width: '100%', textAlign: 'center'}}>{ minutes / 60 }</div>
+              ? <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
+                  <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>{minutes / 60}</div>
+                  <div style={{color: '#db894f', fontSize: 11, fontWeight: 'bold', borderTop: '1px solid #db894f'}}>{nightDuration}h</div>
+                </div>
               : <div className={css.eventTime} style={{borderColor: lineColor}}>
                   { moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm') }
                 </div>
@@ -231,7 +232,7 @@ const MonthCell = ({
         }
       </div>
       {
-        nightDuration && !empty_manual && title && employeeName !== 'Empty'
+        nightDuration && !empty_manual && title && employeeName !== 'Empty' && !(showHoursCount || selectedEvent.rId)
           ? <div className={css.nightHours}>
               { nightDuration }h
             </div>
@@ -266,8 +267,8 @@ const MonthCell = ({
                 photo={photo}
                 jobTypeName={jobTypeName}
                 employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-                start={start}
-                end={end}
+                start={selectedEvent.defaultTimes.start || start}
+                end={selectedEvent.defaultTimes.end || end}
                 onChangeTime={handleAddWorkingTime}
               />
             </Dropdown>

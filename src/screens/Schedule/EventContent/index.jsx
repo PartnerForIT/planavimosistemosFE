@@ -102,10 +102,6 @@ const EventContent = ({
   const [isShown, setIsShown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // useEffect(() => {
-  //   Tooltip.rebuild();
-  // }, []);
-
   useEffect(() => {
     if (content === 'addWorkingTime') {
       if (modalAddRef.current) {
@@ -323,9 +319,13 @@ const EventContent = ({
     [company.currency, currencies],
   )
 
+  if (selectedEvent.rId === 35) {
+    console.log(end)
+  }
+
   const tooltipContent = () => {
     return (
-      `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(end).format('HH:mm')}</b><br/>
+      `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(selectedEvent.realEnd).format('HH:mm')}</b><br/>
       ${t('Total Hours')} <b>${convertMinutesToHoursAndMinutes(minutes)}</b>`
       + (nightPermission ? `<br />${t('Work hours')} <b>${convertMinutesToHoursAndMinutes(work_minutes)}</b>` : ``)
       + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
@@ -335,18 +335,11 @@ const EventContent = ({
     )
   }
 
-  // if (nightDuration && !empty_manual) {
-  //   console.log(employeeId, title, resourceId, employeeName, minutes, empty)
-  // }
-
-  
-
   return (
     <div
       className={classes}
-      data-for={tooltipType()}
-      data-html={true}
-      data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || employeeName === 'Empty' ? null : tooltipContent()}
+      data-tooltip-id={tooltipType()}
+      data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? null : tooltipContent()}
       id='dropdownButton'
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
@@ -404,7 +397,7 @@ const EventContent = ({
               (empty_manual)
               ? (copyTool)
                 ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span onClick={copyEvent} className={'copy-add'}>{t('Paste the Time')}</span> : null
-                : (editPermissions && moment(start).isSameOrAfter(moment().subtract(1, 'day')) && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+                : (editPermissions && moment(start).isSameOrAfter(moment().subtract(1, 'day')) && (<span data-tooltip-id={markerComment() ? 'user_marker' : ''}  data-tooltip-html={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
               : <span className={styles.eventContent__title} >
                 {
                   copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
@@ -415,7 +408,7 @@ const EventContent = ({
                       ? <span>{minutes / 60}</span>
                       : <>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
                     : (employeeName === 'Empty' || empty)
-                        ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> : null
+                        ? moment(start).isSameOrAfter(moment().subtract(1, 'day')) ? <span data-tooltip-id={markerComment() ? 'user_marker' : ''}  data-tooltip-html={markerComment() ? markerComment() : ''} onClick={addEmployee} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> : null
                         :<>{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</>
 
                   
@@ -452,8 +445,8 @@ const EventContent = ({
                 photo={photo}
                 jobTypeName={jobTypeName}
                 employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-                start={start}
-                end={end}
+                start={selectedEvent.defaultTimes.start || start}
+                end={selectedEvent.defaultTimes.end || end}
                 onChangeTime={handleAddWorkingTime}
               />
             </Dropdown>

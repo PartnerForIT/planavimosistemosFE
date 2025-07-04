@@ -15,7 +15,6 @@ import { companyModulesLoading, isLoadingCompanySelector } from '../../store/com
 import { userSelector } from '../../store/auth/selectors';
 
 import Events from '../../components/Events/Events';
-import Schedule from '../Schedule';
 import ScheduleV2 from '../ScheduleV2';
 import SimpleSchedule from '../SimpleSchedule';
 import CreateShift from '../Schedule/Shift';

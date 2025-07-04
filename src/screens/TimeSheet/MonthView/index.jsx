@@ -8,7 +8,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 import ResourceAreaHeader from '../ResourceAreaHeader';
 import ResourcesBlock from './ResourcesBlock';

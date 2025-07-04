@@ -6,7 +6,7 @@ import FitMapIcon from '../../Icons/FitMapIcon';
 import PointMapIcon from '../../Icons/PointMapIcon';
 import CancelMapIcon from '../../Icons/CancelMapIcon';
 import SelectMapIcon from '../../Icons/SelectMapIcon';
-import Tooltip from 'react-tooltip';
+import {Tooltip} from 'react-tooltip';
 import { useTranslation } from 'react-i18next';
 
 const InputAddress = ({
@@ -83,12 +83,12 @@ const InputAddress = ({
           <div className={styles.predictions__footer}>
             <div>
               { selected !== false && (
-                <span onClick={onFit} data-tip={t('Fit to screen')} data-for='google_marker_button' className={styles.predictions__fit}>
+                <span onClick={onFit} data-tooltip-html={t('Fit to screen')} data-tooltip-id='google_marker_button' className={styles.predictions__fit}>
                   <FitMapIcon />
                 </span>
               )}
               { selected !== false && (
-                <span onClick={onPoint} data-tip={t('Location')} data-for='google_marker_button' className={styles.predictions__point}>
+                <span onClick={onPoint} data-tooltip-html={t('Location')} data-tooltip-id='google_marker_button' className={styles.predictions__point}>
                   <PointMapIcon />
                 </span>
               )}

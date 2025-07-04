@@ -35,9 +35,8 @@ const nameFieldRenderer = (row) => (
     { row.description && (
       <span
         className={classes.comment}
-        data-tip={nltobr(row.description)}
-        data-for='cell_description'
-        data-html={true}
+        data-tooltip-html={nltobr(row.description)}
+        data-tooltip-id='cell_description'
       >
         <DescriptionIcon />
       </span>

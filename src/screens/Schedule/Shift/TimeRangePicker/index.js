@@ -206,8 +206,8 @@ export default memo(({
         { copyTool && <span onClick={copyEvent} className={'copy-add-schedule'}>{t('Paste the Time')}</span> }
         { !value.not_work && (
           <button
-            data-for={inCopyTool ? "copy-tip" : null}
-            data-tip={inCopyTool ? t('Click to change time') : false}
+            data-tooltip-id={inCopyTool ? "copy-tip" : null}
+            data-tooltip-html={inCopyTool ? t('Click to change time') : false}
             className={classes.timeRangeColor__button}
             onClick={handleClickOpenModal}
             ref={buttonRef}

@@ -53,8 +53,8 @@ const Cell = ({
       <div className={cellClasses} ref={refCell}>
         <div className={classes.cell__content} data-title={tooltip ? tooltip : title}>
           <div
-            data-for='title'
-            data-tip={`${tooltip ? tooltip : title}`}
+            data-tooltip-id='title'
+            data-tooltip-html={`${tooltip ? tooltip : title}`}
             className={classes.cell__content__text}
           >
             {title}
@@ -74,8 +74,8 @@ const Cell = ({
   return (
     <div className={cellClasses} ref={refCell}>
       <div
-        data-for='title'
-        data-tip={`${tooltip ? tooltip : ''}`}
+        data-tooltip-id='title'
+        data-tooltip-html={`${tooltip ? tooltip : ''}`}
       >
         {title !== 0 ? title : ''}
       </div>

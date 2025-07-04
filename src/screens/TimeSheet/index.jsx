@@ -20,7 +20,7 @@ import Button from '../../components/Core/Button/Button';
 import ArrowEIPIcon from '../../components/Icons/ArrowEIPIcon';
 import ExcelIcon from '../../components/Icons/ExcelIcon';
 import usePermissions from '../../components/Core/usePermissions';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import {
   scheduleSelector,
 } from '../../store/settings/selectors';
@@ -142,7 +142,6 @@ export default () => {
     );
 
   useEffect(() => {
-    ReactTooltip.rebuild();
     dispatch(getPlaces(companyId));
     dispatch(getSkills(companyId));
     dispatch(getSettingWorkTime(companyId));

@@ -9,7 +9,7 @@ import resourceDayGridPlugin from '@fullcalendar/resource-daygrid'
 import { useTranslation } from 'react-i18next'
 import { useSelector, useDispatch } from 'react-redux'
 import { fade } from '@material-ui/core/styles/colorManipulator'
-import Tooltip from 'react-tooltip'
+import {Tooltip} from 'react-tooltip'
 
 import '../Schedule/Schedule.scss'
 import config from '../../config'
@@ -257,6 +257,7 @@ const ScheduleV2 = () => {
   const [filter, setFilter] = useState({employers: [], place: [], shiftType: []})
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
   const [schedule, setSchedule] = useState({holidays: {}, resources: [], events: [], markers: [], timesPanel: {}, loading: false})
+  const [workTimes, setWorkTimes] = useState({})
   const [copyTool, setCopyTool] = useState(false)
   const [copyToolTime, setCopyToolTime] = useState({})
   const [activeDrag, setActiveDrag] = useState('')
@@ -397,6 +398,10 @@ const ScheduleV2 = () => {
       result = schedule?.events
     }
 
+    if (timeline === TIMELINE.WEEK) {
+      result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
+    }
+
     if (timeline === TIMELINE.MONTH) {
       result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)].map(e => {
         return {
@@ -408,6 +413,17 @@ const ScheduleV2 = () => {
       })
     }
 
+    result = result.map(e => {
+      const eventWeekDay = moment(e.start).isoWeekday()
+      return {
+        ...e,
+        defaultTimes: {
+          start: moment(workTimes[eventWeekDay].start, 'HH:mm').format('YYYY-MM-DD HH:mm:ss'),
+          end: moment(workTimes[eventWeekDay].finish, 'HH:mm').format('YYYY-MM-DD HH:mm:ss'),
+        },
+      }
+    })
+
     return [
       ...result.filter((resultItem) => {
         return !copyToolHistory.some((historyItem) => (
@@ -418,7 +434,7 @@ const ScheduleV2 = () => {
       }),
       ...copyToolHistory.map((e) => ({...e, copy_event: true})),
     ]
-  }, [schedule.events, copyToolHistory, timeline, scheduleSettings])
+  }, [schedule.events, copyToolHistory, timeline, scheduleSettings, workTimes])
 
   const daysOfMonth = useMemo(() => {
     const currentMonth = moment().startOf('month')
@@ -478,16 +494,6 @@ const ScheduleV2 = () => {
   }, [timeline, currentStartDate])
 
   useEffect(() => {
-    if (!schedule.loading) {
-      setTimeout(Tooltip.rebuild, 500)
-    }
-  }, [schedule.loading])
-
-  useEffect(() => {
-    setTimeout(Tooltip.rebuild, 500)
-  }, [toolsActive.marking])
-
-  useEffect(() => {
     fromDateRef.current = moment(currentStartDate).toDate()
   }, [currentStartDate])
 
@@ -498,8 +504,9 @@ const ScheduleV2 = () => {
     const promisses = [
       request(`${companyId}/schedule/settings`),
       request(`${companyId}/logbook/additional-rates`),
+      request(`${companyId}/work-time`)
     ]
-    const [scheduleSettingsRes, additionalRatesRes] = await Promise.all(promisses)
+    const [scheduleSettingsRes, additionalRatesRes, workTimeRes] = await Promise.all(promisses)
     if (scheduleSettingsRes) {
       setScheduleSettings(scheduleSettingsRes)
       setToolsActive(state => {
@@ -512,6 +519,12 @@ const ScheduleV2 = () => {
     }
     if (additionalRatesRes) {
       setAdditionalRates(additionalRatesRes)
+    }
+    if (Array.isArray(workTimeRes?.work_time?.work_days?.days)) {
+      setWorkTimes(workTimeRes.work_time.work_days.days.reduce((acc, item) => ({
+        ...acc,
+        [item.day]: item
+      }), {}))
     }
   }
 
@@ -546,18 +559,6 @@ const ScheduleV2 = () => {
         timesPanel: res.timesPanel,
         loading: false,
       }))
-    }
-  }
-
-  const getBodyForGetSchedule = () => {
-    const nextFromDate = timeline === TIMELINE.WEEK ? nextFromDate.startOf('isoWeek') : moment(fromDateRef.current)
-    return {
-      companyId,
-      timeline,
-      fromDate: nextFromDate.format('YYYY-MM-DD'),
-      shiftTypeArr: filter?.shiftType.map(({id}) => id),
-      employeesArr: filter?.employers.map(({id}) => id),
-      placesArr: filter?.place.map(({id}) => id),
     }
   }
   
@@ -814,6 +815,7 @@ const ScheduleV2 = () => {
   const handleChangeTool = async ({ target: {name, checked} }) => {
     setToolsActive(state => ({...state, [name]: checked }))
     if (name === 'start_finish' || name ==='remove_timelines') {
+      setSchedule(prev => ({...prev, loading: true}))
       const res = await request(`${companyId}/schedule/settings/edit`, 'POST', { ...toolsActive, [name]: checked })
       if (res) {
         const settingsRes = await request(`${companyId}/schedule/settings`)
@@ -821,6 +823,7 @@ const ScheduleV2 = () => {
           setScheduleSettings(settingsRes)
         }
       }
+      setSchedule(prev => ({...prev, loading: false}))
     }
   }
 
@@ -910,7 +913,7 @@ const ScheduleV2 = () => {
                   return null
                 }
                 return (
-                  <div key={i} data-for='user_marker' data-tip={marker.comment} className="fc-markers-item marked" style={{ width: date_header.offsetWidth, left: date_header.offsetLeft+1 }} data-mark={moment(marker.date).format('yyyy-MM-DD')}>
+                  <div key={i} data-tooltip-id='user_marker' data-tooltip-html={marker.comment} className="fc-markers-item marked" style={{ width: date_header.offsetWidth, left: date_header.offsetLeft+1 }} data-mark={moment(marker.date).format('yyyy-MM-DD')}>
                   </div>
                 )
               })
@@ -1123,7 +1126,7 @@ const ScheduleV2 = () => {
     if (isNextMonth) {
       if (moment(start).date() === 1 && 'totalHours' in (selectedEvent.accumulatedData || {})) {
         return (
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontFamily: "Helvetica Neue Medium"}}>
             <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>{selectedEvent.accumulatedData.totalHours}</div>
             <div style={{color: '#db894f', fontSize: 11, fontWeight: 'bold', borderTop: '1px solid #db894f'}}>{selectedEvent.accumulatedData?.nightHours}h</div>
           </div>
@@ -1131,7 +1134,7 @@ const ScheduleV2 = () => {
       }
       if (moment(start).date() === 2 && 'cost' in (selectedEvent.accumulatedData || {})) {
         return (
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontFamily: "Helvetica Neue Medium"}}>
             <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>
               { selectedEvent.accumulatedData.cost.toFixed(2) }
             </div>
@@ -1422,10 +1425,9 @@ const ScheduleV2 = () => {
       />
       <Tooltip
         id='user_avatar'
-        // className='schedule-screen__tooltip schedule-screen__tooltip__demand'
-        backgroundColor='transparent'
-        borderColor='transparent'
+        className='schedule-screen__tooltip schedule-screen__tooltip__avatar'
         arrowColor='transparent'
+        style={{backgroundColor: 'transparent'}}
         place="right"
         effect='solid'
       />
@@ -1464,7 +1466,6 @@ const ScheduleV2 = () => {
               start={copyToolTime.start || null}
               end={copyToolTime.end || null}
               onClose={handleCloseCopyTool}
-              getBodyForGetSchedule={getBodyForGetSchedule}
               onAddTimelines={handleAddTimelinesHistory}
             />
           : null

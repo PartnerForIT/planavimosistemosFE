@@ -16,7 +16,7 @@ import CheckboxGroupRaw from '../CheckboxGroupRaw/CheckboxGroupRaw';
 import ExcelIcon from '../../Icons/ExcelIcon';
 import RupExcelIcon from '../../Icons/RupExcelIcon';
 import PdfIcon from '../../Icons/PdfIcon';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 const useStyles = makeStyles({
   colorPrimary: {

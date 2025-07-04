@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Scrollbar from 'react-scrollbars-custom';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import classNames from 'classnames';
 
 import ResourceAreaHeader from '../ResourceAreaHeader';

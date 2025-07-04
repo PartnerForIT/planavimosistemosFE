@@ -225,9 +225,8 @@ const Cell = ({
     <div className={cellClasses}>
       <div className={classes.cell__content} data-title={title ? title : null}>
         <div
-          data-for={tooltipType()}
-          data-html={true}
-          data-tip={title && !copyTool && !event?.empty_manual ? tooltipContent() : null}
+          data-tooltip-id={tooltipType()}
+          data-tooltip-html={title && !copyTool && !event?.empty_manual ? tooltipContent() : null}
           onClick={handleMarker}
           className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
         >
@@ -302,7 +301,7 @@ const CellHeader = ({title, marker, statistic, past, weekend, markerActive, toda
   const isDate = !isNaN(title)
 
   return (
-    <div data-for='user_marker' data-tip={marker && !title ? marker.comment : ''} className={cellClasses} onClick={isDate ? handleMarker : null}>
+    <div data-tooltip-id='user_marker' data-tooltip-html={marker && !title ? marker.comment : ''} className={cellClasses} onClick={isDate ? handleMarker : null}>
       {isDate ? <span>{t('Go')}</span> : null}
       { title }
       {isDate ? <HolidayIcon holidays={holiday} month={true} /> : null}

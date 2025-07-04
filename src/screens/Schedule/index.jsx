@@ -14,9 +14,9 @@ import moment from 'moment';
 import cloneDeep from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Tooltip from 'react-tooltip';
+import {Tooltip} from 'react-tooltip';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import { getSettingWorkTime } from '../../store/settings/actions';
 
 import MainLayout from '../../components/Core/MainLayout';
@@ -1227,7 +1227,7 @@ export default () => {
                 return ( 
                   <React.Fragment key={child.id+'__'+index+'_'+i}>
                     { (marked) ?
-                      (!exist_event ? <div data-for='user_marker' data-tip={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
+                      (!exist_event ? <div data-tooltip-id='user_marker' data-tooltip-html={marked.comment} className="fc-markers-item marked" key={child.id+'_'+index} style={{ width: width, left: left+1 }} data-mark={moment(marked.date).format('yyyy-MM-DD')}></div> : null) :  
                       ((child?.children) ? renderSlotResourceItem(child?.children, markers, employeeId) : null)
                     }
                   </React.Fragment>
@@ -1259,7 +1259,7 @@ export default () => {
                   const same = markers.find(m => moment(m.date).isSame(currDate, 'date'));
                   const markDate = currDate.clone();
 
-                  contains.push(<div data-for='user_marker' data-tip={same ? same.comment : ''} className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
+                  contains.push(<div data-tooltip-id='user_marker' data-tooltip-html={same ? same.comment : ''} className={"fc-markers-item marker_active"+ (same ? ' marked' : '')} key={child.id+'m_00_'+employeeId+'_'+currDate.format('yyyy-MM-DD')} style={{ width: width, left: left+1 }} onClick={() => { handleMarker(employeeId, markDate) }}></div>)
                 }
               }
             }

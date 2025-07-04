@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
@@ -14,7 +14,7 @@ import CheckIcon from '../../Icons/CheckIcon';
 import RejectIcon from '../../Icons/RejectIcon';
 import PoliciesActivityTable from './TimeOffDetails/PoliciesActivityTable';
 
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 function EmployeeManagement({
   goEmployeeActivity,
@@ -31,10 +31,6 @@ function EmployeeManagement({
   const [requestBehalfEditOpen, setRequestBehalfEditOpen] = useState(null);
   const requests = Array.isArray(requestBehalf) ? requestBehalf : [];
 
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  });
-
   return (
     <>
       <TitleBlock>
@@ -42,7 +38,7 @@ function EmployeeManagement({
         <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          data-tip={t('Back')} data-for='back_button'
+          data-tooltip-html={t('Back')} data-tooltip-id='back_button'
         >
           <div>
             <TitleBackIcon />
@@ -131,7 +127,7 @@ function EmployeeManagement({
                     </div>
                     <div className={classes.upcomingRequestsCol}>
                       <div className={classes.upcomingRequestsButtons}>
-                        <div data-tip={t("Edit")} data-for="tip_request">
+                        <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
                           <Button
                             className={classes.buttonEdit}
                             size="little"
@@ -143,7 +139,7 @@ function EmployeeManagement({
                           </Button>
                         </div>
                         { request.status !== 'approved' && (
-                          <div data-tip={t("Approve")} data-for="tip_request">
+                          <div data-tooltip-html={t("Approve")} data-tooltip-id="tip_request">
                             <Button
                               className={classes.buttonApprove}
                               size="little"
@@ -154,7 +150,7 @@ function EmployeeManagement({
                           </div>
                         )}
                         { request.status !== 'rejected' && (
-                          <div data-tip={t("Reject")} data-for="tip_request">
+                          <div data-tooltip-html={t("Reject")} data-tooltip-id="tip_request">
                             <Button
                               className={classes.buttonReject}
                               size="little"

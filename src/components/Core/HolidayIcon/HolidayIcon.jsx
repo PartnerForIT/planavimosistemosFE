@@ -24,9 +24,8 @@ const HolidayIcon = ({
     ) : (
       <div
         className={classnames(classes.holiday_icon, month ? classes.month : '', inline ? classes.inline : '')}
-        data-tip={holidayTip()}
-        data-for='holiday'
-        data-html={true}
+        data-tooltip-html={holidayTip()}
+        data-tooltip-id='holiday'
       >
       {
         (!holidays || !holidays[0] || !holidays[0].company_work_time_id) ? (
