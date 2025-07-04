@@ -207,10 +207,9 @@ const MonthCell = ({
     <div
       className={css.container}
       style={{opacity: isCompleted ? 0.5 : 1}}
-      data-for={marker ? 'user_marker' : tooltipType()}
-      data-html={true}
-      data-tip={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : tooltipContent()}
-      id='dropdownButton'>
+      data-tooltip-id={marker ? 'user_marker' : tooltipType()}
+      data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : tooltipContent()}
+      >
       <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
           (!empty_manual && newEmployee?.name) || selectedEvent.rId
@@ -268,8 +267,8 @@ const MonthCell = ({
                 photo={photo}
                 jobTypeName={jobTypeName}
                 employeeName={newEmployee?.name ? newEmployee?.name : employeeName}
-                start={start}
-                end={end}
+                start={selectedEvent.defaultTimes.start || start}
+                end={selectedEvent.defaultTimes.end || end}
                 onChangeTime={handleAddWorkingTime}
               />
             </Dropdown>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import classes from '../timeoff.module.scss';
@@ -8,7 +8,7 @@ import PoliciesTable from './PoliciesTable';
 import PoliciesDetails from './PoliciesDetails';
 import CardItem from '../../../Core/CardItem/CardItem';
 import CardItemAdd from '../../../Core/CardItemAdd/CardItemAdd';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 function TimeOffBlock({
   time_offs = [],
@@ -34,10 +34,6 @@ function TimeOffBlock({
   const { t } = useTranslation();
   const [removeVisible, setRemoveVisible] = useState(false);
   const [removePolicyVisible, setRemovePolicyVisible] = useState(false);
-
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  });
   
   return (
     <div className={classes.timeoff}>

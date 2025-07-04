@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Tooltip from 'react-tooltip';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
@@ -89,10 +88,6 @@ export default ({
   //const integrations = useSelector(IntegrationsDataSelector);
   const [openedGroup, setOpenedGroup] = useState(false);
   const [activeGroupItem, setActiveGroupItem] = useState(null);
-
-  useEffect(() => {
-    Tooltip.rebuild();
-  });
 
   const classes = classNames(
     styles.eventContent,
@@ -338,9 +333,8 @@ export default ({
   return (
     <div
       className={classes}
-      data-for={tooltipType()}
-      data-html={true}
-      data-tip={copy_event || copyTool || empty ? null : tooltipContent()}
+      data-tooltip-id={tooltipType()}
+      data-tooltip-html={copy_event || copyTool || empty ? null : tooltipContent()}
       id='dropdownButton'
     >
       { !copy_event && endOverlap() > 0 && (

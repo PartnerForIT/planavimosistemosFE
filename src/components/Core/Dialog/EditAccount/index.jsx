@@ -25,7 +25,7 @@ import { validateEmail } from '../../../Helpers/emailValidation';
 import usePermissions from '../../usePermissions';
 import InputSelect from '../../InputSelect';
 import CustomSelect from '../../Select/Select';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import MomentUtils from '@date-io/moment';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import {
@@ -789,8 +789,8 @@ export default function EditAccount({
                                 <Tooltip title={t("First you need to select an assigned place for this employee. Secondary you can choose in which Shift inside that Place he will see and plan. This user can see all employees and also control and edit the schedule for them. It is possible to set the Job Type which he can control. In this way he will have less responsabilities. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
                               </span>
                               <div
-                                data-for='selectdisabled'
-                                data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
+                                data-tooltip-id='selectdisabled'
+                                data-tooltip-html={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                               >
                                 <AddEditSelectOptions
                                   id='shift_id'
@@ -814,8 +814,8 @@ export default function EditAccount({
                                 <Tooltip title={t("In order to assign the job type as the main responsability for this person you should first select a Place and assign the Shift. Only then you can assign the Job Type of that specific Shift. This user will gain control over the users in that Job Type and he can see all the employees in Schedule module under this Job Type. In order to edit and plan in Schedule module this user has to have a role enabled 'Manager view WEB'.")} />
                               </span>
                               <div
-                                data-for='selectdisabled'
-                                data-tip={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
+                                data-tooltip-id='selectdisabled'
+                                data-tooltip-html={(!shiftsOptions.length || !user.place) ? t('Please select a place first') : undefined}
                               >
                                 <AddEditSelectOptions
                                   id='job_type_id'
@@ -856,8 +856,8 @@ export default function EditAccount({
                           <div className={classes.formItem}>
                             <Label text={t('Select 2nd level approver')} htmlFor='approver_2' />
                             <div
-                              data-for='selectdisabled'
-                              data-tip={(!user.approver_1) ? t('Please select 1st level approver') : undefined}
+                              data-tooltip-id='selectdisabled'
+                              data-tooltip-html={(!user.approver_1) ? t('Please select 1st level approver') : undefined}
                             >
                               <CustomSelect
                                 placeholder={t('Select 2nd level approver')}

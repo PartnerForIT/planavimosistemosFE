@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "test:ci": "CI=true react-scripts test",
@@ -62,7 +62,7 @@
     "react-scrollbars-custom": "^4.0.21",
     "react-select": "^3.2.0",
     "react-switch": "^5.0.1",
-    "react-tooltip": "^4.2.21",
+    "react-tooltip": "^5.29.1",
     "react-use": "^17.2.4",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
@@ -88,6 +88,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "interactjs": "^1.10.11",
+    "react-app-rewired": "^2.2.1",
     "stylelint": "^13.2.0",
     "stylelint-config-standard": "^20.0.0"
   },

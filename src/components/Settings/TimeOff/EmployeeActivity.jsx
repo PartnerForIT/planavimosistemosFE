@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBlock from '../../Core/TitleBlock';
 import PageLayout from '../../Core/PageLayout';
@@ -14,7 +14,7 @@ import classes from './timeoff.module.scss';
 import Label from '../../Core/InputLabel';
 import Switch from 'react-switch';
 import classnames from 'classnames';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 import moment from 'moment';
 
 
@@ -44,10 +44,6 @@ function EmployeeActivity({
 
   const activities = activePolicy.employees.find(emp => emp.id === employee.id)?.activities || [];
 
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  });
-
   const expandCycle = (year) => {
     setExpandedCycles((prev) => {
       if (prev.includes(year)) {
@@ -62,7 +58,7 @@ function EmployeeActivity({
     switch (activity.who) {
       case 'employee':
         return <div>
-            <div className={classes.avatarBlock} data-tip={`${activity?.creator?.name} ${activity?.creator?.surname}`} data-for='emp_name'>
+            <div className={classes.avatarBlock} data-tooltip-html={`${activity?.creator?.name} ${activity?.creator?.surname}`} data-tooltip-id='emp_name'>
               <img
                 src={activity?.creator?.photo || avatar}
                 alt='avatar'
@@ -71,9 +67,9 @@ function EmployeeActivity({
             </div>
           </div>;
       case 'admin':
-        return <div className={classes.inlineBlock} data-tip={t('Grownu system')} data-for='emp_name'><GrownuAdminAvatar /></div>;
+        return <div className={classes.inlineBlock} data-tooltip-html={t('Grownu system')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>;
       case 'system':
-        return <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuSystemAvatar /></div>;
+        return <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>;
       default:
         return null;
     }
@@ -133,16 +129,16 @@ function EmployeeActivity({
           return <div className={classes.approverBlock}>
             {!activity.approved_1 && !activity.approved_2 ? (
                 <>
-                  <div className={classes.inlineBlock} data-tip={t('Grownu system')} data-for='emp_name'><GrownuSystemAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu system')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>
                   <span className={classnames(classes.approverStatus, classes.approverStatusApproved)}>{t('Auto Approved')}</span>
                 </>
               ) : (
                 <>
                   {activity.approved_1 ? (
                     activity.approved_1.id === 'admin' ? (
-                      <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                      <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                     ) : (
-                      <div className={classes.approverAvatar} data-tip={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-for='emp_name'>
+                      <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-tooltip-id='emp_name'>
                         <img
                           src={activity.approved_1.photo || avatar}
                           alt='approver'
@@ -153,9 +149,9 @@ function EmployeeActivity({
                   ) : null}
                   {activity.approved_2 ? (
                     activity.approved_2.id === 'admin' ? (
-                      <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                      <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                     ) : (
-                      <div className={classes.approverAvatar} data-tip={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-for='emp_name'>
+                      <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-tooltip-id='emp_name'>
                         <img
                           src={activity.approved_2.photo || avatar}
                           alt='approver'
@@ -173,9 +169,9 @@ function EmployeeActivity({
               <div className={classes.approverBlock}>
               {activity.rejected_by ? (
                 activity.rejected_by.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
-                  <div className={classes.approverAvatar} data-tip={`${activity?.rejected_by?.name} ${activity?.rejected_by?.surname}`} data-for='emp_name'>
+                  <div className={classes.approverAvatar} data-tooltip-html={`${activity?.rejected_by?.name} ${activity?.rejected_by?.surname}`} data-tooltip-id='emp_name'>
                     <img
                       src={activity.rejected_by.photo || avatar}
                       alt='approver'
@@ -194,9 +190,9 @@ function EmployeeActivity({
           return <div className={classes.approverBlock}>
             {activity.approved_1 ? (
               activity.approved_1.id === 'admin' ? (
-                <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
               ) : (
-                <div className={classes.approverAvatar} data-tip={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-for='emp_name'>
+                <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-tooltip-id='emp_name'>
                   <img
                     src={activity.approved_1.photo || avatar}
                     alt='approver'
@@ -207,9 +203,9 @@ function EmployeeActivity({
             ) : 
               (activity.approver_1 ? (
                 activity.approver_1.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
-                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tip={`${activity?.approver_1?.name} ${activity?.approver_1?.surname}`} data-for='emp_name'>
+                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tooltip-html={`${activity?.approver_1?.name} ${activity?.approver_1?.surname}`} data-tooltip-id='emp_name'>
                     <img
                       src={activity.approver_1.photo || avatar}
                       alt='approver'
@@ -221,9 +217,9 @@ function EmployeeActivity({
             }
             {activity.approved_2 ? (
               activity.approved_2.id === 'admin' ? (
-                <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
               ) : (
-                <div className={classes.approverAvatar} data-tip={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-for='emp_name'>
+                <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-tooltip-id='emp_name'>
                   <img
                     src={activity.approved_2.photo || avatar}
                     alt='approver'
@@ -234,9 +230,9 @@ function EmployeeActivity({
             ) : 
               (activity.approver_2 ? (
                 activity.approver_2.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tip={t('Grownu support')} data-for='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
-                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tip={`${activity?.approver_2?.name} ${activity?.approver_2?.surname}`} data-for='emp_name'>
+                  <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tooltip-html={`${activity?.approver_2?.name} ${activity?.approver_2?.surname}`} data-tooltip-id='emp_name'>
                     <img
                       src={activity.approver_2.photo || avatar}
                       alt='approver'
@@ -320,7 +316,7 @@ function EmployeeActivity({
         <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          data-tip={t('Back')} data-for='back_button'
+          data-tooltip-html={t('Back')} data-tooltip-id='back_button'
         >
           <div>
             <TitleBackIcon />

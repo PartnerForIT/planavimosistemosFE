@@ -77,9 +77,8 @@ const CardItem = ({
           <div>
             <span
               className={classes.comment}
-              data-tip={nltobr(description)}
-              data-for='timeoff_description'
-              data-html={true}
+              data-tooltip-html={nltobr(description)}
+              data-tooltip-id='timeoff_description'
             >
               <DescriptionIcon />
             </span>

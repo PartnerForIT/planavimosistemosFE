@@ -40,8 +40,8 @@ export default ({
       return (
         <span
           key={pageNumber}
-          data-for='employees_tooltip'
-          data-tip={page === pageNumber ? null : tooltip(pageNumber)}
+          data-tooltip-id='employees_tooltip'
+          data-tooltip-html={page === pageNumber ? null : tooltip(pageNumber)}
         >
           <FlatButton
             onClick={() => {

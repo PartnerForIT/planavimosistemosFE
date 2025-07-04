@@ -14,7 +14,7 @@ import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed';
 
 import classes from './timeoff.module.scss';
 import moment from 'moment';
-import ReactTooltip from 'react-tooltip';
+import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 const permissionsConfig = [
   {
@@ -134,10 +134,6 @@ function UserDataManagement({
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
   const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false);
   const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false);
-
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  }, []);
 
   const { getDateFormat } = useCompanyInfo();
   const dateFormat = getDateFormat({
@@ -326,7 +322,7 @@ function UserDataManagement({
         <div
           className={classes.titleBackButton}
           onClick={handleClose}
-          data-tip={t('Back')} data-for='back_button'
+          data-tooltip-html={t('Back')} data-tooltip-id='back_button'
         >
           <div>
             <TitleBackIcon />

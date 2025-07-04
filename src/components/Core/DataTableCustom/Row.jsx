@@ -374,28 +374,28 @@ const RowActions = ({
     <div className={actionsClasses}>
       {
         duplicateRow && (
-          <button onClick={() => duplicateRow(id)} data-tip={t('Duplicate')} data-for="tooltip_button">
+          <button onClick={() => duplicateRow(id)} data-tooltip-html={t('Duplicate')} data-tooltip-id="tooltip_button">
             <DuplicateIcon className={styles.iconButtonRow} />
           </button>
         )
       }
       { 
         editRow && (
-          <button onClick={() => editRow(id)} data-tip={t('Edit')} data-for="tooltip_button">
+          <button onClick={() => editRow(id)} data-tooltip-html={t('Edit')} data-tooltip-id="tooltip_button">
             <EditIconFixedFill className={styles.iconButtonRow} />
           </button>
         )
       }
       {
         timeOffRow && (
-          <button onClick={() => timeOffRow(id)} data-tip={t('Time Off')} data-for="tooltip_button">
+          <button onClick={() => timeOffRow(id)} data-tooltip-html={t('Time Off')} data-tooltip-id="tooltip_button">
             <TimeOffIcon className={styles.iconButtonRow} fill="rgb(105, 118, 122)" />
           </button>
         )
       }
       {
         removeRow && (
-          <div data-tip={t('Delete')} data-for="tooltip_button">
+          <div data-tooltip-html={t('Delete')} data-tooltip-id="tooltip_button">
           <button onClick={() => removeRow(id)} >
             <DeleteIcon fill='#fd0d1b' className={styles.iconButtonRow} />
           </button>

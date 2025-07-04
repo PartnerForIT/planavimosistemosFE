@@ -198,9 +198,8 @@ export default ({
       {
         accumulatedHours?.startPeriod && employeeId && (
           <div
-            data-for='demand_hours'
-            data-tip={demandTip()}
-            data-html={true}
+            data-tooltip-id='demand_hours'
+            data-tooltip-html={demandTip()}
             className={demandClasses}>
               {
                 !accumulatedHours?.actualHours && !accumulatedHours?.totalHours ?

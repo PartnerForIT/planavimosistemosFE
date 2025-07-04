@@ -2,7 +2,7 @@ import React, {forwardRef, useRef, useState, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
-import Tooltip from 'react-tooltip';
+import {Tooltip} from 'react-tooltip';
 import moment from 'moment';
 
 import TimeRangePicker from '../Shift/TimeRangePicker';
@@ -130,22 +130,22 @@ export default forwardRef(({
           <div className={classes.copyTool_btns}>
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_back}
-              data-for="copy-tip"
-              data-tip={t('Step Back')}
+              data-tooltip-id="copy-tip"
+              data-tooltip-html={t('Step Back')}
               disabled={history.length === 0}
               onClick={handleBack}
             />
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_forward}
-              data-for="copy-tip"
-              data-tip={t('Step Forward')}
+              data-tooltip-id="copy-tip"
+              data-tooltip-html={t('Step Forward')}
               disabled={rollback.length === 0}
               onClick={handleForward}
             />
             <button
               className={classes.copyTool_btn + ' ' + classes.copyTool_btn_delete}
-              data-for="copy-tip"
-              data-tip={t('Delete Changes')}
+              data-tooltip-id="copy-tip"
+              data-tooltip-html={t('Delete Changes')}
               disabled={history.length === 0 && rollback.length === 0}
               onClick={handleDeleteChanges}
             />

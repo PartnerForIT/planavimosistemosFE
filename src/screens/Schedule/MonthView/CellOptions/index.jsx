@@ -184,7 +184,7 @@ export default ({
             (empty_manual)
             ? (copyTool)
               ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
-              : (editPermissions && (<span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
+              : (editPermissions && (<span data-tooltip-id={markerComment() ? 'user_marker' : ''}  data-tooltip-html={markerComment() ? markerComment() : ''} onClick={openAddWorkingTime} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>))
             : <span className={styles.cellOptions__title} >
                 {
                   copyTool && <span onClick={copyEvent} className={classNames('copy-add event', styles.copyAdd, styles.event)}>{t('Paste the Time')}</span>
@@ -193,7 +193,7 @@ export default ({
                   (!!newEmployee?.name)
                     ? null
                     : (employeeName === 'Empty' || empty)
-                      ? <span data-for={markerComment() ? 'user_marker' : ''}  data-tip={markerComment() ? markerComment() : ''} onClick={addEmployee} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      ? <span data-tooltip-id={markerComment() ? 'user_marker' : ''}  data-tooltip-html={markerComment() ? markerComment() : ''} onClick={addEmployee} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                       : null
                 }
               </span>

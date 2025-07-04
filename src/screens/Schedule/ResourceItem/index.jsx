@@ -121,9 +121,8 @@ export default ({
       {
         accumulatedHours?.startPeriod && employeeId && (
           <div
-            data-for='demand_hours'
-            data-tip={demandTip()}
-            data-html={true}
+            data-tooltip-id='demand_hours'
+            data-tooltip-html={demandTip()}
             className={demandClasses}>
               {
                 !accumulatedHours?.actualHours && !accumulatedHours?.totalHours ?
@@ -136,11 +135,10 @@ export default ({
       {
         photo && (
           <div
-            data-for='user_avatar'
-            data-tip={`<div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"><img alt="" style="width: 100%;" src="${photo}" /></div>`}
+            data-tooltip-id='user_avatar'
+            data-tooltip-html={`<div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"><img alt="" style="width: 100%;" src="${photo}" /></div>`}
             style={{width: 20, height: 20}}
-            className={classes.resourceItem__avatar_trigger}
-            data-html={true}>
+            className={classes.resourceItem__avatar_trigger}>
             <img alt='' src={photo} />
           </div>
         )

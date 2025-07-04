@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../Button/Button';
 import FlatButton from '../../FlatButton/FlatButton';
-import Tooltip from 'react-tooltip';
+import {Tooltip} from 'react-tooltip';
 import GoogleMarkerIcon from '../../../../components/Icons/GoogleMarkerIcon';
 import InputAddress from '../../InputAddress/InputAddress';
 import Input from '../../Input/Input';
@@ -302,7 +302,7 @@ export default function CreateAddress({
                   places={placePredictions}
                   width={'450px'}
                 />
-                <div data-tip={t('Pick location')} data-for='google_marker' className={classes.createAddress__btnMarkerWrap}>
+                <div data-tooltip-html={t('Pick location')} data-tooltip-id='google_marker' className={classes.createAddress__btnMarkerWrap}>
                   <FlatButton  onClick={() => setDragMarker(!dragMarker)} className={classes.createAddress__btnMarker}>
                     <GoogleMarkerIcon active={dragMarker} />
                   </FlatButton>
@@ -317,7 +317,7 @@ export default function CreateAddress({
                   />
                   { formValues.radius && <span>m</span> }
                 </div>
-                <div className={classes.tooltipBlock} data-tip={t('100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy')} data-for='google_marker'>
+                <div className={classes.tooltipBlock} data-tooltip-html={t('100 meters diameter is the minimum acceptable value by the system because of possible GPS discrepancy')} data-tooltip-id='google_marker'>
                   ?
                 </div>
                 { formValues.radius &&
