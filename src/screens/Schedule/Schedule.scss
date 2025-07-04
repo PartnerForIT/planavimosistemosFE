@@ -736,10 +736,14 @@
           display: flex;
         }
 
+        .fc-datagrid-expander-placeholder {
+          display: none;
+        }
+
         .fc-datagrid-expander {
           position: absolute;
           right: 15px;
-          z-index: 2;
+          z-index: 3;
           margin-right: 16px;
 
           .fc-icon {
