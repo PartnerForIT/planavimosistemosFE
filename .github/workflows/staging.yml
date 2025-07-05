@@ -19,7 +19,7 @@ jobs:
       run: GIT_SSH_COMMAND="ssh -i /home/deployment/.ssh/id_rsa_staging_deployment -o StrictHostKeychecking=no" git pull origin staging 
 
     - name: Run install node packages process for FrontEnd app
-      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app febuild:v1 npm install --force
+      run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -e HOME=/tmp -e npm_config_cache=/tmp/npm-cache -v ./:/app -i node:12.16.1-alpine sh -c "apk add --no-cache git && mkdir /tmp/npm-cache && chown node:node /tmp/npm-cache && export npm_config_loglevel=silent; npm install --legacy-peer-deps"
 
     - name: Run BUILD process for FrontEnd app
       run: COMPOSE_INTERACTIVE_NO_CLI=1 sudo docker run --rm -w /app -i -v ./:/app node:12.16.1-alpine npm run build
