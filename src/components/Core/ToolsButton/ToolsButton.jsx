@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
+import cn from 'classnames'
 
 import { useTranslation } from 'react-i18next';
 import styles from './ToolsButton.module.scss';
@@ -26,7 +27,7 @@ const permissionsConfig = [
  * Simple Button encapsulating all design variations
  */
 const ToolsButton = ({
-  values, handleInputChange, handleOpenChangeLog, withLog
+  values, handleInputChange, handleOpenChangeLog, withLog, className, style = {},
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -47,7 +48,7 @@ const ToolsButton = ({
           className={wrapperClasses}
           onClick={() => setOpen(!open)}
         >
-          <span className={styles.customSelect}><SettingsIcon />{t('Tools')}</span>
+          <span className={cn(styles.customSelect, className)} style={style}><SettingsIcon />{t('Tools')}</span>
         </div>
 
         {open ? (
