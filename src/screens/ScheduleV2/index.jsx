@@ -621,7 +621,7 @@ const ScheduleV2 = () => {
     if (info.event.extendedProps.empty_manual) {
       classes.push('is-empty-manual')
     }
-    if (!permissions.schedule_create_and_edit || copyTool || info.event.extendedProps.copy_event) {
+    if (copyTool || info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
     return classes
@@ -1032,6 +1032,8 @@ const ScheduleV2 = () => {
     return <div />
   }, [])
 
+  // console.log('permissions.schedule_create_and_edit', permissions)
+
   const renderResourceLabelContent = useCallback(({fieldValue, resource}) => {
     const {
       photo,
@@ -1051,7 +1053,7 @@ const ScheduleV2 = () => {
         templateId={resource.extendedProps.template_id}
         accumulatedHours={accumulatedHoursDetected}
         shiftId={shiftId}
-        withMenu={permissions.schedule_create_and_edit && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
+        withMenu={(permissions.schedule_create_and_edit || user.employee?.shift_id === shiftId) && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
         employeeId={employeeId}
         onEditShift={() => history.push(`/${companyId}/schedule/shift/${resource.extendedProps.template_id || shiftId}`)}
         onDeleteShift={() => {
@@ -1086,7 +1088,7 @@ const ScheduleV2 = () => {
 
     const isCanEdit = (() => {
       const place_id = selectedEvent?.place_id;
-      const splited = selectedEvent?.resourceId?.toString().split('-');
+      const splited = resourceInfo?.id?.toString().split('-');
       const job_type_id = splited && splited[1] ? splited[1] : null;
       const shift_id = splited && splited[0] ? splited[0] : null;
       if (user?.employee?.place?.[0]?.id) {
