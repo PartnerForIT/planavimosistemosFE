@@ -136,7 +136,7 @@ export default ({
         photo && (
           <div
             data-tooltip-id='user_avatar'
-            data-tooltip-html={`<div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"><img alt="" style="width: 100%;" src="${photo}" /></div>`}
+            data-tooltip-html={`<div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"><img alt="" style="width: 100%; height: 100%; object-fit: cover;" src="${photo}" /></div>`}
             style={{width: 20, height: 20}}
             className={classes.resourceItem__avatar_trigger}>
             <img alt='' src={photo} />
