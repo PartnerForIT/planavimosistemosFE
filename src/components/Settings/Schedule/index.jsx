@@ -304,6 +304,17 @@ export default function ActivityLog() {
                           />
                           <Label text={t('Use empty hours feature in Logbook module')} />
                         </div>
+                        { inputValues.use_empty_hours && (
+                            <div className={styles.clockIn}>
+                              <Checkbox
+                                  onChange={handleChangeInput}
+                                  checked={inputValues.ignore_empty_hours_logbook_edit}
+                                  label={t('Ignore empty hours feature for the entry, if the logbook entry was edited by the user')}
+                                  name='ignore_empty_hours_logbook_edit'
+                                />
+                            </div>
+                          )
+                        }
                         <div className={styles.hr} />
                       </>
                     )
@@ -368,6 +379,17 @@ export default function ActivityLog() {
                           checked={inputValues.use_em_status}
                           label={t('Use “Employee status” in order to calculate correct work load demand in schedule')}
                           name='use_em_status'
+                        />
+                    </div>
+                  )
+                  }
+                  { inputValues.use_accumulated && (
+                    <div className={styles.clockIn}>
+                      <Checkbox
+                          onChange={handleChangeInput}
+                          checked={inputValues.deduct_break_accumulated}
+                          label={t('Deduct automatic break times from the total accumulated hours')}
+                          name='deduct_break_accumulated'
                         />
                     </div>
                   )

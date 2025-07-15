@@ -224,11 +224,13 @@ const ScheduleV2 = () => {
     job_timeline: false,
     request_dayoff: true,
     use_empty_hours: true,
+    ignore_empty_hours_logbook_edit: false,
     deduct_break: true,
     break_from_job: false,
     use_accumulated: true,
     accumulated_from_country: true,
     use_em_status: true,
+    deduct_break_accumulated: false,
     accumulated_months: 1,
     accumulated_start: 1,
     start_finish: true,
@@ -418,8 +420,8 @@ const ScheduleV2 = () => {
       return {
         ...e,
         defaultTimes: {
-          start: moment(workTimes[eventWeekDay].start, 'HH:mm').format('YYYY-MM-DD HH:mm:ss'),
-          end: moment(workTimes[eventWeekDay].finish, 'HH:mm').format('YYYY-MM-DD HH:mm:ss'),
+          start: workTimes[eventWeekDay] ? moment(workTimes[eventWeekDay].start, 'HH:mm').format('YYYY-MM-DD HH:mm:ss') : '08:00',
+          end: workTimes[eventWeekDay] ? moment(workTimes[eventWeekDay].finish, 'HH:mm').format('YYYY-MM-DD HH:mm:ss') : '17:00',
         },
       }
     })
