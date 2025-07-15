@@ -11,6 +11,7 @@ import Scrollbar from 'react-scrollbars-custom';
 import StyledCheckbox from '../Checkbox/Checkbox';
 import Input from '../Input/Input';
 import './style.scss';
+import { useTranslation } from 'react-i18next';
 
 function getOverflowParent(node) {
   if (!node) {
@@ -40,6 +41,7 @@ export default ({
   withoutCheckbox = false,
   withoutSearch = false,
 }) => {
+  const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
@@ -139,7 +141,7 @@ export default ({
           ref={buttonRef}
         >
           <Input
-            placeholder={placeholder}
+            placeholder={open ? t("Type to search") : placeholder}
             value={label}
             onChange={handleSearchChange}
             readOnly={!open || withoutSearch}

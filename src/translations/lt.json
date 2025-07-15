@@ -1399,5 +1399,6 @@
 
         "{{days}} days carryover on {{when}} have an expiration date of {{expire}}": "{{days}} perkeltos dienos nuo {{when}} kurios baigs galioti {{expire}}",
         "Deduct automatic break times from the total accumulated hours": "Atimti automatinį poilsio laiką iš viso planuojamo laiko suminės darbo laiko apskaitos skiltyje",
-        "Ignore empty hours feature for the entry, if the logbook entry was edited by the user": "Ignoruoti neapmokamų valandų funkcionalumą darbo įrašui, jeigu jisai buvo pakoreguotas vartotojo"
+        "Ignore empty hours feature for the entry, if the logbook entry was edited by the user": "Ignoruoti neapmokamų valandų funkcionalumą darbo įrašui, jeigu jisai buvo pakoreguotas vartotojo",
+        "Type to search": "Įveskite, kad ieškotumėte"
 }
