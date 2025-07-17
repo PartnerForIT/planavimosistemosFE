@@ -22,6 +22,7 @@ const convertMinutesToHoursAndMinutes = (minutes) => {
 
 const MonthCell = ({
   selectedEvent,
+  resourceId,
   start,
   end,
   isCompleted,
@@ -64,6 +65,7 @@ const MonthCell = ({
   markers,
   isMarkerMode,
   handleMarker,
+  handleAddHistory,
 }) => {
   const { t } = useTranslation()
 
@@ -201,9 +203,13 @@ const MonthCell = ({
     modalRef.current.close()
   }
 
+  const handleCopyEvent = () => {
+    handleAddHistory({resourceId: resourceId, start: moment(start).format('YYYY-MM-DD'), end: moment(start).format('YYYY-MM-DD'), copy_event: true})
+  }
+
   const marker = markerComment()
   const isMarkerExist = marker !== null
-  
+
   return (
     <div
       className={css.container}
@@ -213,7 +219,7 @@ const MonthCell = ({
       >
       <div className={css.content} style={{justifyContent: (showHoursCount || selectedEvent.rId) ? 'center' : 'flex-start'}}>
         {
-          (!empty_manual && newEmployee?.name) || selectedEvent.rId
+          (!empty_manual && newEmployee?.name) || selectedEvent.rId || copy_event
             ? showHoursCount || selectedEvent.rId
               ? <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>
                   <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>{minutes / 60}</div>
@@ -227,9 +233,14 @@ const MonthCell = ({
                 ? isMarkerExist
                   ? <div className={css.removeMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
                   : <div className={css.addMarker} onClick={() => handleMarker(employeeId, moment(start))}></div>
-                : <div className={css.addButton} onClick={(employeeName === 'Empty' || empty) ? addEmployee : openAddWorkingTime}>
-                  </div>
+                : copyTool
+                  ? null
+                  : <div className={css.addButton} onClick={(employeeName === 'Empty' || empty) ? addEmployee : openAddWorkingTime}>
+                    </div>
               : null
+        }
+        {
+          (copyTool && !selectedEvent.rId) ? <span onClick={handleCopyEvent} style={{textAlign: 'center', fontSize: 11}} className={'copy-add event'}>{t('Paste the Time')}</span> : null
         }
       </div>
       {
