@@ -172,7 +172,7 @@ export default () => {
     return nextColumns;
   }, [columnsFiltered, permissions]);
   const selectedItem = useMemo(() => {
-    if (selectedItemId) {
+    if (selectedItemId && Array.isArray(kiosksUsers.employees)) {
       return kiosksUsers.employees.find((item) => item.id === selectedItemId) || {};
     }
 
