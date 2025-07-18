@@ -170,17 +170,18 @@ export const reducer = (state = initialState, action) => {
         usersLoading: false,
         users: {
           stats: state.users.stats,
-          employees: state.users.employees.map((item) => {
-            if (action.data.employee_ids.includes(item.id)) {
-              return ({
-                ...item,
-                is_kiosk: Number(action.data.status),
-              });
-            }
-
-            return item;
-          }),
-        },
+          employees: Array.isArray(state.users.employees)
+            ? state.users.employees.map((item) => {
+                if (action.data.employee_ids.includes(item.id)) {
+                  return {
+                    ...item,
+                    is_kiosk: Number(action.data.status),
+                  };
+                }
+                return item;
+              })
+            : [],
+          },
       };
     }
 
@@ -209,18 +210,18 @@ export const reducer = (state = initialState, action) => {
         usersLoading: false,
         users: {
           stats: state.users.stats,
-          employees: state.users.employees.map((item) => {
-            const foundItem = action.data.find((itemJ) => itemJ.data.id === item.id);
-            if (foundItem) {
-              return ({
-                ...item,
-                pin_code: foundItem.pin_code,
-              });
-            }
-
-            return item;
-          }),
-        },
+          employees: Array.isArray(state.users.employees)
+            ? state.users.employees.map((item) => {
+                if (action.data.employee_ids.includes(item.id)) {
+                  return {
+                    ...item,
+                    is_kiosk: Number(action.data.status),
+                  };
+                }
+                return item;
+              })
+            : [],
+          },
       };
 
     case GET_PIN_CODE_GENERATE:
