@@ -198,6 +198,70 @@ const generateStatisticEvents = (date, events) => {
   return temp
 }
 
+const generateEvents = (events, markers, timeline, scheduleSettings, fromDate) => {
+  let result = []
+  if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+    result = events.map((e) => ({
+      ...e,
+      realStart: e.start,
+      realEnd: e.end,
+      start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    }));
+  } else if (timeline === TIMELINE.DAY) {
+    result = events
+      .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDate), 'day')))
+      .map(e => {
+        const startOfDay = moment().startOf('day')
+        const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay) && !e.rId
+        if (e.empty_manual && scheduleSettings.working_at_night) {
+          const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
+          const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
+          const endStr = `${moment(startStr).add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')}`
+          const times = {
+            start: startStr,
+            end: endStr,
+          }
+          
+          return {
+            ...e,
+            identifier: e.id,
+            durationEditable: editable,
+            ...times,
+          }
+        }
+        return {
+          ...e,
+          identifier: e.id,
+          durationEditable: editable
+        }
+      })
+  } else {
+    result = events
+  }
+
+  if (timeline === TIMELINE.WEEK) {
+    result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
+  }
+
+  if (timeline === TIMELINE.MONTH) {
+    result = [...result, ...generateStatisticEvents(fromDate, events)].map(e => {
+      const existMarker = markers.find(marker => {
+        return moment(marker.date).format('YYYY-MM-DD') === moment(e.start).format('YYYY-MM-DD') && marker.employee_id === e.employee_id
+      })
+      
+      return {
+        ...e,
+        realStart: e.start,
+        realEnd: e.end,
+        withConflicts: existMarker,
+        end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      }
+    })
+  }
+  return result
+}
+
 const ScheduleV2 = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
@@ -357,63 +421,68 @@ const ScheduleV2 = () => {
   }, [schedule.resources, schedule.events, scheduleSettings.remove_timelines, timeline])
 
   const events = useMemo(() => {
-    let result = []
-    if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
-      result = schedule?.events.map((e) => ({
-        ...e,
-        realStart: e.start,
-        realEnd: e.end,
-        start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      }));
-    } else if (timeline === TIMELINE.DAY) {
-      result = schedule?.events
-        .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
-        .map(e => {
-          const startOfDay = moment().startOf('day')
-          const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay) && !e.rId
-          if (e.empty_manual && scheduleSettings.working_at_night) {
-            const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
-            const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
-            const endStr = `${moment(startStr).add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')}`
-            const times = {
-              start: startStr,
-              end: endStr,
-            }
+    // let result = []
+    // if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
+    //   result = schedule?.events.map((e) => ({
+    //     ...e,
+    //     realStart: e.start,
+    //     realEnd: e.end,
+    //     start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    //     end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    //   }));
+    // } else if (timeline === TIMELINE.DAY) {
+    //   result = schedule?.events
+    //     .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
+    //     .map(e => {
+    //       const startOfDay = moment().startOf('day')
+    //       const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay) && !e.rId
+    //       if (e.empty_manual && scheduleSettings.working_at_night) {
+    //         const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
+    //         const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
+    //         const endStr = `${moment(startStr).add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')}`
+    //         const times = {
+    //           start: startStr,
+    //           end: endStr,
+    //         }
             
-            return {
-              ...e,
-              identifier: e.id,
-              durationEditable: editable,
-              ...times,
-            }
-          }
-          return {
-            ...e,
-            identifier: e.id,
-            durationEditable: editable
-          }
-        })
-    } else {
-      result = schedule?.events
-    }
+    //         return {
+    //           ...e,
+    //           identifier: e.id,
+    //           durationEditable: editable,
+    //           ...times,
+    //         }
+    //       }
+    //       return {
+    //         ...e,
+    //         identifier: e.id,
+    //         durationEditable: editable
+    //       }
+    //     })
+    // } else {
+    //   result = schedule?.events
+    // }
 
-    if (timeline === TIMELINE.WEEK) {
-      result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
-    }
+    // if (timeline === TIMELINE.WEEK) {
+    //   result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
+    // }
 
-    if (timeline === TIMELINE.MONTH) {
-      result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)].map(e => {
-        return {
-          ...e,
-          realStart: e.start,
-          realEnd: e.end,
-          end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        }
-      })
-    }
+    // if (timeline === TIMELINE.MONTH) {
+    //   result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)].map(e => {
+    //     const existMarker = schedule.markers.find(marker => {
+    //       return moment(marker.date).format('YYYY-MM-DD') === moment(e.start).format('YYYY-MM-DD') && marker.employee_id === e.employee_id
+    //     })
+        
+    //     return {
+    //       ...e,
+    //       realStart: e.start,
+    //       realEnd: e.end,
+    //       withConflicts: existMarker,
+    //       end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    //     }
+    //   })
+    // }
 
-    result = result.map(e => {
+    const result = schedule.events.map(e => {
       const eventWeekDay = moment(e.start).isoWeekday()
       return {
         ...e,
@@ -434,7 +503,7 @@ const ScheduleV2 = () => {
       }),
       ...copyToolHistory.map((e) => ({...e, copy_event: true})),
     ]
-  }, [schedule.events, copyToolHistory, timeline, scheduleSettings, workTimes])
+  }, [schedule.events, copyToolHistory, workTimes])
 
   const daysOfMonth = useMemo(() => {
     const currentMonth = moment().startOf('month')
@@ -484,8 +553,11 @@ const ScheduleV2 = () => {
   }, [companyId])
 
   useEffect(() => {
+    if (!scheduleSettings.loaded) {
+      return
+    }      
     getSchedule({type: timeline, formDate: currentStartDate})
-  }, [companyId, timeline, currentStartDate, filter])
+  }, [companyId, timeline, currentStartDate, filter, scheduleSettings.loaded])
 
   useEffect(() => {
     if (timeline === TIMELINE.WEEK || timeline === TIMELINE.MONTH) {
@@ -508,7 +580,7 @@ const ScheduleV2 = () => {
     ]
     const [scheduleSettingsRes, additionalRatesRes, workTimeRes] = await Promise.all(promisses)
     if (scheduleSettingsRes) {
-      setScheduleSettings(scheduleSettingsRes)
+      setScheduleSettings({...scheduleSettingsRes, loaded: true})
       setToolsActive(state => {
         return {
           ...state,
@@ -553,7 +625,7 @@ const ScheduleV2 = () => {
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
         holidays: Object.keys(res.holidays).length ? res.holidays : state.holidays,
-        events: events,
+        events: generateEvents(events, res.markers, type, scheduleSettings, fromDateRef.current),
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
@@ -820,7 +892,7 @@ const ScheduleV2 = () => {
       if (res) {
         const settingsRes = await request(`${companyId}/schedule/settings`)
         if (settingsRes) {
-          setScheduleSettings(settingsRes)
+          setScheduleSettings(state => ({...state, ...settingsRes}))
         }
       }
       setSchedule(prev => ({...prev, loading: false}))

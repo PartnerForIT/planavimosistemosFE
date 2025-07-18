@@ -319,10 +319,6 @@ const EventContent = ({
     [company.currency, currencies],
   )
 
-  if (selectedEvent.rId === 35) {
-    console.log(end)
-  }
-
   const tooltipContent = () => {
     return (
       `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(selectedEvent.realEnd).format('HH:mm')}</b><br/>
