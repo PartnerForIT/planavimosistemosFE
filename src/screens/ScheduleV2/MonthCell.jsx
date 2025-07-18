@@ -111,6 +111,7 @@ const MonthCell = ({
       + (schedule.deduct_break || integrations?.iiko ? `<br />${t('Break hours')} <b>${convertMinutesToHoursAndMinutes(break_minutes)}</b>` : ``)
       + (nightPermission ? `<br />${t('Night hours')} <strong>${convertMinutesToHoursAndMinutes(night_minutes)}</strong>` : ``)
       + (costPermission ? `<br />${t('Cost')} <b>${cost}${currency}</b>` : ``)
+      + (selectedEvent.withConflicts?.comment  ? `<br /><span style="display: inline-block; color: #d9dfe3; text-decoration: underline; transform: translateY(-5px);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><br /><span>${selectedEvent.withConflicts.comment}</span>` : ``)
       + `</div>`
     )
   }
@@ -225,7 +226,7 @@ const MonthCell = ({
                   <div style={{color: '#333945', fontSize: 11, fontWeight: 'bold'}}>{minutes / 60}</div>
                   <div style={{color: '#db894f', fontSize: 11, fontWeight: 'bold', borderTop: '1px solid #db894f'}}>{nightDuration}h</div>
                 </div>
-              : <div className={css.eventTime} style={{borderColor: lineColor}}>
+              : <div className={css.eventTime} style={{borderColor: selectedEvent.withConflicts ? '#E80000' : lineColor}}>
                   { moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm') }
                 </div>
             : editPermissions && !isCompleted && (empty_manual || employeeName === 'Empty')
@@ -343,6 +344,15 @@ const MonthCell = ({
                                 onClick={openCopyMode}
                               />
                               ) : null
+                            }
+                            {
+                              selectedEvent.withConflicts
+                                ? <Dropdown.ItemMenu
+                                    title={t('Remove comment')}
+                                    onClick={() => handleMarker(employeeId, moment(start))}
+                                    remove
+                                  />
+                                : null
                             }
                             { !modules.manual_mode ? (
                                 <Dropdown.ItemMenu
