@@ -208,6 +208,7 @@ function* patchUpdateStatus(action) {
       getToken(),
     );
     yield put(patchUpdateStatusSuccess(action.data));
+    yield put(getKiosksUsersAction(action.companyId, action.isKiosk));
   } catch (e) {
     yield put(patchUpdateStatusError());
     yield put(addSnackbar(e, 'error'));
