@@ -115,8 +115,10 @@ export default ({
     <>
       {
         (title.includes('Empty'))
-            ?  <div className={classes.resourceItem__empty}><span>Empty</span></div>
-            : title
+            ? <div className={classes.resourceItem__empty}><span>Empty</span></div>
+            : <div style={{flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', marginRight: 15, textOverflow: 'ellipsis'}}>
+                {title}
+              </div>
       }
       {
         accumulatedHours?.startPeriod && employeeId && (
