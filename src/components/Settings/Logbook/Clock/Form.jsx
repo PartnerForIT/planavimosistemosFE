@@ -212,7 +212,7 @@ export default function Form({
           </div>
         </div>
 
-        { permissions.custom_category && (
+        {/* { permissions.custom_category && (
           <div className={style.generalBlock6}>
             <Switch
               onChange={() => handleChangeCalculation('use_custom_categories')}
@@ -226,6 +226,40 @@ export default function Form({
               width={40}
             />
             <Label text={t('Use additional categories for registration process')} />
+          </div>
+        )} */}
+
+        { permissions.custom_category && (
+          <div className={style.generalBlock6}>
+            <Switch
+              onChange={() => handleChangeCalculation('use_custom_clock_in')}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              name='use_custom_clock_in'
+              checked={!!ClockData.use_custom_clock_in}
+              height={21}
+              width={40}
+            />
+            <Label text={t('Use additional categories for clock in procedure')} />
+          </div>
+        )}
+
+        { permissions.custom_category && (
+          <div className={style.generalBlock6}>
+            <Switch
+              onChange={() => handleChangeCalculation('use_custom_clock_out')}
+              offColor='#808F94'
+              onColor='#0085FF'
+              uncheckedIcon={false}
+              checkedIcon={false}
+              name='use_custom_clock_out'
+              checked={!!ClockData.use_custom_clock_out}
+              height={21}
+              width={40}
+            />
+            <Label text={t('Use additional categories for clock out procedure')} />
           </div>
         )}
       </div>

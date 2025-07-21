@@ -104,8 +104,8 @@ export default function ButtonBlock({
     dispatch(actionCreatePlace({ name, external_id }, companyId));
     handleCloseItem();
   };
-  const createCustomCategory = ({name, entry_field}) => {
-    dispatch(actionCreateCustomCategory({ name, entry_field }, companyId));
+  const createCustomCategory = ({name, entry_field, start_work, finish_work}) => {
+    dispatch(actionCreateCustomCategory({ name, entry_field, start_work, finish_work }, companyId));
     handleCloseItem();
   };
 

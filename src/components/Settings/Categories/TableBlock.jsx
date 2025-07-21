@@ -51,6 +51,8 @@ const columnsPlaces = [
 const columnsCustomCategories = [
   { label: 'Title', field: 'name', checked: true },
   { label: 'Entry field?', field: 'entry_field', checked: true },
+  { label: 'Start work', field: 'start_work', checked: true },
+  { label: 'Finish work', field: 'finish_work', checked: true },
 ];
 
 const columnsWidthArray = {
@@ -141,6 +143,8 @@ export default function TableBlock({
             ...foundCustomCategory,
             title: foundCustomCategory.name,
             entry_field: foundCustomCategory.entry_field,
+            start_work: foundCustomCategory.start_work,
+            finish_work: foundCustomCategory.finish_work,
           };
         }
         default: return '';
@@ -221,6 +225,8 @@ export default function TableBlock({
         setDataArray(allCustomCategories.map((item) => ({
           ...item,
           entry_field: item.entry_field ? t('Yes') : t('No'),
+          start_work: item.start_work ? t('Yes') : t('No'),
+          finish_work: item.finish_work ? t('Yes') : t('No'),
         })));
         break;
       }

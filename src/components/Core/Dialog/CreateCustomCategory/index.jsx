@@ -10,6 +10,8 @@ import style from '../Dialog.module.scss';
 const initialFormValues = {
   name: '',
   entry_field: true,
+  start_work: false,
+  finish_work: false,
 };
 
 export default function CreateCustomCategory({
@@ -64,6 +66,23 @@ export default function CreateCustomCategory({
           onChange={(e) => setFormValues({ ...formValues, entry_field: !formValues.entry_field })}
         />
       </div>
+
+      <div className={style.formControl}>
+        <StyledCheckbox
+          label={t('Start work additional category')}
+          checked={formValues.start_work}
+          onChange={(e) => setFormValues({ ...formValues, start_work: !formValues.start_work, finish_work: !formValues.start_work ? false : formValues.finish_work })}
+        />
+      </div>
+
+      <div className={style.formControl}>
+        <StyledCheckbox
+          label={t('Finish work additional category')}
+          checked={formValues.finish_work}
+          onChange={(e) => setFormValues({ ...formValues, finish_work: !formValues.finish_work, start_work: !formValues.finish_work ? false : formValues.start_work })}
+        />
+      </div>
+
       <div className={style.buttonSaveBlock}>
         <Button disabled={formValues.name === ''} onClick={() => createCategory(formValues)} fillWidth size='big'>
           {buttonTitle}
