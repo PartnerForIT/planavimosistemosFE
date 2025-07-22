@@ -9,6 +9,8 @@ import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar';
 import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar';
 import avatar from '../../Icons/avatar.png';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
+import EditIconFixedFill from '../../Icons/EditIconFixedFill';
+import DeleteIcon from '../../Icons/DeleteIcon';
 
 import classes from './timeoff.module.scss';
 import Label from '../../Core/InputLabel';
@@ -306,6 +308,16 @@ function EmployeeActivity({
       return total;
     }, 0);
   };
+
+  const editRow = (activity) => {
+    // Implement edit functionality here
+    console.log('Edit activity:', activity);
+  }
+
+  const removeRow = (activity) => {
+    // Implement remove functionality here
+    console.log('Remove activity:', activity);
+  }
   
   return (
     <>
@@ -413,7 +425,7 @@ function EmployeeActivity({
                         ((!exclRejectedRequests || activity.type !== 'request_behalf_rejected') &&
                           (moment(activity.created_at, formatDate).format('YYYY') === String(year))) &&
                           <React.Fragment key={activity.id}>
-                            <div key={activity.id} className={classes.cyclesTableRow}>
+                            <div key={activity.id} className={classnames(classes.cyclesTableRow, { [classes.haveActions]: activity.type === 'manual' || activity.type === 'request_behalf_pending' || activity.type === 'request_behalf_approved' || activity.type === 'request_behalf_rejected' })}>
                               <div className={classes.cyclesTableCol}>
                                 {renderWho(activity)}
                               </div>
@@ -432,6 +444,27 @@ function EmployeeActivity({
                               <div className={classes.cyclesTableCol}>
                                 {activity.balance_after}
                               </div>
+
+                              { (activity.type === 'manual' || activity.type === 'request_behalf_pending' || activity.type === 'request_behalf_approved' || activity.type === 'request_behalf_rejected') && (
+                                <div className={classes.cyclesTableHover}>
+                                  <div className={classes.cyclesTableHoverActions}>
+                                    <div className={classes.cyclesTableHoverAction}>
+                                      <button onClick={() => editRow(activity)} data-tooltip-html={t('Edit')} data-tooltip-id="back_button">
+                                        <EditIconFixedFill className={classes.iconButtonRow} />
+                                      </button>
+      
+          
+                                    </div>
+                                      <div className={classes.cyclesTableHoverAction}>
+                                        <div data-tooltip-html={t('Delete')} data-tooltip-id="back_button">
+                                          <button onClick={() => removeRow(activity)} >
+                                            <DeleteIcon fill='#fd0d1b' className={classes.iconButtonRow} />
+                                          </button>
+                                        </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </React.Fragment>
                       ))}

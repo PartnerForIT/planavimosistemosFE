@@ -701,6 +701,7 @@ $arrow-size: 21px;
 
 .tooltip_back {
   opacity: 1 !important;
+  z-index: 10000;
 }
 
 .tooltip_emp {
@@ -852,11 +853,24 @@ $arrow-size: 21px;
 
 .cyclesTableRow {
   border-bottom: 1px solid #E6EEF6;
+  position: relative;
+
   &:last-child {
     border-bottom: none;
   }
   &:hover {
     background-color: #fafafa;
+  }
+
+  &.haveActions {
+
+    &:hover {
+      background-color: #ecf6ff;
+
+      .cyclesTableHover {
+        visibility: visible;
+      }
+    }
   }
 }
 
@@ -943,5 +957,48 @@ $arrow-size: 21px;
   svg {
     width: 20px;
     height: 20px;
+  }
+}
+
+.cyclesTableHover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 10;
+  visibility: hidden;
+  pointer-events: none;
+
+  &Actions {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    background-color: white;
+    min-width: 300px;
+    background: linear-gradient(90.8deg, rgba(208, 223, 239, 0.039) 0.63%, #D0DFEF 50.64%, #D0DFEF 99.27%);
+  }
+
+  &Action {
+    cursor: pointer;
+    pointer-events: all;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
