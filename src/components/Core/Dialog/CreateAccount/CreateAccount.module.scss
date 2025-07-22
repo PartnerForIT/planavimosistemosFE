@@ -179,7 +179,6 @@ small.error {
 
   &_four {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 20px;
   }
 
   .info {
@@ -197,11 +196,16 @@ small.error {
   
   .column {
     padding-right: $padding-size;
+    padding-left: $padding-size;
     border-right: 1px solid $light-blue;
 
     &:last-child {
       border-right: none;
       padding-right: 0;
+    }
+
+    &:first-child {
+      padding-left: 0;
     }
   }
 }

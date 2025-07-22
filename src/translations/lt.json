@@ -1401,5 +1401,13 @@
         "{{days}} days carryover on {{when}} have an expiration date of {{expire}}": "{{days}} perkeltos dienos nuo {{when}} kurios baigs galioti {{expire}}",
         "Deduct automatic break times from the total accumulated hours": "Atimti automatinį poilsio laiką iš viso planuojamo laiko suminės darbo laiko apskaitos skiltyje",
         "Ignore empty hours feature for the entry, if the logbook entry was edited by the user": "Ignoruoti neapmokamų valandų funkcionalumą darbo įrašui, jeigu jisai buvo pakoreguotas vartotojo",
-        "Type to search": "Įveskite, kad ieškotumėte"
+        "Type to search": "Įveskite, kad ieškotumėte",
+
+        "Use additional categories for clock in procedure": "Naudoti papildomas kategorijas darbo pradžios registravimosi procese",
+        "Use additional categories for clock out procedure": "Naudoti papildomas kategorijas darbo pabaigos išsiregistravimosi procese",
+        "Start work": "Darbo pradžiai",
+        "Finish work": "Darbo pabaigai",
+        "Entry field": "Įvesties laukas",
+        "Start work additional category": "Naudojamas darbo pradžioje",
+        "Finish work additional category": "Naudojamas darbo pabaigoje"
 }

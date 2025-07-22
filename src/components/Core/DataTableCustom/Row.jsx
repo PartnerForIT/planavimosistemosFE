@@ -309,6 +309,11 @@ const Row = ({
                     <span className={styles.addBreak} onClick={() => onOpenWorkTime(row.id)}>+</span>
                   )
                 }
+                {(column.field === 'work_time' && !onOpenWorkTime) 
+                  && (
+                    (column.cellRenderer ? column.cellRenderer(row, t) : t(row[column.field]))
+                  )
+                }
                 {/* for groups section */}
                 {(column.field === 'place_address' && onEditAddress)
                   && (
