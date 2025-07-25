@@ -141,6 +141,9 @@ import {
   GET_POLICIES,
   GET_POLICIES_SUCCESS,
   GET_POLICIES_ERROR,
+  GET_POLICY_EMPLOYEE,
+  GET_POLICY_EMPLOYEE_SUCCESS,
+  GET_POLICY_EMPLOYEE_ERROR,
   CREATE_POLICY,
   CREATE_POLICY_SUCCESS,
   CREATE_POLICY_ERROR,
@@ -174,6 +177,12 @@ import {
   GET_REQUEST_BEHALF,
   GET_REQUEST_BEHALF_SUCCESS,
   GET_REQUEST_BEHALF_ERROR,
+  REMOVE_POLICY_ACTIVITY,
+  REMOVE_POLICY_ACTIVITY_SUCCESS,
+  REMOVE_POLICY_ACTIVITY_ERROR,
+  UPDATE_POLICY_ACTIVITY,
+  UPDATE_POLICY_ACTIVITY_SUCCESS,
+  UPDATE_POLICY_ACTIVITY_ERROR,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_BALANCE_SUCCESS,
   CREATE_ADJUST_BALANCE_ERROR,
@@ -1061,6 +1070,24 @@ export const getPoliciesError = (data) => ({
   data,
 });
 
+export const getPolicyEmployee = (companyId, timeOffId, policyId, employeeId) => ({
+  type: GET_POLICY_EMPLOYEE,
+  companyId,
+  timeOffId,
+  policyId,
+  employeeId,
+});
+
+export const getPolicyEmployeeSuccess = (data) => ({
+  type: GET_POLICY_EMPLOYEE_SUCCESS,
+  data,
+});
+
+export const getPolicyEmployeeError = (data) => ({
+  type: GET_POLICY_EMPLOYEE_ERROR,
+  data,
+});
+
 export const createPolicy = (companyId, timeOffId, data) => ({
   type: CREATE_POLICY,
   companyId,
@@ -1298,6 +1325,45 @@ export const createAdjustTimeUsedError = (data) => ({
   data,
 });
 
+
+export const updatePolicyActivity = (companyId, timeOffId, policyId, employeeId, activityId, data) => ({
+  type: UPDATE_POLICY_ACTIVITY,
+  companyId,
+  timeOffId,
+  policyId,
+  employeeId,
+  activityId,
+  data,
+}); 
+
+export const updatePolicyActivitySuccess = (data) => ({
+  type: UPDATE_POLICY_ACTIVITY_SUCCESS,
+  data,
+});
+
+export const updatePolicyActivityError = (data) => ({
+  type: UPDATE_POLICY_ACTIVITY_ERROR,
+  data,
+});
+
+export const removePolicyActivity = (companyId, timeOffId, policyId, employeeId, activityId) => ({
+  type: REMOVE_POLICY_ACTIVITY,
+  companyId,
+  timeOffId,
+  policyId,
+  employeeId,
+  activityId,
+});
+
+export const removePolicyActivitySuccess = (data) => ({
+  type: REMOVE_POLICY_ACTIVITY_SUCCESS,
+  data,
+});
+
+export const removePolicyActivityError = (data) => ({
+  type: REMOVE_POLICY_ACTIVITY_ERROR,
+  data,
+});
 
 export const loadPermissions = (companyId) => ({
   type: LOAD_PERMISSIONS,

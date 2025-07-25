@@ -116,6 +116,7 @@ function UserDataManagement({
   activeTimeOff,
   activePolicy,
   employeesList,
+  policies,
   handleEditPolicyEmployees,
   onRequestBehalf,
   onAdjustBalance,
@@ -377,7 +378,7 @@ function UserDataManagement({
         }}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
-        policies={activeTimeOff.policies}
+        policies={policies}
         initialValue={{policy_id: activePolicy.id}}
       />
       <AdjustBalance
@@ -392,7 +393,7 @@ function UserDataManagement({
         }}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
-        policies={activeTimeOff.policies}
+        policies={policies}
         initialValue={{policy_id: activePolicy.id}}
       />
       <AdjustTimeUsed
@@ -407,7 +408,7 @@ function UserDataManagement({
         }}
         buttonTitle={t('Submit')}
         employees={selectedEmployees}
-        policies={activeTimeOff.policies}
+        policies={policies}
         initialValue={{policy_id: activePolicy.id}}
       />
       <ReactTooltip

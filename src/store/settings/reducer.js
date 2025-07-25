@@ -104,6 +104,9 @@ import {
   GET_POLICIES,
   GET_POLICIES_SUCCESS,
   GET_POLICIES_ERROR,
+  GET_POLICY_EMPLOYEE,
+  GET_POLICY_EMPLOYEE_SUCCESS,
+  GET_POLICY_EMPLOYEE_ERROR,
   CREATE_POLICY,
   CREATE_POLICY_ERROR,
   CREATE_POLICY_SUCCESS,
@@ -134,6 +137,12 @@ import {
   GET_REQUEST_BEHALF,
   GET_REQUEST_BEHALF_SUCCESS,
   GET_REQUEST_BEHALF_ERROR,
+  UPDATE_POLICY_ACTIVITY,
+  UPDATE_POLICY_ACTIVITY_SUCCESS,
+  UPDATE_POLICY_ACTIVITY_ERROR,
+  REMOVE_POLICY_ACTIVITY,
+  REMOVE_POLICY_ACTIVITY_SUCCESS,
+  REMOVE_POLICY_ACTIVITY_ERROR,
   CREATE_ADJUST_BALANCE,
   CREATE_ADJUST_BALANCE_SUCCESS,
   CREATE_ADJUST_BALANCE_ERROR,
@@ -225,6 +234,7 @@ const initialState = {
   roleDetails: {},
   time_offs: [],
   policies: [],
+  policyEmployee: {},
   requestBehalf: [],
   policiesLoading: false,
   requestBehalfLoading: false,
@@ -945,6 +955,32 @@ export const reducerOrganizationList = (state = initialState, action) => {
         error: action.data.policies,
       };
 
+    case GET_POLICY_EMPLOYEE:
+    case UPDATE_POLICY_ACTIVITY:
+    case REMOVE_POLICY_ACTIVITY:
+      return {
+        ...state,
+        policiesLoading: true,
+        policyEmployee: {},
+        error: null,
+      };
+    case GET_POLICY_EMPLOYEE_SUCCESS:
+    case UPDATE_POLICY_ACTIVITY_SUCCESS:
+    case REMOVE_POLICY_ACTIVITY_SUCCESS:
+      return {
+        ...state,
+        policiesLoading: false,
+        policyEmployee: action.data,
+      };
+    case GET_POLICY_EMPLOYEE_ERROR:
+    case UPDATE_POLICY_ACTIVITY_ERROR:
+    case REMOVE_POLICY_ACTIVITY_ERROR:
+      return {
+        ...state,
+        policiesLoading: false,
+        error: action.data,
+      };
+
     case GET_REQUEST_BEHALF:
       return {
         ...state,
@@ -952,6 +988,7 @@ export const reducerOrganizationList = (state = initialState, action) => {
         requestBehalf: [],
         error: null,
       };
+      
     case GET_REQUEST_BEHALF_SUCCESS:
       return {
         ...state,

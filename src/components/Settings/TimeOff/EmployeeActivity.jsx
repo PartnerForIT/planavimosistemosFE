@@ -11,6 +11,8 @@ import avatar from '../../Icons/avatar.png';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
 import DeleteIcon from '../../Icons/DeleteIcon';
+import RemoveActivity from '../../Core/Dialog/RemoveActivity';
+import EditActivity from '../../Core/Dialog/EditActivity';
 
 import classes from './timeoff.module.scss';
 import Label from '../../Core/InputLabel';
@@ -25,6 +27,9 @@ function EmployeeActivity({
   activeTimeOff,
   activePolicy,
   employee,
+  activities,
+  onRemoveActivity,
+  onEditActivity,
 }) {
   const { getDateFormat } = useCompanyInfo();
   const formatDate = getDateFormat({
@@ -37,14 +42,14 @@ function EmployeeActivity({
   const [exclRejectedRequests, setExclRejectedRequests] = useState(true);
   const currentYear = new Date().getFullYear();
   const [expandedCycles, setExpandedCycles] = useState([currentYear]);
+  const [removeActivityVisible, setRemoveActivityVisible] = useState(false);
+  const [editActivityVisible, setEditActivityVisible] = useState(false);
   
   const cycleYears = [];
   const startYear = new Date(activePolicy.created_at).getFullYear();
   for (let year = startYear; year <= currentYear; year++) {
     cycleYears.push(year);
   }
-
-  const activities = activePolicy.employees.find(emp => emp.id === employee.id)?.activities || [];
 
   const expandCycle = (year) => {
     setExpandedCycles((prev) => {
@@ -309,14 +314,38 @@ function EmployeeActivity({
     }, 0);
   };
 
+  const removeActivityTitle = (activity) => {
+    switch (activity.type) {
+      case 'manual':
+        return t('Delete Balance Adjustment');
+      case 'request_behalf_pending':
+      case 'request_behalf_approved':
+      case 'request_behalf_rejected':
+        return t('Delete Request');
+      default:
+        return t('Delete Activity');
+    }
+  }
+
+  const editActivityTitle = (activity) => {
+    switch (activity.type) {
+      case 'manual':
+        return t('Adjust Balance');
+      case 'request_behalf_pending':
+      case 'request_behalf_approved':
+      case 'request_behalf_rejected':
+        return t('Adjust Request');
+      default:
+        return t('Adjust Activity');
+    }
+  }
+
   const editRow = (activity) => {
-    // Implement edit functionality here
-    console.log('Edit activity:', activity);
+    setEditActivityVisible(activity);
   }
 
   const removeRow = (activity) => {
-    // Implement remove functionality here
-    console.log('Remove activity:', activity);
+    setRemoveActivityVisible(activity);
   }
   
   return (
@@ -485,6 +514,21 @@ function EmployeeActivity({
           id='back_button'
           effect='solid'
           className={classes.tooltip_back}
+        />
+        <RemoveActivity
+          open={!!removeActivityVisible}
+          handleClose={() => setRemoveActivityVisible(false)}
+          title={removeActivityTitle(removeActivityVisible)}
+          buttonTitle={t('Delete')}
+          remove={() => onRemoveActivity(removeActivityVisible)}
+        />
+        <EditActivity
+          open={!!editActivityVisible}
+          handleClose={() => setEditActivityVisible(false)}
+          title={editActivityTitle(editActivityVisible)}
+          buttonTitle={t('Adjust')}
+          submit={(data) => onEditActivity(editActivityVisible, data)}
+          currentBalance={editActivityVisible.changed * (editActivityVisible.adjustment_type === 'increase' ? 1 : -1)}
         />
       </PageLayout>
     </>

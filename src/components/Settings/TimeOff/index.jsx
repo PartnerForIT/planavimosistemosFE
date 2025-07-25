@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import _ from 'lodash';
 import MaynLayout from '../../Core/MainLayout';
 import Dashboard from '../../Core/Dashboard';
 import TitleBlock from '../../Core/TitleBlock';
@@ -16,7 +15,7 @@ import EmployeeManagementPolicy from './EmployeeManagementPolicy';
 import EmployeeActivity from './EmployeeActivity';
 import {
   AccountGroupsSelector, employeesSelector,
-  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
+  isLoadingSelector, isShowSnackbar, permissionsSelector, policiesLoading, policiesSelector, policyEmployeeSelector, timeOffsSelector, requestBehalfSelector, snackbarText, snackbarType,
 } from '../../../store/settings/selectors';
 import { userSelector } from '../../../store/auth/selectors';
 import TimeOffIcon from '../../Icons/TimeOff';
@@ -37,8 +36,11 @@ import {
   changeRequestBehalfStatus,
   createAdjustBalance,
   createAdjustTimeUsed,
+  updatePolicyActivity,
+  removePolicyActivity,
   duplicatePolicy,
   getPolicies,
+  getPolicyEmployee,
   getRequestBehalf,
   getAccountGroups,
   loadEmployeesAll,
@@ -80,6 +82,7 @@ export default () => {
   const user = useSelector(userSelector);
   const time_offs = useSelector(timeOffsSelector);
   const policies = useSelector(policiesSelector);
+  const policyEmployee = useSelector(policyEmployeeSelector);
   const requestBehalf = useSelector(requestBehalfSelector);
   const loading = useSelector(policiesLoading);
   const allPermissions = useSelector(permissionsSelector);
@@ -93,7 +96,8 @@ export default () => {
   const [activePolicy, setActivePolicy] = useState(null);
   const [activeDataManagement, setActiveDataManagement] = useState(null);
   const [activeEmployee, setActiveEmployee] = useState(null);
-  const [activeEmployeeActivity, setActiveEmployeeActivity] = useState(null);
+  const [currentPage, setCurrentPage] = useState('main');
+  const [loadedPageData, setLoadedPageData] = useState(false);
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
@@ -103,48 +107,134 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //check in url if here ?employee= parameter is present then set activeEmployee
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const employeeParam = params.get('employee');
     const pageParam = params.get('page');
-    if (pageParam !== 'activity') {
-      if (employeeParam && employees?.length) {
-        const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
-        if (employee) {
-          dispatch(getPolicies(id, 'all', employee.id));
-          setActiveEmployee(employee);
-          dispatch(getRequestBehalf(id, 'all', 'all', employee.id));
-        }
+    if (pageParam) {
+      switch (pageParam) {
+        case 'activity':
+          setCurrentPage('employeeActivity');
+          break;
+        case 'employee-management-policy':
+          setCurrentPage('employeeManagementPolicy');
+          break;
+        case 'employee-management':
+          setCurrentPage('employeeManagement');
+          break;
+        case 'data-management':
+          setCurrentPage('userDataManagement');
+          break;
+        default:
+          setCurrentPage('main');
+          break;
       }
+    } else {
+      setCurrentPage('main');
     }
-    // eslint-disable-next-line 
-  }, [employees]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history.location.search]);
 
-  //check in url if here ?employee= parameter is present then set activeEmployee
+  const initializePageFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get('page');
+    const employeeId = params.get('employee');
+    const policyId = params.get('policy');
+    const timeOffId = params.get('time_off');
+
+    const foundEmployee = employees.find(e => e.id.toString() === employeeId);
+    const foundPolicy = policies.find(p => p.id.toString() === policyId);
+    const foundTimeOff = time_offs.find(t => t.id.toString() === timeOffId);
+
+    switch (page) {
+      case 'activity':
+        if (foundEmployee && foundPolicy && foundTimeOff) {
+          setActiveTimeOff(foundTimeOff);
+          setActivePolicy(foundPolicy);
+          setActiveDataManagement(foundPolicy);
+          setActiveEmployee(foundEmployee);
+          setLoadedPageData(true);
+        }
+        break;
+
+      case 'employee-management':
+        if (foundPolicy && foundTimeOff && foundEmployee) {
+          setActiveTimeOff(foundTimeOff);
+          setActivePolicy(foundPolicy);
+          setActiveEmployee(foundEmployee);
+          setActiveDataManagement(foundPolicy);
+          dispatch(getRequestBehalf(id, foundTimeOff.id, foundPolicy.id, employeeId));
+          setLoadedPageData(true);
+        }
+        break;
+
+      case 'data-management':
+        if (foundPolicy && foundTimeOff) {
+          setActiveTimeOff(foundTimeOff);
+          setActivePolicy(foundPolicy);
+          setActiveDataManagement(foundPolicy);
+          setLoadedPageData(true);
+        }
+        break;
+
+      case 'employee-management-policy':
+        if (foundPolicy && foundTimeOff && foundEmployee) {
+          setActiveTimeOff(foundTimeOff);
+          setActivePolicy(foundPolicy);
+          setActiveDataManagement(foundPolicy);
+          setActiveEmployee(foundEmployee);
+          dispatch(getRequestBehalf(id, foundTimeOff.id, foundPolicy.id, employeeId));
+          setLoadedPageData(true);
+        }
+        break;
+
+      default:
+        setLoadedPageData(true);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (
+      (currentPage !== 'main') &&
+      employees.length &&
+      policies.length &&
+      time_offs.length &&
+      !loadedPageData
+    ) {
+      initializePageFromUrl();
+    }
+    // eslint-disable-next-line
+  }, [currentPage, employees, policies, time_offs]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const employeeParam = params.get('employee');
-    const pageParam = params.get('page');
-    const policyParam = params.get('policy');
-    const timeOffParam = params.get('time_off');
-    if (pageParam === 'activity' && !activeEmployeeActivity) {
-      if (employeeParam && policyParam && timeOffParam) {
-        const employee = employees.find(({ id }) => id.toString() === employeeParam.toString());
-        const policy = policies.find(({ id }) => id.toString() === policyParam.toString());
-        const time_off = time_offs.find(({ id }) => id.toString() === timeOffParam.toString());
-        if (time_off) {
-          setActiveTimeOff(time_off);
-        }
-        if (employee && policy && time_off) {
-          setActiveEmployee(employee);
-          setActivePolicy(policy);
-          setActiveEmployeeActivity(true);
-        }
-      }
+    const page = params.get('page');
+    const timeOffId = params.get('time_off');
+    const policyId = params.get('policy');
+    const employeeId = params.get('employee');
+
+    if (
+      (page === 'activity' || page === 'employee-management-policy' || page === 'data-management' || page === 'employee-management') &&
+      timeOffId &&
+      time_offs.length &&
+      !policies.some(p => p.time_off_id === parseInt(timeOffId))
+    ) {
+      dispatch(getPolicies(id, timeOffId));
     }
-    // eslint-disable-next-line 
-  }, [employees, policies, time_offs]);
+
+    if (
+      (page === 'activity' || page === 'employee-management-policy' || page === 'employee-management') &&
+      timeOffId &&
+      time_offs.length &&
+      policyId &&
+      policies.length &&
+      (!policyEmployee.id || policyEmployee.policy_id !== parseInt(policyId))
+    ) {
+      dispatch(getPolicyEmployee(id, timeOffId, policyId, employeeId));
+    }
+
+    // eslint-disable-next-line
+  }, [time_offs, policies]);
 
 
   useEffect(() => {
@@ -154,20 +244,6 @@ export default () => {
 
     // eslint-disable-next-line
   }, [dispatch, id, allPermissions?.length]);
-
-  useEffect(() => {
-    if (time_offs?.length && !_.isEmpty(activeTimeOff)) {
-      // eslint-disable-next-line no-shadow
-      //const time_off = time_offs.find(({id}) => id === activeTimeOff.id);
-      //setActiveTimeOff(time_off);
-      if (activePolicy && activePolicy.time_off_id !== activeTimeOff.id) {
-        setActivePolicy(null);
-      }
-
-      dispatch(getPolicies(id, activeTimeOff.id));
-    }
-    // eslint-disable-next-line
-  }, [activeTimeOff]);
 
   const createNewTimeOff = (data) => {
     dispatch(createTimeOff(id, data));
@@ -222,8 +298,20 @@ export default () => {
   }
   
   const handleUsersDataManagement = () => {
-    setActiveDataManagement(activePolicy);
+    const policy = policies.find(({ id }) => id === activePolicy.id);
+    if (policy) {
+      setActiveDataManagement(policy);
+      history.push(`/${id}/settings/time-off?page=data-management&time_off=${policy.time_off_id}&policy=${policy.id}`);
+    }
   }
+
+  const onSetActiveTimeOff = (timeOff) => {
+    setActiveTimeOff(timeOff);
+    setActivePolicy(null);
+    setActiveDataManagement(null);
+    setActiveEmployee(null);
+    dispatch(getPolicies(id, timeOff.id));
+  };
 
   const onRequestBehalf = (data, requestBehalfId) => {
     const selectedPolicy = policies.find(({id}) => id === data.policy_id);
@@ -245,6 +333,8 @@ export default () => {
   }
 
   const onOpenEmployee = (employeeId) => {
+    history.push(`/${id}/settings/time-off?page=employee-management-policy&time_off=${activeTimeOff.id}&policy=${activePolicy.id}&employee=${employeeId}`);
+    setCurrentPage('employeeManagementPolicy');
     setActiveEmployee(employees.find(({id}) => id === employeeId));
     dispatch(getRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, employeeId));
   }
@@ -260,6 +350,7 @@ export default () => {
 
   const onOpenEmployeeActivity = (timeOffId, policyId, employeeId) => {
     history.push(`/${id}/settings/time-off?page=activity&policy=${policyId}&time_off=${timeOffId}&employee=${employeeId}`);
+    setCurrentPage('employeeActivity');
     const time_off = time_offs.find(({id}) => id === timeOffId);
     const policy = policies.find(({id}) => id === policyId);
     const employee = employees.find(({id}) => id === employeeId);
@@ -267,73 +358,41 @@ export default () => {
     setActiveTimeOff(time_off);
     setActiveEmployee(employee);
     setActivePolicy(policy);
-    setActiveEmployeeActivity(true);
+
+    dispatch(getPolicyEmployee(id, timeOffId, policyId, employeeId));
   };
 
+  const onCloseUserDataManagement = () => {
+    setCurrentPage('main');
+    setActiveDataManagement(null);
+    history.push(`/${id}/settings/time-off`);
+  };
+
+  const onCloseEmployeeManagementPolicy = () => {
+    setCurrentPage('userDataManagement');
+    setActiveEmployee(null);
+    history.push(`/${id}/settings/time-off?page=data-management&time_off=${activePolicy.time_off_id}&policy=${activePolicy.id}`);
+  };
+
+  const onCloseEmployeeActivity = () => {
+    setCurrentPage('employeeManagementPolicy');
+    history.push(`/${id}/settings/time-off?page=employee-management-policy&time_off=${activeTimeOff.id}&policy=${activePolicy.id}&employee=${activeEmployee.id}`);
+    dispatch(getRequestBehalf(id, activeTimeOff.id, activePolicy.id ? activePolicy.id : activeDataManagement.id, activeEmployee.id));
+  };
+
+  const onRemoveActivity = (activity) => {
+    dispatch(removePolicyActivity(id, activity.time_off_id, activity.policy_id, activity.employee_id, activity.id));
+  };
+
+  const onEditActivity = (activity, data) => {
+    dispatch(updatePolicyActivity(id, activity.time_off_id, activity.policy_id, activity.employee_id, activity.id, data));
+  };
+  
   return (
     <MaynLayout>
       <Dashboard>
         {
-          activeEmployeeActivity && activeTimeOff && activePolicy && activeEmployee && !loading ? (
-            <EmployeeActivity
-              handleClose={() => {
-                setActiveEmployeeActivity(false);
-                setActiveDataManagement(activePolicy);
-                history.push(`/${id}/settings/time-off`);
-              }}
-              employee={activeEmployee}
-              activeTimeOff={activeTimeOff}
-              activePolicy={activePolicy}
-            />
-          ) : null
-        }
-        {
-          !activeEmployeeActivity && activeDataManagement && activeEmployee && !loading ? (
-              <EmployeeManagementPolicy
-                goEmployeeActivity={onOpenEmployeeActivity}
-                onUnassingPolicyEmployees={onUnassingPolicyEmployees}
-                handleClose={() => setActiveEmployee(null)}
-                activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
-                activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
-                employee={activeEmployee}
-                requestBehalf={requestBehalf}
-                policies={policies}
-                onRequestBehalf={onRequestBehalf}
-                onChangeRequestStatus={onChangeRequestStatus}
-              />
-          ) : null
-        }
-        {
-          !activeEmployeeActivity && !activeDataManagement && activeEmployee && !loading ? (
-              <EmployeeManagement
-                goEmployeeActivity={onOpenEmployeeActivity}
-                onUnassingPolicyEmployees={onUnassingPolicyEmployees}
-                handleClose={() => { setActiveEmployee(null); history.push(`/${id}/settings/accounts/accounts-list`); }}
-                employee={activeEmployee}
-                requestBehalf={requestBehalf}
-                policies={policies}
-                onRequestBehalf={onRequestBehalf}
-                onChangeRequestStatus={onChangeRequestStatus}
-              />
-          ) : null
-        }
-        {
-          !activeEmployeeActivity && activeDataManagement && !activeEmployee && !loading ? (
-              <UserDataManagement
-                handleClose={() => setActiveDataManagement(null)}
-                activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
-                activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
-                employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
-                handleEditPolicyEmployees={handleEditPolicyEmployees}
-                onRequestBehalf={onRequestBehalf}
-                onAdjustBalance={onAdjustBalance}
-                onAdjustTimeUsed={onAdjustTimeUsed}
-                handleOpenEmployee={onOpenEmployee}
-              />
-            ) : null
-        }
-        {
-          !activeEmployeeActivity && !activeDataManagement && !activeEmployee ? (
+           currentPage === 'main' ? (
             <>
               <TitleBlock
                 title={t('Time Off')}
@@ -348,7 +407,7 @@ export default () => {
                         time_offs={time_offs}
                         activeTimeOff={time_offs.find(({id}) => id === activeTimeOff.id)}
                         activePolicy={policies.find(({id}) => id === activePolicy?.id)}
-                        setActiveTimeOff={setActiveTimeOff}
+                        setActiveTimeOff={onSetActiveTimeOff}
                         createNewTimeOff={() => setNewTimeOffOpen(true)}
                         setActivePolicy={setActivePolicy}
                         createNewPolicy={() => { setActivePolicy(false); setNewPolicyOpen(true)} }
@@ -423,8 +482,84 @@ export default () => {
                 />
               </PageLayout>
           </>
-        ) : null
-      }
+          ) : null
+        }
+
+        {
+          currentPage !== 'main' && (
+            !loading && loadedPageData ? (
+            <>
+              {
+                currentPage === 'employeeActivity' ? (
+                  <EmployeeActivity
+                    handleClose={onCloseEmployeeActivity}
+                    employee={activeEmployee}
+                    activeTimeOff={activeTimeOff}
+                    activePolicy={activePolicy}
+                    activities={policyEmployee?.activities || []}
+                    onRemoveActivity={onRemoveActivity}
+                    onEditActivity={onEditActivity}
+                  />
+                ) : null
+              }
+              {
+                 currentPage === 'employeeManagementPolicy' ? (
+                    <EmployeeManagementPolicy
+                      goEmployeeActivity={onOpenEmployeeActivity}
+                      onUnassingPolicyEmployees={onUnassingPolicyEmployees}
+                      handleClose={onCloseEmployeeManagementPolicy}
+                      activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
+                      activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
+                      employee={activeEmployee}
+                      requestBehalf={requestBehalf}
+                      policies={policies}
+                      onRequestBehalf={onRequestBehalf}
+                      onChangeRequestStatus={onChangeRequestStatus}
+                    />
+                ) : null
+              }
+              {
+                 currentPage === 'employeeManagement' ? (
+                    <EmployeeManagement
+                      goEmployeeActivity={onOpenEmployeeActivity}
+                      onUnassingPolicyEmployees={onUnassingPolicyEmployees}
+                      handleClose={() => { setActiveEmployee(null); history.push(`/${id}/settings/accounts/accounts-list`); }}
+                      employee={activeEmployee}
+                      requestBehalf={requestBehalf}
+                      policies={policies}
+                      onRequestBehalf={onRequestBehalf}
+                      onChangeRequestStatus={onChangeRequestStatus}
+                    />
+                ) : null
+              }
+              {
+                currentPage === 'userDataManagement' ? (
+                    <UserDataManagement
+                      handleClose={onCloseUserDataManagement}
+                      activeTimeOff={time_offs.find(({id}) => id === activeDataManagement.time_off_id)}
+                      activePolicy={policies.find(({id}) => id === activeDataManagement.id)}
+                      employeesList={policies.find(({id}) => id === activeDataManagement.id)?.employees}
+                      policies={policies}
+                      handleEditPolicyEmployees={handleEditPolicyEmployees}
+                      onRequestBehalf={onRequestBehalf}
+                      onAdjustBalance={onAdjustBalance}
+                      onAdjustTimeUsed={onAdjustTimeUsed}
+                      handleOpenEmployee={onOpenEmployee}
+                    />
+                  ) : null  
+              }
+            </>
+          ) :  <>
+              <TitleBlock
+                title={t('Time Off')}
+              >
+                <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
+              </TitleBlock>
+              <PageLayout><Progress />
+              </PageLayout>
+            </>
+          )
+        }
       
       </Dashboard>
     </MaynLayout>

@@ -16,11 +16,10 @@ import AlertCircle from '../../../Icons/AlertCircle';
 import Button from '../../../Core/Button/Button';
 import UnassignEmployee from '../../../Core/Dialog/UnassignEmployee';
 import useCompanyInfo from '../../../../hooks/useCompanyInfo';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import {
-   policiesSelector
+   policiesSelector,
 } from '../../../../store/settings/selectors';
 
 function PoliciesActivityTable({
@@ -53,16 +52,6 @@ function PoliciesActivityTable({
       onUnassingPolicyEmployees(employee.id, unasignVisible);
       setUnasignVisible(false);
     };
-
-    const calculateTotalBooked = (policy) => {
-        return policy?.activities.reduce((total, activity) => {
-          //past approved
-          if (activity.type === 'request_behalf_approved' && moment(activity.requested_to, formatDate).isBefore(moment())) {
-            return total + (activity.changed || 0);
-          }
-          return total;
-        }, 0);
-      };
 
     return (
       <div className={classes.container}>
@@ -187,7 +176,7 @@ function PoliciesActivityTable({
                                       </div>
                                       <div>
                                           <strong>{t('Days booked')}:</strong>
-                                          <div>{calculateTotalBooked(policyEmployeeDetails)}</div>
+                                          <div>{policyEmployeeDetails.total_booked}</div>
                                       </div>
                                   </div>
                                   <div className={classes.carryoverInfo}>

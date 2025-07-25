@@ -574,7 +574,8 @@ export default function AccountsList() {
 
   const onOpenTimeOff = (employeeId) => {
     const mainPath = `/${id}/settings`;
-    history.push(`${mainPath}/time-off?employee=${employeeId}`);
+    //todo WHERE IT SHOULD GO?
+    history.push(`${mainPath}/time-off`);
   }
 
   useEffect(() => {

@@ -23,6 +23,7 @@ function EmployeeManagementPolicy({
   activeTimeOff,
   activePolicy,
   employee,
+  policies,
   requestBehalf,
   onRequestBehalf,
   onChangeRequestStatus = Function.prototype,
@@ -191,7 +192,7 @@ function EmployeeManagementPolicy({
         }}
         buttonTitle={t('Submit')}
         employees={[employee]}
-        policies={activeTimeOff.policies}
+        policies={policies}
         initialValue={{policy_id: activePolicy.id, ...requestBehalfEditOpen}}
       />
       <ReactTooltip

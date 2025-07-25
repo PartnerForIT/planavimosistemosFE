@@ -68,6 +68,7 @@ import {
   DELETE_TIME_OFF,
   UPDATE_TIME_OFF,
   GET_POLICIES,
+  GET_POLICY_EMPLOYEE,
   CREATE_POLICY,
   DELETE_POLICY,
   UPDATE_POLICY,
@@ -99,6 +100,8 @@ import {
   DELETE_EVENT,
   GET_SETTINGS_SCHEDULE,
   POST_SETTINGS_SCHEDULE,
+  UPDATE_POLICY_ACTIVITY,
+  REMOVE_POLICY_ACTIVITY,
 } from './types';
 import {
   getSettingCompanySuccess,
@@ -164,6 +167,8 @@ import {
   getPolicies,
   getPoliciesSuccess,
   getPoliciesError,
+  getPolicyEmployeeSuccess,
+  getPolicyEmployeeError,
   createPolicyError,
   //createPolicySuccess,
   deletePolicyError,
@@ -180,6 +185,10 @@ import {
   getRequestBehalf,
   getRequestBehalfSuccess,
   getRequestBehalfError,
+  removePolicyActivityError,
+  removePolicyActivitySuccess,
+  updatePolicyActivityError,
+  updatePolicyActivitySuccess,
   createAdjustBalanceError,
   createAdjustTimeUsedError,
   loadEmployeesError,
@@ -1435,6 +1444,15 @@ function* loadPolicies(action) {
   }
 }
 
+function* loadPolicyEmployee(action) {
+  try {
+    const { data } = yield call(axios.get, `${config.api.url}/company/${action.companyId}/time-off/${action.timeOffId}/policy/${action.policyId}/employee/${action.employeeId}`, token());
+    yield put(getPolicyEmployeeSuccess(data));
+  } catch (e) {
+    yield put(getPolicyEmployeeError(e));
+  }
+}
+
 function* createPolicy(action) {
   try {
     const {
@@ -1520,7 +1538,7 @@ function* patchPolicySettings(action) {
 
     //yield put(authCheck());
     yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
-    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off } : time_off))));
 
     //yield delay(4000);
     //yield put(dismissSnackbar());
@@ -1547,7 +1565,7 @@ function* patchPolicyEmployees(action) {
 
     //yield put(authCheck());
     yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy))));
-    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off } : time_off))));
 
     //yield delay(4000);
     //yield put(dismissSnackbar());
@@ -1574,7 +1592,7 @@ function* unasignPolicyEmployees(action) {
 
     //yield put(authCheck());
     yield put(updatePolicySettingsSuccess(policies.map((policy) => (policy.id === policyId ? { ...policy, ...responseData } : policy))));
-    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off, policies: time_off.policies.map((policy) => (policy.id === policyId ? { ...responseData } : policy)) } : time_off))));
+    yield put(updateTimeOffSuccess(time_offs.map((time_off) => (time_off.id === timeOffId ? { ...time_off } : time_off))));
 
     //yield delay(4000);
     //yield put(dismissSnackbar());
@@ -1793,6 +1811,44 @@ function* updateEmployeeLogbook(action) {
   } catch (e) {
     yield put(patchEmployeeLogbookError(e));
     yield put(addSnackbar('An error occurred while edit account', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* updatePolicyActivity(action) {
+  try {
+    const { data, companyId, timeOffId, policyId, employeeId, activityId } = action;
+    const { data: responseData } = yield call(axios.patch,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}/activity/${activityId}`, data, token());
+
+    yield put(updatePolicyActivitySuccess(responseData));
+    yield put(addSnackbar('Edit Policy Activity successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(updatePolicyActivityError(e));
+    yield put(addSnackbar('An error occurred while editing policy activity', 'error'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  }
+}
+
+function* removePolicyActivity(action) {
+  try {
+    console.log(action);
+    const { companyId, timeOffId, policyId, employeeId, activityId } = action;
+    const { data } = yield call(axios.delete,
+      `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}/activity/${activityId}`,
+      token());
+    
+    yield put(removePolicyActivitySuccess(data));
+    yield put(addSnackbar('Removed Policy Activity successfully', 'success'));
+    yield delay(4000);
+    yield put(dismissSnackbar());
+  } catch (e) {
+    yield put(removePolicyActivityError(e));
+    yield put(addSnackbar('An error occurred while removing Policy Activity', 'error'));
     yield delay(4000);
     yield put(dismissSnackbar());
   }
@@ -2338,6 +2394,7 @@ export default function* SettingsWatcher() {
   yield takeLatest(DELETE_TIME_OFF, removeTimeOff);
   yield takeLatest(UPDATE_TIME_OFF, patchTimeOff);
   yield takeLeading(GET_POLICIES, loadPolicies);
+  yield takeLatest(GET_POLICY_EMPLOYEE, loadPolicyEmployee);
   yield takeLatest(CREATE_POLICY, createPolicy);
   yield takeLatest(DELETE_POLICY, removePolicy);
   yield takeLatest(UPDATE_POLICY, patchPolicy);
@@ -2349,6 +2406,8 @@ export default function* SettingsWatcher() {
   yield takeLatest(UPDATE_REQUEST_BEHALF, updateRequestBehalf);
   yield takeLatest(CHANGE_REQUEST_BEHALF_STATUS, changeRequestBehalfStatus);
   yield takeLatest(GET_REQUEST_BEHALF, loadRequestBehalf);
+  yield takeLatest(REMOVE_POLICY_ACTIVITY, removePolicyActivity);
+  yield takeLatest(UPDATE_POLICY_ACTIVITY, updatePolicyActivity);
   yield takeLatest(CREATE_ADJUST_BALANCE, createAdjustBalance);
   yield takeLatest(CREATE_ADJUST_TIME_USED, createAdjustTimeUsed);
   yield takeLeading(LOAD_PERMISSIONS, loadPermissions);

@@ -46,6 +46,8 @@ export const timeOffsLoading = (state) => state.settings.timeOffsLoading;
 export const policiesSelector = (state) => state.settings.policies;
 export const policiesLoading = (state) => state.settings.policiesLoading;
 
+export const policyEmployeeSelector = (state) => state.settings.policyEmployee;
+
 export const requestBehalfSelector = (state) => state.settings.requestBehalf;
 export const requestBehalfLoading = (state) => state.settings.requestBehalfLoading;
 
