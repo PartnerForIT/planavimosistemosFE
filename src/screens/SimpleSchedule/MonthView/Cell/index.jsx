@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 //import { useSelector } from 'react-redux';
 import classnames from 'classnames';
@@ -17,7 +17,7 @@ import {
   employeesSelector,
 } from '../../../../store/settings/selectors';
 
-export default ({
+const Cell = ({
   title,
   startFinish,
   statistic,
@@ -285,3 +285,10 @@ export default ({
     </>
   );
 };
+
+const isEqual = (prevProps, nextProps) => {
+  return prevProps.title === nextProps.title && prevProps.scheduleSettings === nextProps.scheduleSettings
+};
+
+export default memo(Cell, isEqual)
+

@@ -2,6 +2,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  memo,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +30,7 @@ const trackYProps = {
   ),
 };
 
-export default ({
+const MonthView = ({
   published,
   resources: externalResources,
   events,
@@ -380,3 +381,9 @@ export default ({
     </>
   );
 };
+
+const isEqual = (prevProps, nextProps) => {
+  return prevProps.events === nextProps.events && prevProps.scheduleSettings === nextProps.scheduleSettings
+}
+
+export default memo(MonthView, isEqual)
