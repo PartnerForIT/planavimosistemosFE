@@ -16,16 +16,11 @@ const RowContent = ({
   handleMarker,
   scheduleSettings,
   currentResource,
-  copyTool,
   workTime,
   resource,
   permissions,
   markers,
-  handleChangeEmployee,
   handleEmptyTimeline,
-  handleCopyTool,
-  handleAddHistory,
-  currentMonth,
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
@@ -126,12 +121,11 @@ const RowContent = ({
          return (
              <Cell
                 event={newFoundItem(item.title)}
-                currentDay={index+1}
-                currentMonth={currentMonth}
                 key={item.id}
                 title={item.statistic ? check(item.statistic, item.id) : (newFoundItem(item.title)?.hours ?? '')}
                 startFinish={item.statistic || !employeeId ? '' : (newFoundItem(item.title)?.title ?? '')}
                 statistic={item.statistic}
+                events={events}
                 borderColor={currentResource?.eventBorderColor}
                 weekend={item.weekend}
                 past={!item.statistic && pastDay >= item.id}
@@ -140,16 +134,10 @@ const RowContent = ({
                 handleMarker={() => { handleMarker(employeeId, item.id) } }
                 night_duration={item.statistic ? check(item.statistic, item.id, true) : (newFoundItem(item.title)?.night_duration ?? false)}
                 scheduleSettings={scheduleSettings}
-                copyTool={copyTool}
                 workTime={workTime}
                 resource={resource}
                 permissions={permissions}
-                events={events}
-                markers={markers}
-                handleChangeEmployee={handleChangeEmployee}
                 handleEmptyTimeline={handleEmptyTimeline}
-                handleCopyTool={handleCopyTool}
-                handleAddHistory={handleAddHistory}
                 handleEditWorkingTime={handleEditWorkingTime}
                 handleDuplicateEmployee={handleDuplicateEmployee}
                 handleDeleteWorkingTime={handleDeleteWorkingTime}
@@ -179,15 +167,10 @@ const RowContent = ({
             daysOfMonth={daysOfMonth}
             pastDay={pastDay}
             scheduleSettings={scheduleSettings}
-            copyTool={copyTool}
             workTime={workTime}
             permissions={permissions}
             markers={markers}
-            handleChangeEmployee={handleChangeEmployee}
             handleEmptyTimeline={handleEmptyTimeline}
-            handleCopyTool={handleCopyTool}
-            handleAddHistory={handleAddHistory}
-            currentMonth={currentMonth}
             handleEditWorkingTime={handleEditWorkingTime}
             handleDuplicateEmployee={handleDuplicateEmployee}
             handleDeleteWorkingTime={handleDeleteWorkingTime}

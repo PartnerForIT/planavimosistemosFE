@@ -2,6 +2,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  memo,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +30,7 @@ const trackYProps = {
   ),
 };
 
-export default ({
+const MonthView = ({
   published,
   resources: externalResources,
   events,
@@ -41,12 +42,8 @@ export default ({
   markerActive,
   handleMarker,
   scheduleSettings,
-  copyTool,
   workTime,
   permissions,
-  handleChangeEmployee,
-  handleCopyTool,
-  handleAddHistory,
   handleChangeTimeline,
   handleEditWorkingTime,
   handleDuplicateEmployee,
@@ -296,14 +293,9 @@ export default ({
                       events={events}
                       pastDay={flexBackground.past}
                       scheduleSettings={scheduleSettings}
-                      copyTool={copyTool}
                       workTime={workTime}
                       permissions={permissions}
                       markers={markers}
-                      handleChangeEmployee={handleChangeEmployee}
-                      handleCopyTool={handleCopyTool}
-                      handleAddHistory={handleAddHistory}
-                      currentMonth={currentMonth}
                       handleEditWorkingTime={handleEditWorkingTime}
                       handleDuplicateEmployee={handleDuplicateEmployee}
                       handleDeleteWorkingTime={handleDeleteWorkingTime}
@@ -380,3 +372,9 @@ export default ({
     </>
   );
 };
+
+const isEqual = (prevProps, nextProps) => {
+  return prevProps.events === nextProps.events && prevProps.scheduleSettings === nextProps.scheduleSettings
+}
+
+export default memo(MonthView, isEqual)

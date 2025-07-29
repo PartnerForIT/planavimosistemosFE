@@ -14,8 +14,6 @@ import Dots from '../../../../components/Icons/Dots';
 
 export default ({
   id,
-  employeeId,
-  resourceId,
   group,
   reccuring,
   title,
@@ -26,7 +24,6 @@ export default ({
   skillName,
   employeeName,
   withMenu,
-  onChangeEmployee,
   start,
   end,
   worked_start,
@@ -37,12 +34,6 @@ export default ({
   isCompleted,
   isFisnihed,
   unavailableEmployees,
-  markers,
-  handleCopyTool,
-  copyTool,
-  handleAddHistory,
-  currentDay,
-  currentMonth,
   onEditWorkingTime,
   onDeleteWorkingTime,
   onAddTask,
@@ -120,13 +111,6 @@ export default ({
     modalRef.current.open();
   }
 
-  const copyEvent = () => {
-    let start_day = moment(start).format('YYYY-MM-DD');
-    if (!start) {
-      start_day = moment(currentMonth).date(currentDay).format('YYYY-MM-DD');
-    }
-    handleAddHistory({resourceId: resourceId, day: currentDay, start: start_day, end: start_day});
-  };
   const handleCancel = () => {
     if (modalAddRef.current) {
       modalAddRef.current.close();
@@ -212,11 +196,9 @@ export default ({
         id={empty ? 'withEmpty' : 'dropdownButton'}
       >
         {
-          editPermissions && (
-          (copyTool)
-            ? <span onClick={copyEvent} className={classNames('copy-add', styles.copyAdd)}>{t('Paste the Time')}</span>
-            : empty && (<span onClick={openAddSchedule} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)
-          )
+          editPermissions && empty
+            ? (<span onClick={openAddSchedule} className={classNames('empty-add', styles.emptyAdd)}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)
+            : null
         }
         {
           !copy_event && withMenu && !empty && editPermissions ? (
