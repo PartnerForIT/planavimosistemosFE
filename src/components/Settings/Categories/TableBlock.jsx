@@ -36,6 +36,7 @@ const columns = [
 const columnsJobs = [
   { label: 'Title', field: 'title', checked: true },
   //{ label: 'ID', field: 'id', checked: true },
+  { label: 'Value', field: 'value', checked: true },
   { label: 'Break Times', field: 'breaks', checked: true },
 ];
 
@@ -256,6 +257,9 @@ export default function TableBlock({
           if ((!scheduleSettings.deduct_break || !scheduleSettings.break_from_job) && column.field === 'breaks') {
             return false;
           }
+          if (!permissions.use_job_value && column.field === 'value') {
+            return false;
+          }
           return true;
         });
         break;
@@ -363,8 +367,8 @@ export default function TableBlock({
       default: break;
     }
   };
-  const updateJob = (name) => {
-    dispatch(patchJob({ title: name }, companyId, selectedItem));
+  const updateJob = (values) => {
+    dispatch(patchJob(values, companyId, selectedItem));
     handleCloseItem();
   };
   const updateSkill = (values) => {
@@ -493,8 +497,9 @@ export default function TableBlock({
         handleClose={handleCloseItem}
         title={t('Update Job name')}
         buttonTitle={t('Update Job Name')}
-        initialValue={selectedItemData?.title}
+        initialValues={{ title: selectedItemData?.title, value: selectedItemData?.value }}
         createJob={updateJob}
+        permissions={permissions}
       />
       <DialogCreatePlace
         open={isEditItem && selectedCategory === 'places'}

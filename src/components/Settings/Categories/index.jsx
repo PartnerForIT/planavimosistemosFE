@@ -68,6 +68,10 @@ const permissionsConfig = [
     name: 'custom_category',
     module: 'custom_category',
   },
+  {
+    name: 'use_job_value',
+    module: 'use_job_value',
+  },
 ];
 export default function Categories() {
   const { id } = useParams();

@@ -96,8 +96,8 @@ export default function ButtonBlock({
     }, companyId));
     handleCloseItem();
   };
-  const createJob = (name) => {
-    dispatch(actionCreateJob({ title: name }, companyId));
+  const createJob = (values) => {
+    dispatch(actionCreateJob(values, companyId));
     handleCloseItem();
   };
   const createPlace = ({name, external_id}) => {
@@ -163,6 +163,7 @@ export default function ButtonBlock({
         title={t('Create Job name')}
         buttonTitle={t('Create Job Name')}
         createJob={createJob}
+        permissions={permissions}
       />
       <DialogCreatePlace
         open={openNewItem && selectedCategory === 'places'}

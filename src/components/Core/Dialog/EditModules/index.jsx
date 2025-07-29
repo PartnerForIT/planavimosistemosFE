@@ -27,6 +27,7 @@ const initialValues = {
   hybrid_mode: false,
   create_places: false,
   create_jobs: false,
+  use_job_value: false,
   create_groups: false,
   use_manager_mobile: false,
   use_approval_flow: false,
@@ -223,6 +224,16 @@ export default ({
                 label={t('Can create Jobs')}
                 name='create_jobs'
               />
+              { modules.create_jobs && (
+              <div className={style.marginLeft}>
+                <Checkbox
+                  onChange={handleChange}
+                  checked={modules.use_job_value}
+                  label={t('Use Value')}
+                  name='use_job_value'
+                />
+              </div>
+              )}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.custom_category}

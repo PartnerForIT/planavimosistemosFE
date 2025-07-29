@@ -8,24 +8,24 @@ import style from '../Dialog.module.scss';
 
 export default function CreateJob({
   handleClose, title, open,
-  buttonTitle, createJob, initialValue,
+  buttonTitle, createJob, initialValues, permissions,
 }) {
   const { t } = useTranslation();
-  const [jobName, setJobName] = useState('');
+  const [values, setValues] = useState({});
 
   useEffect(() => {
-    if (initialValue) {
-      setJobName(initialValue);
+    if (initialValues) {
+      setValues(initialValues);
     } else {
-      setJobName('');
+      setValues({});
     }
-  }, [initialValue, open]);
+  }, [initialValues, open]);
 
   const handleExited = () => {
-    setJobName('');
+    setValues({});
   };
   const onClose = () => {
-    setJobName('');
+    setValues({});
     handleClose();
 
   };
@@ -36,14 +36,28 @@ export default function CreateJob({
         <Label text={t('Job name')} htmlFor='name' />
         <Input
           placeholder={`${t('Enter Job name')}`}
-          value={jobName}
-          name='name'
+          value={values.title || ''}
+          name='title'
           fullWidth
-          onChange={(e) => setJobName(e.target.value)}
+          onChange={(e) => setValues({ ...values, title: e.target.value })}
         />
       </div>
+      {
+        permissions.use_job_value && (
+          <div className={style.formControl}>
+            <Label text={t(`Value`)} htmlFor='value' />
+            <Input
+              placeholder={`${t('Value')}`}
+              value={values.value || ''}
+              name='value'
+              fullWidth
+              onChange={(e) => setValues({ ...values, value: e.target.value })}
+            />
+          </div>
+        )
+      }
       <div className={style.buttonSaveBlock}>
-        <Button disabled={jobName === ''} onClick={() => createJob(jobName)} fillWidth size='big'>
+        <Button disabled={values.title === ''} onClick={() => createJob(values)} fillWidth size='big'>
           {buttonTitle}
         </Button>
       </div>
