@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useCallback,
   useEffect,
   useRef,
   useMemo,
@@ -63,7 +62,7 @@ import ResourceAreaHeader from './ResourceAreaHeader';
 import ResourceItem from './ResourceItem';
 import Background from './Background';
 import Footer from './Footer';
-import CopyTool from './CopyTool';
+// import CopyTool from './CopyTool';
 import './Schedule.scss';
 import {
   AdditionalRatesDataSelector,
@@ -95,6 +94,11 @@ const permissionsConfig = [
   },
 ];
 
+const employToCheck = ({id, name, surname}) => ({
+  id,
+  label: `${name} ${surname}`,
+})
+
 export default () => {
   const { t } = useTranslation();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
@@ -105,7 +109,7 @@ export default () => {
   const resizeObserverRef = useRef();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
-  //const employees = useSelector(employeesSelector);
+  
   const { users: employees } = useSelector(employeesSelector);
   const schedule = useSelector(simpleScheduleSelector);
   const markers = useSelector(markersSelector);
@@ -113,10 +117,8 @@ export default () => {
   const isLoading = useSelector(isLoadingSelector);
   const [filterData, setFilterData] = useState({});
   const permissions = usePermissions(permissionsConfig);
-  const scheduleSettings=useSelector(scheduleSettingSelector);
-  const copyToolRef = useRef();
-  const [copyTool,setCopyTool] = useState(false)
-  const [copyToolTime,setCopyToolTime] = useState({})
+  const scheduleSettings = useSelector(scheduleSettingSelector);
+
   const workTime = useSelector(settingWorkTime);
   const AdditionalRates = useSelector(AdditionalRatesDataSelector);
   const [openCreateShift, setOpenCreateShift] = useState(false);
@@ -124,19 +126,8 @@ export default () => {
   const [changeLogModal, setChangeLogModal] = useState(false);
   const [publishDialog,setPublishDialog] = useState(false)
 
-  const published = useMemo(() => {
-    if (schedule?.published) {
-      return true
-    }
-    return false
-  }, [schedule]);
-
-  const count_changes = useMemo(() => {
-    if (schedule?.count_changes) {
-      return schedule.count_changes
-    }
-    return 0
-  }, [schedule]);
+  const published = Boolean(schedule?.published)
+  const count_changes = schedule?.count_changes || 0
 
   const resources = useMemo(() => {
     let currentColor = 0;
@@ -312,17 +303,8 @@ export default () => {
     });
 
     return result;
-  }, [resources]);
+  }, [(resources || []).map(r => r.id).join('_')]);
 
-  const employToCheck = useCallback(({
-    id,
-    name,
-    surname,
-  }) => ({
-    id,
-    label: `${name} ${surname}`,
-    // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
-  }), []);
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   const filteringResource = (data) => {
@@ -439,7 +421,6 @@ export default () => {
   const handleMarker = (employeeId, date) => {
     dispatch(patchMarker({
       companyId,
-
       data: {
         employeeId,
         date: date.format('YYYY-MM-DD'),
@@ -665,13 +646,6 @@ export default () => {
     });
   }
 
-  const handleCopyTool = (time) => {
-    setCopyToolTime(time)
-    setCopyTool(!copyTool);
-  }
-  const handleAddHistory = (data) => {
-    copyToolRef.current.addHistory(data);
-  }
   const handleChangeTool = (event) => {
     const { name, checked } = event.target;
     setToolsActive({ ...toolsActive, [name]: checked })
@@ -773,7 +747,7 @@ export default () => {
         editPermission={permissions.schedule_create_and_edit}
         viewType={view.type}
         photo={resourceInfo.extendedProps.photo}
-        withMenu={withMenu && !copyTool}
+        withMenu={withMenu}
         jobTypeName={selectedEvent?.job_type_name}
         skillName={resourceInfo?.extendedProps?.skill_name}
         openAddSchedule={() => { handleOpenAddSchedule(selectedEvent) }}
@@ -781,8 +755,6 @@ export default () => {
         onDeleteWorkingTime={handleDeleteWorkingTime}
         onAddTask={handleAddTask}
         onEditWorkingTime={handleEditWorkingTime}
-        handleAddHistory={handleAddHistory}
-        copyTool={copyTool}
         endDay={endDay}
         isCompleted={isCompleted}
         isFisnihed={selectedEvent?.is_finished}
@@ -799,7 +771,7 @@ export default () => {
     if (info.event.extendedProps.empty_event) {
       classes.push('is-empty-manual')
     }
-    if (copyTool || info.event.extendedProps.copy_event) {
+    if (info.event.extendedProps.copy_event) {
       classes.push('disable-drag')
     }
 
@@ -1199,14 +1171,12 @@ export default () => {
                 />
               }
 
-              { !copyTool && (
-                <ToolsButton
-                  withLog={permissions.schedule_create_and_edit}
-                  handleInputChange={handleChangeTool}
-                  handleOpenChangeLog={handleOpenChangeLog}
-                  values={toolsActive}
-                />
-              )}
+              <ToolsButton
+                withLog={permissions.schedule_create_and_edit}
+                handleInputChange={handleChangeTool}
+                handleOpenChangeLog={handleOpenChangeLog}
+                values={toolsActive}
+              />
 
               
               <div className='simple-schedule-screen__buttons'>
@@ -1251,7 +1221,7 @@ export default () => {
                   ) : null
                 }
 
-                { !copyTool && permissions.schedule_create_and_edit && (
+                { permissions.schedule_create_and_edit && (
                   <Button onClick={handleCreateNewShift}>
                     {t('Create Task')}
                   </Button> )
@@ -1279,13 +1249,10 @@ export default () => {
                         withCost={permissions.cost && permissions.schedule_costs}
                         permissions={permissions}
                         scheduleSettings={scheduleSettings}
-                        copyTool={copyTool}
                         workTime={workTime}
                         handleDuplicateEmployee={handleDuplicateEmployee}
                         handleDeleteWorkingTime={handleDeleteWorkingTime}
                         handleAddTask={handleAddTask}
-                        handleCopyTool={handleCopyTool}
-                        handleAddHistory={handleAddHistory}
                         handleChangeTimeline={handleChangeTimeline}
                         handleEditWorkingTime={handleEditWorkingTime}
                         handleAddEmployees={permissions.schedule_create_and_edit ? handleAddEmployees : false}
@@ -1428,17 +1395,6 @@ export default () => {
                 <div className='schedule-screen__overlay-loading'>
                   <Progress/>
                 </div>
-              )
-            }
-            {
-              (copyTool) && (
-                <CopyTool
-                  ref={copyToolRef}
-                  start={copyToolTime.start || null}
-                  end={copyToolTime.end || null}
-                  onClose={handleCopyTool}
-                  getBodyForGetSchedule={getBodyForGetSchedule}
-                />
               )
             }
             { changeLogModal && (

@@ -21,6 +21,7 @@ const Cell = ({
   title,
   startFinish,
   statistic,
+  events,
   weekend,
   past,
   marker,
@@ -33,18 +34,10 @@ const Cell = ({
   scheduleSettings,
   borderColor,
   event,
-  copyTool,
   workTime,
   resource,
   permissions,
-  events,
-  markers,
-  handleChangeEmployee,
   handleEmptyTimeline,
-  handleCopyTool,
-  handleAddHistory,
-  currentDay,
-  currentMonth,
   handleEditWorkingTime,
   handleDuplicateEmployee,
   handleDeleteWorkingTime,
@@ -136,7 +129,11 @@ const Cell = ({
     return `${formattedHours}:${formattedMinutes}`;
   }
 
+  
+
   const tooltipContent = () => {
+    
+
     let tooltip_start = moment(event.start);
     let tooltip_end = moment(event.end);
     let minutes = event.minutes;
@@ -158,6 +155,23 @@ const Cell = ({
         work_minutes += g.work_minutes;
         night_minutes += g.night_minutes;
       });
+    }
+    if (statistic) {
+      const resourceEvents = events?.filter((ev) => ev?.resourceId === resource?.id) || []
+      const stats = resourceEvents.reduce((acc, e) => {
+        return {
+          minutes: acc.minutes + (e?.minutes || 0),
+          work_minutes: acc.work_minutes + (e?.work_minutes || 0),
+          night_minutes: acc.night_minutes + (e?.night_minutes || 0),
+        }
+      }, {
+        minutes: 0,
+        work_minutes: 0,
+        night_minutes: 0,
+      })
+      minutes = stats.minutes
+      work_minutes = stats.work_minutes
+      night_minutes = stats.night_minutes
     }
 
     return (
@@ -185,6 +199,8 @@ const Cell = ({
     
     return type;
   }
+
+  
   
   if (!header) {
     return (
@@ -192,7 +208,7 @@ const Cell = ({
         <div className={classes.cell__content} data-title={title ? title : null}>
           <div
             data-tooltip-id={tooltipType()}
-            data-tooltip-html={title && !copyTool ? tooltipContent() : null}
+            data-tooltip-html={title ? tooltipContent() : null}
             onClick={handleMarker}
             className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
           >
@@ -218,8 +234,6 @@ const Cell = ({
             { !statistic && !markerActive &&
               <CellOptions
                 id={event?.id}
-                currentDay={currentDay}
-                currentMonth={currentMonth}
                 empty={event?.empty_event}
                 copy_event={event?.copy_event}
                 title={event?.real_title || null}
@@ -227,26 +241,19 @@ const Cell = ({
                 description={event?.description || null}
                 schedule_title={event?.schedule_title || null}
                 group={event?.group || null}
-                copyTool={copyTool}
                 start={start}
                 end={end}
                 worked_start={event?.worked_start}
                 worked_end={event?.worked_end}
-                employeeId={employee_Id}
                 employeeName={employeeName}
-                resourceId={resource?.id}
                 photo={resource?.photo}
                 jobTypeName={event?.job_type_name}
                 skillName={resource?.skill_name}
-                withMenu={withMenu && !copyTool}
+                withMenu={withMenu}
                 editPermissions={permissions?.schedule_create_and_edit}
                 isCompleted={isCompleted}
                 isFisnihed={event?.is_finished}
-                markers={markers}
-                onChangeEmployee={handleChangeEmployee}
                 onEmptyTimeline={handleEmptyTimeline}
-                handleCopyTool={handleCopyTool}
-                handleAddHistory={handleAddHistory}
                 onEditWorkingTime={handleEditWorkingTime}
                 onDuplicateEmployee={handleDuplicateEmployee}
                 onDeleteWorkingTime={handleDeleteWorkingTime}

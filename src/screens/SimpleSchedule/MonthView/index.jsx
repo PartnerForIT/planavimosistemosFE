@@ -42,12 +42,8 @@ const MonthView = ({
   markerActive,
   handleMarker,
   scheduleSettings,
-  copyTool,
   workTime,
   permissions,
-  handleChangeEmployee,
-  handleCopyTool,
-  handleAddHistory,
   handleChangeTimeline,
   handleEditWorkingTime,
   handleDuplicateEmployee,
@@ -297,14 +293,9 @@ const MonthView = ({
                       events={events}
                       pastDay={flexBackground.past}
                       scheduleSettings={scheduleSettings}
-                      copyTool={copyTool}
                       workTime={workTime}
                       permissions={permissions}
                       markers={markers}
-                      handleChangeEmployee={handleChangeEmployee}
-                      handleCopyTool={handleCopyTool}
-                      handleAddHistory={handleAddHistory}
-                      currentMonth={currentMonth}
                       handleEditWorkingTime={handleEditWorkingTime}
                       handleDuplicateEmployee={handleDuplicateEmployee}
                       handleDeleteWorkingTime={handleDeleteWorkingTime}
