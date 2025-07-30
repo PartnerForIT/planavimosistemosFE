@@ -294,7 +294,7 @@ const Cell = ({
 };
 
 const isEqual = (prevProps, nextProps) => {
-  return prevProps.title === nextProps.title && prevProps.scheduleSettings === nextProps.scheduleSettings
+  return prevProps.title === nextProps.title && prevProps.scheduleSettings === nextProps.scheduleSettings && prevProps.event === nextProps.event
 };
 
 export default memo(Cell, isEqual)
