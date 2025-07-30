@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-  call, put, takeLatest, delay, select, takeLeading,
+  call, put, takeLatest, takeEvery, delay, select, takeLeading,
 } from 'redux-saga/effects';
 import config from 'config';
 import axios from 'axios';
@@ -479,6 +479,7 @@ function* creacteJob(action) {
 }
 function* patchJob(action) {
   try {
+    console.log('gogo');
     const { data } = yield call(
       axios.patch,
       `${config.api.url}/company/${action.companyId}/job-types/update/${action.id}`,
@@ -2322,7 +2323,7 @@ function* postSchedule(action) {
 }
 
 export default function* SettingsWatcher() {
-  yield takeLeading(PATCH_JOB, patchJob);
+  yield takeEvery(PATCH_JOB, patchJob);
   yield takeLeading(DELETE_JOB, deleteJob);
   yield takeLeading(PATCH_PLACE, patchPlace);
   yield takeLeading(DELETE_PLACE, deletePlace);
