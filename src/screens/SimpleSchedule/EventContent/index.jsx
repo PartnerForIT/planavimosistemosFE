@@ -43,7 +43,6 @@ export default ({
   empty,
   cost,
   night_minutes,
-  break_minutes,
   work_minutes,
   minutes,
   costPermission,
@@ -59,11 +58,8 @@ export default ({
   end,
   worked_start,
   worked_end,
-  viewType,
-  copy_event,
   isCompleted,
   isFisnihed,
-  copyTool,
   handleAddHistory,
   description,
   schedule_title,
@@ -334,24 +330,24 @@ export default ({
     <div
       className={classes}
       data-tooltip-id={tooltipType()}
-      data-tooltip-html={copy_event || copyTool || empty ? null : tooltipContent()}
+      data-tooltip-html={empty ? null : tooltipContent()}
       id='dropdownButton'
     >
-      { !copy_event && endOverlap() > 0 && (
+      { endOverlap() > 0 && (
           <div
             className={styles.eventContent__night_end}
             style={{ width: `${endOverlap()}%` }}
           ></div>
         )
       }
-      { !copy_event && startOverlap() > 0 && (
+      { startOverlap() > 0 && (
           <div
             className={styles.eventContent__night_start}
             style={{ width: `${startOverlap()}%` }}
           ></div>
         )
       }
-      { !copy_event && removeTimelines && !empty && (
+      { removeTimelines && !empty && (
           <div className={styles.eventContent__line} style={{backgroundColor: lineColor}}></div>
         )
       }
@@ -364,7 +360,7 @@ export default ({
       {
         employeeId && (
           empty ?
-            editPermission && <span onClick={openAddSchedule} className={'empty-add'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            editPermission && <span onClick={openAddSchedule} className={'empty-add'} style={{color: '#000'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           : (group ? (
             <span className={styles.eventContent__group}
               onClick={() => setOpenedGroup(!openedGroup)}
@@ -392,10 +388,6 @@ export default ({
                 <span className={styles.eventContent__title} >{moment(start).format('HH:mm')}<br />{moment(end).format('HH:mm')}</span>
                 ) : (
                 <span className={styles.eventContent__title} >
-                  {
-                    copyTool && <span onClick={copyEvent} className={'copy-add event'}>{t('Paste the Time')}</span>
-                  }
-
                   { title?.place && <span className={styles.eventContent__place}>{title.place}</span> }
                   { title?.job_type && <span className={styles.eventContent__job_type}>{title.job_type}</span> }
                 </span>
@@ -464,7 +456,7 @@ export default ({
         </Content>
       )}
       {
-        !copy_event && withMenu && !empty && editPermission && employeeId ? (
+        withMenu && !empty && editPermission && employeeId ? (
           <Dropdown
             light
             green={activeGroupItem ? activeGroupItem.is_finished : isFisnihed}

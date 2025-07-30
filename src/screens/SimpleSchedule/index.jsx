@@ -247,25 +247,27 @@ export default () => {
       getChildren(item);
     });
 
-    // Calculate days based on the timeline
-    let days = [];
-    if (timeline === TIMELINE.MONTH) {
-        const daysInMonth = moment(fromDateRef.current).daysInMonth(); // Total days in the selected month
-        days = Array.from({ length: daysInMonth }, (_, i) => i + 1); // [1, 2, ..., 28/29/30/31]
-    } else if (timeline === TIMELINE.WEEK) {
-        days = Array.from({ length: 7 }, (_, i) => moment(fromDateRef.current).startOf('isoWeek').add(i, 'days').date());
-    } else if (timeline === TIMELINE.DAY) {
-        days = [moment(fromDateRef.current).date()]; // Single day view
+    let rangeDates = []
+    switch (timeline) {
+      case TIMELINE.MONTH:
+        const daysInMonth = moment(fromDateRef.current).daysInMonth()
+        rangeDates = [...new Array(daysInMonth)].map((_, i) => moment(fromDateRef.current).date(i+1).format('YYYY-MM-DD'))
+        break
+      case TIMELINE.WEEK:
+        rangeDates = [...new Array(7)].map((_, i) => moment(fromDateRef.current).startOf('isoWeek').add(i, 'days').format('YYYY-MM-DD'))
+        break
+      case TIMELINE.DAY:
+        rangeDates = [moment(fromDateRef.current).format('YYYY-MM-DD')]
+        break
     }
 
-    // Generate empty events
     employee_ids.forEach((employee_id) => {
-        days.forEach((day_number) => {
-            //continue if it's past day
-            if (moment(fromDateRef.current).date(day_number).isBefore(moment().startOf('day'))) return;
-
+        rangeDates.forEach((dateStr) => {
+            const date = moment(dateStr, 'YYYY-MM-DD')
+            if (date.isBefore(moment().startOf('day'))) return;
+            const day_number = date.date();
             const hasEvent = result.some(
-                (e) => e.employee_id === employee_id && e.day_number === day_number
+                (e) => e.employee_id === employee_id && moment(e.start).format('YYYY-MM-DD') === date.format('YYYY-MM-DD')
             );
             if (!hasEvent) {
                 result.push({
@@ -274,8 +276,8 @@ export default () => {
                     day_number,
                     day: day_number,
                     empty_event: true,
-                    start: moment(fromDateRef.current).date(day_number).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-                    end: moment(fromDateRef.current).date(day_number).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    start: date.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    end: date.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
                 });
             }
         });
@@ -736,7 +738,6 @@ export default () => {
         worked_start={selectedEvent?.worked_start || null}
         worked_end={selectedEvent?.worked_end || null}
         resourceId={resourceInfo.id}
-        copy_event={event.extendedProps.copy_event}
         cost={event.extendedProps.cost}
         night_minutes={event.extendedProps.night_minutes}
         break_minutes={event.extendedProps.break_minutes}
@@ -770,9 +771,6 @@ export default () => {
     let classes = [];
     if (info.event.extendedProps.empty_event) {
       classes.push('is-empty-manual')
-    }
-    if (info.event.extendedProps.copy_event) {
-      classes.push('disable-drag')
     }
 
     return classes;
