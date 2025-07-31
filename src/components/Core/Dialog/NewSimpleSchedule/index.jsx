@@ -24,6 +24,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import moment from 'moment';
 import Input from '../../Input/Input';
 import CustomSelect from '../../Select/Select';
+import AppSelect from '../../AppSelect'
 
 import useGroupingEmployees from '../../../../hooks/useGroupingEmployees';
 
@@ -270,6 +271,7 @@ export default function NewSimpleSchedule({
   }
 
   const onEmployeesSelectChange = (selectedEmployees) => {
+    console.log('selectedEmployees', selectedEmployees);
     const nextInputValues = { ...formValues, employees: selectedEmployees };
     setFormValues(nextInputValues);
   };
@@ -285,15 +287,16 @@ export default function NewSimpleSchedule({
   }
 
   return (
-    <Dialog handleClose={handleClose} open={open} title={title}>
+    <Dialog handleClose={handleClose} open={open} title={title} disableEnforceFocus>
       <div className={classes.addEntry__form}>
         <div className={classes.addEntry__formControl}>
           <div className={classes.addEntry__formControl__labelBlock}>
             <Label text={t('Employee')} htmlFor='employee' />
           </div>
-          <CustomSelect
+          <AppSelect
             placeholder={t('Select employee')}
             items={allSortedEmployees ?? []}
+            checkedItems={formValues.employees || []}
             onChange={onEmployeesSelectChange}
             width='100%'
             fullWidth
