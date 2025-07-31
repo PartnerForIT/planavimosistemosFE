@@ -1398,6 +1398,9 @@ const ScheduleV2 = () => {
                 aspectRatio={1}
                 height="100%"
                 eventStartEditable={false}
+                // eventMinWidth={10}
+                // dayMinWidth={10}
+                slotMinWidth={10}
                 eventDurationEditable={timeline === TIMELINE.DAY}
                 resourceAreaWidth={timeline === TIMELINE.MONTH ? '20%' : '25%'}
                 views={{

@@ -4,23 +4,23 @@ import StyledCheckbox from '../Checkbox/Checkbox';
 import styles from './CheckboxGroupRaw.module.scss';
 
 export default function CheckboxGroup({ className, items, onChange }) {
-  const [itemsArray, setItemsArray] = useState([]);
+  // const [itemsArray, setItemsArray] = useState([]);
 
-  useEffect(() => {
-    setItemsArray(items.map((item) => ({ ...item, checked: !!item.checked })));
-  }, [items]);
+  // useEffect(() => {
+  //   setItemsArray(items.map((item) => ({ ...item, checked: !!item.checked })));
+  // }, [items]);
 
   return (
     <div className={classNames(styles.checkboxGroup, className)}>
       <div className={classNames(styles.contentBox)}>
         {
-          itemsArray.map((item, idx) => (
+          items.map((item, idx) => (
             <StyledCheckbox
               key={item.label + idx.toString()}
               label={item.label}
-              checked={item.checked}
+              checked={Boolean(item.checked)}
               disabled={item.disabled}
-              onChange={() => onChange(item)}
+              onChange={() => onChange(item, Boolean(item.checked))}
             />
           ))
         }
