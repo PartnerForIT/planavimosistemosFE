@@ -70,7 +70,7 @@
     background: white;
     height: 39px;
     width: 122px;
-    border-right: 1px solid #d9dfe3;
+    border-right: 1px solid #828688;
   }
 
   &_statistic {
@@ -98,6 +98,7 @@
 
     &:nth-last-child(6) {
       right: 255px;
+      border-left: 1px solid #828688;
     }
 
     // &_time:nth-last-child(2) {
