@@ -1203,6 +1203,7 @@
         "Earned allowance": "Kaupiamasis",
         "Unlimited allowance": "Neribotas",
         "Annual grant": "Skirta kalendoriniams metams",
+        "Child-care allowance": "Vaikų priežiūros dienos",
 
         "Allowance types:": "Priemokų tipai:",
         "Earned allowance - time off that is accumulated based on the hours or days worked. This allowance is typically granted gradually over time as the employee works, such as paid vacation or sick leave.": "Uždirbtos priemokos - poilsio laikas, kaupiamas pagal darbuotojo dirbtas valandas arba dienas. Ši priemoka paprastai suteikiama palaipsniui, priklausomai nuo atlikto darbo laiko, pavyzdžiui, apmokamos atostogos arba ligos atostogos.",
@@ -1252,6 +1253,9 @@
         "6 months": "6 mėnesiai",
         "12 months": "12 mėnesių",
         "24 months": "24 mėnesiai",
+
+        "Enter the age of non disabled child after which the policy should exclude from the further calculations.": "Įveskite vaikų be negalios amžiaus ribą nuo kurios vaikai turėtų būti automatiškai pašalinti iš šios politikos skaičiavimo.",
+        "Enter the age of disabled child after which the policy should exclude from the further calculations when the child will reach this age.": "Įveskite vaikų su negalia amžiaus ribą nuo kurios vaikai, kai jie pasieks šį amžių, turėtų būti automatiškai pašalinti iš šios politikos skaičiavimo.",
 
         "Use carryover expiration period:": "Perkeltų likučių galiojimo laikas:",
         "Enable this option to set an expiration period for carried-over balances. Select the desired period from the dropdown to define how long unused time off remains valid before expiring.": "Įjunkite šią parinktį, kad nustatytumėte perkeltų likučių galiojimo laikotarpį. Pasirinkite norimą laikotarpį iš išskleidžiamojo meniu, kad nustatytumėte, kiek laiko nepanaudotas poilsio laikas išliks galiojantis prieš pasibaigiant.",
@@ -1409,5 +1413,24 @@
         "Finish work": "Darbo pabaigai",
         "Entry field": "Įvesties laukas",
         "Start work additional category": "Naudojamas darbo pradžioje",
-        "Finish work additional category": "Naudojamas darbo pabaigoje"
+        "Finish work additional category": "Naudojamas darbo pabaigoje",
+
+        "Child amount": "Vaikų skaičius",
+        "Enter child amount": "Įvesti vaikų kiekį",
+        "Disabled child amount": "Neįgalių vaikų skaičius",
+        "Days given": "Suteikti dienų",
+        "Enter days": "Įvesti dienas",
+
+        "How to fill this table": "Kaip pildyti lentelę",
+        "Child amount ≥ – minimum number of all eligible children required for the rule.": "Vaikų sk. ≥ – mažiausias visų tinkamo amžiaus vaikų skaičius, kad taisyklė galiotų.",
+        "Disabled child amount ≥ – minimum number of eligible disabled children. Enter 0 if not relevant.": "Neįgalių vaikų sk. ≥ – mažiausias tinkamo amžiaus neįgalių vaikų skaičius. Jei neaktualu, rašykite 0.",
+        "Days given – paid days (or fraction) granted per period selected above (Monthly / Quarterly / Annual). Example 0.333 = 1 day every 3 months.": "Suteikiama dienų – apmokamų dienų skaičius (gali būti dalis), suteikiamas per aukščiau pasirinktą laikotarpį (mėnesį / ketvirtį / metus). Pvz. 0,333 = 1 d. kas 3 mėn.",
+        "The system reads the rows from bottom to top; the first row whose numbers meet the “≥” conditions is applied.": "Sistema tikrina eilutes iš apačios į viršų; pritaikoma pirma taisyklė, kurios „≥“ sąlygos tenkinamos.",
+        "Use ＋ to add a new rule, 🗑 to remove.": "Spauskite ＋ norėdami pridėti naują eilutę, 🗑 – pašalinti.",
+
+        "Tip: place the most generous rule—e.g. “≥ 3 children → 2 d/mo”—at the bottom.": "(Patarimas: dosniausias derinys, pvz. „≥ 3 vaikai → 2 d./mėn.“, turėtų būti sąrašo apačioje.)",
+        "Example:": "PVZ:",
+        "Child ≥": "Vaikų ≥",
+        "Disabled ≥": "Neįgalių ≥",
+        "d./mėn.": "d./mėn."
 }

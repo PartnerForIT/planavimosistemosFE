@@ -227,7 +227,7 @@ $arrow-size: 21px;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin-top: 25px;
+  margin-top: 32px;
 
   &:hover {
     opacity: 0.7;
@@ -1000,5 +1000,32 @@ $arrow-size: 21px;
       align-items: center;
       justify-content: center;
     }
+  }
+}
+
+.tooltipRed {
+  margin-bottom: 10px;
+  > div {
+    background: #FD0D1B;
+  }
+}
+
+.exampleTable {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 2px 8px;
+    text-align: left;
+    border: 1px solid #E6EEF6;
+    font-size: 13px;
+  }
+
+  th {
+    color: #fff;
+  }
+
+  td {
+    color: #fff;
   }
 }

@@ -38,6 +38,8 @@ const initialValues = {
   proration_type: '',
   allowance_carryover_type: '',
   allowance_carryover_amount: '',
+  age_of_expire: '',
+  age_of_disabled_for_expire: '',
   prorotate_based_on_em_status: false,
   use_carryover_expiration_period: false,
   allowance_carryover_expiration_period: '',
@@ -52,12 +54,14 @@ const initialValues = {
   symbol: '',
   color: '',
   extra_amounts: [],
+  extra_children: [],
 }
 
 const allowance_type_arr = [
   { code: 'earned', name: 'Earned allowance' },
   { code: 'unlimited', name: 'Unlimited allowance' },
   { code: 'annual_grant', name: 'Annual grant' },
+  { code: 'child_care', name: 'Child-care allowance' },
 ];
 
 const allowance_calculation_period_arr = [
@@ -104,17 +108,22 @@ const PolicySettings = React.memo(({
       const updatedValues = {
         ...prev,
         //if name ! extra_amounts
-        [name]: name !== 'extra_amounts' ? value : prev.extra_amounts,
+        [name]: name !== 'extra_amounts' && name !== 'extra_children' ? value : (name === 'extra_amounts' ? prev.extra_amounts : prev.extra_children),
       };
   
       const requiredFields = [
         'name',
         'allowance_type',
       ];
-  
-      if (updatedValues.allowance_type === 'earned') {
+
+      if (['earned', 'child_care'].includes(updatedValues.allowance_type)) {
         requiredFields.push('allowance_calculation_period');
         requiredFields.push('proration_type');
+      }
+
+      if (['child_care'].includes(updatedValues.allowance_type)) {
+        requiredFields.push('age_of_expire');
+        requiredFields.push('age_of_disabled_for_expire');
       }
   
       if (['earned', 'annual_grant'].includes(updatedValues.allowance_type)) {
@@ -175,6 +184,13 @@ const PolicySettings = React.memo(({
     }));
   };
 
+  const addExtraChild = () => {
+    setValues((prev) => ({
+      ...prev,
+      extra_children: [...(prev.extra_children ? prev.extra_children : []), { amount: '', disabled: '', days: '' }],
+    }));
+  };
+
   const handleExtraAmountChange = (index, field, value) => {
     setValues((prev) => {
       const updatedExtraAmounts = [...prev.extra_amounts];
@@ -195,6 +211,20 @@ const PolicySettings = React.memo(({
     });
   };
 
+  const handleExtraChildChange = (index, field, value) => {
+    setValues((prev) => {
+      const updatedExtraChildren = [...prev.extra_children];
+      updatedExtraChildren[index] = {
+        ...updatedExtraChildren[index],
+        [field]: value,
+      };
+      return {
+        ...prev,
+        extra_children: updatedExtraChildren,
+      };
+    });
+  };
+
   const handleRemoveExtraAmount = (index) => {
     setValues((prev) => {
       const updatedExtraAmounts = [...prev.extra_amounts];
@@ -208,6 +238,23 @@ const PolicySettings = React.memo(({
     handleChange({
       target: {
         name: 'extra_amounts',
+      },
+    });
+  };
+
+  const handleRemoveExtraChild = (index) => {
+    setValues((prev) => {
+      const updatedExtraChildren = [...prev.extra_children];
+      updatedExtraChildren.splice(index, 1);
+      return {
+        ...prev,
+        extra_children: updatedExtraChildren,
+      };
+    });
+
+    handleChange({
+      target: {
+        name: 'extra_children',
       },
     });
   };
@@ -344,7 +391,10 @@ const PolicySettings = React.memo(({
                         </li>
                         <li>
                         {t('Annual grant - A fixed amount of time off (in hours or days) that is granted to the employee on a yearly basis, often for vacation or other types of leave. This allowance resets annually.')}
-                        </li>  
+                        </li>
+                        <li>
+                        {t('Child-care allowance')}
+                        </li>
                       </ul>
                     </>
                   }
@@ -354,14 +404,14 @@ const PolicySettings = React.memo(({
                 handleInputChange={handleChange}
                 name='allowance_type'
                 value={values.allowance_type ?? ''}
-                options={allowance_type_arr.map((item) => { return {...item}})}
+                options={allowance_type_arr.map((item) => { return {...item, label: t(item.label)}})}
               />
             </div>
             <div></div>
           </div>
           <hr className={classes.hr} />
           {
-            values.allowance_type === 'earned' ? (
+            (values.allowance_type === 'earned' || values.allowance_type === 'child_care') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.selectBlock}>
@@ -391,22 +441,26 @@ const PolicySettings = React.memo(({
                       handleInputChange={handleChange}
                       name='allowance_calculation_period'
                       value={values.allowance_calculation_period ?? ''}
-                      options={allowance_calculation_period_arr.map((item) => { return {...item}})}
+                      options={allowance_calculation_period_arr.filter(item => !(item.code === 'weekly' && values.allowance_type === 'child_care')).map((item) => { return {...item}})}
                     />
                   </div>
-                  <div className={classes.formControl}>
-                    <div className={classes.labelBlock}>
-                      <Label text={t('Allowance amount')} htmlFor='allowance_amount' />
-                      <span className={classes.required}>*</span>
-                    </div>
-                    <Input
-                      placeholder={t('Enter allowance amount')}
-                      value={values.allowance_amount ?? ''}
-                      name='allowance_amount'
-                      fullWidth
-                      onChange={handleChange}
-                      disabled={!values.allowance_calculation_period}
-                    />
+                    <div className={classes.formControl}>
+                    { values.allowance_type === 'earned' && (
+                        <>
+                        <div className={classes.labelBlock}>
+                          <Label text={t('Allowance amount')} htmlFor='allowance_amount' />
+                          <span className={classes.required}>*</span>
+                        </div>
+                        <Input
+                          placeholder={t('Enter allowance amount')}
+                          value={values.allowance_amount ?? ''}
+                          name='allowance_amount'
+                          fullWidth
+                          onChange={handleChange}
+                          disabled={!values.allowance_calculation_period}
+                        />
+                    </>
+                    )}
                   </div>
                 </div>
 
@@ -545,6 +599,153 @@ const PolicySettings = React.memo(({
                   </div>
                 </div>
 
+                <hr className={classes.hr} />
+              </>
+            ) : null
+          }
+          {
+            values.allowance_type === 'child_care' ? (
+              <>
+                <hr className={classes.hr} />
+                <div className={classes.tooltipRed}>
+                  <Tooltip
+                    title={
+                      <>
+                        <div><b>{t('How to fill this table')}</b></div>
+                        <ul>
+                          <li>{t('Child amount ≥ – minimum number of all eligible children required for the rule.')}</li>
+                          <li>{t('Disabled child amount ≥ – minimum number of eligible disabled children. Enter 0 if not relevant.')}</li>
+                          <li>{t('Days given – paid days (or fraction) granted per period selected above (Monthly / Quarterly / Annual). Example 0.333 = 1 day every 3 months.')}</li>
+                        </ul>
+                        <div>{t('The system reads the rows from bottom to top; the first row whose numbers meet the “≥” conditions is applied.')}</div>
+                        <div>{t('Use ＋ to add a new rule, 🗑 to remove.')}</div>
+                        <div>{t('Tip: place the most generous rule—e.g. “≥ 3 children → 2 d/mo”—at the bottom.')}</div>
+                        <br />
+                        <div>{t('Example:')}</div>
+                        <table className={classes.exampleTable}>
+                          <thead>
+                            <tr><th>{t('Child ≥')}</th><th>{t('Disabled ≥')}</th><th>{t('Days')}</th></tr>
+                          </thead>
+                          <tbody>
+                            <tr><td>1</td><td>0</td><td>0,333 {t('d./mėn.')}</td></tr>
+                            <tr><td>0</td><td>1</td><td>1 {t('d./mėn.')}</td></tr>
+                            <tr><td>2</td><td>0</td><td>1 {t('d./mėn.')}</td></tr>
+                            <tr><td>3</td><td>0</td><td>2 {t('d./mėn.')}</td></tr>
+                          </tbody>
+                        </table>
+                      </>
+                    }
+                  />
+                </div>
+                {
+                  values.extra_children && values.extra_children.map((item, index) => (
+                    <div key={index+'-pc'} className={classes.policyForm_row}>
+                      <div key={index+'-pc1'} className={classNames(classes.policyForm_row)}>
+                        <div className={classes.formControl}>
+                          <div className={classes.labelBlock}>
+                            <Label text={`${t('Child amount')} ≥`} htmlFor='amount' />
+                            <span className={classes.required}>*</span>
+                          </div>
+                          <Input
+                            placeholder={t('Enter child amount')}
+                            value={item.amount ?? ''}
+                            name='amount'
+                            fullWidth
+                            type='number'
+                            onChange={(e) => handleExtraChildChange(index, e.target.name, e.target.value)}
+                          />
+                        </div>
+                        <button className={classes.removeBtn} onClick={() => handleRemoveExtraChild(index)}>
+                          <DeleteIcon fill='#fd0d1b' className={classes.iconButtonRow} />
+                        </button>
+                        <div className={classes.formControl}>
+                          <div className={classes.labelBlock}>
+                            <Label text={`${t('Disabled child amount')} ≥`} htmlFor='disabled' />
+                            <span className={classes.required}>*</span>
+                          </div>
+                          <Input
+                            placeholder={t('Enter child amount')}
+                            value={item.disabled ?? ''}
+                            name='disabled'
+                            fullWidth
+                            type='number'
+                            onChange={(e) => handleExtraChildChange(index, e.target.name, e.target.value)}
+                          />
+                        </div>
+                        <div className={classes.formControl}>
+                          <div className={classes.labelBlock}>
+                            <Label text={t('Days given')} htmlFor='days' />
+                            <span className={classes.required}>*</span>
+                          </div>
+                          <Input
+                            placeholder={t('Enter days')}
+                            value={item.days ?? ''}
+                            name='days'
+                            fullWidth
+                            type='number'
+                            onChange={(e) => handleExtraChildChange(index, e.target.name, e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+
+                <div className={classes.policyForm_row}>
+                  <button
+                    type='button'
+                    className={classes.addBtn}
+                    onClick={addExtraChild}
+                  >+</button>
+                </div>
+                <hr className={classes.hr} />
+
+                <div className={classes.policyForm_row}>
+                  <div className={classes.formControl}>
+                    <div className={classes.labelBlock}>
+                      <Label text={t('Age of expire')} htmlFor='age_of_expire' />
+                      <span className={classes.required}>*</span>
+                      <Tooltip
+                        title={
+                          <>
+                            {t('Enter the age of non disabled child after which the policy should exclude from the further calculations.')}
+                          </>
+                        }
+                      />
+                    </div>
+                    <Input
+                      placeholder={t('Enter child age')}
+                      value={values.age_of_expire ?? ''}
+                      name='age_of_expire'
+                      fullWidth
+                      type='number'
+                      min='0'
+                      onChange={(e) => handleChange({ target: { name: 'age_of_expire', value: e.target.value < 0 ? Math.abs(e.target.value) : e.target.value } })}
+                    />
+                  </div>
+                  <div className={classes.formControl}>
+                    <div className={classes.labelBlock}>
+                      <Label text={t('Age of disabled for expire')} htmlFor='age_of_disabled_for_expire' />
+                      <span className={classes.required}>*</span>
+                      <Tooltip
+                        title={
+                          <>
+                            {t('Enter the age of disabled child after which the policy should exclude from the further calculations when the child will reach this age.')}
+                          </>
+                        }
+                      />
+                    </div>
+                    <Input
+                      placeholder={t('Enter child age')}
+                      value={values.age_of_disabled_for_expire ?? ''}
+                      name='age_of_disabled_for_expire'
+                      fullWidth
+                      type='number'
+                      min='0'
+                      onChange={(e) => handleChange({ target: { name: 'age_of_disabled_for_expire', value: e.target.value < 0 ? Math.abs(e.target.value) : e.target.value } })}
+                    />
+                  </div>
+                </div>
                 <hr className={classes.hr} />
               </>
             ) : null
@@ -806,7 +1007,7 @@ const PolicySettings = React.memo(({
             ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') ? (
+            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant' || values.allowance_type === 'child_care') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
@@ -860,7 +1061,7 @@ const PolicySettings = React.memo(({
             ) : null
           }
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant') ? (
+            (values.allowance_type === 'earned' || values.allowance_type === 'unlimited' || values.allowance_type === 'annual_grant' || values.allowance_type === 'child_care') ? (
               <>
                 <div className={classes.policyForm_row}>
                   <div className={classes.formControlSwhitchLine}>
