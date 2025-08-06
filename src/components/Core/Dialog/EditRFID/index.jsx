@@ -37,7 +37,7 @@ export default ({
     } else {
       setFormValues(initialFormValues);
     }
-  }, [currentRFID]);
+  }, [currentRFID, open]);
 
   return (
     <Dialog handleClose={onClose} onExited={handleExited} open={open} title={title}>
