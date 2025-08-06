@@ -96,6 +96,9 @@ function EmployeeActivity({
         return <div><div>{t('Accrue')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
       case 'child_care':
         return <div><div>{t('Child Care')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'child_care_expired':
+        return <div><div>{t('Child Care Expired')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
+      case 'carryover_move':
       case 'carryover_expired':
         return <div><div>{t('Carryover')}</div><div className={classes.dateGray}>{activity.created_at}</div></div>;
       case 'carryover':
@@ -270,6 +273,7 @@ function EmployeeActivity({
       || activity.type === 'request_behalf_rejected'
       || activity.type === 'accrue'
       || activity.type === 'child_care'
+      || activity.type === 'child_care_expired'
       || activity.type === 'carryover'
       || activity.type === 'carryover_expired') {
       return (
