@@ -313,6 +313,10 @@ function EmployeeActivity({
   };
 
   const calculateTotalAccrued = (year) => {
+    if (activePolicy.allowance_type === 'unlimited') {
+      return '∞';
+    }
+    
     return activities.reduce((total, activity) => {
       if (activity.type === 'accrue' && new Date(activity.created_at).getFullYear() === year) {
         return total + (activity.changed || 0);

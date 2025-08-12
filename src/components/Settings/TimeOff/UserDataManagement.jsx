@@ -237,6 +237,10 @@ function UserDataManagement({
         return false;
       }
 
+      if (activePolicy.allowance_type === 'unlimited' && (column.field === 'accrued_amount_this_cycle')) {
+        return false;
+      }
+
       return true;
     });
 

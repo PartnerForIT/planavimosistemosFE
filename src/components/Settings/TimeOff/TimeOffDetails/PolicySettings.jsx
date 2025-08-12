@@ -116,7 +116,7 @@ const PolicySettings = React.memo(({
         'allowance_type',
       ];
 
-      if (['earned', 'child_care'].includes(updatedValues.allowance_type)) {
+      if (['earned', 'annual_grant', 'child_care'].includes(updatedValues.allowance_type)) {
         requiredFields.push('allowance_calculation_period');
         requiredFields.push('proration_type');
       }
@@ -411,58 +411,62 @@ const PolicySettings = React.memo(({
           </div>
           <hr className={classes.hr} />
           {
-            (values.allowance_type === 'earned' || values.allowance_type === 'child_care') ? (
+            (values.allowance_type === 'earned' || values.allowance_type === 'annual_grant' || values.allowance_type === 'child_care') ? (
               <>
-                <div className={classes.policyForm_row}>
-                  <div className={classes.selectBlock}>
-                    <div className={classes.tooltipBlock}>
-                      <Label text={t('Allowance calculation period')} />
-                      <span className={classes.required}>*</span>
-                      <Tooltip
-                        title={
-                          <>
-                            {t('Allowance calculation period:')}
-                            <ul>
-                              <li>
-                              {t('Annual allowance - The total allowance is granted for the entire year at once. Employees receive a fixed amount of time off (in hours or days) for the year, which may be used at any time within that period.')}
-                              </li>
-                              <li>
-                              {t('Monthly allowance - The allowance is distributed on a monthly basis. Employees receive a set number of hours or days each month, rather than receiving the full allowance upfront for the year.')}
-                              </li>
-                              <li>
-                              {t('Weekly allowance - The allowance is calculated and allocated weekly. Employees get a specific amount of time off per week, ensuring a steady and short-term distribution of available leave.')}
-                              </li>  
-                            </ul>
-                          </>
-                        }
-                      />
-                    </div>
-                    <Select
-                      handleInputChange={handleChange}
-                      name='allowance_calculation_period'
-                      value={values.allowance_calculation_period ?? ''}
-                      options={allowance_calculation_period_arr.filter(item => !(item.code === 'weekly' && values.allowance_type === 'child_care')).map((item) => { return {...item}})}
-                    />
-                  </div>
-                    <div className={classes.formControl}>
-                    { values.allowance_type === 'earned' && (
-                        <>
-                        <div className={classes.labelBlock}>
-                          <Label text={t('Allowance amount')} htmlFor='allowance_amount' />
+                {
+                  (values.allowance_type === 'earned' || values.allowance_type === 'child_care') ? (
+                    <div className={classes.policyForm_row}>
+                      <div className={classes.selectBlock}>
+                        <div className={classes.tooltipBlock}>
+                          <Label text={t('Allowance calculation period')} />
                           <span className={classes.required}>*</span>
+                          <Tooltip
+                            title={
+                              <>
+                                {t('Allowance calculation period:')}
+                                <ul>
+                                  <li>
+                                  {t('Annual allowance - The total allowance is granted for the entire year at once. Employees receive a fixed amount of time off (in hours or days) for the year, which may be used at any time within that period.')}
+                                  </li>
+                                  <li>
+                                  {t('Monthly allowance - The allowance is distributed on a monthly basis. Employees receive a set number of hours or days each month, rather than receiving the full allowance upfront for the year.')}
+                                  </li>
+                                  <li>
+                                  {t('Weekly allowance - The allowance is calculated and allocated weekly. Employees get a specific amount of time off per week, ensuring a steady and short-term distribution of available leave.')}
+                                  </li>  
+                                </ul>
+                              </>
+                            }
+                          />
                         </div>
-                        <Input
-                          placeholder={t('Enter allowance amount')}
-                          value={values.allowance_amount ?? ''}
-                          name='allowance_amount'
-                          fullWidth
-                          onChange={handleChange}
-                          disabled={!values.allowance_calculation_period}
+                        <Select
+                          handleInputChange={handleChange}
+                          name='allowance_calculation_period'
+                          value={values.allowance_calculation_period ?? ''}
+                          options={allowance_calculation_period_arr.filter(item => !(item.code === 'weekly' && values.allowance_type === 'child_care')).map((item) => { return {...item}})}
                         />
-                    </>
-                    )}
-                  </div>
-                </div>
+                      </div>
+                        <div className={classes.formControl}>
+                        { values.allowance_type === 'earned' && (
+                            <>
+                            <div className={classes.labelBlock}>
+                              <Label text={t('Allowance amount')} htmlFor='allowance_amount' />
+                              <span className={classes.required}>*</span>
+                            </div>
+                            <Input
+                              placeholder={t('Enter allowance amount')}
+                              value={values.allowance_amount ?? ''}
+                              name='allowance_amount'
+                              fullWidth
+                              onChange={handleChange}
+                              disabled={!values.allowance_calculation_period}
+                            />
+                        </>
+                        )}
+                      </div>
+                    </div>
+                  ) : null
+                }
 
                 <div className={classes.policyForm_row}>
                   <div className={classes.selectBlock}>
@@ -508,7 +512,7 @@ const PolicySettings = React.memo(({
                     </div>
                     <Input
                       placeholder={t('Enter allowance amount')}
-                      value={values.allowance_amount}
+                      value={values.allowance_amount ?? ''}
                       name='allowance_amount'
                       fullWidth
                       onChange={handleChange}
