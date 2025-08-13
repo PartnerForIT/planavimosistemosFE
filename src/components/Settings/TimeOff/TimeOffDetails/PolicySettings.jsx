@@ -116,8 +116,12 @@ const PolicySettings = React.memo(({
         'allowance_type',
       ];
 
-      if (['earned', 'annual_grant', 'child_care'].includes(updatedValues.allowance_type)) {
+      if (['earned', 'child_care'].includes(updatedValues.allowance_type)) {
         requiredFields.push('allowance_calculation_period');
+        requiredFields.push('proration_type');
+      }
+
+      if (['annual_grant'].includes(updatedValues.allowance_type)) {
         requiredFields.push('proration_type');
       }
 
