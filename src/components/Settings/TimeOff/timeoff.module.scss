@@ -13,6 +13,13 @@ $arrow-size: 21px;
   grid-auto-flow: dense;
 }
 
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
 .details {
   position: relative;
   z-index: 1;

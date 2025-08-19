@@ -194,6 +194,8 @@ function EmployeeManagementPolicy({
         employees={[employee]}
         policies={policies}
         initialValue={{policy_id: activePolicy.id, ...requestBehalfEditOpen}}
+        activeTimeOff={activeTimeOff}
+        singleRequest
       />
       <ReactTooltip
         id='back_button'
