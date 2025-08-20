@@ -509,13 +509,6 @@
   max-height: calc(100vh - 70px);
   overflow: auto;
 
-  .detailsImage {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .detailsTitleClear {
     font-size: 14px;
     font-weight: 600;
@@ -596,5 +589,16 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.detailsImage {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 200px;
   }
 }

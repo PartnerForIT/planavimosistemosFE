@@ -708,6 +708,8 @@ export default function AccountsList() {
             handleClose={() => setChangeStatusOpen(false)}
             title={t('Change status?')}
             changeStatus={handleChangingStatus}
+            employees={employees}
+            selected={checkedItems.length ? checkedItems : [selected.id]}
           />
           <ImportAccounts
             title={t('Import accounts')}

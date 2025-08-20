@@ -10,7 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import MomentUtils from '@date-io/moment';
 import RightSideIcon from '../../../Icons/request_behalf_right.svg';
-import LeftSideIcon from '../../../Icons/request_behalf_left.svg';
+import LeftSideIcon from '../../../Icons/request_behalf_left.png';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useTranslation } from 'react-i18next';
 import useCompanyInfo from '../../../../hooks/useCompanyInfo';
