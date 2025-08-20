@@ -506,7 +506,7 @@
   min-width: 230px;
   border-left: 1px solid #E1EBF5;
   padding: 20px;
-  max-height: 520px;
+  max-height: calc(100vh - 70px);
   overflow: auto;
 
   .detailsImage {
@@ -542,7 +542,7 @@
     }
 
     &.notSingle {
-      max-height: calc(520px - 120px);
+      max-height: calc(100vh - 190px);
       overflow: auto;
     }
   }
