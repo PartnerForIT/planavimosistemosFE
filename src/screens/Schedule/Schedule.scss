@@ -8,6 +8,10 @@
   position: relative;
   //position: relative;
 
+  .fc-scrollgrid-sync-table > tbody:last-of-type > tr:last-of-type td .fc-timeline-lane-frame {
+    border-bottom: 1px solid #d9dfe3;
+  }
+
   .marker-tooltip {
     border: 1px solid #1AA1FD !important;
   }

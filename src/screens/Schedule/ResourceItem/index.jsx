@@ -110,6 +110,8 @@ export default ({
       </table>
     `
   };
+
+  const isEmpty = title.includes('Empty')
   
   return (
     <>
@@ -121,7 +123,7 @@ export default ({
               </div>
       }
       {
-        accumulatedHours?.startPeriod && employeeId && (
+        accumulatedHours?.startPeriod && employeeId && !isEmpty && (
           <div
             data-tooltip-id='demand_hours'
             data-tooltip-html={demandTip()}
