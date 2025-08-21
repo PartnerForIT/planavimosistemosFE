@@ -1432,5 +1432,24 @@
         "Example:": "PVZ:",
         "Child ≥": "Vaikų ≥",
         "Disabled ≥": "Neįgalių ≥",
-        "d./mėn.": "d./mėn."
+        "d./mėn.": "d./mėn.",
+
+        "Your request details": "Jūsų prašymo informacija",
+        "All day": "Visa diena",
+        "Non working day": "Nedarbo diena",
+
+        "You request total of <span>{{days}}</span> d.": "Iš viso prašote <span>{{days}}</span> d.",
+        "Your end balance will be <span>{{days}}</span> d.": "Jūsų galutinis likutis bus <span>{{days}}</span> d.",
+
+        "Conflict with other requests:": "Nesuderinama su kitais prašymais:",
+
+        "Pending approval {{policy_name}} request from {{from}} to {{to}}.": "Laukiama patvirtinimo {{policy_name}} prašymas nuo {{from}} iki {{to}}.",
+        "Approved {{policy_name}} request from {{from}} to {{to}}.": "Patvirtintas {{policy_name}} prašymas nuo {{from}} iki {{to}}.",
+
+        "Pending approval {{policy_name}} request from {{from}}.": "Laukiama patvirtinimo {{policy_name}} prašymas {{from}}.",
+        "Approved {{policy_name}} request from {{from}}.": "Patvirtintas {{policy_name}} prašymas {{from}}.",
+
+        "Insufficient balance for:": "Nepakankamas likutis:",
+        "Missing {{days}} d. for this request.": "Trūksta {{days}} d. šiam prašymui"
+
 }

@@ -384,6 +384,7 @@ function UserDataManagement({
         employees={selectedEmployees}
         policies={policies}
         initialValue={{policy_id: activePolicy.id}}
+        activeTimeOff={activeTimeOff}
       />
       <AdjustBalance
         open={adjustBalanceOpen}

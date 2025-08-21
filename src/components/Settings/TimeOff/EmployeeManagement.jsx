@@ -25,6 +25,7 @@ function EmployeeManagement({
   policies,
   onRequestBehalf,
   onChangeRequestStatus = Function.prototype,
+  activeTimeOff,
 }) {
   const { t } = useTranslation();
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
@@ -191,6 +192,8 @@ function EmployeeManagement({
         employees={[employee]}
         policies={policies}
         initialValue={{...requestBehalfEditOpen}}
+        activeTimeOff={activeTimeOff}
+        singleRequest
       />
       <ReactTooltip
         id='back_button'

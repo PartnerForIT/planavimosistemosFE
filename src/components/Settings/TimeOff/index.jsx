@@ -20,6 +20,7 @@ import {
 import { userSelector } from '../../../store/auth/selectors';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TimeOffBlock from './TimeOffDetails/TimeOffBlock';
+import style from './timeoff.module.scss';
 import {
   createTimeOff,
   deleteTimeOff,
@@ -101,7 +102,7 @@ export default () => {
 
   useEffect(() => {
     dispatch(getTimeOffs(id));
-    dispatch(loadEmployeesAll(id));
+    dispatch(loadEmployeesAll(id, {time_off: true}));
     dispatch(getAccountGroups(id));
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -529,6 +530,7 @@ export default () => {
                       policies={policies}
                       onRequestBehalf={onRequestBehalf}
                       onChangeRequestStatus={onChangeRequestStatus}
+                      activeTimeOff={activeTimeOff}
                     />
                 ) : null
               }
@@ -555,7 +557,10 @@ export default () => {
               >
                 <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
               </TitleBlock>
-              <PageLayout><Progress />
+              <PageLayout>
+                <div className={style.progressWrapper}>
+                  <Progress />
+                </div>
               </PageLayout>
             </>
           )
