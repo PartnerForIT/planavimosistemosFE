@@ -1,0 +1,60 @@
+.container {
+  height: 32px;
+  display: flex;
+  position: relative;
+
+  .option {
+    padding: 6px 16px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+     gap: 4px;
+
+    .title {
+      color: #808F94;
+      font-family: 'Helvetica Neue';
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    &.active {
+      .title {
+        color: #1685FC;
+      }
+    }
+
+    .badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #1685FC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+     
+
+      .badgeTitle {
+        color: #fff;
+        font-size: 14px;
+        font-family: 'Helvetica Neue';
+        font-weight: 500;
+      }
+    }
+  }
+
+  .tab {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #F6FAFD;
+    min-width: 50px;
+    z-index: 1;
+    border-bottom: 2px solid #1685FC;
+    transition: all .2s;
+  }
+  
+}
