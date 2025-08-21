@@ -95,15 +95,11 @@ function PoliciesActivityTable({
 
                   return (
                       <React.Fragment key={policy.id}>
-                      <div className={classes.policiesTableRow}>
+                      <div className={classnames(classes.policiesTableRow, classes.pointer)} onClick={() => expandPolicy(policy.id)}>
                           <div className={classnames(classes.policiesTableCol, classes.policiesTableColExpand)}>
-                          <button
-                              type="button"
-                              className={classnames(classes.policiesTableExpand, { [classes.active]: isExpanded })}
-                              onClick={() => expandPolicy(policy.id)}
-                          >
+                          <div className={classnames(classes.policiesTableExpand, { [classes.active]: isExpanded })}>
                               <ArrowRightButton />
-                          </button>
+                          </div>
                           </div>
                           <div className={classes.policiesTableCol}>
                           <div className={classes.tableName}>

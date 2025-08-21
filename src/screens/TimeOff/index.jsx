@@ -4,6 +4,7 @@ import styles from './styles.module.scss'
 
 import MainLayout from '../../components/Core/MainLayout'
 import AppNavbar from '../../components/Core/AppNavbar'
+import MyTimeOff from '../../components/TimeOff/MytimeOffSection'
 
 const options = [{
   title: 'My time off',
@@ -43,7 +44,9 @@ const TimeOffScreen = () => {
           (tab => {
             switch (tab) {
               case 'time_off':
-                return null
+                return (
+                  <MyTimeOff />
+                )
               case 'requests':
                 return null
               case 'calendar':
