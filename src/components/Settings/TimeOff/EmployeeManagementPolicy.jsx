@@ -67,7 +67,7 @@ function EmployeeManagementPolicy({
               )
             }
             <div>
-              <div className={classes.employeeName}>{employee.name}</div>
+              <div className={classes.employeeName}>{employee.name} {employee.surname}</div>
               <div className={classes.skillName}>{employee.skills}</div>
             </div>
 

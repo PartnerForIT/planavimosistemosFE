@@ -72,20 +72,20 @@ function PoliciesActivityTable({
                           t('Current cycle')
                       )}
                   </div>
-                  <div className={classes.policiesTableHeaderCol}>
+                  <div className={classnames(classes.policiesTableHeaderCol, classes.right)}>
                       {!expandedPolicyIds.length && (
                           t('Cycle allowance')
                       )}
                   </div>
-                  <div className={classes.policiesTableHeaderCol}>
+                  <div className={classnames(classes.policiesTableHeaderCol, classes.right)}>
                       {!expandedPolicyIds.length && (
                           t('Accrued')
                       )}
                   </div>
-                  <div className={classes.policiesTableHeaderCol}>
+                  <div className={classnames(classes.policiesTableHeaderCol, classes.right)}>
                   {t('Taken')}
                   </div>
-                  <div className={classes.policiesTableHeaderCol}>
+                  <div className={classnames(classes.policiesTableHeaderCol, classes.right)}>
                   {t('Balance')}
                   </div>
               </div>
@@ -124,20 +124,20 @@ function PoliciesActivityTable({
                                   `${policyEmployeeDetails?.current_cycle_start} - ${policyEmployeeDetails?.current_cycle_end}`
                               )}
                           </div>
-                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray)}>
+                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray, classes.right)}>
                               {!expandedPolicyIds.length && (
                                   policyEmployeeDetails?.cycle_allowance
                               )}
                           </div>
-                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray)}>
+                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray, classes.right)}>
                               {!expandedPolicyIds.length && (
                                   policyEmployeeDetails?.accrued_amount_this_cycle
                               )}
                           </div>
-                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray)}>
+                          <div className={classnames(classes.policiesTableCol, classes.right)}>
                           {policyEmployeeDetails?.taken_this_cycle}
                           </div>
-                          <div className={classnames(classes.policiesTableCol, classes.policiesTableColGray)}>
+                          <div className={classnames(classes.policiesTableCol, classes.right)}>
                           {policyEmployeeDetails?.balance}
                           </div>
                       </div>
