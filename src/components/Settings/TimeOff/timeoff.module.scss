@@ -139,12 +139,27 @@ $arrow-size: 21px;
   border-radius: 50%;
   margin-left: 12px;
   cursor: pointer;
+  transform: scale(1);
+  transition: transform .1s;
 
   &:hover {
-    opacity: 0.8;
-    width: 60px;
-    height: 60px;
-    margin: -5px -10px -5px 12px;
+    transform: scale(1.1);
+    animation: pulse 0.8s;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(64, 128, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(64, 128, 255, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 10px rgba(64, 128, 255, 0);
+    box-shadow: 0 0 0 10px rgba(64, 128, 255, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(64, 128, 255, 0);
+    box-shadow: 0 0 0 0 rgba(64, 128, 255, 0);
   }
 }
 
@@ -670,6 +685,10 @@ $arrow-size: 21px;
   grid-template-columns: 24px 2fr 2fr 1fr 1fr 1fr 1fr;
   padding: 8px 12px;
   align-items: center;
+
+  &.pointer {
+    cursor: pointer;
+  }
 }
 
 .policiesTableHeader {
@@ -703,6 +722,10 @@ $arrow-size: 21px;
 
   &.policiesTableColGray {
     color: #808F94;
+  }
+
+  &.right {
+    text-align: right;
   }
 }
 

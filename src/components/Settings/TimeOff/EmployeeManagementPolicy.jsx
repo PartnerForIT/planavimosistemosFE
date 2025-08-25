@@ -67,7 +67,7 @@ function EmployeeManagementPolicy({
               )
             }
             <div>
-              <div className={classes.employeeName}>{employee.name}</div>
+              <div className={classes.employeeName}>{employee.name} {employee.surname}</div>
               <div className={classes.skillName}>{employee.skills}</div>
             </div>
 
@@ -85,93 +85,96 @@ function EmployeeManagementPolicy({
             </div>
           </div>
         </div>
-
-        <div className={classes.container}>
-          <div className={classes.containerTitle}>
-            {t('Upcoming requests')}
-          </div>
-          {
-            requests.length > 0 ? (
-              <div className={classes.upcomingRequests}>
-                <div className={classes.upcomingRequestsHeader}>
-                  <div className={classes.upcomingRequestsHeaderCol}>
-                    {t('Request type')}
-                  </div>
-                  <div className={classes.upcomingRequestsHeaderCol}>
-                    {t('When')}
-                  </div>
-                  <div className={classes.upcomingRequestsHeaderCol}>
-                    {t('Requested on')}
-                  </div>
-                  <div className={classes.upcomingRequestsHeaderCol}>
-                    {t('Status')}
-                  </div>
-                  <div className={classes.upcomingRequestsHeaderCol}></div>
+        {
+          requests.length > 0
+            ? <div className={classes.container}>
+                <div className={classes.containerTitle}>
+                  {t('Upcoming requests')}
                 </div>
-                {requests.map((request) => (
-                  <div key={request.id} className={classes.upcomingRequestsRow}>
-                    <div className={classes.upcomingRequestsCol}>
-                      {request.time_off_name}
-                    </div>
-                    <div className={classes.upcomingRequestsCol}>
-                      {request.from} - {request.to}
-                    </div>
-                    <div className={classes.upcomingRequestsCol}>
-                      {request.created_at}
-                    </div>
-                    <div className={classes.upcomingRequestsCol}>
-                      <div className={classsnames(classes.upcomingRequestsStatus, {
-                        [classes.requestStatusApproved]: request.status === 'approved',
-                        [classes.requestStatusPending]: request.status === 'pending',
-                        [classes.requestStatusRejected]: request.status === 'rejected',
-                        [classes.requestStatusCancelled]: request.status === 'cancelled',
-                      })}>
-                        {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                      </div>
-                    </div>
-                    <div className={classes.upcomingRequestsCol}>
-                      <div className={classes.upcomingRequestsButtons}>
-                        <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
-                          <Button
-                            className={classes.buttonEdit}
-                            size="little"
-                            onClick={() => {
-                              setRequestBehalfEditOpen(request)
-                            }}
-                          >
-                            <EditIconFixedFill />
-                          </Button>
+                {
+                  requests.length > 0 ? (
+                    <div className={classes.upcomingRequests}>
+                      <div className={classes.upcomingRequestsHeader}>
+                        <div className={classes.upcomingRequestsHeaderCol}>
+                          {t('Request type')}
                         </div>
-                        { request.status !== 'approved' && (
-                          <div data-tooltip-html={t("Approve")} data-tooltip-id="tip_request">
-                            <Button
-                              className={classes.buttonApprove}
-                              size="little"
-                              onClick={() => {onChangeRequestStatus(request.id, 'approved')}}
-                            >
-                              <CheckIcon />
-                            </Button>
-                          </div>
-                        )}
-                        { request.status !== 'rejected' && (
-                          <div data-tooltip-html={t("Reject")} data-tooltip-id="tip_request">
-                            <Button
-                              className={classes.buttonReject}
-                              size="little"
-                              onClick={() => {onChangeRequestStatus(request.id, 'rejected')}}
-                            >
-                              <RejectIcon />
-                            </Button>
-                          </div>
-                        )}
+                        <div className={classes.upcomingRequestsHeaderCol}>
+                          {t('When')}
+                        </div>
+                        <div className={classes.upcomingRequestsHeaderCol}>
+                          {t('Requested on')}
+                        </div>
+                        <div className={classes.upcomingRequestsHeaderCol}>
+                          {t('Status')}
+                        </div>
+                        <div className={classes.upcomingRequestsHeaderCol}></div>
                       </div>
+                      {requests.map((request) => (
+                        <div key={request.id} className={classes.upcomingRequestsRow}>
+                          <div className={classes.upcomingRequestsCol}>
+                            {request.time_off_name}
+                          </div>
+                          <div className={classes.upcomingRequestsCol}>
+                            {request.from} - {request.to}
+                          </div>
+                          <div className={classes.upcomingRequestsCol}>
+                            {request.created_at}
+                          </div>
+                          <div className={classes.upcomingRequestsCol}>
+                            <div className={classsnames(classes.upcomingRequestsStatus, {
+                              [classes.requestStatusApproved]: request.status === 'approved',
+                              [classes.requestStatusPending]: request.status === 'pending',
+                              [classes.requestStatusRejected]: request.status === 'rejected',
+                              [classes.requestStatusCancelled]: request.status === 'cancelled',
+                            })}>
+                              {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                            </div>
+                          </div>
+                          <div className={classes.upcomingRequestsCol}>
+                            <div className={classes.upcomingRequestsButtons}>
+                              <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
+                                <Button
+                                  className={classes.buttonEdit}
+                                  size="little"
+                                  onClick={() => {
+                                    setRequestBehalfEditOpen(request)
+                                  }}
+                                >
+                                  <EditIconFixedFill />
+                                </Button>
+                              </div>
+                              { request.status !== 'approved' && (
+                                <div data-tooltip-html={t("Approve")} data-tooltip-id="tip_request">
+                                  <Button
+                                    className={classes.buttonApprove}
+                                    size="little"
+                                    onClick={() => {onChangeRequestStatus(request.id, 'approved')}}
+                                  >
+                                    <CheckIcon />
+                                  </Button>
+                                </div>
+                              )}
+                              { request.status !== 'rejected' && (
+                                <div data-tooltip-html={t("Reject")} data-tooltip-id="tip_request">
+                                  <Button
+                                    className={classes.buttonReject}
+                                    size="little"
+                                    onClick={() => {onChangeRequestStatus(request.id, 'rejected')}}
+                                  >
+                                    <RejectIcon />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
+                  ) : null
+                }   
               </div>
-            ) : null
-          }   
-        </div>
+            : null
+        }
         <PoliciesActivityTable
           goEmployeeActivity={goEmployeeActivity}
           onUnassingPolicyEmployees={onUnassingPolicyEmployees}
