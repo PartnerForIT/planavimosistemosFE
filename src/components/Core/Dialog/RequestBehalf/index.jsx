@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import DialogClear from '../DialogClear';
 import Button from '../../Button/Button';
 //import Input from '../../Input/Input';
@@ -28,7 +28,7 @@ const defaultValues = {
   note: '',
 };
 
-export default ({
+const RequestBehalf = forwardRef(({
   handleClose,
   title,
   open,
@@ -39,9 +39,10 @@ export default ({
   policies,
   activeTimeOff,
   singleRequest = false,
-}) => {
+}, ref) => {
   const { t } = useTranslation();
   const [values, setValues] = useState(defaultValues);
+  const [internalOpen, setInternalOpen] = useState(false)
   const workTime = useSelector(settingWorkTime);
   const { getDateFormat } = useCompanyInfo();
   const { id: companyId } = useParams();
@@ -58,6 +59,15 @@ export default ({
     // eslint-disable-next-line
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    open: (initialParams) => {
+      if (initialParams) {
+        setValues(state => ({...state, ...initialParams}))
+      }
+      setInternalOpen(true)
+    },
+    close: onClose,
+  }))
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -69,6 +79,7 @@ export default ({
     setValues(defaultValues);
   };
   const onClose = () => {
+    setInternalOpen(false)
     setValues(defaultValues);
     handleClose();
 
@@ -187,7 +198,7 @@ export default ({
     <DialogClear
       handleClose={onClose}
       onExited={handleExited}
-      open={open}
+      open={open || internalOpen}
       title={title}
       maxWidth="lg"
     >
@@ -440,4 +451,6 @@ export default ({
       </div>
     </DialogClear>
   );
-};
+});
+
+export default RequestBehalf

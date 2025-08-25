@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import cn from 'classnames'
 import Header from '../Header';
 import styles from './Layout.module.scss';
 import { logout, refreshToken } from '../../../store/auth/actions';
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children, layoutClassName, screenClassName }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,8 +32,8 @@ export default function MainLayout({ children }) {
   return (
     <div className={styles.mainLayout}>
       <Header logOut={logOut} />
-      <main className={styles.mainBody}>
-        <div className={styles.mainBlock}>
+      <main className={cn(styles.mainBody, layoutClassName)}>
+        <div className={cn(styles.mainBlock, screenClassName)}>
           {children}
         </div>
       </main>

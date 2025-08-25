@@ -16,6 +16,7 @@ import { userSelector } from '../../store/auth/selectors';
 
 import Events from '../../components/Events/Events';
 import ScheduleV2 from '../ScheduleV2';
+import TimeOffScreen from '../TimeOff'
 import SimpleSchedule from '../SimpleSchedule';
 import CreateShift from '../Schedule/Shift';
 import TimeSheet from '../TimeSheet';
@@ -337,6 +338,11 @@ export default () => {
       {
         permissions.time_off && (
           <Route exact path='/:id/settings/time-off' component={TimeOff} />
+        )
+      }
+      {
+        permissions.time_off && (
+          <Route exact path='/:id/time-off' component={TimeOffScreen} />
         )
       }
       {
