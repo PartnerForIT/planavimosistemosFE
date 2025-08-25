@@ -44,6 +44,8 @@ import AutoDelete from '../../components/Settings/Delete/AutoDelete';
 import SettingEvents from '../../components/Settings/Events';
 import Reports from '../../components/Reports/Reports';
 import usePermissions from '../../components/Core/usePermissions';
+import pusher from '../../pusher';
+import getToken from '../../store/getToken';
 
 import styles from './Company.module.scss';
 
@@ -175,6 +177,12 @@ export default () => {
       dispatch(getCompanyInfo(companyId, true));
       dispatch(getOrganisationModules(companyId));
       dispatch(loadLogbookAdditionalRates(companyId));
+      pusher.init(getToken(), (status) => {});
+      pusher.openUserChannel(user?.user?.id);
+      pusher.listenUserNotify((data) => {
+        console.log('user notify', data);
+      });
+
     }
     // eslint-disable-next-line
   }, [companyId]);
