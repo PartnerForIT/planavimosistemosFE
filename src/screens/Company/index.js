@@ -45,6 +45,7 @@ import AutoDelete from '../../components/Settings/Delete/AutoDelete';
 import SettingEvents from '../../components/Settings/Events';
 import Reports from '../../components/Reports/Reports';
 import usePermissions from '../../components/Core/usePermissions';
+import { NotificationContainer, addNotification } from "../../components/Core/NotificationContainer/NotificationContainer";
 import pusher from '../../pusher';
 import getToken from '../../store/getToken';
 
@@ -180,9 +181,7 @@ export default () => {
       dispatch(loadLogbookAdditionalRates(companyId));
       pusher.init(getToken(), (status) => {});
       pusher.openUserChannel(user?.user?.id);
-      pusher.listenUserNotify((data) => {
-        console.log('user notify', data);
-      });
+      pusher.listenUserNotify(addNotification);
 
     }
     // eslint-disable-next-line
@@ -226,159 +225,162 @@ export default () => {
   }
 
   return (
-    <Switch>
-      {
-        permissions.logbook && (
-          <Route exact path='/:id/logbook' component={Logbook} />
-        )
-      }
-      {
-        permissions.events && (
-          <Route exact path='/:id/events' component={Events} />
-        )
-      }
-      {
-        (permissions.time_sheet_module) && (
-          <Route exact path='/:id/time-sheet' component={TimeSheet} />
-        )
-      }
-      {/* {
-        (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : Schedule} />
-        )
-      } */}
-      {
-        (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : ScheduleV2} />
-        )
-      }
-      {
-        (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule/shift/:shiftId' component={CreateShift} />
-        )
-      }
-      {
-        (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
-          <Route exact path='/:id/schedule/shift/create' component={CreateShift} />
-        )
-      }
-      {
-        permissions.reports && (
-          <Route exact path='/:id/reports' component={Reports} />
-        )
-      }
-      <Route exact path='/:id/settings' component={Settings} />
-      {
-        permissions.company_edit_settings && (
-          <Route exact path='/:id/settings/general/company' component={SettingCompany} />
-        )
-      }
-      {
-        permissions.company_edit_settings && (
-          <Route exact path='/:id/settings/general/work-time' component={SettingWorkTime} />
-        )
-      }
-      {
-        permissions.company_edit_settings && (
-          <Route exact path='/:id/settings/general/security' component={SettingSecurity} />
-        )
-      }
-      {
-        permissions.accounts_see_and_edit && (
-          <Route exact path='/:id/settings/accounts/accounts-list' component={Accounts} />
-        )
-      }
-      {
-        permissions.groups && (
-          <Route exact path='/:id/settings/accounts/grouping' component={Grouping} />
-        )
-      }
-      {
-        permissions.roles_create && (
-          <Route exact path='/:id/settings/accounts/roles' component={Roles} />
-        )
-      }
-      {
-        (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) && (
-          <Route exact path='/:id/settings/schedule' component={permissions.schedule_simple_access ? SimpleScheduleSettings : ScheduleSettings} />
-        )
-      }
-      {
-        permissions.kiosk && (
-          <Route exact path='/:id/settings/kiosk/kiosk-list' component={KioskList} />
-        )
-      }
-      {
-        permissions.kiosk && (
-          <Route exact path='/:id/settings/kiosk/users' component={KioskUsers} />
-        )
-      }
-      {
-        permissions.categories_create && (
-          <Route exact path='/:id/settings/categories' component={SettingCategories} />
-        )
-      }
-      {
-        (permissions.logbook && permissions.logbook_edit_settings) && (
-          <Route exact path='/:id/settings/logbook/journal' component={SettingJournal} />
-        )
-      }
-      {
-        (permissions.logbook && permissions.logbook_edit_settings) && (
-          <Route exact path='/:id/settings/logbook/overtime' component={Overtime} />
-        )
-      }
-      {
-        (permissions.logbook && permissions.logbook_edit_settings) && (
-          <Route exact path='/:id/settings/logbook/additional-rates' component={AdditionalRates} />
-        )
-      }
-      {
-        (permissions.logbook && permissions.logbook_edit_settings) && (
-          <Route exact path='/:id/settings/logbook/clock' component={Clock} />
-        )
-      }
-      {
-        permissions.activity_log && (
-          <Route exact path='/:id/settings/activity-log' component={ActivityLog} />
-        )
-      }
-      {
-        permissions.time_off && (
-          <Route exact path='/:id/settings/time-off' component={TimeOff} />
-        )
-      }
-      {
-        permissions.time_off && (
-          <Route exact path='/:id/time-off' component={TimeOffScreen} />
-        )
-      }
-      {
-        permissions.time_sheet_edit_settings && (
-          <Route exact path='/:id/settings/time_sheet' component={TimeSheetSettings} />
-        )
-      }
-      {
-        permissions.integrations_edit_settings && (
-          <Route exact path='/:id/settings/integrations' component={IntegrationsSettings} />
-        )
-      }
-      {
-        permissions.data_delete && (
-          <Route exact path='/:id/settings/delete/data-delete' component={SettingDelete} />
-        )
-      }
-      {
-        permissions.data_delete && (
-          <Route exact path='/:id/settings/delete/auto-delete' component={AutoDelete} />
-        )
-      }
-      {
-        (permissions.events && permissions.events_create) && (
-          <Route exact path='/:id/settings/events' component={SettingEvents} />
-        )
-      }
-      <Redirect from='*' to='/404' />
-    </Switch>
+    <>
+      <NotificationContainer />
+      <Switch>
+        {
+          permissions.logbook && (
+            <Route exact path='/:id/logbook' component={Logbook} />
+          )
+        }
+        {
+          permissions.events && (
+            <Route exact path='/:id/events' component={Events} />
+          )
+        }
+        {
+          (permissions.time_sheet_module) && (
+            <Route exact path='/:id/time-sheet' component={TimeSheet} />
+          )
+        }
+        {/* {
+          (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
+            <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : Schedule} />
+          )
+        } */}
+        {
+          (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
+            <Route exact path='/:id/schedule' component={permissions.schedule_simple_access ? SimpleSchedule : ScheduleV2} />
+          )
+        }
+        {
+          (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
+            <Route exact path='/:id/schedule/shift/:shiftId' component={CreateShift} />
+          )
+        }
+        {
+          (permissions.schedule_shift_access || permissions.schedule_simple_access) && (
+            <Route exact path='/:id/schedule/shift/create' component={CreateShift} />
+          )
+        }
+        {
+          permissions.reports && (
+            <Route exact path='/:id/reports' component={Reports} />
+          )
+        }
+        <Route exact path='/:id/settings' component={Settings} />
+        {
+          permissions.company_edit_settings && (
+            <Route exact path='/:id/settings/general/company' component={SettingCompany} />
+          )
+        }
+        {
+          permissions.company_edit_settings && (
+            <Route exact path='/:id/settings/general/work-time' component={SettingWorkTime} />
+          )
+        }
+        {
+          permissions.company_edit_settings && (
+            <Route exact path='/:id/settings/general/security' component={SettingSecurity} />
+          )
+        }
+        {
+          permissions.accounts_see_and_edit && (
+            <Route exact path='/:id/settings/accounts/accounts-list' component={Accounts} />
+          )
+        }
+        {
+          permissions.groups && (
+            <Route exact path='/:id/settings/accounts/grouping' component={Grouping} />
+          )
+        }
+        {
+          permissions.roles_create && (
+            <Route exact path='/:id/settings/accounts/roles' component={Roles} />
+          )
+        }
+        {
+          (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) && (
+            <Route exact path='/:id/settings/schedule' component={permissions.schedule_simple_access ? SimpleScheduleSettings : ScheduleSettings} />
+          )
+        }
+        {
+          permissions.kiosk && (
+            <Route exact path='/:id/settings/kiosk/kiosk-list' component={KioskList} />
+          )
+        }
+        {
+          permissions.kiosk && (
+            <Route exact path='/:id/settings/kiosk/users' component={KioskUsers} />
+          )
+        }
+        {
+          permissions.categories_create && (
+            <Route exact path='/:id/settings/categories' component={SettingCategories} />
+          )
+        }
+        {
+          (permissions.logbook && permissions.logbook_edit_settings) && (
+            <Route exact path='/:id/settings/logbook/journal' component={SettingJournal} />
+          )
+        }
+        {
+          (permissions.logbook && permissions.logbook_edit_settings) && (
+            <Route exact path='/:id/settings/logbook/overtime' component={Overtime} />
+          )
+        }
+        {
+          (permissions.logbook && permissions.logbook_edit_settings) && (
+            <Route exact path='/:id/settings/logbook/additional-rates' component={AdditionalRates} />
+          )
+        }
+        {
+          (permissions.logbook && permissions.logbook_edit_settings) && (
+            <Route exact path='/:id/settings/logbook/clock' component={Clock} />
+          )
+        }
+        {
+          permissions.activity_log && (
+            <Route exact path='/:id/settings/activity-log' component={ActivityLog} />
+          )
+        }
+        {
+          permissions.time_off && (
+            <Route exact path='/:id/settings/time-off' component={TimeOff} />
+          )
+        }
+        {
+          permissions.time_off && (
+            <Route exact path='/:id/time-off' component={TimeOffScreen} />
+          )
+        }
+        {
+          permissions.time_sheet_edit_settings && (
+            <Route exact path='/:id/settings/time_sheet' component={TimeSheetSettings} />
+          )
+        }
+        {
+          permissions.integrations_edit_settings && (
+            <Route exact path='/:id/settings/integrations' component={IntegrationsSettings} />
+          )
+        }
+        {
+          permissions.data_delete && (
+            <Route exact path='/:id/settings/delete/data-delete' component={SettingDelete} />
+          )
+        }
+        {
+          permissions.data_delete && (
+            <Route exact path='/:id/settings/delete/auto-delete' component={AutoDelete} />
+          )
+        }
+        {
+          (permissions.events && permissions.events_create) && (
+            <Route exact path='/:id/settings/events' component={SettingEvents} />
+          )
+        }
+        <Redirect from='*' to='/404' />
+      </Switch>
+    </>
   );
 };
