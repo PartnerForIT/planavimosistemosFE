@@ -14,8 +14,6 @@ import Progress from '../../components/Core/Progress'
 import config from '../../config'
 import { userSelector } from '../../store/auth/selectors'
 
-
-
 const request = async (url, method, params) => {
   if (method === 'GET' && params) {
     url += '?' + new URLSearchParams(params).toString()
@@ -49,34 +47,16 @@ const updateRequest = async (companyId, timeOffId, policyId, requestId, data) =>
   return res
 }
 
-const changeRequestStatus = async (companyId, timeOffId, policyId, requestId, data) => {
-  const res = await request(`${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestId}/status`, 'POST', data)
-  return res
-}
-
-const unAsssingPolicy = async (companyId, timeOffId, policyId, data) => {
-  const res = await request(`${companyId}/time-off/${timeOffId}/policy/${policyId}/unasign-employees`, 'PATCH', data)
-  return res
-}
-
-const getTimeOffs = async (companyId) => {
-  const res = await request(`${companyId}/time-off`)
-  if (res.success && Array.isArray(res.time_offs)) {
-    return res.time_offs
-  }
-  return []
-}
-
-const getPolicies = async (companyId, timeOffId) => {
-  const res = await request(`${companyId}/time-off/${timeOffId}/policy`)
+const getPolicies = async (companyId, employeeId) => {
+  const res = await request(`${companyId}/time-off/all/policy/employee/${employeeId}`)
   if (res.success && Array.isArray(res.policies)) {
     return res.policies
   }
   return []
 }
 
-const getTimeOffRequests = async (companyId, timeOffId, policyId) => {
-  const res = await request(`${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/employee/925`)
+const getTimeOffRequests = async (companyId, employeeId) => {
+  const res = await request(`${companyId}/time-off/all/policy/all/request-behalf/employee/${employeeId}`)
   if (Array.isArray(res.request_behalf)) {
     return res.request_behalf
   }
@@ -115,15 +95,17 @@ const TimeOffScreen = () => {
   }]
 
   useEffect(() => {
-    init()
-  }, [])
+    if (companyId && user.employee.id) {
+      init(companyId, user.employee.id)
+    }
+    
+  }, [user.employee.id, companyId])
 
-  const init = async () => {
+  const init = async (companyId, employeeId) => {
     setLoading(true)
-    const timeOffs = await getTimeOffs(companyId)
-    const policies = (await Promise.all(timeOffs.map(t => getPolicies(companyId, t.id)))).flat().filter(p => p.employees.find(e => e.employee_id === 925)) // employee.id
+    const policies = await getPolicies(companyId, employeeId)
     setPolicies(policies)
-    const timeOffRequests = (await Promise.all(policies.map(p => getTimeOffRequests(companyId, p.time_off_id, p.id)))).flat()
+    const timeOffRequests = await getTimeOffRequests(companyId, user.employee.id)
     setRequests(timeOffRequests)
     setLoading(false)
   }
@@ -145,18 +127,8 @@ const TimeOffScreen = () => {
       } else {
         await createRequest(companyId, selectedPolicy.time_off_id, data.policy_id, data)
       }
-      init()
+      init(companyId, user.employee.id)
     }
-  }
-
-  const handleChangeRequestStatus = async (request, status) => {
-    await changeRequestStatus(companyId, request.time_off_id, request.policy_id, request.id, {status: status, employees: [request.employee_id]})
-    init()
-  }
-
-  const handleUnAssign = async (policy) => {
-    await unAsssingPolicy(companyId, policy.time_off_id, policy.id, {employees: [925]}) // user.employee
-    init()
   }
 
   return (
@@ -177,9 +149,7 @@ const TimeOffScreen = () => {
                     requests={requests}
                     policies={policies}
                     employee={user.employee}
-                    onRequest={handleRequest}
-                    onChangeRequestStatus={handleChangeRequestStatus}
-                    onUnassign={handleUnAssign} />
+                    onRequest={handleRequest} />
                 )
               case 'requests':
                 return null
@@ -197,7 +167,7 @@ const TimeOffScreen = () => {
         onSubmit={handleSubmitRequest}
         handleClose={() => {}}
         buttonTitle={t('Submit')}
-        employees={[{id: 925}]} // user.employee
+        employees={[{id: user.employee.id}]}
         policies={policies}
         initialValue={{}}
         activeTimeOff={1}

@@ -7,8 +7,6 @@ import styles from './styles.module.scss'
 
 import Button from '../../Core/Button/Button'
 import EditIconFixedFill from '../../Icons/EditIconFixedFill'
-import CheckIcon from '../../Icons/CheckIcon'
-import RejectIcon from '../../Icons/RejectIcon'
 import TimeOffSymbol1 from '../../Icons/TimeOffSymbol1'
 import TimeOffSymbol2 from '../../Icons/TimeOffSymbol2'
 import TimeOffSymbol3 from '../../Icons/TimeOffSymbol3'
@@ -20,16 +18,14 @@ import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
 import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
 import ArrowRightButton from '../../Icons/ArrowRightButton'
 import AlertCircle from '../../Icons/AlertCircle'
-import UnassignEmployee from '../../Core/Dialog/UnassignEmployee'
 
-const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeRequestStatus, onUnassign }) => {
+const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
   const { t } = useTranslation()
   const history = useHistory()
 
-  const employeeId = 925 // employee.id
+  const employeeId = employee.id
 
   const [expandedPolicyIds, setExpandedPolicyIds] = useState([])
-  const [activePolicy, setActivePolicy] = useState(null)
 
   const expandPolicy = (policyId, expand) => {
     setExpandedPolicyIds((prev) =>
@@ -37,10 +33,6 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeReq
         ? [...prev, policyId]
         : prev.filter((id) => id !== policyId)
     );
-  }
-
-  const handleUnassign = () => {
-    onUnassign(activePolicy)
   }
 
   const goEmployeeActivity = (timeOffId, policyId, employeeId) => {
@@ -114,28 +106,6 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeReq
                             <EditIconFixedFill />
                           </Button>
                         </div>
-                        {request.status !== 'approved' && (
-                          <div data-tooltip-html={t("Approve")} data-tooltip-id="tip_request">
-                            <Button
-                              className={styles.buttonApprove}
-                              size="little"
-                              onClick={() => { onChangeRequestStatus(request, 'approved') }}
-                            >
-                              <CheckIcon />
-                            </Button>
-                          </div>
-                        )}
-                        {request.status !== 'rejected' && (
-                          <div data-tooltip-html={t("Reject")} data-tooltip-id="tip_request">
-                            <Button
-                              className={styles.buttonReject}
-                              size="little"
-                              onClick={() => { onChangeRequestStatus(request, 'rejected') }}
-                            >
-                              <RejectIcon />
-                            </Button>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -209,9 +179,10 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeReq
                           </div>
                         </div>
                         <div className={cn(styles.policiesTableCol, styles.policiesTableColGray, styles.nowrap)}>
-                          {!expandedPolicyIds.length && (
-                            `${policyEmployeeDetails?.current_cycle_start} - ${policyEmployeeDetails?.current_cycle_end}`
-                          )}
+                          {!expandedPolicyIds.length
+                            ? `${policyEmployeeDetails?.current_cycle_start ? policyEmployeeDetails?.current_cycle_start : ''} ${policyEmployeeDetails?.current_cycle_end ? `- ${policyEmployeeDetails?.current_cycle_end}` : ''}`
+                            : null
+                          }
                         </div>
                         <div className={cn(styles.policiesTableCol, styles.policiesTableColGray, styles.right)}>
                           {!expandedPolicyIds.length && (
@@ -286,12 +257,6 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeReq
                                 >
                                   {t('Activity')}
                                 </Button>
-                                <Button
-                                  onClick={() => { setActivePolicy(policy); }}
-                                  black
-                                >
-                                  {t('Unassign')}
-                                </Button>
                               </div>
                             </div>
                           </div>
@@ -304,14 +269,6 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest, onChangeReq
           ) : null
         }
       </div>
-      <UnassignEmployee
-        title={t('Are you sure?')}
-        open={Boolean(activePolicy)}
-        handleClose={() => setActivePolicy(null)}
-        buttonTitle={t('Unassign')}
-        name={employee.name}
-        remove={handleUnassign}
-      />
     </div>
   )
 }
