@@ -14,8 +14,11 @@ const pusher = {
         const port = 6001
         this.echo = new Echo({
           broadcaster: "socket.io",
-          host: `${window.location.hostname}:${port}`,
+          host: `${window.location.hostname}`+ (process.env.MIX_APP_ENV === 'local' ? `:${port}` : ''),
           auth: {
+            params: {
+              token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,
+            },
             headers: {
               Authorization: token.headers.Authorization,
             },
@@ -209,7 +212,7 @@ const pusher = {
 
 
   log(data, title = false) {
-    if (process.env.MIX_APP_ENV == 'local' || process.env.MIX_APP_ENV == 'development') {
+    if (process.env.MIX_APP_ENV === 'local' || process.env.MIX_APP_ENV === 'development') {
       if (title) {
         console.log(title, data)
       } else {
