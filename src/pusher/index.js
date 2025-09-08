@@ -9,6 +9,7 @@ const pusher = {
 
   init(token = null, connectCallback) {
     if (token && token?.headers?.Authorization) {
+      console.log('token', token)
       if ( ! this.echo) {
         const port = 6001
         this.echo = new Echo({
