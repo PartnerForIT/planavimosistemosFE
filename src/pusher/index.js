@@ -15,7 +15,11 @@ const pusher = {
         this.echo = new Echo({
           broadcaster: "socket.io",
           host: `${window.location.hostname}:${port}`,
-          auth: token,
+          auth: {
+            headers: {
+              Authorization: token.headers.Authorization,
+            },
+          }
         })
 
         //this.log(this.echo, 'Echo init')
