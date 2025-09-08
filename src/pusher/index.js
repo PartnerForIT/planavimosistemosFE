@@ -9,13 +9,12 @@ const pusher = {
 
   init(token = null, connectCallback) {
     if (token && token?.headers?.Authorization) {
-      console.log('token', token)
       if ( ! this.echo) {
         const port = 6001
         document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
         this.echo = new Echo({
           broadcaster: "socket.io",
-          host: `${window.location.hostname}`+ (process.env.MIX_APP_ENV === 'local' ? `:${port}` : ''),
+          host: `${window.location.hostname}:6001`+ (process.env.MIX_APP_ENV === 'local' ? `:${port}` : ''),
           auth: {
             params: {
               token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,
