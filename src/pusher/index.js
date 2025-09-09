@@ -161,7 +161,7 @@ const pusher = {
   openUserChannel(userId) {
     this.closeUserChannel()
     if (this.echo) {
-      this.userChannel = this.echo.join(`App.Models.User.${userId}`)
+      this.userChannel = this.echo.private(`App.Models.User.${userId}`)
       //console.log(this.userChannel, 'User Channel was open')
       return this.userChannel
     } else {
