@@ -10,6 +10,7 @@ import AppNavbar from '../../components/Core/AppNavbar'
 import MyTimeOff from '../../components/TimeOff/MytimeOffSection'
 import RequestBehalf from '../../components/Core/Dialog/RequestBehalf'
 import Progress from '../../components/Core/Progress'
+import Calendar from '../../components/TimeOff/Calendar'
 
 import config from '../../config'
 import { userSelector } from '../../store/auth/selectors'
@@ -70,7 +71,7 @@ const TimeOffScreen = () => {
   const user = useSelector(userSelector)
 
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState('time_off')
+  const [activeTab, setActiveTab] = useState('calendar')
   const [requests, setRequests] = useState([])
   const [policies, setPolicies] = useState([])
 
@@ -152,9 +153,13 @@ const TimeOffScreen = () => {
                     onRequest={handleRequest} />
                 )
               case 'requests':
-                return null
+                return (
+                  null
+                )
               case 'calendar':
-                return null
+                return (
+                  <Calendar />
+                )
               case 'employees':
                 return null
             }
