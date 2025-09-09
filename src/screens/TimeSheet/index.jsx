@@ -280,7 +280,8 @@ export default () => {
       applyingFilters.current = true
       setPage(1)
     }
-    loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), tempList.map(e => e.id))
+    //WTF it send request twice!!!
+    //loadSheetByPage(moment(currentDate).format('YYYY-MM-DD'), tempList.map(e => e.id))
   }
 
   const onEmployeesSelectFilter = (emp) => {
