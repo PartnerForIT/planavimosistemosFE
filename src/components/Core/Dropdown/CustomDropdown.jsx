@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-//import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TriangleIcon from '../../Icons/TriangleIcon';
-import classNames from 'classnames';
-import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
-import StyledCheckbox from '../Checkbox/Checkbox';
-import styles from './Dropdown.module.scss';
-import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw';
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import TriangleIcon from '../../Icons/TriangleIcon'
+import classNames from 'classnames'
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core'
+import StyledCheckbox from '../Checkbox/Checkbox'
+import styles from './Dropdown.module.scss'
+import CheckboxGroup from '../CheckboxGroupRaw/CheckboxGroupRaw'
 
 const useStyles = makeStyles({
   root: {
@@ -58,35 +57,22 @@ const useStyles = makeStyles({
       left: 27,
     },
   },
-});
+})
 
 const isChecked = (items) => {
   return items.every(item => {
-    if (Array.isArray(item.items)) {
-      return isChecked(item.items)
+    if (Array.isArray(item.children)) {
+      return isChecked(item.children)
     }
     return Boolean(item.checked)
   })
 }
 
-export default function Dropdown({
-  currentItem, label, items, checked, onChange,
-  choiceOfOnlyOne,
-}) {
+const Dropdown = ({currentItem, label, items, checked, onChange}) => {
   const [expanded, setExpanded] = useState(false);
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const renderCheckboxGroup = (arr) => (
-    <CheckboxGroup
-      className={styles.checkboxGroupItem}
-      items={arr ?? items}
-      onChange={(item, checked) => {
-        onChange(item, !checked)
-      }}
-    />
-  );
-
-  const renderDropdown = () => (
+  return (
     <Accordion
       classes={{
         root: classes.root,
@@ -114,16 +100,12 @@ export default function Dropdown({
       >
         <FormControlLabel
           aria-label='Acknowledge'
-          onClick={(event) => event.stopPropagation()}
-          onFocus={(event) => event.stopPropagation()}
+          // onClick={(event) => event.stopPropagation()}
+          // onFocus={(event) => event.stopPropagation()}
           className={styles.checkboxLabel}
           control={(
             <StyledCheckbox
-              onChange={() => {
-                if (!choiceOfOnlyOne) {
-                  onChange(currentItem, !checked);
-                }
-              }}
+              onChange={() => onChange(currentItem, !checked)}
               checked={checked}
             />
           )}
@@ -133,30 +115,33 @@ export default function Dropdown({
       <AccordionDetails className={classes.details}>
         {
           items.map((item, idx) => (
-            item?.type === 'group' || item.isGroup || item.isSubGroup
+            item.isGroup || item.isSubGroup
               ? (
                 <Dropdown
-                  key={item.label + idx.toString()}
-                  label={item.label}
+                  key={item.title + idx.toString()}
+                  label={item.title}
                   currentItem={item}
-                  checked={isChecked(item.items)}
-                  items={item.items || item.children}
+                  checked={isChecked(item.children)}
+                  items={item.children}
                   onChange={onChange}
-                  choiceOfOnlyOne={choiceOfOnlyOne}
                 />
               )
               : (
-                <React.Fragment key={item.label + idx.toString()}>
-                  {renderCheckboxGroup([item])}
+                <React.Fragment key={item.title + idx.toString()}>
+                  <CheckboxGroup
+                    className={styles.checkboxGroupItem}
+                    items={[item]}
+                    onChange={(item, checked) => {
+                      onChange(item, !checked)
+                    }}
+                  />
                 </React.Fragment>
               )
           ))
         }
       </AccordionDetails>
     </Accordion>
-  );
-
-  return (
-    renderDropdown()
-  );
+  )
 }
+
+export default Dropdown

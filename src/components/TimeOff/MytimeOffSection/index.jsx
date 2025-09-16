@@ -150,6 +150,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
               </div>
               {
                 policies.map((policy) => {
+                  console.log(policy)
                   const policyEmployeeDetails = policy.employees.find((emp) => emp.id === employeeId)
                   const isExpanded = expandedPolicyIds.includes(policy.id)
                   return (

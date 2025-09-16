@@ -1,0 +1,51 @@
+.container {
+  width: 28px;
+  height: 32px;
+  border: 1px solid #D0D6DB;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 2px;
+
+  &.active {
+    border-color: #1685FC;
+    background-color: #1685FC;
+
+    .employeesCount {
+      color: #fff;
+    }
+
+    .progressBar {
+      background-color: #fff;
+
+      .progress {
+        background-color: #B4DFFF;
+      }
+    }
+  }
+
+  .employeesCount {
+    color: #333945;
+    font-size: 12px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-weight: 500;
+  }
+
+  .progressBar {
+    background-color: #EBF3F9;
+    border-radius: 4px;
+    width: 100%;
+    height: 6px;
+    position: relative;
+    margin-top: auto;
+    overflow: hidden;
+
+    .progress {
+      background-color: #1685FC;
+      height: 100%;
+    }
+  }
+}

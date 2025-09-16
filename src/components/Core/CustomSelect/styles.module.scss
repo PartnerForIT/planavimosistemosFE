@@ -1,0 +1,108 @@
+.container {
+
+  .buttonWrapper {
+    position: relative;
+    height: 36px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 12.077px;
+      height: 7.039px;
+      top: 15px;
+      right: 10px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12.077' height='7.039' viewBox='0 0 12.077 7.039'%3E%3Cpath id='Path_1161' data-name='Path 1161' d='M2360.908,1120.023l4.625,4.624,4.624-4.624' transform='translate(-2359.494 -1118.609)' fill='none' stroke='%230085ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/svg%3E%0A") right center no-repeat;
+      transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      transform: rotate(-90deg);
+    }
+
+    &.active::before {
+      transform: rotate(0deg);
+    }
+
+    &.active {
+      .buttonInput {
+        border: 1px solid #0085ff;
+      }
+    }
+
+    .buttonInput {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      border: 1px solid #d0dfef;
+      border-radius: 4px;
+      outline: none;
+      padding: 5px 20px 5px 10px;
+      font-family: Helvetica Neue, sans-serif;
+      font-size: 15px;
+      color: #333945;
+      box-sizing: border-box;
+      cursor: pointer;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  
+}
+
+.contentBox {
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #0085ff;
+  border-radius: 4px;
+  padding: 10px;
+  position: absolute;
+  margin-top: 10px;
+  z-index: 3;
+  min-height: 100px;
+
+  .checkboxGroup {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d0dfef;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    max-height: 100%;
+    margin-top: 10px;
+
+    .headerRow {
+      border-bottom: 1px solid #d0dfef;
+      display: flex;
+      height: 30px;
+
+      .button {
+        flex: 1;
+        font-family: 'Helvetica Neue Medium', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #0087ff;
+        letter-spacing: -0.17px;
+        background: #fff;
+        cursor: pointer;
+        outline: transparent;
+        border: none;
+        border-radius: 4px 4px 0 0;
+        
+        &:first-child {
+          border-right: 1px solid #d0dfef;
+          border-radius: 4px 0 0 0;
+        }
+
+        &:disabled {
+          color: #c3d3e3;
+          pointer-events: none;
+        }
+      }
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      max-height: 315px;
+      height: 230px;
+    }
+  }
+}

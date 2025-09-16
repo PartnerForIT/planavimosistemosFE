@@ -1,0 +1,42 @@
+.container {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  background-color: #EBF3FA;
+  border-radius: 5px;
+  position: relative;
+
+  .option {
+    position: relative;
+    color: #000;
+    font-size: 14px;
+    font-family: "Helvetica Neue", sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 98px;
+
+    &.active {
+      color: #fff;
+    }
+  }
+
+  .badge {
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    width: 98px;
+    padding: 2px;
+    transition: transform 0.2s ease;
+
+    .inner {
+      background-color: #1685FC;
+      border-radius: 5px;
+      height: 100%;
+      width: 100%;
+    }
+  }
+}

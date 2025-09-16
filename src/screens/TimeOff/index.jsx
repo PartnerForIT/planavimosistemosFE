@@ -58,7 +58,7 @@ const getPolicies = async (companyId, employeeId) => {
 
 const getTimeOffRequests = async (companyId, employeeId) => {
   const res = await request(`${companyId}/time-off/all/policy/all/request-behalf/employee/${employeeId}`)
-  if (Array.isArray(res.request_behalf)) {
+  if (Array.isArray(res?.request_behalf)) {
     return res.request_behalf
   }
   return []
