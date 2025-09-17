@@ -9,51 +9,54 @@ const pusher = {
 
   init(token = null, connectCallback) {
     if (token && token?.headers?.Authorization) {
-      if ( ! this.echo) {
-        const port = 6001
-        document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
-
-        this.echo = new Echo({
-          broadcaster: "socket.io",
-          host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
-          auth: {
-            params: {
-              token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,
-            },
-            headers: {
-              Authorization: token.headers.Authorization,
-            },
-          }
-        })
-
-        //this.log(this.echo, 'Echo init')
-
-        this.echo.connector.socket.on('connect', () => {
-          //this.log(this.echo.socketId(), 'Connected Event')
-          connectCallback({
-            type: 'connected',
-          })
-        })
-
-        this.echo.connector.socket.on('disconnect', () => {
-          //this.log('Disconnected Event')
-          connectCallback({
-            type: 'disconnected',
-          })
-        })
-
-        this.echo.connector.socket.on('reconnecting', (attempts) => {
-          //this.log(attempts, 'Reconnecting Event')
-          connectCallback({
-            type: 'reconnected',
-            attempts,
-          })
-        })
-
-        return this.echo
-      } else {
-        //this.log('Echo already inited')
+      if (this.echo) {
+        this.echo.disconnect();
+        this.echo = null;
+        this.companyChannel = null;
+        this.userChannel = null;
       }
+    
+      const port = 6001
+      document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
+
+      this.echo = new Echo({
+        broadcaster: "socket.io",
+        host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
+        auth: {
+          params: {
+            token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,
+          },
+          headers: {
+            Authorization: token.headers.Authorization,
+          },
+        }
+      })
+
+      //this.log(this.echo, 'Echo init')
+
+      this.echo.connector.socket.on('connect', () => {
+        //this.log(this.echo.socketId(), 'Connected Event')
+        connectCallback({
+          type: 'connected',
+        })
+      })
+
+      this.echo.connector.socket.on('disconnect', () => {
+        //this.log('Disconnected Event')
+        connectCallback({
+          type: 'disconnected',
+        })
+      })
+
+      this.echo.connector.socket.on('reconnecting', (attempts) => {
+        //this.log(attempts, 'Reconnecting Event')
+        connectCallback({
+          type: 'reconnected',
+          attempts,
+        })
+      })
+
+      return this.echo
     } else {
       //this.log('Token in null during Echo init')
     }
