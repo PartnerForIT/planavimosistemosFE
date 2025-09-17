@@ -32,6 +32,7 @@ const MonthView = ({
   sheet,
   fields,
   holidays,
+  requestBehalves,
   onChangeMonth,
   withCost,
   withAccumulated,
@@ -214,6 +215,7 @@ const MonthView = ({
                                 resource={resource}
                                 sheet={sheet}
                                 daysOfMonth={daysOfMonth}
+                                requestBehalves={requestBehalves}
                               />
                             )
                           }) : null

@@ -372,6 +372,7 @@ export default () => {
               holidays={sheet?.holidays}
               sheet={sheet?.sheet}
               fields={sheet?.fields}
+              requestBehalves={sheet?.request_behalves || []}
               onChangeMonth={handleGetSheet}
               withCost={permissions.cost && permissions.time_sheet_costs}
               withAccumulated={timesheet.use_accumulated}
