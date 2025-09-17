@@ -180,10 +180,13 @@ export default () => {
       dispatch(getOrganisationModules(companyId));
       dispatch(loadLogbookAdditionalRates(companyId));
       pusher.init(getToken(), (status) => {});
-      pusher.openUserChannel(user?.user?.id)
-      setTimeout(() => {
-        pusher.listenUserNotify(addNotification);
-      }, 1000);
+      if (user?.user?.id) {
+        pusher.openUserChannel(user?.user?.id)
+        setTimeout(() => {
+          console.log('listenUserNotify');
+          pusher.listenUserNotify(addNotification);
+        }, 1000);
+      }
     }
     // eslint-disable-next-line
   }, [companyId]);

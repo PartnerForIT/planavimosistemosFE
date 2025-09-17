@@ -12,9 +12,10 @@ const pusher = {
       if ( ! this.echo) {
         const port = 6001
         document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
+
         this.echo = new Echo({
           broadcaster: "socket.io",
-          host: `${window.location.hostname}`+ (process.env.MIX_APP_ENV === 'local' ? `:${port}` : ''),
+          host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
           auth: {
             params: {
               token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,
