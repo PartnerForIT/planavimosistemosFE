@@ -3,6 +3,7 @@ import cn from 'classnames'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from 'recharts'
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import { useTranslation } from 'react-i18next'
+import moment from 'moment'
 
 import styles from './styles.module.scss'
 
@@ -28,7 +29,44 @@ const ActiveSector = (props) => {
   )
 }
 
-export const ProfileIcon = ({color = '#292D32', ...props}) => {
+const ChevronIcon = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={12}
+      height={20}
+      viewBox="0 0 12 20"
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke="#1685FC"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={3}
+        d="m2 2 8 8-8 8" />
+    </svg>
+  )
+}
+
+const ArrowIcon = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={9}
+      height={8}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill="#999DA8"
+        d="M.63 4.667H6.85L4.78 6.862a.695.695 0 0 0 0 .943.61.61 0 0 0 .445.195.61.61 0 0 0 .445-.195L8.816 4.47a.695.695 0 0 0 0-.942L5.669.195a.605.605 0 0 0-.89 0 .695.695 0 0 0 0 .943L6.85 3.333H.63C.282 3.333 0 3.632 0 4c0 .368.282.667.63.667Z"
+      />
+    </svg>
+  )
+}
+
+const ProfileIcon = ({color = '#292D32', ...props}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -51,6 +89,17 @@ export const ProfileIcon = ({color = '#292D32', ...props}) => {
   )
 }
 
+const PieTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  const seg = p.payload.seg;
+  return (
+    <div className={styles.pieTooltip}>
+      {seg.type} — {seg.count}
+    </div>
+  );
+}
+
 const PolicySideBar = forwardRef(({onClose}, ref) => {
   const { t } = useTranslation()
 
@@ -62,6 +111,8 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
     activeIndex: -1,
   })
 
+  const [expandedPolicies, setExpandedPolicies] = useState([])
+
   useImperativeHandle(ref, () => ({
     open: (data) => {
       setState({isOpen: true, data: data, activeIndex: -1})
@@ -71,117 +122,138 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
 
   const close = () => {
     setState({isOpen: false, data: {segments: []}, activeIndex: -1})
+    setExpandedPolicies([])
     if (onClose) {
       onClose()
     }
   }
 
-  
-
   return (
     <div className={cn(styles.container, {[styles.active]: isOpen})}>
-      <div>
-        <div className={styles.title}>{data.date}</div>
-      </div>
-      <div style={{height: 300, position: 'relative', width: '100%'}}>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data.segments}
-              dataKey="value"
-              nameKey="name"
-              innerRadius={70}
-              outerRadius={110}
-              paddingAngle={0}
-              stroke="#fff"
-              strokeWidth={0}
-              isAnimationActive
-              animationBegin={0}
-              animationDuration={800}
-              animationEasing="ease-out"
-              activeIndex={activeIndex}
-              activeShape={(p) => <ActiveSector {...p} />}
-              onMouseEnter={(_, idx) => setState(prev => ({...prev, activeIndex: idx}))}
-              onMouseLeave={() => setState(prev => ({...prev, activeIndex: -1}))}
-            >
-              {data.segments.map((entry, index) => (
-                <Cell key={`c-${index}`} fill={activeIndex === index ? fade(entry.fill, 0.8) : entry.fill} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className={styles.onLeaveContainer}>
-          <div className={styles.onLeave}>{ data.onLeave }</div>
-          <div className={styles.description}>{ t('on leave') }</div>
+      <div className={styles.scrollable}>
+        <div>
+          <div className={styles.title}>{data.date}</div>
         </div>
-      </div>
-      <div className={styles.policiesContainer}>
-        {
-          data.segments.map((entry, index) => {
-            const avatarsToRender = entry.seg.employees.slice(0, AVATARS_COUNT)
-            return (
-              <div key={index} className={styles.card} style={{backgroundColor: fade(entry.fill, 0.1)}}>
-                <div className={styles.cardHeader}>
-                  {
-                    (symbol => {
-                      switch(symbol) {
-                        case '1': return <TimeOffSymbol1 fill={entry.fill} className={styles.policyIcon} />
-                        case '2': return <TimeOffSymbol2 fill={entry.fill} className={styles.policyIcon} />
-                        case '3': return <TimeOffSymbol3 fill={entry.fill} className={styles.policyIcon} />
-                        case '4': return <TimeOffSymbol4 fill={entry.fill} className={styles.policyIcon} />
-                        case '5': return <TimeOffSymbol5 fill={entry.fill} className={styles.policyIcon} />
-                        case '6': return <TimeOffSymbol6 fill={entry.fill} className={styles.policyIcon} />
-                        case '7': return <TimeOffSymbol7 fill={entry.fill} className={styles.policyIcon} />
-                        case '8': return <TimeOffSymbol8 fill={entry.fill} className={styles.policyIcon} />
-                        case '9': return <TimeOffSymbol9 fill={entry.fill} className={styles.policyIcon} />
-                        default: return <TimeOffSymbol1 fill={entry.fill} className={styles.policyIcon} />
-                      }
-                    })(entry.symbol)
-                  }
-                  <div className={styles.title} style={{color: entry.fill}}>{entry.name}</div>
-                </div>
-                <div className={styles.avatarContainer}>
-                  {
-                    avatarsToRender.map((emp, i) => {
-                      return (
-                        <div key={i} className={styles.avatar}>
-                          {
-                            emp.photo
-                              ? <img src={emp.photo} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-                              : <ProfileIcon width={52} height={52} color={emp.color} style={{position: 'absolute'}} />
-                          }
-                          
+        <div style={{height: 300, position: 'relative', width: '100%'}}>
+          <div className={styles.onLeaveContainer}>
+            <div className={styles.onLeave}>{ data.onLeave }</div>
+            <div className={styles.description}>{ t('on leave') }</div>
+          </div>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data.segments}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={70}
+                outerRadius={110}
+                paddingAngle={0}
+                strokeWidth={0}
+                isAnimationActive
+                animationBegin={0}
+                animationDuration={800}
+                animationEasing="ease-out"
+                activeIndex={activeIndex}
+                activeShape={(p) => <ActiveSector {...p} />}
+                onMouseEnter={(_, idx) => setState(prev => ({...prev, activeIndex: idx}))}
+                onMouseLeave={() => setState(prev => ({...prev, activeIndex: -1}))}
+              >
+                {data.segments.map((entry, index) => (
+                  <Cell key={`c-${index}`} fill={activeIndex === index ? entry.fill : fade(entry.fill, 0.4)} />
+                ))}
+              </Pie>
+              <Tooltip content={<PieTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div className={styles.policiesContainer}>
+          {
+            data.segments.map((entry, index) => {
+              console.log(entry)
+              const avatarsToRender = entry.seg.employees.slice(0, AVATARS_COUNT)
+              const isExpanded = expandedPolicies.includes(entry.id)
+              return (
+                <div key={index} className={styles.card} style={{backgroundColor: fade(entry.fill, 0.1)}}>
+                  <div className={styles.cardHeader} onClick={() => setExpandedPolicies(prev => isExpanded ? prev.filter(e => e !== entry.id) : [...prev, entry.id])}>
+                    {
+                      (symbol => {
+                        switch(symbol) {
+                          case '1': return <TimeOffSymbol1 fill={entry.fill} className={styles.policyIcon} />
+                          case '2': return <TimeOffSymbol2 fill={entry.fill} className={styles.policyIcon} />
+                          case '3': return <TimeOffSymbol3 fill={entry.fill} className={styles.policyIcon} />
+                          case '4': return <TimeOffSymbol4 fill={entry.fill} className={styles.policyIcon} />
+                          case '5': return <TimeOffSymbol5 fill={entry.fill} className={styles.policyIcon} />
+                          case '6': return <TimeOffSymbol6 fill={entry.fill} className={styles.policyIcon} />
+                          case '7': return <TimeOffSymbol7 fill={entry.fill} className={styles.policyIcon} />
+                          case '8': return <TimeOffSymbol8 fill={entry.fill} className={styles.policyIcon} />
+                          case '9': return <TimeOffSymbol9 fill={entry.fill} className={styles.policyIcon} />
+                          default: return <TimeOffSymbol1 fill={entry.fill} className={styles.policyIcon} />
+                        }
+                      })(entry.symbol)
+                    }
+                    <div className={styles.title} style={{color: entry.fill}}>{entry.name}</div>
+                    <div className={styles.expandButton}>
+                      <ChevronIcon width={9} height={16} style={{transform: `rotate(${isExpanded ? 270 : 90}deg)`}} />
+                    </div>
+                  </div>
+                  <div className={styles.avatarContainer}>
+                    {
+                      avatarsToRender.map((emp, i) => {
+                        return (
+                          <div key={i} className={styles.avatar}>
+                            {
+                              emp.photo
+                                ? <img src={emp.photo} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                                : <ProfileIcon width={52} height={52} color={emp.color} style={{position: 'absolute'}} />
+                            }
+                          </div>
+                        )
+                      })
+                    }
+                    {
+                      entry.seg.employees.length > AVATARS_COUNT
+                      ? <div className={styles.blur}>
+                          {entry.seg.employees.length - AVATARS_COUNT}
                         </div>
-                      )
-                    })
-                  }
-                  {
-                    entry.seg.employees.length > AVATARS_COUNT
-                    ? <div className={styles.blur}>
-                        {entry.seg.employees.length - AVATARS_COUNT}
-                      </div>
-                    : null
-                  }
+                      : null
+                    }
+                  </div>
+                  <div className={cn(styles.cardContent, {[styles.expanded]: isExpanded})}>
+                    {
+                      entry.seg.employees.map((emp, i) => {
+                        return (
+                          <div key={i} className={styles.employeeRow}>
+                            <div className={styles.employeeRowHeader}>
+                              <div className={styles.avatar}>
+                                {
+                                  emp.photo
+                                    ? <img src={emp.photo} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                                    : <ProfileIcon width={52} height={52} color={emp.color} />
+                                }
+                              </div>
+                              <div>
+                                <div className={styles.employeeName}>{emp.name} {emp.surname}</div>
+                                <div className={styles.employeeRole}>{emp.role}</div>
+                              </div>
+                            </div>
+                            <div className={styles.employeesDatesContainer}>
+                              <div className={styles.employeeDate}>{moment(emp.event.start).format('ddd, MMM DD')}</div>
+                              <ArrowIcon />
+                              <div className={styles.employeeDate}>{moment(emp.event.end).format('ddd, MMM DD')}</div>
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
                 </div>
-              </div>
-            )
-          })
-        }
-      </div>
-      <div className={styles.closeButton} onClick={close}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width={12}
-          height={20}
-          fill="none"
-        >
-          <path
-            stroke="#1685FC"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={3}
-            d="m2 2 8 8-8 8" />
-        </svg>
+              )
+            })
+          }
+        </div>
+        <div className={styles.closeButton} onClick={close}>
+          <ChevronIcon />
+        </div>
       </div>
     </div>
   )

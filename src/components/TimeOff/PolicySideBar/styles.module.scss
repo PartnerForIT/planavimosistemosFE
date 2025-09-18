@@ -2,16 +2,26 @@
   position: fixed;
   right: 0;
   top: 71px;
+  bottom: 0;
   background-color: #fff;
   width: 330px;
   border-width: 1px 0px 0px 1px;
   border-style: solid;
   border-color: #D0DFEF;
-  height: 100%;
   z-index: 1;
   transform: translateX(100%);
   transition: transform 0.15s ease-in-out;
   padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+
+  .scrollable {
+    flex: 1;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
   &.active {
     transform: translateX(0%);
@@ -57,7 +67,7 @@
     gap: 5px;
 
     .card {
-      height: 86px;
+      gap: 8px;
       border-radius: 12px;
       padding: 10px;
       display: flex;
@@ -67,6 +77,16 @@
         display: flex;
         gap: 4px;
         align-items: center;
+        cursor: pointer;
+
+        .expandButton {
+          margin-left: auto;
+          padding-right: 6px;
+
+          svg {
+            transition: transform 0.15s ease-in-out;
+          }
+        }
 
         .policyIcon {
           fill: none !important;
@@ -112,6 +132,72 @@
         }
       }
 
+      .cardContent {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.15s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .employeeRow {
+          height: 81px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .employeeRowHeader {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .employeeName {
+              font-family: SF Pro Text;
+              font-weight: 500;
+              font-style: Medium;
+              font-size: 14px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              color: #333945;
+              margin-bottom: 4px;
+            }
+
+            .employeeRole {
+              font-family: SF Pro Text;
+              font-weight: 400;
+              font-style: Regular;
+              font-size: 12px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              color: #A5A8B1;
+            }
+          }
+
+          .employeesDatesContainer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .employeeDate {
+              font-family: SF Pro Text;
+              font-weight: 500;
+              font-style: Medium;
+              line-height: 100%;
+              letter-spacing: 0%;
+              color: #333945;
+              background-color: #fff;
+              border-radius: 4px;
+              padding: 6px 8px;
+              font-size: 10px;
+            }
+          }
+        }
+
+        &.expanded {
+          max-height: 500px; /* Arbitrary large value to allow expansion */
+        }
+      }
+
       .title {
         font-family: "Helvetica Neue Medium", sans-serif;
         font-size: 14px;
@@ -119,4 +205,15 @@
       }
     }
   }
+}
+
+.pieTooltip {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  // font-family: "Helvetica Neue Medium", sans-serif;
+  // font-size: 14px;
+  position: relative;
+  z-index: 10;
 }

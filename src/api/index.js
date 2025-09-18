@@ -48,3 +48,29 @@ export const getCompanyTimeOffPolicies = async (companyId) => {
   const res = await request(`company/${companyId}/time-off/all/policy`, 'GET')
   return res
 }
+
+export const createRequest = async (companyId, timeOffId, policyId, data) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/store`, 'POST', data)
+  return res
+}
+
+export const updateRequest = async (companyId, timeOffId, policyId, requestId, data) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestId}`, 'POST', data)
+  return res
+}
+
+export const getEmployeePolicies = async (companyId, employeeId) => {
+  const res = await request(`company/${companyId}/time-off/all/policy/employee/${employeeId}`)
+  if (Array.isArray(res?.policies)) {
+    return res.policies
+  }
+  return []
+}
+
+export const getTimeOffEmployeeRequests = async (companyId, employeeId) => {
+  const res = await request(`company/${companyId}/time-off/all/policy/all/request-behalf/employee/${employeeId}`)
+  if (Array.isArray(res?.request_behalf)) {
+    return res.request_behalf
+  }
+  return []
+}

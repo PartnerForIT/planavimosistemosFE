@@ -13,7 +13,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator'
 import './styles.scss'
 import styles from './styles.module.scss'
 
-import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getPlaces } from '../../../api'
+import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../../api'
 import { TIMELINE, COLORS_JOB_TYPE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
@@ -21,6 +21,16 @@ import AvailabilityCard from '../AvailabilityCard'
 import Tabs from '../Tabs'
 import PolicySideBar from '../PolicySideBar'
 import CustomSelect from '../../Core/CustomSelect'
+import Progress from '../../Core/Progress'
+import TimeOffSymbol1 from '../../Icons/TimeOffSymbol1'
+import TimeOffSymbol2 from '../../Icons/TimeOffSymbol2'
+import TimeOffSymbol3 from '../../Icons/TimeOffSymbol3'
+import TimeOffSymbol4 from '../../Icons/TimeOffSymbol4'
+import TimeOffSymbol5 from '../../Icons/TimeOffSymbol5'
+import TimeOffSymbol6 from '../../Icons/TimeOffSymbol6'
+import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7'
+import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
+import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
 
 const AVAILABILITY_RESOURCE = { id: 'availability', title: 'Availability', isGroup: false, isSubGroup: false, isEmployee: false, order: 0, level: 0, className: 'sticky-resource' }
 const CALENDAR_VIEWS_CONFIG = {
@@ -169,21 +179,49 @@ function groupEmployees(employees) {
   return [ ...groupedArray, ...topLevel];
 }
 
+const rangesOverlap = (start1, end1, start2, end2) => {
+  if (end1.isBefore(start1)) [start1, end1] = [end1, start1]
+  if (end2.isBefore(start2)) [start2, end2] = [end2, start2]
+  return start1.isBefore(end2) && start2.isBefore(end1)
+}
+
 const generateAvailabilityEvents = (currentDate, employees, events) => {
   const currentMonth = moment(currentDate).startOf('month')
   
   const employeesMap = employees.reduce((acc, emp) => {
     return {...acc, [emp.id]: emp}
   }, {})
+
+  let maxEmployeesOnLeave = 0
+  new Array(currentMonth.daysInMonth()).fill().forEach((_, i) => {
+    const start = currentMonth.clone().add(i, 'days').startOf('day')
+    const end = currentMonth.clone().add(i, 'days').endOf('day')
+    
+    const unavailableEmployees = events.reduce((acc, event) => {
+      const eventStart = moment(event.start)
+      const eventEnd = moment(event.end)
+      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
+      if (isEventInDay) {
+        acc += 1
+      }
+      return acc
+    }, 0)
+
+    if (unavailableEmployees > maxEmployeesOnLeave) {
+      maxEmployeesOnLeave = unavailableEmployees
+    }
+  })
+
   const arr = new Array(currentMonth.daysInMonth()).fill().map((_, i) => {
     const start = currentMonth.clone().add(i, 'days').startOf('day')
     const end = currentMonth.clone().add(i, 'days').endOf('day')
+    
 
     const res = events.reduce((acc, event) => {
       const eventStart = moment(event.start)
       const eventEnd = moment(event.end)
-      const isEventInDay = eventStart.isBefore(end) && eventEnd.isAfter(start) || eventStart.isSame(start) || eventEnd.isSame(end)
-      if (isEventInDay) {
+      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
+      if (isEventInDay && employeesMap[event.employee_id]) {        
         acc.count += 1
         const existingPolicy = acc.policies[event.policy.id]
         if (!existingPolicy) {
@@ -193,11 +231,11 @@ const generateAvailabilityEvents = (currentDate, employees, events) => {
             name: event.policy.name || 'Time Off',
             id: event.policy.id,
             symbol: event.policy.symbol,
-            employees: [{...employeesMap[event.employee_id], color: getRandomHexColor()}]
+            employees: [{...employeesMap[event.employee_id], color: getRandomHexColor(), event: event}]
           }
         } else {
           acc.policies[event.policy.id].onLeave += 1
-          acc.policies[event.policy.id].employees.push({...employeesMap[event.employee_id], color: getRandomHexColor()})
+          acc.policies[event.policy.id].employees.push({...employeesMap[event.employee_id], color: getRandomHexColor(), event: event})
         }
       }
       return acc
@@ -214,13 +252,14 @@ const generateAvailabilityEvents = (currentDate, employees, events) => {
       type: 'availability',
       metadata: {
         unavailableEmployees: unavailableEmployees,
-        totalEmployees: employees.length,
-        percentage: employees.length > 0 ? Math.round((unavailableEmployees / employees.length) * 100) : 0,
+        totalEmployees: maxEmployeesOnLeave,
+        percentage: maxEmployeesOnLeave > 0 ? Math.round((unavailableEmployees / maxEmployeesOnLeave) * 100) : 0,
         chartData: {
           date: start.format('YYYY-MM-DD'),
           onLeave: unavailableEmployees,
           segments: Object.values(res.policies).map(item => {
             return {
+              id: item.id,
               name: item.name,
               value: item.onLeave,
               symbol: item.symbol,
@@ -298,8 +337,10 @@ const generateEvents = (data, policies) => {
     const policy = policiesMap[item.policy_id] || {}
     return {
       id: item.id,
-      start: moment(item.from).toDate(),
-      end: moment(item.to).toDate(),
+      start: moment(item.from).startOf('day').toDate(),
+      end: moment(item.to).endOf('day').toDate(),
+      from: item.from,
+      to: item.to,
       resourceId: item.employee_id.toString(),
       policy: policy,
       employee_id: item.employee_id,
@@ -307,6 +348,7 @@ const generateEvents = (data, policies) => {
       borderColor: policy.color || COLORS_JOB_TYPE[0],
       title: policy.name || 'Time Off',
       classNames: [styles.event],
+      status: item.status,
     }
   })
   return arr
@@ -348,21 +390,25 @@ const TimeOffCalendar = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
 
+  const [loading, setLoading] = useState(true)
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
-  const [places, setPlaces] = useState([])
   const [policies, setPolicies] = useState([])
   const [employees, setEmployees] = useState([])
   const [resources, setResources] = useState([])
   const [events, setEvents] = useState([])
   const [activeAvailability, setActiveAvailability] = useState(null)
 
-  const fromDateRef = useRef(new Date())
+  // const fromDateRef = useRef(new Date())
   const calendarRef = useRef(null)
   const sideBarRef = useRef(null)
+  // const currentMonthRef = useRef(currentStartDate)
+
+  // console.log(events.filter(e => e.resourceId !== 'availability'))
   
   useEffect(() => {
     getCompanyEmployeesAll(companyId).then(res => {
+      console.log(res.users.find(u => u.id === 912))
       const grouped = groupEmployees(res.users || [])
       setResources(grouped)
       setEmployees(res.users || [])
@@ -372,29 +418,38 @@ const TimeOffCalendar = () => {
         setPolicies(res.policies.map(p => ({...p, checked: false, title: p.name, isEmployee: true})))
       }
     })
-    getPlaces(companyId).then(res => {
-      setPlaces(res.map(p => ({...p, title: p.name, isEmployee: true, checked: false})))
-    })
   }, [companyId])
 
   useEffect(() => {
+    // if (timeline !== TIMELINE.MONTH) {
+    //   return
+    // }
     if (employees.length && policies.length) {
+      const viewMap = {
+        [TIMELINE.DAY]: 'daily',
+        [TIMELINE.WEEK]: 'weekly',
+        [TIMELINE.MONTH]: 'monthly',
+      }
+      
       const params = {
-        view: 'monthly',
-        start_date: moment(currentStartDate).startOf('month').format('YYYY-MM-DD'),
+        view: viewMap[timeline],
+        start_date: currentStartDate,
         employees: getCheckedEmployeeIds(resources),
+        policies: policies.filter(p => p.checked).map(p => p.id),
       }
       getEvents(params)
     }
-  }, [currentStartDate, employees, policies, resources])
+  }, [currentStartDate, employees, policies, resources, timeline])
 
-  const getEvents = (params) => {
-    getCompanyTimeOffRequests(companyId, params).then(res => {
-      if (Array.isArray(res?.request_behalf)) {
-        const events = generateEvents(res.request_behalf, policies)
-        setEvents([...events, ...generateAvailabilityEvents(currentStartDate, employees, events)])
-      }
-    })
+  const getEvents = async (params) => {
+    setLoading(true)
+    sideBarRef.current.close()
+    const res = await getCompanyTimeOffRequests(companyId, params)
+    if (Array.isArray(res?.request_behalf)) {
+      const events = generateEvents(res.request_behalf, policies)
+      setEvents([...events, ...generateAvailabilityEvents(currentStartDate, employees, events)])
+    }
+    setLoading(false)
   }
 
   const getResourceTitle = useCallback((viewType, date) => {
@@ -412,6 +467,17 @@ const TimeOffCalendar = () => {
       }
     }
   }, [t])
+
+  const changeView = (viewtype, date) => {
+    calendarRef.current.getApi().changeView(viewtype, date)
+    setTimeline(viewtype)
+  }
+
+  const handleChangeTimeline = (view) => {
+    const startDate = view === TIMELINE.MONTH ? moment().startOf('month') : view === TIMELINE.WEEK ? moment().startOf('isoWeek') : moment()
+    changeView(view, startDate.toDate())
+    setCurrentStartDate(startDate.format('YYYY-MM-DD'))
+  }
 
   const handleClickDay = useCallback((date) => {
     const calendarApi = calendarRef.current?.getApi()
@@ -439,21 +505,17 @@ const TimeOffCalendar = () => {
     setPolicies(res)
   }, [])
 
-  const handleChangePlaceFilter = useCallback((res) => {
-    setPlaces(res)
-  }, [])
-
   const renderResourceAreaHeaderContent = useCallback(({view}) => {
     const handleClickPrev = () => {
       view.calendar.prev()
       const targetDate = view.getCurrentData().currentDate
       if (timeline === TIMELINE.MONTH) {
         
-        const date = moment(fromDateRef.current).startOf('month').subtract(1, 'days').startOf('month')
-        fromDateRef.current = date.startOf('day').toDate()
+        const date = moment(currentStartDate).startOf('month').subtract(1, 'days').startOf('month')
+        // fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
-        fromDateRef.current = moment(targetDate).startOf('day').toDate()
+        // fromDateRef.current = moment(targetDate).startOf('day').toDate()
         setCurrentStartDate(moment(targetDate).format('YYYY-MM-DD'))
       }
     }
@@ -462,11 +524,11 @@ const TimeOffCalendar = () => {
       view.calendar.next()
       const targetDate = view.getCurrentData().currentDate
       if (timeline === TIMELINE.MONTH) {
-        const date = moment(fromDateRef.current).endOf('month').add(1, 'days')
-        fromDateRef.current = date.startOf('day').toDate()
+        const date = moment(currentStartDate).endOf('month').add(1, 'days')
+        // fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
-        fromDateRef.current = moment(targetDate).startOf('day').toDate()
+        // fromDateRef.current = moment(targetDate).startOf('day').toDate()
         setCurrentStartDate(moment(targetDate).format('YYYY-MM-DD'))
       }
     }
@@ -513,8 +575,54 @@ const TimeOffCalendar = () => {
           onPress={(id) => handleChangeAvailability(id, event)} />
       )
     }
+    const eventProps = event.extendedProps
+    const statusColor = (status => {
+      switch(status) {
+        case 'approved': return '#34C759'
+        case 'pending': return '#FF9500'
+        case 'rejected': return '#FF3B30'
+        default: return '#34C759'
+      }
+    })(eventProps.status)
+
+    const tooltipContent = `
+      <div style="font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('From')}:</span>
+          <b style="color: #000;">${eventProps.from}</b>
+          <span style="color: #7c7c7c;">${t('To')}:</span>
+          <b style="color: #000;">${eventProps.to}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Policy')}:</span>
+          <b style="color: #000;">${eventProps.policy.name}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Status')}:</span>
+          <b style="color: ${statusColor}; text-transform: capitalize;">${eventProps.status}</b>
+        </div>
+      </div>
+    `
     return (
-      <div className={styles.eventContent}>
+      <div className={styles.eventContent}
+        data-tooltip-id="time_off"
+        data-tooltip-html={tooltipContent}>
+        {
+          ((symbol, color) => {
+            switch(symbol) {
+              case '1': return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
+              case '2': return <TimeOffSymbol2 fill={color} className={styles.policyIcon} />
+              case '3': return <TimeOffSymbol3 fill={color} className={styles.policyIcon} />
+              case '4': return <TimeOffSymbol4 fill={color} className={styles.policyIcon} />
+              case '5': return <TimeOffSymbol5 fill={color} className={styles.policyIcon} />
+              case '6': return <TimeOffSymbol6 fill={color} className={styles.policyIcon} />
+              case '7': return <TimeOffSymbol7 fill={color} className={styles.policyIcon} />
+              case '8': return <TimeOffSymbol8 fill={color} className={styles.policyIcon} />
+              case '9': return <TimeOffSymbol9 fill={color} className={styles.policyIcon} />
+              default: return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
+            }
+          })(eventProps.policy.symbol, fade(eventProps.policy.color, 0.5))
+        }
       </div>
     )
    
@@ -524,20 +632,23 @@ const TimeOffCalendar = () => {
     const date = moment(monthDate)
     return (
       <div onClick={() => handleClickDay(date)}>
-        <span className='schedule-enter-day'>{ t('Go') }</span>
         { `${date.format('D')}` }
       </div>
     )
-  }, [currentStartDate])
+  }, [])
+
+  const renderWeekHeader = useCallback(({date: monthDate}) => {
+    const date = moment(monthDate)
+    return (
+      <div onClick={() => handleClickDay(date)}>
+        { `${t(date.format('ddd'))} ${date.format('D')}` }
+      </div>
+    )
+  }, [])
 
   return (
     <div className={styles.screen}>
       <div className={styles.toolsContainer}>
-        <CustomSelect
-          placeholder={t('All Places')}
-          items={places}
-          onChange={handleChangePlaceFilter}
-          width='auto' />
         <CustomSelect
           placeholder={t('All Policies')}
           items={policies}
@@ -551,7 +662,7 @@ const TimeOffCalendar = () => {
           width='auto' />
         <Tabs 
           selected={timeline}
-          onChange={setTimeline}
+          onChange={handleChangeTimeline}
           options={[{
             title: t('Day'),
             key: TIMELINE.DAY,
@@ -589,7 +700,7 @@ const TimeOffCalendar = () => {
             },
             week: {
               ...CALENDAR_VIEWS_CONFIG.week,
-              // slotLabelFormat: renderWeekHeader,
+              slotLabelFormat: renderWeekHeader,
             },
             month: {
               ...CALENDAR_VIEWS_CONFIG.month,
@@ -631,11 +742,22 @@ const TimeOffCalendar = () => {
         ref={sideBarRef}
         onClose={() => setActiveAvailability(null)} />
       <Tooltip
+        id='time_off'
+        className={styles.timeOffTooltip}
+        effect='solid' />
+      <Tooltip
         id='user_avatar'
         arrowColor='transparent'
-        style={{backgroundColor: 'transparent'}}
+        style={{backgroundColor: 'transparent', zIndex: 1000}}
         place="right"
         effect='solid' />
+      {
+        loading
+          ? <div className={styles.overlayProgress}>
+              <Progress />
+            </div>
+          : null
+      }
     </div>
   )
 }

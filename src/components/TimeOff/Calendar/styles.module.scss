@@ -5,17 +5,50 @@
   gap: 16px;
   overflow: hidden;
   position: relative;
+  
+  .overlayProgress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .timeOffTooltip {
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    border: none !important;
+    opacity: 1 !important;
+    padding: 7px 14px !important;
+    color: #333945 !important;
+    font-family: Helvetica Neue, sans-serif !important;
+    font-size: 12px !important;
+    box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+    z-index: 1000;
+  }
 
   .event {
     border-radius: 4px;
     height: 32px;
     margin-top: 4px;
     margin-left: 4px;
-    margin-right: 4px;
-    width: calc(100% - 10px);
+    width: calc(100% - 7px);
 
     .eventContent {
-      
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .policyIcon {
+        width: 20px;
+      }
     }
   }
 

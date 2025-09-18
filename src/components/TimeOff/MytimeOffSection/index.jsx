@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { useHistory } from 'react-router-dom'
@@ -18,14 +18,56 @@ import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
 import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
 import ArrowRightButton from '../../Icons/ArrowRightButton'
 import AlertCircle from '../../Icons/AlertCircle'
+import Progress from '../../Core/Progress'
+import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 
-const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
+import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest } from '../../../api'
+
+const MyTimeOffSection = ({ companyId, employee }) => {
   const { t } = useTranslation()
   const history = useHistory()
 
   const employeeId = employee.id
 
   const [expandedPolicyIds, setExpandedPolicyIds] = useState([])
+
+  const [loading, setLoading] = useState(false)
+  const [requests, setRequests] = useState([])
+  const [policies, setPolicies] = useState([])
+
+  const requestFormRef = useRef(null)
+
+  useEffect(() => {
+    if (companyId && employeeId) {
+      init(companyId, employeeId)
+    }
+  }, [employeeId, companyId])
+
+  const init = async (companyId, employeeId) => {
+    setLoading(true)
+    const policies = await getEmployeePolicies(companyId, employeeId)
+    setPolicies(policies)
+    const timeOffRequests = await getTimeOffEmployeeRequests(companyId, employeeId)
+    setRequests(timeOffRequests)
+    setLoading(false)
+  }
+
+  const handleSubmitRequest = async (data) => {
+    const selectedPolicy = policies.find(({id}) => id === data.policy_id)
+    if (selectedPolicy) {
+      requestFormRef.current.close()
+      if (data.id) {
+        await updateRequest(companyId, selectedPolicy.time_off_id, data.policy_id, data.id, data)
+      } else {
+        await createRequest(companyId, selectedPolicy.time_off_id, data.policy_id, data)
+      }
+      init(companyId, employee.id)
+    }
+  }
+
+const handleRequest = (params) => {
+  requestFormRef.current.open(params)
+}
 
   const expandPolicy = (policyId, expand) => {
     setExpandedPolicyIds((prev) =>
@@ -48,7 +90,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
             className={styles.button}
             size="large"
             primary
-            onClick={() => onRequest()}
+            onClick={() => handleRequest()}
           >
             {t('Request on behalf')}
           </Button>
@@ -100,7 +142,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
                             className={styles.buttonEdit}
                             size="little"
                             onClick={() => {
-                              onRequest(request)
+                              handleRequest(request)
                             }}
                           >
                             <EditIconFixedFill />
@@ -164,7 +206,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
                         <div className={styles.policiesTableCol}>
                           <div className={styles.tableName}>
                             {(policy.ready && policy.symbol && policy.color) ? (
-                              <span className={styles.tableSymbol} style={{ backgroundColor: policy.color }}>
+                              <span className={styles.tableSymbol} style={{backgroundColor: policy.color}}>
                                 {policy.symbol === '1' && <TimeOffSymbol1 />}
                                 {policy.symbol === '2' && <TimeOffSymbol2 />}
                                 {policy.symbol === '3' && <TimeOffSymbol3 />}
@@ -213,7 +255,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
                               </div>
                               <div>
                                 <strong>{t('Allowance type')}:</strong>
-                                <div>{policyEmployeeDetails.cycle_type_text}</div>
+                                <div>{policyEmployeeDetails?.cycle_type_text}</div>
                               </div>
                               <div></div>
                               <div></div>
@@ -221,7 +263,7 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
                             <div className={styles.expandedInfo}>
                               <div>
                                 <strong>{t('Cycle allowance')}:</strong>
-                                <div>{policyEmployeeDetails.cycle_allowance}</div>
+                                <div>{policyEmployeeDetails?.cycle_allowance}</div>
                               </div>
                               <div>
                                 <strong>{t('Accrued')}:</strong>
@@ -233,12 +275,12 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
                               </div>
                               <div>
                                 <strong>{t('Days booked')}:</strong>
-                                <div>{policyEmployeeDetails.total_booked}</div>
+                                <div>{policyEmployeeDetails?.total_booked}</div>
                               </div>
                             </div>
                             <div className={styles.carryoverInfo}>
                               {
-                                policyEmployeeDetails.carryovers && policyEmployeeDetails.carryovers.length > 0 && (
+                                policyEmployeeDetails?.carryovers && policyEmployeeDetails.carryovers.length > 0 && (
                                   <div className={styles.carryoverList}>
                                     {policyEmployeeDetails.carryovers.map((carryover) => (
                                       <div key={carryover.id} className={styles.carryoverItem}>
@@ -270,6 +312,25 @@ const MyTimeOffSection = ({ requests, policies, employee, onRequest }) => {
           ) : null
         }
       </div>
+      <RequestBehalf
+        ref={requestFormRef}
+        title={t('Request on behalf')}
+        onSubmit={handleSubmitRequest}
+        handleClose={() => {}}
+        buttonTitle={t('Submit')}
+        employees={[{id: employee.id}]}
+        policies={policies}
+        initialValue={{}}
+        activeTimeOff={1}
+        singleRequest
+      />
+      {
+        loading
+          ? <div className={styles.loader}>
+              <Progress />
+            </div>
+          : null
+      }
     </div>
   )
 }
