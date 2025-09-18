@@ -1452,5 +1452,7 @@
         "Insufficient balance for:": "Nepakankamas likutis:",
         "Missing {{days}} d. for this request.": "Trūksta {{days}} d. šiam prašymui",
 
-        "On": "Ši diena"
+        "On": "Ši diena",
+
+        "Unpaid time, h": "Neapmokamos val."
 }
