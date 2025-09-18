@@ -151,6 +151,7 @@
         font-family: Helvetica Neue, sans-serif !important;
         font-size: 12px !important;
         box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+        z-index: 100000 !important;
 
         &::after {
           border-top-color: #fff !important;

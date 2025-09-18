@@ -1450,6 +1450,9 @@
         "Approved {{policy_name}} request from {{from}}.": "Patvirtintas {{policy_name}} prašymas {{from}}.",
 
         "Insufficient balance for:": "Nepakankamas likutis:",
-        "Missing {{days}} d. for this request.": "Trūksta {{days}} d. šiam prašymui"
+        "Missing {{days}} d. for this request.": "Trūksta {{days}} d. šiam prašymui",
 
+        "On": "Ši diena",
+
+        "Unpaid time, h": "Neapmokamos val."
 }

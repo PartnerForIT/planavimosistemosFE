@@ -212,11 +212,22 @@ export const reducer = (state = initialState, action) => {
           stats: state.users.stats,
           employees: Array.isArray(state.users.employees)
             ? state.users.employees.map((item) => {
-                if (action.data.employee_ids.includes(item.id)) {
-                  return {
-                    ...item,
-                    is_kiosk: Number(action.data.status),
-                  };
+                if (action.data.employee_ids) {
+                  if (action.data.employee_ids.includes(item.id)) {
+                    return {
+                      ...item,
+                      is_kiosk: Number(action.data.status),
+                    };
+                  }
+                } else {
+                  const found = action.data.find((emp) => emp.data?.id === item.id);
+                  if (found) {
+                    return {
+                      ...item,
+                      pin_code: found.pin_code,
+                      is_kiosk: found.data.is_kiosk,
+                    };
+                  }
                 }
                 return item;
               })

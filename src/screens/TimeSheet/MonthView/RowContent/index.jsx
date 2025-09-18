@@ -23,6 +23,7 @@ const RowContent = ({
   resource,
   daysOfMonth,
   pastDay,
+  requestBehalves,
 }) => {
   const { t } = useTranslation();
 
@@ -125,6 +126,12 @@ const RowContent = ({
 
     return '';
   }
+
+  const requestBehalve = (item) => {
+    const requestBehalve = requestBehalves.find(requestBehalve => requestBehalve.mark_in_schedule_and_time_sheet && requestBehalve.employee_id*1 === resource.id*1 && moment(requestBehalve.from, 'YYYY-MM-DD').format('DD')*1 <= item.id*1 && moment(requestBehalve.to, 'YYYY-MM-DD').format('DD')*1 >= item.id*1);
+    return requestBehalve;
+    
+  };
   
   return (
     <>
@@ -150,6 +157,7 @@ const RowContent = ({
                 tooltip={tooltipInner(item, field)}
                 past={!item.statistic && pastDay >= item.id}
                 holiday={item.holiday}
+                requestBehalve={!item.statistic && field === 'working_days' ? requestBehalve(item) : null}
             />)
             }
           )

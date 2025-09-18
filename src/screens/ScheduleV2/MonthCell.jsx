@@ -252,7 +252,7 @@ const MonthCell = ({
           : null
       }
       {
-        !copy_event && newEmployee?.name !== oldEmployee?.name
+        !copy_event && newEmployee?.name !== oldEmployee?.name && !empty_manual
           ? <div className={css.changeEmployeeContainer}>
               <ReplacedEmployee
                 newEmployee={newEmployee}

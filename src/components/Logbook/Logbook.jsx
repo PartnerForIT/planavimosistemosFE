@@ -82,6 +82,7 @@ let columns = [
   { label: 'End', field: 'end', checked: true },
   { label: 'Duration, h', field: 'duration', checked: true },
   { label: 'Working hours, h', field: 'working_hours', checked: true },
+  { label: 'Unpaid time, h', field: 'empty_hours', checked: true },
   { label: 'Break time, h', field: 'break_time', checked: true },
   { label: 'Holiday time, h', field: 'holiday_time', checked: true },
   { label: 'Night time, h', field: 'night_duration', checked: true },
@@ -182,6 +183,10 @@ const permissionsConfig = [
   {
     name: 'logbook_edit_logs',
     permission: 'logbook_edit_logs',
+  },
+  {
+    name: 'empty_hours_enabled',
+    module: 'empty_hours_enabled',
   },
 ];
 
@@ -612,6 +617,10 @@ export default () => {
       }
 
       if (!permissions.schedule_simple && column.field === 'task_name') {
+        return false;
+      }
+
+      if (!permissions.empty_hours_enabled && column.field === 'empty_hours') {
         return false;
       }
 
