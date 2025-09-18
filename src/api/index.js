@@ -1,4 +1,6 @@
-const BASE_URL = 'https://staging.grownu.com/api'
+import config from '../config'
+
+const BASE_URL = config.api.url
 
 const request = async (url, method, params) => {
   const token = localStorage.getItem('token')
