@@ -388,6 +388,8 @@ export default () => {
   const onEditActivity = (activity, data) => {
     dispatch(updatePolicyActivity(id, activity.time_off_id, activity.policy_id, activity.employee_id, activity.id, data));
   };
+
+  console.log('currentPage', currentPage)
   
   return (
     <MaynLayout>

@@ -3,6 +3,19 @@
   flex-direction: column;
   gap: 24px;
 
+  .loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
   .section {
     display: flex;
     flex-direction: column;
@@ -182,6 +195,28 @@
       overflow-wrap: anywhere;
       font-size: 14px;
       font-weight: 500;
+
+      .tableSymbol {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        padding: 2px;
+
+        svg {
+          margin: 0;
+          padding: 0;
+          width: 18px;
+          height: 18px;
+
+          path {
+            stroke: white;
+            fill: transparent;
+          }
+        }
+      }
 
       &.policiesTableColExpand {
         padding: 6px 0;
