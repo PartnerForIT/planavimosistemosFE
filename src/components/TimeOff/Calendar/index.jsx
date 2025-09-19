@@ -622,7 +622,7 @@ const TimeOffCalendar = () => {
               case '9': return <TimeOffSymbol9 fill={color} className={styles.policyIcon} />
               default: return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
             }
-          })(eventProps.policy.symbol, fade(eventProps.policy.color, 0.5))
+          })(eventProps.policy.symbol, fade(eventProps.policy.color || DEFAULT_COLOR, 0.5))
         }
       </div>
     )
