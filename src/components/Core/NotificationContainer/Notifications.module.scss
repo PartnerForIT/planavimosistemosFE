@@ -46,6 +46,22 @@
   &.success {
     border-left-color: #2ecc71;
   }
+
+  &.clock_in {
+    border-left-color: #2ecc71;
+  }
+
+  &.clock_out {
+    border-left-color: #2ecc71;
+  }
+
+  &.break_start {
+    border-left-color: #2ecc71;
+  }
+
+  &.break_end {
+    border-left-color: #2ecc71;
+  }
 }
 
 .icon {

@@ -133,6 +133,7 @@ export default () => {
             ...(modules.cost_earning && { costs: 'Can see costs' }),
             requests: 'Get approval requests',
             requests_in_place: 'Get approval requests in assigned place',
+            receive_notifications: 'Receive notifications',
           },
         },
       }),

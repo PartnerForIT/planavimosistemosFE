@@ -35,6 +35,14 @@ export const NotificationContainer = () => {
                   return 'ℹ️';
                 case 'warning':
                   return '⚠️';
+                case 'clock_in':
+                  return '🕒';
+                case 'clock_out':
+                  return '🕒';
+                case 'break_start':
+                  return '🕒';
+                case 'break_end':
+                  return '🕒';
                 default:
                   return 'ℹ️';
               }
