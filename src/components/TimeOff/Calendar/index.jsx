@@ -14,7 +14,7 @@ import './styles.scss'
 import styles from './styles.module.scss'
 
 import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../../api'
-import { TIMELINE, COLORS_JOB_TYPE } from '../../../const'
+import { TIMELINE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
 import AvailabilityCard from '../AvailabilityCard'
@@ -51,6 +51,7 @@ const CALENDAR_VIEWS_CONFIG = {
     // slotDuration: '12:00',
   }
 }
+const DEFAULT_COLOR = '#1685FD'
 
 function groupEmployees(employees) {
   const topLevel = [];
@@ -226,7 +227,7 @@ const generateAvailabilityEvents = (currentDate, employees, events) => {
         const existingPolicy = acc.policies[event.policy.id]
         if (!existingPolicy) {
           acc.policies[event.policy.id] = {
-            color: event.policy.color || COLORS_JOB_TYPE[0],
+            color: event.policy.color || DEFAULT_COLOR,
             onLeave: 1,
             name: event.policy.name || 'Time Off',
             id: event.policy.id,
@@ -344,8 +345,8 @@ const generateEvents = (data, policies) => {
       resourceId: item.employee_id.toString(),
       policy: policy,
       employee_id: item.employee_id,
-      backgroundColor: fade(policy.color || COLORS_JOB_TYPE[0], 0.5),
-      borderColor: policy.color || COLORS_JOB_TYPE[0],
+      backgroundColor: fade(policy.color || DEFAULT_COLOR, 0.5),
+      borderColor: policy.color || DEFAULT_COLOR,
       title: policy.name || 'Time Off',
       classNames: [styles.event],
       status: item.status,
