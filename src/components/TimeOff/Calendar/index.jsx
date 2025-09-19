@@ -13,7 +13,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator'
 import './styles.scss'
 import styles from './styles.module.scss'
 
-import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../../api'
+import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getCompanyShifts } from '../../../api'
 import { TIMELINE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
@@ -31,6 +31,7 @@ import TimeOffSymbol6 from '../../Icons/TimeOffSymbol6'
 import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7'
 import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
 import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
+import HolidayIcon from '../../Core/HolidayIcon/HolidayIcon'
 
 const AVAILABILITY_RESOURCE = { id: 'availability', title: 'Availability', isGroup: false, isSubGroup: false, isEmployee: false, order: 0, level: 0, className: 'sticky-resource' }
 const CALENDAR_VIEWS_CONFIG = {
@@ -387,6 +388,15 @@ const eventClassNames = ({ event }) => {
   return ['']
 }
 
+// const slotLaneClassNames = ({ date }) => {
+//   const classes = []
+//   const day = moment(date).day()
+//   if (day === 6 || day === 0) {
+//     classes.push('fc-slot-weekend')
+//   }
+//   return classes
+// }
+
 const TimeOffCalendar = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
@@ -394,6 +404,7 @@ const TimeOffCalendar = () => {
   const [loading, setLoading] = useState(true)
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
+  const [holidays, setHolidays] = useState({})
   const [policies, setPolicies] = useState([])
   const [employees, setEmployees] = useState([])
   const [resources, setResources] = useState([])
@@ -406,6 +417,8 @@ const TimeOffCalendar = () => {
   // const currentMonthRef = useRef(currentStartDate)
 
   // console.log(events.filter(e => e.resourceId !== 'availability'))
+
+  const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
   useEffect(() => {
     getCompanyEmployeesAll(companyId).then(res => {
@@ -420,6 +433,18 @@ const TimeOffCalendar = () => {
       }
     })
   }, [companyId])
+
+  useEffect(() => {
+    const params = {
+      type: 'month',
+      from_date: currentStartDate,
+    }
+    getCompanyShifts(companyId, params).then(res => {
+      if (res?.holidays && !Array.isArray(res.holidays)) {
+        setHolidays(res.holidays)
+      }
+    })
+  }, [companyId, currentMonth])
 
   useEffect(() => {
     // if (timeline !== TIMELINE.MONTH) {
@@ -631,12 +656,15 @@ const TimeOffCalendar = () => {
 
   const renderMonthHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
+    const holiday = holidays[date.date()]
     return (
       <div onClick={() => handleClickDay(date)}>
+        <span className='schedule-enter-day'>{ t('Go') }</span>
         { `${date.format('D')}` }
+        <HolidayIcon holidays={holiday} month={true} />
       </div>
     )
-  }, [])
+  }, [holidays])
 
   const renderWeekHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
@@ -646,6 +674,19 @@ const TimeOffCalendar = () => {
       </div>
     )
   }, [])
+
+  // const renderSlotLaneContent = useCallback(({ date }) => {
+  //   const d = moment(date)
+  //   const isWeekend = d.day() === 6 || d.day() === 0
+  //   if (isWeekend) {
+  //     return (
+  //       <div
+  //         className="weekend-slot"
+  //       />
+  //     )
+  //   }
+  //   return <div />
+  // }, [])
 
   return (
     <div className={styles.screen}>
@@ -691,6 +732,13 @@ const TimeOffCalendar = () => {
           eventMinWidth={10}
           dayMinWidth={10}
           slotMinWidth={10}
+          // dayCellClassNames={(arg) => {
+          //   const dow = arg.date.getDay(); // 0 = Sunday, 6 = Saturday
+          //   if (dow === 0 || dow === 6) {
+          //     return ["fc-weekend-cell"]; // custom class
+          //   }
+          //   return [];
+          // }}
           // eventDurationEditable={timeline === TIMELINE.DAY}
           views={{
             ...CALENDAR_VIEWS_CONFIG,
@@ -706,13 +754,16 @@ const TimeOffCalendar = () => {
             month: {
               ...CALENDAR_VIEWS_CONFIG.month,
               slotLabelContent: renderMonthHeader,
-              // slotLabelClassNames: ({date: monthDate, view}) => {
-              //   const isNextMonth = moment(monthDate).isAfter(moment(currentStartDate).endOf('month'))
-              //   const date = moment(monthDate)
-              //   const holiday = schedule.holidays[date.date()]
-              //   const isWeekend = date.day() === 6 || date.day() === 0
-              //   return isNextMonth ? ['statistic-slot'] : holiday ? [isWeekend ? 'header-holiday-slot-weekend' : 'header-holiday-slot'] : []
-              // },
+              slotLabelClassNames: ({date: monthDate, view}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend-header' : ''
+              },
+              slotLaneClassNames: ({date: monthDate}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend' : ''
+              },
               visibleRange: () => {
                 const visibleRange = {
                   start: moment(currentStartDate).clone().startOf('month').toDate(),
@@ -747,10 +798,19 @@ const TimeOffCalendar = () => {
         className={styles.timeOffTooltip}
         effect='solid' />
       <Tooltip
+        id='availability_description'
+        className={styles.timeOffTooltip}
+        style={{backgroundColor: '#000', color: '#fff'}}
+        effect='solid' />
+      <Tooltip
         id='user_avatar'
         arrowColor='transparent'
         style={{backgroundColor: 'transparent', zIndex: 1000}}
         place="right"
+        effect='solid' />
+      <Tooltip
+        id='holiday'
+        className={styles.timeOffTooltip}
         effect='solid' />
       {
         loading

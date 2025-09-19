@@ -131,7 +131,7 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
   return (
     <div className={cn(styles.container, {[styles.active]: isOpen})}>
       <div className={styles.scrollable}>
-        <div>
+        <div className={styles.titleContainer}>
           <div className={styles.title}>{data.date}</div>
         </div>
         <div style={{height: 300, position: 'relative', width: '100%'}}>

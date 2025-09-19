@@ -2,7 +2,89 @@
   flex: 1;
 
   .fc .fc-scrollgrid tr:nth-child(2) td {
-    border-top: 2px solid #fff !important;
+    ::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #fff;
+    }
+  }
+
+  .fc-timeline-body,
+  .fc-timeline-header-row  {
+    background-color: #fff;
+  }
+
+  .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sat,
+  .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sun {
+    background: repeating-linear-gradient(
+      to bottom,
+      #f9fbfc,
+      #f9fbfc 40px,
+      transparent 40px,
+      transparent 41px
+    );
+  }
+
+  .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sat,
+  .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sun {
+    background: repeating-linear-gradient(
+      to bottom,
+      #f9fbfc,
+      #f9fbfc 40px,
+      transparent 40px,
+      transparent 41px
+    );
+  }
+
+  .schedule-enter-day {
+    display: block;
+    display: none;
+  }
+
+  .fc-week-view, .fc-month-view {
+    .fc-timeline-slot-cushion {
+      &:hover {
+        cursor: pointer;
+        color: #1d88fc;
+  
+        .schedule-enter-day {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .holiday-slot-weekend {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 5px, rgba(64, 195, 226, .1) 5px, rgba(64, 195, 226, .1) 10px);
+      pointer-events: none;
+    }
+    
+  }
+
+  .holiday-slot-weekend-header {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 5px, rgba(64, 195, 226, .1) 5px, rgba(64, 195, 226, .1) 10px);
+      pointer-events: none;
+    }
   }
 
   .fc .fc-timeline-header-row-chrono .fc-timeline-slot-frame {
@@ -42,6 +124,11 @@
     font-family: "Helvetica Neue Medium", sans-serif;
     font-size: 12px;
     font-weight: normal;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   .fc .fc-day-today {
@@ -177,6 +264,11 @@
     width: 8px;
   }
 
+  .fc-scrollgrid-sync-table > tbody:last-of-type > tr:last-of-type td .fc-timeline-lane-frame {
+    border-bottom: 1px solid #d9dfe3;
+    z-index: 1;
+  }
+
   .fc-timeline-lane.fc-resource.sticky-resource {
     position: sticky;
     top: 0;
@@ -193,6 +285,10 @@
     top: 0;
     z-index: 5;
     background-color: #FAFBFC;
+
+    .fc-datagrid-cell-frame {
+      border-bottom: 1px solid #d0d6db;
+    }
   }
 
   .availability-event {

@@ -18,7 +18,7 @@ const TimeOffScreen = () => {
 
   const user = useSelector(userSelector)
 
-  const [activeTab, setActiveTab] = useState('time_off')
+  const [activeTab, setActiveTab] = useState('calendar')
 
   const options = [{
     title: 'My time off',
