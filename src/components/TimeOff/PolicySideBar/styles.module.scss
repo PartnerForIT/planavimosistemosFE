@@ -27,10 +27,18 @@
     transform: translateX(0%);
   }
 
-  .title {
-    font-family: "Helvetica Neue Medium", sans-serif;
-    font-size: 25px;
-    text-align: center;
+  .titleContainer {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+    box-shadow: 0px 4px 5px rgba(255, 255, 255, 1);
+
+    .title {
+      font-family: "Helvetica Neue Medium", sans-serif;
+      font-size: 25px;
+      text-align: center;
+    }
   }
 
   .onLeaveContainer {
@@ -152,23 +160,21 @@
             gap: 8px;
 
             .employeeName {
-              font-family: SF Pro Text;
+              font-family: "Helvetica Neue Medium", sans-serif;
               font-weight: 500;
-              font-style: Medium;
               font-size: 14px;
               line-height: 100%;
-              letter-spacing: 0%;
+              letter-spacing: 0.02em;
               color: #333945;
               margin-bottom: 4px;
             }
 
             .employeeRole {
-              font-family: SF Pro Text;
+              font-family: "Helvetica Neue Regular", sans-serif;
               font-weight: 400;
-              font-style: Regular;
               font-size: 12px;
               line-height: 100%;
-              letter-spacing: 0%;
+              letter-spacing: 0.02em;
               color: #A5A8B1;
             }
           }
@@ -179,11 +185,10 @@
             gap: 8px;
 
             .employeeDate {
-              font-family: SF Pro Text;
+              font-family: "Helvetica Neue Medium", sans-serif;
               font-weight: 500;
-              font-style: Medium;
               line-height: 100%;
-              letter-spacing: 0%;
+              letter-spacing: 0.02em;
               color: #333945;
               background-color: #fff;
               border-radius: 4px;

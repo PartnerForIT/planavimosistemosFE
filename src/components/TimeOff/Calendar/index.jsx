@@ -9,11 +9,12 @@ import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { Tooltip } from 'react-tooltip'
 import { fade } from '@material-ui/core/styles/colorManipulator'
+import cn from 'classnames'
 
 import './styles.scss'
 import styles from './styles.module.scss'
 
-import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../../api'
+import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getCompanyShifts } from '../../../api'
 import { TIMELINE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
@@ -22,15 +23,8 @@ import Tabs from '../Tabs'
 import PolicySideBar from '../PolicySideBar'
 import CustomSelect from '../../Core/CustomSelect'
 import Progress from '../../Core/Progress'
-import TimeOffSymbol1 from '../../Icons/TimeOffSymbol1'
-import TimeOffSymbol2 from '../../Icons/TimeOffSymbol2'
-import TimeOffSymbol3 from '../../Icons/TimeOffSymbol3'
-import TimeOffSymbol4 from '../../Icons/TimeOffSymbol4'
-import TimeOffSymbol5 from '../../Icons/TimeOffSymbol5'
-import TimeOffSymbol6 from '../../Icons/TimeOffSymbol6'
-import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7'
-import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
-import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
+import HolidayIcon from '../../Core/HolidayIcon/HolidayIcon'
+import Event from '../Event'
 
 const AVAILABILITY_RESOURCE = { id: 'availability', title: 'Availability', isGroup: false, isSubGroup: false, isEmployee: false, order: 0, level: 0, className: 'sticky-resource' }
 const CALENDAR_VIEWS_CONFIG = {
@@ -186,6 +180,21 @@ const rangesOverlap = (start1, end1, start2, end2) => {
   return start1.isBefore(end2) && start2.isBefore(end1)
 }
 
+const getEventsForDay = (events, date) => {
+  const start = moment(date).startOf('day')
+  const end = moment(date).endOf('day')
+  const eventsMap = events.reduce((acc, event) => {
+    const eventStart = moment(event.start)
+    const eventEnd = moment(event.end)
+    const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
+    if (isEventInDay) {
+      acc[event.employee_id] = true
+    }
+    return acc
+  }, {})
+  return eventsMap
+}
+
 const generateAvailabilityEvents = (currentDate, employees, events) => {
   const currentMonth = moment(currentDate).startOf('month')
   
@@ -202,7 +211,7 @@ const generateAvailabilityEvents = (currentDate, employees, events) => {
       const eventStart = moment(event.start)
       const eventEnd = moment(event.end)
       const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
-      if (isEventInDay) {
+      if (isEventInDay && employeesMap[event.employee_id]) {
         acc += 1
       }
       return acc
@@ -216,7 +225,6 @@ const generateAvailabilityEvents = (currentDate, employees, events) => {
   const arr = new Array(currentMonth.daysInMonth()).fill().map((_, i) => {
     const start = currentMonth.clone().add(i, 'days').startOf('day')
     const end = currentMonth.clone().add(i, 'days').endOf('day')
-    
 
     const res = events.reduce((acc, event) => {
       const eventStart = moment(event.start)
@@ -302,6 +310,29 @@ const getCheckedElements = (items) => {
   return result
 }
 
+const getEmployeesWithEvents = (items, eventsMap) => {
+  const result = []
+
+  for (const item of items) {
+    if ("isEmployee" in item && item.isEmployee) {
+      if (eventsMap[item.id]) {
+        result.push(item);
+      }
+    } else if ("children" in item) {
+      const checkedChildren = getEmployeesWithEvents(item.children, eventsMap);
+
+      if (checkedChildren.length > 0) {
+        result.push({
+          ...item,
+          children: checkedChildren
+        });
+      }
+    }
+  }
+
+  return result
+}
+
 const getCheckedEmployeeIds = (items) => {
   let ids = []
   for (const item of items) {
@@ -314,12 +345,30 @@ const getCheckedEmployeeIds = (items) => {
   return ids
 }
 
-const getCheckedOrAll = (items) => {
+const getCheckedEmployees = (items) => {
   const checked = getCheckedElements(items)
   if (checked.length === 0) {
     return items
   }
   return checked
+}
+
+const getCheckedOrAll = (items, policies, events, currentMonth, activeAvailability) => {
+  let checkedEmployees = getCheckedEmployees(items)
+  const checkedPolices = getCheckedElements(policies)
+  if (checkedPolices.length) {
+    const eventsMap = events.filter(e => e.resourceId !== 'availability').reduce((acc, event) => ({
+      ...acc,
+      [event.employee_id]: true,
+    }), {})
+    checkedEmployees = getEmployeesWithEvents(checkedEmployees, eventsMap)
+  }
+  if (activeAvailability) {
+    const day = Number(activeAvailability.split('-')[1])+1
+    const temp = getEventsForDay(events.filter(e => e.resourceId !== 'availability'), `${currentMonth}-${day}`)
+    checkedEmployees = getEmployeesWithEvents(checkedEmployees, temp)
+  }
+  return checkedEmployees
 }
 
 const getRandomHexColor = () => {
@@ -350,9 +399,24 @@ const generateEvents = (data, policies) => {
       title: policy.name || 'Time Off',
       classNames: [styles.event],
       status: item.status,
+      note: item.note,
     }
   })
   return arr
+}
+
+const filterEvents = (events, currentMonth, activeAvailability) => {
+  if (!activeAvailability) {
+    return events
+  }
+  const day = Number(activeAvailability.split('-')[1])+1
+  const start = moment(`${currentMonth}-${day}`).startOf('day')
+  const end = moment(`${currentMonth}-${day}`).endOf('day')
+  return events.filter(event => {
+    const eventStart = moment(event.start)
+    const eventEnd = moment(event.end)
+    return rangesOverlap(start, end, eventStart, eventEnd)
+  })
 }
 
 const resourceLabelClassNames = ({ resource }) => {
@@ -387,6 +451,15 @@ const eventClassNames = ({ event }) => {
   return ['']
 }
 
+// const slotLaneClassNames = ({ date }) => {
+//   const classes = []
+//   const day = moment(date).day()
+//   if (day === 6 || day === 0) {
+//     classes.push('fc-slot-weekend')
+//   }
+//   return classes
+// }
+
 const TimeOffCalendar = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
@@ -394,6 +467,7 @@ const TimeOffCalendar = () => {
   const [loading, setLoading] = useState(true)
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
+  const [holidays, setHolidays] = useState({})
   const [policies, setPolicies] = useState([])
   const [employees, setEmployees] = useState([])
   const [resources, setResources] = useState([])
@@ -406,10 +480,11 @@ const TimeOffCalendar = () => {
   // const currentMonthRef = useRef(currentStartDate)
 
   // console.log(events.filter(e => e.resourceId !== 'availability'))
+
+  const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
   useEffect(() => {
     getCompanyEmployeesAll(companyId).then(res => {
-      console.log(res.users.find(u => u.id === 912))
       const grouped = groupEmployees(res.users || [])
       setResources(grouped)
       setEmployees(res.users || [])
@@ -422,9 +497,18 @@ const TimeOffCalendar = () => {
   }, [companyId])
 
   useEffect(() => {
-    // if (timeline !== TIMELINE.MONTH) {
-    //   return
-    // }
+    const params = {
+      type: 'month',
+      from_date: currentStartDate,
+    }
+    getCompanyShifts(companyId, params).then(res => {
+      if (res?.holidays) {
+        setHolidays(!Array.isArray(res.holidays) ? res.holidays : {})
+      }
+    })
+  }, [companyId, currentMonth])
+
+  useEffect(() => {
     if (employees.length && policies.length) {
       const viewMap = {
         [TIMELINE.DAY]: 'daily',
@@ -443,8 +527,10 @@ const TimeOffCalendar = () => {
   }, [currentStartDate, employees, policies, resources, timeline])
 
   const getEvents = async (params) => {
+    if (sideBarRef.current) {
+      sideBarRef.current.close()
+    }
     setLoading(true)
-    sideBarRef.current.close()
     const res = await getCompanyTimeOffRequests(companyId, params)
     if (Array.isArray(res?.request_behalf)) {
       const events = generateEvents(res.request_behalf, policies)
@@ -576,76 +662,45 @@ const TimeOffCalendar = () => {
           onPress={(id) => handleChangeAvailability(id, event)} />
       )
     }
-    const eventProps = event.extendedProps
-    const statusColor = (status => {
-      switch(status) {
-        case 'approved': return '#34C759'
-        case 'pending': return '#FF9500'
-        case 'rejected': return '#FF3B30'
-        default: return '#34C759'
-      }
-    })(eventProps.status)
-
-    const tooltipContent = `
-      <div style="font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
-        <div style="display: flex; gap: 4px;">
-          <span style="color: #7c7c7c;">${t('From')}:</span>
-          <b style="color: #000;">${eventProps.from}</b>
-          <span style="color: #7c7c7c;">${t('To')}:</span>
-          <b style="color: #000;">${eventProps.to}</b>
-        </div>
-        <div style="display: flex; gap: 4px;">
-          <span style="color: #7c7c7c;">${t('Policy')}:</span>
-          <b style="color: #000;">${eventProps.policy.name}</b>
-        </div>
-        <div style="display: flex; gap: 4px;">
-          <span style="color: #7c7c7c;">${t('Status')}:</span>
-          <b style="color: ${statusColor}; text-transform: capitalize;">${eventProps.status}</b>
-        </div>
-      </div>
-    `
-    return (
-      <div className={styles.eventContent}
-        data-tooltip-id="time_off"
-        data-tooltip-html={tooltipContent}>
-        {
-          ((symbol, color) => {
-            switch(symbol) {
-              case '1': return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
-              case '2': return <TimeOffSymbol2 fill={color} className={styles.policyIcon} />
-              case '3': return <TimeOffSymbol3 fill={color} className={styles.policyIcon} />
-              case '4': return <TimeOffSymbol4 fill={color} className={styles.policyIcon} />
-              case '5': return <TimeOffSymbol5 fill={color} className={styles.policyIcon} />
-              case '6': return <TimeOffSymbol6 fill={color} className={styles.policyIcon} />
-              case '7': return <TimeOffSymbol7 fill={color} className={styles.policyIcon} />
-              case '8': return <TimeOffSymbol8 fill={color} className={styles.policyIcon} />
-              case '9': return <TimeOffSymbol9 fill={color} className={styles.policyIcon} />
-              default: return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
-            }
-          })(eventProps.policy.symbol, fade(eventProps.policy.color || DEFAULT_COLOR, 0.5))
-        }
-      </div>
-    )
-   
+    return <Event event={event} /> 
   }, [activeAvailability])
 
   const renderMonthHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
+    const holiday = holidays[date.date()]
     return (
       <div onClick={() => handleClickDay(date)}>
+        <span className='schedule-enter-day'>{ t('Go') }</span>
         { `${date.format('D')}` }
+        <HolidayIcon holidays={holiday} month={true} />
       </div>
     )
-  }, [])
+  }, [holidays])
 
   const renderWeekHeader = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
+    const holiday = holidays[date.date()]
     return (
       <div onClick={() => handleClickDay(date)}>
-        { `${t(date.format('ddd'))} ${date.format('D')}` }
+        <span className='schedule-enter-day'>{ t('Go') }</span>
+        { `${date.format('D')}` }
+        <HolidayIcon holidays={holiday} month={true} />
       </div>
     )
-  }, [])
+  }, [holidays])
+
+  // const renderSlotLaneContent = useCallback(({ date }) => {
+  //   const d = moment(date)
+  //   const isWeekend = d.day() === 6 || d.day() === 0
+  //   if (isWeekend) {
+  //     return (
+  //       <div
+  //         className="weekend-slot"
+  //       />
+  //     )
+  //   }
+  //   return <div />
+  // }, [])
 
   return (
     <div className={styles.screen}>
@@ -675,7 +730,7 @@ const TimeOffCalendar = () => {
             key: TIMELINE.MONTH,
           }]} />
       </div>
-      <div className="calendar-wrapper">
+      <div className={cn('calendar-wrapper', timeline)}>
         <FullCalendar
           ref={calendarRef}
           resourceOrder="order"
@@ -691,6 +746,13 @@ const TimeOffCalendar = () => {
           eventMinWidth={10}
           dayMinWidth={10}
           slotMinWidth={10}
+          // dayCellClassNames={(arg) => {
+          //   const dow = arg.date.getDay(); // 0 = Sunday, 6 = Saturday
+          //   if (dow === 0 || dow === 6) {
+          //     return ["fc-weekend-cell"]; // custom class
+          //   }
+          //   return [];
+          // }}
           // eventDurationEditable={timeline === TIMELINE.DAY}
           views={{
             ...CALENDAR_VIEWS_CONFIG,
@@ -702,17 +764,30 @@ const TimeOffCalendar = () => {
             week: {
               ...CALENDAR_VIEWS_CONFIG.week,
               slotLabelFormat: renderWeekHeader,
+              slotLabelClassNames: ({date: monthDate}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend-header' : ''
+              },
+              slotLaneClassNames: ({date: monthDate}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend' : ''
+              },
             },
             month: {
               ...CALENDAR_VIEWS_CONFIG.month,
               slotLabelContent: renderMonthHeader,
-              // slotLabelClassNames: ({date: monthDate, view}) => {
-              //   const isNextMonth = moment(monthDate).isAfter(moment(currentStartDate).endOf('month'))
-              //   const date = moment(monthDate)
-              //   const holiday = schedule.holidays[date.date()]
-              //   const isWeekend = date.day() === 6 || date.day() === 0
-              //   return isNextMonth ? ['statistic-slot'] : holiday ? [isWeekend ? 'header-holiday-slot-weekend' : 'header-holiday-slot'] : []
-              // },
+              slotLabelClassNames: ({date: monthDate, view}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend-header' : ''
+              },
+              slotLaneClassNames: ({date: monthDate}) => {
+                const date = moment(monthDate)
+                const holiday = holidays[date.date()]
+                return holiday ? 'holiday-slot-weekend' : ''
+              },
               visibleRange: () => {
                 const visibleRange = {
                   start: moment(currentStartDate).clone().startOf('month').toDate(),
@@ -722,8 +797,8 @@ const TimeOffCalendar = () => {
               },
             },
           }}
-          resources={[AVAILABILITY_RESOURCE, ...getCheckedOrAll(resources)]}
-          events={events}
+          resources={[AVAILABILITY_RESOURCE, ...getCheckedOrAll(resources, policies, events, currentMonth, activeAvailability)]}
+          events={filterEvents(events, currentMonth, activeAvailability)}
           eventContent={renderEventContent}
           eventClassNames={eventClassNames}
           // slotLaneClassNames={slotLaneClassNames}
@@ -739,18 +814,25 @@ const TimeOffCalendar = () => {
           // viewDidMount={handleViewDidMount}
         />
       </div>
-      <PolicySideBar
-        ref={sideBarRef}
-        onClose={() => setActiveAvailability(null)} />
+      <PolicySideBar ref={sideBarRef} />
       <Tooltip
         id='time_off'
         className={styles.timeOffTooltip}
+        effect='solid' />
+      <Tooltip
+        id='availability_description'
+        className={styles.timeOffTooltip}
+        style={{backgroundColor: '#000', color: '#fff'}}
         effect='solid' />
       <Tooltip
         id='user_avatar'
         arrowColor='transparent'
         style={{backgroundColor: 'transparent', zIndex: 1000}}
         place="right"
+        effect='solid' />
+      <Tooltip
+        id='holiday'
+        className={styles.timeOffTooltip}
         effect='solid' />
       {
         loading

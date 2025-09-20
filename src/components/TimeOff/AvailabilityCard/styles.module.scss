@@ -11,6 +11,10 @@
   align-items: center;
   padding: 3px 2px;
 
+  &.disabled {
+    cursor: inherit;
+  }
+
   &.active {
     border-color: #1685FC;
     background-color: #1685FC;

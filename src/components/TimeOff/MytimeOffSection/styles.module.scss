@@ -196,6 +196,12 @@
       font-size: 14px;
       font-weight: 500;
 
+      .tableName {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
       .tableSymbol {
         display: flex;
         align-items: center;

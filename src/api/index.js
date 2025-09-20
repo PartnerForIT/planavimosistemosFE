@@ -41,6 +41,11 @@ export const getCompanyEmployeesAll = async (companyId) => {
   return res
 }
 
+export const getCompanyShifts = async (companyId, params) => {
+  const res = await request(`company/${companyId}/shift`, 'GET', params)
+  return res
+}
+
 export const getCompanyTimeOffRequests = async (companyId, params) => {
   const res = await request(`company/${companyId}/time-off/all/policy/all/request-behalf/employee/all`, 'GET', params)
   return res
