@@ -169,7 +169,6 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
         <div className={styles.policiesContainer}>
           {
             data.segments.map((entry, index) => {
-              console.log(entry)
               const avatarsToRender = entry.seg.employees.slice(0, AVATARS_COUNT)
               const isExpanded = expandedPolicies.includes(entry.id)
               return (

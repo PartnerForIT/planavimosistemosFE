@@ -1,8 +1,9 @@
 .calendar-wrapper {
   flex: 1;
 
-  .fc .fc-scrollgrid tr:nth-child(2) td {
-    ::after {
+  .fc .fc-scrollgrid tr:nth-child(2) td.fc-timeline-lane.fc-resource {
+    position: relative;
+    &::after {
       content: '';
       position: absolute;
       top: -1px;
@@ -18,26 +19,34 @@
     background-color: #fff;
   }
 
-  .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sat,
-  .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sun {
-    background: repeating-linear-gradient(
-      to bottom,
-      #f9fbfc,
-      #f9fbfc 40px,
-      transparent 40px,
-      transparent 41px
-    );
-  }
+  &.month,
+  &.week {
+    .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sat,
+    .fc-timeline-slot.fc-timeline-slot-label.fc-day.fc-day-sun {
+      background: #f9fbfc;
+    }
 
-  .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sat,
-  .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sun {
-    background: repeating-linear-gradient(
-      to bottom,
-      #f9fbfc,
-      #f9fbfc 40px,
-      transparent 40px,
-      transparent 41px
-    );
+    .fc-timeline-slot.fc-timeline-slot-lane.fc-timeline-slot-major.fc-slot.fc-slot-sat,
+    .fc-timeline-slot.fc-timeline-slot-lane.fc-timeline-slot-major.fc-slot.fc-slot-sun {
+      background: repeating-linear-gradient(
+        to bottom,
+        #f9fbfc,
+        #f9fbfc 40px,
+        transparent 40px,
+        transparent 41px
+      );
+    }
+
+    .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sat,
+    .fc .fc-timeline-slot.fc-timeline-slot-lane.fc-day.fc-day-sun {
+      background: repeating-linear-gradient(
+        to bottom,
+        #f9fbfc,
+        #f9fbfc 40px,
+        transparent 40px,
+        transparent 41px
+      );
+    }
   }
 
   .schedule-enter-day {
