@@ -1,5 +1,5 @@
 import {
-  LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN,
+  LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN, UPDATE_EVENTS_COUNTER,
 } from './types';
 
 export const login = (email, password, remember) => ({
@@ -53,4 +53,9 @@ export const authCheck = () => ({
   meta: {
     thunk: true,
   },
+});
+
+export const updateEventsCounter = (count) => ({
+  type: UPDATE_EVENTS_COUNTER,
+  payload: count,
 });

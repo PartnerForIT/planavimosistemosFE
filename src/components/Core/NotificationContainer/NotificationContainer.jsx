@@ -1,17 +1,26 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDispatch } from "react-redux";
 import styles from "./Notifications.module.scss";
 import { useTranslation } from "react-i18next";
 import classnames from "classnames";
 import EventsIcon from '../../Icons/Events';
+import { updateEventsCounter } from '../../../store/auth/actions';
 
 let addNotificationExternal;
+let notificationDispatch;
 
 export const NotificationContainer = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const [notifications, setNotifications] = useState([]);
     const [queue, setQueue] = useState([]);
     const timersRef = useRef(new Map());
     const nextDismissTimeRef = useRef(Date.now());
+
+    // Store dispatch reference for external use
+    useEffect(() => {
+        notificationDispatch = dispatch;
+    }, [dispatch]);
 
     const MAX_VISIBLE_NOTIFICATIONS = 3;
     const AUTO_DISMISS_INTERVAL = 5000; // 5 seconds between dismissals
@@ -157,7 +166,7 @@ export const NotificationContainer = () => {
 };
 
 // Action handlers for notifications without messages
-const handleNotificationAction = (notificationType, data) => {
+const handleNotificationAction = (notificationType, data, dispatch) => {
   // Get the current path to determine which data to refresh
   const currentPath = window.location.pathname;
   
@@ -169,9 +178,7 @@ const handleNotificationAction = (notificationType, data) => {
       console.log('clock_in, clock_out, break_start, break_end');
       break;
     case 'events_counter':
-      if (document.getElementById(notificationType)) {
-        document.getElementById(notificationType).innerHTML = data.count;
-      }
+      dispatch(updateEventsCounter(data.count));
       break;
     case 'new_event':
       // For event notifications, refresh schedule or events data
@@ -198,7 +205,7 @@ export const addNotification = (data) => {
   // Check if notification has a message
   if (!data.message || data.message.trim() === '') {
     // If no message, execute action immediately based on notification type
-    handleNotificationAction(data.type, data);
+    handleNotificationAction(data.type, data, notificationDispatch);
     return;
   }
   

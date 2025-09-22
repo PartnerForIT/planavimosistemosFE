@@ -188,7 +188,7 @@ export default () => {
       }
     }
     // eslint-disable-next-line
-  }, [companyId, user]);
+  }, [companyId, user?.user?.id]);
   // useEffect(() => {
   //   if (!isLoadingCompanyModules) {
   //     const [,,, section, innerSection] = pathname.split('/');

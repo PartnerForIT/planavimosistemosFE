@@ -74,7 +74,7 @@ const ResourceCell = ({
     }
 
     return permissions?.schedule_create_and_edit
-  }, [permissions, item, user]);
+  }, [permissions, item, user?.user?.id]);
 
   // const handleChangeNumber = useCallback((value) => {
   //   onChangeNumber({ rowId, value });

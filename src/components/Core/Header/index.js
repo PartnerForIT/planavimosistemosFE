@@ -26,7 +26,7 @@ import { changePassword, editLangSettingCompany, getSecurityCompany } from '../.
 import { postSupportTicket, doneSupportTicket } from '../../../store/company/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import usePermissions from '../usePermissions';
-import { userSelector } from '../../../store/auth/selectors';
+import { userSelector, eventsCounterSelector } from '../../../store/auth/selectors';
 import {
   postSupportTicketLoadingSelector,
   isCreateTicketSelector,
@@ -153,6 +153,7 @@ export default function ButtonAppBar({ logOut }) {
   const [,, pageName] = pathname.split('/');
   const { id: companyId } = useParams();
   const user = useSelector(userSelector);
+  const eventsCounter = useSelector(eventsCounterSelector);
   const dispatch = useDispatch();
   const permissions = usePermissions(permissionsConfig);
 
@@ -313,7 +314,7 @@ export default function ButtonAppBar({ logOut }) {
                 <span className={styles.link__text}>
                   {item.title}
                 </span>
-                {item.counter && <span id={item.counter} className={styles.counter}></span>}
+                {item.counter && <span className={styles.counter}>{item.counter === 'events_counter' ? eventsCounter : (item[item.counter] ? item[item.counter] : '')}</span>}
               </Link>
             ))}
           </div>
