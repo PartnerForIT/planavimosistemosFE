@@ -228,6 +228,7 @@ export default function ButtonAppBar({ logOut }) {
         title: t('Events'),
         name: 'events',
         to: `/${companyId}/events`,
+        counter: 'events_counter',
       });
     }
     if (permissions.reports) {
@@ -312,6 +313,7 @@ export default function ButtonAppBar({ logOut }) {
                 <span className={styles.link__text}>
                   {item.title}
                 </span>
+                {item.counter && <span id={item.counter} className={styles.counter}></span>}
               </Link>
             ))}
           </div>
