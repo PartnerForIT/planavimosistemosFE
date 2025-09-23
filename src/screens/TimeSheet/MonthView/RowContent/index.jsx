@@ -129,13 +129,13 @@ const RowContent = ({
 
   const requestBehalve = (item) => {
     if (requestBehalves[0]) {
-      console.log('requestBehalves', moment(requestBehalves[0].from).set('day', '6').format('YYYY-MM-DD'));
+      console.log('requestBehalves', moment(requestBehalves[0].from).set('date', 6).format('YYYY-MM-DD'));
     }
     const requestBehalve = requestBehalves.find(requestBehalve => requestBehalve.mark_in_schedule_and_time_sheet
       && requestBehalve.employee_id*1 === resource.id*1
       && moment(requestBehalve.from, 'YYYY-MM-DD').format('DD')*1 <= item.id*1
       && moment(requestBehalve.to, 'YYYY-MM-DD').format('DD')*1 >= item.id*1
-      && !requestBehalve.non_working_days.includes(moment(requestBehalve.from, 'YYYY-MM-DD').set('day', item.id).format('YYYY-MM-DD')));
+      && !requestBehalve.non_working_days.includes(moment(requestBehalve.from, 'YYYY-MM-DD').set('date', item.id).format('YYYY-MM-DD')));
     return requestBehalve;
     
   };
