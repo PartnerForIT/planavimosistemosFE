@@ -6,6 +6,7 @@ import classnames from "classnames";
 import EventsIcon from '../../Icons/Events';
 import { updateEventsCounter } from '../../../store/auth/actions';
 import TimeOffIcon from '../../Icons/TimeOff';
+import { useParams } from "react-router-dom";
 
 let addNotificationExternal;
 let notificationDispatch;
@@ -13,6 +14,7 @@ let notificationDispatch;
 export const NotificationContainer = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const { id: companyId } = useParams();
     const [notifications, setNotifications] = useState([]);
     const [queue, setQueue] = useState([]);
     const timersRef = useRef(new Map());
@@ -123,6 +125,21 @@ export const NotificationContainer = () => {
         };
     }, []);
 
+    const notificationMessage = (data) => {
+      switch(data.type) {
+        case 'request':
+          return (
+            <>
+              {t(data.message)} {t('Request needs your action.')}{' '}
+              <a href={`/${companyId}/time-off`} className={styles.link}>
+                {t('Press to review')}
+              </a>
+            </>
+          );
+        default:
+          return t(data.message);
+      }
+    }
   return (
     <div className={styles.container}>
       {notifications.map((n) => (
@@ -158,7 +175,9 @@ export const NotificationContainer = () => {
               }
             })()}
           </span>
-          <span className={styles.text}>{t(n.data.message)}</span>
+          <span className={styles.text}>
+            {notificationMessage(n.data)}
+          </span>
           <button
             className={styles.close}
             onClick={() => removeNotification(n.id)}
