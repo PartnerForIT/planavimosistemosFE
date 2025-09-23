@@ -128,6 +128,7 @@ const RowContent = ({
   }
 
   const requestBehalve = (item) => {
+    console.log('requestBehalves', requestBehalves);
     const requestBehalve = requestBehalves.find(requestBehalve => requestBehalve.mark_in_schedule_and_time_sheet
       && requestBehalve.employee_id*1 === resource.id*1
       && moment(requestBehalve.from, 'YYYY-MM-DD').format('DD')*1 <= item.id*1
