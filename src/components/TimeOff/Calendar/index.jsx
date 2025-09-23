@@ -353,7 +353,10 @@ const getCheckedEmployees = (items) => {
   return checked
 }
 
-const getCheckedOrAll = (items, policies, events, currentMonth, activeAvailability) => {
+const getCheckedOrAll = (items, policies, events, currentMonth, activeAvailability, loading) => {
+  if (loading) {
+    return items
+  }
   let checkedEmployees = getCheckedEmployees(items)
   const checkedPolices = getCheckedElements(policies)
   if (checkedPolices.length) {
@@ -413,6 +416,9 @@ const filterEvents = (events, currentMonth, activeAvailability) => {
   const start = moment(`${currentMonth}-${day}`).startOf('day')
   const end = moment(`${currentMonth}-${day}`).endOf('day')
   return events.filter(event => {
+    if (event.resourceId === 'availability') {
+      return true
+    }
     const eventStart = moment(event.start)
     const eventEnd = moment(event.end)
     return rangesOverlap(start, end, eventStart, eventEnd)
@@ -497,18 +503,6 @@ const TimeOffCalendar = () => {
   }, [companyId])
 
   useEffect(() => {
-    const params = {
-      type: 'month',
-      from_date: currentStartDate,
-    }
-    getCompanyShifts(companyId, params).then(res => {
-      if (res?.holidays) {
-        setHolidays(!Array.isArray(res.holidays) ? res.holidays : {})
-      }
-    })
-  }, [companyId, currentMonth])
-
-  useEffect(() => {
     if (employees.length && policies.length) {
       const viewMap = {
         [TIMELINE.DAY]: 'daily',
@@ -531,10 +525,21 @@ const TimeOffCalendar = () => {
       sideBarRef.current.close()
     }
     setLoading(true)
-    const res = await getCompanyTimeOffRequests(companyId, params)
-    if (Array.isArray(res?.request_behalf)) {
-      const events = generateEvents(res.request_behalf, policies)
+    const holidayParams = {
+      type: 'month',
+      from_date: currentStartDate,
+    }
+    const [eventsRes, holidayRes] = await Promise.all([
+      getCompanyTimeOffRequests(companyId, params),
+      getCompanyShifts(companyId, holidayParams),
+    ])
+
+    if (Array.isArray(eventsRes?.request_behalf)) {
+      const events = generateEvents(eventsRes.request_behalf, policies)
       setEvents([...events, ...generateAvailabilityEvents(currentStartDate, employees, events)])
+    }
+    if (holidayRes?.holidays) {
+      setHolidays(!Array.isArray(holidayRes.holidays) ? holidayRes.holidays : {})
     }
     setLoading(false)
   }
@@ -653,7 +658,7 @@ const TimeOffCalendar = () => {
     )
   }, [])
 
-  const renderEventContent = useCallback(({event}) => {
+  const renderEventContent = useCallback(({event, view}) => {
     if (event.getResources()[0].id === 'availability') {
        return (
         <AvailabilityCard
@@ -662,27 +667,15 @@ const TimeOffCalendar = () => {
           onPress={(id) => handleChangeAvailability(id, event)} />
       )
     }
-    return <Event event={event} /> 
-  }, [activeAvailability])
+    return <Event event={event} view={view} /> 
+  }, [activeAvailability, loading])
 
-  const renderMonthHeader = useCallback(({date: monthDate}) => {
+  const renderHeaderCell = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
     const holiday = holidays[date.date()]
     return (
-      <div onClick={() => handleClickDay(date)}>
-        <span className='schedule-enter-day'>{ t('Go') }</span>
-        { `${date.format('D')}` }
-        <HolidayIcon holidays={holiday} month={true} />
-      </div>
-    )
-  }, [holidays])
-
-  const renderWeekHeader = useCallback(({date: monthDate}) => {
-    const date = moment(monthDate)
-    const holiday = holidays[date.date()]
-    return (
-      <div onClick={() => handleClickDay(date)}>
-        <span className='schedule-enter-day'>{ t('Go') }</span>
+      <div className="header-cell" onClick={() => handleClickDay(date)}>
+        <span className="schedule-enter-day">{ t('Go') }</span>
         { `${date.format('D')}` }
         <HolidayIcon holidays={holiday} month={true} />
       </div>
@@ -763,7 +756,7 @@ const TimeOffCalendar = () => {
             },
             week: {
               ...CALENDAR_VIEWS_CONFIG.week,
-              slotLabelFormat: renderWeekHeader,
+              slotLabelFormat: renderHeaderCell,
               slotLabelClassNames: ({date: monthDate}) => {
                 const date = moment(monthDate)
                 const holiday = holidays[date.date()]
@@ -777,7 +770,7 @@ const TimeOffCalendar = () => {
             },
             month: {
               ...CALENDAR_VIEWS_CONFIG.month,
-              slotLabelContent: renderMonthHeader,
+              slotLabelContent: renderHeaderCell,
               slotLabelClassNames: ({date: monthDate, view}) => {
                 const date = moment(monthDate)
                 const holiday = holidays[date.date()]
@@ -797,7 +790,7 @@ const TimeOffCalendar = () => {
               },
             },
           }}
-          resources={[AVAILABILITY_RESOURCE, ...getCheckedOrAll(resources, policies, events, currentMonth, activeAvailability)]}
+          resources={[AVAILABILITY_RESOURCE, ...getCheckedOrAll(resources, policies, events, currentMonth, activeAvailability, loading)]}
           events={filterEvents(events, currentMonth, activeAvailability)}
           eventContent={renderEventContent}
           eventClassNames={eventClassNames}

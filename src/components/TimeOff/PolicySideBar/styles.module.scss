@@ -159,6 +159,19 @@
             align-items: center;
             gap: 8px;
 
+            .avatar {
+              width: 44px;
+              height: 44px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+
+              img {
+                border-radius: 50%;
+              }
+            }
+
             .employeeName {
               font-family: "Helvetica Neue Medium", sans-serif;
               font-weight: 500;

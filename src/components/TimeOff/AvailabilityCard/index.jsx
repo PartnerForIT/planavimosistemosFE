@@ -7,7 +7,7 @@ import styles from './styles.module.scss'
 const AvailabilityCard = ({event, isActive, onPress}) => {
   const { t } = useTranslation()
   const props = event.extendedProps || {}
-  const tooltipContent = `<b>${t('Click to expand the day overview')}</b>`
+  const tooltipContent = isActive ? `<b>${t('Click to exit the expanded day overview mode')}</b>` : `<b>${t('Click to expand the day overview')}</b>`
   const isDisabled = props.metadata.unavailableEmployees === 0
   return (
     <div

@@ -50,12 +50,11 @@
   }
 
   .schedule-enter-day {
-    display: block;
     display: none;
   }
 
   .fc-week-view, .fc-month-view {
-    .fc-timeline-slot-cushion {
+    .fc-timeline-slot-frame {
       &:hover {
         cursor: pointer;
         color: #1d88fc;
@@ -63,6 +62,21 @@
         .schedule-enter-day {
           display: block;
         }
+      }
+    }
+    .fc-timeline-slot-cushion {
+      width: 100%;
+      height: 100%;
+      display: flex;
+
+      .header-cell {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
       }
     }
   }

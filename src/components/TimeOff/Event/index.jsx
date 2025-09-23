@@ -54,11 +54,13 @@ const AttentionIcon = ({color, ...props}) => {
   )
 }
 
-const Event = ({event}) => {
+const Event = ({event, view}) => {
   const { t } = useTranslation()
-
+  const activeRange = view.getCurrentData().dateProfile.activeRange
+  const viewRange = moment(activeRange.end).diff(moment(activeRange.start), 'days')
   const eventRange = moment(event.end).diff(moment(event.start), 'days') + 1
-  const cellWidthPercentage = 100 / eventRange
+  const dayRange = view.type === 'day' ? 23 : Math.min(eventRange, viewRange)
+  const cellWidthPercentage = 100 / dayRange
   const rightCells = Math.floor(100/cellWidthPercentage/2) - 1
 
   const eventProps = event.extendedProps
@@ -121,9 +123,9 @@ const Event = ({event}) => {
         {
           eventProps.status === 'rejected' || eventProps.status === 'pending'
             ? <AttentionIcon
-                style={{right: `${rightCells * cellWidthPercentage + (100 / eventRange / 2)}%`}}
+                style={{right: `${rightCells * cellWidthPercentage + (100 / dayRange / 2)}%`}}
                 color={eventProps.status === 'rejected' ? '#FD4646' : '#FFBD06'}
-                className={cn(styles.attentionIcon, {[styles.absolute]: eventRange === 1})} />
+                className={cn(styles.attentionIcon, {[styles.absolute]: dayRange === 1})} />
             : null
         }
       </div>
