@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import classnames from "classnames";
 import EventsIcon from '../../Icons/Events';
 import { updateEventsCounter } from '../../../store/auth/actions';
+import TimeOffIcon from '../../Icons/TimeOff';
 
 let addNotificationExternal;
 let notificationDispatch;
@@ -147,6 +148,11 @@ export const NotificationContainer = () => {
                   return '🕒';
                 case 'new_event':
                   return <EventsIcon fill="#e8a43f" />;
+                case 'request':
+                  return <TimeOffIcon fill="#f59f13" />;
+                case 'request_approved':
+                case 'request_rejected':
+                  return <TimeOffIcon fill={n.data.type === 'request_approved' ? '#178034' : '#f01f1f'} />;
                 default:
                   return 'ℹ️';
               }

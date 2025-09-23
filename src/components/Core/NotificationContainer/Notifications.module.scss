@@ -69,6 +69,18 @@
   &.break_end {
     border-left-color: #2ecc71;
   }
+
+  &.request {
+    border-left-color: #f59f13;
+  }
+
+  &.request_approved {
+    border-left-color: #178034;
+  }
+
+  &.request_rejected {
+    border-left-color: #f01f1f;
+  }
 }
 
 .icon {
