@@ -184,7 +184,7 @@ export default () => {
         pusher.openUserChannel(user?.user?.id)
         setTimeout(() => {
           pusher.listenUserNotify(addNotification);
-        }, 1000);
+        }, 500);
       }
     }
     // eslint-disable-next-line
