@@ -2,9 +2,9 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-export default function TimeOffSymbol1({ fill, viewBox, className }) {
+export default function TimeOffSymbol1({ fill, viewBox, className, ...props }) {
   return (
-    <SvgIcon viewBox={viewBox || '0 0 26 41'} className={className} fill="none">
+    <SvgIcon viewBox={viewBox || '0 0 26 41'} className={className} fill="none" {...props}>
       <path d="M5.08542 39.9997C4.65 39.9997 4.29688 39.6465 4.29688 39.2111V37.4189H5.87397V39.2111C5.87397 39.6465 5.52085 39.9997 5.08542 39.9997Z" stroke={ fill || "#B3B3B3" } strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M12.605 39.9997C12.1695 39.9997 11.8164 39.6465 11.8164 39.2111V37.4189H13.3935V39.2111C13.3935 39.6465 13.0404 39.9997 12.605 39.9997Z" stroke={ fill || "#B3B3B3" } strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M11.9599 3.49023L11.644 15.6397H6.55689L6.23828 3.49023H11.9599Z" stroke="#B3B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

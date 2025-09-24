@@ -20,6 +20,54 @@ import { AdditionalRatesDataSelector,
   settingCompanySelector, IntegrationsDataSelector } from '../../../store/settings/selectors';
 import usePermissions from '../../../components/Core/usePermissions';
 
+import TimeOffSymbol1 from '../../../components/Icons/TimeOffSymbol1'
+import TimeOffSymbol2 from '../../../components/Icons/TimeOffSymbol2'
+import TimeOffSymbol3 from '../../../components/Icons/TimeOffSymbol3'
+import TimeOffSymbol4 from '../../../components/Icons/TimeOffSymbol4'
+import TimeOffSymbol5 from '../../../components/Icons/TimeOffSymbol5'
+import TimeOffSymbol6 from '../../../components/Icons/TimeOffSymbol6'
+import TimeOffSymbol7 from '../../../components/Icons/TimeOffSymbol7'
+import TimeOffSymbol8 from '../../../components/Icons/TimeOffSymbol8'
+import TimeOffSymbol9 from '../../../components/Icons/TimeOffSymbol9'
+
+const DEFAULT_COLOR = '#1685FD'
+
+const AttentionIcon = ({color, ...props}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={19}
+      height={19}
+      viewBox='0 0 19 19'
+      fill="none"
+      {...props}
+    >
+      <g clipPath="url(#a)">
+        <path fill={color} d="M9.5 19a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19Z" />
+        <path
+          stroke="#fff"
+          d="M9.5 18.703A9.203 9.203 0 1 0 9.5.297a9.203 9.203 0 0 0 0 18.406Z"
+        />
+        <path
+          fill="#fff"
+          d="M8.996 4.367a.594.594 0 0 1 1.007 0l4.869 7.786a.595.595 0 0 1-.504.909H4.631a.594.594 0 0 1-.504-.909l4.87-7.786Z"
+        />
+        <path
+          stroke={color}
+          strokeLinecap="round"
+          strokeWidth={1.2}
+          d="M9.5 7.62v1.694"
+        />
+      </g>
+      <defs>
+        <clipPath id="a">
+          <path fill="#fff" d="M0 0h19v19H0z" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
 const permissionsConfig = [
   {
     name: 'night_rates',
@@ -84,6 +132,7 @@ const EventContent = ({
   nightDuration,
   title,
   showHoursCount,
+  policies,
 }) => {
 
   const { t } = useTranslation();
@@ -331,6 +380,35 @@ const EventContent = ({
     )
   }
 
+  if (selectedEvent.timeOffRequest && (selectedEvent.timeOffRequest.status === 'approved' || (selectedEvent.timeOffRequest.status === 'pending' && empty_manual))) {
+    const policy = policies[selectedEvent.timeOffRequest.policy_id] || {color: DEFAULT_COLOR}
+    return (
+      <div className={styles.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR}}>
+        {
+          ((symbol) => {
+            switch(symbol) {
+              case '1': return <TimeOffSymbol1 className={styles.policyIcon} width={10} height={20} />
+              case '2': return <TimeOffSymbol2 className={styles.policyIcon} width={10} height={20} />
+              case '3': return <TimeOffSymbol3 className={styles.policyIcon} width={10} height={20} />
+              case '4': return <TimeOffSymbol4 className={styles.policyIcon} width={10} height={20} />
+              case '5': return <TimeOffSymbol5 className={styles.policyIcon} width={10} height={20} />
+              case '6': return <TimeOffSymbol6 className={styles.policyIcon} width={10} height={20} />
+              case '7': return <TimeOffSymbol7 className={styles.policyIcon} width={10} height={20} />
+              case '8': return <TimeOffSymbol8 className={styles.policyIcon} width={10} height={20} />
+              case '9': return <TimeOffSymbol9 className={styles.policyIcon} width={10} height={20} />
+              default: return <TimeOffSymbol1 className={styles.policyIcon} width={10} height={20} />
+            }
+          })(policy.symbol)
+        }
+        {
+          selectedEvent.timeOffRequest.status === 'pending'
+            ? <div className={styles.pendingDot} />
+            : null
+        }
+      </div>
+    )
+  }
+
   return (
     <div
       className={classes}
@@ -340,6 +418,15 @@ const EventContent = ({
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
+      {
+        selectedEvent.timeOffRequest && !empty_manual
+          ? <AttentionIcon
+              style={{position: 'absolute', top: 1, right: 0, zIndex: 2, visibility: 'visible'}}
+              width={12}
+              height={12}
+              color={'#FD4646'} />
+          : null
+      }
       <div style={{display: 'flex', alignItems: 'flex-start', flex: 1, width: '100%'}}>
         { !copy_event && !activeDrag && !empty_manual && endOverlap() > 0 && (
           <div

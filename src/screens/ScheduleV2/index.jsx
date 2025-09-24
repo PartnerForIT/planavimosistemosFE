@@ -19,6 +19,7 @@ import { loadEmployeesAll } from '../../store/settings/actions'
 import { getShiftTypes } from '../../store/shiftsTypes/actions'
 import { getJobTypes } from '../../store/jobTypes/actions'
 import usePermissions from '../../components/Core/usePermissions'
+import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../api'
 
 import HolidayIcon from '../../components/Core/HolidayIcon/HolidayIcon'
 import Progress from '../../components/Core/Progress'
@@ -104,6 +105,12 @@ const employToCheck = ({id,name,surname}) => ({
   label: `${name} ${surname}`,
 })
 
+const rangesOverlap = (start1, end1, start2, end2) => {
+  if (end1.isBefore(start1)) [start1, end1] = [end1, start1]
+  if (end2.isBefore(start2)) [start2, end2] = [end2, start2]
+  return start1.isBefore(end2) && start2.isBefore(end1)
+}
+
 const handleResourceLabelClassNames = ({ resource }) => {
   const { extendedProps: props } = resource;
   const classes = []
@@ -166,6 +173,9 @@ const generateStatisticEvents = (date, events) => {
 
   const temp = Object.entries(resourceEvents).flatMap(([resourceId, events]) => {
     const accumulatedData = events.filter(e => !e.empty_event && !e.empty_manual && !e.empty_employee).reduce((acc, e) => {
+      if (e.timeOffRequest && e.timeOffRequest.status === 'approved') {
+        return acc
+      }
       return {
         totalHours: acc.totalHours + (e.hours || 0),
         nightHours: acc.nightHours + (e.night_duration || 0),
@@ -241,7 +251,14 @@ const generateEvents = (events, markers, timeline, scheduleSettings, fromDate) =
   }
 
   if (timeline === TIMELINE.WEEK) {
-    result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
+    result = result.map(e => {
+      return {
+        ...e,
+        realStart: e.start,
+        realEnd: e.end,
+        ...(e.timeOffRequest && e.timeOffRequest.status === 'approved' ? {start: moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'), end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss')} : {}),
+      }
+    })
   }
 
   if (timeline === TIMELINE.MONTH) {
@@ -333,6 +350,7 @@ const ScheduleV2 = () => {
   const [modalAddTempEmployee, setmodalAddTempEmployee] = useState(null)
   const [tempShiftID, setTempShiftID] = useState(0)
   const [tempEventID, setTempEventID] = useState(0)
+  const [policies, setPolicies] = useState({})
 
   const calendarRef = useRef(null)
   const fromDateRef = useRef(new Date())
@@ -423,67 +441,6 @@ const ScheduleV2 = () => {
   }, [schedule.resources, schedule.events, scheduleSettings.remove_timelines, timeline])
 
   const events = useMemo(() => {
-    // let result = []
-    // if (scheduleSettings.remove_timelines && timeline === TIMELINE.WEEK) {
-    //   result = schedule?.events.map((e) => ({
-    //     ...e,
-    //     realStart: e.start,
-    //     realEnd: e.end,
-    //     start: e.empty_manual ? e.start : moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-    //     end: e.empty_manual ? e.end : moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-    //   }));
-    // } else if (timeline === TIMELINE.DAY) {
-    //   result = schedule?.events
-    //     .filter((e) => !(!e.employee_id && !moment(e.start).isSame(moment(fromDateRef.current), 'day')))
-    //     .map(e => {
-    //       const startOfDay = moment().startOf('day')
-    //       const editable = moment(e.start, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(startOfDay) && !e.rId
-    //       if (e.empty_manual && scheduleSettings.working_at_night) {
-    //         const start = moment(e.start, 'YYYY-MM-DD HH:mm:ss')
-    //         const startStr = `${start.format('YYYY-MM-DD')} ${scheduleSettings.time_view_stats}:00`
-    //         const endStr = `${moment(startStr).add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')}`
-    //         const times = {
-    //           start: startStr,
-    //           end: endStr,
-    //         }
-            
-    //         return {
-    //           ...e,
-    //           identifier: e.id,
-    //           durationEditable: editable,
-    //           ...times,
-    //         }
-    //       }
-    //       return {
-    //         ...e,
-    //         identifier: e.id,
-    //         durationEditable: editable
-    //       }
-    //     })
-    // } else {
-    //   result = schedule?.events
-    // }
-
-    // if (timeline === TIMELINE.WEEK) {
-    //   result = result.map(e => ({...e, realStart: e.start, realEnd: e.end}))
-    // }
-
-    // if (timeline === TIMELINE.MONTH) {
-    //   result = [...result, ...generateStatisticEvents(fromDateRef.current, schedule.events)].map(e => {
-    //     const existMarker = schedule.markers.find(marker => {
-    //       return moment(marker.date).format('YYYY-MM-DD') === moment(e.start).format('YYYY-MM-DD') && marker.employee_id === e.employee_id
-    //     })
-        
-    //     return {
-    //       ...e,
-    //       realStart: e.start,
-    //       realEnd: e.end,
-    //       withConflicts: existMarker,
-    //       end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-    //     }
-    //   })
-    // }
-
     const result = schedule.events.map(e => {
       const eventWeekDay = moment(e.start).isoWeekday()
       return {
@@ -505,7 +462,7 @@ const ScheduleV2 = () => {
       }),
       ...copyToolHistory.map((e) => ({...e, copy_event: true})),
     ]
-  }, [schedule.events, copyToolHistory, workTimes])
+  }, [schedule.events, copyToolHistory, workTimes, policies])
 
   const daysOfMonth = useMemo(() => {
     const currentMonth = moment().startOf('month')
@@ -578,9 +535,10 @@ const ScheduleV2 = () => {
     const promisses = [
       request(`${companyId}/schedule/settings`),
       request(`${companyId}/logbook/additional-rates`),
-      request(`${companyId}/work-time`)
+      request(`${companyId}/work-time`),
+      getCompanyTimeOffPolicies(companyId),
     ]
-    const [scheduleSettingsRes, additionalRatesRes, workTimeRes] = await Promise.all(promisses)
+    const [scheduleSettingsRes, additionalRatesRes, workTimeRes, policiesRes] = await Promise.all(promisses)
     if (scheduleSettingsRes) {
       setScheduleSettings({...scheduleSettingsRes, loaded: true})
       setToolsActive(state => {
@@ -598,6 +556,12 @@ const ScheduleV2 = () => {
       setWorkTimes(workTimeRes.work_time.work_days.days.reduce((acc, item) => ({
         ...acc,
         [item.day]: item
+      }), {}))
+    }
+    if (Array.isArray(policiesRes?.policies)) {
+      setPolicies(policiesRes.policies.reduce((acc, item) => ({
+        ...acc,
+        [item.id]: item
       }), {}))
     }
   }
@@ -624,10 +588,37 @@ const ScheduleV2 = () => {
         }
         return e
       })
+      const timeOffRes = await getCompanyTimeOffRequests(companyId, formDate)
+      const timeOffRequestsMap = timeOffRes.request_behalf.map(req => ({...req, status: 'pending'})).reduce((acc, req) => ({
+        ...acc,
+        [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], req] : [req]
+      }), {})
+      const eventsWithRequests = events.map(e => {
+        const timeOffRequests = timeOffRequestsMap[e.employee_id]
+        if (timeOffRequests) {
+          const conflictRequest = timeOffRequests.find(req => {
+            const reqStart = moment(req.from).startOf('day')
+            const reqEnd = moment(req.to).endOf('day')
+            const eventStart = moment(e.start)
+            const eventEnd = moment(e.end)
+            return rangesOverlap(reqStart, reqEnd, eventStart, eventEnd)
+          })
+          if (conflictRequest) {
+            return {
+              ...e,
+              timeOffRequest: conflictRequest,
+            }
+          }
+        }
+        return e
+      })
+
+      const workEvents = generateEvents(eventsWithRequests, res.markers, type, scheduleSettings, fromDateRef.current)
+      
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
         holidays: Object.keys(res.holidays).length ? res.holidays : state.holidays,
-        events: generateEvents(events, res.markers, type, scheduleSettings, fromDateRef.current),
+        events: workEvents,
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
@@ -1235,6 +1226,7 @@ const ScheduleV2 = () => {
           timeText={timeText}
           start={start}
           end={end}
+          policies={policies}
           resourceId={resourceInfo.id}
           copy_event={event.extendedProps.copy_event}
           empty={event.extendedProps.empty_event}
@@ -1285,6 +1277,7 @@ const ScheduleV2 = () => {
         timeText={timeText}
         start={start}
         end={end}
+        policies={policies}
         resourceId={resourceInfo.id}
         copy_event={event.extendedProps.copy_event}
         empty={event.extendedProps.empty_event}
@@ -1322,7 +1315,7 @@ const ScheduleV2 = () => {
         addEmployee={() => addTempEmployees(shiftId, event.id)}
       />
     )
-  }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking])
+  }, [permissions, scheduleSettings, timeline, activeDrag, schedule, copyTool, toolsActive.marking, policies])
 
   return (
     <MainLayout>

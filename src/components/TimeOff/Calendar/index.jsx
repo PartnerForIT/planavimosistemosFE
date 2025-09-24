@@ -525,6 +525,7 @@ const TimeOffCalendar = () => {
       sideBarRef.current.close()
     }
     setLoading(true)
+    setHolidays({})
     const holidayParams = {
       type: 'month',
       from_date: currentStartDate,
