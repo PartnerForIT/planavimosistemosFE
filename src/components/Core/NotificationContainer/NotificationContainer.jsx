@@ -7,6 +7,7 @@ import EventsIcon from '../../Icons/Events';
 import { updateEventsCounter } from '../../../store/auth/actions';
 import TimeOffIcon from '../../Icons/TimeOff';
 import { useParams } from "react-router-dom";
+import ScheduleIcon from '../../Icons/Schedule';
 
 let addNotificationExternal;
 let notificationDispatch;
@@ -170,6 +171,9 @@ export const NotificationContainer = () => {
                 case 'request_approved':
                 case 'request_rejected':
                   return <TimeOffIcon fill={n.data.type === 'request_approved' ? '#178034' : '#f01f1f'} />;
+                case 'schedule_published':
+                case 'schedule_changed':
+                  return <ScheduleIcon fill={n.data.type === 'schedule_published' ? '#178034' : '#f59f13'} />;
                 default:
                   return 'ℹ️';
               }

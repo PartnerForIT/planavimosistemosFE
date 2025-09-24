@@ -81,6 +81,14 @@
   &.request_rejected {
     border-left-color: #f01f1f;
   }
+
+  &.schedule_published {
+    border-left-color: #178034;
+  }
+
+  &.schedule_changed {
+    border-left-color: #f59f13;
+  }
 }
 
 .icon {
