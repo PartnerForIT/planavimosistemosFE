@@ -151,6 +151,44 @@ const MonthCell = ({
     return type
   }
 
+  const timeOffTooltipContent = (timeOffRequest) => {
+    const statusColor = (status => {
+      switch(status) {
+        case 'approved': return '#34C759'
+        case 'pending': return '#FF9500'
+        case 'rejected': return '#FF3B30'
+        default: return '#34C759'
+      }
+    })(timeOffRequest.status)
+
+    return `
+      <div style="font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('From')}:</span>
+          <b style="color: #000;">${timeOffRequest.from}</b>
+          <span style="color: #7c7c7c;">${t('To')}:</span>
+          <b style="color: #000;">${timeOffRequest.to}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Policy')}:</span>
+          <b style="color: #000;">${timeOffRequest.policy.name}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Status')}:</span>
+          <b style="color: ${statusColor}; text-transform: capitalize;">${timeOffRequest.status}</b>
+        </div>
+        ${
+          timeOffRequest.note
+            ? `<div style="display: flex; gap: 4px;">
+                <span style="color: #7c7c7c;">${t('Note')}:</span>
+                <b style="color: #000;">${timeOffRequest.note}</b>
+              </div>`
+            : ''
+        }
+      </div>
+    `
+  }
+
   const tooltipContent = () => {
     return (
       `<div class="timeline-tooltip">${t('From')} <b>${moment(start).format('HH:mm')}</b> ${t('to')} <b>${moment(end).format('HH:mm')}</b><br/>
@@ -261,8 +299,12 @@ const MonthCell = ({
 
   if (selectedEvent.timeOffRequest && (selectedEvent.timeOffRequest.status === 'approved' || (selectedEvent.timeOffRequest.status === 'pending' && empty_manual))) {
     const policy = policies[selectedEvent.timeOffRequest.policy_id] || {color: DEFAULT_COLOR}
+    
     return (
-      <div className={css.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR}}>
+      <div
+        data-tooltip-id="time_off"
+        data-tooltip-html={timeOffTooltipContent({...selectedEvent.timeOffRequest, policy: policy})}
+        className={css.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR}}>
         {
           ((symbol) => {
             switch(symbol) {
@@ -292,8 +334,8 @@ const MonthCell = ({
     <div
       className={css.container}
       style={{opacity: isCompleted ? 0.5 : 1}}
-      data-tooltip-id={marker ? 'user_marker' : tooltipType()}
-      data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : tooltipContent()}
+      data-tooltip-id={marker ? 'user_marker' : (selectedEvent.timeOffRequest ? 'time_off' : tooltipType())}
+      data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : (selectedEvent.timeOffRequest ? timeOffTooltipContent({...selectedEvent.timeOffRequest, policy: policies[selectedEvent.timeOffRequest.policy_id]}) : tooltipContent())}
       >
       {
         selectedEvent.timeOffRequest && !empty_manual

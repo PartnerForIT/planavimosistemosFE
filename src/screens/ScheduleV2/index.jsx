@@ -1464,6 +1464,10 @@ const ScheduleV2 = () => {
         </div>
       </div>
       <Tooltip
+        id='time_off'
+        className={'schedule-screen__tooltip schedule-screen__tooltip__active'}
+        effect='solid' />
+      <Tooltip
         id='time_active'
         className='schedule-screen__tooltip schedule-screen__tooltip__active'
         effect='solid' />
