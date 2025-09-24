@@ -33,15 +33,16 @@ const CALENDAR_VIEWS_CONFIG = {
     title: 'ddd MMM, DD, YYYY',
     slotLabelFormat: 'HH:mm',
     slotDuration: '1:00',
-    snapDuration: '00:15',
+    // snapDuration: '00:15',
   },
   week: {
     type: 'resourceTimelineWeek',
     slotDuration: '24:00',
-    snapDuration: '6:00',
+    // snapDuration: '6:00',
   },
   month: {
     type: 'resourceTimeline',
+    // slotDuration: '24:00',
     // slotDuration: '12:00',
   }
 }
@@ -379,6 +380,22 @@ const getRandomHexColor = () => {
   return `#${randomColor.padStart(6, '0')}`;
 }
 
+const generateWorkEvents = (data) => {
+  return data.filter(e => Boolean(e.employee_id) && !e.empty_manual).map(event => {
+    return {
+      id: event.id,
+      start: moment(event.start).toDate(),
+      end: moment(event.end).toDate(),
+      from: event.start,
+      to: event.end,
+      backgroundColor: fade(DEFAULT_COLOR, 0.5),
+      borderColor: DEFAULT_COLOR,
+      resourceId: event.employee_id.toString(),
+      classNames: [styles.event],
+    }
+  })
+}
+
 const generateEvents = (data, policies) => {
   const policiesMap = policies.reduce((acc, policy) => {
     return {
@@ -457,15 +474,6 @@ const eventClassNames = ({ event }) => {
   return ['']
 }
 
-// const slotLaneClassNames = ({ date }) => {
-//   const classes = []
-//   const day = moment(date).day()
-//   if (day === 6 || day === 0) {
-//     classes.push('fc-slot-weekend')
-//   }
-//   return classes
-// }
-
 const TimeOffCalendar = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
@@ -480,12 +488,8 @@ const TimeOffCalendar = () => {
   const [events, setEvents] = useState([])
   const [activeAvailability, setActiveAvailability] = useState(null)
 
-  // const fromDateRef = useRef(new Date())
   const calendarRef = useRef(null)
   const sideBarRef = useRef(null)
-  // const currentMonthRef = useRef(currentStartDate)
-
-  // console.log(events.filter(e => e.resourceId !== 'availability'))
 
   const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
@@ -683,19 +687,6 @@ const TimeOffCalendar = () => {
     )
   }, [holidays])
 
-  // const renderSlotLaneContent = useCallback(({ date }) => {
-  //   const d = moment(date)
-  //   const isWeekend = d.day() === 6 || d.day() === 0
-  //   if (isWeekend) {
-  //     return (
-  //       <div
-  //         className="weekend-slot"
-  //       />
-  //     )
-  //   }
-  //   return <div />
-  // }, [])
-
   return (
     <div className={styles.screen}>
       <div className={styles.toolsContainer}>
@@ -740,20 +731,10 @@ const TimeOffCalendar = () => {
           eventMinWidth={10}
           dayMinWidth={10}
           slotMinWidth={10}
-          // dayCellClassNames={(arg) => {
-          //   const dow = arg.date.getDay(); // 0 = Sunday, 6 = Saturday
-          //   if (dow === 0 || dow === 6) {
-          //     return ["fc-weekend-cell"]; // custom class
-          //   }
-          //   return [];
-          // }}
-          // eventDurationEditable={timeline === TIMELINE.DAY}
           views={{
             ...CALENDAR_VIEWS_CONFIG,
             day: {
               ...CALENDAR_VIEWS_CONFIG.day,
-              // slotMinTime: scheduleSettings.working_at_night ? scheduleSettings.time_view_stats : '00:00:00',
-              // slotMaxTime: scheduleSettings.working_at_night ? `${+scheduleSettings.time_view_stats.split(':')[0] + 24}:00:00` : '24:00:00', 
             },
             week: {
               ...CALENDAR_VIEWS_CONFIG.week,
@@ -795,17 +776,10 @@ const TimeOffCalendar = () => {
           events={filterEvents(events, currentMonth, activeAvailability)}
           eventContent={renderEventContent}
           eventClassNames={eventClassNames}
-          // slotLaneClassNames={slotLaneClassNames}
-          // slotLaneContent={renderSlotLaneContent}
-          // resourceAreaHeaderClassNames={() => ['resource-area-header']}
           resourceAreaHeaderContent={renderResourceAreaHeaderContent}
-          // resourceLaneContent={resourceLaneContent}
           resourceLabelClassNames={resourceLabelClassNames}
           resourceLaneClassNames={resourceLaneClassNames}
           resourceLabelContent={renderResourceLabelContent}
-          // locale={localStorage.getItem('i18nextLng') || 'en'}
-          // eventAllow={eventListener}
-          // viewDidMount={handleViewDidMount}
         />
       </div>
       <PolicySideBar ref={sideBarRef} />
