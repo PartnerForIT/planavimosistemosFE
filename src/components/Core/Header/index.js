@@ -251,7 +251,7 @@ export default function ButtonAppBar({ logOut }) {
     if ((permissions.schedule_shift || permissions.schedule_simple)) {
       nextMenuItems.push({
         Icon: ScheduleIcon,
-        title: t('Schedule'),
+        title: permissions.schedule_simple ? t('Tasker') : t('Schedule'),
         name: 'schedule',
         to: `/${companyId}/schedule`,
         width: 33,
