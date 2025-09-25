@@ -36,6 +36,11 @@ export const getPlaces = async (companyId) => {
   return res
 }
 
+export const getCompanyHolidays = async (companyId, params) => {
+  const res = await request(`company/${companyId}/holidays`, 'GET', params)
+  return res
+}
+
 export const getCompanyEmployeesAll = async (companyId) => {
   const res = await request(`company/${companyId}/employees/all`, 'GET')
   return res

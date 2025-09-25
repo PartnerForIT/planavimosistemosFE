@@ -92,7 +92,7 @@ const handleRequest = (params) => {
             primary
             onClick={() => handleRequest()}
           >
-            {t('Request on behalf')}
+            {t('Fill Request')}
           </Button>
         </div>
         <div>
@@ -192,7 +192,6 @@ const handleRequest = (params) => {
               </div>
               {
                 policies.map((policy) => {
-                  console.log(policy)
                   const policyEmployeeDetails = policy.employees.find((emp) => emp.id === employeeId)
                   const isExpanded = expandedPolicyIds.includes(policy.id)
                   return (
@@ -314,7 +313,7 @@ const handleRequest = (params) => {
       </div>
       <RequestBehalf
         ref={requestFormRef}
-        title={t('Request on behalf')}
+        title={t('Fill Request')}
         onSubmit={handleSubmitRequest}
         handleClose={() => {}}
         buttonTitle={t('Submit')}

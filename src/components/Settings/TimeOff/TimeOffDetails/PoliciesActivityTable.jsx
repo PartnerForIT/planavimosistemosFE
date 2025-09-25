@@ -56,7 +56,7 @@ function PoliciesActivityTable({
     return (
       <div className={classes.container}>
           <div className={classes.containerTitle}>
-          {t(' Policies')}
+          {t(' Policies')} <span style={{color: '#808F94'}}>{employeePolicies.length}</span>
           </div>
           {
           employeePolicies.length > 0 ? (
