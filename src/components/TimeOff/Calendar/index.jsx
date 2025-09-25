@@ -202,97 +202,7 @@ const getEventsForDay = (events, date) => {
   return eventsMap
 }
 
-const generateAvailabilityEvents = (currentDate, employees, events) => {
-  const currentMonth = moment(currentDate).startOf('month')
-  
-  const employeesMap = employees.reduce((acc, emp) => {
-    return {...acc, [emp.id]: emp}
-  }, {})
 
-  let maxEmployeesOnLeave = 0
-  new Array(currentMonth.daysInMonth()).fill().forEach((_, i) => {
-    const start = currentMonth.clone().add(i, 'days').startOf('day')
-    const end = currentMonth.clone().add(i, 'days').endOf('day')
-    
-    const unavailableEmployees = events.reduce((acc, event) => {
-      const eventStart = moment(event.start)
-      const eventEnd = moment(event.end)
-      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
-      if (isEventInDay && employeesMap[event.employee_id]) {
-        acc += 1
-      }
-      return acc
-    }, 0)
-
-    if (unavailableEmployees > maxEmployeesOnLeave) {
-      maxEmployeesOnLeave = unavailableEmployees
-    }
-  })
-
-  const arr = new Array(currentMonth.daysInMonth()).fill().map((_, i) => {
-    const start = currentMonth.clone().add(i, 'days').startOf('day')
-    const end = currentMonth.clone().add(i, 'days').endOf('day')
-
-    const res = events.reduce((acc, event) => {
-      const eventStart = moment(event.start)
-      const eventEnd = moment(event.end)
-      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
-      if (isEventInDay && employeesMap[event.employee_id]) {        
-        acc.count += 1
-        const existingPolicy = acc.policies[event.policy.id]
-        if (!existingPolicy) {
-          acc.policies[event.policy.id] = {
-            color: event.policy.color || DEFAULT_COLOR,
-            onLeave: 1,
-            name: event.policy.name || 'Time Off',
-            id: event.policy.id,
-            symbol: event.policy.symbol,
-            employees: [{...employeesMap[event.employee_id], color: getRandomHexColor(), event: event}]
-          }
-        } else {
-          acc.policies[event.policy.id].onLeave += 1
-          acc.policies[event.policy.id].employees.push({...employeesMap[event.employee_id], color: getRandomHexColor(), event: event})
-        }
-      }
-      return acc
-    }, {count: 0, policies: {}})
-    
-    const unavailableEmployees = res.count
-    return {
-      resourceId: 'availability',
-      id: `availability-${i}`,
-      start: start.toDate(),
-      end: end.toDate(),
-      backgroundColor: 'transparent',
-      borderColor: 'transparent',
-      type: 'availability',
-      metadata: {
-        unavailableEmployees: unavailableEmployees,
-        totalEmployees: maxEmployeesOnLeave,
-        percentage: maxEmployeesOnLeave > 0 ? Math.round((unavailableEmployees / maxEmployeesOnLeave) * 100) : 0,
-        chartData: {
-          date: start.format('YYYY-MM-DD'),
-          onLeave: unavailableEmployees,
-          segments: Object.values(res.policies).map(item => {
-            return {
-              id: item.id,
-              name: item.name,
-              value: item.onLeave,
-              symbol: item.symbol,
-              seg: {
-                  type: item.name,
-                  count: item.onLeave,
-                  employees: item.employees,
-              },
-              fill: item.color,
-            }
-          })
-        }
-      }
-    }
-  })
-  return arr
-}
 
 const getCheckedElements = (items) => {
   const result = []
@@ -451,6 +361,99 @@ const generateEvents = (data, policies) => {
   return arr
 }
 
+const generateAvailabilityEvents = (currentDate, employees, events) => {
+  const currentMonth = moment(currentDate).startOf('month')
+  
+  const employeesMap = employees.reduce((acc, emp) => {
+    return {...acc, [emp.id]: emp}
+  }, {})
+
+  let maxEmployeesOnLeave = 0
+  new Array(currentMonth.daysInMonth()).fill().forEach((_, i) => {
+    const start = currentMonth.clone().add(i, 'days').startOf('day')
+    const end = currentMonth.clone().add(i, 'days').endOf('day')
+    
+    const unavailableEmployees = events.reduce((acc, event) => {
+      const eventStart = moment(event.start)
+      const eventEnd = moment(event.end)
+      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
+      if (isEventInDay && employeesMap[event.employee_id]) {
+        acc += 1
+      }
+      return acc
+    }, 0)
+
+    if (unavailableEmployees > maxEmployeesOnLeave) {
+      maxEmployeesOnLeave = unavailableEmployees
+    }
+  })
+
+  const arr = new Array(currentMonth.daysInMonth()).fill().map((_, i) => {
+    const start = currentMonth.clone().add(i, 'days').startOf('day')
+    const end = currentMonth.clone().add(i, 'days').endOf('day')
+
+    const res = events.reduce((acc, event) => {
+      const eventStart = moment(event.start)
+      const eventEnd = moment(event.end)
+      const isEventInDay = rangesOverlap(start, end, eventStart, eventEnd)
+      if (isEventInDay && employeesMap[event.employee_id]) {        
+        acc.count += 1
+        const existingPolicy = acc.policies[event.policy.id]
+        if (!existingPolicy) {
+          acc.policies[event.policy.id] = {
+            color: event.policy.color || DEFAULT_COLOR,
+            onLeave: 1,
+            name: event.policy.name || 'Time Off',
+            id: event.policy.id,
+            symbol: event.policy.symbol,
+            employees: [{...employeesMap[event.employee_id], color: getRandomHexColor(), event: event}]
+          }
+        } else {
+          acc.policies[event.policy.id].onLeave += 1
+          acc.policies[event.policy.id].employees.push({...employeesMap[event.employee_id], color: getRandomHexColor(), event: event})
+        }
+      }
+      return acc
+    }, {count: 0, policies: {}})
+    
+    const unavailableEmployees = res.count
+    return {
+      resourceId: 'availability',
+      id: `availability-${i}`,
+      start: start.toDate(),
+      end: end.toDate(),
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      type: 'availability',
+      classNames: [styles.availabilityEvent],
+      metadata: {
+        unavailableEmployees: unavailableEmployees,
+        totalEmployees: maxEmployeesOnLeave,
+        percentage: maxEmployeesOnLeave > 0 ? Math.round((unavailableEmployees / maxEmployeesOnLeave) * 100) : 0,
+        chartData: {
+          date: start.format('YYYY-MM-DD'),
+          onLeave: unavailableEmployees,
+          segments: Object.values(res.policies).map(item => {
+            return {
+              id: item.id,
+              name: item.name,
+              value: item.onLeave,
+              symbol: item.symbol,
+              seg: {
+                  type: item.name,
+                  count: item.onLeave,
+                  employees: item.employees,
+              },
+              fill: item.color,
+            }
+          })
+        }
+      }
+    }
+  })
+  return arr
+}
+
 const filterResources = (items, policies, places, events, currentMonth, activeAvailability) => {
   let checkedEmployees = getCheckedEmployees(items)
   const checkedPolices = getCheckedElements(policies)
@@ -516,28 +519,19 @@ const resourceLaneClassNames = ({ resource }) => {
   return []
 }
 
-const eventClassNames = ({ event }) => {
-  if (event.extendedProps.type === 'availability') {
-    return ['availability-event']
-  }
-  return ['']
-}
-
 const TimeOffCalendar = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
-
-  const [loading, setLoading] = useState(true)
-  const [timeline, setTimeline] = useState(TIMELINE.MONTH)
-  const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
-  const [holidays, setHolidays] = useState({})
 
   const [{resources, policies, places}, setData] = useState({
     places: [],
     policies: [],
     resources: [],
   })
-
+  const [loading, setLoading] = useState(true)
+  const [timeline, setTimeline] = useState(TIMELINE.MONTH)
+  const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
+  const [holidays, setHolidays] = useState({})
   const [events, setEvents] = useState([])
   const [activeAvailability, setActiveAvailability] = useState(null)
 
@@ -836,7 +830,6 @@ const TimeOffCalendar = () => {
           resources={[AVAILABILITY_RESOURCE, ...filterResources(resources, policies, places, events, currentMonth, activeAvailability, loading)]}
           events={filterEvents(events, currentMonth, activeAvailability)}
           eventContent={renderEventContent}
-          eventClassNames={eventClassNames}
           resourceAreaHeaderContent={renderResourceAreaHeaderContent}
           resourceLabelClassNames={resourceLabelClassNames}
           resourceLaneClassNames={resourceLaneClassNames}
