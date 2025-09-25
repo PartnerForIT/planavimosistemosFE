@@ -531,10 +531,13 @@ const TimeOffCalendar = () => {
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
   const [holidays, setHolidays] = useState({})
-  const [places, setPlaces] = useState([])
-  const [policies, setPolicies] = useState([])
-  const [employees, setEmployees] = useState([])
-  const [resources, setResources] = useState([])
+
+  const [{resources, policies, places}, setData] = useState({
+    places: [],
+    policies: [],
+    resources: [],
+  })
+
   const [events, setEvents] = useState([])
   const [activeAvailability, setActiveAvailability] = useState(null)
 
@@ -576,17 +579,18 @@ const TimeOffCalendar = () => {
       getCompanyTimeOffPolicies(companyId),
       getPlaces(companyId),
     ])
+    const data = {resources: [], policies: [], places: []}
     if (Array.isArray(employeesRes?.users)) {
       const grouped = groupEmployees(employeesRes?.users)
-      setResources(grouped)
-      setEmployees(employeesRes?.users)
+      data.resources = grouped
     }
     if (Array.isArray(policiesRes?.policies)) {
-      setPolicies(policiesRes.policies.map(p => ({...p, checked: false, title: p.name, isEmployee: true})))
+      data.policies = policiesRes.policies.map(p => ({...p, checked: false, title: p.name, isEmployee: true}))
     }
     if (Array.isArray(placesRes)) {
-      setPlaces(placesRes.map(p => ({...p, title: p.name, checked: false, isEmployee: true})))
+      data.places = placesRes.map(p => ({...p, checked: false, title: p.name, isEmployee: true}))
     }
+    setData(data)
   }
 
   const getEvents = async (params) => {
@@ -668,18 +672,10 @@ const TimeOffCalendar = () => {
       return
     }
     sideBarRef.current.close()
-  }, [employees.length])
-
-  const handleChangeEmployeeFilter = useCallback((res) => {
-    setResources(res)
   }, [])
 
-  const handleChangePolicyFilter = useCallback((res) => {
-    setPolicies(res)
-  }, [])
-
-  const handleChangePlaceFilter = useCallback((res) => {
-    setPlaces(res)
+  const handleChangeFilter = useCallback((key, data) => {
+    setData(prev => ({...prev, [key]: data}))
   }, [])
 
   const renderResourceAreaHeaderContent = useCallback(({view}) => {
@@ -769,18 +765,18 @@ const TimeOffCalendar = () => {
         <CustomSelect
           placeholder={t('All places')}
           items={places}
-          onChange={handleChangePlaceFilter}
+          onChange={data => handleChangeFilter('places', data)}
           width='auto' />
         <CustomSelect
           placeholder={t('All Policies')}
           items={policies}
-          onChange={handleChangePolicyFilter}
+          onChange={data => handleChangeFilter('policies', data)}
           width='auto' />
         <CustomSelect
           placeholder={t('All employees')}
           buttonLabel={t('Filter')}
           items={resources}
-          onChange={handleChangeEmployeeFilter}
+          onChange={data => handleChangeFilter('resources', data)}
           width='auto' />
         <Tabs 
           selected={timeline}
