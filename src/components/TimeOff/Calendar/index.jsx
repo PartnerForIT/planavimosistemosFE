@@ -438,6 +438,7 @@ const generateEvents = (data, policies) => {
       to: item.to,
       resourceId: item.employee_id.toString(),
       policy: policy,
+      policy_id: item.policy_id,
       employee_id: item.employee_id,
       backgroundColor: fade(policy.color || DEFAULT_COLOR, 0.5),
       borderColor: policy.color || DEFAULT_COLOR,
@@ -450,15 +451,13 @@ const generateEvents = (data, policies) => {
   return arr
 }
 
-const filterResources = (items, policies, places, events, currentMonth, activeAvailability, loading) => {
-  if (loading) {
-    return items
-  }
+const filterResources = (items, policies, places, events, currentMonth, activeAvailability) => {
   let checkedEmployees = getCheckedEmployees(items)
   const checkedPolices = getCheckedElements(policies)
   const checkedPlaces = getCheckedElements(places)
   if (checkedPolices.length) {
-    const eventsMap = events.filter(e => e.resourceId !== 'availability').reduce((acc, event) => ({
+    const policiesMap = checkedPolices.reduce((acc, policy) => ({...acc, [policy.id]: true }), {})
+    const eventsMap = events.filter(e => e.resourceId !== 'availability' && policiesMap[e.policy_id]).reduce((acc, event) => ({
       ...acc,
       [event.employee_id]: true,
     }), {})
@@ -553,7 +552,7 @@ const TimeOffCalendar = () => {
   }, [companyId, currentMonth])
 
   useEffect(() => {
-    if (employees.length && policies.length) {
+    if (resources.length && policies.length) {
       const viewMap = {
         [TIMELINE.DAY]: 'daily',
         [TIMELINE.WEEK]: 'weekly',
@@ -569,7 +568,7 @@ const TimeOffCalendar = () => {
       }
       getEvents(params)
     }
-  }, [currentStartDate, employees, policies, places, resources, timeline])
+  }, [currentStartDate, policies, places, resources, timeline])
 
   const init = async () => {
     const [employeesRes, policiesRes, placesRes] = await Promise.all([
