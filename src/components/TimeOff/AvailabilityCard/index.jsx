@@ -13,6 +13,7 @@ const AvailabilityCard = ({event, isActive, onPress}) => {
     <div
       data-tooltip-id="availability_description"
       data-tooltip-html={tooltipContent}
+      data-tooltip-hidden={isDisabled}
       className={cn(styles.container, {[styles.active]: isActive, [styles.disabled]: isDisabled})} onClick={isDisabled ? null : () => onPress(isActive ? null : event.id)}>
       <div className={styles.employeesCount}>{props.metadata.unavailableEmployees}</div>
       <div className={styles.progressBar}>

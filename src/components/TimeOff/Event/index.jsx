@@ -83,7 +83,7 @@ const Event = ({event, view}) => {
       </div>
       <div style="display: flex; gap: 4px;">
         <span style="color: #7c7c7c;">${t('Policy')}:</span>
-        <b style="color: #000;">${eventProps.policy.name}</b>
+        <b style="color: #000;">${eventProps.policy?.name}</b>
       </div>
       <div style="display: flex; gap: 4px;">
         <span style="color: #7c7c7c;">${t('Status')}:</span>
@@ -100,36 +100,37 @@ const Event = ({event, view}) => {
     </div>
   `
 
-    return (
-      <div className={styles.eventContent}
-        data-tooltip-id="time_off"
-        data-tooltip-html={tooltipContent}>
-        {
-          ((symbol, color) => {
-            switch(symbol) {
-              case '1': return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
-              case '2': return <TimeOffSymbol2 fill={color} className={styles.policyIcon} />
-              case '3': return <TimeOffSymbol3 fill={color} className={styles.policyIcon} />
-              case '4': return <TimeOffSymbol4 fill={color} className={styles.policyIcon} />
-              case '5': return <TimeOffSymbol5 fill={color} className={styles.policyIcon} />
-              case '6': return <TimeOffSymbol6 fill={color} className={styles.policyIcon} />
-              case '7': return <TimeOffSymbol7 fill={color} className={styles.policyIcon} />
-              case '8': return <TimeOffSymbol8 fill={color} className={styles.policyIcon} />
-              case '9': return <TimeOffSymbol9 fill={color} className={styles.policyIcon} />
-              default: return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
-            }
-          })(eventProps.policy.symbol, fade(eventProps.policy.color || DEFAULT_COLOR, 0.5))
-        }
-        {
-          eventProps.status === 'rejected' || eventProps.status === 'pending'
-            ? <AttentionIcon
-                style={{right: `${rightCells * cellWidthPercentage + (100 / dayRange / 2)}%`}}
-                color={eventProps.status === 'rejected' ? '#FD4646' : '#FFBD06'}
-                className={cn(styles.attentionIcon, {[styles.absolute]: dayRange === 1})} />
-            : null
-        }
-      </div>
-    )
+  return (
+    <div
+      className={styles.eventContent}
+      data-tooltip-id="time_off"
+      data-tooltip-html={tooltipContent}>
+      {
+        ((symbol, color) => {
+          switch(symbol) {
+            case '1': return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
+            case '2': return <TimeOffSymbol2 fill={color} className={styles.policyIcon} />
+            case '3': return <TimeOffSymbol3 fill={color} className={styles.policyIcon} />
+            case '4': return <TimeOffSymbol4 fill={color} className={styles.policyIcon} />
+            case '5': return <TimeOffSymbol5 fill={color} className={styles.policyIcon} />
+            case '6': return <TimeOffSymbol6 fill={color} className={styles.policyIcon} />
+            case '7': return <TimeOffSymbol7 fill={color} className={styles.policyIcon} />
+            case '8': return <TimeOffSymbol8 fill={color} className={styles.policyIcon} />
+            case '9': return <TimeOffSymbol9 fill={color} className={styles.policyIcon} />
+            default: return <TimeOffSymbol1 fill={color} className={styles.policyIcon} />
+          }
+        })(eventProps.policy?.symbol, fade(eventProps.policy?.color || DEFAULT_COLOR, 0.5))
+      }
+      {
+        eventProps.status === 'rejected' || eventProps.status === 'pending'
+          ? <AttentionIcon
+              style={{right: `${rightCells * cellWidthPercentage + (100 / dayRange / 2)}%`}}
+              color={eventProps.status === 'rejected' ? '#FD4646' : '#FFBD06'}
+              className={cn(styles.attentionIcon, {[styles.absolute]: dayRange === 1})} />
+          : null
+      }
+    </div>
+  )
 }
 
 export default Event

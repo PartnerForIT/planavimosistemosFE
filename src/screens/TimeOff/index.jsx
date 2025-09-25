@@ -32,10 +32,6 @@ const TimeOffScreen = () => {
     title: 'Calendar',
     key: 'calendar',
     badge: 0,
-  }, {
-    title: 'My employees',
-    key: 'employees',
-    badge: 0,
   }]
 
   const handleSelectTab = key => {
@@ -74,8 +70,6 @@ const TimeOffScreen = () => {
           })(activeTab)
         }
       </div>
-      
-      
     </MainLayout>
   )
 }

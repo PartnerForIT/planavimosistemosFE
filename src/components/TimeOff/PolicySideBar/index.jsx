@@ -231,7 +231,7 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
                                 }
                               </div>
                               <div>
-                                <div className={styles.employeeName}>{emp.name} {emp.surname}</div>
+                                <div className={styles.employeeName}>{emp.title}</div>
                                 <div className={styles.employeeRole}>{emp.role}</div>
                               </div>
                             </div>

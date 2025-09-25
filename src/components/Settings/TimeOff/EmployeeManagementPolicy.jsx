@@ -89,7 +89,7 @@ function EmployeeManagementPolicy({
           requests.length > 0
             ? <div className={classes.container}>
                 <div className={classes.containerTitle}>
-                  {t('Upcoming requests')}
+                  {t('Upcoming requests')} <span style={{color: '#808F94'}}>{requests.length}</span>
                 </div>
                 {
                   requests.length > 0 ? (
