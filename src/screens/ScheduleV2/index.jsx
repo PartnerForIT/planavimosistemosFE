@@ -589,7 +589,7 @@ const ScheduleV2 = () => {
         return e
       })
       const timeOffRes = await getCompanyTimeOffRequests(companyId, formDate)
-      const timeOffRequestsMap = timeOffRes.request_behalf.map(req => ({...req, status: 'pending'})).reduce((acc, req) => ({
+      const timeOffRequestsMap = timeOffRes.request_behalf.reduce((acc, req) => ({
         ...acc,
         [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], req] : [req]
       }), {})
@@ -1465,7 +1465,7 @@ const ScheduleV2 = () => {
       </div>
       <Tooltip
         id='time_off'
-        className={'schedule-screen__tooltip schedule-screen__tooltip__active'}
+        className={'schedule-screen__tooltip'}
         effect='solid' />
       <Tooltip
         id='time_active'

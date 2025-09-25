@@ -297,6 +297,10 @@ const MonthCell = ({
   const marker = markerComment()
   const isMarkerExist = marker !== null
 
+  // return (
+  //   <div style={{color: 'red'}}>123</div>
+  // )
+
   if (selectedEvent.timeOffRequest && (selectedEvent.timeOffRequest.status === 'approved' || (selectedEvent.timeOffRequest.status === 'pending' && empty_manual))) {
     const policy = policies[selectedEvent.timeOffRequest.policy_id] || {color: DEFAULT_COLOR}
     
@@ -338,7 +342,7 @@ const MonthCell = ({
       data-tooltip-html={activeDrag || copy_event || copyTool || empty_manual || empty || (employeeName === 'Empty' && !selectedEvent.new_employee?.id) ? marker : (selectedEvent.timeOffRequest ? timeOffTooltipContent({...selectedEvent.timeOffRequest, policy: policies[selectedEvent.timeOffRequest.policy_id]}) : tooltipContent())}
       >
       {
-        selectedEvent.timeOffRequest && !empty_manual
+        selectedEvent.timeOffRequest && selectedEvent.timeOffRequest.status === 'pending' && !empty_manual
           ? <AttentionIcon
               style={{position: 'absolute', top: 1, right: 0, zIndex: 2}}
               width={12}

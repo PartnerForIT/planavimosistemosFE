@@ -14,7 +14,7 @@ import cn from 'classnames'
 import './styles.scss'
 import styles from './styles.module.scss'
 
-import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getCompanyShifts, getPlaces } from '../../../api'
+import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getPlaces, getCompanyHolidays } from '../../../api'
 import { TIMELINE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
@@ -63,6 +63,7 @@ function groupEmployees(employees) {
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
         place_id: Number(emp.place_id),
+        role: emp.role,
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -83,6 +84,7 @@ function groupEmployees(employees) {
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
         place_id: Number(emp.place_id),
+        role: emp.role,
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -102,6 +104,7 @@ function groupEmployees(employees) {
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
         place_id: Number(emp.place_id),
+        role: emp.role,
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -385,6 +388,18 @@ const getCheckedEmployees = (items) => {
   return checked
 }
 
+const getEmployeesFromResources = (resources) => {
+  let employees = []
+  for (const item of resources) {
+    if ("isEmployee" in item && item.isEmployee) {
+      employees.push(item)
+    } else if ("children" in item) {
+      employees = employees.concat(getEmployeesFromResources(item.children))
+    }
+  }
+  return employees
+}
+
 const getRandomHexColor = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16)
   return `#${randomColor.padStart(6, '0')}`;
@@ -534,6 +549,10 @@ const TimeOffCalendar = () => {
   }, [companyId])
 
   useEffect(() => {
+    getHolidays()
+  }, [companyId, currentMonth])
+
+  useEffect(() => {
     if (employees.length && policies.length) {
       const viewMap = {
         [TIMELINE.DAY]: 'daily',
@@ -576,24 +595,23 @@ const TimeOffCalendar = () => {
       sideBarRef.current.close()
     }
     setLoading(true)
-    setHolidays({})
-    const holidayParams = {
-      type: 'month',
-      from_date: currentStartDate,
-    }
-    const [eventsRes, holidayRes] = await Promise.all([
-      getCompanyTimeOffRequests(companyId, params),
-      getCompanyShifts(companyId, holidayParams),
-    ])
-
-    if (Array.isArray(eventsRes?.request_behalf)) {
-      const events = generateEvents(eventsRes.request_behalf, policies)
-      setEvents([...events, ...generateAvailabilityEvents(currentStartDate, employees, events)])
-    }
-    if (holidayRes?.holidays) {
-      setHolidays(!Array.isArray(holidayRes.holidays) ? holidayRes.holidays : {})
+    const res = await getCompanyTimeOffRequests(companyId, params)
+    if (Array.isArray(res?.request_behalf)) {
+      const events = generateEvents(res.request_behalf, policies)
+      setEvents([...events, ...generateAvailabilityEvents(currentStartDate, getEmployeesFromResources(resources), events)])
     }
     setLoading(false)
+  }
+
+  const getHolidays = async () => {
+    setHolidays({})
+    const res = await getCompanyHolidays(companyId, {
+      startDate: moment(currentStartDate).startOf('month').format('YYYY-MM-DD'),
+      endDate: moment(currentStartDate).endOf('month').format('YYYY-MM-DD'),
+    })
+    if (res) {
+      setHolidays(!Array.isArray(res) ? res : {})
+    }
   }
 
   const getResourceTitle = useCallback((viewType, date) => {
@@ -616,6 +634,18 @@ const TimeOffCalendar = () => {
     calendarRef.current.getApi().changeView(viewtype, date)
     setTimeline(viewtype)
   }
+
+  const slotLabelClassNames = useCallback(({ date: monthDate }) => {
+    const date = moment(monthDate)
+    const holiday = holidays[date.format('YYYY-MM-DD')]
+    return holiday ? 'holiday-slot-weekend-header' : ''
+  }, [holidays])
+
+  const slotLaneClassNames = useCallback(({ date: monthDate }) => {
+    const date = moment(monthDate)
+    const holiday = holidays[date.format('YYYY-MM-DD')]
+    return holiday ? 'holiday-slot-weekend' : ''
+  }, [holidays])
 
   const handleChangeTimeline = (view) => {
     const startDate = view === TIMELINE.MONTH ? moment().startOf('month') : view === TIMELINE.WEEK ? moment().startOf('isoWeek') : moment()
@@ -660,10 +690,8 @@ const TimeOffCalendar = () => {
       if (timeline === TIMELINE.MONTH) {
         
         const date = moment(currentStartDate).startOf('month').subtract(1, 'days').startOf('month')
-        // fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
-        // fromDateRef.current = moment(targetDate).startOf('day').toDate()
         setCurrentStartDate(moment(targetDate).format('YYYY-MM-DD'))
       }
     }
@@ -673,10 +701,8 @@ const TimeOffCalendar = () => {
       const targetDate = view.getCurrentData().currentDate
       if (timeline === TIMELINE.MONTH) {
         const date = moment(currentStartDate).endOf('month').add(1, 'days')
-        // fromDateRef.current = date.startOf('day').toDate()
         setCurrentStartDate(date.format('YYYY-MM-DD'))
       } else {
-        // fromDateRef.current = moment(targetDate).startOf('day').toDate()
         setCurrentStartDate(moment(targetDate).format('YYYY-MM-DD'))
       }
     }
@@ -728,7 +754,7 @@ const TimeOffCalendar = () => {
 
   const renderHeaderCell = useCallback(({date: monthDate}) => {
     const date = moment(monthDate)
-    const holiday = holidays[date.date()]
+    const holiday = holidays[date.format('YYYY-MM-DD')]
     return (
       <div className="header-cell" onClick={() => handleClickDay(date)}>
         <span className="schedule-enter-day">{ t('Go') }</span>
@@ -795,30 +821,14 @@ const TimeOffCalendar = () => {
             week: {
               ...CALENDAR_VIEWS_CONFIG.week,
               slotLabelFormat: renderHeaderCell,
-              slotLabelClassNames: ({date: monthDate}) => {
-                const date = moment(monthDate)
-                const holiday = holidays[date.date()]
-                return holiday ? 'holiday-slot-weekend-header' : ''
-              },
-              slotLaneClassNames: ({date: monthDate}) => {
-                const date = moment(monthDate)
-                const holiday = holidays[date.date()]
-                return holiday ? 'holiday-slot-weekend' : ''
-              },
+              slotLabelClassNames: slotLabelClassNames,
+              slotLaneClassNames: slotLaneClassNames,
             },
             month: {
               ...CALENDAR_VIEWS_CONFIG.month,
               slotLabelContent: renderHeaderCell,
-              slotLabelClassNames: ({date: monthDate, view}) => {
-                const date = moment(monthDate)
-                const holiday = holidays[date.date()]
-                return holiday ? 'holiday-slot-weekend-header' : ''
-              },
-              slotLaneClassNames: ({date: monthDate}) => {
-                const date = moment(monthDate)
-                const holiday = holidays[date.date()]
-                return holiday ? 'holiday-slot-weekend' : ''
-              },
+              slotLabelClassNames: slotLabelClassNames,
+              slotLaneClassNames: slotLaneClassNames,
               visibleRange: () => {
                 const visibleRange = {
                   start: moment(currentStartDate).clone().startOf('month').toDate(),
