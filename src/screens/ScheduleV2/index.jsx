@@ -39,6 +39,7 @@ import ExcelIcon from '../../components/Icons/ExcelIcon'
 import Button from '../../components/Core/Button/Button'
 import MonthCell from './MonthCell'
 import AddTempEmployee from '../Schedule/AddTempEmployee'
+import DialogPublishShift from '../../components/Core/Dialog/PublishShift'
 
 const CALENDAR_VIEWS_CONFIG = {
   day: {
@@ -277,6 +278,7 @@ const ScheduleV2 = () => {
   const permissions = usePermissions(permissionsConfig)
   
   const [scheduleSettings, setScheduleSettings] = useState({
+    use_publish: false,
     clock_in_restriction: false,
     ignore_clockin_restriction: false,
     working_at_night: false,
@@ -340,6 +342,10 @@ const ScheduleV2 = () => {
   const copyToolRef = useRef()
 
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck)
+
+  const [publishDialog,setPublishDialog] = useState(false)
+  const published = Boolean(schedule?.published)
+  const count_changes = schedule?.count_changes || 0
 
   const resources = useMemo(() => {
     let currentColor = 0
@@ -635,6 +641,32 @@ const ScheduleV2 = () => {
       }))
     }
   }
+
+  const handleNotifyChanges = () => {
+    // dispatch(notifySchedule({
+    //   companyId,
+    //   data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    // })).then(() => {
+    //   handleGetSchedule({ fromDate: fromDateRef.current });
+    // });
+  }
+
+  const handlePublishSchedule = () => {
+    setPublishDialog(false)
+    // dispatch(publishSchedule({
+    //   companyId,
+    //   data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    // })).then(() => {
+    //   handleGetSchedule({ fromDate: fromDateRef.current });
+    // });
+  }
+
+  const handlePublishDialog = () => {
+    setPublishDialog(false);
+  };
+  const cancelPublish = () => {
+    setPublishDialog(false);
+  };
   
   const handleViewDidMount = (info) => {
     const container = document.getElementsByClassName('fc-timeline-slots')
@@ -642,6 +674,52 @@ const ScheduleV2 = () => {
       const rows = item[0].target.children[0].children[1].children[0].children
       updateWidthCell(rows)
     }).observe(container[0], { box: 'border-box' });
+
+    if (!permissions.schedule_create_and_edit && !published) {
+      const calendarEl = info.el.closest('.fc');
+      const eventArea = calendarEl.querySelector('.fc-timeline-body');
+      let parentParent = null;
+      if (eventArea) {
+        parentParent = eventArea.parentElement?.parentElement;
+      }
+      
+      // Remove any previous "No events" message
+      const existingOverlay = calendarEl.querySelector('.no-events-overlay');
+      if (existingOverlay) existingOverlay.remove();
+
+      if (events.length === 0 && parentParent) {
+        // Create overlay container
+        const overlay = document.createElement("div");
+        overlay.classList.add("no-events-overlay");
+  
+        // Create NotPublished element (you can replace this with your own React component if needed)
+        const notPublished = document.createElement("div");
+        notPublished.classList.add("not-published-icon");
+  
+        // Create title
+        const title = document.createElement("p");
+        title.classList.add("empty-title");
+        title.innerText = t("WAITING FOR PUBLISHING");
+  
+        // Create descriptions
+        const desc1 = document.createElement("p");
+        desc1.classList.add("empty-description");
+        desc1.innerText = t("This month is not yet published, your managers are still planning and scheduling work for this month.");
+  
+        const desc2 = document.createElement("p");
+        desc2.classList.add("empty-description");
+        desc2.innerText = t("You will be notified in the Grownu mobile app when this month will be published.");
+  
+        // Append all elements inside overlay
+        overlay.appendChild(notPublished); // Append the NotPublished element
+        overlay.appendChild(title);
+        overlay.appendChild(desc1);
+        overlay.appendChild(desc2);
+  
+        // Insert overlay inside parentParent
+        parentParent.appendChild(overlay);
+      }
+    }
   }
   
   const getResourceTitle = (viewType, date) => {
@@ -1379,13 +1457,56 @@ const ScheduleV2 = () => {
                 </FlatButton>
               : null
           }
-          {
-            !copyTool && permissions.schedule_create_and_edit
-              ? <Button onClick={handleCreateNewShift}>
-                  {t('Create new shift')}
-                </Button>
-              : null
-          }
+
+          <div className='schedule-screen__buttons'>
+            {
+              timeline === TIMELINE.MONTH && schedule && permissions.schedule_create_and_edit && scheduleSettings.use_publish ? (
+                ! published && !schedule?.events?.length ? (
+                  <Button
+                    className={'simple-schedule-screen__nochanges'}
+                    disabled
+                  >
+                    {t('No Entries')}
+                  </Button>
+                ) : (
+                  ! published && schedule?.events?.length ? (
+                    <Button
+                      className={'simple-schedule-screen__publish'}
+                      onClick={() => { setPublishDialog(true) }}
+                    >
+                      {t('Publish')}
+                    </Button>
+                  ) : (
+                    published && !count_changes ? (
+                      <Button
+                        className={'simple-schedule-screen__published'}
+                        disabled
+                      >
+                        {t('Published')}
+                      </Button>
+                    ) : (
+                      published && count_changes ? (
+                        <Button
+                          className={'simple-schedule-screen__notify'}
+                          onClick={handleNotifyChanges}
+                        >
+                          {t('Notify Changes')} ({count_changes})
+                        </Button>
+                      ) : null
+                    )
+                  )
+                )
+
+              ) : null
+            }
+            {
+              !copyTool && permissions.schedule_create_and_edit
+                ? <Button onClick={handleCreateNewShift}>
+                    {t('Create new shift')}
+                  </Button>
+                : null
+            }
+          </div>
         </div>
         <div className="schedule-screen">
           <div style={{display: 'flex', flexDirection: 'row', flex: 1}}>
@@ -1547,6 +1668,22 @@ const ScheduleV2 = () => {
             />
           : null
       }
+      <DialogPublishShift
+        open={publishDialog}
+        handleClose={handlePublishDialog}
+        title={t('Schedule Publishing')}
+        description={
+          <>
+          {t('You are about to publish your scheduled calendar for all employees and notify them with push notification to their Grownu Mobile APP. They will start seeing what is planned for them for this month both in WEB and Mobile APP environments.')}
+          <br/>
+          {t("You are not able to revoke the process/unpublish so be sure that it's fully prepared.")}
+          </>
+        }
+        buttonTitle2={t('Cancel')}
+        buttonTitle={t('Publish')}
+        submitDeleteShift={() => handlePublishSchedule(publishDialog)}
+        cancelDelete={cancelPublish}
+      />
     </MainLayout>
   )
 }

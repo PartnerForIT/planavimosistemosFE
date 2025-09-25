@@ -147,6 +147,20 @@ export default function ActivityLog() {
             isLoading ? <Progress />
               : (
                 <>
+                  <div className={styles.workAtNight}>
+                    <Switch
+                      onChange={(checked) => { handleSetInputValues({ use_publish: checked }); }}
+                      offColor='#808F94'
+                      onColor='#0085FF'
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      checked={inputValues.use_publish || false}
+                      height={21}
+                      width={40}
+                    />
+                    <Label text={t('Use publish month and change notifications')} />
+                  </div>
+                  <div className={styles.hr} />
                   <div className={styles.clockInRestriction}>
                     <Label text={t('Clock in restriction')} />
                     <Tooltip title={t('Clock in restriction')} />

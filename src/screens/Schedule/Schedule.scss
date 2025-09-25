@@ -180,6 +180,13 @@
     background-color: rgba(0, 0, 0, 0.2);
     //border-radius: 12px;
   }
+
+  &__buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .schedule-enter-day {
