@@ -14,7 +14,7 @@ import cn from 'classnames'
 import './styles.scss'
 import styles from './styles.module.scss'
 
-import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getCompanyShifts } from '../../../api'
+import { getCompanyEmployeesAll, getCompanyTimeOffRequests, getCompanyTimeOffPolicies, getCompanyShifts, getPlaces } from '../../../api'
 import { TIMELINE } from '../../../const'
 
 import ResourceAreaHeader from '../../../screens/Schedule/ResourceAreaHeader'
@@ -62,6 +62,7 @@ function groupEmployees(employees) {
         group_id: emp.group_id,
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
+        place_id: Number(emp.place_id),
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -81,6 +82,7 @@ function groupEmployees(employees) {
         group_id: emp.group_id,
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
+        place_id: Number(emp.place_id),
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -99,6 +101,7 @@ function groupEmployees(employees) {
         group_id: emp.group_id,
         subgroup_id: emp.subgroup_id,
         photo: emp.photo,
+        place_id: Number(emp.place_id),
         isGroup: false,
         isSubGroup: false,
         isEmployee: true,
@@ -334,6 +337,34 @@ const getEmployeesWithEvents = (items, eventsMap) => {
   return result
 }
 
+const getEmployeesWithPlaces = (items, places) => {
+  const result = []
+
+  const placesMap = places.reduce((acc, place) => ({
+    ...acc,
+    [place.id]: place,
+  }), {})
+
+  for (const item of items) {
+    if ("isEmployee" in item && item.isEmployee) {
+      if (placesMap[item.place_id]) {
+        result.push(item);
+      }
+    } else if ("children" in item) {
+      const checkedChildren = getEmployeesWithPlaces(item.children, places);
+
+      if (checkedChildren.length > 0) {
+        result.push({
+          ...item,
+          children: checkedChildren
+        });
+      }
+    }
+  }
+
+  return result
+}
+
 const getCheckedEmployeeIds = (items) => {
   let ids = []
   for (const item of items) {
@@ -352,27 +383,6 @@ const getCheckedEmployees = (items) => {
     return items
   }
   return checked
-}
-
-const getCheckedOrAll = (items, policies, events, currentMonth, activeAvailability, loading) => {
-  if (loading) {
-    return items
-  }
-  let checkedEmployees = getCheckedEmployees(items)
-  const checkedPolices = getCheckedElements(policies)
-  if (checkedPolices.length) {
-    const eventsMap = events.filter(e => e.resourceId !== 'availability').reduce((acc, event) => ({
-      ...acc,
-      [event.employee_id]: true,
-    }), {})
-    checkedEmployees = getEmployeesWithEvents(checkedEmployees, eventsMap)
-  }
-  if (activeAvailability) {
-    const day = Number(activeAvailability.split('-')[1])+1
-    const temp = getEventsForDay(events.filter(e => e.resourceId !== 'availability'), `${currentMonth}-${day}`)
-    checkedEmployees = getEmployeesWithEvents(checkedEmployees, temp)
-  }
-  return checkedEmployees
 }
 
 const getRandomHexColor = () => {
@@ -423,6 +433,31 @@ const generateEvents = (data, policies) => {
     }
   })
   return arr
+}
+
+const filterResources = (items, policies, places, events, currentMonth, activeAvailability, loading) => {
+  if (loading) {
+    return items
+  }
+  let checkedEmployees = getCheckedEmployees(items)
+  const checkedPolices = getCheckedElements(policies)
+  const checkedPlaces = getCheckedElements(places)
+  if (checkedPolices.length) {
+    const eventsMap = events.filter(e => e.resourceId !== 'availability').reduce((acc, event) => ({
+      ...acc,
+      [event.employee_id]: true,
+    }), {})
+    checkedEmployees = getEmployeesWithEvents(checkedEmployees, eventsMap)
+  }
+  if (checkedPlaces.length) {
+    checkedEmployees = getEmployeesWithPlaces(checkedEmployees, checkedPlaces)
+  }
+  if (activeAvailability) {
+    const day = Number(activeAvailability.split('-')[1])+1
+    const temp = getEventsForDay(events.filter(e => e.resourceId !== 'availability'), `${currentMonth}-${day}`)
+    checkedEmployees = getEmployeesWithEvents(checkedEmployees, temp)
+  }
+  return checkedEmployees
 }
 
 const filterEvents = (events, currentMonth, activeAvailability) => {
@@ -482,6 +517,7 @@ const TimeOffCalendar = () => {
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
   const [holidays, setHolidays] = useState({})
+  const [places, setPlaces] = useState([])
   const [policies, setPolicies] = useState([])
   const [employees, setEmployees] = useState([])
   const [resources, setResources] = useState([])
@@ -494,16 +530,7 @@ const TimeOffCalendar = () => {
   const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
   useEffect(() => {
-    getCompanyEmployeesAll(companyId).then(res => {
-      const grouped = groupEmployees(res.users || [])
-      setResources(grouped)
-      setEmployees(res.users || [])
-    })
-    getCompanyTimeOffPolicies(companyId).then(res => {
-      if (Array.isArray(res?.policies)) {
-        setPolicies(res.policies.map(p => ({...p, checked: false, title: p.name, isEmployee: true})))
-      }
-    })
+    init()
   }, [companyId])
 
   useEffect(() => {
@@ -519,10 +546,30 @@ const TimeOffCalendar = () => {
         start_date: currentStartDate,
         employees: getCheckedEmployeeIds(resources),
         policies: policies.filter(p => p.checked).map(p => p.id),
+        places: places.filter(p => p.checked).map(p => p.id),
       }
       getEvents(params)
     }
-  }, [currentStartDate, employees, policies, resources, timeline])
+  }, [currentStartDate, employees, policies, places, resources, timeline])
+
+  const init = async () => {
+    const [employeesRes, policiesRes, placesRes] = await Promise.all([
+      getCompanyEmployeesAll(companyId),
+      getCompanyTimeOffPolicies(companyId),
+      getPlaces(companyId),
+    ])
+    if (Array.isArray(employeesRes?.users)) {
+      const grouped = groupEmployees(employeesRes?.users)
+      setResources(grouped)
+      setEmployees(employeesRes?.users)
+    }
+    if (Array.isArray(policiesRes?.policies)) {
+      setPolicies(policiesRes.policies.map(p => ({...p, checked: false, title: p.name, isEmployee: true})))
+    }
+    if (Array.isArray(placesRes)) {
+      setPlaces(placesRes.map(p => ({...p, title: p.name, checked: false, isEmployee: true})))
+    }
+  }
 
   const getEvents = async (params) => {
     if (sideBarRef.current) {
@@ -600,6 +647,10 @@ const TimeOffCalendar = () => {
 
   const handleChangePolicyFilter = useCallback((res) => {
     setPolicies(res)
+  }, [])
+
+  const handleChangePlaceFilter = useCallback((res) => {
+    setPlaces(res)
   }, [])
 
   const renderResourceAreaHeaderContent = useCallback(({view}) => {
@@ -691,6 +742,11 @@ const TimeOffCalendar = () => {
     <div className={styles.screen}>
       <div className={styles.toolsContainer}>
         <CustomSelect
+          placeholder={t('All places')}
+          items={places}
+          onChange={handleChangePlaceFilter}
+          width='auto' />
+        <CustomSelect
           placeholder={t('All Policies')}
           items={policies}
           onChange={handleChangePolicyFilter}
@@ -772,7 +828,7 @@ const TimeOffCalendar = () => {
               },
             },
           }}
-          resources={[AVAILABILITY_RESOURCE, ...getCheckedOrAll(resources, policies, events, currentMonth, activeAvailability, loading)]}
+          resources={[AVAILABILITY_RESOURCE, ...filterResources(resources, policies, places, events, currentMonth, activeAvailability, loading)]}
           events={filterEvents(events, currentMonth, activeAvailability)}
           eventContent={renderEventContent}
           eventClassNames={eventClassNames}
