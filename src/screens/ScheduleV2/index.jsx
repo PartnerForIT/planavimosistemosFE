@@ -261,6 +261,15 @@ const generateEvents = (events, markers, timeline, scheduleSettings, fromDate) =
     })
   }
 
+  if (timeline === TIMELINE.DAY) {
+    result = result.map(e => {
+      return {
+        ...e,
+        ...(e.timeOffRequest && e.timeOffRequest.status === 'approved' ? {start: moment(e.start).startOf('day').format('YYYY-MM-DD HH:mm:ss'), end: moment(e.start).endOf('day').format('YYYY-MM-DD HH:mm:ss')} : {}),
+      }
+    })
+  }
+
   if (timeline === TIMELINE.MONTH) {
     result = [...result, ...generateStatisticEvents(fromDate, events)].map(e => {
       const existMarker = markers.find(marker => {
@@ -420,6 +429,10 @@ const ScheduleV2 = () => {
             eventBorderColor = 'transparent'
             eventBackgroundColor = 'transparent'
           }
+
+          if (item.timeOffRequest) {
+            console.log(item)
+          }
           
           return {
             ...item,
@@ -443,8 +456,10 @@ const ScheduleV2 = () => {
   const events = useMemo(() => {
     const result = schedule.events.map(e => {
       const eventWeekDay = moment(e.start).isoWeekday()
+      const isTimeOffRequested = e.timeOffRequest && (e.timeOffRequest.status === 'approved' || e.timeOffRequest.status === 'pending')
       return {
         ...e,
+        ...(isTimeOffRequested ? {backgroundColor: 'transparent', borderColor: 'transparent'} : {}),
         defaultTimes: {
           start: workTimes[eventWeekDay] ? moment(workTimes[eventWeekDay].start, 'HH:mm').format('YYYY-MM-DD HH:mm:ss') : '08:00',
           end: workTimes[eventWeekDay] ? moment(workTimes[eventWeekDay].finish, 'HH:mm').format('YYYY-MM-DD HH:mm:ss') : '17:00',

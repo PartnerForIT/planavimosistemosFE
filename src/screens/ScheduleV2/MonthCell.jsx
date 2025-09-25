@@ -308,7 +308,7 @@ const MonthCell = ({
       <div
         data-tooltip-id="time_off"
         data-tooltip-html={timeOffTooltipContent({...selectedEvent.timeOffRequest, policy: policy})}
-        className={css.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR}}>
+        className={css.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR, opacity: isCompleted ? 0.5 : 1}}>
         {
           ((symbol) => {
             switch(symbol) {

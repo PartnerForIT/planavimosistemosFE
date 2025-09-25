@@ -424,7 +424,7 @@ const EventContent = ({
       <div
         data-tooltip-id="time_off"
         data-tooltip-html={timeOffTooltipContent({...selectedEvent.timeOffRequest, policy: policy})}
-        className={styles.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR}}>
+        className={styles.timrOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR, opacity: isCompleted ? 0.5 : 1}}>
         {
           ((symbol) => {
             switch(symbol) {
