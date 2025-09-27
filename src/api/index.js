@@ -24,10 +24,8 @@ const request = async (url, method, params) => {
       return await res.json()
     }
     return true
-  } else {
-    // const error = await res.json()
-    // console.log(error)
   }
+  console.log('RESPONSE ERROR', res.status, res.statusText)
   return null
 }
 
