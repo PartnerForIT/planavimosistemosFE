@@ -26,7 +26,7 @@ import { changePassword, editLangSettingCompany, getSecurityCompany } from '../.
 import { postSupportTicket, doneSupportTicket } from '../../../store/company/actions';
 import { securityCompanySelector } from '../../../store/settings/selectors';
 import usePermissions from '../usePermissions';
-import { userSelector } from '../../../store/auth/selectors';
+import { userSelector, eventsCounterSelector } from '../../../store/auth/selectors';
 import {
   postSupportTicketLoadingSelector,
   isCreateTicketSelector,
@@ -153,6 +153,7 @@ export default function ButtonAppBar({ logOut }) {
   const [,, pageName] = pathname.split('/');
   const { id: companyId } = useParams();
   const user = useSelector(userSelector);
+  const eventsCounter = useSelector(eventsCounterSelector);
   const dispatch = useDispatch();
   const permissions = usePermissions(permissionsConfig);
 
@@ -228,6 +229,7 @@ export default function ButtonAppBar({ logOut }) {
         title: t('Events'),
         name: 'events',
         to: `/${companyId}/events`,
+        counter: 'events_counter',
       });
     }
     if (permissions.reports) {
@@ -249,7 +251,7 @@ export default function ButtonAppBar({ logOut }) {
     if ((permissions.schedule_shift || permissions.schedule_simple)) {
       nextMenuItems.push({
         Icon: ScheduleIcon,
-        title: t('Schedule'),
+        title: permissions.schedule_simple ? t('Tasker') : t('Schedule'),
         name: 'schedule',
         to: `/${companyId}/schedule`,
         width: 33,
@@ -312,6 +314,7 @@ export default function ButtonAppBar({ logOut }) {
                 <span className={styles.link__text}>
                   {item.title}
                 </span>
+                {item.counter && <span className={styles.counter}>{item.counter === 'events_counter' ? eventsCounter : (item[item.counter] ? item[item.counter] : '')}</span>}
               </Link>
             ))}
           </div>

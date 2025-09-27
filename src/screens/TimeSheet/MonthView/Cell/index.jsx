@@ -86,12 +86,15 @@ const Cell = ({
 
   if (!header && (title || requestBehalve)) {
     return (
-      <div className={cellClasses} ref={refCell} style={{backgroundColor: requestBehalve ? requestBehalve.color : null}}>
+      <div className={cellClasses} ref={refCell} style={{backgroundColor: requestBehalve ? requestBehalve.color : null}}
+        data-tooltip-id={requestBehalve ? 'title' : null}
+        data-tooltip-html={`${requestBehalve ? requestBehalveTooltip() : null}`}
+      >
         <div className={classes.cell__content} data-title={requestBehalve ? requestBehalveTooltip() : (tooltip ? tooltip : title)}>
           <div
-            data-tooltip-id='title'
-            data-tooltip-html={`${requestBehalve ? requestBehalveTooltip() : (tooltip ? tooltip : title)}`}
             className={classes.cell__content__text}
+            data-tooltip-id={!requestBehalve ? 'title' : null}
+            data-tooltip-html={`${!requestBehalve ? (tooltip ? tooltip : title) : null}`}
           >
            { requestBehalve ? (
             <span className={classes.cell_request_behalve}>

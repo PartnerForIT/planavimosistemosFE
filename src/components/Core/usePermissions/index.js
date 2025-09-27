@@ -26,7 +26,7 @@ export default (permissionsConfig) => {
     }
 
     return {};
-  }, [user, modules, permissionsConfig]);
+  }, [user?.user?.role_id, user?.user_permissions, modules, permissionsConfig]);
 
   return permissions;
 };

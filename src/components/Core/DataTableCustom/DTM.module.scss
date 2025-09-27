@@ -923,6 +923,7 @@ div {
   font-family: Helvetica Neue, sans-serif !important;
   font-size: 12px !important;
   box-shadow: 0 2px 8px rgba(#647d93, 0.2) !important;
+  z-index: 1000 !important;
 
   &::after {
     border-top-color: #fff !important;
@@ -933,6 +934,10 @@ div {
     border-right: 8px solid transparent !important;
     margin-left: -8px !important;
   }
+}
+
+.tooltip_black {
+  z-index: 1000 !important;
 }
 
 .footerButton {

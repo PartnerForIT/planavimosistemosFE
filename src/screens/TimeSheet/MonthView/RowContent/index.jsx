@@ -128,7 +128,11 @@ const RowContent = ({
   }
 
   const requestBehalve = (item) => {
-    const requestBehalve = requestBehalves.find(requestBehalve => requestBehalve.mark_in_schedule_and_time_sheet && requestBehalve.employee_id*1 === resource.id*1 && moment(requestBehalve.from, 'YYYY-MM-DD').format('DD')*1 <= item.id*1 && moment(requestBehalve.to, 'YYYY-MM-DD').format('DD')*1 >= item.id*1);
+    const requestBehalve = requestBehalves.find(requestBehalve => requestBehalve.mark_in_schedule_and_time_sheet
+      && requestBehalve.employee_id*1 === resource.id*1
+      && moment(requestBehalve.from, 'YYYY-MM-DD').format('DD')*1 <= item.id*1
+      && moment(requestBehalve.to, 'YYYY-MM-DD').format('DD')*1 >= item.id*1
+      && !requestBehalve.non_working_days.includes(moment(requestBehalve.from, 'YYYY-MM-DD').set('date', item.id).format('YYYY-MM-DD')));
     return requestBehalve;
     
   };

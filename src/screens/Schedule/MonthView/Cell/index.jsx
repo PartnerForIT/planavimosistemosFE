@@ -125,7 +125,7 @@ const Cell = ({
 
     return permissions?.schedule_create_and_edit
 
-  }, [permissions, event, user]);
+  }, [permissions, event, user?.user?.id]);
 
   
   

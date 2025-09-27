@@ -1295,7 +1295,7 @@ function* patchRole(action) {
       // console.log('action = ', action);
       // console.log('roleId = ', roleId);
       // console.log('userRoleId = ', userRoleId);
-      yield put(authCheck());
+      //yield put(authCheck());
       yield put(getRolesSuccess(roles.map((role) => (role.id === roleId ? { ...role, data } : role))));
     } else {
       // eslint-disable-next-line no-unused-vars

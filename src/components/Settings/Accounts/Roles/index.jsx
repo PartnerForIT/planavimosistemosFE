@@ -92,6 +92,10 @@ const permissionsConfig = [
     name: 'comments_photo',
     module: 'comments_photo',
   },
+  {
+    name: 'time_off',
+    module: 'time_off',
+  },
 ];
 export default () => {
   const { id } = useParams();
@@ -133,6 +137,7 @@ export default () => {
             ...(modules.cost_earning && { costs: 'Can see costs' }),
             requests: 'Get approval requests',
             requests_in_place: 'Get approval requests in assigned place',
+            receive_notifications: 'Receive notifications',
           },
         },
       }),
@@ -178,6 +183,13 @@ export default () => {
             assigned_place: 'Only assigned place view',
             see_all_employees: 'Can see all employees',
             costs: 'Can see Costs',
+          },
+        },
+      }),
+      ...((modules.time_off) && {
+        time_off: {
+          options: {
+            receive_notifications: 'Receive notifications',
           },
         },
       }),
@@ -415,6 +427,10 @@ export default () => {
       }
       if (!permissions.activity_log) {
         delete nextOrganisation.activity_log;
+      }
+
+      if (!permissions.time_off) {
+        delete nextModuleAccess.time_off;
       }
 
       return {
