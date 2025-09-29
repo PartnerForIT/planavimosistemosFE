@@ -17,6 +17,54 @@ import {
   employeesSelector,
 } from '../../../../store/settings/selectors';
 
+import TimeOffSymbol1 from '../../../../components/Icons/TimeOffSymbol1'
+import TimeOffSymbol2 from '../../../../components/Icons/TimeOffSymbol2'
+import TimeOffSymbol3 from '../../../../components/Icons/TimeOffSymbol3'
+import TimeOffSymbol4 from '../../../../components/Icons/TimeOffSymbol4'
+import TimeOffSymbol5 from '../../../../components/Icons/TimeOffSymbol5'
+import TimeOffSymbol6 from '../../../../components/Icons/TimeOffSymbol6'
+import TimeOffSymbol7 from '../../../../components/Icons/TimeOffSymbol7'
+import TimeOffSymbol8 from '../../../../components/Icons/TimeOffSymbol8'
+import TimeOffSymbol9 from '../../../../components/Icons/TimeOffSymbol9'
+
+const DEFAULT_COLOR = '#1685FD'
+
+const AttentionIcon = ({color, ...props}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={19}
+      height={19}
+      viewBox='0 0 19 19'
+      fill="none"
+      {...props}
+    >
+      <g clipPath="url(#a)">
+        <path fill={color} d="M9.5 19a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19Z" />
+        <path
+          stroke="#fff"
+          d="M9.5 18.703A9.203 9.203 0 1 0 9.5.297a9.203 9.203 0 0 0 0 18.406Z"
+        />
+        <path
+          fill="#fff"
+          d="M8.996 4.367a.594.594 0 0 1 1.007 0l4.869 7.786a.595.595 0 0 1-.504.909H4.631a.594.594 0 0 1-.504-.909l4.87-7.786Z"
+        />
+        <path
+          stroke={color}
+          strokeLinecap="round"
+          strokeWidth={1.2}
+          d="M9.5 7.62v1.694"
+        />
+      </g>
+      <defs>
+        <clipPath id="a">
+          <path fill="#fff" d="M0 0h19v19H0z" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
 const Cell = ({
   title,
   startFinish,
@@ -132,8 +180,6 @@ const Cell = ({
   
 
   const tooltipContent = () => {
-    
-
     let tooltip_start = moment(event.start);
     let tooltip_end = moment(event.end);
     let minutes = event.minutes;
@@ -188,6 +234,44 @@ const Cell = ({
     )
   }
 
+  const timeOffTooltipContent = (timeOffRequest) => {
+    const statusColor = (status => {
+      switch(status) {
+        case 'approved': return '#34C759'
+        case 'pending': return '#FF9500'
+        case 'rejected': return '#FF3B30'
+        default: return '#34C759'
+      }
+    })(timeOffRequest.status)
+
+    return `
+      <div style="font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('From')}:</span>
+          <b style="color: #000;">${timeOffRequest.from}</b>
+          <span style="color: #7c7c7c;">${t('To')}:</span>
+          <b style="color: #000;">${timeOffRequest.to}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Policy')}:</span>
+          <b style="color: #000;">${timeOffRequest.policy.name}</b>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <span style="color: #7c7c7c;">${t('Status')}:</span>
+          <b style="color: ${statusColor}; text-transform: capitalize;">${timeOffRequest.status}</b>
+        </div>
+        ${
+          timeOffRequest.note
+            ? `<div style="display: flex; gap: 4px;">
+                <span style="color: #7c7c7c;">${t('Note')}:</span>
+                <b style="color: #000;">${timeOffRequest.note}</b>
+              </div>`
+            : ''
+        }
+      </div>
+    `
+  }
+
   const tooltipType = () => {
     let type = 'time';
     
@@ -200,15 +284,54 @@ const Cell = ({
     return type;
   }
 
-  
+  if (event && event.timeOffRequest && (event.timeOffRequest.status === 'approved' || (event.timeOffRequest.status === 'pending' && event.empty_event))) {
+    const policy = event.timeOffRequest.policy
+    return (
+      <div
+        data-tooltip-id="time"
+        data-tooltip-html={timeOffTooltipContent(event.timeOffRequest)}
+        className={classes.timeOffRequest} style={{backgroundColor: policy.color || DEFAULT_COLOR, opacity: isCompleted ? 0.5 : 1}}>
+        {
+          ((symbol) => {
+            switch(symbol) {
+              case '1': return <TimeOffSymbol1 className={classes.policyIcon} width={10} height={20} />
+              case '2': return <TimeOffSymbol2 className={classes.policyIcon} width={10} height={20} />
+              case '3': return <TimeOffSymbol3 className={classes.policyIcon} width={10} height={20} />
+              case '4': return <TimeOffSymbol4 className={classes.policyIcon} width={10} height={20} />
+              case '5': return <TimeOffSymbol5 className={classes.policyIcon} width={10} height={20} />
+              case '6': return <TimeOffSymbol6 className={classes.policyIcon} width={10} height={20} />
+              case '7': return <TimeOffSymbol7 className={classes.policyIcon} width={10} height={20} />
+              case '8': return <TimeOffSymbol8 className={classes.policyIcon} width={10} height={20} />
+              case '9': return <TimeOffSymbol9 className={classes.policyIcon} width={10} height={20} />
+              default: return <TimeOffSymbol1 className={classes.policyIcon} width={10} height={20} />
+            }
+          })(policy.symbol)
+        }
+        {
+          event.timeOffRequest.status === 'pending'
+            ? <div className={classes.pendingDot} />
+            : null
+        }
+      </div>
+    )
+  }
   
   if (!header) {
     return (
       <div className={cellClasses} ref={refCell}>
+        {
+          event && event.timeOffRequest && event.timeOffRequest.status === 'pending' && !event.empty_event
+            ? <AttentionIcon
+                style={{position: 'absolute', top: 1, right: 0, zIndex: 2}}
+                width={12}
+                height={12}
+                color={'#FD4646'} />
+            : null
+        }
         <div className={classes.cell__content} data-title={title ? title : null}>
           <div
-            data-tooltip-id={tooltipType()}
-            data-tooltip-html={title ? tooltipContent() : null}
+            data-tooltip-id={Boolean(event && event.timeOffRequest) ? 'time' : tooltipType()}
+            data-tooltip-html={Boolean(event && event.timeOffRequest) ? timeOffTooltipContent(event.timeOffRequest) : (title ? tooltipContent() : null)}
             onClick={handleMarker}
             className={classnames(classes.cell__content__text, {[classes.cell__content__text_time]: scheduleSettings?.start_finish && startFinish})}
           >

@@ -55,6 +55,7 @@ import {
 } from '../../store/settings/actions';
 import { simpleScheduleSelector, markersSelector, isLoadingSelector } from '../../store/simpleSchedule/selectors';
 import { employeesSelector, settingWorkTime } from '../../store/settings/selectors';
+import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../api'
 
 import EventContent from './EventContent';
 import MonthView from './MonthView';
@@ -99,11 +100,18 @@ const employToCheck = ({id, name, surname}) => ({
   label: `${name} ${surname}`,
 })
 
+const rangesOverlap = (start1, end1, start2, end2) => {
+  if (end1.isBefore(start1)) [start1, end1] = [end1, start1]
+  if (end2.isBefore(start2)) [start2, end2] = [end2, start2]
+  return start1.isBefore(end2) && start2.isBefore(end1)
+}
+
 export default () => {
   const { t } = useTranslation();
   const [timeline, setTimeline] = useState(TIMELINE.MONTH);
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false});
   const [filter, setFilter] = useState({ employers: [], place: [], shiftType: [], skill: []});
+  const [timeOffRequests, setTimeOffRequests] = useState({})
   const calendarRef = useRef();
   const fromDateRef = useRef(new Date());
   const resizeObserverRef = useRef();
@@ -283,9 +291,29 @@ export default () => {
         });
     });
 
+    result = result.map(e => {
+      const userRequests = timeOffRequests[e.employee_id]
+      if (userRequests) {
+        const conflictRequest = userRequests.find(req => {
+          const reqStart = moment(req.from).startOf('day')
+          const reqEnd = moment(req.to).endOf('day')
+          const eventStart = moment(e.start)
+          const eventEnd = moment(e.end)
+          return rangesOverlap(reqStart, reqEnd, eventStart, eventEnd)
+        })
+        if (conflictRequest) {
+          return {
+            ...e,
+            timeOffRequest: conflictRequest,
+          }
+        }
+      }
+      return e
+    })
+
     return result;
     // eslint-disable-next-line
-  }, [filterData, schedule?.events, isLoading]);
+  }, [filterData, schedule?.events, timeOffRequests, isLoading]);
 
   const unEmployees = useMemo(() => {
     let result = [];
@@ -398,11 +426,34 @@ export default () => {
     handleCloseCreateShift();
   }
 
+  const getTimeOffs = async (fromDate) => {
+    const [policiesRes, timeOffsRes] = await Promise.all([
+      getCompanyTimeOffPolicies(companyId),
+      getCompanyTimeOffRequests(companyId, fromDate)
+    ])
+    if (Array.isArray(timeOffsRes?.request_behalf) && Array.isArray(policiesRes?.policies)) {
+      const policiesMap = policiesRes.policies.reduce((acc, policy) => ({
+        ...acc,
+        [policy.id]: policy
+      }), {})
+      const timeOffRequestsMap = timeOffsRes.request_behalf.reduce((acc, req) => {
+        const reqWithPolicy = {...req, policy: policiesMap[req.policy_id]}
+        return {
+          ...acc,
+          [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], reqWithPolicy] : [reqWithPolicy]
+        }
+      }, {})
+      setTimeOffRequests(timeOffRequestsMap)
+    }
+  }
+
   const handleGetSchedule = ({ nextTimeline = timeline, fromDate = fromDateRef.current }) => {
     let nextFromDate = moment(fromDate);
     if (nextTimeline === TIMELINE.WEEK) {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
+
+    getTimeOffs(fromDate)
 
     dispatch(getSchedule({
       companyId,
@@ -724,6 +775,7 @@ export default () => {
     return (
       <EventContent
         id={event.id}
+        selectedEvent={selectedEvent}
         employeeId={selectedEvent?.employee_id || null}
         title={selectedEvent?.title || null}
         schedule_title={selectedEvent?.schedule_title || null}
@@ -1075,7 +1127,7 @@ export default () => {
     dispatch(getEmployees(companyId));
     dispatch(getSkills(companyId));
     dispatch(getSettingWorkTime(companyId));
-
+    getTimeOffs(moment(new Date()).format('YYYY-MM-DD'))
     dispatch(getSchedule({
       companyId,
 
@@ -1368,6 +1420,10 @@ export default () => {
               editData={editShiftData}
               availableEmployees={unEmployees}
             />
+            <Tooltip
+              id='time_off'
+              className={'schedule-screen__tooltip'}
+              effect='solid' />
             <Tooltip
               id='time'
               className='schedule-screen__tooltip'
