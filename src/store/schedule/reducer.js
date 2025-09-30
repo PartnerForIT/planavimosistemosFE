@@ -34,6 +34,8 @@ const initialState = {
   loading: false,
   shift: null,
   markers: [],
+  published: false,
+  count_changes: 0,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -55,6 +57,8 @@ export const reducer = (state = initialState, action) => {
         resources: action.data.resources,
         events: action.data.events,
         markers: action.data.markers,
+        published: action.data.published,
+        count_changes: action.data.count_changes,
         loading: false,
       };
     case GET_SCHEDULE_ERROR:

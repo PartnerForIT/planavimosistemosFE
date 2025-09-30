@@ -133,7 +133,7 @@ const TimeOffCalendar = () => {
     policies: [],
     resources: [],
   })
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
   const [holidays, setHolidays] = useState({})
@@ -146,6 +146,7 @@ const TimeOffCalendar = () => {
   const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
   useEffect(() => {
+    console.log('companyId', companyId)
     init()
   }, [companyId])
 
@@ -178,6 +179,7 @@ const TimeOffCalendar = () => {
       getCompanyTimeOffPolicies(companyId),
       getPlaces(companyId),
     ])
+    
     const data = {resources: [], policies: [], places: []}
     if (Array.isArray(employeesRes?.users)) {
       const grouped = generateResourcesFromEmployees(employeesRes?.users)
@@ -197,7 +199,9 @@ const TimeOffCalendar = () => {
       sideBarRef.current.close()
     }
     setLoading(true)
+    console.log('getEvents')
     const res = await getCompanyTimeOffRequests(companyId, params)
+    console.log(res)
     if (Array.isArray(res?.request_behalf)) {
       const events = generateTimeOffEvents(res.request_behalf, policies, [styles.event])
       setEvents([...events, ...generateAvailabilityEvents(currentStartDate, getEmployeesFromResources(resources), events, [styles.availabilityEvent])])

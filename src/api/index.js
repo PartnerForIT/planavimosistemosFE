@@ -24,10 +24,8 @@ const request = async (url, method, params) => {
       return await res.json()
     }
     return true
-  } else {
-    // const error = await res.json()
-    // console.log(error)
   }
+  console.log('RESPONSE ERROR', res.status, res.statusText)
   return null
 }
 
@@ -85,4 +83,9 @@ export const getTimeOffEmployeeRequests = async (companyId, employeeId) => {
     return res.request_behalf
   }
   return []
+}
+
+export const publishSchedule = async (companyId, data) => {
+  const res = await request(`company/${companyId}/shift/publish`, 'POST', data)
+  return res
 }

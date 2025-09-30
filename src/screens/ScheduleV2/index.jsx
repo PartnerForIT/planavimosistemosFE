@@ -19,7 +19,7 @@ import { loadEmployeesAll } from '../../store/settings/actions'
 import { getShiftTypes } from '../../store/shiftsTypes/actions'
 import { getJobTypes } from '../../store/jobTypes/actions'
 import usePermissions from '../../components/Core/usePermissions'
-import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies } from '../../api'
+import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule } from '../../api'
 
 import HolidayIcon from '../../components/Core/HolidayIcon/HolidayIcon'
 import Progress from '../../components/Core/Progress'
@@ -350,7 +350,7 @@ const ScheduleV2 = () => {
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false})
   const [filter, setFilter] = useState({employers: [], place: [], shiftType: []})
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
-  const [schedule, setSchedule] = useState({holidays: {}, resources: [], events: [], markers: [], timesPanel: {}, loading: false})
+  const [schedule, setSchedule] = useState({holidays: {}, resources: [], events: [], markers: [], timesPanel: {}, loading: true, published: false, count_changes: 0})
   const [workTimes, setWorkTimes] = useState({})
   const [copyTool, setCopyTool] = useState(false)
   const [copyToolTime, setCopyToolTime] = useState({})
@@ -371,7 +371,6 @@ const ScheduleV2 = () => {
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck)
 
   const [publishDialog,setPublishDialog] = useState(false)
-  const published = Boolean(schedule?.published)
   const count_changes = schedule?.count_changes || 0
 
   const resources = useMemo(() => {
@@ -543,7 +542,7 @@ const ScheduleV2 = () => {
     if (timeline === TIMELINE.WEEK || timeline === TIMELINE.MONTH) {
       handleViewDidMount()
     }
-  }, [timeline, currentStartDate])
+  }, [timeline, currentStartDate, schedule.loading, schedule.published])
 
   useEffect(() => {
     fromDateRef.current = moment(currentStartDate).toDate()
@@ -643,6 +642,8 @@ const ScheduleV2 = () => {
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
+        published: res.published,
+        count_changes: res.count_changes,
         loading: false,
       }))
     }
@@ -659,12 +660,12 @@ const ScheduleV2 = () => {
 
   const handlePublishSchedule = () => {
     setPublishDialog(false)
-    // dispatch(publishSchedule({
-    //   companyId,
-    //   data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
-    // })).then(() => {
-    //   handleGetSchedule({ fromDate: fromDateRef.current });
-    // });
+    publishSchedule(
+      companyId,
+      {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    ).then(() => {
+      getSchedule({type: timeline, formDate: currentStartDate})
+    });
   }
 
   const handlePublishDialog = () => {
@@ -681,8 +682,10 @@ const ScheduleV2 = () => {
       updateWidthCell(rows)
     }).observe(container[0], { box: 'border-box' });
 
-    if (!permissions.schedule_create_and_edit && !published) {
-      const calendarEl = info.el.closest('.fc');
+    console.log(!permissions.schedule_create_and_edit, !schedule?.published, !schedule.loading, info, schedule)
+    if (!permissions.schedule_create_and_edit && !schedule?.published && !schedule.loading) {
+      const calendarEl = info ? info.el.closest('.fc') : document.querySelector('.fc-view').closest('.fc');
+      console.log(calendarEl)
       const eventArea = calendarEl.querySelector('.fc-timeline-body');
       let parentParent = null;
       if (eventArea) {
@@ -1469,7 +1472,7 @@ const ScheduleV2 = () => {
           <div className='schedule-screen__buttons'>
             {
               timeline === TIMELINE.MONTH && schedule && permissions.schedule_create_and_edit && scheduleSettings.use_publish ? (
-                ! published && !schedule?.events?.length ? (
+                ! schedule?.published && !schedule?.events?.length ? (
                   <Button
                     className={'simple-schedule-screen__nochanges'}
                     disabled
@@ -1477,7 +1480,7 @@ const ScheduleV2 = () => {
                     {t('No Entries')}
                   </Button>
                 ) : (
-                  ! published && schedule?.events?.length ? (
+                  ! schedule?.published && schedule?.events?.length ? (
                     <Button
                       className={'simple-schedule-screen__publish'}
                       onClick={() => { setPublishDialog(true) }}
@@ -1485,7 +1488,7 @@ const ScheduleV2 = () => {
                       {t('Publish')}
                     </Button>
                   ) : (
-                    published && !count_changes ? (
+                    schedule?.published && !count_changes ? (
                       <Button
                         className={'simple-schedule-screen__published'}
                         disabled
@@ -1493,7 +1496,7 @@ const ScheduleV2 = () => {
                         {t('Published')}
                       </Button>
                     ) : (
-                      published && count_changes ? (
+                      schedule?.published && count_changes ? (
                         <Button
                           className={'simple-schedule-screen__notify'}
                           onClick={handleNotifyChanges}
