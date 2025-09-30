@@ -19,7 +19,7 @@ import { loadEmployeesAll } from '../../store/settings/actions'
 import { getShiftTypes } from '../../store/shiftsTypes/actions'
 import { getJobTypes } from '../../store/jobTypes/actions'
 import usePermissions from '../../components/Core/usePermissions'
-import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule } from '../../api'
+import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule, notifySchedule, scheduleChangesLog } from '../../api'
 
 import HolidayIcon from '../../components/Core/HolidayIcon/HolidayIcon'
 import Progress from '../../components/Core/Progress'
@@ -41,6 +41,7 @@ import Button from '../../components/Core/Button/Button'
 import MonthCell from './MonthCell'
 import AddTempEmployee from '../Schedule/AddTempEmployee'
 import DialogPublishShift from '../../components/Core/Dialog/PublishShift'
+import ChangeLog from '../../components/Core/Dialog/ChangeLog';
 
 const CALENDAR_VIEWS_CONFIG = {
   day: {
@@ -362,6 +363,7 @@ const ScheduleV2 = () => {
   const [tempShiftID, setTempShiftID] = useState(0)
   const [tempEventID, setTempEventID] = useState(0)
   const [policies, setPolicies] = useState({})
+  const [changeLogModal, setChangeLogModal] = useState(false)
 
   const calendarRef = useRef(null)
   const fromDateRef = useRef(new Date())
@@ -649,13 +651,17 @@ const ScheduleV2 = () => {
     }
   }
 
+  const handleOpenChangeLog = () => {
+    setChangeLogModal(true);
+  }
+
   const handleNotifyChanges = () => {
-    // dispatch(notifySchedule({
-    //   companyId,
-    //   data: {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
-    // })).then(() => {
-    //   handleGetSchedule({ fromDate: fromDateRef.current });
-    // });
+    notifySchedule(
+      companyId,
+      {date: moment(fromDateRef.current).format('YYYY-MM-DD') },
+    ).then(() => {
+      getSchedule({type: timeline, formDate: currentStartDate})
+    });
   }
 
   const handlePublishSchedule = () => {
@@ -682,10 +688,8 @@ const ScheduleV2 = () => {
       updateWidthCell(rows)
     }).observe(container[0], { box: 'border-box' });
 
-    console.log(!permissions.schedule_create_and_edit, !schedule?.published, !schedule.loading, info, schedule)
     if (!permissions.schedule_create_and_edit && !schedule?.published && !schedule.loading) {
       const calendarEl = info ? info.el.closest('.fc') : document.querySelector('.fc-view').closest('.fc');
-      console.log(calendarEl)
       const eventArea = calendarEl.querySelector('.fc-timeline-body');
       let parentParent = null;
       if (eventArea) {
@@ -1458,7 +1462,13 @@ const ScheduleV2 = () => {
           />
           {
             !copyTool
-              ? <ToolsButton handleInputChange={handleChangeTool} values={toolsActive} style={{height: '100%'}} />
+              ? <ToolsButton
+                  withLog={permissions.schedule_create_and_edit}
+                  handleOpenChangeLog={handleOpenChangeLog}
+                  handleInputChange={handleChangeTool}
+                  values={toolsActive}
+                  style={{height: '100%'}}
+                />
               : null
           }
           {
@@ -1699,6 +1709,14 @@ const ScheduleV2 = () => {
         submitDeleteShift={() => handlePublishSchedule(publishDialog)}
         cancelDelete={cancelPublish}
       />
+      { changeLogModal && (
+        <ChangeLog
+          date={fromDateRef.current}
+          type={'schedule'}
+          open={changeLogModal}
+          onClose={() => setChangeLogModal(false)}
+        />
+      )}
     </MainLayout>
   )
 }

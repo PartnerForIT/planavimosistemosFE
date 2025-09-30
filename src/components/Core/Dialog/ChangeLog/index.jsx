@@ -36,6 +36,7 @@ export default function ChangeLog({
   date,
   onClose,
   open,
+  type,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -62,6 +63,17 @@ export default function ChangeLog({
   const page = {};
 
   useEffect(() => {
+    if (type === 'schedule') {
+      setColumnsArray(columns.map((column) => {
+        if (column.field === 'title') {
+          return { ...column, label: 'Shift name' };
+        }
+        return column;
+      }));
+    }
+  }, [type]);
+
+  useEffect(() => {
     if (open) {
       setIsLoading(true);
       dispatch(changesLog(
@@ -69,6 +81,7 @@ export default function ChangeLog({
           companyId,
           data: {
             date: moment(date).format('YYYY-MM-DD'),
+            type,
           }
         }
       )).then((data) => {

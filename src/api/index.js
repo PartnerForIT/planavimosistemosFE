@@ -89,3 +89,13 @@ export const publishSchedule = async (companyId, data) => {
   const res = await request(`company/${companyId}/shift/publish`, 'POST', data)
   return res
 }
+
+export const notifySchedule = async (companyId, data) => {
+  const res = await request(`company/${companyId}/shift/notify`, 'POST', data)
+  return res
+}
+
+export const scheduleChangesLog = async (companyId, data) => {
+  const res = await request(`company/${companyId}/shift/changes-log`, 'POST', data)
+  return res
+}

@@ -269,7 +269,7 @@ export const changesLog = ({ companyId, data }) => {
   return (dispatch, getState) => {
     dispatch(postSimpleSheet());
     return new Promise((resolve, reject) => {
-      fetch(`${config.api.url}/company/${companyId}/simple/changes-log`, {
+      fetch(`${config.api.url}/company/${companyId}/${data?.type === 'schedule' ? 'shift' : 'simple'}/changes-log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
