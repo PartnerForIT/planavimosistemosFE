@@ -270,13 +270,33 @@ export default () => {
     }
 
     employee_ids.forEach((employee_id) => {
+        const userRequests = timeOffRequests[employee_id]
         rangeDates.forEach((dateStr) => {
             const date = moment(dateStr, 'YYYY-MM-DD')
-            if (date.isBefore(moment().startOf('day'))) return;
             const day_number = date.date();
-            const hasEvent = result.some(
-                (e) => e.employee_id === employee_id && moment(e.start).format('YYYY-MM-DD') === date.format('YYYY-MM-DD')
-            );
+            const hasEvent = result.some((e) => e.employee_id === employee_id && moment(e.start).format('YYYY-MM-DD') === date.format('YYYY-MM-DD'));
+
+            if (!hasEvent && userRequests) {
+              const timeOffRequest = userRequests.find(req => moment(dateStr).isBetween(req.from, req.to) || moment(dateStr).isSame(req.from) || moment(dateStr).isSame(req.to))
+              if (timeOffRequest) {
+                result.push({
+                    resourceId: employee_id,
+                    employee_id,
+                    day_number,
+                    day: day_number,
+                    empty_event: true,
+                    start: date.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    end: date.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    timeOffRequest,
+                })
+              }
+              console.log('timeOffRequest', timeOffRequest)
+            }
+
+            if (date.isBefore(moment().startOf('day'))) {
+              return
+            }
+
             if (!hasEvent) {
                 result.push({
                     resourceId: employee_id,
@@ -290,7 +310,6 @@ export default () => {
             }
         });
     });
-
     result = result.map(e => {
       const userRequests = timeOffRequests[e.employee_id]
       if (userRequests) {
@@ -429,7 +448,7 @@ export default () => {
   const getTimeOffs = async (fromDate) => {
     const [policiesRes, timeOffsRes] = await Promise.all([
       getCompanyTimeOffPolicies(companyId),
-      getCompanyTimeOffRequests(companyId, fromDate)
+      getCompanyTimeOffRequests(companyId, {view: 'monthly', start_date: fromDate})
     ])
     if (Array.isArray(timeOffsRes?.request_behalf) && Array.isArray(policiesRes?.policies)) {
       const policiesMap = policiesRes.policies.reduce((acc, policy) => ({
@@ -453,7 +472,7 @@ export default () => {
       nextFromDate = nextFromDate.startOf('isoWeek');
     }
 
-    getTimeOffs(fromDate)
+    getTimeOffs(moment(fromDate).format('YYYY-MM-DD'))
 
     dispatch(getSchedule({
       companyId,

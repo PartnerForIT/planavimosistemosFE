@@ -39,6 +39,11 @@ export const getCompanyHolidays = async (companyId, params) => {
   return res
 }
 
+export const getCompanyWorkTimeSettings = async (companyId) => {
+  const res = await request(`company/${companyId}/work-time`, 'GET')
+  return res
+}
+
 export const getCompanyEmployeesAll = async (companyId) => {
   const res = await request(`company/${companyId}/employees/all`, 'GET')
   return res

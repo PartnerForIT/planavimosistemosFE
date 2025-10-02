@@ -572,7 +572,7 @@ $arrow-size: 21px;
 .upcomingRequestsHeader,
 .upcomingRequestsRow {
   display: grid;
-  grid-template-columns: 4fr 4fr 3fr 2fr 100px;
+  grid-template-columns: 4fr 1fr 4fr 3fr 2fr 100px;
   padding: 8px 12px;
   align-items: center;
 }
@@ -601,6 +601,17 @@ $arrow-size: 21px;
   overflow-wrap: anywhere;
   font-size: 14px;
   font-weight: 500;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    padding-top: 2px;
+  }
 }
 
 .upcomingRequestsStatus {
