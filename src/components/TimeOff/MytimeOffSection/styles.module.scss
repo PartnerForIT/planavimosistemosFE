@@ -50,7 +50,7 @@
     .upcomingRequestsHeader,
     .upcomingRequestsRow {
       display: grid;
-      grid-template-columns: 4fr 4fr 3fr 2fr 100px;
+      grid-template-columns: 4fr 2fr 4fr 3fr 2fr 100px;
       padding: 8px 12px;
       align-items: center;
     }
@@ -79,6 +79,34 @@
       overflow-wrap: anywhere;
       font-size: 14px;
       font-weight: 500;
+
+      .tableName {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tableSymbol {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        padding: 2px;
+
+        svg {
+          margin: 0;
+          padding: 0;
+          width: 18px;
+          height: 18px;
+
+          path {
+            stroke: white;
+            fill: transparent;
+          }
+        }
+      }
     }
 
     .upcomingRequestsStatus {

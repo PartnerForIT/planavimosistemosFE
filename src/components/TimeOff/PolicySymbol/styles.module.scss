@@ -1,0 +1,21 @@
+.symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 2px;
+
+  svg {
+    margin: 0;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+
+    path {
+      stroke: white;
+      fill: transparent;
+    }
+  }
+}

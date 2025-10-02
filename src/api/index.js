@@ -64,6 +64,11 @@ export const getCompanyTimeOffPolicies = async (companyId) => {
   return res
 }
 
+export const getCompanyTimeOffs = async (companyId) => {
+  const res = await request(`company/${companyId}/time-off`, 'GET')
+  return res?.time_offs || []
+}
+
 export const createRequest = async (companyId, timeOffId, policyId, data) => {
   const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/store`, 'POST', data)
   return res
