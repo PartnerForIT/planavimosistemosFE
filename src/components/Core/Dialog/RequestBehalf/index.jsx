@@ -380,7 +380,7 @@ const RequestBehalf = forwardRef(({
                     }}
                   />
 
-                  { singleRequest && endBalance !== false && (
+                  { singleRequest && endBalance !== false && !isNaN(endBalance) && (
                     <div className={style.detailsBalance}
                       dangerouslySetInnerHTML={{
                         __html: t('Your end balance will be <span>{{days}}</span> d.', { days: endBalance })
