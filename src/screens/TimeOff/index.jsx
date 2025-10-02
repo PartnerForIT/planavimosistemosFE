@@ -12,27 +12,27 @@ import Calendar from '../../components/TimeOff/Calendar'
 
 import { userSelector } from '../../store/auth/selectors'
 
+const options = [{
+  title: 'My time off',
+  key: 'time_off',
+  badge: 0,
+}, {
+  title: 'Requests',
+  key: 'requests',
+  badge: 0,
+}, {
+  title: 'Calendar',
+  key: 'calendar',
+  badge: 0,
+}]
+
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
   const { t } = useTranslation()
 
   const user = useSelector(userSelector)
 
-  const [activeTab, setActiveTab] = useState('calendar')
-
-  const options = [{
-    title: 'My time off',
-    key: 'time_off',
-    badge: 0,
-  }, {
-    title: 'Requests',
-    key: 'requests',
-    badge: 0,
-  }, {
-    title: 'Calendar',
-    key: 'calendar',
-    badge: 0,
-  }]
+  const [activeTab, setActiveTab] = useState('time_off')
 
   const handleSelectTab = key => {
     setActiveTab(key)

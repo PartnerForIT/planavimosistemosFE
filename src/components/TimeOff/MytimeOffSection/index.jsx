@@ -2,26 +2,22 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { useHistory } from 'react-router-dom'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
 
 import styles from './styles.module.scss'
 
 import Button from '../../Core/Button/Button'
 import EditIconFixedFill from '../../Icons/EditIconFixedFill'
-import TimeOffSymbol1 from '../../Icons/TimeOffSymbol1'
-import TimeOffSymbol2 from '../../Icons/TimeOffSymbol2'
-import TimeOffSymbol3 from '../../Icons/TimeOffSymbol3'
-import TimeOffSymbol4 from '../../Icons/TimeOffSymbol4'
-import TimeOffSymbol5 from '../../Icons/TimeOffSymbol5'
-import TimeOffSymbol6 from '../../Icons/TimeOffSymbol6'
-import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7'
-import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8'
-import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9'
 import ArrowRightButton from '../../Icons/ArrowRightButton'
 import AlertCircle from '../../Icons/AlertCircle'
 import Progress from '../../Core/Progress'
 import RequestBehalf from '../../Core/Dialog/RequestBehalf'
+import PolicySymbol from '../PolicySymbol'
 
-import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest } from '../../../api'
+import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest, getCompanyWorkTimeSettings, getCompanyTimeOffs } from '../../../api'
+
+const moment = extendMoment(Moment)
 
 const MyTimeOffSection = ({ companyId, employee }) => {
   const { t } = useTranslation()
@@ -34,8 +30,19 @@ const MyTimeOffSection = ({ companyId, employee }) => {
   const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState([])
   const [policies, setPolicies] = useState([])
+  const [workTimeSettings, setWorkTimeSettings] = useState({})
 
   const requestFormRef = useRef(null)
+
+  const holidaysMap = [...(workTimeSettings.work_time?.holidays || []), ...(workTimeSettings.national_holidays || [])].reduce((acc, holiday) => ({
+    ...acc,
+    [holiday.date]: true,
+  }), {})
+
+  const policiesMap = policies.reduce((acc, policy) => ({
+    ...acc,
+    [policy.id]: policy,
+  }), {})
 
   useEffect(() => {
     if (companyId && employeeId) {
@@ -45,10 +52,21 @@ const MyTimeOffSection = ({ companyId, employee }) => {
 
   const init = async (companyId, employeeId) => {
     setLoading(true)
-    const policies = await getEmployeePolicies(companyId, employeeId)
-    setPolicies(policies)
-    const timeOffRequests = await getTimeOffEmployeeRequests(companyId, employeeId)
+    const [timeOffs, policies, timeOffRequests, workTimeSettings] = await Promise.all([
+      getCompanyTimeOffs(companyId),
+      getEmployeePolicies(companyId, employeeId),
+      getTimeOffEmployeeRequests(companyId, employeeId),
+      getCompanyWorkTimeSettings(companyId),
+    ])
+
+    const timeOffsMap = timeOffs.reduce((acc, timeOff) => ({
+      ...acc,
+      [timeOff.id]: timeOff,
+    }), {})
+    
+    setPolicies(policies.map((p => ({...p, time_off: timeOffsMap[p.time_off_id]}))))
     setRequests(timeOffRequests)
+    setWorkTimeSettings(workTimeSettings)
     setLoading(false)
   }
 
@@ -104,6 +122,9 @@ const handleRequest = (params) => {
                     {t('Request type')}
                   </div>
                   <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('Days')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}>
                     {t('When')}
                   </div>
                   <div className={styles.upcomingRequestsHeaderCol}>
@@ -114,44 +135,65 @@ const handleRequest = (params) => {
                   </div>
                   <div className={styles.upcomingRequestsHeaderCol}></div>
                 </div>
-                {requests.map((request) => (
-                  <div key={request.id} className={styles.upcomingRequestsRow}>
-                    <div className={styles.upcomingRequestsCol}>
-                      {request.time_off_name}
-                    </div>
-                    <div className={styles.upcomingRequestsCol}>
-                      {request.from} - {request.to}
-                    </div>
-                    <div className={styles.upcomingRequestsCol}>
-                      {request.created_at}
-                    </div>
-                    <div className={styles.upcomingRequestsCol}>
-                      <div className={cn(styles.upcomingRequestsStatus, {
-                        [styles.requestStatusApproved]: request.status === 'approved',
-                        [styles.requestStatusPending]: request.status === 'pending',
-                        [styles.requestStatusRejected]: request.status === 'rejected',
-                        [styles.requestStatusCancelled]: request.status === 'cancelled',
-                      })}>
-                        {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                {requests.map((request) => {
+                  const policy = policiesMap[request.policy_id] || {};
+                  const range = Array.from(moment.range(moment(request.from), moment(request.to)).by('days')).map(date => date.format('YYYY-MM-DD'))
+                  const totalWorkingDays = range.reduce((acc, date) => {
+                    if (holidaysMap[date]) {
+                      return acc
+                    }
+                    const day = moment(date).day()
+                    if (policy.time_off.work_days === 'any_day' || (day !== 0 && day !== 6)) {
+                      return acc + 1
+                    }
+                    return acc
+                  }, 0)
+                  
+                  return (
+                    <div key={request.id} className={styles.upcomingRequestsRow}>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={styles.tableName}>
+                          <PolicySymbol symbol={policy.symbol} color={policy.color} />
+                          {policy.name}
+                        </div>
                       </div>
-                    </div>
-                    <div className={styles.upcomingRequestsCol}>
-                      <div className={styles.upcomingRequestsButtons}>
-                        <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
-                          <Button
-                            className={styles.buttonEdit}
-                            size="little"
-                            onClick={() => {
-                              handleRequest(request)
-                            }}
-                          >
-                            <EditIconFixedFill />
-                          </Button>
+                      <div className={styles.upcomingRequestsCol}>
+                        {totalWorkingDays}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        {request.from} - {request.to}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        {request.created_at}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={cn(styles.upcomingRequestsStatus, {
+                          [styles.requestStatusApproved]: request.status === 'approved',
+                          [styles.requestStatusPending]: request.status === 'pending',
+                          [styles.requestStatusRejected]: request.status === 'rejected',
+                          [styles.requestStatusCancelled]: request.status === 'cancelled',
+                        })}>
+                          {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                        </div>
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={styles.upcomingRequestsButtons}>
+                          <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
+                            <Button
+                              className={styles.buttonEdit}
+                              size="little"
+                              onClick={() => {
+                                handleRequest(request)
+                              }}
+                            >
+                              <EditIconFixedFill />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             ) : null
           }
@@ -204,19 +246,7 @@ const handleRequest = (params) => {
                         </div>
                         <div className={styles.policiesTableCol}>
                           <div className={styles.tableName}>
-                            {(policy.ready && policy.symbol && policy.color) ? (
-                              <span className={styles.tableSymbol} style={{backgroundColor: policy.color}}>
-                                {policy.symbol === '1' && <TimeOffSymbol1 />}
-                                {policy.symbol === '2' && <TimeOffSymbol2 />}
-                                {policy.symbol === '3' && <TimeOffSymbol3 />}
-                                {policy.symbol === '4' && <TimeOffSymbol4 />}
-                                {policy.symbol === '5' && <TimeOffSymbol5 />}
-                                {policy.symbol === '6' && <TimeOffSymbol6 />}
-                                {policy.symbol === '7' && <TimeOffSymbol7 />}
-                                {policy.symbol === '8' && <TimeOffSymbol8 />}
-                                {policy.symbol === '9' && <TimeOffSymbol9 />}
-                              </span>
-                            ) : null}
+                            <PolicySymbol symbol={policy.symbol} color={policy.color} />
                             {policy.name}
                           </div>
                         </div>
