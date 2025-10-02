@@ -610,7 +610,7 @@ const ScheduleV2 = () => {
         }
         return e
       })
-      const timeOffRes = await getCompanyTimeOffRequests(companyId, formDate)
+      const timeOffRes = await getCompanyTimeOffRequests(companyId, {start_date: formDate, view: 'monthly'})
       const timeOffRequestsMap = timeOffRes.request_behalf.reduce((acc, req) => ({
         ...acc,
         [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], req] : [req]

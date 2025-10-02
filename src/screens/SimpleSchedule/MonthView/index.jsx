@@ -374,7 +374,7 @@ const MonthView = ({
 };
 
 const isEqual = (prevProps, nextProps) => {
-  return prevProps.events === nextProps.events && prevProps.scheduleSettings === nextProps.scheduleSettings
+  return prevProps.events === nextProps.events && prevProps.scheduleSettings === nextProps.scheduleSettings && prevProps.holidays === nextProps.holidays
 }
 
 export default memo(MonthView, isEqual)
