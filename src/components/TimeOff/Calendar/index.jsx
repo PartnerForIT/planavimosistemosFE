@@ -146,7 +146,6 @@ const TimeOffCalendar = () => {
   const currentMonth = moment(currentStartDate).startOf('month').format('YYYY-MM')
   
   useEffect(() => {
-    console.log('companyId', companyId)
     init()
   }, [companyId])
 
@@ -199,9 +198,7 @@ const TimeOffCalendar = () => {
       sideBarRef.current.close()
     }
     setLoading(true)
-    console.log('getEvents')
     const res = await getCompanyTimeOffRequests(companyId, params)
-    console.log(res)
     if (Array.isArray(res?.request_behalf)) {
       const events = generateTimeOffEvents(res.request_behalf, policies, [styles.event])
       setEvents([...events, ...generateAvailabilityEvents(currentStartDate, getEmployeesFromResources(resources), events, [styles.availabilityEvent])])

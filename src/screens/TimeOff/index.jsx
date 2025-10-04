@@ -9,6 +9,7 @@ import MainLayout from '../../components/Core/MainLayout'
 import AppNavbar from '../../components/Core/AppNavbar'
 import MyTimeOff from '../../components/TimeOff/MytimeOffSection'
 import Calendar from '../../components/TimeOff/Calendar'
+import TimneOffRequests from '../../components/TimeOff/Requests'
 
 import { userSelector } from '../../store/auth/selectors'
 
@@ -32,7 +33,7 @@ const TimeOffScreen = () => {
 
   const user = useSelector(userSelector)
 
-  const [activeTab, setActiveTab] = useState('time_off')
+  const [activeTab, setActiveTab] = useState('requests')
 
   const handleSelectTab = key => {
     setActiveTab(key)
@@ -58,7 +59,7 @@ const TimeOffScreen = () => {
                 )
               case 'requests':
                 return (
-                  null
+                  <TimneOffRequests />
                 )
               case 'calendar':
                 return (

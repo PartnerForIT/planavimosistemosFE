@@ -4,6 +4,7 @@ import cn from 'classnames'
 import { useHistory } from 'react-router-dom'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import styles from './styles.module.scss'
 
@@ -14,6 +15,7 @@ import AlertCircle from '../../Icons/AlertCircle'
 import Progress from '../../Core/Progress'
 import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 import PolicySymbol from '../PolicySymbol'
+import DescriptionIcon from '../../Icons/DescriptionIcon';
 
 import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest, getCompanyWorkTimeSettings, getCompanyTimeOffs } from '../../../api'
 
@@ -155,6 +157,13 @@ const handleRequest = (params) => {
                         <div className={styles.tableName}>
                           <PolicySymbol symbol={policy.symbol} color={policy.color} />
                           {policy.name}
+                          {
+                            request.note
+                              ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
+                                  <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+                                </div>
+                              : null
+                          }
                         </div>
                       </div>
                       <div className={styles.upcomingRequestsCol}>
@@ -352,6 +361,11 @@ const handleRequest = (params) => {
         initialValue={{}}
         activeTimeOff={1}
         singleRequest
+      />
+      <ReactTooltip
+        id='note'
+        effect='solid'
+        className={styles.tooltip}
       />
       {
         loading

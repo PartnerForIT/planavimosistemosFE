@@ -2,8 +2,8 @@
 import SvgIcon from '@material-ui/core/SvgIcon';
 import React from 'react';
 
-const DescriptionIcon = ({ className }) => (
-  <SvgIcon viewBox="0 0 12 11" className={className}>
+const DescriptionIcon = ({ className, ...props }) => (
+  <SvgIcon viewBox="0 0 12 11" className={className} {...props}>
     <path d="M2.23484 9.54983L0.970421 10.8243C0.790737 11.0055 0.584053 11.0466 0.350368 10.9474C0.11679 10.8482 0 10.6697 0 10.4117V1.15091C0 0.829296 0.110526 0.557073 0.331579 0.334244C0.552632 0.111415 0.822684 0 1.14174 0H10.8583C11.1773 0 11.4474 0.111415 11.6684 0.334244C11.8895 0.557073 12 0.829296 12 1.15091V8.39892C12 8.72053 11.8895 8.99276 11.6684 9.21558C11.4474 9.43841 11.1773 9.54983 10.8583 9.54983H2.23484Z" fill="#9BA6AC"/>
   </SvgIcon>
 );
