@@ -288,12 +288,10 @@ export const generateWorkEvents = (data) => {
 }
 
 export const generateTimeOffEvents = (data, policies, classNames) => {
-  const policiesMap = policies.reduce((acc, policy) => {
-    return {
-      ...acc,
-      [policy.id]: policy,
-    }
-  }, {})
+  const policiesMap = policies.reduce((acc, policy) => ({
+    ...acc,
+    [policy.id]: policy,
+  }), {})
   const arr = data.map(item => {
     const policy = policiesMap[item.policy_id] || {}
     return {
