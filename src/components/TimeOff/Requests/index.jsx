@@ -24,6 +24,31 @@ import Progress from '../../Core/Progress'
 import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 import InfoIcon from '../../Icons/InfoIcon'
 import CheckboxIcon from '../../Icons/CheckboxIcon'
+import TriangleIcon from '../../Icons/TriangleIcon';
+
+const generateSections = (requests) => {
+  return requests.reduce((acc, request) => {
+    const sectionKey = request.status === 'pending' ? 'Pending' : moment(request.created_at).format('MMM DD, YYYY')
+    if (!acc[sectionKey]) {
+      acc[sectionKey] = []
+    }
+    acc[sectionKey].push(request)
+    return acc
+  }, {})
+}
+
+const filterRequests = (request, query) => {
+  if (!query) return true
+  const q = query.toLowerCase()
+  if (request.employee.title.toLowerCase().includes(q)) return true
+  if (request.policy.name.toLowerCase().includes(q)) return true
+  if (request.employee.groups?.toLowerCase().includes(q)) return true
+  if (request.employee.subgroups?.toLowerCase().includes(q)) return true
+  if (request.employee.place?.toLowerCase().includes(q)) return true
+  if (request.approver_1_name?.toLowerCase().includes(q)) return true
+  if (request.approver_2_name?.toLowerCase().includes(q)) return true
+  return false
+}
 
 const moment = extendMoment(Moment)
 
@@ -32,23 +57,26 @@ const TimneOffRequests = () => {
   const { t } = useTranslation()
 
   const [loading, setLoading] = useState(true)
+  const [expandedSections, setExpandedSections] = useState([])
   const [query, setQuery] = useState('')
   const [{employees, policies, places, filterDate}, setFilters] = useState({
     filterDate: {
-      start: moment(),
-      end: moment().endOf('month'),
+      start: moment().startOf('isoWeek'),
+      end: moment().endOf('isoWeek'),
     },
     places: [],
     policies: [],
     employees: [],
   })
-  const [timeOffRequests, setTimeOffRequests] = useState([])
+  const [sections, setSections] = useState({})
   const [workTimeSettings, setWorkTimeSettings] = useState({})
 
   const holidaysMap = [...(workTimeSettings.work_time?.holidays || []), ...(workTimeSettings.national_holidays || [])].reduce((acc, holiday) => ({
     ...acc,
     [holiday.date]: true,
   }), {})
+
+  const timeOffRequests = Object.values(sections).flat(Infinity)
 
   const isCheckedAll = timeOffRequests.length > 0 && timeOffRequests.every(r => r.checked)
   const checkedItems = timeOffRequests.filter(r => r.checked)
@@ -111,8 +139,7 @@ const TimneOffRequests = () => {
         ...acc,
         [emp.id]: emp,
       }), {})
-
-      setTimeOffRequests(res.request_behalf.map(r => {
+      const timeOffReuests = res.request_behalf.map(r => {
         const policy = policiesMap[r.policy_id]
         const range = Array.from(moment.range(moment(r.from), moment(r.to)).by('days')).map(date => date.format('YYYY-MM-DD'))
         const totalRestDays = range.reduce((acc, date) => {
@@ -133,7 +160,9 @@ const TimneOffRequests = () => {
           totalRestDays: totalRestDays,
           checked: false,
         }
-      }))
+      })
+      const sections = generateSections(timeOffReuests)
+      setSections(sections)
     }
     setLoading(false)
   }
@@ -161,24 +190,32 @@ const TimneOffRequests = () => {
   }
 
   const handleChangeRequestStatusBulk = async (status, employeeIds) => {
-    
+
   }
 
   const handleToggleAll = () => {
     if (isCheckedAll) {
-      setTimeOffRequests(prev => prev.map(r => ({...r, checked: false})))
+      setSections(generateSections(timeOffRequests.map(r => ({...r, checked: false}))))
       return
     }
-    setTimeOffRequests(prev => prev.map(r => ({...r, checked: true})))
+    setSections(generateSections(timeOffRequests.map(r => ({...r, checked: true}))))
   }
 
   const handleSelect = (request) => () => {
-    setTimeOffRequests(prev => prev.map(r => r.id === request.id ? {...r, checked: !r.checked} : r))
+    setSections(generateSections(timeOffRequests.map(r => r.id === request.id ? {...r, checked: !r.checked} : r)))
+  }
+
+  const handleExpand = (section, isExpanded) => {
+    if (isExpanded) {
+      setExpandedSections(expandedSections.filter(s => s !== section))
+      return
+    }
+    setExpandedSections([...expandedSections, section])
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.content}>
+      <div className={styles.screen}>
         <div className={styles.toolsContainer}>
           <DRP initRange={{startDate: filterDate.start.toDate(), endDate: filterDate.end.toDate()}} onChange={handleChangeDate} />
           <Input
@@ -212,8 +249,7 @@ const TimneOffRequests = () => {
                 <StyledCheckbox
                   id='all'
                   checked={isCheckedAll}
-                  onChange={handleToggleAll}
-                />
+                  onChange={handleToggleAll} />
               </div>
               <div className={styles.cell}>{t('Action')}</div>
               <div className={styles.cell}>{t('Status')}</div>
@@ -230,18 +266,92 @@ const TimneOffRequests = () => {
             </div>
             <div className={styles.body}>
               {
-                timeOffRequests.filter(r => {
-                  if (!query) return true
-                  const q = query.toLowerCase()
-                  if (r.employee.title.toLowerCase().includes(q)) return true
-                  if (r.policy.name.toLowerCase().includes(q)) return true
-                  if (r.employee.groups?.toLowerCase().includes(q)) return true
-                  if (r.employee.subgroups?.toLowerCase().includes(q)) return true
-                  if (r.employee.place?.toLowerCase().includes(q)) return true
-                  if (r.approver_1_name?.toLowerCase().includes(q)) return true
-                  if (r.approver_2_name?.toLowerCase().includes(q)) return true
-                  return false
-                }).map(request => {
+                Object.entries(sections).map(([section, requests]) => {
+                  const isExpanded = expandedSections.includes(section)
+                  return (
+                    <div key={section} className={cn(styles.section, {[styles.active]: isExpanded})}>
+                      <div className={styles.sectionHeader} onClick={() => handleExpand(section, isExpanded)}>
+                        <TriangleIcon className={cn(styles.icon)} />
+                        {section} ({requests.length})
+                      </div>
+                      {
+                        isExpanded && requests.map(request => {
+                          return (
+                            <div key={request.id} className={cn(styles.row)}>
+                              <div className={cn(styles.cell, styles.center)}>
+                                <StyledCheckbox
+                                  id={request.id}
+                                  checked={request.checked}
+                                  onChange={handleSelect(request)} />
+                              </div>
+                              <div className={cn(styles.cell, styles.actions)}>
+                                <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon}>
+                                  <EditIconFixedFill />
+                                </div>
+                                { request.status !== 'approved' && (
+                                  <div data-tooltip-html={t("Approve")} data-tooltip-id="note" className={cn(styles.icon, styles.approve)} onClick={() => handleChangeRequestStatus(request, 'approved', [request.employee_id])}>
+                                    <CheckIcon />
+                                  </div>
+                                )}
+                                { request.status !== 'rejected' && (
+                                  <div data-tooltip-html={t("Reject")} data-tooltip-id="note" className={cn(styles.icon, styles.reject)} onClick={() => handleChangeRequestStatus(request, 'rejected', [request.employee_id])}>
+                                    <RejectIcon />
+                                  </div>
+                                )}
+                              </div>
+                              <div className={styles.cell}>
+                                <div className={cn(styles.status, styles[request.status])}>
+                                  { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
+                                </div>
+                              </div>
+                              <div className={styles.cell}>
+                                { request.employee.title }
+                              </div>
+                              <div className={cn(styles.cell, styles.policy)}>
+                                <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
+                                {request.policy.name}
+                                {
+                                  request.note
+                                    ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
+                                        <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+                                      </div>
+                                    : null
+                                }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.totalRestDays }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.from } - { request.to }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.created_at }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.employee.groups }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.employee.subgroups }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.employee.place }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.approver_1_name }
+                              </div>
+                              <div className={styles.cell}>
+                                { request.approver_2_name }
+                              </div>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  )
+                })
+              }
+              {/* {
+                timeOffRequests.filter(r => filterRequests(r, query)).map(request => {
                   return (
                     <div key={request.id} className={cn(styles.row)}>
                       <div className={cn(styles.cell, styles.center)}>
@@ -311,7 +421,7 @@ const TimneOffRequests = () => {
                     </div>
                   )
                 })
-              }
+              } */}
             </div>
           </div>
         </div>
