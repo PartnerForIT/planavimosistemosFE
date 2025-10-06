@@ -133,7 +133,7 @@ const TimeOffCalendar = () => {
     policies: [],
     resources: [],
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
   const [holidays, setHolidays] = useState({})
