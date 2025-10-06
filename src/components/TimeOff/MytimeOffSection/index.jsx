@@ -29,7 +29,7 @@ const MyTimeOffSection = ({ companyId, employee }) => {
 
   const [expandedPolicyIds, setExpandedPolicyIds] = useState([])
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [requests, setRequests] = useState([])
   const [policies, setPolicies] = useState([])
   const [workTimeSettings, setWorkTimeSettings] = useState({})
