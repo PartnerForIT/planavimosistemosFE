@@ -1,0 +1,119 @@
+.row {
+  height: 48px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px, 1fr);
+  grid-template-columns: 100px 100px repeat(3, minmax(150px, 1fr)) 100px 200px repeat(5, minmax(150px, 1fr));
+
+  &:nth-child(even) {
+    background-color: #f9fbfc;
+  }
+
+  &.header {
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 2;
+    padding: 0 16px;
+  }
+
+  .cell {
+    font-family: 'Helvetica Neue Medium';
+    color: #808F94;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+
+    &.center {
+      justify-content: center;
+    }
+
+    &.policy {
+      gap: 8px;
+
+      .note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        padding-top: 2px;
+
+        .noteIcon {
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+
+    &.actions {
+      gap: 4px;
+
+      .icon {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4080fc;
+        border-radius: 4px;
+
+        &.approve {
+          background-color: #E1F5F0;
+          color: #068968;
+          svg {
+            path {
+              fill: #068968;
+            }
+          }
+        }
+
+        &.reject {
+          background-color: #F5E1E1;
+          color: #890606;
+          svg {
+            path {
+              fill: #890606;
+            }
+          }
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+
+          path {
+            fill: #fff;
+          }
+        }
+      }
+    }
+
+    .status {
+      height: 24px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+
+      &.approved {
+        background: #E1F5F0;
+      }
+
+      &.pending {
+        background: #E2EFFF;
+      }
+
+      &.rejected {
+        background: #F5E1E1;
+      }
+
+      &.cancelled {
+        background: #808F94;
+      }
+    }
+  }
+}

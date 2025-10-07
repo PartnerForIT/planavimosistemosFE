@@ -89,6 +89,11 @@ export const updateRequestStatus = async (companyId, timeOffId, policyId, reques
   return res
 }
 
+export const updateRequestStatusBulk = async (companyId, data) => {
+  const res = await request(`company/${companyId}/time-off/update-request-status`, 'POST', data)
+  return res
+}
+
 export const getEmployeePolicies = async (companyId, employeeId) => {
   const res = await request(`company/${companyId}/time-off/all/policy/employee/${employeeId}`)
   if (Array.isArray(res?.policies)) {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
 import cn from 'classnames'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import Moment from 'moment'
@@ -8,7 +7,17 @@ import { extendMoment } from 'moment-range'
 
 import styles from './styles.module.scss'
 
-import { getCompanyTimeOffPolicies, getCompanyTimeOffRequests, getCompanyEmployeesAll, getPlaces, getCompanyTimeOffs, getCompanyWorkTimeSettings, updateRequestStatus, getCompanyInfo } from '../../../api'
+import {
+  getCompanyTimeOffPolicies,
+  getCompanyTimeOffRequests,
+  getCompanyEmployeesAll,
+  getPlaces,
+  getCompanyTimeOffs,
+  getCompanyWorkTimeSettings,
+  updateRequestStatus,
+  getCompanyInfo,
+  updateRequestStatusBulk
+} from '../../../api'
 import { generateResourcesFromEmployees, getEmployeesFromResources, getCheckedEmployeeIds } from '../Calendar/utils'
 
 import CustomSelect from '../../Core/CustomSelect'
@@ -25,6 +34,7 @@ import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 import InfoIcon from '../../Icons/InfoIcon'
 import CheckboxIcon from '../../Icons/CheckboxIcon'
 import TriangleIcon from '../../Icons/TriangleIcon'
+import RequestTableRow from '../RequestTableRow'
 
 const moment = extendMoment(Moment)
 
@@ -58,8 +68,7 @@ const filterRequests = (request, query) => {
   return false
 }
 
-const TimneOffRequests = () => {
-  const { id: companyId } = useParams()
+const TimneOffRequests = ({companyId}) => {
   const { t } = useTranslation()
 
   const [loading, setLoading] = useState(true)
@@ -199,8 +208,10 @@ const TimneOffRequests = () => {
     getTimeOffRequests()
   }
 
-  const handleChangeRequestStatusBulk = async (status, employeeIds) => {
-
+  const handleChangeRequestStatusBulk = async (status, checkedRequests) => {
+    const request_behalf_ids = checkedRequests.map(r => r.id)
+    const res = await updateRequestStatusBulk(companyId, {status: status, request_behalf_ids: request_behalf_ids})
+    getTimeOffRequests()
   }
 
   const handleToggleAll = () => {
@@ -289,72 +300,77 @@ const TimneOffRequests = () => {
                       {
                         isExpanded && requests.filter(r => filterRequests(r, query)).map(request => {
                           return (
-                            <div key={request.id} className={cn(styles.row)}>
-                              <div className={cn(styles.cell, styles.center)}>
-                                <StyledCheckbox
-                                  id={request.id}
-                                  checked={request.checked}
-                                  onChange={handleSelect(request)} />
-                              </div>
-                              <div className={cn(styles.cell, styles.actions)}>
-                                <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon}>
-                                  <EditIconFixedFill />
-                                </div>
-                                { request.status !== 'approved' && (
-                                  <div data-tooltip-html={t("Approve")} data-tooltip-id="note" className={cn(styles.icon, styles.approve)} onClick={() => handleChangeRequestStatus(request, 'approved', [request.employee_id])}>
-                                    <CheckIcon />
-                                  </div>
-                                )}
-                                { request.status !== 'rejected' && (
-                                  <div data-tooltip-html={t("Reject")} data-tooltip-id="note" className={cn(styles.icon, styles.reject)} onClick={() => handleChangeRequestStatus(request, 'rejected', [request.employee_id])}>
-                                    <RejectIcon />
-                                  </div>
-                                )}
-                              </div>
-                              <div className={styles.cell}>
-                                <div className={cn(styles.status, styles[request.status])}>
-                                  { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
-                                </div>
-                              </div>
-                              <div className={styles.cell}>
-                                { request.employee.title }
-                              </div>
-                              <div className={cn(styles.cell, styles.policy)}>
-                                <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
-                                {request.policy.name}
-                                {
-                                  request.note
-                                    ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
-                                        <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
-                                      </div>
-                                    : null
-                                }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.totalRestDays }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.from } - { request.to }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.created_at }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.employee.groups }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.employee.subgroups }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.employee.place }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.approver_1_name }
-                              </div>
-                              <div className={styles.cell}>
-                                { request.approver_2_name }
-                              </div>
-                            </div>
+                            <RequestTableRow
+                              key={request.id}
+                              request={request}
+                              onSelect={handleSelect}
+                              onChangeRequestStatus={handleChangeRequestStatus} />
+                            // <div key={request.id} className={cn(styles.row)}>
+                            //   <div className={cn(styles.cell, styles.center)}>
+                            //     <StyledCheckbox
+                            //       id={request.id}
+                            //       checked={request.checked}
+                            //       onChange={handleSelect(request)} />
+                            //   </div>
+                            //   <div className={cn(styles.cell, styles.actions)}>
+                            //     <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon}>
+                            //       <EditIconFixedFill />
+                            //     </div>
+                            //     { request.status !== 'approved' && (
+                            //       <div data-tooltip-html={t("Approve")} data-tooltip-id="note" className={cn(styles.icon, styles.approve)} onClick={() => handleChangeRequestStatus(request, 'approved', [request.employee_id])}>
+                            //         <CheckIcon />
+                            //       </div>
+                            //     )}
+                            //     { request.status !== 'rejected' && (
+                            //       <div data-tooltip-html={t("Reject")} data-tooltip-id="note" className={cn(styles.icon, styles.reject)} onClick={() => handleChangeRequestStatus(request, 'rejected', [request.employee_id])}>
+                            //         <RejectIcon />
+                            //       </div>
+                            //     )}
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     <div className={cn(styles.status, styles[request.status])}>
+                            //       { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
+                            //     </div>
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.employee.title }
+                            //   </div>
+                            //   <div className={cn(styles.cell, styles.policy)}>
+                            //     <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
+                            //     {request.policy.name}
+                            //     {
+                            //       request.note
+                            //         ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
+                            //             <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+                            //           </div>
+                            //         : null
+                            //     }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.totalRestDays }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.from } - { request.to }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.created_at }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.employee.groups }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.employee.subgroups }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.employee.place }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.approver_1_name }
+                            //   </div>
+                            //   <div className={styles.cell}>
+                            //     { request.approver_2_name }
+                            //   </div>
+                            // </div>
                           )
                         })
                       }
@@ -381,14 +397,14 @@ const TimneOffRequests = () => {
             type="button"
             disabled={checkedItems.every(r => r.status === 'approved')}
             className={cn(styles.button, styles.approve)}
-            onClick={() => handleChangeRequestStatusBulk('approved', checkedItems.map(i => i.employee_id))}>
+            onClick={() => handleChangeRequestStatusBulk('approved', checkedItems)}>
             { t('Approve') }
           </button>
           <button
             type="button"
             disabled={checkedItems.every(r => r.status === 'rejected')}
             className={cn(styles.button, styles.reject)}
-            onClick={() => handleChangeRequestStatusBulk('rejected', checkedItems.map(i => i.employee_id))}>
+            onClick={() => handleChangeRequestStatusBulk('rejected', checkedItems)}>
             { t('Reject') }
           </button>
         </div>

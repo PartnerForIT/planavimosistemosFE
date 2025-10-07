@@ -314,7 +314,7 @@ function UserDataManagement({
   
 
   return (
-    <>
+    <div style={{overflow: 'hidden', height: '100%'}}>
       <TitleBlock
         info={{
           [t('users assigned')]: employeesList.length,
@@ -421,7 +421,7 @@ function UserDataManagement({
         effect='solid'
         className={classes.tooltip_back}
       />
-    </>
+    </div>
   );
 }
 
