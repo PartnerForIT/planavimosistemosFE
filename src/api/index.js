@@ -34,6 +34,11 @@ export const getPlaces = async (companyId) => {
   return res
 }
 
+export const getCompanyInfo = async (companyId) => {
+  const res = await request(`company/${companyId}/edit`, 'GET')
+  return res
+}
+
 export const getCompanyHolidays = async (companyId, params) => {
   const res = await request(`company/${companyId}/holidays`, 'GET', params)
   return res
@@ -81,6 +86,11 @@ export const updateRequest = async (companyId, timeOffId, policyId, requestId, d
 
 export const updateRequestStatus = async (companyId, timeOffId, policyId, requestId, data) => {
   const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestId}/status`, 'POST', data)
+  return res
+}
+
+export const updateRequestStatusBulk = async (companyId, data) => {
+  const res = await request(`company/${companyId}/time-off/update-request-status`, 'POST', data)
   return res
 }
 

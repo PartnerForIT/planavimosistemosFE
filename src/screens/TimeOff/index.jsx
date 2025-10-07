@@ -10,6 +10,7 @@ import AppNavbar from '../../components/Core/AppNavbar'
 import MyTimeOff from '../../components/TimeOff/MytimeOffSection'
 import Calendar from '../../components/TimeOff/Calendar'
 import TimneOffRequests from '../../components/TimeOff/Requests'
+import MyEmployeesSection from '../../components/TimeOff/MyEmployeesSection'
 
 import { userSelector } from '../../store/auth/selectors'
 
@@ -25,7 +26,13 @@ const options = [{
   title: 'Calendar',
   key: 'calendar',
   badge: 0,
-}]
+},
+// {
+//   title: 'My employees',
+//   key: 'employees',
+//   badge: 0,
+// }
+]
 
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
@@ -33,7 +40,7 @@ const TimeOffScreen = () => {
 
   const user = useSelector(userSelector)
 
-  const [activeTab, setActiveTab] = useState('requests')
+  const [activeTab, setActiveTab] = useState('time_off')
 
   const handleSelectTab = key => {
     setActiveTab(key)
@@ -59,14 +66,20 @@ const TimeOffScreen = () => {
                 )
               case 'requests':
                 return (
-                  <TimneOffRequests />
+                  <TimneOffRequests
+                    companyId={companyId} />
                 )
               case 'calendar':
                 return (
-                  <Calendar />
+                  <Calendar
+                    companyId={companyId} />
                 )
               case 'employees':
-                return null
+                return (
+                  <MyEmployeesSection
+                    companyId={companyId}
+                    employee={user.employee} />
+                )
             }
           })(activeTab)
         }

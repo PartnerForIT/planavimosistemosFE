@@ -124,8 +124,7 @@ const resourceLaneClassNames = ({ resource }) => {
   return []
 }
 
-const TimeOffCalendar = () => {
-  const { id: companyId } = useParams()
+const TimeOffCalendar = ({companyId}) => {
   const { t } = useTranslation()
 
   const [{resources, policies, places}, setData] = useState({
