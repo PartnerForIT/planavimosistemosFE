@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useMemo } from 'react'
+import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 
 import styles from './styles.module.scss'
 
@@ -13,6 +12,11 @@ import TimneOffRequests from '../../components/TimeOff/Requests'
 import MyEmployeesSection from '../../components/TimeOff/MyEmployeesSection'
 
 import { userSelector } from '../../store/auth/selectors'
+
+const useQuery = (param) => {
+  const { search } = useLocation()
+  return useMemo(() => new URLSearchParams(search).get(param), [search])
+}
 
 const options = [{
   title: 'My time off',
@@ -36,14 +40,15 @@ const options = [{
 
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
-  const { t } = useTranslation()
+  const queryTab = useQuery('tab')
+  const history = useHistory()
 
   const user = useSelector(userSelector)
 
-  const [activeTab, setActiveTab] = useState('time_off')
+  const activeTab = queryTab || 'time_off'
 
   const handleSelectTab = key => {
-    setActiveTab(key)
+    history.push({search: `?tab=${key}`})
   }
 
   return (
