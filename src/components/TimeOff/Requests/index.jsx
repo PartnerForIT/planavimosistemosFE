@@ -22,11 +22,6 @@ import { generateResourcesFromEmployees, getEmployeesFromResources, getCheckedEm
 
 import CustomSelect from '../../Core/CustomSelect'
 import DRP from '../../Core/DRP/DRP'
-import PolicySymbol from '../PolicySymbol'
-import DescriptionIcon from '../../Icons/DescriptionIcon'
-import EditIconFixedFill from '../../Icons/EditIconFixedFill'
-import CheckIcon from '../../Icons/CheckIcon'
-import RejectIcon from '../../Icons/RejectIcon'
 import SearchIcon from '../../Icons/SearchIcon'
 import Input from '../../Core/Input/Input'
 import Progress from '../../Core/Progress'
@@ -204,14 +199,22 @@ const TimneOffRequests = ({companyId}) => {
   }
 
   const handleChangeRequestStatus = async (request, status, employeeIds) => {
+    const updated = timeOffRequests.map(r => r.id === request.id ? ({...r, status: status, checked: false}) : r)
+    setSections(generateSections(updated, companyData.date_format))
     const res = await updateRequestStatus(companyId, request.time_off_id, request.policy_id, request.id, {status: status, employees: employeeIds})
-    getTimeOffRequests()
+    if (!res) {
+      getTimeOffRequests()
+    }
   }
 
   const handleChangeRequestStatusBulk = async (status, checkedRequests) => {
+    const updated = timeOffRequests.map(r => checkedRequests.some(cr => cr.id === r.id) ? ({...r, status: status, checked: false}) : r)
+    setSections(generateSections(updated, companyData.date_format))
     const request_behalf_ids = checkedRequests.map(r => r.id)
     const res = await updateRequestStatusBulk(companyId, {status: status, request_behalf_ids: request_behalf_ids})
-    getTimeOffRequests()
+    if (!res) {
+      getTimeOffRequests()
+    }
   }
 
   const handleToggleAll = () => {
@@ -238,14 +241,18 @@ const TimneOffRequests = ({companyId}) => {
     <div className={styles.container}>
       <div className={styles.screen}>
         <div className={styles.toolsContainer}>
-          <DRP initRange={{startDate: filterDate.start.toDate(), endDate: filterDate.end.toDate()}} onChange={handleChangeDate} />
-          <Input
-            icon={<SearchIcon />}
-            placeholder={`${t('Search')}...`}
-            width='400px'
-            height='36px'
-            value={query}
-            onChange={(e) => setQuery(e.target.value)} />
+          <DRP
+            initRange={{startDate: filterDate.start.toDate(), endDate: filterDate.end.toDate()}}
+            onChange={handleChangeDate} />
+          <div style={{flex: 1}}>
+            <Input
+              icon={<SearchIcon />}
+              placeholder={`${t('Search')}...`}
+              width="100%"
+              height='36px'
+              value={query}
+              onChange={(e) => setQuery(e.target.value)} />
+          </div>
           <CustomSelect
             placeholder={t('All places')}
             items={places}
@@ -287,7 +294,7 @@ const TimneOffRequests = ({companyId}) => {
             </div>
             <div className={styles.body}>
               {
-                Object.entries(sections).filter(([s, requests]) => {
+                Object.entries(sections).filter(([_, requests]) => {
                   return requests.some(r => filterRequests(r, query))
                 }).map(([section, requests]) => {
                   const isExpanded = expandedSections.includes(section)
@@ -305,72 +312,6 @@ const TimneOffRequests = ({companyId}) => {
                               request={request}
                               onSelect={handleSelect}
                               onChangeRequestStatus={handleChangeRequestStatus} />
-                            // <div key={request.id} className={cn(styles.row)}>
-                            //   <div className={cn(styles.cell, styles.center)}>
-                            //     <StyledCheckbox
-                            //       id={request.id}
-                            //       checked={request.checked}
-                            //       onChange={handleSelect(request)} />
-                            //   </div>
-                            //   <div className={cn(styles.cell, styles.actions)}>
-                            //     <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon}>
-                            //       <EditIconFixedFill />
-                            //     </div>
-                            //     { request.status !== 'approved' && (
-                            //       <div data-tooltip-html={t("Approve")} data-tooltip-id="note" className={cn(styles.icon, styles.approve)} onClick={() => handleChangeRequestStatus(request, 'approved', [request.employee_id])}>
-                            //         <CheckIcon />
-                            //       </div>
-                            //     )}
-                            //     { request.status !== 'rejected' && (
-                            //       <div data-tooltip-html={t("Reject")} data-tooltip-id="note" className={cn(styles.icon, styles.reject)} onClick={() => handleChangeRequestStatus(request, 'rejected', [request.employee_id])}>
-                            //         <RejectIcon />
-                            //       </div>
-                            //     )}
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     <div className={cn(styles.status, styles[request.status])}>
-                            //       { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
-                            //     </div>
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.employee.title }
-                            //   </div>
-                            //   <div className={cn(styles.cell, styles.policy)}>
-                            //     <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
-                            //     {request.policy.name}
-                            //     {
-                            //       request.note
-                            //         ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
-                            //             <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
-                            //           </div>
-                            //         : null
-                            //     }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.totalRestDays }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.from } - { request.to }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.created_at }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.employee.groups }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.employee.subgroups }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.employee.place }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.approver_1_name }
-                            //   </div>
-                            //   <div className={styles.cell}>
-                            //     { request.approver_2_name }
-                            //   </div>
-                            // </div>
                           )
                         })
                       }
