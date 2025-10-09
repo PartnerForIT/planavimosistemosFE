@@ -31,11 +31,11 @@ const options = [{
   key: 'calendar',
   badge: 0,
 },
-// {
-//   title: 'My employees',
-//   key: 'employees',
-//   badge: 0,
-// }
+{
+  title: 'My employees',
+  key: 'employees',
+  badge: 0,
+}
 ]
 
 const TimeOffScreen = () => {
