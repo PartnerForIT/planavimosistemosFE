@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
+import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 
 import styles from './styles.module.scss'
 
@@ -16,7 +17,8 @@ import {
   getCompanyWorkTimeSettings,
   updateRequestStatus,
   getCompanyInfo,
-  updateRequestStatusBulk
+  updateRequestStatusBulk,
+  updateRequest,
 } from '../../../api'
 import { generateResourcesFromEmployees, getEmployeesFromResources, getCheckedEmployeeIds } from '../Calendar/utils'
 
@@ -65,6 +67,8 @@ const filterRequests = (request, query) => {
 
 const TimneOffRequests = ({companyId}) => {
   const { t } = useTranslation()
+
+  const requestFormRef = useRef(null)
 
   const [loading, setLoading] = useState(true)
   const [companyData, setCompanyData] = useState({})
@@ -237,6 +241,21 @@ const TimneOffRequests = ({companyId}) => {
     setExpandedSections([...expandedSections, section])
   }
 
+  const handleSubmitRequest = async (data) => {
+    const post = {
+      ...data,
+      employees: [data.employee_id],
+    }
+    await updateRequest(companyId, data.time_off_id, data.policy_id, data.id, post)
+    requestFormRef.current.close()
+    getTimeOffRequests()
+  }
+
+  const handleEdit = (params) => {
+    console.log(params)
+    requestFormRef.current.open(params)
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.screen}>
@@ -311,6 +330,7 @@ const TimneOffRequests = ({companyId}) => {
                               key={request.id}
                               request={request}
                               onSelect={handleSelect}
+                              onEdit={handleEdit}
                               onChangeRequestStatus={handleChangeRequestStatus} />
                           )
                         })
@@ -354,6 +374,17 @@ const TimneOffRequests = ({companyId}) => {
         id='note'
         effect='solid'
         className={styles.tooltip} />
+      <RequestBehalf
+        ref={requestFormRef}
+        title={t('Fill Request')}
+        onSubmit={handleSubmitRequest}
+        handleClose={() => {}}
+        buttonTitle={t('Submit')}
+        employees={[]} // {id: employee.id}
+        policies={policies}
+        initialValue={{}}
+        activeTimeOff={1}
+        singleRequest />
       {
         loading
           ? <div className={styles.overlayProgress}>

@@ -11,7 +11,7 @@ import CheckIcon from '../../Icons/CheckIcon'
 import RejectIcon from '../../Icons/RejectIcon'
 import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 
-const RequestTableRow = ({request, onSelect, onChangeRequestStatus}) => {
+const RequestTableRow = ({request, onEdit, onSelect, onChangeRequestStatus}) => {
   const { t } = useTranslation()
   return (
     <div className={cn(styles.row)}>
@@ -22,7 +22,7 @@ const RequestTableRow = ({request, onSelect, onChangeRequestStatus}) => {
           onChange={onSelect(request)} />
       </div>
       <div className={cn(styles.cell, styles.actions)}>
-        <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon}>
+        <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon} onClick={() => onEdit(request)}>
           <EditIconFixedFill />
         </div>
         { request.status !== 'approved' && (
