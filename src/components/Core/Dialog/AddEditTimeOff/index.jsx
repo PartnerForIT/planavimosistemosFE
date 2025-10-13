@@ -16,6 +16,7 @@ const units = [
   {
     code: 'hours',
     name: 'Hours',
+    disabled: true,
   },
   {
     code: 'days',
