@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import { useHistory } from 'react-router-dom'
 
 import styles from './styles.module.scss'
 
-import { getCompanyTimeOffPolicies, getCompanyTimeOffs } from '../../../api'
+import { getCompanyTimeOffPolicies, getCompanyTimeOffs, createRequest, createAdjustBalance, createAdjustTimeUsed } from '../../../api'
 import useCompanyInfo from '../../../hooks/useCompanyInfo'
 
 import Select from '../Select'
@@ -17,6 +18,7 @@ import Filter from '../../../components/Settings/TimeOff/TimeOffDetails/Filter'
 import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 import AdjustBalance from '../../Core/Dialog/AdjustBalance'
 import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed'
+import Progress from '../../Core/Progress'
 
 const NameWithAvatar = (row) => (
   <div className={styles.cellNameWithAvatar}>
@@ -107,6 +109,7 @@ const columns = [
 
 const MyEmployeesSection = ({ companyId, employee }) => {
   const { t } = useTranslation()
+  const history = useHistory()
 
   const { getDateFormat } = useCompanyInfo()
   const dateFormat = getDateFormat({
@@ -126,11 +129,10 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false)
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const policies = policySections.flatMap(s => s.data)
   const selectedPolicy = policies.find(section => section.id === selectedPolicyId)
-
-  console.log(selectedPolicy)
 
   const employeesFiltered = useMemo(() => {
     return employees
@@ -197,6 +199,9 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }, [])
 
   const init = async () => {
+    if (selectedPolicyId) {
+      setLoading(true)
+    }
     const [timeOffsRes, policiesRes] = await Promise.all([
       getCompanyTimeOffs(companyId),
       getCompanyTimeOffPolicies(companyId)
@@ -204,7 +209,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
 
     if (Array.isArray(timeOffsRes) && Array.isArray(policiesRes?.policies)) {
       const timeOffsMap = timeOffsRes.reduce((acc, timeOff) => {
-        return { ...acc, [timeOff.id]: timeOff.name }
+        return { ...acc, [timeOff.id]: timeOff }
       }, {})
       const policiesMap = policiesRes.policies.reduce((acc, policy) => {
         const formattedPolicy = {
@@ -230,6 +235,13 @@ const MyEmployeesSection = ({ companyId, employee }) => {
         data: policiesMap[timeOff.id] || [],
       }), {})
       setPolicySections(timeOffs)
+      if (selectedPolicyId) {
+        const selected = policiesRes.policies.find(p => p.id === selectedPolicyId)
+        if (selected) {
+          setEmployees(selected.employees.map(emp => ({...emp, name: `${emp.name} ${emp.surname}`})))
+        }
+      }
+      setLoading(false)
     }
   }
 
@@ -272,20 +284,22 @@ const MyEmployeesSection = ({ companyId, employee }) => {
     setAll(updated.every(emp => emp.checked))
   }
 
-  const handleOpenEmployee = () => {
-    console.log('Open employee')
+  const handleOpenEmployee = (employeeId) => {
+    history.push(`/${companyId}/settings/time-off?page=employee-management-policy&time_off=${selectedPolicy.timeOff.id}&policy=${selectedPolicy.id}&employee=${employeeId}`);
   }
 
-  const onRequestBehalf = () => {
-    console.log('onRequestBehalf')
+  const onRequestBehalf = async (data) => {
+    await createRequest(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
   }
 
-  const onAdjustBalance = () => {
-    console.log('onAdjustBalance')
+  const onAdjustBalance = async (data) => {
+    await createAdjustBalance(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
+    init()
   }
 
-  const onAdjustTimeUsed = () => {
-    console.log('onAdjustTimeUsed')
+  const onAdjustTimeUsed = async (data) => {
+    await createAdjustTimeUsed(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
+    init()
   }
 
   const renderPolicyOption = (policy, isSelected) => {
@@ -334,6 +348,9 @@ const MyEmployeesSection = ({ companyId, employee }) => {
                     handleAdjustBalance={() => setAdjustBalanceOpen(true)}
                     handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
                     selectedItem={{}}
+                    info={{
+                      [t('users assigned')]: employees.length,
+                    }}
                     setSearch={setSearch}
                     search={search} />
                 </div>
@@ -417,6 +434,13 @@ const MyEmployeesSection = ({ companyId, employee }) => {
             />
           : null
         
+      }
+      {
+        loading
+          ? <div className={styles.loader}>
+              <Progress />
+            </div>
+          : null
       }
     </div>
   )
