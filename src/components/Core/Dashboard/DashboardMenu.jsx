@@ -168,7 +168,12 @@ const permissionsConfig = [
   {
     name: 'time_off',
     module: 'time_off',
-  }
+  },
+  {
+    name: 'time_off_edit_settings',
+    module: 'time_off',
+    permission: 'time_off_edit_settings',
+  },
 ];
 export default function DashboardMenu() {
   const classes = useStyles();
@@ -317,7 +322,7 @@ export default function DashboardMenu() {
       });
     }
 
-    if (permissions.time_off) {
+    if (permissions.time_off && permissions.time_off_edit_settings) {
       nextMenuItems.push({
         to: `/${companyId}/settings/time-off`,
         icon: TimeOffIcon,

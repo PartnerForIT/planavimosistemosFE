@@ -167,6 +167,11 @@ const permissionsConfig = [
     module: 'schedule_simple',
     permission: 'schedule_module_access',
   },
+  {
+    name: 'time_off_edit_settings',
+    module: 'time_off',
+    permission: 'time_off_edit_settings',
+  },
 ];
 
 export default () => {
@@ -356,7 +361,7 @@ export default () => {
           )
         }
         {
-          permissions.time_off && (
+          permissions.time_off && permissions.time_off_edit_settings && (
             <Route exact path='/:id/settings/time-off' component={TimeOff} />
           )
         }

@@ -190,6 +190,12 @@ export default () => {
         time_off: {
           options: {
             receive_notifications: 'Receive notifications',
+            see_all_requests: 'Can see all requests (Requests)',
+            see_my_employees: 'Can see My Employees',
+            fill_request_behalf: 'Can fill request on behalf of (My Employees)',
+            adjust_balance: 'Can adjust balance (My Employees)',
+            adjust_time_used: 'Can adjust time used (My Employees)',
+            see_private_requests: 'Can see private requests',
           },
         },
       }),
@@ -277,6 +283,13 @@ export default () => {
           ...(modules.integrations && { edit_settings: 'Can edit Integration settings' }),
         },
       },
+      ...((modules.time_off) && {
+        time_off: {
+          options: {
+            edit_settings: 'Can edit Time Off settings',
+          },
+        },
+      }),
     },
   };
 
@@ -432,6 +445,7 @@ export default () => {
 
       if (!permissions.time_off) {
         delete nextModuleAccess.time_off;
+        delete nextOrganisation.time_off;
       }
 
       return {
