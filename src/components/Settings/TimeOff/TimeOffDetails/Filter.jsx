@@ -38,7 +38,7 @@ export default function Filter({
         info
           ? Object.entries(info).map(([key, value]) => {
             return (
-              <div className={styles.assignedUsers}>
+              <div key={key} className={styles.assignedUsers}>
                 { value } { key }
               </div>
             )

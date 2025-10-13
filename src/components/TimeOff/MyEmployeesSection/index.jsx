@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import { useHistory } from 'react-router-dom'
 
 import styles from './styles.module.scss'
 
@@ -107,6 +108,7 @@ const columns = [
 
 const MyEmployeesSection = ({ companyId, employee }) => {
   const { t } = useTranslation()
+  const history = useHistory()
 
   const { getDateFormat } = useCompanyInfo()
   const dateFormat = getDateFormat({
@@ -228,6 +230,12 @@ const MyEmployeesSection = ({ companyId, employee }) => {
         data: policiesMap[timeOff.id] || [],
       }), {})
       setPolicySections(timeOffs)
+      if (selectedPolicyId) {
+        const selected = policiesRes.policies.find(p => p.id === selectedPolicyId)
+        if (selected) {
+          setEmployees(selected.employees.map(emp => ({...emp, name: `${emp.name} ${emp.surname}`})))
+        }
+      }
     }
   }
 
@@ -270,8 +278,8 @@ const MyEmployeesSection = ({ companyId, employee }) => {
     setAll(updated.every(emp => emp.checked))
   }
 
-  const handleOpenEmployee = () => {
-    console.log('Open employee')
+  const handleOpenEmployee = (employeeId) => {
+    history.push(`/${companyId}/settings/time-off?page=employee-management-policy&time_off=${selectedPolicy.timeOff.id}&policy=${selectedPolicy.id}&employee=${employeeId}`);
   }
 
   const onRequestBehalf = async (data) => {
