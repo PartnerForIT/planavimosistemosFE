@@ -43,6 +43,15 @@
     fill: $gray !important;
   }
 
+  .icon.taskerIcon {
+    width: 24px;
+    height: 24px;
+    background-image: url('../../../assets/tasker-top-menu-unselected.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
   &__text {
     display: inline-block;
     padding-top: 5px;
@@ -107,6 +116,10 @@
 
     &::before {
       opacity: 1;
+    }
+
+    .icon.taskerIcon {
+      background-image: url('../../../assets/tasker-top-menu-selected.png');
     }
   }
 }

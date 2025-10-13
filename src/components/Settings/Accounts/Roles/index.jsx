@@ -264,6 +264,7 @@ export default () => {
       schedule: {
         options: {
           ...(modules.schedule_shift && { edit: 'Can edit Schedule settings' }),
+          ...(modules.schedule_simple && { edit_settings: 'Can edit Tasker settings' }),
         },
       },
       time_sheet: {

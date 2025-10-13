@@ -6,6 +6,15 @@
   height: auto;
   align-items: center;
   justify-content: center;
+
+  .taskerIcon {
+    width: 24px;
+    height: 24px;
+    background-image: url('../../../assets/tasker-top-menu-unselected.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 .dashboard {
@@ -132,5 +141,9 @@
   /* stylelint-disable no-descending-specificity */
   path {
     fill: $blue-2;
+  }
+
+  .taskerIcon {
+    background-image: url('../../../assets/tasker-top-menu-selected.png');
   }
 }

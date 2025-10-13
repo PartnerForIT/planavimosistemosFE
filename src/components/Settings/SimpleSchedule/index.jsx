@@ -10,7 +10,7 @@ import MaynLayout from '../../Core/MainLayout';
 import PageLayout from '../../Core/PageLayout';
 import TitleBlock from '../../Core/TitleBlock';
 import Dashboard from '../../Core/Dashboard';
-import Schedule2Icon from '../../Icons/Schedule2';
+import TaskerIcon from '../../Icons/Tasker';
 import Progress from '../../Core/Progress';
 import {
   isShowSnackbar,
@@ -78,8 +78,8 @@ export default function ActivityLog() {
   return (
     <MaynLayout>
       <Dashboard>
-        <TitleBlock title={t('Schedule')}>
-          <Schedule2Icon className={styles.icon} />
+        <TitleBlock title={t('Tasker')}>
+          <TaskerIcon className={styles.icon} />
         </TitleBlock>
         <PageLayout>
           {

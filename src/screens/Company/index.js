@@ -125,15 +125,6 @@ const permissionsConfig = [
     permission: 'schedule_create_and_edit',
   },
   {
-    name: 'schedule_simple',
-    module: 'schedule_simple',
-    permission: 'schedule_create_and_edit',
-  },
-  {
-    name: 'schedule_module',
-    permission: 'schedule_module_access',
-  },
-  {
     name: 'reports',
     module: 'reports',
     permission: 'reports_module_access',
@@ -154,12 +145,27 @@ const permissionsConfig = [
     permission: 'integrations_edit_settings',
   },
   {
-    name: 'schedule_create_and_edit',
-    permission: 'schedule_create_and_edit',
-  },
-  {
     name: 'time_off',
     module: 'time_off',
+  },
+
+  {
+    name: 'schedule_edit',
+    permission: 'schedule_edit',
+  },
+  {
+    name: 'schedule_edit_settings',
+    permission: 'schedule_edit_settings',
+  },
+  {
+    name: 'schedule_shift',
+    module: 'schedule_shift',
+    permission: 'schedule_module_access',
+  },
+  {
+    name: 'schedule_simple',
+    module: 'schedule_simple',
+    permission: 'schedule_module_access',
   },
 ];
 
@@ -226,6 +232,8 @@ export default () => {
       </div>
     );
   }
+
+  console.log('permissions', permissions);
 
   return (
     <>
@@ -303,7 +311,7 @@ export default () => {
           )
         }
         {
-          (permissions.schedule_create_and_edit && (permissions.schedule_module || permissions.schedule_simple)) && (
+          ((permissions.schedule_shift && permissions.schedule_edit) || (permissions.schedule_simple && permissions.schedule_edit_settings)) && (
             <Route exact path='/:id/settings/schedule' component={permissions.schedule_simple_access ? SimpleScheduleSettings : ScheduleSettings} />
           )
         }

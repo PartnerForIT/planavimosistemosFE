@@ -9,6 +9,7 @@ import ChangeEmployee from './ChangeEmployee';
 import MenuContent from './MenuContent';
 import ReccuringArrows from '../../../components/Icons/ReccuringArrows';
 import GroupIcon from '../../../components/Icons/group_icon.png';
+import GroupIconBlue from '../../../components/Icons/group_icon_blue.png';
 import CommentIcon from '../../../components/Icons/comment_icon.png';
 import styles from './EventContent.module.scss';
 //import PlaceholderAvatarIcon from "../../../components/Icons/PlaceholderAvatar";
@@ -495,7 +496,7 @@ export default ({
               ref={buttonRef}
             >
               <div className={styles.eventContent__group_icon} >
-                <img src={GroupIcon} alt={employeeName} />
+                <img src={!removeTimelines ? GroupIcon : GroupIconBlue} alt={employeeName} />
               </div>
               <div className={styles.eventContent__group_title} >
                 {removeTimelines ? (

@@ -16,6 +16,7 @@ import EventsIcon from '../../Icons/Events';
 import TimeSheetIcon from '../../Icons/TimeSheet';
 import TimeOffIcon from '../../Icons/TimeOff';
 import ScheduleIcon from '../../Icons/Schedule';
+import TaskerIcon from '../../Icons/Tasker';
 import Grownu from '../../Icons/Grownu';
 import AvatarComponent from './Avatar';
 import styles from './header.module.scss';
@@ -250,7 +251,7 @@ export default function ButtonAppBar({ logOut }) {
     }
     if ((permissions.schedule_shift || permissions.schedule_simple)) {
       nextMenuItems.push({
-        Icon: ScheduleIcon,
+        Icon: permissions.schedule_simple ? TaskerIcon : ScheduleIcon,
         title: permissions.schedule_simple ? t('Tasker') : t('Schedule'),
         name: 'schedule',
         to: `/${companyId}/schedule`,
@@ -307,7 +308,7 @@ export default function ButtonAppBar({ logOut }) {
                 className={classNames(styles.link, { [styles.link_active]: pageName === item.name })}
               >
                 <item.Icon
-                  className={styles.icon}
+                  className={classNames(styles.icon, { [styles.taskerIcon]: item.Icon === TaskerIcon })}
                   width={item.width}
                   heigt={item.height}
                 />

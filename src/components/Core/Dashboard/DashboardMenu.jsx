@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GenaralIcon from '../../Icons/GeneralIcon';
 import AccountIcon from '../../Icons/AccountsIcon';
 import ScheduleIcon from '../../Icons/Schedule';
+import TaskerIcon from '../../Icons/Tasker';
 import LogbookIcon from '../../Icons/LogbookIcon';
 import EventsIcon from '../../Icons/Events';
 import CategoriesIcon from '../../Icons/Categories';
@@ -21,6 +22,7 @@ import DeleteIcon from '../../Icons/DeleteIcon';
 import KioskIcon from '../../Icons/Kiosk';
 import styles from './dasboard.module.scss';
 import usePermissions from '../usePermissions';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(() => ({
   accordion: {
@@ -134,6 +136,10 @@ const permissionsConfig = [
   {
     name: 'schedule_edit',
     permission: 'schedule_edit',
+  },
+  {
+    name: 'schedule_edit_settings',
+    permission: 'schedule_edit_settings',
   },
   {
     name: 'schedule_shift',
@@ -302,11 +308,11 @@ export default function DashboardMenu() {
     }
     
     // Schedule
-    if ((permissions.schedule_shift || permissions.schedule_simple) && permissions.schedule_edit) {
+    if ((permissions.schedule_shift && permissions.schedule_edit) || (permissions.schedule_simple && permissions.schedule_edit_settings)) {
       nextMenuItems.push({
         to: `/${companyId}/settings/schedule`,
-        icon: ScheduleIcon,
-        title: t('Schedule'),
+        icon: permissions.schedule_simple ? TaskerIcon : ScheduleIcon,
+        title: permissions.schedule_simple ? t('Tasker') : t('Schedule'),
         name: 'schedule',
       });
     }
@@ -444,7 +450,7 @@ export default function DashboardMenu() {
                 key={item.name}
               >
                 <IconWrapper>
-                  <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
+                  <item.icon className={classNames(styles.icon, { [styles.taskerIcon]: item.icon === TaskerIcon })} fill={section === item.name ? '#4080fc' : '#69767A'} />
                 </IconWrapper>
                 <span className={styles.textLink}>
                   {item.title}

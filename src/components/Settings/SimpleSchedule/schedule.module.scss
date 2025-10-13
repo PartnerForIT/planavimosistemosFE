@@ -1,6 +1,10 @@
 .icon {
-  width: 40px !important;
-  height: 34px !important;
+  width: 40px;
+  height: 40px;
+  background-image: url('../../../assets/tasker-settings.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .clockInRestriction {

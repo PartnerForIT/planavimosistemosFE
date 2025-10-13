@@ -98,6 +98,11 @@ function RoleDetails({
     [classes.details_withModules]: (permissions.reports || permissions.events || permissions.logbook),
   });
 
+  const categoriesNameModified = {
+    ...categoriesNames,
+    schedule: permissions.schedule_simple ? 'Tasker' : 'Schedule',
+  };
+
   return (
     <div className={detailsClasses}>
       {
@@ -125,7 +130,7 @@ function RoleDetails({
             availableDetails={availableDetails}
             roleAccess={roleAccess}
             readOnly={readOnly}
-            categoriesNames={categoriesNames}
+            categoriesNames={categoriesNameModified}
             setRoleAccess={setRoleAccess}
             activePermissions={activePermissions}
             permissionsIds={permissionsIds}
@@ -133,12 +138,13 @@ function RoleDetails({
           />
         )
       }
+      
       <OrganisationAccess
         activeRole={activeRole}
         availableDetails={availableDetails}
         roleAccess={roleAccess}
         readOnly={readOnly}
-        categoriesNames={categoriesNames}
+        categoriesNames={categoriesNameModified}
         setRoleAccess={setRoleAccess}
         activePermissions={activePermissions}
         permissionsIds={permissionsIds}
