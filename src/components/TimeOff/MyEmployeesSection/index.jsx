@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import styles from './styles.module.scss'
 
-import { getCompanyTimeOffPolicies, getCompanyTimeOffs } from '../../../api'
+import { getCompanyTimeOffPolicies, getCompanyTimeOffs, createRequest, createAdjustBalance, createAdjustTimeUsed } from '../../../api'
 import useCompanyInfo from '../../../hooks/useCompanyInfo'
 
 import Select from '../Select'
@@ -130,8 +130,6 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   const policies = policySections.flatMap(s => s.data)
   const selectedPolicy = policies.find(section => section.id === selectedPolicyId)
 
-  console.log(selectedPolicy)
-
   const employeesFiltered = useMemo(() => {
     return employees
       .filter(empl => {
@@ -204,7 +202,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
 
     if (Array.isArray(timeOffsRes) && Array.isArray(policiesRes?.policies)) {
       const timeOffsMap = timeOffsRes.reduce((acc, timeOff) => {
-        return { ...acc, [timeOff.id]: timeOff.name }
+        return { ...acc, [timeOff.id]: timeOff }
       }, {})
       const policiesMap = policiesRes.policies.reduce((acc, policy) => {
         const formattedPolicy = {
@@ -276,16 +274,19 @@ const MyEmployeesSection = ({ companyId, employee }) => {
     console.log('Open employee')
   }
 
-  const onRequestBehalf = () => {
-    console.log('onRequestBehalf')
+  const onRequestBehalf = async (data) => {
+    await createRequest(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
   }
 
-  const onAdjustBalance = () => {
+  const onAdjustBalance = async (data) => {
     console.log('onAdjustBalance')
+    await createAdjustBalance(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
+    init()
   }
 
-  const onAdjustTimeUsed = () => {
+  const onAdjustTimeUsed = async (data) => {
     console.log('onAdjustTimeUsed')
+    await createAdjustTimeUsed(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
   }
 
   const renderPolicyOption = (policy, isSelected) => {
@@ -334,6 +335,9 @@ const MyEmployeesSection = ({ companyId, employee }) => {
                     handleAdjustBalance={() => setAdjustBalanceOpen(true)}
                     handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
                     selectedItem={{}}
+                    info={{
+                      [t('users assigned')]: employees.length,
+                    }}
                     setSearch={setSearch}
                     search={search} />
                 </div>

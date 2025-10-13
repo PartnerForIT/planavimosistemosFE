@@ -18,6 +18,7 @@ export default function Filter({
   selectedItem,
   setSearch,
   search,
+  info,
 }) {
   const { t } = useTranslation();
   
@@ -33,7 +34,17 @@ export default function Filter({
           />
         </FormControl>
       </div>
-
+      {
+        info
+          ? Object.entries(info).map(([key, value]) => {
+            return (
+              <div className={styles.assignedUsers}>
+                { value } { key }
+              </div>
+            )
+          })
+          : null
+      }
       <div className={styles.filterBlock__inner}>
         <p>
           {checkedItems.length || (selectedItem.id ? '1' : '0')}

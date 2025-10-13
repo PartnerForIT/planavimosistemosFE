@@ -318,9 +318,6 @@ function UserDataManagement({
   return (
     <div style={{overflow: 'hidden', height: '100%'}}>
       <TitleBlock
-        info={{
-          [t('users assigned')]: employeesList.length,
-        }}
         title={`${activeTimeOff.name} / ${activePolicy.name}`}
         TitleButtonImport={t('Bulk update')}
         handleButtonImport={() => { console.log('go'); }}
@@ -347,6 +344,9 @@ function UserDataManagement({
           selectedItem={selected}
           setSearch={setSearch}
           search={search}
+          info={{
+            [t('users assigned')]: employeesList.length,
+          }}
         />
         <DataTable
           data={employees ?? []}

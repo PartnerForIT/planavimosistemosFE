@@ -38,6 +38,14 @@ $arrow-size: 21px;
   }
 }
 
+.assignedUsers {
+      background-color: #d0dfef82;
+    padding: 3px 14px;
+    color: #4d7499;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
 .detailsPolicy {
   position: relative;
   grid-column-start: 1;
@@ -471,8 +479,8 @@ $arrow-size: 21px;
 .filterBlock {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 15px;
+  gap: 16px;
 
   &__leftContainer {
     display: flex;
@@ -485,6 +493,7 @@ $arrow-size: 21px;
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
+    margin-left: auto;
 
     p {
       font-weight: bold;

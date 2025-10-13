@@ -84,6 +84,16 @@ export const updateRequest = async (companyId, timeOffId, policyId, requestId, d
   return res
 }
 
+export const createAdjustBalance = async (companyId, timeOffId, policyId, data) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/adjust-balance/store`, 'POST', data)
+  return res
+}
+
+export const createAdjustTimeUsed = async (companyId, timeOffId, policyId, data) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/adjust-time-used/store`, 'POST', data)
+  return res
+}
+
 export const updateRequestStatus = async (companyId, timeOffId, policyId, requestId, data) => {
   const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestId}/status`, 'POST', data)
   return res
