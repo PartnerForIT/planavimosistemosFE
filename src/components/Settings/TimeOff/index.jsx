@@ -352,6 +352,7 @@ export default () => {
     history.push(`/${id}/settings/time-off?page=employee-management${activeTimeOff.id ? `&time_off=${activeTimeOff.id}` : ''}${activePolicy.id ? `&policy=${activePolicy.id}` : ''}&employee=${employeeId}`);
     setCurrentPage('employeeManagement');
     setActiveEmployee(employees.find(({id}) => id === employeeId));
+    dispatch(getPolicies(id, 'all'));
     dispatch(getRequestBehalf(id, 'all', 'all', employeeId));
   }
 
@@ -412,7 +413,7 @@ export default () => {
     setActiveEmployee(null);
     if (activeTimeOff?.id && activePolicy?.id) {
       setCurrentPage('userDataManagement');
-      history.push(`/${id}/settings/time-off?page=data-management&time_off=${activeTimeOff.time_off_id}&policy=${activePolicy.id}`);
+      history.push(`/${id}/settings/time-off?page=data-management&time_off=${activeTimeOff.id}&policy=${activePolicy.id}`);
     } else {
       history.push(`/${id}/settings/accounts/accounts-list`);
     }

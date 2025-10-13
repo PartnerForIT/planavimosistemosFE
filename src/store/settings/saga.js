@@ -1645,8 +1645,8 @@ function* createRequestBehalf(action) {
     yield call(axios.post,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/store`, data, token());
 
-    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
-    yield put(getPolicies(companyId, timeOffId));
+    yield put(getRequestBehalf(companyId, 'all', 'all', data.employees[0]));
+    yield put(getPolicies(companyId, 'all'));
 
     yield put(addSnackbar('Added Request Behalf successfully', 'success'));
     yield delay(4000);
@@ -1672,8 +1672,8 @@ function* updateRequestBehalf(action) {
     yield call(axios.post,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestBehalfId}`, data, token());
 
-    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
-    yield put(getPolicies(companyId, timeOffId));
+    yield put(getRequestBehalf(companyId, 'all', 'all',data.employees[0]));
+    yield put(getPolicies(companyId, 'all'));
 
     yield put(addSnackbar('Updated Request Behalf successfully', 'success'));
     yield delay(4000);
@@ -1699,8 +1699,8 @@ function* changeRequestBehalfStatus(action) {
     yield call(axios.post,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/request-behalf/${requestBehalfId}/status`, data, token());
 
-    yield put(getRequestBehalf(companyId, timeOffId, policyId, data.employees[0]));
-    yield put(getPolicies(companyId, timeOffId));
+    yield put(getRequestBehalf(companyId, 'all', 'all', data.employees[0]));
+    yield put(getPolicies(companyId, 'all'));
 
     yield put(addSnackbar('Updated Request Behalf successfully', 'success'));
     yield delay(4000);
