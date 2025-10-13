@@ -74,6 +74,10 @@ function RoleDetails({
           return prevState.filter((i) => i !== id && i !== permissionsIds.logbook.edit_comments);
         }
 
+        if (permissionsIds.time_off.see_my_employees === id) {
+          return prevState.filter((i) => i !== id && i !== permissionsIds.time_off.fill_request_behalf && i !== permissionsIds.time_off.adjust_balance && i !== permissionsIds.time_off.adjust_time_used);
+        }
+
         return prevState.filter((i) => i !== id);
       }
 

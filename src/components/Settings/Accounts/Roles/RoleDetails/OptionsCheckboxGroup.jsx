@@ -23,6 +23,18 @@ const OptionsCheckBoxGroup = ({
       return activePermissions.some((it) => it === permissionsIds[name].profit);
     }
 
+    if (name === 'time_off' && action === 'fill_request_behalf') {
+      return !activePermissions.some((it) => it === permissionsIds[name].see_my_employees)
+    }
+
+    if (name === 'time_off' && action === 'adjust_balance') {
+      return !activePermissions.some((it) => it === permissionsIds[name].see_my_employees)
+    }
+
+    if (name === 'time_off' && action === 'adjust_time_used') {
+      return !activePermissions.some((it) => it === permissionsIds[name].see_my_employees)
+    }
+
     return false;
   };
 

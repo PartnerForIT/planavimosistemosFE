@@ -6,7 +6,40 @@ import styles from '../timeoff.module.scss';
 import Button from '../../../Core/Button/Button';
 import SearchIcon from '../../../Icons/SearchIcon';
 import Input from '../../../Core/Input/Input';
+import usePermissions from '../../../Core/usePermissions';
 
+const permissionsConfig = [
+  {
+    name: 'time_off_see_all_requests',
+    permission: 'time_off_see_all_requests',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_see_my_employees',
+    permission: 'time_off_see_my_employees',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_fill_request_behalf',
+    permission: 'time_off_fill_request_behalf',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_adjust_balance',
+    permission: 'time_off_adjust_balance',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_adjust_time_used',
+    permission: 'time_off_adjust_time_used',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_see_private_requests',
+    permission: 'time_off_see_private_requests',
+    module: 'time_off',
+  },
+]
 
 export default function Filter({
   changeUserStatus = () => ({}),
@@ -20,7 +53,8 @@ export default function Filter({
   search,
 }) {
   const { t } = useTranslation();
-  
+  const permissions = usePermissions(permissionsConfig);
+
   return (
     <div className={styles.filterBlock}>
       <div>
@@ -41,6 +75,7 @@ export default function Filter({
           {t('USERS SELECTED')}
         </p>
         
+        {permissions.time_off_fill_request_behalf && (
         <Button
           onClick={handleRequestBehalf}
           primary
@@ -48,6 +83,8 @@ export default function Filter({
         >
           {t('Request on behalf')}
         </Button>
+        )}
+        {permissions.time_off_adjust_balance && (
         <Button
           onClick={handleAdjustBalance}
           primary
@@ -55,6 +92,8 @@ export default function Filter({
         >
           {t('Adjust balance')}
         </Button>
+        )}
+        {permissions.time_off_adjust_time_used && (
         <Button
           onClick={handleAdjustTimeUsed}
           primary
@@ -62,6 +101,7 @@ export default function Filter({
         >
           {t('Adjust time used')}
         </Button>
+        )}
         {
           handleUnassign
            ? <Button
