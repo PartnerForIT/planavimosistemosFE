@@ -18,6 +18,7 @@ import Filter from '../../../components/Settings/TimeOff/TimeOffDetails/Filter'
 import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 import AdjustBalance from '../../Core/Dialog/AdjustBalance'
 import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed'
+import Progress from '../../Core/Progress'
 
 const NameWithAvatar = (row) => (
   <div className={styles.cellNameWithAvatar}>
@@ -128,6 +129,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false)
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const policies = policySections.flatMap(s => s.data)
   const selectedPolicy = policies.find(section => section.id === selectedPolicyId)
@@ -197,6 +199,9 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }, [])
 
   const init = async () => {
+    if (selectedPolicyId) {
+      setLoading(true)
+    }
     const [timeOffsRes, policiesRes] = await Promise.all([
       getCompanyTimeOffs(companyId),
       getCompanyTimeOffPolicies(companyId)
@@ -236,6 +241,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
           setEmployees(selected.employees.map(emp => ({...emp, name: `${emp.name} ${emp.surname}`})))
         }
       }
+      setLoading(false)
     }
   }
 
@@ -287,14 +293,13 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }
 
   const onAdjustBalance = async (data) => {
-    console.log('onAdjustBalance')
     await createAdjustBalance(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
     init()
   }
 
   const onAdjustTimeUsed = async (data) => {
-    console.log('onAdjustTimeUsed')
     await createAdjustTimeUsed(companyId, selectedPolicy.timeOff.id, selectedPolicy.id, data)
+    init()
   }
 
   const renderPolicyOption = (policy, isSelected) => {
@@ -429,6 +434,13 @@ const MyEmployeesSection = ({ companyId, employee }) => {
             />
           : null
         
+      }
+      {
+        loading
+          ? <div className={styles.loader}>
+              <Progress />
+            </div>
+          : null
       }
     </div>
   )
