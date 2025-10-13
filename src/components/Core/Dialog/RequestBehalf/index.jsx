@@ -47,6 +47,7 @@ const RequestBehalf = forwardRef(({
   const { getDateFormat } = useCompanyInfo();
   const { id: companyId } = useParams();
   const dispatch = useDispatch();
+  const [selectedTimeOff, setSelectedTimeOff] = useState(activeTimeOff);
   const formatDate = getDateFormat({
     'YY.MM.DD': 'yyyy.MM.DD',
     'DD.MM.YY': 'DD.MM.yyyy',
@@ -54,6 +55,17 @@ const RequestBehalf = forwardRef(({
   });
 
   useEffect(() => {
+    if (activeTimeOff) {
+      setSelectedTimeOff(activeTimeOff);
+    } else if (initialValue?.policy_id) {
+      const policy = policies.find(policy => policy.id === initialValue.policy_id);
+      if (policy) {
+        setSelectedTimeOff(policy.time_off);
+      }
+    } else {
+      setSelectedTimeOff(policies[0].time_off);
+      
+    }
     dispatch(getSettingWorkTime(companyId));
 
     // eslint-disable-next-line
@@ -70,6 +82,13 @@ const RequestBehalf = forwardRef(({
   }))
 
   const handleChange = (e) => {
+    if (e.target.name === 'policy_id') {
+      const policy = policies.find(policy => policy.id === e.target.value);
+      if (policy) {
+        const timeOff = policy.time_off;
+        setSelectedTimeOff(timeOff);
+      }
+    }
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const handleSubmit = () => {
@@ -91,19 +110,19 @@ const RequestBehalf = forwardRef(({
     const end = moment(values.to);
     const dates = [];
     while (start.isSameOrBefore(end)) {
-      const isWorkingDay = activeTimeOff.work_days === "any_day" ? true : [1, 2, 3, 4, 5].includes(start.day());
-      const isHoliday = activeTimeOff.work_days === "any_day" ? false : workTime?.work_time?.holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD')) || workTime?.national_holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD'));
+      const isWorkingDay = selectedTimeOff.work_days === "any_day" ? true : [1, 2, 3, 4, 5].includes(start.day());
+      const isHoliday = selectedTimeOff.work_days === "any_day" ? false : workTime?.work_time?.holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD')) || workTime?.national_holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD'));
       dates.push({ date: start.format(formatDate), isWorkingDay, isHoliday });
       start.add(1, 'day');
     }
     return dates;
 
     // eslint-disable-next-line
-  }, [values.from, values.to, formatDate]);
+  }, [values.from, values.to, formatDate, selectedTimeOff]);
 
   const totalDays = useMemo(() => {
     return datesList.filter(date => date.isWorkingDay && !date.isHoliday).length;
-  }, [datesList]);
+  }, [datesList, selectedTimeOff]);
 
   const endBalance = useMemo(() => {
     if (!employees?.[0] || !policies?.[0] || !values.policy_id) return false;
@@ -111,18 +130,18 @@ const RequestBehalf = forwardRef(({
     const employee = policy.employees.find(emp => emp.id === employees[0].id);
     if (!employee) return false;
     return employee.balance - totalDays;
-  }, [totalDays]);
+  }, [totalDays, selectedTimeOff]);
   
   // build once: allowed dates from the current selection (respecting workday/holiday)
   const allowedDatesSet = useMemo(() => {
     const set = new Set();
     datesList.forEach(d => {
-      const allowed = activeTimeOff.work_days === "any_day" || (d.isWorkingDay && !d.isHoliday);
+      const allowed = selectedTimeOff.work_days === "any_day" || (d.isWorkingDay && !d.isHoliday);
       if (allowed) set.add(d.date); // d.date is already in formatDate
     });
     return set;
     // eslint-disable-next-line
-  }, [datesList, activeTimeOff.work_days]);
+  }, [datesList, selectedTimeOff.work_days]);
 
   const conflicts = useMemo(() => {
     const conflictMap = {};

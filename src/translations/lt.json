@@ -1460,5 +1460,13 @@
         "New event notification.": "Naujas įvykio pranešimas",
 
         "Tasker": "Užduotys",
-        "Can edit Tasker settings": "Koreguoti Užduočių nustatymus"
+        "Can edit Tasker settings": "Koreguoti Užduočių nustatymus",
+
+        "Can see all requests (Requests)": "Gali matyti visus prašymus (Prašymai)",
+        "Can see My Employees": "Gali matyti Mano Darbuotojai",
+        "Can fill request on behalf of (My Employees)": "Gali pildyti prašymą už kitą (Mano darbuotojai)",
+        "Can adjust balance (My Employees)": "Gali koreguoti balansą (Mano darbuotojai)",
+        "Can adjust time used (My Employees)": "Gali koreguoti panaudotą laiką (Mano darbuotojai)",
+        "Can see private requests": "Gali matyti privačias politikas",
+        "Can edit Time Off settings": "Koreguoti Atostogų nustatymus"
 }

@@ -26,6 +26,7 @@ function EmployeeManagement({
   onRequestBehalf,
   onChangeRequestStatus = Function.prototype,
   activeTimeOff,
+  activePolicy,
 }) {
   const { t } = useTranslation();
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
@@ -34,7 +35,7 @@ function EmployeeManagement({
 
   return (
     <>
-      <TitleBlock>
+      <TitleBlock title={`${activeTimeOff?.name ? `${activeTimeOff.name} / ` : ''} ${activePolicy?.name ? `${activePolicy.name} / ` : ''} ${employee.name} ${employee.surname}`}>
         <TimeOffIcon viewBox='0 0 26 26' fill='rgba(226,235,244,0.85)' />
         <div
           className={classes.titleBackButton}
@@ -191,7 +192,7 @@ function EmployeeManagement({
         buttonTitle={t('Submit')}
         employees={[employee]}
         policies={policies}
-        initialValue={{...requestBehalfEditOpen}}
+        initialValue={{...(activePolicy ? {policy_id: activePolicy.id} : {}), ...requestBehalfEditOpen}}
         activeTimeOff={activeTimeOff}
         singleRequest
       />
