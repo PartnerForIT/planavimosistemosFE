@@ -136,7 +136,7 @@ function UserDataManagement({
   const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false);
   const [adjustTimeUsedOpen, setAdjustTimeUsedOpen] = useState(false);
 
-  const { getDateFormat } = useCompanyInfo();
+  const { getDateFormat } = useCompanyInfo()
   const dateFormat = getDateFormat({
     'YY.MM.DD': 'YYYY, MMM DD',
     'DD.MM.YY': 'DD MMM, YYYY',
@@ -220,6 +220,8 @@ function UserDataManagement({
       });
       // eslint-disable-next-line
   }, [employeesAll, colSearch, dateFormat, search]);
+
+  console.log('settings selected', selected);
 
   useEffect(() => {
     if (employees.length && checkedItems.length === employees.length) {

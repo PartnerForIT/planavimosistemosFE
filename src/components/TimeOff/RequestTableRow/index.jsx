@@ -13,6 +13,7 @@ import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 
 const RequestTableRow = ({request, onEdit, onSelect, onChangeRequestStatus}) => {
   const { t } = useTranslation()
+  console.log('request', request)
   return (
     <div className={cn(styles.row)}>
       <div className={cn(styles.cell, styles.center)}>

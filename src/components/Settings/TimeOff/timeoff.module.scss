@@ -572,7 +572,7 @@ $arrow-size: 21px;
 .upcomingRequestsHeader,
 .upcomingRequestsRow {
   display: grid;
-  grid-template-columns: 4fr 1fr 4fr 3fr 2fr 100px;
+  grid-template-columns: 4fr minmax(90px, 1fr) 4fr 3fr 2fr 100px;
   padding: 8px 12px;
   align-items: center;
 }
@@ -611,6 +611,11 @@ $arrow-size: 21px;
     justify-content: center;
     margin-left: 8px;
     padding-top: 2px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
   }
 }
 
