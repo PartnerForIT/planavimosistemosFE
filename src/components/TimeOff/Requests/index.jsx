@@ -32,6 +32,9 @@ import InfoIcon from '../../Icons/InfoIcon'
 import CheckboxIcon from '../../Icons/CheckboxIcon'
 import TriangleIcon from '../../Icons/TriangleIcon'
 import RequestTableRow from '../RequestTableRow'
+import PendingIcon from '../../Icons/PendingIcon';
+import ApprovedIcon from '../../Icons/ApprovedIcon';
+import SuspendedIcon from '../../Icons/SuspendedIcon';
 
 const moment = extendMoment(Moment)
 
@@ -65,6 +68,10 @@ const filterRequests = (request, query) => {
   return false
 }
 
+const filterStatuses = (request, statuses) => {
+  return statuses.includes(request.status)
+}
+
 const TimneOffRequests = ({companyId}) => {
   const { t } = useTranslation()
 
@@ -74,7 +81,7 @@ const TimneOffRequests = ({companyId}) => {
   const [companyData, setCompanyData] = useState({})
   const [expandedSections, setExpandedSections] = useState([])
   const [query, setQuery] = useState('')
-  const [{employees, policies, places, filterDate}, setFilters] = useState({
+  const [{employees, policies, places, statuses, filterDate}, setFilters] = useState({
     filterDate: {
       start: moment().startOf('isoWeek'),
       end: moment().endOf('isoWeek'),
@@ -82,6 +89,7 @@ const TimneOffRequests = ({companyId}) => {
     places: [],
     policies: [],
     employees: [],
+    statuses: ['pending', 'approved', 'rejected'],
   })
   const [sections, setSections] = useState({})
   const [workTimeSettings, setWorkTimeSettings] = useState({})
@@ -107,7 +115,6 @@ const TimneOffRequests = ({companyId}) => {
   }, [places, employees, policies, filterDate])
 
   const init = async () => {
-    
     const [employeesRes, policiesRes, placesRes, timeOffsRes, workTimesRes, companyRes] = await Promise.all([
       getCompanyEmployeesAll(companyId),
       getCompanyTimeOffPolicies(companyId),
@@ -256,6 +263,15 @@ const TimneOffRequests = ({companyId}) => {
     requestFormRef.current.open(params)
   }
 
+  const handleFilterStatus = (status) => () => {
+    setFilters(prev => ({
+      ...prev,
+      statuses: prev.statuses.includes(status) ? prev.statuses.filter(s => s !== status) : [...prev.statuses, status],
+    }))
+  }
+
+  
+
   return (
     <div className={styles.container}>
       <div className={styles.screen}>
@@ -299,7 +315,18 @@ const TimneOffRequests = ({companyId}) => {
                   onChange={handleToggleAll} />
               </div>
               <div className={styles.cell}>{t('Action')}</div>
-              <div className={styles.cell}>{t('Status')}</div>
+              <div className={cn(styles.cell, styles.status)}>
+                {t('Status')}
+                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('pending')})} onClick={handleFilterStatus('pending')}>
+                  <PendingIcon />
+                </div>
+                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('approved')})} onClick={handleFilterStatus('approved')}>
+                  <ApprovedIcon />
+                </div>
+                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('rejected')})} onClick={handleFilterStatus('rejected')}>
+                  <SuspendedIcon />
+                </div>
+              </div>
               <div className={styles.cell}>{t('Employee')}</div>
               <div className={styles.cell}>{t('Request type')}</div>
               <div className={styles.cell}>{t('Days')}</div>
@@ -314,7 +341,7 @@ const TimneOffRequests = ({companyId}) => {
             <div className={styles.body}>
               {
                 Object.entries(sections).filter(([_, requests]) => {
-                  return requests.some(r => filterRequests(r, query))
+                  return requests.some(r => filterRequests(r, query) && filterStatuses(r, statuses))
                 }).map(([section, requests]) => {
                   const isExpanded = expandedSections.includes(section)
                   return (
@@ -324,7 +351,7 @@ const TimneOffRequests = ({companyId}) => {
                         {section} ({requests.length})
                       </div>
                       {
-                        isExpanded && requests.filter(r => filterRequests(r, query)).map(request => {
+                        isExpanded && requests.filter(r => filterRequests(r, query) && filterStatuses(r, statuses)).map(request => {
                           return (
                             <RequestTableRow
                               key={request.id}

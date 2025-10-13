@@ -62,13 +62,17 @@ export default function Filter({
         >
           {t('Adjust time used')}
         </Button>
-        <Button
-          black
-          onClick={handleUnassign}
-          disabled={!checkedItems.length > 0 && !selectedItem.id}
-        >
-          {t('Unassign')}
-        </Button>
+        {
+          handleUnassign
+           ? <Button
+              black
+              onClick={handleUnassign}
+              disabled={!checkedItems.length > 0 && !selectedItem.id}
+            >
+              {t('Unassign')}
+            </Button>
+          : null
+        }        
       </div>
     </div>
   );
