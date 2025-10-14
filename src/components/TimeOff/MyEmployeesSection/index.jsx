@@ -285,7 +285,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }
 
   const handleOpenEmployee = (employeeId) => {
-    history.push(`/${companyId}/settings/time-off?page=employee-management-policy&time_off=${selectedPolicy.timeOff.id}&policy=${selectedPolicy.id}&employee=${employeeId}`);
+    history.push(`/${companyId}/settings/time-off?page=employee-management&time_off=${selectedPolicy.timeOff.id}&policy=${selectedPolicy.id}&employee=${employeeId}`);
   }
 
   const onRequestBehalf = async (data) => {
