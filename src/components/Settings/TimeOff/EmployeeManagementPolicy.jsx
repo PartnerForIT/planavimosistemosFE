@@ -236,7 +236,7 @@ function EmployeeManagementPolicy({
                           </div>
                         )
                       })}
-                    </div>
+                      </div>
                   ) : null
                 }   
               </div>
