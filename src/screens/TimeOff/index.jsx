@@ -10,6 +10,7 @@ import MyTimeOff from '../../components/TimeOff/MytimeOffSection'
 import Calendar from '../../components/TimeOff/Calendar'
 import TimneOffRequests from '../../components/TimeOff/Requests'
 import MyEmployeesSection from '../../components/TimeOff/MyEmployeesSection'
+import usePermissions from '../../components/Core/usePermissions'
 
 import { userSelector } from '../../store/auth/selectors'
 
@@ -17,6 +18,14 @@ const useQuery = (param) => {
   const { search } = useLocation()
   return useMemo(() => new URLSearchParams(search).get(param), [search])
 }
+
+const permissionsConfig = [
+  {
+    name: 'time_off_see_my_employees',
+    module: 'time_off',
+    permission: 'time_off_see_my_employees',
+  },
+]
 
 const options = [{
   title: 'My time off',
@@ -42,7 +51,7 @@ const TimeOffScreen = () => {
   const { id: companyId } = useParams()
   const queryTab = useQuery('tab')
   const history = useHistory()
-
+  const permissions = usePermissions(permissionsConfig)
   const user = useSelector(userSelector)
 
   const activeTab = queryTab || 'time_off'
@@ -51,11 +60,18 @@ const TimeOffScreen = () => {
     history.push({search: `?tab=${key}`})
   }
 
+  const filteredOptions = options.filter(option => {
+    if (option.key === 'employees') {
+      return permissions.time_off_see_my_employees
+    }
+    return true
+  })
+
   return (
     <MainLayout layoutClassName={styles.layout} screenClassName={styles.screen}>
       <div className={styles.navBar}>
         <AppNavbar
-          options={options}
+          options={filteredOptions}
           selected={activeTab}
           onSelect={handleSelectTab} />
       </div>

@@ -164,7 +164,7 @@ const TimneOffRequests = ({companyId}) => {
         ...acc,
         [emp.id]: emp,
       }), {})
-      const timeOffReuests = res.request_behalf.map(r => {
+      const timeOffReuests = res.request_behalf.filter(r => policiesMap[r.policy_id]).map(r => {
         const policy = policiesMap[r.policy_id]
         const range = Array.from(moment.range(moment(r.from), moment(r.to)).by('days')).map(date => date.format('YYYY-MM-DD'))
         const totalRestDays = range.reduce((acc, date) => {

@@ -183,6 +183,11 @@ const permissionsConfig = [
     name: 'time_off',
     module: 'time_off',
   },
+  {
+    name: 'time_off_edit_settings',
+    module: 'time_off',
+    permission: 'time_off_edit_settings',
+  },
 ];
 export default function AccountsList() {
   const { id } = useParams();
@@ -641,7 +646,7 @@ export default function AccountsList() {
                     accountList
                     colSearch={colSearch}
                     onSearch={onColumnSearch}
-                    timeOffRow={permissions.time_off ? onOpenTimeOff : undefined}
+                    timeOffRow={permissions.time_off && permissions.time_off_edit_settings ? onOpenTimeOff : undefined}
                   />
                 </>
               )
