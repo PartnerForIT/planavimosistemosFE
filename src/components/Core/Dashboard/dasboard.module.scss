@@ -98,12 +98,18 @@
   }
 }
 
-.Onelink:hover svg {
-  g[data-name="schedule"] {
-    path[data-name="Контур 13723"],
-    g[data-name="Эллипс 7"] {
-      stroke: $blue-2 !important;
+.Onelink:hover {
+  svg {
+    g[data-name="schedule"] {
+      path[data-name="Контур 13723"],
+      g[data-name="Эллипс 7"] {
+        stroke: $blue-2 !important;
+      }
     }
+  }
+
+  .taskerIcon {
+    background-image: url('../../../assets/tasker-top-menu-selected.png');
   }
 }
 
