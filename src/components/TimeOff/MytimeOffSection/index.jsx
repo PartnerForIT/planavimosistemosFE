@@ -6,9 +6,12 @@ import Progress from '../../Core/Progress'
 import EmployeeView from '../EmployeeView'
 
 import { getCompanyWorkTimeSettings, getCompanyTimeOffs } from '../../../api'
+import { useQuery } from '../../../hooks/useQuery'
 
 const MyTimeOffSection = ({ companyId, employee }) => {
   const employeeId = employee.id
+
+  const { tab, timeOffId, policyId, view } = useQuery(['tab', 'timeOffId', 'policyId', 'employeeId', 'view:requests'])
 
   const [loading, setLoading] = useState(true)
   const [timeOffs, setTimeOffs] = useState([])
@@ -47,8 +50,14 @@ const MyTimeOffSection = ({ companyId, employee }) => {
   return (
     <div className={styles.container}>
       <EmployeeView
-        employeeId={employeeId}
+        isMe={true}
+        tab={tab}
         companyId={companyId}
+        timeOffId={timeOffId}
+        policyId={policyId}
+        employeeId={employeeId}
+        view={view}
+        employee={employee}
         timeOffs={timeOffsMap}
         holidays={holidaysMap} />
       {
