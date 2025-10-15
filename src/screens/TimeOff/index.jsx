@@ -14,9 +14,15 @@ import usePermissions from '../../components/Core/usePermissions'
 
 import { userSelector } from '../../store/auth/selectors'
 
-const useQuery = (param) => {
+const useQuery = (params) => {
   const { search } = useLocation()
-  return useMemo(() => new URLSearchParams(search).get(param), [search])
+  return useMemo(() => {
+    const all = Object.fromEntries(new URLSearchParams(search).entries())
+    return params.reduce((acc, key) => ({
+      ...acc,
+      [key]: all[key] || null,
+    }), {})
+  }, [search])
 }
 
 const permissionsConfig = [
@@ -49,12 +55,12 @@ const options = [{
 
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
-  const queryTab = useQuery('tab')
+  const { tab, content } = useQuery(['tab', 'content'])
   const history = useHistory()
   const permissions = usePermissions(permissionsConfig)
   const user = useSelector(userSelector)
 
-  const activeTab = queryTab || 'time_off'
+  const activeTab = tab || 'time_off'
 
   const handleSelectTab = key => {
     history.push({search: `?tab=${key}`})
@@ -99,7 +105,7 @@ const TimeOffScreen = () => {
                 return (
                   <MyEmployeesSection
                     companyId={companyId}
-                    employee={user.employee} />
+                    content={content || 'list'} />
                 )
             }
           })(activeTab)

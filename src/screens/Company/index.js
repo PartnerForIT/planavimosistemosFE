@@ -238,8 +238,6 @@ export default () => {
     );
   }
 
-  console.log('permissions', permissions);
-
   return (
     <>
       <NotificationContainer />

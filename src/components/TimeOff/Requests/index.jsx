@@ -45,7 +45,7 @@ const generateSections = (requests, keyFormat) => {
     'YY': 'YYYY',
   }
   const format = keyFormat.split('.').map(k => keyMap[k] || k).join(' ')
-  return requests.reduce((acc, request) => {
+  const sections = requests.reduce((acc, request) => {
     const sectionKey = request.status === 'pending' ? 'Pending' : moment(request.created_at).format(`dddd, ${format}`)
     if (!acc[sectionKey]) {
       acc[sectionKey] = []
@@ -53,6 +53,15 @@ const generateSections = (requests, keyFormat) => {
     acc[sectionKey].push(request)
     return acc
   }, {})
+
+  return Object.entries(sections).sort((a, b) => {
+    if (a[0] === 'Pending') return -1
+    if (b[0] === 'Pending') return 1
+    return moment(b[0], `dddd, ${format}`).toDate() - moment(a[0], `dddd, ${format}`).toDate()
+  }).reduce((acc, [key, value]) => ({
+    ...acc,
+    [key]: value,
+  }), {})
 }
 
 const filterRequests = (request, query) => {
@@ -259,7 +268,6 @@ const TimneOffRequests = ({companyId}) => {
   }
 
   const handleEdit = (params) => {
-    console.log(params)
     requestFormRef.current.open(params)
   }
 
@@ -269,8 +277,6 @@ const TimneOffRequests = ({companyId}) => {
       statuses: prev.statuses.includes(status) ? prev.statuses.filter(s => s !== status) : [...prev.statuses, status],
     }))
   }
-
-  
 
   return (
     <div className={styles.container}>
@@ -344,9 +350,10 @@ const TimneOffRequests = ({companyId}) => {
                   return requests.some(r => filterRequests(r, query) && filterStatuses(r, statuses))
                 }).map(([section, requests]) => {
                   const isExpanded = expandedSections.includes(section)
+                  const isPendingSection = section === 'Pending'
                   return (
                     <div key={section} className={cn(styles.section, {[styles.active]: isExpanded})}>
-                      <div className={styles.sectionHeader} onClick={() => handleExpand(section, isExpanded)}>
+                      <div className={cn(styles.sectionHeader, {[styles.pending]: isPendingSection})} onClick={() => handleExpand(section, isExpanded)}>
                         <TriangleIcon className={cn(styles.icon)} />
                         {section} ({requests.length})
                       </div>
