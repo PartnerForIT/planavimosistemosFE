@@ -13,17 +13,7 @@ import MyEmployeesSection from '../../components/TimeOff/MyEmployeesSection'
 import usePermissions from '../../components/Core/usePermissions'
 
 import { userSelector } from '../../store/auth/selectors'
-
-const useQuery = (params) => {
-  const { search } = useLocation()
-  return useMemo(() => {
-    const all = Object.fromEntries(new URLSearchParams(search).entries())
-    return params.reduce((acc, key) => ({
-      ...acc,
-      [key]: all[key] || null,
-    }), {})
-  }, [search])
-}
+import { useQuery } from '../../hooks/useQuery'
 
 const permissionsConfig = [
   {
@@ -55,12 +45,10 @@ const options = [{
 
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
-  const { tab, content } = useQuery(['tab', 'content'])
+  const { tab: activeTab } = useQuery(['tab:employees'])
   const history = useHistory()
   const permissions = usePermissions(permissionsConfig)
   const user = useSelector(userSelector)
-
-  const activeTab = tab || 'time_off'
 
   const handleSelectTab = key => {
     history.push({search: `?tab=${key}`})
@@ -104,8 +92,7 @@ const TimeOffScreen = () => {
               case 'employees':
                 return (
                   <MyEmployeesSection
-                    companyId={companyId}
-                    content={content || 'list'} />
+                    companyId={companyId} />
                 )
             }
           })(activeTab)

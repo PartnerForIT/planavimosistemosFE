@@ -112,12 +112,27 @@ export const getEmployeePolicies = async (companyId, employeeId) => {
   return []
 }
 
+export const getPolicyEmployee = async (companyId, timeOffId, policyId, employeeId) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}`)
+  return res
+}
+
 export const getTimeOffEmployeeRequests = async (companyId, employeeId) => {
   const res = await request(`company/${companyId}/time-off/all/policy/all/request-behalf/employee/${employeeId}`)
   if (Array.isArray(res?.request_behalf)) {
     return res.request_behalf
   }
   return []
+}
+
+export const removePolicyActivity = async (companyId, timeOffId, policyId, employeeId, activityId) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}/activity/${activityId}`, 'DELETE')
+  return res
+}
+
+export const updatePolicyActivity = async (companyId, timeOffId, policyId, employeeId, activityId, data) => {
+  const res = await request(`company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}/activity/${activityId}`, 'PATCH', data)
+  return res
 }
 
 export const publishSchedule = async (companyId, data) => {

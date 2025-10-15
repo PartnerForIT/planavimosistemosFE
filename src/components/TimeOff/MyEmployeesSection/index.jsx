@@ -8,6 +8,7 @@ import styles from './styles.module.scss'
 
 import { getCompanyTimeOffPolicies, getCompanyTimeOffs, createRequest, createAdjustBalance, createAdjustTimeUsed } from '../../../api'
 import useCompanyInfo from '../../../hooks/useCompanyInfo'
+import { useQuery } from '../../../hooks/useQuery'
 
 import Select from '../Select'
 import PolicySymbol from '../PolicySymbol'
@@ -108,9 +109,10 @@ const columns = [
   { label: 'Second approver', field: 'approver_2', checked: true, cellRenderer: ApproverWithAvatar2 },
 ]
 
-const MyEmployeesSection = ({ companyId, content }) => {
+const MyEmployeesSection = ({ companyId }) => {
   const { t } = useTranslation()
   const history = useHistory()
+  const { tab, policyId: selectedPolicyId, employeeId, view } = useQuery(['tab', 'policyId', 'employeeId', 'view:requests'])
 
   const { getDateFormat } = useCompanyInfo()
   const dateFormat = getDateFormat({
@@ -120,7 +122,6 @@ const MyEmployeesSection = ({ companyId, content }) => {
   })
 
   const [policySections, setPolicySections] = useState([])
-  const [selectedPolicyId, setSelectedPolicyId] = useState(null)
 
   const [columnsArray, setColumnsArray] = useState(columns)
   const [employees, setEmployees] = useState([])
@@ -207,7 +208,7 @@ const MyEmployeesSection = ({ companyId, content }) => {
     [timeOff.id]: timeOff,
   }), {})
 
-  const selectedEmployee = employees.find(emp => emp.id === Number(content))
+  const selectedEmployee = employees.find(emp => emp.id === Number(employeeId))
 
   useEffect(() => {
     init()
@@ -285,8 +286,7 @@ const MyEmployeesSection = ({ companyId, content }) => {
   }, [])
 
   const handleSelectPolicy = (policy) => {
-    history.push({search: `?tab=employees`})
-    setSelectedPolicyId(policy.id)
+    history.push({search: `?tab=employees&policyId=${policy.id}`})
     setEmployees(policy.employees.map(emp => ({ ...emp, name: `${emp.name} ${emp.surname}` })))
   }
 
@@ -302,7 +302,7 @@ const MyEmployeesSection = ({ companyId, content }) => {
   }
 
   const handleOpenEmployee = (employeeId) => {
-    history.push({search: `?tab=employees&content=${employeeId}`})
+    history.push({search: `?tab=employees&policyId=${selectedPolicyId}&employeeId=${employeeId}`})
   }
 
   const onRequestBehalf = async (data) => {
@@ -322,10 +322,10 @@ const MyEmployeesSection = ({ companyId, content }) => {
   const renderPolicyOption = (policy, isSelected) => {
     return (
       <div className={styles.policyOption}>
-        <PolicySymbol symbol={policy.symbol} color={policy.color} />
-        {policy.name}
+        <PolicySymbol symbol={policy?.symbol} color={policy?.color} />
+        {policy?.name}
         {
-          policy.description && !isSelected
+          policy?.description && !isSelected
             ? <div className={styles.description} data-tooltip-html={policy.description} data-tooltip-id="description">
               <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
             </div>
@@ -355,59 +355,55 @@ const MyEmployeesSection = ({ companyId, content }) => {
       <div className={styles.content}>
         {
           selectedPolicy
-            ? (content => {
-                switch (content) {
-                  case 'list':
-                    return (
-                      <>
-                        <div style={{ width: '100%' }}>
-                          <Filter
-                            changeUserStatus={() => ({})}
-                            checkedItems={employees.filter(emp => emp.checked)}
-                            handleRequestBehalf={() => setRequestBehalfOpen(true)}
-                            handleAdjustBalance={() => setAdjustBalanceOpen(true)}
-                            handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
-                            selectedItem={{}}
-                            info={{
-                              [t('users assigned')]: employees.length,
-                            }}
-                            setSearch={setSearch}
-                            search={search} />
-                        </div>
-                        <DataTable
-                          data={employeesFiltered}
-                          columns={columnsArray}
-                          columnsWidth={columnsWidthArray}
-                          onColumnsChange={setColumnsArray}
-                          selectable
-                          sortable
-                          loading={false}
-                          onSelect={selectionHandler}
-                          hoverActions
-                          hoverable
-                          onSort={(field, asc) => sorting(employeesFiltered, { field, asc })}
-                          selectedItem={{}}
-                          verticalOffset='296px'
-                          selectAllItems={selectAllHandler}
-                          all={all}
-                          setAll={setAll}
-                          accountList
-                          colSearch={colSearch}
-                          onSearch={onColumnSearch}
-                          openButton={handleOpenEmployee} />
-                      </>
-                    )
-                  default:
-                    return (
-                      <EmployeeView
-                        employeeId={content}
-                        companyId={companyId}
-                        employee={selectedEmployee}
-                        timeOffs={timeOffsMap}
-                        holidays={holidaysMap} />
-                    )
-                }
-              })(content)
+            ? employeeId
+              ? <EmployeeView
+                  tab={tab}
+                  companyId={companyId}
+                  timeOffId={selectedPolicy?.time_off_id}
+                  policyId={selectedPolicyId}
+                  employeeId={employeeId}
+                  view={view}
+                  employee={selectedEmployee}
+                  policy={selectedPolicy}
+                  timeOffs={timeOffsMap}
+                  holidays={holidaysMap} />
+              :  <>
+                  <div style={{ width: '100%' }}>
+                    <Filter
+                      changeUserStatus={() => ({})}
+                      checkedItems={employees.filter(emp => emp.checked)}
+                      handleRequestBehalf={() => setRequestBehalfOpen(true)}
+                      handleAdjustBalance={() => setAdjustBalanceOpen(true)}
+                      handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
+                      selectedItem={{}}
+                      info={{
+                        [t('users assigned')]: employees.length,
+                      }}
+                      setSearch={setSearch}
+                      search={search} />
+                  </div>
+                  <DataTable
+                    data={employeesFiltered}
+                    columns={columnsArray}
+                    columnsWidth={columnsWidthArray}
+                    onColumnsChange={setColumnsArray}
+                    selectable
+                    sortable
+                    loading={false}
+                    onSelect={selectionHandler}
+                    hoverActions
+                    hoverable
+                    onSort={(field, asc) => sorting(employeesFiltered, { field, asc })}
+                    selectedItem={{}}
+                    verticalOffset='296px'
+                    selectAllItems={selectAllHandler}
+                    all={all}
+                    setAll={setAll}
+                    accountList
+                    colSearch={colSearch}
+                    onSearch={onColumnSearch}
+                    openButton={handleOpenEmployee} />
+                </>
             : <div className={styles.empty}>
               <TableIcon />
               {t('Select any entry to get a detailed editable info')}
@@ -428,7 +424,7 @@ const MyEmployeesSection = ({ companyId, content }) => {
               employees={employees.filter(emp => emp.checked)}
               policies={policies}
               initialValue={{ policy_id: selectedPolicyId }}
-              activeTimeOff={selectedPolicy.timeOff}
+              activeTimeOff={selectedPolicy?.timeOff || {}}
             />
           : null
       }
