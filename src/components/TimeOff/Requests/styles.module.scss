@@ -142,6 +142,7 @@
 
     .content {
       width: max-content;
+      min-width: 100%;
     }
 
     .section {
@@ -163,6 +164,17 @@
         align-items: center;
         gap: 4px;
         cursor: pointer;
+
+        &.pending {
+          background-color: rgba(250, 172, 46, 0.1);
+          color: rgb(245, 159, 19);
+
+          .icon {
+            path {
+              fill: rgb(245, 159, 19);
+            }
+          }
+        }
 
         .icon {
           width: 9px;

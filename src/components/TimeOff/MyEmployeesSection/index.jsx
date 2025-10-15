@@ -19,6 +19,7 @@ import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 import AdjustBalance from '../../Core/Dialog/AdjustBalance'
 import AdjustTimeUsed from '../../Core/Dialog/AdjustTimeUsed'
 import Progress from '../../Core/Progress'
+import EmployeeView from '../EmployeeView'
 
 const NameWithAvatar = (row) => (
   <div className={styles.cellNameWithAvatar}>
@@ -107,7 +108,7 @@ const columns = [
   { label: 'Second approver', field: 'approver_2', checked: true, cellRenderer: ApproverWithAvatar2 },
 ]
 
-const MyEmployeesSection = ({ companyId, employee }) => {
+const MyEmployeesSection = ({ companyId, content }) => {
   const { t } = useTranslation()
   const history = useHistory()
 
@@ -123,6 +124,8 @@ const MyEmployeesSection = ({ companyId, employee }) => {
 
   const [columnsArray, setColumnsArray] = useState(columns)
   const [employees, setEmployees] = useState([])
+  const [timeOffs, setTimeOffs] = useState([])
+  const [workTimeSettings, setWorkTimeSettings] = useState({})
   const [all, setAll] = useState(false)
   const [colSearch, setColSearch] = useState({})
   const [adjustBalanceOpen, setAdjustBalanceOpen] = useState(false)
@@ -154,7 +157,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
                 // Convert emplValue to string for other fields
                 emplValue = emplValue.toString().toLowerCase();
               }
-              
+
               if (emplValue.indexOf(searchValue) !== -1) {
                 globalSearch = true;
                 break;
@@ -168,7 +171,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
             if (colSearch[key]) { // Check if there's a search term for this key
               let emplValue = empl[key];
               let searchValue = colSearch[key].toLowerCase();
-        
+
               if (emplValue !== undefined && emplValue !== null) { // Check if the employee has a value for this key
                 if (key === 'created_at' || key === 'updated_at') {
                   // Special handling for date fields
@@ -179,7 +182,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
                   // Convert emplValue to string for other fields
                   emplValue = emplValue.toString().toLowerCase();
                 }
-        
+
                 if (emplValue.indexOf(searchValue) === -1) {
                   return false; // This employee does not match the search term
                 }
@@ -191,8 +194,20 @@ const MyEmployeesSection = ({ companyId, employee }) => {
         }
         return globalSearch; // Include this employee
       })
-      
+
   }, [employees, colSearch, dateFormat, search])
+
+  const holidaysMap = [...(workTimeSettings.work_time?.holidays || []), ...(workTimeSettings.national_holidays || [])].reduce((acc, holiday) => ({
+    ...acc,
+    [holiday.date]: true,
+  }), {})
+
+  const timeOffsMap = timeOffs.reduce((acc, timeOff) => ({
+    ...acc,
+    [timeOff.id]: timeOff,
+  }), {})
+
+  const selectedEmployee = employees.find(emp => emp.id === Number(content))
 
   useEffect(() => {
     init()
@@ -208,6 +223,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
     ])
 
     if (Array.isArray(timeOffsRes) && Array.isArray(policiesRes?.policies)) {
+      setTimeOffs(timeOffsRes)
       const timeOffsMap = timeOffsRes.reduce((acc, timeOff) => {
         return { ...acc, [timeOff.id]: timeOff }
       }, {})
@@ -227,7 +243,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
           [policy.time_off_id]: acc[policy.time_off_id] ? [...acc[policy.time_off_id], formattedPolicy] : [formattedPolicy]
         }
       })
-      
+
       const timeOffs = timeOffsRes.map((timeOff) => ({
         id: timeOff.id,
         name: timeOff.name,
@@ -238,7 +254,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
       if (selectedPolicyId) {
         const selected = policiesRes.policies.find(p => p.id === selectedPolicyId)
         if (selected) {
-          setEmployees(selected.employees.map(emp => ({...emp, name: `${emp.name} ${emp.surname}`})))
+          setEmployees(selected.employees.map(emp => ({ ...emp, name: `${emp.name} ${emp.surname}` })))
         }
       }
       setLoading(false)
@@ -250,27 +266,28 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }
 
   const sorting = useCallback((employees, { field, asc }) => {
-      const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
-      const sortFunction = (a, b) => {
-        if (typeof a[field] === 'number' && typeof b[field] === 'number') {
-          return sortNumFunction(a, b);
-        }
-        if (typeof a[field] === 'object' || typeof b[field] === 'object') {
-          return sortNumFunction(a, b);
-        }
-        if (asc) {
-          return a[field].toString()
-            .localeCompare(b[field]);
-        }
-        return b[field].toString()
-          .localeCompare(a[field]);
-      };
-      return employees.sort(sortFunction);
-    }, [])
+    const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
+    const sortFunction = (a, b) => {
+      if (typeof a[field] === 'number' && typeof b[field] === 'number') {
+        return sortNumFunction(a, b);
+      }
+      if (typeof a[field] === 'object' || typeof b[field] === 'object') {
+        return sortNumFunction(a, b);
+      }
+      if (asc) {
+        return a[field].toString()
+          .localeCompare(b[field]);
+      }
+      return b[field].toString()
+        .localeCompare(a[field]);
+    };
+    return employees.sort(sortFunction);
+  }, [])
 
   const handleSelectPolicy = (policy) => {
+    history.push({search: `?tab=employees`})
     setSelectedPolicyId(policy.id)
-    setEmployees(policy.employees.map(emp => ({...emp, name: `${emp.name} ${emp.surname}`})))
+    setEmployees(policy.employees.map(emp => ({ ...emp, name: `${emp.name} ${emp.surname}` })))
   }
 
   const selectAllHandler = (data = []) => {
@@ -285,7 +302,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   }
 
   const handleOpenEmployee = (employeeId) => {
-    history.push(`/${companyId}/settings/time-off?page=employee-management&time_off=${selectedPolicy.timeOff.id}&policy=${selectedPolicy.id}&employee=${employeeId}`);
+    history.push({search: `?tab=employees&content=${employeeId}`})
   }
 
   const onRequestBehalf = async (data) => {
@@ -310,8 +327,8 @@ const MyEmployeesSection = ({ companyId, employee }) => {
         {
           policy.description && !isSelected
             ? <div className={styles.description} data-tooltip-html={policy.description} data-tooltip-id="description">
-                <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
-              </div>
+              <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+            </div>
             : null
         }
       </div>
@@ -321,65 +338,80 @@ const MyEmployeesSection = ({ companyId, employee }) => {
   return (
     <div className={styles.screen}>
       <div className={styles.selectContainer}>
-       <Select
-        placeholder={t('Select a policy')}
-        options={policySections}
-        value={selectedPolicyId}
-        renderSelected={props => renderPolicyOption(props, true)}
-        renderOption={renderPolicyOption}
-        injectedElements={() => (
-          <ReactTooltip
-            id="description"
-            effect="solid"
-            className={styles.tooltip} />
-        )}
-        onSelect={handleSelectPolicy} /> 
+        <Select
+          placeholder={t('Select a policy')}
+          options={policySections}
+          value={selectedPolicyId}
+          renderSelected={props => renderPolicyOption(props, true)}
+          renderOption={renderPolicyOption}
+          injectedElements={() => (
+            <ReactTooltip
+              id="description"
+              effect="solid"
+              className={styles.tooltip} />
+          )}
+          onSelect={handleSelectPolicy} />
       </div>
       <div className={styles.content}>
-        
         {
           selectedPolicy
-            ? <>
-                <div style={{width: '100%'}}>
-                  <Filter
-                    changeUserStatus={() => ({})}
-                    checkedItems={employees.filter(emp => emp.checked)}
-                    handleRequestBehalf={() => setRequestBehalfOpen(true)}
-                    handleAdjustBalance={() => setAdjustBalanceOpen(true)}
-                    handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
-                    selectedItem={{}}
-                    info={{
-                      [t('users assigned')]: employees.length,
-                    }}
-                    setSearch={setSearch}
-                    search={search} />
-                </div>
-                <DataTable
-                  data={employeesFiltered}
-                  columns={columnsArray}
-                  columnsWidth={columnsWidthArray}
-                  onColumnsChange={setColumnsArray}
-                  selectable
-                  sortable
-                  loading={false}
-                  onSelect={selectionHandler}
-                  hoverActions
-                  hoverable
-                  onSort={(field, asc) => sorting(employeesFiltered, { field, asc })}
-                  selectedItem={{}}
-                  verticalOffset='296px'
-                  selectAllItems={selectAllHandler}
-                  all={all}
-                  setAll={setAll}
-                  accountList
-                  colSearch={colSearch}
-                  onSearch={onColumnSearch}
-                  openButton={handleOpenEmployee} />
-              </>
+            ? (content => {
+                switch (content) {
+                  case 'list':
+                    return (
+                      <>
+                        <div style={{ width: '100%' }}>
+                          <Filter
+                            changeUserStatus={() => ({})}
+                            checkedItems={employees.filter(emp => emp.checked)}
+                            handleRequestBehalf={() => setRequestBehalfOpen(true)}
+                            handleAdjustBalance={() => setAdjustBalanceOpen(true)}
+                            handleAdjustTimeUsed={() => setAdjustTimeUsedOpen(true)}
+                            selectedItem={{}}
+                            info={{
+                              [t('users assigned')]: employees.length,
+                            }}
+                            setSearch={setSearch}
+                            search={search} />
+                        </div>
+                        <DataTable
+                          data={employeesFiltered}
+                          columns={columnsArray}
+                          columnsWidth={columnsWidthArray}
+                          onColumnsChange={setColumnsArray}
+                          selectable
+                          sortable
+                          loading={false}
+                          onSelect={selectionHandler}
+                          hoverActions
+                          hoverable
+                          onSort={(field, asc) => sorting(employeesFiltered, { field, asc })}
+                          selectedItem={{}}
+                          verticalOffset='296px'
+                          selectAllItems={selectAllHandler}
+                          all={all}
+                          setAll={setAll}
+                          accountList
+                          colSearch={colSearch}
+                          onSearch={onColumnSearch}
+                          openButton={handleOpenEmployee} />
+                      </>
+                    )
+                  default:
+                    return (
+                      <EmployeeView
+                        employeeId={content}
+                        companyId={companyId}
+                        employee={selectedEmployee}
+                        timeOffs={timeOffsMap}
+                        holidays={holidaysMap} />
+                    )
+                }
+              })(content)
             : <div className={styles.empty}>
-                <TableIcon />
-                {t('Select any entry to get a detailed editable info')}
-              </div>
+              <TableIcon />
+              {t('Select any entry to get a detailed editable info')}
+            </div>
         }
       </div>
       {
@@ -395,7 +427,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
               buttonTitle={t('Submit')}
               employees={employees.filter(emp => emp.checked)}
               policies={policies}
-              initialValue={{policy_id: selectedPolicyId}}
+              initialValue={{ policy_id: selectedPolicyId }}
               activeTimeOff={selectedPolicy.timeOff}
             />
           : null
@@ -413,7 +445,7 @@ const MyEmployeesSection = ({ companyId, employee }) => {
               buttonTitle={t('Submit')}
               employees={employees.filter(emp => emp.checked)}
               policies={policies}
-              initialValue={{policy_id: selectedPolicyId}}
+              initialValue={{ policy_id: selectedPolicyId }}
             />
           : null
       }
@@ -430,16 +462,15 @@ const MyEmployeesSection = ({ companyId, employee }) => {
               buttonTitle={t('Submit')}
               employees={employees.filter(emp => emp.checked)}
               policies={policies}
-              initialValue={{policy_id: selectedPolicyId}}
+              initialValue={{ policy_id: selectedPolicyId }}
             />
           : null
-        
       }
       {
         loading
           ? <div className={styles.loader}>
-              <Progress />
-            </div>
+            <Progress />
+          </div>
           : null
       }
     </div>

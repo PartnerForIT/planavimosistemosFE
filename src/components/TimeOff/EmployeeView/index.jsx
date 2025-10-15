@@ -1,0 +1,419 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
+import { useTranslation } from 'react-i18next'
+import cn from 'classnames'
+import { useHistory } from 'react-router-dom'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
+
+import styles from './styles.module.scss'
+
+import Button from '../../Core/Button/Button'
+import EditIconFixedFill from '../../Icons/EditIconFixedFill'
+import ArrowRightButton from '../../Icons/ArrowRightButton'
+import AlertCircle from '../../Icons/AlertCircle'
+import RequestBehalf from '../../Core/Dialog/RequestBehalf'
+import PolicySymbol from '../PolicySymbol'
+import DescriptionIcon from '../../Icons/DescriptionIcon'
+
+import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest } from '../../../api'
+import usePermissions from '../../Core/usePermissions'
+
+const permissionsConfig = [
+  {
+    name: 'time_off',
+    module: 'time_off',
+  },
+  {
+    name: 'time_off_edit_settings',
+    module: 'time_off',
+    permission: 'time_off_edit_settings',
+  },
+]
+
+const moment = extendMoment(Moment)
+
+const EmployeeView = ({companyId, employeeId, employee, timeOffs, holidays}) => {
+  const { t } = useTranslation()
+  const history = useHistory()
+  const permissions = usePermissions(permissionsConfig)
+
+  const requestFormRef = useRef(null)
+
+  const [expandedPolicyIds, setExpandedPolicyIds] = useState([])
+  const [requests, setRequests] = useState([])
+  const [policies, setPolicies] = useState([])
+
+  const policiesMap = policies.reduce((acc, policy) => ({
+    ...acc,
+    [policy.id]: policy,
+  }), {})
+
+  useEffect(() => {
+    init()
+  }, [timeOffs])
+
+  const init = async () => {
+    if (!Object.keys(timeOffs).length) {
+      return
+    }
+    const [policiesRes, requestsRes] = await Promise.all([
+      getEmployeePolicies(companyId, employeeId),
+      getTimeOffEmployeeRequests(companyId, employeeId),
+    ])
+    setPolicies(policiesRes.map((p => ({...p, time_off: timeOffs[p.time_off_id]}))))
+    setRequests(requestsRes)
+  }
+
+  const expandPolicy = (policyId, expand) => {
+    setExpandedPolicyIds((prev) =>
+      expand
+        ? [...prev, policyId]
+        : prev.filter((id) => id !== policyId)
+    );
+  }
+
+  const handleSubmitRequest = async (data) => {
+    const selectedPolicy = policies.find(({id}) => id === data.policy_id)
+    if (selectedPolicy) {
+      requestFormRef.current.close()
+      if (data.id) {
+        await updateRequest(companyId, selectedPolicy.time_off_id, data.policy_id, data.id, data)
+      } else {
+        await createRequest(companyId, selectedPolicy.time_off_id, data.policy_id, data)
+      }
+      init(companyId, employeeId)
+    }
+  }
+
+  const handleRequest = (params) => {
+    requestFormRef.current.open(params)
+  }
+
+  const goEmployeeActivity = (timeOffId, policyId, employeeId) => {
+    console.log(`settings/time-off?page=activity&policy=${policyId}&time_off=${timeOffId}&employee=${employeeId}`)
+    history.push(`settings/time-off?page=activity&policy=${policyId}&time_off=${timeOffId}&employee=${employeeId}`)
+  }
+
+  const settingsTimeOffAccess = permissions.time_off && permissions.time_off_edit_settings
+
+  return (
+    <div className={styles.container}>
+      {
+        employee
+          ? <div className={styles.section}>
+              <div className={styles.sectionTitle}>{t('Employee')}</div>
+              <div className={styles.employeeBlock}>
+                {
+                  employee.photo && (
+                    <div className={styles.avatarBlock}>
+                      <img
+                        src={employee.photo}
+                        alt='avatar'
+                        className={styles.avatar}
+                      />
+                    </div>
+                  )
+                }
+                <div>
+                  <div className={styles.employeeName}>{employee.name} {employee.surname}</div>
+                  <div className={styles.skillName}>{employee.skills}</div>
+                </div>
+                <div className={styles.buttonBlock}>
+                  <Button
+                    className={styles.button}
+                    size="large"
+                    primary
+                    onClick={() => handleRequest()}
+                  >
+                    {t('Request on behalf')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          : null
+      }
+      <div className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.sectionTitle}>{t('Upcoming requests')} <span className={styles.secondary}>{requests.length}</span></div>
+          {
+            !employee
+              ? <Button
+                  className={styles.button}
+                  size="large"
+                  primary
+                  onClick={() => handleRequest()}
+                >
+                  {t('Fill Request')}
+                </Button>
+              : null
+          }
+        </div>
+        <div>
+          {
+            requests.length > 0 ? (
+              <div className={styles.upcomingRequests}>
+                <div className={styles.upcomingRequestsHeader}>
+                  <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('Request type')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('Days')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('When')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('Requested on')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}>
+                    {t('Status')}
+                  </div>
+                  <div className={styles.upcomingRequestsHeaderCol}></div>
+                </div>
+                {requests.map((request) => {
+                  const policy = policiesMap[request.policy_id] || {};
+                  const range = Array.from(moment.range(moment(request.from), moment(request.to)).by('days')).map(date => date.format('YYYY-MM-DD'))
+                  const totalWorkingDays = range.reduce((acc, date) => {
+                    if (holidays[date]) {
+                      return acc
+                    }
+                    const day = moment(date).day()
+                    if (policy.time_off.work_days === 'any_day' || (day !== 0 && day !== 6)) {
+                      return acc + 1
+                    }
+                    return acc
+                  }, 0)
+
+                  return (
+                    <div key={request.id} className={styles.upcomingRequestsRow}>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={styles.tableName}>
+                          <PolicySymbol symbol={policy.symbol} color={policy.color} />
+                          {policy.name}
+                          {
+                            request.note
+                              ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
+                                <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+                              </div>
+                              : null
+                          }
+                        </div>
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        {totalWorkingDays}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        {request.from} - {request.to}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        {request.created_at}
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={cn(styles.upcomingRequestsStatus, {
+                          [styles.requestStatusApproved]: request.status === 'approved',
+                          [styles.requestStatusPending]: request.status === 'pending',
+                          [styles.requestStatusRejected]: request.status === 'rejected',
+                          [styles.requestStatusCancelled]: request.status === 'cancelled',
+                        })}>
+                          {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                        </div>
+                      </div>
+                      <div className={styles.upcomingRequestsCol}>
+                        <div className={styles.upcomingRequestsButtons}>
+                          <div data-tooltip-html={t("Edit")} data-tooltip-id="tip_request">
+                            <Button
+                              className={styles.buttonEdit}
+                              size="little"
+                              onClick={() => {
+                                handleRequest(request)
+                              }}
+                            >
+                              <EditIconFixedFill />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : null
+          }
+        </div>
+      </div>
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>{t('Policies')} <span className={styles.secondary}>{policies.length}</span></div>
+        {
+          policies.length > 0 ? (
+            <div className={styles.policiesTable}>
+              <div className={styles.policiesTableHeader}>
+                <div className={styles.policiesTableHeaderCol}>
+                </div>
+                <div className={styles.policiesTableHeaderCol}>
+                  {t('Policy')}
+                </div>
+                <div className={styles.policiesTableHeaderCol}>
+                  {!expandedPolicyIds.length && (
+                    t('Current cycle')
+                  )}
+                </div>
+                <div className={cn(styles.policiesTableHeaderCol, styles.right)}>
+                  {!expandedPolicyIds.length && (
+                    t('Cycle allowance')
+                  )}
+                </div>
+                <div className={cn(styles.policiesTableHeaderCol, styles.right)}>
+                  {!expandedPolicyIds.length && (
+                    t('Accrued')
+                  )}
+                </div>
+                <div className={cn(styles.policiesTableHeaderCol, styles.right)}>
+                  {t('Taken')}
+                </div>
+                <div className={cn(styles.policiesTableHeaderCol, styles.right)}>
+                  {t('Balance')}
+                </div>
+              </div>
+              {
+                policies.map((policy) => {
+                  const policyEmployeeDetails = policy.employees.find((emp) => emp.id === employeeId)
+                  const isExpanded = expandedPolicyIds.includes(policy.id)
+                  return (
+                    <React.Fragment key={policy.id}>
+                      <div className={cn(styles.policiesTableRow, styles.pointer)} onClick={() => expandPolicy(policy.id, !isExpanded)}>
+                        <div className={cn(styles.policiesTableCol, styles.policiesTableColExpand)}>
+                          <div className={cn(styles.policiesTableExpand, { [styles.active]: isExpanded })}>
+                            <ArrowRightButton />
+                          </div>
+                        </div>
+                        <div className={styles.policiesTableCol}>
+                          <div className={styles.tableName}>
+                            <PolicySymbol symbol={policy.symbol} color={policy.color} />
+                            {policy.name}
+                          </div>
+                        </div>
+                        <div className={cn(styles.policiesTableCol, styles.policiesTableColGray, styles.nowrap)}>
+                          {!expandedPolicyIds.length
+                            ? `${policyEmployeeDetails?.current_cycle_start ? policyEmployeeDetails?.current_cycle_start : ''} ${policyEmployeeDetails?.current_cycle_end ? `- ${policyEmployeeDetails?.current_cycle_end}` : ''}`
+                            : null
+                          }
+                        </div>
+                        <div className={cn(styles.policiesTableCol, styles.policiesTableColGray, styles.right)}>
+                          {!expandedPolicyIds.length && (
+                            policyEmployeeDetails?.cycle_allowance
+                          )}
+                        </div>
+                        <div className={cn(styles.policiesTableCol, styles.policiesTableColGray, styles.right)}>
+                          {!expandedPolicyIds.length && (
+                            policyEmployeeDetails?.accrued_amount_this_cycle
+                          )}
+                        </div>
+                        <div className={cn(styles.policiesTableCol, styles.right)}>
+                          {policyEmployeeDetails?.taken_this_cycle}
+                        </div>
+                        <div className={cn(styles.policiesTableCol, styles.right)}>
+                          {policyEmployeeDetails?.balance}
+                        </div>
+                      </div>
+
+                      {isExpanded && (
+                        <div className={styles.expandedRow}>
+                          <div className={styles.expandedContent}>
+                            <div className={styles.expandedInfo}>
+                              <div>
+                                <strong>{t('Cycle period')}:</strong>
+                                <div>{policyEmployeeDetails?.current_cycle_start} — {policyEmployeeDetails?.current_cycle_end}</div>
+                              </div>
+                              <div>
+                                <strong>{t('Allowance type')}:</strong>
+                                <div>{policyEmployeeDetails?.cycle_type_text}</div>
+                              </div>
+                              <div></div>
+                              <div></div>
+                            </div>
+                            <div className={styles.expandedInfo}>
+                              <div>
+                                <strong>{t('Cycle allowance')}:</strong>
+                                <div>{policyEmployeeDetails?.cycle_allowance}</div>
+                              </div>
+                              <div>
+                                <strong>{t('Accrued')}:</strong>
+                                <div>{policyEmployeeDetails?.accrued_amount_this_cycle}</div>
+                              </div>
+                              <div>
+                                <strong>{t('Adjusted by admin')}:</strong>
+                                <div>todo</div>
+                              </div>
+                              <div>
+                                <strong>{t('Days booked')}:</strong>
+                                <div>{policyEmployeeDetails?.total_booked}</div>
+                              </div>
+                            </div>
+                            <div className={styles.carryoverInfo}>
+                              {
+                                policyEmployeeDetails?.carryovers && policyEmployeeDetails.carryovers.length > 0 && (
+                                  <div className={styles.carryoverList}>
+                                    {policyEmployeeDetails.carryovers.map((carryover) => (
+                                      <div key={carryover.id} className={styles.carryoverItem}>
+                                        <AlertCircle /> {t("{{days}} days carryover on {{when}} have an expiration date of {{expire}}", { days: carryover.amount, when: carryover.carryover_date, expire: carryover.expire_at })}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )
+                              }
+                            </div>
+                            {
+                              settingsTimeOffAccess
+                                ? <div className={styles.actionsRow}>
+                                    <div></div>
+                                    <div className={styles.actionsRowButtons}>
+                                      <Button
+                                        onClick={() => { goEmployeeActivity(policy.time_off_id, policy.id, employeeId); }}
+                                        primary
+                                      >
+                                        {t('Activity')}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                : null
+                            }
+                          </div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+            </div>
+          ) : null
+        }
+      </div>
+      <RequestBehalf
+        ref={requestFormRef}
+        title={t('Fill Request')}
+        onSubmit={handleSubmitRequest}
+        handleClose={() => { }}
+        buttonTitle={t('Submit')}
+        employees={[{ id: employeeId }]}
+        policies={policies}
+        initialValue={{}}
+        activeTimeOff={1}
+        singleRequest
+      />
+      <ReactTooltip
+        id='note'
+        effect='solid'
+        className={styles.tooltip}
+      />
+      {/* {
+        loading
+          ? <div className={styles.loader}>
+            <Progress />
+          </div>
+          : null
+      } */}
+    </div>
+  )
+}
+
+export default EmployeeView
