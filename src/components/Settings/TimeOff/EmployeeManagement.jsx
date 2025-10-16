@@ -9,6 +9,7 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range'
 import { useSelector } from 'react-redux';
 import { settingWorkTime } from '../../../store/settings/selectors'
+import usePermissions from '../../Core/usePermissions';
 
 import classes from './timeoff.module.scss';
 import Button from '../../Core/Button/Button';
@@ -33,6 +34,14 @@ import PoliciesActivityTable from './TimeOffDetails/PoliciesActivityTable';
 
 const moment = extendMoment(Moment)
 
+const permissionsConfig = [
+  {
+    name: 'time_off_fill_request_behalf',
+    permission: 'time_off_fill_request_behalf',
+    module: 'time_off',
+  },
+];
+
 function EmployeeManagement({
   goEmployeeActivity,
   onUnassingPolicyEmployees,
@@ -46,6 +55,7 @@ function EmployeeManagement({
   onChangeRequestStatus = Function.prototype,
 }) {
   const { t } = useTranslation();
+  const permissions = usePermissions(permissionsConfig);
   const workTime = useSelector(settingWorkTime);
 
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
@@ -98,18 +108,21 @@ function EmployeeManagement({
               <div className={classes.skillName}>{employee.skills}</div>
             </div>
 
-            <div className={classes.buttonBlock}>
-              <Button
-                className={classes.button}
-                size="large"
-                primary
-                onClick={() => {
-                  setRequestBehalfOpen(true);
-                }}
-              >
-                {t('Request on behalf')}
-              </Button>
-            </div>
+            { permissions.time_off_fill_request_behalf ?
+                <div className={classes.buttonBlock}>
+                  <Button
+                    className={classes.button}
+                    size="large"
+                    primary
+                    onClick={() => {
+                      setRequestBehalfOpen(true);
+                    }}
+                  >
+                    {t('Request on behalf')}
+                  </Button>
+                </div>
+              : null
+            }
           </div>
         </div>
         {
