@@ -48,7 +48,8 @@
     }
 
     .section {
-      padding: 0 16px;
+      // padding: 0 16px;
+      padding: 0px 32px 0px 16px;
 
       .sectionHeader {
         height: 34px;
@@ -105,8 +106,8 @@
       height: 48px;
       display: grid;
       grid-auto-flow: column;
-      // grid-auto-columns: minmax(150px, 1fr);
-      grid-template-columns: 100px 100px repeat(3, minmax(150px, 1fr)) 100px 200px repeat(5, minmax(150px, 1fr));
+      grid-auto-columns: minmax(150px, 1fr);
+      
 
       &:nth-child(even) {
         background-color: #f9fbfc;
@@ -118,7 +119,7 @@
         top: 0;
         background-color: #fff;
         z-index: 2;
-        padding: 0 16px;
+        padding: 0px 32px 0px 16px;
       }
 
       .cell {

@@ -1468,5 +1468,6 @@
         "Can adjust balance (My Employees)": "Gali koreguoti balansą (Mano darbuotojai)",
         "Can adjust time used (My Employees)": "Gali koreguoti panaudotą laiką (Mano darbuotojai)",
         "Can see private requests": "Gali matyti privačias politikas",
-        "Can edit Time Off settings": "Koreguoti Atostogų nustatymus"
+        "Can edit Time Off settings": "Koreguoti Atostogų nustatymus",
+        "Please select the policy type first in order to see the assigned employees for further review or edits.": "Prašome pasirinkti neatvykimų politiką, kad galėtumėte pamatyti darbuotojų informaciją ir juos koreguoti."
 }
