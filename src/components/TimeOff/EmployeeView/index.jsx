@@ -423,8 +423,7 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         onSubmit={handleSubmitRequest}
         handleClose={() => { }}
         buttonTitle={t('Submit')}
-        //ARE YOU SERIOSLY? WTF IS IT?
-        employees={[employee]}
+        employees={[{ ...employee, request_behalves: requests }]}
         policies={policies}
         initialValue={{}}
         //ARE YOU SERIOSLY? WTF IS IT?
