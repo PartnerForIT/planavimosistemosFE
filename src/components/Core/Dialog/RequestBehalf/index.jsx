@@ -57,19 +57,20 @@ const RequestBehalf = forwardRef(({
   useEffect(() => {
     if (activeTimeOff) {
       setSelectedTimeOff(activeTimeOff);
-    } else if (initialValue?.policy_id) {
-      const policy = policies.find(policy => policy.id === initialValue.policy_id);
+    } else if (values?.policy_id || initialValue.policy_id) {
+      const p_id = values?.policy_id || initialValue.policy_id
+      const policy = policies.find(policy => policy.id === p_id);
       if (policy) {
         setSelectedTimeOff(policy.time_off);
       }
-    } else {
+    } else if (policies[0]) {
       setSelectedTimeOff(policies[0].time_off);
       
     }
     dispatch(getSettingWorkTime(companyId));
 
     // eslint-disable-next-line
-  }, []);
+  }, [activeTimeOff, initialValue?.policy_id, policies, values?.policy_id]);
 
   useImperativeHandle(ref, () => ({
     open: (initialParams) => {
@@ -110,8 +111,8 @@ const RequestBehalf = forwardRef(({
     const end = moment(values.to);
     const dates = [];
     while (start.isSameOrBefore(end)) {
-      const isWorkingDay = selectedTimeOff.work_days === "any_day" ? true : [1, 2, 3, 4, 5].includes(start.day());
-      const isHoliday = selectedTimeOff.work_days === "any_day" ? false : workTime?.work_time?.holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD')) || workTime?.national_holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD'));
+      const isWorkingDay = selectedTimeOff?.work_days === "any_day" ? true : [1, 2, 3, 4, 5].includes(start.day());
+      const isHoliday = selectedTimeOff?.work_days === "any_day" ? false : workTime?.work_time?.holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD')) || workTime?.national_holidays?.some(holiday => holiday.date === start.format('YYYY-MM-DD'));
       dates.push({ date: start.format(formatDate), isWorkingDay, isHoliday });
       start.add(1, 'day');
     }
@@ -136,12 +137,12 @@ const RequestBehalf = forwardRef(({
   const allowedDatesSet = useMemo(() => {
     const set = new Set();
     datesList.forEach(d => {
-      const allowed = selectedTimeOff.work_days === "any_day" || (d.isWorkingDay && !d.isHoliday);
+      const allowed = selectedTimeOff?.work_days === "any_day" || (d.isWorkingDay && !d.isHoliday);
       if (allowed) set.add(d.date); // d.date is already in formatDate
     });
     return set;
     // eslint-disable-next-line
-  }, [datesList, selectedTimeOff.work_days]);
+  }, [datesList, selectedTimeOff?.work_days]);
 
   const conflicts = useMemo(() => {
     const conflictMap = {};
@@ -188,7 +189,7 @@ const RequestBehalf = forwardRef(({
 
     return conflictMap;
     // eslint-disable-next-line
-  }, [employees, formatDate, allowedDatesSet]);
+  }, [employees, formatDate, allowedDatesSet, selectedTimeOff]);
 
   const missingDays = useMemo(() => {
     // If you have balances per employee, use them; otherwise default to 0 so the section won’t show bogus numbers.

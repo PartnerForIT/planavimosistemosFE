@@ -436,10 +436,11 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         onSubmit={handleSubmitRequest}
         handleClose={() => { }}
         buttonTitle={t('Submit')}
-        employees={[{ id: employeeId }]}
+        employees={[{ ...employee, request_behalves: requests }]}
         policies={policies}
         initialValue={{}}
-        activeTimeOff={1}
+        //ARE YOU SERIOSLY? WTF IS IT?
+        //activeTimeOff={1}
         singleRequest
       />
       <ReactTooltip

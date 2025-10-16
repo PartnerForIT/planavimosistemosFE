@@ -11,6 +11,7 @@ import Calendar from '../../components/TimeOff/Calendar'
 import TimneOffRequests from '../../components/TimeOff/Requests'
 import MyEmployeesSection from '../../components/TimeOff/MyEmployeesSection'
 import usePermissions from '../../components/Core/usePermissions'
+import { timeoffCounterSelector } from '../../store/auth/selectors';
 
 import { userSelector } from '../../store/auth/selectors'
 import { useQuery } from '../../hooks/useQuery'
@@ -48,6 +49,7 @@ const TimeOffScreen = () => {
   const { tab: activeTab } = useQuery(['tab:employees'])
   const history = useHistory()
   const permissions = usePermissions(permissionsConfig)
+  const timeOffCounter = useSelector(timeoffCounterSelector)
   const user = useSelector(userSelector)
 
   const handleSelectTab = key => {
@@ -59,6 +61,14 @@ const TimeOffScreen = () => {
       return permissions.time_off_see_my_employees
     }
     return true
+  }).map(option => {
+    if (option.key === 'requests') {
+      return {
+        ...option,
+        badge: timeOffCounter,
+      }
+    }
+    return option
   })
 
   return (
@@ -67,7 +77,8 @@ const TimeOffScreen = () => {
         <AppNavbar
           options={filteredOptions}
           selected={activeTab}
-          onSelect={handleSelectTab} />
+          onSelect={handleSelectTab}
+          requestsCounter={timeOffCounter} />
       </div>
       <div className={styles.content}>
         {

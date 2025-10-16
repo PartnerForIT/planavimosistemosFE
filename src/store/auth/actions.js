@@ -1,5 +1,5 @@
 import {
-  LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN, UPDATE_EVENTS_COUNTER,
+  LOGIN, LOGOUT, LOGIN_CHECK, REFRESH_TOKEN, UPDATE_EVENTS_COUNTER, UPDATE_TIMEOFF_COUNTER
 } from './types';
 
 export const login = (email, password, remember) => ({
@@ -57,5 +57,10 @@ export const authCheck = () => ({
 
 export const updateEventsCounter = (count) => ({
   type: UPDATE_EVENTS_COUNTER,
+  payload: count,
+});
+
+export const updateTimeOffCounter = (count) => ({
+  type: UPDATE_TIMEOFF_COUNTER,
   payload: count,
 });
