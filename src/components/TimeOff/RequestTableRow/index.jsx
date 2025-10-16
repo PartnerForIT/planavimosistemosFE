@@ -43,7 +43,7 @@ const RequestTableRow = ({request, onEdit, onSelect, onChangeRequestStatus}) => 
         </div>
       </div>
       <div className={styles.cell}>
-        { request.employee.title }
+        { request.employee?.title }
       </div>
       <div className={cn(styles.cell, styles.policy)}>
         <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
@@ -66,13 +66,13 @@ const RequestTableRow = ({request, onEdit, onSelect, onChangeRequestStatus}) => 
         { request.created_at }
       </div>
       <div className={styles.cell}>
-        { request.employee.groups }
+        { request.employee?.groups }
       </div>
       <div className={styles.cell}>
-        { request.employee.subgroups }
+        { request.employee?.subgroups }
       </div>
       <div className={styles.cell}>
-        { request.employee.place }
+        { request.employee?.place }
       </div>
       <div className={styles.cell}>
         { request.approver_1_name }
