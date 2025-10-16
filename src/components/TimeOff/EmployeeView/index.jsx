@@ -35,6 +35,8 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
 
   const currentPolicy = policies.find(({ id }) => id === policyId) || {}
 
+  console.log(currentPolicy)
+
   const policiesMap = policies.reduce((acc, policy) => ({
     ...acc,
     [policy.id]: policy,
@@ -114,7 +116,7 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         {
           employeeId && !isMe || view === 'activity'
             ? <div className={styles.breadcrumps}>
-                <div className={styles.backButton} onClick={() => history.goBack()}>
+                <div className={styles.backButton} onClick={() => history.goBack()} data-tooltip-html={t("Back")} data-tooltip-id="note">
                   <TitleBackIcon />
                 </div>
                 { currentPolicy?.name } / { employee?.name } {view === 'activity' ? ` / ${t('Balance activity')}` : '' }
@@ -439,13 +441,13 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         employees={[{ ...employee, request_behalves: requests }]}
         policies={policies}
         initialValue={{}}
-        //ARE YOU SERIOSLY? WTF IS IT?
-        //activeTimeOff={1}
         singleRequest
+        {...(currentPolicy ? {activeTimeOff: currentPolicy.time_off} : null)}
       />
       <ReactTooltip
         id='note'
         effect='solid'
+        place='top'
         className={styles.tooltip}
       />
     </div>
