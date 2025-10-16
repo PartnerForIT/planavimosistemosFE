@@ -132,7 +132,7 @@ const ResourcesCell = ({
     onDelete({ rowId, parentRowId });
     // eslint-disable-next-line
   }, [rowId, parentRowId]);
-  
+
   return (
     <>
       <div className={rowClasses}>
@@ -439,7 +439,7 @@ export default forwardRef(({
   const handleNotWorkToday = ({ time, cellId, resourceId}) => {
     const cellIndex = cellId;
     setData((prevState) => {
-      
+
       const mweek = prevState[currentWeek].map((item, index) => {
 
         // eslint-disable-next-line
@@ -483,10 +483,10 @@ export default forwardRef(({
     }));
   };
   const handleChangeTime = ({ time, resourceId, cellId }) => {
-    
+
     const cellIndex = cellId;
     setData((prevState) => {
-      
+
       const mweek = prevState[currentWeek].map((item, index) => {
 
         if (!item.data[cellIndex] || (resourceId.toString() !== item.resourceId.toString() && item.resourceId.toString().indexOf(resourceId+'-') !== 0)){
@@ -509,8 +509,8 @@ export default forwardRef(({
       })
 
       return {
-      ...prevState,
-      [currentWeek]: mweek
+        ...prevState,
+        [currentWeek]: mweek,
     }});
 
     // setData((prevState) => {
@@ -626,7 +626,7 @@ export default forwardRef(({
 
     setData((prevState) => Object.keys(prevState).reduce((acc, item) => {
       if ((+item + 1) <= numberOfWeeks) {
-        
+
         acc[item] = [
           ...prevState[item],
           ...newData.map((itemJ) => {
@@ -806,7 +806,7 @@ export default forwardRef(({
     },
     updateData: (copyData) => {
       if (!copyData) return;
-      
+
       setData(mergeObjects(data, copyData));
     }
   }));
@@ -870,7 +870,7 @@ export default forwardRef(({
 
         let uniqueEmployees = [];
         let uniqueEmployeePhotos = [];
-        
+
         const weekInfo = weekMock.reduce((accJ, dayOfWeek, indexDay) => {
           let totalDayEmployees = 0;
           let dayTotalTime = 0;
@@ -928,7 +928,7 @@ export default forwardRef(({
                         if (!total.children[index].children[indexJ]) {
                           total.children[index].children[indexJ] = {cost: 0, time: 0};
                         }
-                      
+
                         total.children[index].children[indexJ].cost += cost;
                         total.children[index].children[indexJ].time += time;
                         total.children[index].cost += cost;
@@ -994,7 +994,7 @@ export default forwardRef(({
   const { t } = useTranslation();
   const timesPanelFull = useMemo(() => {
     let res = {};
-    
+
     Object.keys(timesPanel[currentWeek]).map((key) => {
       if (timesPanel[currentWeek][key]) {
         res[key] = {...timesPanel[currentWeek][key]};
@@ -1017,8 +1017,8 @@ export default forwardRef(({
     return resShift;
 // eslint-disable-next-line
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
-  //console.log('mergedData', mergedData, numberOfWeeks);
-  //console.log('resources', resources);
+  // console.log('mergedData', mergedData, numberOfWeeks);
+  // console.log('resources', resources);
   return (
     <div className={classnames(classes.table, (modules?.manual_mode && !templateSchedule) ? classes.table__gray : '')}>
       { (!modules?.manual_mode || templateSchedule) && (
@@ -1067,7 +1067,7 @@ export default forwardRef(({
                 ))
               }
             </div>
-            
+
             { (!modules?.manual_mode || templateSchedule) && (
               <div className={classes.table__content__data}>
                 <RowDefaultTimeContent
@@ -1122,7 +1122,7 @@ export default forwardRef(({
           )
           }
         </>
-      { (!modules?.manual_mode || templateSchedule) && 
+      { (!modules?.manual_mode || templateSchedule) &&
         (<Footer
           timesPanel={timesPanelFull}
           daysOfWeek={daysOfWeek[currentWeek]}

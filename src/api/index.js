@@ -14,6 +14,7 @@ const request = async (url, method, params) => {
         'Content-Type': 'application/json',
       },
       ...(method !== 'GET' ? {body: JSON.stringify(params)} : null),
+      signal: AbortSignal.timeout(3000),
     },
   ).catch(err => {
     console.log('REQUEST ERROR', err)

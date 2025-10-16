@@ -406,7 +406,7 @@ const MyEmployeesSection = ({ companyId }) => {
                 </>
             : <div className={styles.empty}>
               <TableIcon />
-              {t('Select any entry to get a detailed editable info')}
+              {t('Please select the policy type first in order to see the assigned employees for further review or edits.')}
             </div>
         }
       </div>
