@@ -4,7 +4,7 @@ import styles from "./Notifications.module.scss";
 import { useTranslation } from "react-i18next";
 import classnames from "classnames";
 import EventsIcon from '../../Icons/Events';
-import { updateEventsCounter } from '../../../store/auth/actions';
+import { updateEventsCounter, updateTimeOffCounter } from '../../../store/auth/actions';
 import TimeOffIcon from '../../Icons/TimeOff';
 import { useParams } from "react-router-dom";
 import ScheduleIcon from '../../Icons/Schedule';
@@ -208,6 +208,9 @@ const handleNotificationAction = (notificationType, data, dispatch) => {
       break;
     case 'events_counter':
       dispatch(updateEventsCounter(data.count));
+      break;
+    case 'timeoff_counter':
+      dispatch(updateTimeOffCounter(data.count));
       break;
     case 'new_event':
       // For event notifications, refresh schedule or events data

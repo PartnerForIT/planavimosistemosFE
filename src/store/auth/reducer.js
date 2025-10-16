@@ -2,7 +2,7 @@
 import { success, error } from 'redux-saga-requests';
 import {
   LOGIN,
-  LOGIN_CHECK, REFRESH_TOKEN, UPDATE_EVENTS_COUNTER,
+  LOGIN_CHECK, REFRESH_TOKEN, UPDATE_EVENTS_COUNTER, UPDATE_TIMEOFF_COUNTER,
 } from './types';
 
 const initialState = {
@@ -65,6 +65,15 @@ export const reducer = (state = initialState, action) => {
         user: state.user ? {
           ...state.user,
           events_counter: action.payload
+        } : null,
+      };
+    
+    case UPDATE_TIMEOFF_COUNTER:
+      return {
+        ...state,
+        user: state.user ? {
+          ...state.user,
+          timeoff_counter: action.payload
         } : null,
       };
 
