@@ -54,8 +54,6 @@ const RequestBehalf = forwardRef(({
     'MM.DD.YY': 'MM.DD.yyyy',
   });
 
-  console.log('formatDate', formatDate)
-
   useEffect(() => {
     if (activeTimeOff) {
       setSelectedTimeOff(activeTimeOff);
