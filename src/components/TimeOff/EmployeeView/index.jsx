@@ -35,8 +35,6 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
 
   const currentPolicy = policies.find(({ id }) => id === policyId) || {}
 
-  console.log(currentPolicy)
-
   const policiesMap = policies.reduce((acc, policy) => ({
     ...acc,
     [policy.id]: policy,
@@ -116,7 +114,7 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         {
           employeeId && !isMe || view === 'activity'
             ? <div className={styles.breadcrumps}>
-                <div className={styles.backButton} onClick={() => history.goBack()} data-tooltip-html={t("Back")} data-tooltip-id="note">
+                <div className={styles.backButton} onClick={() => history.goBack()} data-tooltip-html={t("Back")} data-tooltip-id="back">
                   <TitleBackIcon />
                 </div>
                 { currentPolicy?.name } / { employee?.name } {view === 'activity' ? ` / ${t('Balance activity')}` : '' }
@@ -447,6 +445,12 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
       <ReactTooltip
         id='note'
         effect='solid'
+        className={styles.tooltip}
+      />
+      <ReactTooltip
+        id='back'
+        effect='solid'
+        style={{backgroundColor: '#000', color: '#fff'}}
         place='top'
         className={styles.tooltip}
       />

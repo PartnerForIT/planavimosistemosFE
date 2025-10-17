@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import cn from 'classnames'
 import { Tooltip } from 'react-tooltip'
+import Scrollbar from 'react-scrollbars-custom'
 
 import styles from './styles.module.scss'
 
@@ -30,7 +31,26 @@ const Table = ({data, columns: initialColumns, renderCell, renderCellHeader}) =>
 
   return (
     <div className={styles.tableContainer}>
-      <div className={styles.table}>
+      <Scrollbar
+        trackXProps={{
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackX}
+            />
+          ),
+        }}
+        trackYProps={{
+          renderer: ({ elementRef, ...restProps }) => (
+            <span
+              {...restProps}
+              ref={elementRef}
+              className={styles.scrollbarTrackY}
+            />
+          ),
+        }}
+        className={styles.table}>
         <div className={styles.content}>
           <div className={cn(styles.header, styles.row)} style={{gridTemplateColumns: generateGrid()}}>
             {
@@ -81,7 +101,7 @@ const Table = ({data, columns: initialColumns, renderCell, renderCellHeader}) =>
             }
           </div>
         </div>
-      </div>
+      </Scrollbar>
       <div className={styles.toolbar}>
         <div className={styles.settingsButton} data-tooltip-id="table_tootip">
           <CogwheelIcon />
