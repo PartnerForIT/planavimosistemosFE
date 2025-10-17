@@ -16,6 +16,7 @@ import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 import PolicySymbol from '../PolicySymbol'
 import DescriptionIcon from '../../Icons/DescriptionIcon'
 import EmployeeActivity from '../EmployeeActivity'
+import TitleBackIcon from '../../Icons/TitleBackIcon'
 
 import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest, getPolicyEmployee, removePolicyActivity, updatePolicyActivity } from '../../../api'
 
@@ -109,6 +110,18 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
 
   return (
     <div className={styles.container}>
+      <div>
+        {
+          employeeId && !isMe || view === 'activity'
+            ? <div className={styles.breadcrumps}>
+                <div className={styles.backButton} onClick={() => history.goBack()}>
+                  <TitleBackIcon />
+                </div>
+                { currentPolicy?.name } / { employee?.name } {view === 'activity' ? ` / ${t('Balance activity')}` : '' }
+              </div>
+            : null
+        }
+      </div>
       {
         (view => {
           switch (view) {

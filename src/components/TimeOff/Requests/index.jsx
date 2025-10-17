@@ -4,7 +4,6 @@ import cn from 'classnames'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
-import RequestBehalf from '../../Core/Dialog/RequestBehalf'
 
 import styles from './styles.module.scss'
 
@@ -30,11 +29,16 @@ import Progress from '../../Core/Progress'
 import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 import InfoIcon from '../../Icons/InfoIcon'
 import CheckboxIcon from '../../Icons/CheckboxIcon'
-import TriangleIcon from '../../Icons/TriangleIcon'
-import RequestTableRow from '../RequestTableRow'
-import PendingIcon from '../../Icons/PendingIcon';
-import ApprovedIcon from '../../Icons/ApprovedIcon';
-import SuspendedIcon from '../../Icons/SuspendedIcon';
+import RequestBehalf from '../../Core/Dialog/RequestBehalf'
+import Table from '../Table'
+import PolicySymbol from '../PolicySymbol'
+import DescriptionIcon from '../../Icons/DescriptionIcon'
+import EditIconFixedFill from '../../Icons/EditIconFixedFill'
+import CheckIcon from '../../Icons/CheckIcon'
+import RejectIcon from '../../Icons/RejectIcon'
+import PendingIcon from '../../Icons/PendingIcon'
+import ApprovedIcon from '../../Icons/ApprovedIcon'
+import SuspendedIcon from '../../Icons/SuspendedIcon'
 
 const moment = extendMoment(Moment)
 
@@ -69,11 +73,6 @@ const filterRequests = (request, query) => {
   const q = query.toLowerCase()
   if (request.employee.title.toLowerCase().includes(q)) return true
   if (request.policy.name.toLowerCase().includes(q)) return true
-  if (request.employee.groups?.toLowerCase().includes(q)) return true
-  if (request.employee.subgroups?.toLowerCase().includes(q)) return true
-  if (request.employee.place?.toLowerCase().includes(q)) return true
-  if (request.approver_1_name?.toLowerCase().includes(q)) return true
-  if (request.approver_2_name?.toLowerCase().includes(q)) return true
   return false
 }
 
@@ -112,6 +111,22 @@ const TimneOffRequests = ({companyId}) => {
 
   const isCheckedAll = timeOffRequests.length > 0 && timeOffRequests.every(r => r.checked)
   const checkedItems = timeOffRequests.filter(r => r.checked)
+
+  const columns = [
+    { label: '', accessor: 'checkbox', className: styles.center },
+    { label: t('Action'), accessor: 'action', className: styles.actions },
+    { label: t('Status'), accessor: 'status' },
+    { label: t('Employee'), accessor: 'employee.title' },
+    { label: t('Request type'), accessor: 'policy.name', className: styles.policy },
+    { label: t('Days'), accessor: 'totalRestDays' },
+    { label: t('When'), accessor: 'from', width: 200 },
+    { label: t('Requested on'), accessor: 'created_at' },
+    { label: t('Group'), accessor: 'groups' },
+    { label: t('Sub group'), accessor: 'subgroups' },
+    { label: t('Place'), accessor: 'employee.place' },
+    { label: t('1st approver'), accessor: 'approver_1_name' },
+    { label: t('2nd approver'), accessor: 'approver_2_name' },
+  ]
   
   useEffect(() => {
     init()
@@ -278,6 +293,93 @@ const TimneOffRequests = ({companyId}) => {
     }))
   }
 
+  const renderCellHeader = (props) => {
+    switch (props.accessor) {
+      case 'checkbox':
+        return (
+          <StyledCheckbox
+            id='all'
+            checked={isCheckedAll}
+            onChange={handleToggleAll} />
+        )
+      case 'status':
+        return (
+          <div className={styles.statusHeader}>
+            {props.label}
+            <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('pending')})} onClick={handleFilterStatus('pending')}>
+              <PendingIcon />
+            </div>
+            <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('approved')})} onClick={handleFilterStatus('approved')}>
+              <ApprovedIcon />
+            </div>
+            <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('rejected')})} onClick={handleFilterStatus('rejected')}>
+              <SuspendedIcon />
+            </div>
+          </div>
+        )
+      default:
+        return props.label
+    }
+  }
+
+  const renderCell = (value, request, col) => {
+    switch (col.accessor) {
+      case 'checkbox':
+        return (
+          <StyledCheckbox
+            id={request.id}
+            checked={request.checked}
+            onChange={handleSelect(request)} />
+        )
+      case 'action':
+        return (
+          <>
+          <div data-tooltip-html={t("Edit")} data-tooltip-id="note" className={styles.icon} onClick={() => handleEdit(request)}>
+            <EditIconFixedFill />
+          </div>
+          { request.status !== 'approved' && (
+            <div data-tooltip-html={t("Approve")} data-tooltip-id="note" className={cn(styles.icon, styles.approve)} onClick={() => handleChangeRequestStatus(request, 'approved', [request.employee_id])}>
+              <CheckIcon />
+            </div>
+          )}
+          { request.status !== 'rejected' && (
+            <div data-tooltip-html={t("Reject")} data-tooltip-id="note" className={cn(styles.icon, styles.reject)} onClick={() => handleChangeRequestStatus(request, 'rejected', [request.employee_id])}>
+              <RejectIcon />
+            </div>
+          )}
+          </>
+        )
+      case 'status':
+        return (
+          <div className={cn(styles.status, styles[request.status])}>
+            { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
+          </div>
+        )
+      case 'policy.name':
+        return (
+          <>
+            <PolicySymbol symbol={request.policy.symbol} color={request.policy.color} />
+            {request.policy.name}
+            {
+              request.note
+                ? <div className={styles.note} data-tooltip-html={request.note} data-tooltip-id='note'>
+                    <DescriptionIcon width={12} height={12} className={styles.noteIcon} />
+                  </div>
+                : null
+            }
+          </>
+        )
+      case 'from':
+        return `${request.from} - ${request.to}`
+      default:
+        return value
+    }
+  }
+
+  const filteredSections = Object.entries(sections).map(([section, requests]) => {
+    return [section, requests.filter(r => filterRequests(r, query) && filterStatuses(r, statuses))]
+  }).filter(([_, requests]) => requests.length)
+
   return (
     <div className={styles.container}>
       <div className={styles.screen}>
@@ -311,71 +413,11 @@ const TimneOffRequests = ({companyId}) => {
             onChange={data => handleChangeFilter('employees', data)}
             width='auto' />
         </div>
-        <div className={styles.table}>
-          <div className={styles.content}>
-            <div className={cn(styles.header, styles.row)}>
-              <div className={cn(styles.cell, styles.center)}>
-                <StyledCheckbox
-                  id='all'
-                  checked={isCheckedAll}
-                  onChange={handleToggleAll} />
-              </div>
-              <div className={styles.cell}>{t('Action')}</div>
-              <div className={cn(styles.cell, styles.status)}>
-                {t('Status')}
-                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('pending')})} onClick={handleFilterStatus('pending')}>
-                  <PendingIcon />
-                </div>
-                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('approved')})} onClick={handleFilterStatus('approved')}>
-                  <ApprovedIcon />
-                </div>
-                <div className={cn(styles.statusButton, {[styles.active]: statuses.includes('rejected')})} onClick={handleFilterStatus('rejected')}>
-                  <SuspendedIcon />
-                </div>
-              </div>
-              <div className={styles.cell}>{t('Employee')}</div>
-              <div className={styles.cell}>{t('Request type')}</div>
-              <div className={styles.cell}>{t('Days')}</div>
-              <div className={styles.cell}>{t('When')}</div>
-              <div className={styles.cell}>{t('Requested on')}</div>
-              <div className={styles.cell}>{t('Group')}</div>
-              <div className={styles.cell}>{t('Sub group')}</div>
-              <div className={styles.cell}>{t('Place')}</div>
-              <div className={styles.cell}>{t('1st approver')}</div>
-              <div className={styles.cell}>{t('2nd approver')}</div>
-            </div>
-            <div className={styles.body}>
-              {
-                Object.entries(sections).filter(([_, requests]) => {
-                  return requests.some(r => filterRequests(r, query) && filterStatuses(r, statuses))
-                }).map(([section, requests]) => {
-                  const isExpanded = expandedSections.includes(section)
-                  const isPendingSection = section === 'Pending'
-                  return (
-                    <div key={section} className={cn(styles.section, {[styles.active]: isExpanded})}>
-                      <div className={cn(styles.sectionHeader, {[styles.pending]: isPendingSection})} onClick={() => handleExpand(section, isExpanded)}>
-                        <TriangleIcon className={cn(styles.icon)} />
-                        {section} ({requests.length})
-                      </div>
-                      {
-                        isExpanded && requests.filter(r => filterRequests(r, query) && filterStatuses(r, statuses)).map(request => {
-                          return (
-                            <RequestTableRow
-                              key={request.id}
-                              request={request}
-                              onSelect={handleSelect}
-                              onEdit={handleEdit}
-                              onChangeRequestStatus={handleChangeRequestStatus} />
-                          )
-                        })
-                      }
-                    </div>
-                  )
-                })
-              }
-            </div>
-          </div>
-        </div>
+        <Table
+          columns={columns}
+          renderCellHeader={renderCellHeader}
+          renderCell={renderCell}
+          data={filteredSections} />
       </div>
       <div className={cn(styles.sidebarContainer, {[styles.active]: timeOffRequests.some(r => r.checked)})}>
         <div className={styles.header}>

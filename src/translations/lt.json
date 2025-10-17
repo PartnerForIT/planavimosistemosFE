@@ -1469,5 +1469,9 @@
         "Can adjust time used (My Employees)": "Gali koreguoti panaudotą laiką (Mano darbuotojai)",
         "Can see private requests": "Gali matyti privačias politikas",
         "Can edit Time Off settings": "Koreguoti Atostogų nustatymus",
+<<<<<<< HEAD
         "Entry was successfully deleted": "Įrašas buvo sėkmingai pašalintas"
+=======
+        "Please select the policy type first in order to see the assigned employees for further review or edits.": "Prašome pasirinkti neatvykimų politiką, kad galėtumėte pamatyti darbuotojų informaciją ir juos koreguoti."
+>>>>>>> 55cbadff6fa9a618fc9c46716f61f4377cf62d38
 }
