@@ -42,6 +42,15 @@ const permissionsConfig = [
   },
 ];
 
+const convertFormat = (companyFormat) => {
+  const keyMap = {
+    'DD': 'DD',
+    'MM': 'MM',
+    'YY': 'YYYY',
+  }
+  return companyFormat.split('.').map(k => keyMap[k] || k).join('-')
+}
+
 function EmployeeManagement({
   goEmployeeActivity,
   onUnassingPolicyEmployees,
@@ -57,6 +66,7 @@ function EmployeeManagement({
   const { t } = useTranslation();
   const permissions = usePermissions(permissionsConfig);
   const workTime = useSelector(settingWorkTime);
+  const companyData = useSelector(state => state.company.companyInfo);
 
   const [requestBehalfOpen, setRequestBehalfOpen] = useState(false);
   const [requestBehalfEditOpen, setRequestBehalfEditOpen] = useState(null);
@@ -192,10 +202,10 @@ function EmployeeManagement({
                               {totalWorkingDays}
                             </div>
                             <div className={classes.upcomingRequestsCol}>
-                              {request.from} - {request.to}
+                              {moment(request.from).format(convertFormat(companyData.date_format))} - {moment(request.to).format(convertFormat(companyData.date_format))}
                             </div>
                             <div className={classes.upcomingRequestsCol}>
-                              {request.created_at}
+                              {moment(request.created_at).format(convertFormat(companyData.date_format))}
                             </div>
                             <div className={classes.upcomingRequestsCol}>
                               <div className={classsnames(classes.upcomingRequestsStatus, {

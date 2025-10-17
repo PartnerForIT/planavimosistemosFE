@@ -332,7 +332,7 @@ const RequestBehalf = forwardRef(({
                     label={t('Start date')}
                     value={values.from}
                     onChange={(date) => handleChange({target: {name: 'from', value: date.format('YYYY-MM-DD')}})}
-                    format='MMM, DD, YYYY'
+                    format={formatDate} //'MMM, DD, YYYY'
                     name="from"
                   />
                 </MuiPickersUtilsProvider>
@@ -348,7 +348,7 @@ const RequestBehalf = forwardRef(({
                     label={t('To date')}
                     value={values.to}
                     onChange={(date) => handleChange({target: {name: 'to', value: date.format('YYYY-MM-DD')}})}
-                    format='MMM, DD, YYYY'
+                    format={formatDate} //'MMM, DD, YYYY'
                     name="to"
                   />
                 </MuiPickersUtilsProvider>

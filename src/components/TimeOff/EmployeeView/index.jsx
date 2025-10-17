@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { useHistory } from 'react-router-dom'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
+import { useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 
@@ -22,9 +23,20 @@ import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createR
 
 const moment = extendMoment(Moment)
 
+const convertFormat = (companyFormat) => {
+  const keyMap = {
+    'DD': 'DD',
+    'MM': 'MM',
+    'YY': 'YYYY',
+  }
+  return companyFormat.split('.').map(k => keyMap[k] || k).join('-')
+}
+
 const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, view, employee, timeOffs, holidays }) => {
   const { t } = useTranslation()
   const history = useHistory()
+  const companyData = useSelector(state => state.company.companyInfo)
+
 
   const requestFormRef = useRef(null)
 
@@ -233,10 +245,10 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
                                     {totalWorkingDays}
                                   </div>
                                   <div className={styles.upcomingRequestsCol}>
-                                    {request.from} - {request.to}
+                                    {moment(request.from).format(convertFormat(companyData.date_format))} - {moment(request.to).format(convertFormat(companyData.date_format))}
                                   </div>
                                   <div className={styles.upcomingRequestsCol}>
-                                    {request.created_at}
+                                    {moment(request.created_at).format(convertFormat(companyData.date_format))}
                                   </div>
                                   <div className={styles.upcomingRequestsCol}>
                                     <div className={cn(styles.upcomingRequestsStatus, {
