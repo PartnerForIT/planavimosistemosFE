@@ -54,6 +54,8 @@ const RequestBehalf = forwardRef(({
     'MM.DD.YY': 'MM.DD.yyyy',
   });
 
+  console.log('formatDate', formatDate)
+
   useEffect(() => {
     if (activeTimeOff) {
       setSelectedTimeOff(activeTimeOff);
@@ -332,7 +334,7 @@ const RequestBehalf = forwardRef(({
                     label={t('Start date')}
                     value={values.from}
                     onChange={(date) => handleChange({target: {name: 'from', value: date.format('YYYY-MM-DD')}})}
-                    format='MMM, DD, YYYY'
+                    format={formatDate} //'MMM, DD, YYYY'
                     name="from"
                   />
                 </MuiPickersUtilsProvider>
@@ -348,7 +350,7 @@ const RequestBehalf = forwardRef(({
                     label={t('To date')}
                     value={values.to}
                     onChange={(date) => handleChange({target: {name: 'to', value: date.format('YYYY-MM-DD')}})}
-                    format='MMM, DD, YYYY'
+                    format={formatDate} //'MMM, DD, YYYY'
                     name="to"
                   />
                 </MuiPickersUtilsProvider>

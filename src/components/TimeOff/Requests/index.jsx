@@ -42,6 +42,15 @@ import SuspendedIcon from '../../Icons/SuspendedIcon'
 
 const moment = extendMoment(Moment)
 
+const convertFormat = (companyFormat) => {
+  const keyMap = {
+    'DD': 'DD',
+    'MM': 'MM',
+    'YY': 'YYYY',
+  }
+  return companyFormat.split('.').map(k => keyMap[k] || k).join('-')
+}
+
 const generateSections = (requests, keyFormat) => {
   const keyMap = {
     'DD': 'DD',
@@ -87,7 +96,6 @@ const TimneOffRequests = ({companyId}) => {
 
   const [loading, setLoading] = useState(true)
   const [companyData, setCompanyData] = useState({})
-  const [expandedSections, setExpandedSections] = useState([])
   const [query, setQuery] = useState('')
   const [{employees, policies, places, statuses, filterDate}, setFilters] = useState({
     filterDate: {
@@ -264,14 +272,6 @@ const TimneOffRequests = ({companyId}) => {
     setSections(generateSections(timeOffRequests.map(r => r.id === request.id ? {...r, checked: !r.checked} : r), companyData.date_format))
   }
 
-  const handleExpand = (section, isExpanded) => {
-    if (isExpanded) {
-      setExpandedSections(expandedSections.filter(s => s !== section))
-      return
-    }
-    setExpandedSections([...expandedSections, section])
-  }
-
   const handleSubmitRequest = async (data) => {
     const post = {
       ...data,
@@ -370,7 +370,11 @@ const TimneOffRequests = ({companyId}) => {
           </>
         )
       case 'from':
-        return `${request.from} - ${request.to}`
+        const formattedFrom = moment(request.from).format(convertFormat(companyData.date_format))
+        const formattedTo = moment(request.to).format(convertFormat(companyData.date_format))
+        return `${formattedFrom} - ${formattedTo}`
+      case 'created_at':
+        return moment(request.created_at).format(convertFormat(companyData.date_format))
       default:
         return value
     }
