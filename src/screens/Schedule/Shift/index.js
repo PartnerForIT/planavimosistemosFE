@@ -38,11 +38,13 @@ import usePermissions from '../../../components/Core/usePermissions';
 import { COLORS_SHIFT } from '../../../const';
 import ErrorModal from 'components/Core/Dialog/ErrorModal';
 import { companyModules } from '../../../store/company/selectors';
+import { getCompanySkills } from '../../../api';
 
 import CopyTool from './../CopyTool';
 import DatePicker from './DatePicker';
 import ButtonsField from './ButtonsField';
 import Table from './Table';
+import DemanToolForm from './DemandToolForm';
 import classes from './Shift.module.scss';
 
 const makeShiftForOptions = [
@@ -114,6 +116,10 @@ const permissionsConfig = [
   {
     name: 'hybrid_mode',
     module: 'hybrid_mode',
+  },
+  {
+    name: 'demand_tool',
+    module: 'demand_tool',
   }
 ];
 
@@ -127,7 +133,8 @@ export default () => {
   const [colorShift, setColorShift] = useState(COLORS_SHIFT.bright[0]);
   const [selectedPlace, setSelectedPlace] = useState('');
   const [shiftName, setShiftName] = useState('');
-  const [templateSchedule, setTemplateSchedule] = useState(false);
+  const [templateSchedule, setTemplateSchedule] = useState(true); // TODO: default true, need to change to false
+  const [useDemandTool, setUseDemandTool] = useState(true); // TODO: default true, need to change to false
   const [excludeHolidays, setExcludeHolidays] = useState(false);
   const [minusHour, setMinusHour] = useState(false);
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
@@ -149,6 +156,8 @@ export default () => {
   //const copyToolHistory = useSelector(copyToolHistorySelector);
   const [copyTool,setCopyTool] = useState(false)
   const [copyToolTime,setCopyToolTime] = useState({})
+  const [demandToolData, setDemandToolData] = useState({0: []})
+  const [skills, setSkills] = useState([])
 
   const isCreate = useMemo(() => {
     const pathnameArr = pathname.split('/');
@@ -290,6 +299,17 @@ export default () => {
     // eslint-disable-next-line
   }, [shift]);
 
+  const selectedDemandData = Object.entries(demandToolData).reduce((acc, [weekIndex, weekData]) => {
+    const selectedDay = weekData.find(day => day.checked)
+    if (selectedDay) {
+      acc = {
+        weekIndex: Number(weekIndex),
+        ...selectedDay
+      }
+    }
+    return acc
+  }, null)
+
   const handleChangePlace = (event) => {
     setSelectedPlace(event.target.value);
   };
@@ -302,6 +322,9 @@ export default () => {
   const handleChangeTemplateSchedule = (checked) => {
     setTemplateSchedule(checked); 
   };
+  const handleChangeDemandTool = (checked) => {
+    setUseDemandTool(checked);
+  }
   const handleChangeExcludeHolidays = (checked) => {
     setExcludeHolidays(checked);
   };
@@ -505,9 +528,14 @@ export default () => {
   }
 
   useEffect(() => {
+    getCompanySkills(companyId).then(res => {
+      if (Array.isArray(res?.skills)) {
+        setSkills(res.skills)
+      }
+    })
 
     if (history.action === 'POP') {
-      window.location.href = `/${companyId}/schedule`;
+      // window.location.href = `/${companyId}/schedule`; // TODO: remove this line after testing
     }
 
     dispatch(getPlaces(companyId)).then(({ data }) => {
@@ -589,10 +617,34 @@ export default () => {
           3: defaultWorkingTime,
         };
 
-        if (tableRef?.current) {
-          tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
+        const workingDaysMap = days.reduce((acc, day) => ({
+          ...acc,
+          [day.day]: {
+            start: day.start,
+            end: day.finish
+          },
+        }), {})
+
+        const workingDays = weekMock.map((day) => ({
+          ...day,
+          disabled: !workingDaysMap[day.id],
+          defaultTimes: workingDaysMap[day.id],
+          jobTypes: {},
+        }))
+
+        const demandToolData = {
+          0: workingDays,
+          1: workingDays,
+          2: workingDays,
+          3: workingDays,
         }
 
+        setDemandToolData(demandToolData);
+
+        if (tableRef?.current) {
+          tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
+          
+        }
         handleChangeStartDay(moment());
       } else if (shift) {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
@@ -653,12 +705,59 @@ export default () => {
     // eslint-disable-next-line
   }, [workTime, shift]);
 
+  const updateDemandDayData = (currentWeek, dayData) => {
+    return Object.entries(demandToolData).reduce((acc, [weekIndex, weekData]) => {
+      if (Number(weekIndex) === currentWeek) {
+        const updatedWeekData = weekData.map(day => day.id === dayData.id ? dayData : day)
+        return {
+          ...acc,
+          [currentWeek]: updatedWeekData,
+        }
+      }
+      return acc
+    }, demandToolData)
+  }
+
+  const handleSelectDemandToolDay = (currentWeek, item, value) => {
+    const updated = Object.entries(demandToolData).reduce((acc, [weekIndex, weekData]) => {
+      return {
+        ...acc,
+        [weekIndex]: weekData.map(day => ({...day, checked: (item.id === day.id && Number(weekIndex) === currentWeek) ? value : false})),
+      }
+    }, demandToolData)
+
+    setDemandToolData(updated)
+  }
+
+  const handleChangeDemandShifts = (weekIndex, data) => {
+    const updated = updateDemandDayData(weekIndex, data)
+    setDemandToolData(updated)
+  }
+
   return (
     <MainLayout>
       <div className={classes.header}>
         <span className={classes.header__title}>
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
+        {
+          permissions.demand_tool || true // TODO: remove this true when permissions will work
+            ? <div className={classes.checkButton}>
+                <Label text={t('Use demand tool')} />
+                <Switch
+                  onChange={handleChangeDemandTool}
+                  offColor='#808F94'
+                  onColor='#0085FF'
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  name='demand_tool'
+                  checked={useDemandTool}
+                  height={21}
+                  width={40}
+                />
+              </div>
+            : null
+        }
         {
           (permissions.hybrid_mode && isCreate) ? (
             <div className={classes.checkButton}>
@@ -691,6 +790,7 @@ export default () => {
           value={selectedPlace}
           onChange={handleChangePlace}
           options={places}
+          className={classes.placeSelect}
           valueKey='id'
           labelKey='name'
         />
@@ -783,6 +883,9 @@ export default () => {
             handleAddHistory={handleAddHistory}
             copyTool={copyTool}
             templateSchedule={templateSchedule}
+            useDemandTool={useDemandTool}
+            demandToolData={demandToolData}
+            onSelectDemandToolDay={handleSelectDemandToolDay}
           />
         )
       }
@@ -827,6 +930,14 @@ export default () => {
           />
         )
       }
+      <DemanToolForm
+        data={selectedDemandData}
+        weeksCount={Object.keys(demandToolData).length}
+        jobTypes={allJobTypes}
+        skills={skills}
+        active={Boolean(selectedDemandData)}
+        onClose={handleSelectDemandToolDay}
+        onChange={handleChangeDemandShifts} />
     </MainLayout>
   );
 };

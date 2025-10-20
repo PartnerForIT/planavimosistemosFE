@@ -150,3 +150,8 @@ export const scheduleChangesLog = async (companyId, data) => {
   const res = await request(`company/${companyId}/shift/changes-log`, 'POST', data)
   return res
 }
+
+export const getCompanySkills = async (companyId) => {
+  const res = await request(`company/${companyId}/specialities`, 'GET')
+  return res
+}
