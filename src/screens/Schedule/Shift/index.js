@@ -460,6 +460,19 @@ export default () => {
       }
     });
 
+    const demandToolPlainData = Object.entries(demandToolData).filter(([weekIndex]) => weekIndex < numberOfWeeks).reduce((acc, [weekIndex, days]) => {
+      return {
+        ...acc,
+        [weekIndex]: days.filter(d => d.active).map(d => {
+          return {
+            id: d.id,
+            label: d.label,
+            jobTypes: d.jobTypes,
+          }
+        })
+      }
+    }, {})
+
     const data = {
       shift_info: {
         name: shiftName || values.shiftName,
@@ -478,6 +491,7 @@ export default () => {
       events: submitEvents,
       emptyEvents: emptyEvents,
       resources: dataResources,
+      demand_tools: demandToolPlainData,
     };
 
     const existJob = data.resources.find(i => i.job_type_id);
