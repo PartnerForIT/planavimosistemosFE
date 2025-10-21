@@ -549,7 +549,7 @@ export default () => {
     })
 
     if (history.action === 'POP') {
-      // window.location.href = `/${companyId}/schedule`; // TODO: remove this line after testing
+      window.location.href = `/${companyId}/schedule`;
     }
 
     dispatch(getPlaces(companyId)).then(({ data }) => {
