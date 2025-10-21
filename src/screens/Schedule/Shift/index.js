@@ -761,7 +761,7 @@ export default () => {
     }
   }, {})
 
-  console.log('numberOfWeeks -> ', numberOfWeeks)
+  console.log('demandToolPlainData -> ', demandToolPlainData)
 
   return (
     <MainLayout>
