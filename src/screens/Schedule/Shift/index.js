@@ -627,7 +627,6 @@ export default () => {
 
         const workingDays = weekMock.map((day) => ({
           ...day,
-          disabled: !workingDaysMap[day.id],
           defaultTimes: workingDaysMap[day.id],
           jobTypes: {},
         }))
@@ -733,6 +732,36 @@ export default () => {
     const updated = updateDemandDayData(weekIndex, data)
     setDemandToolData(updated)
   }
+
+  const handleChangeWeekDays = (weekDays) => {
+    const updated = Object.entries(demandToolData).reduce((acc, [weekIndex, weekData]) => {
+      const updatedWeekData = weekData.map((day, j) => ({
+        ...day,
+        active: weekDays[weekIndex][j],
+      }))
+      return {
+        ...acc,
+        [weekIndex]: updatedWeekData,
+      }
+    }, demandToolData)
+    setDemandToolData(updated)
+  }
+
+  
+  const demandToolPlainData = Object.entries(demandToolData).filter(([weekIndex]) => weekIndex < numberOfWeeks).reduce((acc, [weekIndex, days]) => {
+    return {
+      ...acc,
+      [weekIndex]: days.filter(d => d.active).map(d => {
+        return {
+          id: d.id,
+          label: d.label,
+          jobTypes: d.jobTypes,
+        }
+      })
+    }
+  }, {})
+
+  console.log('numberOfWeeks -> ', numberOfWeeks)
 
   return (
     <MainLayout>
@@ -886,6 +915,7 @@ export default () => {
             useDemandTool={useDemandTool}
             demandToolData={demandToolData}
             onSelectDemandToolDay={handleSelectDemandToolDay}
+            onChangeWeekDays={handleChangeWeekDays}
           />
         )
       }
@@ -931,11 +961,11 @@ export default () => {
         )
       }
       <DemanToolForm
+        active={Boolean(selectedDemandData)}
         data={selectedDemandData}
-        weeksCount={Object.keys(demandToolData).length}
+        weeksCount={numberOfWeeks}
         jobTypes={allJobTypes}
         skills={skills}
-        active={Boolean(selectedDemandData)}
         onClose={handleSelectDemandToolDay}
         onChange={handleChangeDemandShifts} />
     </MainLayout>

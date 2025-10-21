@@ -151,7 +151,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
   }
 
   const handleChangeSkills = (skills) => {
-    const updatedSkills = {...selectedSkills, ...skills.reduce((acc, skill) => ({...acc, [skill.id]: skill}), {})}
+    const updatedSkills = {...selectedSkills, ...skills.reduce((acc, skill) => ({...acc, [skill.id]: {id: skill.id, name: skill.name}}), {})}
     const updatedJobtypes = Object.entries(data.jobTypes).reduce((acc, [jobTypeId, shifts]) => {
       if (jobTypeId === selectedData.jobTypeId) {
         return {

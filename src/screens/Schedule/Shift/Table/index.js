@@ -5,6 +5,7 @@ import React, {
   useRef,
   useImperativeHandle,
   forwardRef,
+  useEffect,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
@@ -339,7 +340,6 @@ const RowDefaultTimeContent = ({
 };
 
 const RowDeamndToolContent = ({items, daysOfWeek, onSelect}) => {
-  
   return (
     <div className={classnames(classes.table__content__data__row, classes.table__content__data__row_demandTool)}>
       {
@@ -348,7 +348,7 @@ const RowDeamndToolContent = ({items, daysOfWeek, onSelect}) => {
           return (
             <div key={i} className={classes.table__content__data__row__cell}>
               {
-                !item.disabled && daysOfWeek[i].checked
+                daysOfWeek[i].checked && !daysOfWeek[i].disabled
                   ? <div className={classnames(classes.demandToolButton, {[classes.active]: item.checked})} onClick={() => onSelect(item)}>
                       { shiftsCount }
                     </div>
@@ -381,6 +381,7 @@ export default forwardRef(({
   useDemandTool,
   demandToolData,
   onSelectDemandToolDay,
+  onChangeWeekDays,
 }, ref) => {
   const [data, setData] = useState(initialValues.data);
   const [resources, setResources] = useState(initialValues.resources);
@@ -390,6 +391,21 @@ export default forwardRef(({
   const contentRef = useRef(null);
   const modules = useSelector(companyModules);
   const copyToolHistory = useSelector(copyToolHistorySelector);
+
+  useEffect(() => {
+    const temp = Object.entries(daysOfWeek).reduce((acc, [weekIndex, days]) => {
+      return {
+        ...acc,
+        [weekIndex]: days.reduce((acc1, day, index) => ({
+          ...acc1,
+          [index]: day.checked && !day.disabled,
+        }), {})
+      }
+    }, {})
+    if (onChangeWeekDays) {
+      onChangeWeekDays(temp)
+    }
+  }, [daysOfWeek])
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
