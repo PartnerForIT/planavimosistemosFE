@@ -44,7 +44,7 @@ const options = [{
 
 const TimeOffScreen = () => {
   const { id: companyId } = useParams()
-  const { tab: activeTab } = useQuery(['tab:employees'])
+  const { tab: activeTab } = useQuery(['tab:time_off'])
   const history = useHistory()
   const permissions = usePermissions(permissionsConfig)
   const user = useSelector(userSelector)

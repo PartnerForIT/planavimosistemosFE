@@ -18,6 +18,9 @@ import PolicySymbol from '../PolicySymbol'
 import DescriptionIcon from '../../Icons/DescriptionIcon'
 import EmployeeActivity from '../EmployeeActivity'
 import TitleBackIcon from '../../Icons/TitleBackIcon'
+import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar'
+import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar'
+import avatar from '../../Icons/avatar.png'
 
 import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest, getPolicyEmployee, removePolicyActivity, updatePolicyActivity } from '../../../api'
 
@@ -36,7 +39,6 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
   const { t } = useTranslation()
   const history = useHistory()
   const companyData = useSelector(state => state.company.companyInfo)
-
 
   const requestFormRef = useRef(null)
 
@@ -118,6 +120,40 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
   const onEditActivity = async (activity, data) => {
     await updatePolicyActivity(companyId, activity.time_off_id, activity.policy_id, activity.employee_id, activity.id, data)
     getActivities()
+  }
+
+  const renderApproverAvatar = (request) => {
+    const { rejected_by, approver_1_name, approver_1_avatar, approver_2_name, approver_2_avatar } = request
+    const avatars = []
+    if (request.status === 'rejected' && rejected_by) {
+      avatars.push({
+        image: rejected_by === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={request.rejected_by_avatar || avatar} alt='approver' className={styles.approverAvatar} />,
+        label: rejected_by === 'Super Admin' ? t('Grownu support') : request.rejected_by_name,
+      })
+      return avatars
+    }
+    if (!approver_1_name && !approver_2_name) {
+      avatars.push({
+        image: <GrownuSystemAvatar />,
+        label: t('Grownu support'),
+      })
+      return avatars
+    }
+    if (approver_1_name) {
+      const avatar1 = {
+        image: approver_1_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_1_avatar || avatar} alt='approver1' className={styles.approverAvatar} />,
+        label: approver_1_name === 'Super Admin' ? t('Grownu support') : approver_1_name,
+      }
+      avatars.push(avatar1)
+    }
+    if (approver_2_name) {
+      const avatar2 = {
+        image: approver_2_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_2_avatar || avatar} alt='approver2' className={styles.approverAvatar} />,
+        label: approver_2_name === 'Super Admin' ? t('Grownu support') : approver_2_name,
+      }
+      avatars.push(avatar2)
+    }
+    return avatars
   }
 
   return (
@@ -250,7 +286,12 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
                                   <div className={styles.upcomingRequestsCol}>
                                     {moment(request.created_at).format(convertFormat(companyData.date_format))}
                                   </div>
-                                  <div className={styles.upcomingRequestsCol}>
+                                  <div className={cn(styles.upcomingRequestsCol, styles.status)}>
+                                    { renderApproverAvatar(request).map((avatar, i) => {
+                                      return (
+                                        <div key={i} data-tooltip-html={avatar.label} data-tooltip-id='emp_name'>{avatar.image}</div>
+                                      )
+                                    }) }
                                     <div className={cn(styles.upcomingRequestsStatus, {
                                       [styles.requestStatusApproved]: request.status === 'approved',
                                       [styles.requestStatusPending]: request.status === 'pending',
@@ -465,6 +506,12 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
         style={{backgroundColor: '#000', color: '#fff'}}
         place='top'
         className={styles.tooltip}
+      />
+      <ReactTooltip
+        id='emp_name'
+        effect='solid'
+        opacity={1}
+        className={styles.tooltip_emp}
       />
     </div>
   )
