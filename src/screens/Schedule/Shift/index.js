@@ -133,8 +133,8 @@ export default () => {
   const [colorShift, setColorShift] = useState(COLORS_SHIFT.bright[0]);
   const [selectedPlace, setSelectedPlace] = useState('');
   const [shiftName, setShiftName] = useState('');
-  const [templateSchedule, setTemplateSchedule] = useState(true); // TODO: default true, need to change to false
-  const [useDemandTool, setUseDemandTool] = useState(true); // TODO: default true, need to change to false
+  const [templateSchedule, setTemplateSchedule] = useState(false);
+  const [useDemandTool, setUseDemandTool] = useState(false);
   const [excludeHolidays, setExcludeHolidays] = useState(false);
   const [minusHour, setMinusHour] = useState(false);
   const [numberOfWeeks, setNumberOfWeeks] = useState(1);
@@ -584,11 +584,33 @@ export default () => {
       setNumberOfWeeks(initialValues.shift_info.week_count);
     }
   }, [initialValues]);
+
   useEffect(() => {
     if (workTime.work_time.work_days) {
-      if (isCreate) {
-        const days = workTime.work_time.work_days?.days ?? [];
+      const days = workTime.work_time.work_days?.days ?? [];
 
+      const workingDaysMap = days.reduce((acc, day) => ({
+        ...acc,
+        [day.day]: {
+          start: day.start,
+          end: day.finish
+        },
+      }), {})
+
+      const workingDays = weekMock.map((day) => ({
+        ...day,
+        defaultTimes: workingDaysMap[day.id],
+        jobTypes: {},
+      }))
+
+      const demandToolData = {
+        0: workingDays,
+        1: workingDays,
+        2: workingDays,
+        3: workingDays,
+      }
+
+      if (isCreate) {
         // это создание, значит тянем онли с work_time
         const week = weekMock.reduce((acc, item, index) => {
           acc[index] = days.some((itemJ) => (itemJ.day === item.id));
@@ -631,27 +653,6 @@ export default () => {
           3: defaultWorkingTime,
         };
 
-        const workingDaysMap = days.reduce((acc, day) => ({
-          ...acc,
-          [day.day]: {
-            start: day.start,
-            end: day.finish
-          },
-        }), {})
-
-        const workingDays = weekMock.map((day) => ({
-          ...day,
-          defaultTimes: workingDaysMap[day.id],
-          jobTypes: {},
-        }))
-
-        const demandToolData = {
-          0: workingDays,
-          1: workingDays,
-          2: workingDays,
-          3: workingDays,
-        }
-
         setDemandToolData(demandToolData);
 
         if (tableRef?.current) {
@@ -661,6 +662,7 @@ export default () => {
         handleChangeStartDay(moment());
       } else if (shift) {
         // это редактирование и шифт уже загружен, значит тянем шифта и с ворк тайми
+        
         handleChangeStartDay(moment(shift.shift_info.date_start));
         const days = workTime.work_time.work_days?.days ?? [];
 
@@ -711,6 +713,32 @@ export default () => {
           tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
           tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
         }
+        if (shift.demand_tools.length) {
+          setUseDemandTool(true)
+        }
+        const temp = shift.demand_tools.reduce((acc, item, index) => {
+          return {
+            ...acc,
+            [index]: acc[index].map(day => {
+              const foundDay = item.find(d => d.id === day.id)
+              return foundDay ? {
+                ...day,
+                jobTypes: Object.entries(foundDay.jobTypes).reduce((acc1, [jobTypeId, shifts]) => {
+                  return {
+                    ...acc1,
+                    [jobTypeId]: shifts.reduce((acc2, shift, j) => {
+                      return {
+                        ...acc2,
+                        [j]: {...shift, skills: shift.skills || {}},
+                      }
+                    }, {}),
+                  }
+                }, {}),
+              } : day
+            }),
+          }
+        }, demandToolData)
+        setDemandToolData(temp);
         // todo после ухода с экрана, нужно не забыть зачистить шифт,
         //  так как по этому условию будет подходить старый шифт
       }
@@ -762,20 +790,20 @@ export default () => {
   }
 
   
-  const demandToolPlainData = Object.entries(demandToolData).filter(([weekIndex]) => weekIndex < numberOfWeeks).reduce((acc, [weekIndex, days]) => {
-    return {
-      ...acc,
-      [weekIndex]: days.filter(d => d.active).map(d => {
-        return {
-          id: d.id,
-          label: d.label,
-          jobTypes: d.jobTypes,
-        }
-      })
-    }
-  }, {})
+  // const demandToolPlainData = Object.entries(demandToolData).filter(([weekIndex]) => weekIndex < numberOfWeeks).reduce((acc, [weekIndex, days]) => {
+  //   return {
+  //     ...acc,
+  //     [weekIndex]: days.filter(d => d.active).map(d => {
+  //       return {
+  //         id: d.id,
+  //         label: d.label,
+  //         jobTypes: d.jobTypes,
+  //       }
+  //     })
+  //   }
+  // }, {})
 
-  console.log('demandToolPlainData -> ', demandToolPlainData)
+  console.log('demandToolData -> ', demandToolData)
 
   return (
     <MainLayout>
@@ -784,7 +812,7 @@ export default () => {
           {isCreate ? t('Create New Shift') : t('Edit Shift')}
         </span>
         {
-          permissions.demand_tool || true // TODO: remove this true when permissions will work
+          permissions.demand_tool && templateSchedule
             ? <div className={classes.checkButton}>
                 <Label text={t('Use demand tool')} />
                 <Switch

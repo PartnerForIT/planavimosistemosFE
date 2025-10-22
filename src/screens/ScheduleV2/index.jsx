@@ -134,6 +134,9 @@ const handleResourceLabelClassNames = ({ resource }) => {
   if (props.employee_type === 3 || props.employee_type === 2){
     classes.push('fc-datagrid-cell-empty');
   }
+  if (props.type === 'demand_tool') {
+    classes.push('fc-datagrid-cell-demand-tool');
+  }
   return classes
 }
 
@@ -351,7 +354,7 @@ const ScheduleV2 = () => {
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false})
   const [filter, setFilter] = useState({employers: [], place: [], shiftType: []})
   const [currentStartDate, setCurrentStartDate] = useState(moment().startOf(timeline).format('YYYY-MM-DD'))
-  const [schedule, setSchedule] = useState({holidays: {}, resources: [], events: [], markers: [], timesPanel: {}, loading: true, published: false, count_changes: 0})
+  const [schedule, setSchedule] = useState({holidays: {}, resources: [], events: [], markers: [], timesPanel: {}, demand_tools: {}, loading: true, published: false, count_changes: 0})
   const [workTimes, setWorkTimes] = useState({})
   const [copyTool, setCopyTool] = useState(false)
   const [copyToolTime, setCopyToolTime] = useState({})
@@ -385,7 +388,23 @@ const ScheduleV2 = () => {
           const lastShift = upLastShift || (item.shiftId && ((children.length - 1) === index))
           const customTime = upCustomTime || item.custom_time
           const lastJobType = upLastJobType || (item.job_type_id && ((children.length - 1) === index))
-      
+          if (item.place_id && !item.employeeId) {
+            item.children = item.children.reduce((acc, shift) => {
+              if (schedule.demand_tools[shift.shiftId]) {
+                acc.push({
+                  title: t('Demand planning'),
+                  id: `demand_tool_${shift.shiftId}`,
+                  type: 'demand_tool',
+                  sort: shift.sort,
+                })
+              }
+              acc.push(shift)
+              return acc
+            }, [])
+            if (schedule.demand_tools) {
+
+            }
+          }
 
           if (item.shiftId) {
             item.count = item.count || 0;
@@ -610,11 +629,15 @@ const ScheduleV2 = () => {
         }
         return e
       })
+      let timeOffRequestsMap = {}
       const timeOffRes = await getCompanyTimeOffRequests(companyId, {start_date: formDate, view: 'monthly'})
-      const timeOffRequestsMap = timeOffRes.request_behalf.reduce((acc, req) => ({
-        ...acc,
-        [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], req] : [req]
-      }), {})
+      if (timeOffRes) {
+        timeOffRequestsMap = timeOffRes.request_behalf.reduce((acc, req) => ({
+          ...acc,
+          [req.employee_id]: acc[req.employee_id] ? [...acc[req.employee_id], req] : [req]
+        }), {})
+      }
+
       const eventsWithRequests = events.map(e => {
         const timeOffRequests = timeOffRequestsMap[e.employee_id]
         if (timeOffRequests) {
@@ -646,6 +669,7 @@ const ScheduleV2 = () => {
         timesPanel: res.timesPanel,
         published: res.published,
         count_changes: res.count_changes,
+        demand_tools: res.demand_tools,
         loading: false,
       }))
     }

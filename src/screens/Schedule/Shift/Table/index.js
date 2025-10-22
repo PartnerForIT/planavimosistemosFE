@@ -1078,15 +1078,15 @@ export default forwardRef(({
         <>
           <div className={classes.table__content} ref={contentRef}>
             <div className={classes.table__content__resources}>
-              <div className={classes.table__content__resources__cell}>
-                {
-                  useDemandTool
-                   ? <div className={classes.demandTool}>
-                      {t('Demand planning')}
+              {
+                useDemandTool
+                  ? <div className={classes.table__content__resources__cell}>
+                      <div className={classes.demandTool}>
+                        {t('Demand planning')}
+                      </div>             
                     </div>
                   : null
-                }                
-              </div>
+              }
               <div className={classes.table__content__resources__cell}>
                 <DefaultShiftTime />
               </div>

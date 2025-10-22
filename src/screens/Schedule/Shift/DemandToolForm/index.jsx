@@ -24,31 +24,37 @@ const trackYProps = {
   ),
 }
 
-const Wrapper = ({active, data, onClose, ...props}) => {
-  const containerRef = useRef()
-
-  useEffect(() => {
-    if (active) {
-      document.addEventListener('click', handleClickOutside)
-    }
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [active, data])
-
-  const handleClickOutside = (event) => {
-    if (containerRef.current && !event.target.closest('#parent')) {
-      onClose(data.weekIndex, data, false)
-    }
-  }
-
+const ChevronIcon = (props) => {
   return (
-    <div id="parent" ref={containerRef} className={cn(styles.container, {[styles.active]: active})}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={12}
+      height={20}
+      viewBox="0 0 12 20"
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke="#1685FC"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={3}
+        d="m2 2 8 8-8 8" />
+    </svg>
+  )
+}
+
+const Wrapper = ({active, data, onClose, ...props}) => {
+  return (
+    <div className={cn(styles.container, {[styles.active]: active})}>
       {
         data
           ? <DemanToolForm data={data} {...props} />
           : null
       }
+      <div className={styles.closeButton} onClick={() => onClose(data.weekIndex, data, false)}>
+        <ChevronIcon />
+      </div>
     </div>
   )
 }
@@ -217,7 +223,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
   return (
     <>
       <div className={styles.header}>
-        <div className={styles.title}>Week {data.weekIndex+1}/{weeksCount}</div>
+        <div className={styles.title}>{data.weekIndex+1}/{weeksCount}</div>
         <div className={styles.title}>{data.label}</div>
         <div className={styles.jobsCount}>
           { shiftsCount }
@@ -235,7 +241,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
             return (
               <div key={jobTypeId} className={styles.jobTypeContainer}>
                 <div className={styles.jobType}>
-                  <div>{ jobTypesMap[jobTypeId].title } {jobTypeId} </div>
+                  <div>{ jobTypesMap[jobTypeId].title }</div>
                   <InputNumber
                     value={Object.keys(shifts).length}
                     onChange={value => handleChangeShiftsCount(jobTypeId, value)} />
