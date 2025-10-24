@@ -438,9 +438,8 @@ export default ({
           body.toTime = item.finished;
         }
 
-        if (item.isWork) {
-          body.totalWorkTime += totalTime;
-        } else {
+        body.totalWorkTime += totalTime;
+        if (!item.isWork) {
           body.totalBreakTime += totalTime;
         }
       }
