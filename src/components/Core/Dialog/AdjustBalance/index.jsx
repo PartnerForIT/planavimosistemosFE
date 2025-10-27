@@ -139,7 +139,7 @@ export default ({
     >
       <div className={style.sideForm}>
         <div className={style.employeesSide}>
-          <h4 className={style.dialogTitleClear}>{t('Users selected:')}</h4>
+          <h4 className={style.dialogTitleClear}>{t('Users selected')}:</h4>
           {
             employees.map((employee) => (
               <div key={employee.id} className={style.employeeItem}>

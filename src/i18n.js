@@ -4,6 +4,10 @@ import backend from 'i18next-xhr-backend';
 import { initReactI18next } from 'react-i18next';
 import translationEN from './translations/en.json';
 import translationLT from './translations/lt.json';
+import moment from 'moment';
+import 'moment/locale/lt';
+
+moment.locale('en');
 
 i18n
   .use(detector)

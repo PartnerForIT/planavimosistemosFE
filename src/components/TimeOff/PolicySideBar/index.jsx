@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from 'recha
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import { useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 
@@ -100,8 +101,21 @@ const PieTooltip = ({ active, payload }) => {
   );
 }
 
+const convertFormat = (companyFormat) => {
+  const formatMap = {
+    'DD': 'DD',
+    'MM': 'MMM',
+    'YY': 'YYYY',
+  }
+  const format = companyFormat.split('.').map(f => formatMap[f] || f).join(' ')
+  return `ddd, ${format}`
+}
+
 const PolicySideBar = forwardRef(({onClose}, ref) => {
   const { t } = useTranslation()
+
+  const companyInfo = useSelector(state => state.company.companyInfo)
+  const locale = localStorage.getItem('i18nextLng') || 'en'
 
   const [{ data, isOpen, activeIndex }, setState] = useState({
     isOpen: false,
@@ -236,9 +250,9 @@ const PolicySideBar = forwardRef(({onClose}, ref) => {
                               </div>
                             </div>
                             <div className={styles.employeesDatesContainer}>
-                              <div className={styles.employeeDate}>{moment(emp.event.start).format('ddd, MMM DD')}</div>
+                              <div className={styles.employeeDate}>{moment(emp.event.start).locale(locale).format(convertFormat(companyInfo.date_format))}</div>
                               <ArrowIcon />
-                              <div className={styles.employeeDate}>{moment(emp.event.end).format('ddd, MMM DD')}</div>
+                              <div className={styles.employeeDate}>{moment(emp.event.end).locale(locale).format(convertFormat(companyInfo.date_format))}</div>
                             </div>
                           </div>
                         )

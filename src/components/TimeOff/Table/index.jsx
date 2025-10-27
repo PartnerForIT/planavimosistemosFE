@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import cn from 'classnames'
 import { Tooltip } from 'react-tooltip'
 import Scrollbar from 'react-scrollbars-custom'
+import { useTranslation } from 'react-i18next'
 
 import styles from './styles.module.scss'
 
@@ -10,6 +11,7 @@ import CogwheelIcon from '../../Icons/CogwheelIcon'
 import StyledCheckbox from '../../Core/Checkbox/Checkbox'
 
 const Table = ({data, columns: initialColumns, renderCell, renderCellHeader}) => {
+  const { t } = useTranslation()
   const [expandedSections, setExpandedSections] = useState([])
   const [columns, setColumns] = useState(initialColumns.map(col => ({...col, checked: true})))
 
@@ -67,12 +69,12 @@ const Table = ({data, columns: initialColumns, renderCell, renderCellHeader}) =>
             {
               data.map(([section, requests]) => {
                 const isExpanded = expandedSections.includes(section)
-                const isPendingSection = section === 'Pending'
+                const isPendingSection = section === 'pending'
                 return (
                   <div key={section} className={cn(styles.section, { [styles.active]: isExpanded })}>
                     <div className={cn(styles.sectionHeader, { [styles.pending]: isPendingSection })} onClick={() => handleExpand(section, isExpanded)}>
                       <TriangleIcon className={cn(styles.icon)} />
-                      {section} ({requests.length})
+                      {isPendingSection ? t(section) : section} ({requests.length})
                     </div>
                     {
                       isExpanded && requests.map((row, i) => {

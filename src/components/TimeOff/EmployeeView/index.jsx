@@ -27,6 +27,9 @@ import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createR
 const moment = extendMoment(Moment)
 
 const convertFormat = (companyFormat) => {
+  if (!companyFormat) {
+    return 'YYYY-MM-DD'
+  }
   const keyMap = {
     'DD': 'DD',
     'MM': 'MM',
