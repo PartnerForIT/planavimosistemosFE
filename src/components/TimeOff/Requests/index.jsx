@@ -60,7 +60,7 @@ const generateSections = (requests, keyFormat) => {
   const locale = localStorage.getItem('i18nextLng') || 'en'
   const format = keyFormat.split('.').map(k => keyMap[k] || k).join(' ')
   const sections = requests.reduce((acc, request) => {
-    const sectionKey = request.status === 'pending' ? 'pending' : moment(request.created_at).locale(locale).format(`dddd, ${format}`)
+    const sectionKey = request.status === 'pending' ? 'pending' : moment(request.created_at).format('YYYY-MM-DD')
     if (!acc[sectionKey]) {
       acc[sectionKey] = []
     }
@@ -71,11 +71,14 @@ const generateSections = (requests, keyFormat) => {
   return Object.entries(sections).sort((a, b) => {
     if (a[0] === 'Pending') return -1
     if (b[0] === 'Pending') return 1
-    return moment(b[0], `dddd, ${format}`).toDate() - moment(a[0], `dddd, ${format}`).toDate()
-  }).reduce((acc, [key, value]) => ({
+    return moment(b[0]).toDate() - moment(a[0]).toDate()
+  }).reduce((acc, [key, value]) => {
+    const formattedKey = key === 'pending' ? 'pending' : moment(key).locale(locale).format(`dddd, ${format}`)
+    return {
     ...acc,
-    [key]: value,
-  }), {})
+      [formattedKey]: value,
+    }
+  }, {})
 }
 
 const filterRequests = (request, query) => {

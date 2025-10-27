@@ -1252,6 +1252,8 @@
         "To activate this policy, you need to configure its settings according to your requirements. Follow the simple steps below to review all available options based on your selected allowance type. Only the chosen allowance type affects the structure of the policy settings.": "Norint, kad ši politika pradėtų veikti, reikia sukonfigūruoti jos nustatymus pagal savo poreikius. Vadovaukitės paprastais žingsniais žemiau, kad peržiūrėtumėte visas galimas parinktis pagal pasirinktą išmokos tipą. Tik pasirinktas išmokos tipas lemia politikos nustatymų struktūrą.",
         "Users within this policy": "Vartotojai šioje politikoje",
         "Easily select and assign individual employees or groups within this tool to apply them to the chosen time-off policy.": "Lengvai pasirinkite ir priskirkite atskirus darbuotojus arba darbuotojų grupes šioje skiltyje, kad pritaikytumėte pasirinktą atostogų politiką.",
+        "Upcoming requests": "Numatomi prašymai",
+        "Policies": "Politikos",
 
         "1 month": "1 mėnesis",
         "2 months": "2 mėnesiai",
