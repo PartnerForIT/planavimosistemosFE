@@ -272,7 +272,7 @@ const PolicySettings = React.memo(({
   }, [activePolicy]);
     
   return (
-    <Content tooltip='Tooltip' title={t('Policy settings')}>
+    <Content tooltip={t('To activate this policy, you need to configure its settings according to your requirements. Follow the simple steps below to review all available options based on your selected allowance type. Only the chosen allowance type affects the structure of the policy settings.')} title={t('Policy settings')}>
       <>
         <div className={classes.policyForm}>
           <div className={classes.policyForm_row}>
@@ -408,7 +408,7 @@ const PolicySettings = React.memo(({
                 handleInputChange={handleChange}
                 name='allowance_type'
                 value={values.allowance_type ?? ''}
-                options={allowance_type_arr.map((item) => { return {...item, label: t(item.label)}})}
+                options={allowance_type_arr.map((item) => { return {...item, name: t(item.name)}})}
               />
             </div>
             <div></div>
@@ -447,7 +447,7 @@ const PolicySettings = React.memo(({
                           handleInputChange={handleChange}
                           name='allowance_calculation_period'
                           value={values.allowance_calculation_period ?? ''}
-                          options={allowance_calculation_period_arr.filter(item => !(item.code === 'weekly' && values.allowance_type === 'child_care')).map((item) => { return {...item}})}
+                          options={allowance_calculation_period_arr.filter(item => !(item.code === 'weekly' && values.allowance_type === 'child_care')).map((item) => { return {...item, name: t(item.name)}})}
                         />
                       </div>
                         <div className={classes.formControl}>
@@ -497,7 +497,7 @@ const PolicySettings = React.memo(({
                       handleInputChange={handleChange}
                       name='proration_type'
                       value={values.proration_type ?? ''}
-                      options={proration_type_arr.map((item) => { return {...item}})}
+                      options={proration_type_arr.map((item) => { return {...item, name: t(item.name)}})}
                     />
                   </div>
                   <div></div>
@@ -555,7 +555,7 @@ const PolicySettings = React.memo(({
                       handleInputChange={handleChange}
                       name='allowance_carryover_type'
                       value={values.allowance_carryover_type ?? ''}
-                      options={allowance_carryover_type_arr.map((item) => { return {...item}})}
+                      options={allowance_carryover_type_arr.map((item) => { return {...item, name: t(item.name)}})}
                     />
                   </div>
                   <div className={classes.formControl}>
@@ -799,7 +799,7 @@ const PolicySettings = React.memo(({
                           handleInputChange={handleChange}
                           name='allowance_carryover_expiration_period'
                           value={values.allowance_carryover_expiration_period ?? ''}
-                          options={allowance_carryover_expiration_period_arr.map((item) => { return {...item}})}
+                          options={allowance_carryover_expiration_period_arr.map((item) => { return {...item, name: t(item.name)}})}
                         />
                       </div>
                       <div></div>

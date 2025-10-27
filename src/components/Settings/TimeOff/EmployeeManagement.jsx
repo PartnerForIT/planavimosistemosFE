@@ -88,6 +88,7 @@ function EmployeeManagement({
   const renderApproverAvatar = (request) => {
     const { rejected_by, approver_1_name, approver_1_avatar, approver_2_name, approver_2_avatar } = request
     const avatars = []
+    console.log(request)
     if (request.status === 'rejected' && rejected_by) {
       avatars.push({
         image: rejected_by === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={request.rejected_by_avatar || avatar} alt='approver' className={classes.approverAvatar} />,

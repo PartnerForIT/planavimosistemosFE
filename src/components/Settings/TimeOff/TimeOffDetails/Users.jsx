@@ -99,7 +99,7 @@ const Users = React.memo(({
   };
 
   return (
-    <Content tooltip='Tooltip' title={t('Users within this policy')}>
+    <Content tooltip={t('Easily select and assign individual employees or groups within this tool to apply them to the chosen time-off policy.')} title={t('Users within this policy')}>
       <>
         <Button
           onClick={handleUsersDataManagement}

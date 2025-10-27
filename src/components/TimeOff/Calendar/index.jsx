@@ -367,7 +367,7 @@ const TimeOffCalendar = ({companyId}) => {
           onChange={data => handleChangeFilter('places', data)}
           width='auto' />
         <CustomSelect
-          placeholder={t('All Policies')}
+          placeholder={t('All policies')}
           items={policies}
           onChange={data => handleChangeFilter('policies', data)}
           width='auto' />

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 import styles from './styles.module.scss'
 
@@ -23,31 +24,34 @@ const permissionsConfig = [
   },
 ]
 
-const options = [{
-  title: 'My time off',
-  key: 'time_off',
-  badge: 0,
-}, {
-  title: 'Requests',
-  key: 'requests',
-  badge: 0,
-}, {
-  title: 'Calendar',
-  key: 'calendar',
-  badge: 0,
-},
-{
-  title: 'My employees',
-  key: 'employees',
-  badge: 0,
-}]
+
 
 const TimeOffScreen = () => {
+  const { t } = useTranslation()
   const { id: companyId } = useParams()
   const { tab: activeTab } = useQuery(['tab:time_off'])
   const history = useHistory()
   const permissions = usePermissions(permissionsConfig)
   const user = useSelector(userSelector)
+
+  const options = [{
+    title: t('My time off'),
+    key: 'time_off',
+    badge: 0,
+  }, {
+    title: t('Requests'),
+    key: 'requests',
+    badge: 0,
+  }, {
+    title: t('Calendar'),
+    key: 'calendar',
+    badge: 0,
+  },
+  {
+    title: t('My employees'),
+    key: 'employees',
+    badge: 0,
+  }]
 
   const handleSelectTab = key => {
     history.push({search: `?tab=${key}`})
