@@ -57,9 +57,10 @@ const generateSections = (requests, keyFormat) => {
     'MM': 'MMMM',
     'YY': 'YYYY',
   }
+  const locale = localStorage.getItem('i18nextLng') || 'en'
   const format = keyFormat.split('.').map(k => keyMap[k] || k).join(' ')
   const sections = requests.reduce((acc, request) => {
-    const sectionKey = request.status === 'pending' ? 'Pending' : moment(request.created_at).format(`dddd, ${format}`)
+    const sectionKey = request.status === 'pending' ? 'pending' : moment(request.created_at).format('YYYY-MM-DD')
     if (!acc[sectionKey]) {
       acc[sectionKey] = []
     }
@@ -70,11 +71,14 @@ const generateSections = (requests, keyFormat) => {
   return Object.entries(sections).sort((a, b) => {
     if (a[0] === 'Pending') return -1
     if (b[0] === 'Pending') return 1
-    return moment(b[0], `dddd, ${format}`).toDate() - moment(a[0], `dddd, ${format}`).toDate()
-  }).reduce((acc, [key, value]) => ({
+    return moment(b[0]).toDate() - moment(a[0]).toDate()
+  }).reduce((acc, [key, value]) => {
+    const formattedKey = key === 'pending' ? 'pending' : moment(key).locale(locale).format(`dddd, ${format}`)
+    return {
     ...acc,
-    [key]: value,
-  }), {})
+      [formattedKey]: value,
+    }
+  }, {})
 }
 
 const filterRequests = (request, query) => {
@@ -130,7 +134,7 @@ const TimneOffRequests = ({companyId}) => {
     { label: t('When'), accessor: 'from', width: 200 },
     { label: t('Requested on'), accessor: 'created_at' },
     { label: t('Group'), accessor: 'groups' },
-    { label: t('Sub group'), accessor: 'subgroups' },
+    { label: t('Sub-group'), accessor: 'subgroups' },
     { label: t('Place'), accessor: 'employee.place' },
     { label: t('1st approver'), accessor: 'approver_1_name' },
     { label: t('2nd approver'), accessor: 'approver_2_name' },
@@ -352,7 +356,7 @@ const TimneOffRequests = ({companyId}) => {
       case 'status':
         return (
           <div className={cn(styles.status, styles[request.status])}>
-            { request.status.charAt(0).toUpperCase() + request.status.slice(1) }
+            { t(request.status) }
           </div>
         )
       case 'policy.name':
@@ -406,7 +410,7 @@ const TimneOffRequests = ({companyId}) => {
             onChange={data => handleChangeFilter('places', data)}
             width='auto' />
           <CustomSelect
-            placeholder={t('All Policies')}
+            placeholder={t('All policies')}
             items={policies}
             onChange={data => handleChangeFilter('policies', data)}
             width='auto' />

@@ -104,7 +104,7 @@
     .upcomingRequestsHeader,
     .upcomingRequestsRow {
       display: grid;
-      grid-template-columns: 4fr 2fr 4fr 3fr 2fr 100px;
+      grid-template-columns: 4fr 2fr 4fr 2fr 3fr 100px;
       padding: 8px 12px;
       align-items: center;
     }
@@ -159,6 +159,27 @@
             stroke: white;
             fill: transparent;
           }
+        }
+      }
+    }
+
+    .upcomingRequestsCol {
+      &.status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .approverAvatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          overflow: hidden;
+          object-fit: cover;
+        }
+
+        svg {
+          width: 32px;
+          height: 32px;
         }
       }
     }

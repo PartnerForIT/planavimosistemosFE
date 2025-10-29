@@ -68,6 +68,7 @@ const allowance_type_arr = [
   { code: 'earned', name: 'Earned allowance' },
   { code: 'unlimited', name: 'Unlimited allowance' },
   { code: 'annual_grant', name: 'Annual grant' },
+  { code: 'child_care', name: 'Child-care allowance' },
 ];
 
 const units = [
@@ -94,6 +95,7 @@ function PoliciesTable({
     if (activeTimeOff && activeTimeOff.id) {
       const policiesArray = policies.filter((policy) => policy.time_off_id === activeTimeOff.id);
       const data = policiesArray.map((policy) => {
+        console.log(policy.allowance_type, allowance_type_arr)
         return {
           ...policy,
           type: activeTimeOff?.name,

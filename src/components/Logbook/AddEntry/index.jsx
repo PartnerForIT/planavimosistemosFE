@@ -350,8 +350,11 @@ export default ({
       const totalTime = dur.asMinutes();
 
 
-      if (!body.fromTime) {
+      if (!body.fromTime || moment(item.started, 'HH:mm').isBefore(moment(body.fromTime, 'HH:mm'))) {
         body.fromTime = item.started;
+      }
+
+      if (!body.toTime || moment(item.finished, 'HH:mm').isAfter(moment(body.toTime, 'HH:mm'))) {
         body.toTime = item.finished;
       }
 

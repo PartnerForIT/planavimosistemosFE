@@ -87,7 +87,7 @@ const Event = ({event, view}) => {
       </div>
       <div style="display: flex; gap: 4px;">
         <span style="color: #7c7c7c;">${t('Status')}:</span>
-        <b style="color: ${statusColor}; text-transform: capitalize;">${eventProps.status}</b>
+        <b style="color: ${statusColor}; text-transform: capitalize;">${t(eventProps.status)}</b>
       </div>
       ${
         eventProps.note

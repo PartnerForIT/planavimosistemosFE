@@ -28,6 +28,9 @@ import TimeOffSymbol7 from '../../Icons/TimeOffSymbol7';
 import TimeOffSymbol8 from '../../Icons/TimeOffSymbol8';
 import TimeOffSymbol9 from '../../Icons/TimeOffSymbol9';
 import DescriptionIcon from '../../Icons/DescriptionIcon';
+import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar'
+import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar'
+import avatar from '../../Icons/avatar.png';
 
 import {Tooltip as ReactTooltip} from 'react-tooltip';
 import PoliciesActivityTable from './TimeOffDetails/PoliciesActivityTable';
@@ -81,6 +84,41 @@ function EmployeeManagement({
     ...acc,
     [policy.id]: policy,
   }), {})
+
+  const renderApproverAvatar = (request) => {
+    const { rejected_by, approver_1_name, approver_1_avatar, approver_2_name, approver_2_avatar } = request
+    const avatars = []
+    console.log(request)
+    if (request.status === 'rejected' && rejected_by) {
+      avatars.push({
+        image: rejected_by === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={request.rejected_by_avatar || avatar} alt='approver' className={classes.approverAvatar} />,
+        label: rejected_by === 'Super Admin' ? t('Grownu support') : request.rejected_by_name,
+      })
+      return avatars
+    }
+    if (!approver_1_name && !approver_2_name) {
+      avatars.push({
+        image: <GrownuSystemAvatar />,
+        label: t('Grownu support'),
+      })
+      return avatars
+    }
+    if (approver_1_name) {
+      const avatar1 = {
+        image: approver_1_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_1_avatar || avatar} alt='approver1' className={classes.approverAvatar} />,
+        label: approver_1_name === 'Super Admin' ? t('Grownu support') : approver_1_name,
+      }
+      avatars.push(avatar1)
+    }
+    if (approver_2_name) {
+      const avatar2 = {
+        image: approver_2_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_2_avatar || avatar} alt='approver2' className={classes.approverAvatar} />,
+        label: approver_2_name === 'Super Admin' ? t('Grownu support') : approver_2_name,
+      }
+      avatars.push(avatar2)
+    }
+    return avatars
+  }
 
   return (
     <>
@@ -207,7 +245,12 @@ function EmployeeManagement({
                             <div className={classes.upcomingRequestsCol}>
                               {moment(request.created_at).format(convertFormat(companyData.date_format))}
                             </div>
-                            <div className={classes.upcomingRequestsCol}>
+                            <div className={classsnames(classes.upcomingRequestsCol, classes.status)}>
+                              { renderApproverAvatar(request).map((avatar, i) => {
+                                return (
+                                  <div key={i} data-tooltip-html={avatar.label} data-tooltip-id='emp_name'>{avatar.image}</div>
+                                )
+                              }) }
                               <div className={classsnames(classes.upcomingRequestsStatus, {
                                 [classes.requestStatusApproved]: request.status === 'approved',
                                 [classes.requestStatusPending]: request.status === 'pending',
@@ -302,6 +345,12 @@ function EmployeeManagement({
         id='tip_request'
         effect='solid'
         className={classes.tooltip_back}
+      />
+      <ReactTooltip
+        id='emp_name'
+        effect='solid'
+        opacity={1}
+        className={classes.tooltip_emp}
       />
     </>
   );

@@ -362,7 +362,7 @@ function UserDataManagement({
           onSort={(field, asc) => sorting(employees, { field, asc })}
           selectedItem={selected}
           setSelectedItem={setSelected}
-          verticalOffset='270px'
+          verticalOffset='307px'
           selectAllItems={selectAllHandler}
           all={all}
           setAll={setAll}

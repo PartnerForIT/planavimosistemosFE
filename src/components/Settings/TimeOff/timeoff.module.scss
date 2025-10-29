@@ -581,7 +581,7 @@ $arrow-size: 21px;
 .upcomingRequestsHeader,
 .upcomingRequestsRow {
   display: grid;
-  grid-template-columns: 4fr minmax(90px, 1fr) 4fr 3fr 2fr 100px;
+  grid-template-columns: 4fr minmax(100px, 1fr) 4fr 2fr 3fr 100px;
   padding: 8px 12px;
   align-items: center;
 }
@@ -624,6 +624,27 @@ $arrow-size: 21px;
     svg {
       width: 12px;
       height: 12px;
+    }
+  }
+}
+
+.upcomingRequestsCol {
+  &.status {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .approverAvatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      object-fit: cover;
+    }
+
+    svg {
+      width: 32px;
+      height: 32px;
     }
   }
 }
@@ -936,6 +957,10 @@ $arrow-size: 21px;
   overflow-wrap: anywhere;
   font-size: 14px;
   font-weight: 500;
+}
+
+.cyclesTableHeaderCol {
+  white-space: nowrap;
 }
 
 .dateGray {

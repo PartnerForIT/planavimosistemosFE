@@ -1840,14 +1840,13 @@ function* updatePolicyActivity(action) {
 
 function* removePolicyActivity(action) {
   try {
-    console.log(action);
     const { companyId, timeOffId, policyId, employeeId, activityId } = action;
     const { data } = yield call(axios.delete,
       `${config.api.url}/company/${companyId}/time-off/${timeOffId}/policy/${policyId}/employee/${employeeId}/activity/${activityId}`,
       token());
     
     yield put(removePolicyActivitySuccess(data));
-    yield put(addSnackbar('Removed Policy Activity successfully', 'success'));
+    yield put(addSnackbar('Entry was successfully deleted', 'success'));
     yield delay(4000);
     yield put(dismissSnackbar());
   } catch (e) {
