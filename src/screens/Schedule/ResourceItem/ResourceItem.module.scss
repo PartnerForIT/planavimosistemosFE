@@ -4,6 +4,16 @@
     right: 2px;
   }
 
+  &__aiButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333945;
+    font-size: 12px;
+    font-family: "Helvetica Neue Medium", sans-serif;
+    flex: 1;
+  }
+
   &__empty {
     position: static !important;
     width: auto !important;

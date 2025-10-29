@@ -19,7 +19,7 @@ import { loadEmployeesAll } from '../../store/settings/actions'
 import { getShiftTypes } from '../../store/shiftsTypes/actions'
 import { getJobTypes } from '../../store/jobTypes/actions'
 import usePermissions from '../../components/Core/usePermissions'
-import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule, notifySchedule, scheduleChangesLog } from '../../api'
+import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule, notifySchedule, scheduleChangesLog, generateAIShiftEvents } from '../../api'
 
 import HolidayIcon from '../../components/Core/HolidayIcon/HolidayIcon'
 import Progress from '../../components/Core/Progress'
@@ -42,6 +42,7 @@ import MonthCell from './MonthCell'
 import AddTempEmployee from '../Schedule/AddTempEmployee'
 import DialogPublishShift from '../../components/Core/Dialog/PublishShift'
 import ChangeLog from '../../components/Core/Dialog/ChangeLog';
+import GenerationAIEventsSettings from '../../components/Core/Dialog/GenerationAIEventsSettings'
 
 const CALENDAR_VIEWS_CONFIG = {
   day: {
@@ -81,6 +82,10 @@ const permissionsConfig = [
     name: 'night_rates',
     module: 'night_rates',
   },
+  {
+    name: 'demand_tool',
+    module: 'demand_tool',
+  }
 ]
 
 const request = async (url, method, params) => {
@@ -211,6 +216,19 @@ const generateStatisticEvents = (date, events) => {
   })
 
   return temp
+}
+
+const getShiftsFromResources = (resources) => {
+  return resources.reduce((acc, resource) => {
+    // 
+  }, [])
+}
+
+const generateDemandToolsEvents = (timeline, demand_tools, resources) => {
+  console.log(resources)
+  const shifts = getShiftsFromResources(resources)
+  console.log('shifts', shifts)
+  return []
 }
 
 const generateEvents = (events, markers, timeline, scheduleSettings, fromDate) => {
@@ -350,6 +368,7 @@ const ScheduleV2 = () => {
     is_current: true,
     ignore_holiday_night_time: true
   })
+
   const [timeline, setTimeline] = useState(TIMELINE.MONTH)
   const [toolsActive, setToolsActive] = useState({ marking: false, start_finish: false, remove_timelines: false})
   const [filter, setFilter] = useState({employers: [], place: [], shiftType: []})
@@ -372,6 +391,7 @@ const ScheduleV2 = () => {
   const fromDateRef = useRef(new Date())
   const resizeObserverRef = useRef()
   const copyToolRef = useRef()
+  const aiSettingsRef = useRef()
 
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck)
 
@@ -401,9 +421,6 @@ const ScheduleV2 = () => {
               acc.push(shift)
               return acc
             }, [])
-            if (schedule.demand_tools) {
-
-            }
           }
 
           if (item.shiftId) {
@@ -659,11 +676,12 @@ const ScheduleV2 = () => {
       })
 
       const workEvents = generateEvents(eventsWithRequests, res.markers, type, scheduleSettings, fromDateRef.current)
+      const demandToolsEvents = generateDemandToolsEvents(type, res.demand_tools, res.resources)
       
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
         holidays: Object.keys(res.holidays).length ? res.holidays : state.holidays,
-        events: workEvents,
+        events: [...workEvents, ...demandToolsEvents],
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
@@ -1041,6 +1059,19 @@ const ScheduleV2 = () => {
     history.push(`/${companyId}/schedule/shift/create`)
   }
 
+  const handleGenerateAIEvents = (shiftId) => {
+    aiSettingsRef.current.open(shiftId)
+  }
+
+  const generateAIEvents = async (shiftId) => {
+    const res = await generateAIShiftEvents(companyId, shiftId, {
+      from_date: currentStartDate,
+      type: timeline,
+    })
+    console.log(res)
+    getSchedule({type: timeline, formDate: currentStartDate})
+  }
+
   const getShiftName = (id) => {
     const name = shiftsTypes?.shiftTypes?.find((i) => i.id === id)?.name
     return name || ''
@@ -1243,10 +1274,12 @@ const ScheduleV2 = () => {
         withMenu={(permissions.schedule_create_and_edit || user.employee?.shift_id === shiftId) && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
         employeeId={employeeId}
         onEditShift={() => history.push(`/${companyId}/schedule/shift/${resource.extendedProps.template_id || shiftId}`)}
+        withAI={permissions.demand_tool}
         onDeleteShift={() => {
           setOpenDialog(shiftId)
           setDeletedShiftName(fieldValue)
         }}
+        onGenerateAiEvents={handleGenerateAIEvents}
         canClearTimesForShift={shiftId && resource.extendedProps.template_id && checkIfEventsExist(shiftId, employeeId)}
         onGenerateTimes={checkIfEventsExist(employeeShiftId, employeeId) ? false : () => handleGenerateTimes(shiftId || employeeShiftId, employeeId)}
         onClearTimes={(fullShift) => {
@@ -1678,6 +1711,9 @@ const ScheduleV2 = () => {
         place="right"
         effect='solid'
       />
+      <GenerationAIEventsSettings
+        ref={aiSettingsRef}
+        onSubmit={generateAIEvents}/>
       <DialogDeleteShift
         open={openDialog}
         handleClose={handleCloseDialog}

@@ -155,3 +155,18 @@ export const getCompanySkills = async (companyId) => {
   const res = await request(`company/${companyId}/specialities`, 'GET')
   return res
 }
+
+export const getAIGenerationSettings = async (companyId) => {
+  const res = await request(`company/${companyId}/ai/schedule-generation-settings`, 'GET')
+  return res
+}
+
+export const updateAIGenerationSettings = async (companyId, data) => {
+  const res = await request(`company/${companyId}/ai/schedule-generation-settings`, 'POST', data)
+  return res
+}
+
+export const generateAIShiftEvents = async (companyId, shiftId, data) => {
+  const res = await request(`company/${companyId}/shift/${shiftId}/generate-ai-times`, 'PATCH', data)
+  return res
+}
