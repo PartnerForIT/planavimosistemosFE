@@ -8,6 +8,7 @@ import AddJobTypeModal from './AddJobTypeModal';
 export default ({
   allJobTypes,
   onSubmit,
+  modalClassName,
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +37,7 @@ export default ({
             onClose={handleClose}
             onSubmit={onSubmit}
             items={allJobTypes}
+            className={modalClassName}
           />
         )
       }

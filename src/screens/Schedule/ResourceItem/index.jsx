@@ -8,6 +8,17 @@ import classNames from 'classnames';
 import classes from './ResourceItem.module.scss';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 
+import aiLogo from '../../../assets/ai_logo.png'
+
+const AiButton = () => {
+  return (
+    <div className={classes.resourceItem__aiButton}>
+      <div>Generate with AI</div>
+      <img src={aiLogo} />
+    </div>
+  )
+}
+
 export default ({
   title,
   photo,
@@ -16,11 +27,13 @@ export default ({
   templateId,
   withMenu,
   shiftId,
+  withAI,
   onEditShift,
   onDeleteShift,
   onGenerateTimes,
   onClearTimes,
   canClearTimesForShift,
+  onGenerateAiEvents,
 }) => {
   const { t } = useTranslation();
   const { getDateFormat } = useCompanyInfo();
@@ -158,6 +171,17 @@ export default ({
             <div className={classes.resourceItem__title}>
               {title}
             </div>
+            {
+              shiftId && withAI
+                ? <Dropdown.ItemMenu
+                    title={<AiButton />}
+                    onClick={() => {
+                      onGenerateAiEvents(shiftId)
+                      dropdownRef.current.close()
+                    }}
+                  />
+                : null
+            }
             {
               shiftId
                 ? <>

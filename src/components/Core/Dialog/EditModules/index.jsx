@@ -25,6 +25,7 @@ const initialValues = {
   schedule_shift: false,
   manual_mode: false,
   hybrid_mode: false,
+  demand_tool: false,
   create_places: false,
   create_jobs: false,
   use_job_value: false,
@@ -177,13 +178,24 @@ export default ({
                   name='manual_mode'
                 />
               </div>
-              <Checkbox
+              <div className={style.marginLeft}>
+                <Checkbox
                   onChange={handleChange}
                   checked={modules.hybrid_mode}
                   disabled={!modules.schedule_shift}
                   label={t('Hybrid Schedule')}
                   name='hybrid_mode'
                 />
+              </div>
+              <div className={style.marginLeft}>
+                <Checkbox
+                  onChange={handleChange}
+                  checked={modules.demand_tool}
+                  disabled={!modules.schedule_shift}
+                  label={t('Demand Tool')}
+                  name='demand_tool'
+                />
+              </div>
               <Checkbox
                 onChange={handleChange}
                 checked={modules.time_off}

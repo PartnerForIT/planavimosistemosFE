@@ -58,6 +58,19 @@
         &_main + &_children :global(.sectionEmpty)::after {
           height: 25px;
         }
+
+        .demandTool {
+          height: 32px;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          padding: 0 15px;
+          font-family: 'Helvetica Neue Medium', sans-serif;
+          font-size: 12px;
+          border-radius: 4px;
+          color: #000;
+          background-color: #DEF4F0;
+        }
       }
     }
 
@@ -87,9 +100,29 @@
         & > div {
           max-width: 110px;
         }
+
+        .demandToolButton {
+          width: 25px;
+          height: 32px;
+          border: 1px solid #D0D6DB;
+          border-radius: 4px;
+          background-color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Helvetica Neue Medium', sans-serif;
+          font-size: 12px;
+          color: #333945;
+          cursor: pointer;
+
+          &.active {
+            background-color: #61C3B0;
+            color: #fff;
+          }
+        }
       }
 
-      &:not(.table__content__data__row_customWorkingTime):not(.table__content__data__row_jobWorkingTime):hover {
+      &:not(.table__content__data__row_customWorkingTime):not(.table__content__data__row_jobWorkingTime):not(.table__content__data__row_demandTool):hover {
         .table__content__data__row__cell {
           background-color: #fafbfc;
         }
@@ -104,6 +137,13 @@
 
         .table__content__data__row__cell {
           background-color: #EBF3FA;
+        }
+      }
+
+      &_demandTool {
+        background-color: #DEF4F0;
+        .table__content__data__row__cell {
+          background-color: #DEF4F0;
         }
       }
 

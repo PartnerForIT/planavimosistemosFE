@@ -869,6 +869,14 @@
     }
   }
 
+  td.fc-datagrid-cell-demand-tool {
+    .fc-datagrid-cell-cushion.fc-scrollgrid-sync-inner {
+      .fc-datagrid-cell-main {
+        background-color: #DEF4F0;
+      }
+    }
+  }
+
 
   td.fc-datagrid-cell-empty {
     border-color: transparent;

@@ -9,6 +9,7 @@
         "Data Delete": "Duomenų Pašalinimas",
         "Categories": "Kategorijos",
         "Time Sheet": "Tabelis",
+        "Deman Tool": "Poreikio įrankis",
         "Reports": "Raportai",
         "Integrations": "Integracijos",
         "Activity Log": "Veiklos Žurnalas",
@@ -1353,6 +1354,7 @@
 
         "Generate Work Times": "Generuoti Darbo Laikus",
         "Use automatic schedule": "Naudoti automatines pamainas",
+        "Use demand tool": "Poreikio planavimas",
         "Exclude bank holidays": "Praleisti valstybines šventes",
         "Clear Work Times": "Pašalinti Darbo laikus",
         "Clear Work Times?": "Pašalinti Darbo Laikus?",

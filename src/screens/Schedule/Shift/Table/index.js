@@ -5,6 +5,7 @@ import React, {
   useRef,
   useImperativeHandle,
   forwardRef,
+  useEffect,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
@@ -338,6 +339,29 @@ const RowDefaultTimeContent = ({
   );
 };
 
+const RowDeamndToolContent = ({items, daysOfWeek, onSelect}) => {
+  return (
+    <div className={classnames(classes.table__content__data__row, classes.table__content__data__row_demandTool)}>
+      {
+        items.map((item, i) => {
+          const shiftsCount = Object.values(item.jobTypes).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)
+          return (
+            <div key={i} className={classes.table__content__data__row__cell}>
+              {
+                daysOfWeek[i].checked && !daysOfWeek[i].disabled
+                  ? <div className={classnames(classes.demandToolButton, {[classes.active]: item.checked})} onClick={() => onSelect(item)}>
+                      { shiftsCount }
+                    </div>
+                  : null
+              }
+            </div>
+          )
+        })
+      }
+    </div>
+  )
+}
+
 export default forwardRef(({
   numberOfWeeks,
   customWorkingTime,
@@ -354,6 +378,10 @@ export default forwardRef(({
   handleAddHistory,
   copyTool,
   templateSchedule,
+  useDemandTool,
+  demandToolData,
+  onSelectDemandToolDay,
+  onChangeWeekDays,
 }, ref) => {
   const [data, setData] = useState(initialValues.data);
   const [resources, setResources] = useState(initialValues.resources);
@@ -363,6 +391,21 @@ export default forwardRef(({
   const contentRef = useRef(null);
   const modules = useSelector(companyModules);
   const copyToolHistory = useSelector(copyToolHistorySelector);
+
+  useEffect(() => {
+    const temp = Object.entries(daysOfWeek).reduce((acc, [weekIndex, days]) => {
+      return {
+        ...acc,
+        [weekIndex]: days.reduce((acc1, day, index) => ({
+          ...acc1,
+          [index]: day.checked && !day.disabled,
+        }), {})
+      }
+    }, {})
+    if (onChangeWeekDays) {
+      onChangeWeekDays(temp)
+    }
+  }, [daysOfWeek])
 
   const handleClickPrev = () => {
     setCurrentWeek((prevState) => (prevState - 1));
@@ -1018,7 +1061,7 @@ export default forwardRef(({
 // eslint-disable-next-line
   }, [startShiftFrom, employees, resources, data, mergedData, numberOfWeeks, daysOfWeek, currentWeek]);
   // console.log('mergedData', mergedData, numberOfWeeks);
-  // console.log('resources', resources);
+  // console.log('demandToolData', demandToolData)
   return (
     <div className={classnames(classes.table, (modules?.manual_mode && !templateSchedule) ? classes.table__gray : '')}>
       { (!modules?.manual_mode || templateSchedule) && (
@@ -1035,6 +1078,15 @@ export default forwardRef(({
         <>
           <div className={classes.table__content} ref={contentRef}>
             <div className={classes.table__content__resources}>
+              {
+                useDemandTool
+                  ? <div className={classes.table__content__resources__cell}>
+                      <div className={classes.demandTool}>
+                        {t('Demand planning')}
+                      </div>             
+                    </div>
+                  : null
+              }
               <div className={classes.table__content__resources__cell}>
                 <DefaultShiftTime />
               </div>
@@ -1070,6 +1122,14 @@ export default forwardRef(({
 
             { (!modules?.manual_mode || templateSchedule) && (
               <div className={classes.table__content__data}>
+                {
+                  useDemandTool
+                   ? <RowDeamndToolContent
+                      items={demandToolData[currentWeek]}
+                      daysOfWeek={daysOfWeek[currentWeek]}
+                      onSelect={item => onSelectDemandToolDay(currentWeek, item, !item.checked)} />
+                   : null
+                }
                 <RowDefaultTimeContent
                   items={defaultWorkingTime[currentWeek]}
                   onChange={handleChangeDefaultTime}

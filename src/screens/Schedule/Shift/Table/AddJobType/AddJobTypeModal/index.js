@@ -24,6 +24,7 @@ export default ({
   onClose,
   onSubmit,
   items,
+  className,
 }) => {
   const { t } = useTranslation();
 
@@ -63,7 +64,7 @@ export default ({
 
   return (
     <ClickAwayListener onClickAway={onClose}>
-      <div className={classes.addJobTypeModal}>
+      <div className={classNames(classes.addJobTypeModal, className)}>
         <div className={classes.addJobTypeModal__title}>
           {t('Add Job Type')}
         </div>
