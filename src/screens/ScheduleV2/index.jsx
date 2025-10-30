@@ -1713,6 +1713,7 @@ const ScheduleV2 = () => {
       />
       <GenerationAIEventsSettings
         ref={aiSettingsRef}
+        companyId={companyId}
         onSubmit={generateAIEvents}/>
       <DialogDeleteShift
         open={openDialog}
