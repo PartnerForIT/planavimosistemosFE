@@ -125,9 +125,13 @@ const GenerationAIEventsSettings = forwardRef(({companyId, onSubmit}, ref) => {
     }
   }
 
-  const handleSubmit = () => {
-    onSubmit(shiftIdRef.current)
-    setOpen(false)
+  const handleSubmit = async () => {
+    const res = await updateAIGenerationSettings(companyId, settings)
+    console.log(res)
+    if (res) {
+      onSubmit(shiftIdRef.current)
+      setOpen(false)
+    }
   }
 
   return (
