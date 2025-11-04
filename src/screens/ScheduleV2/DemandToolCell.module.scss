@@ -1,0 +1,62 @@
+.container {
+  position: absolute;
+  color: #333945;
+  font-size: 11px;
+  font-family: "Helvetica Neue Medium", sans-serif;
+  top: 0px;
+  left: 4px;
+  right: 1px;
+  bottom: 0;
+  background-color: #fff;
+  border: 1px solid #D0D6DB;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 2px;
+
+  &.disabled {
+    cursor: inherit;
+  }
+
+  &.active {
+    border-color: #61C3B0;
+    background-color: #61C3B0;
+
+    .count {
+      color: #fff;
+    }
+
+    .progressBar {
+      background-color: #fff;
+
+      .progress {
+        background-color: #DEF4F0;
+      }
+    }
+  }
+
+  .count {
+    color: #333945;
+    font-size: 12px;
+    font-family: 'Helvetica Neue Medium', sans-serif;
+    font-weight: 500;
+  }
+
+  .progressBar {
+    background-color: #DEF4F0;
+    border-radius: 4px;
+    width: 100%;
+    height: 6px;
+    position: relative;
+    margin-top: auto;
+    overflow: hidden;
+
+    .progress {
+      background-color: #61C3B0;
+      height: 100%;
+    }
+  }
+}
+

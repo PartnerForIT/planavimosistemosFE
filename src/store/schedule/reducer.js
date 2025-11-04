@@ -21,6 +21,7 @@ import {
   PATCH_ADD_TIMELINE,
   DOWNLOAD_SCHEDULE,
   SET_LOADER,
+  SET_ACTIVE_DEMAND_ID,
   
   DOWNLOAD_SCHEDULE_ERROR,
   DELETE_TIMELINE, EMPTY_TIMELINE, ADD_TEMP_EMPLOYEE,
@@ -36,6 +37,7 @@ const initialState = {
   markers: [],
   published: false,
   count_changes: 0,
+  activeDemandId: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -63,7 +65,9 @@ export const reducer = (state = initialState, action) => {
       };
     case GET_SCHEDULE_ERROR:
       return { ...state, loading: false };
-
+    case SET_ACTIVE_DEMAND_ID:
+      console.log('SET_ACTIVE_DEMAND_ID', action.id)
+      return { ...state, activeDemandId: state.activeDemandId === action.id ? null : action.id };
     case POST_SHIFT:
     case PUT_SHIFT:
       return { ...state, postShiftLoading: true };

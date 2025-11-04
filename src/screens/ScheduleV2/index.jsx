@@ -43,6 +43,8 @@ import AddTempEmployee from '../Schedule/AddTempEmployee'
 import DialogPublishShift from '../../components/Core/Dialog/PublishShift'
 import ChangeLog from '../../components/Core/Dialog/ChangeLog';
 import GenerationAIEventsSettings from '../../components/Core/Dialog/GenerationAIEventsSettings'
+import DemandToolCell from './DemandToolCell'
+import DemandToolSidebar from './DemandToolSidebar'
 
 const CALENDAR_VIEWS_CONFIG = {
   day: {
@@ -220,15 +222,71 @@ const generateStatisticEvents = (date, events) => {
 
 const getShiftsFromResources = (resources) => {
   return resources.reduce((acc, resource) => {
-    // 
+    if (resource.shiftId) {
+      return [...acc, {
+        shiftId: resource.shiftId,
+        shiftStart: resource.shift_start,
+        title: resource.title,
+
+      }]
+    } else if (resource.children && resource.children.length > 0) {
+      return [...acc, ...getShiftsFromResources(resource.children)]
+    }
+    return acc
   }, [])
 }
 
-const generateDemandToolsEvents = (timeline, demand_tools, resources) => {
-  console.log(resources)
+const generateDemandToolsEvents = (timeline, fromDate, demand_tools, resources, events, demandTools) => {
   const shifts = getShiftsFromResources(resources)
-  console.log('shifts', shifts)
-  return []
+  
+  const shiftsWithDemandTools = shifts.filter(shift => demand_tools[shift.shiftId])
+
+  const demandEvents = shiftsWithDemandTools.reduce((acc, shift) => {
+    const shiftDemandTool = demandTools[shift.shiftId]
+
+    const getDemandData = (weekNumber, dayNumber) => {
+      if (shiftDemandTool && shiftDemandTool[weekNumber-1]) {
+        const dayData = shiftDemandTool[weekNumber-1].find(item => item.id === dayNumber)
+        return dayData
+      }
+    }
+
+    const shiftEvents = events.filter(event => {
+      const [eventShiftId] = event.resourceId.split('-')
+      return Number(eventShiftId) === shift.shiftId && !event.empty_manual
+    }).reduce((acc, event) => {
+      return {
+        ...acc,
+        [event.day_number]: acc[event.day_number] ? [...acc[event.day_number], event] : [event]
+      }
+    }, {})
+
+    const shiftStart = moment(shift.shiftStart).startOf('week').add(1, 'days')
+    let weekNumber = 0
+
+    const shiftDemandEvents = [...new Array(moment(fromDate).daysInMonth())].map((_, i) => {
+      const day = i+1
+      const weekDay = moment(fromDate).date(day).isoWeekday()
+      const currentDate = moment(fromDate).date(day)
+      
+      if (currentDate.isSameOrAfter(shiftStart.clone().add(7*weekNumber, 'days'))) {
+        weekNumber += 1
+      }
+      const demandData = getDemandData(weekNumber > 4 ? 1 : weekNumber, weekDay)
+      return {
+        resourceId: `demand_tool_${shift.shiftId}`,
+        start: moment(fromDate).date(day).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        end: moment(fromDate).date(day).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        type: 'demand_tool',
+        demandData: demandData?.jobTypes || {},
+        weekNumber: weekNumber > 4 ? 1 : weekNumber,
+        dateString: currentDate.format('DD-MM-YYYY'),
+        shiftEvents: shiftEvents[day] || [],
+      }
+    })
+    return [...acc, ...shiftDemandEvents]
+  }, [])
+  return demandEvents
 }
 
 const generateEvents = (events, markers, timeline, scheduleSettings, fromDate) => {
@@ -392,6 +450,7 @@ const ScheduleV2 = () => {
   const resizeObserverRef = useRef()
   const copyToolRef = useRef()
   const aiSettingsRef = useRef()
+  const demandToolSidebarRef = useRef()
 
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck)
 
@@ -676,7 +735,7 @@ const ScheduleV2 = () => {
       })
 
       const workEvents = generateEvents(eventsWithRequests, res.markers, type, scheduleSettings, fromDateRef.current)
-      const demandToolsEvents = generateDemandToolsEvents(type, res.demand_tools, res.resources)
+      const demandToolsEvents = generateDemandToolsEvents(type, formDate, res.demand_tools, res.resources, events, res.demand_tools)
       
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
@@ -1068,7 +1127,7 @@ const ScheduleV2 = () => {
       from_date: currentStartDate,
       type: timeline,
     })
-    console.log(res)
+    console.log('generateAIEvents', res)
     getSchedule({type: timeline, formDate: currentStartDate})
   }
 
@@ -1274,7 +1333,7 @@ const ScheduleV2 = () => {
         withMenu={(permissions.schedule_create_and_edit || user.employee?.shift_id === shiftId) && (shiftId || employeeId && resource.extendedProps.template_id && timeline === TIMELINE.MONTH)}
         employeeId={employeeId}
         onEditShift={() => history.push(`/${companyId}/schedule/shift/${resource.extendedProps.template_id || shiftId}`)}
-        withAI={permissions.demand_tool}
+        withAI={permissions.demand_tool && schedule.demand_tools[shiftId]}
         onDeleteShift={() => {
           setOpenDialog(shiftId)
           setDeletedShiftName(fieldValue)
@@ -1344,6 +1403,21 @@ const ScheduleV2 = () => {
       }
       return acc
     }, [])
+
+    if (selectedEvent.type === 'demand_tool') {
+      return (
+        <DemandToolCell
+          event={selectedEvent}
+          resourceId={resourceInfo.id}
+          // activeDemandId={activeDemandTool}
+          onSelect={(id, data) => {
+            // setActiveDemandTool(prev => prev === id ? null : id)
+            dispatch({type: 'SET_ACTIVE_DEMAND_ID', id: id})
+            demandToolSidebarRef.current.open(data)
+          }} />
+      )
+    }
+
     const isNextMonth = moment(start).isAfter(moment(currentStartDate).endOf('month'))
     if (isNextMonth) {
       if (moment(start).date() === 1 && 'totalHours' in (selectedEvent.accumulatedData || {})) {
@@ -1778,6 +1852,8 @@ const ScheduleV2 = () => {
           onClose={() => setChangeLogModal(false)}
         />
       )}
+      <DemandToolSidebar
+        ref={demandToolSidebarRef} />
     </MainLayout>
   )
 }

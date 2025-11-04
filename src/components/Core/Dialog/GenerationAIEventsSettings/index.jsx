@@ -97,7 +97,10 @@ const GenerationAIEventsSettings = forwardRef(({companyId, onSubmit}, ref) => {
 
   useEffect(() => {
     getAIGenerationSettings(companyId).then(res => {
-      console.log('settings ai -> ', res)
+      if (res) {
+        const {company_id, id, updated_at, created_at, ...rest} = res
+        setSettings(rest)
+      }
     })
   }, [])
 

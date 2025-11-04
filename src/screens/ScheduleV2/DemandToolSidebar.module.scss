@@ -1,0 +1,55 @@
+.container {
+  position: fixed;
+  background-color: #fff;
+  width: 330px;
+  height: 100%;
+  right: 0;
+  z-index: 5;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  padding: 20px;
+
+  &.active {
+    transform: translateX(0);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+
+    .editButton {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #0385FF;
+      font-family: "Helvetica Neue Medium";
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .title {
+      font-family: "Helvetica Neue Medium";
+      font-size: 25px;    
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .demandShiftsCount {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      border: 1px solid #D0D6DB;
+      background-color: #61C3B0;
+      color: #fff;
+      font-family: "Helvetica Neue Medium";
+      font-size: 24px;
+    }
+  }
+}
