@@ -473,6 +473,8 @@ export default () => {
       }
     }, {})
 
+    console.log('demandToolPlainData', demandToolPlainData)
+
     const data = {
       shift_info: {
         name: shiftName || values.shiftName,
@@ -491,7 +493,7 @@ export default () => {
       events: submitEvents,
       emptyEvents: emptyEvents,
       resources: dataResources,
-      demand_tools: demandToolPlainData,
+      demand_tools: useDemandTool ? demandToolPlainData : {},
     };
 
     const existJob = data.resources.find(i => i.job_type_id);
@@ -713,13 +715,18 @@ export default () => {
           tableRef.current.updateDefaultWorkingTime(workingSetting, defaultTime);
           tableRef.current.updateStartDay(moment(initialValues.shift_info.date_start));
         }
-        if (shift.demand_tools.length) {
+        console.log('shift.demand_tools', shift.demand_tools)
+        if (Object.keys(shift.demand_tools).length) {
           setUseDemandTool(true)
+          
         }
-        const temp = shift.demand_tools.reduce((acc, item, index) => {
+
+        const shiftDemandTools = Array.isArray(shift.demand_tools) ? {} : (shift.demand_tools || {})
+
+        const temp = Object.entries(shiftDemandTools).reduce((acc, [weekIndex, item]) => {
           return {
             ...acc,
-            [index]: acc[index].map(day => {
+            [weekIndex]: acc[weekIndex].map(day => {
               const foundDay = item.find(d => d.id === day.id)
               return foundDay ? {
                 ...day,
@@ -739,6 +746,7 @@ export default () => {
           }
         }, demandToolData)
         setDemandToolData(temp);
+        
         // todo после ухода с экрана, нужно не забыть зачистить шифт,
         //  так как по этому условию будет подходить старый шифт
       }

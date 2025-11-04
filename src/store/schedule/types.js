@@ -53,3 +53,5 @@ export const DELETE_SHIFT = 'DELETE_SHIFT';
 export const RESET_SHIFT = 'RESET_SHIFT';
 
 export const SET_LOADER = 'SET_LOADER';
+
+export const SET_ACTIVE_DEMAND_ID = 'SET_ACTIVE_DEMAND_ID';

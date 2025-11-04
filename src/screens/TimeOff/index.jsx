@@ -24,8 +24,6 @@ const permissionsConfig = [
   },
 ]
 
-
-
 const TimeOffScreen = () => {
   const { t } = useTranslation()
   const { id: companyId } = useParams()

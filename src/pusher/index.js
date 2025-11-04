@@ -18,10 +18,10 @@ const pusher = {
     
       const port = 6001
       document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
-
       this.echo = new Echo({
         broadcaster: "socket.io",
-        host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
+        host: `${window.location.hostname === 'localhost' ? 'staging.grownu.com' : window.location.hostname}`,
+        // host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
         auth: {
           params: {
             token: token.headers.Authorization.split(' ')[1] || token.headers.Authorization,

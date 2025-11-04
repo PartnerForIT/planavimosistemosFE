@@ -97,7 +97,10 @@ const GenerationAIEventsSettings = forwardRef(({companyId, onSubmit}, ref) => {
 
   useEffect(() => {
     getAIGenerationSettings(companyId).then(res => {
-      console.log('settings ai -> ', res)
+      if (res) {
+        const {company_id, id, updated_at, created_at, ...rest} = res
+        setSettings(rest)
+      }
     })
   }, [])
 
@@ -125,9 +128,13 @@ const GenerationAIEventsSettings = forwardRef(({companyId, onSubmit}, ref) => {
     }
   }
 
-  const handleSubmit = () => {
-    onSubmit(shiftIdRef.current)
-    setOpen(false)
+  const handleSubmit = async () => {
+    const res = await updateAIGenerationSettings(companyId, settings)
+    console.log(res)
+    if (res) {
+      onSubmit(shiftIdRef.current)
+      setOpen(false)
+    }
   }
 
   return (
