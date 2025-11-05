@@ -247,7 +247,22 @@ const generateDemandToolsEvents = (timeline, fromDate, demand_tools, resources, 
     const getDemandData = (weekNumber, dayNumber) => {
       if (shiftDemandTool && shiftDemandTool[weekNumber-1]) {
         const dayData = shiftDemandTool[weekNumber-1].find(item => item.id === dayNumber)
-        return dayData
+        if (dayData) {
+          return {
+            jobTypes: Object.entries(dayData.jobTypes).reduce((acc, [jobTypeId, shifts]) => {
+              return {
+                ...acc,
+                [jobTypeId]: shifts.reduce((shiftAcc, shift, index) => {
+                  return {
+                    ...shiftAcc,
+                    [index]: shift,
+                  }
+                }, {})
+              }
+            }, {})
+          }
+        }
+        return null
       }
     }
 
@@ -278,7 +293,7 @@ const generateDemandToolsEvents = (timeline, fromDate, demand_tools, resources, 
         start: moment(fromDate).date(day).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
         end: moment(fromDate).date(day).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         type: 'demand_tool',
-        demandData: demandData?.jobTypes || {},
+        jobTypes: demandData?.jobTypes || {},
         weekNumber: weekNumber > 4 ? 1 : weekNumber,
         dateString: currentDate.format('DD-MM-YYYY'),
         shiftEvents: shiftEvents[day] || [],

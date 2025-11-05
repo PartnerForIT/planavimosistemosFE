@@ -45,8 +45,16 @@ const ChevronIcon = (props) => {
 }
 
 const Wrapper = ({active, data, onClose, ...props}) => {
+  const shiftsCount = Object.values(data?.jobTypes || {}).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)
   return (
     <div className={cn(styles.container, {[styles.active]: active})}>
+      <div className={styles.header}>
+        <div className={styles.title}>{data?.weekIndex+1}/{props?.weeksCount}</div>
+        <div className={styles.title}>{data?.label}</div>
+        <div className={styles.jobsCount}>
+          { shiftsCount }
+        </div>
+      </div>
       {
         data
           ? <DemanToolForm data={data} {...props} />
@@ -113,17 +121,15 @@ const SkillContent = ({skills, onChange}) => {
   )
 }
 
-const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
+export const DemanToolForm = ({data, jobTypes, skills, onChange}) => {
   const { t } = useTranslation()
 
   const tooltipRef = useRef()
-  
 
   const [selectedData, setSelectedData] = useState({shiftIndex: null, jobTypeId: null})
 
   const jobTypesMap = jobTypes.reduce((acc, jobType) => ({...acc, [jobType.id]: jobType}), {})
   const selectedSkills = data.jobTypes[selectedData.jobTypeId]?.[selectedData.shiftIndex]?.skills || {}
-  const shiftsCount = Object.values(data.jobTypes).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)
   const EMPTY_SHIFT = {
     start: data.defaultTimes.start || '08:00',
     end: data.defaultTimes.end || '18:00',
@@ -152,6 +158,8 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
       }
       return acc
     }, data.jobTypes)
+
+    console.log('updatedJobTypes', updatedJobTypes)
     
     onChange(data.weekIndex, {...data, jobTypes: updatedJobTypes})
   }
@@ -221,14 +229,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
   }
 
   return (
-    <>
-      <div className={styles.header}>
-        <div className={styles.title}>{data.weekIndex+1}/{weeksCount}</div>
-        <div className={styles.title}>{data.label}</div>
-        <div className={styles.jobsCount}>
-          { shiftsCount }
-        </div>
-      </div>
+    <div className={styles.form}>
       <div className={styles.addJobButton}>
         <AddJobType
           allJobTypes={jobTypes.filter(jobType => !data.jobTypes[jobType.id])}
@@ -268,7 +269,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
                             </div>
                             <div className={styles.shiftSkills}>
                               {
-                                Object.entries(shift.skills).map(([skillId, skill]) => {
+                                Object.entries(shift.skills || {}).map(([skillId, skill]) => {
                                   return (
                                     <div key={skillId} className={styles.skill} onClick={() => handleRemoveSkill(jobTypeId, shiftIndex, skillId)}>
                                       { skill.name } &times;
@@ -301,7 +302,7 @@ const DemanToolForm = ({data, weeksCount, jobTypes, skills, onChange}) => {
           skills={skills.filter(s => !selectedSkills[s.id])}
           onChange={handleChangeSkills} />
       </Tooltip>
-    </>
+    </div>
   )
 }
 

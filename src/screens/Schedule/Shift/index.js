@@ -473,8 +473,6 @@ export default () => {
       }
     }, {})
 
-    console.log('demandToolPlainData', demandToolPlainData)
-
     const data = {
       shift_info: {
         name: shiftName || values.shiftName,

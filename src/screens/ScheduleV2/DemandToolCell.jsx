@@ -9,7 +9,7 @@ const DemandToolCell = ({ event, resourceId, onSelect }) => {
   const activeDemandId = useSelector(state => state.schedule.activeDemandId)
   const isActive = activeDemandId === id
 
-  const demandShiftsCount = Object.values(event.demandData || {}).reduce((acc, shifts) => acc + shifts.length, 0)
+  const demandShiftsCount = Object.values(event.jobTypes || {}).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)
   const totalShifts = event.shiftEvents.length
   const percentage = Math.min(totalShifts ? totalShifts * 100 / demandShiftsCount : 0, 100)
 
