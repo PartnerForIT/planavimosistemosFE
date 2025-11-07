@@ -8,7 +8,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import { useDispatch } from 'react-redux'
 
 import { jobTypesSelector } from '../../store/jobTypes/selectors'
-import { getCompanySkills } from '../../api'
+import { getCompanySkills, updateDemandToolsForDate } from '../../api'
 
 import styles from './DemandToolSidebar.module.scss'
 
@@ -65,7 +65,17 @@ const DemandToolSidebar = forwardRef(({onClose}, ref) => {
     setData(prev => ({...prev, jobTypes: data.jobTypes}))
   }
 
-  const toggleMode = () => {
+  const toggleMode = async () => {
+    if (mode === 'edit') {
+      const post = {
+        date: data.dateString,
+        jobTypes: data.jobTypes,
+      }
+      const [shiftId] = activeDemandId.replace('demand_tool_', '').split('_')
+      console.log('post -> ', post)
+      const res = await updateDemandToolsForDate(companyId, shiftId, post)
+      console.log('updateDemandToolsForDate', res)
+    }
     setMode(prev => prev === 'view' ? 'edit' : 'view')
   }
 
@@ -73,6 +83,8 @@ const DemandToolSidebar = forwardRef(({onClose}, ref) => {
     setMode('view')
     dispatch({type: 'SET_ACTIVE_DEMAND_ID', id: activeDemandId})
   }
+
+  console.log('activeDemandId', activeDemandId)
 
   return (
     

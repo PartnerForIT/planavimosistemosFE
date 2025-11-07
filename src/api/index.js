@@ -170,3 +170,8 @@ export const generateAIShiftEvents = async (companyId, shiftId, data) => {
   const res = await request(`company/${companyId}/shift/${shiftId}/generate-ai-times`, 'PATCH', data)
   return res
 }
+
+export const updateDemandToolsForDate = async (companyId, shiftId, data) => {
+  const res = await request(`company/${companyId}/shift/${shiftId}/demand-tools/update`, 'POST', data)
+  return res
+}
