@@ -276,25 +276,32 @@ const generateDemandToolsEvents = (timeline, fromDate, demand_tools, resources, 
       }
     }, {})
 
-    const shiftStart = moment(shift.shiftStart).startOf('week').add(1, 'days')
-    let weekNumber = 0
+    const shiftStart = moment(shift.shiftStart).startOf('week')
+    const orginalShiftStart = shiftStart.clone()
+    let weekNumber = 1
+    const totalWeeks = shiftDemandTool.length
 
     const shiftDemandEvents = [...new Array(moment(fromDate).daysInMonth())].map((_, i) => {
       const day = i+1
       const weekDay = moment(fromDate).date(day).isoWeekday()
       const currentDate = moment(fromDate).date(day)
-      
-      if (currentDate.isSameOrAfter(shiftStart.clone().add(7*weekNumber, 'days'))) {
+
+      if (currentDate.isAfter(shiftStart.clone().add(7*weekNumber, 'days'))) {
         weekNumber += 1
+        if (weekNumber > totalWeeks) {
+          shiftStart.add(7*totalWeeks, 'days')
+          weekNumber = 1
+        }
       }
-      const demandData = getDemandData(weekNumber > 4 ? 1 : weekNumber, weekDay)
+      const isInShift = currentDate.isAfter(orginalShiftStart)
+      const demandData = getDemandData(isInShift ? weekNumber : 0, weekDay)
       return {
         resourceId: `demand_tool_${shift.shiftId}`,
         start: moment(fromDate).date(day).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
         end: moment(fromDate).date(day).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         type: 'demand_tool',
         jobTypes: demandData?.jobTypes || {},
-        weekNumber: weekNumber > 4 ? 1 : weekNumber,
+        weekNumber: isInShift ? weekNumber : 0,
         dateString: currentDate.format('DD-MM-YYYY'),
         shiftEvents: shiftEvents[day] || [],
       }
