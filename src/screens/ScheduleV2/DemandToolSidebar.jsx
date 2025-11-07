@@ -4,6 +4,8 @@ import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import { useDispatch } from 'react-redux'
 
 import { jobTypesSelector } from '../../store/jobTypes/selectors'
 import { getCompanySkills } from '../../api'
@@ -12,12 +14,15 @@ import styles from './DemandToolSidebar.module.scss'
 
 import useCompanyInfo from '../../hooks/useCompanyInfo'
 import { DemanToolForm } from '../Schedule/Shift/DemandToolForm'
+import DemandToolView from './DemandToolView'
 
-const DemandToolSidebar = forwardRef(({active}, ref) => {
+const DemandToolSidebar = forwardRef(({onClose}, ref) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const { id: companyId } = useParams()
   const activeDemandId = useSelector(state => state.schedule.activeDemandId)
   const allJobTypes = useSelector(jobTypesSelector)
+  
 
   const { getDateFormat } = useCompanyInfo()
   const dateFormat = getDateFormat({
@@ -64,30 +69,45 @@ const DemandToolSidebar = forwardRef(({active}, ref) => {
     setMode(prev => prev === 'view' ? 'edit' : 'view')
   }
 
+  const handleClose = () => {
+    setMode('view')
+    dispatch({type: 'SET_ACTIVE_DEMAND_ID', id: activeDemandId})
+  }
+
   return (
-    <div className={cn(styles.container, {[styles.active]: Boolean(activeDemandId)})}>
-      {
-        data
-          ? <div className={styles.content}>
-              <div className={styles.editButton} onClick={toggleMode}>{mode === 'view' ? t('Edit') : t('Save & Close')}</div>
-              <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').format(dateFormat)}</div>
-              <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').locale(locale).format('dddd')}</div>
-              <div className={styles.demandShiftsCount}>
-                <div>{Object.values(data.jobTypes).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)}</div>
-              </div>
-              {
-                mode === 'view'
-                  ? null
-                  : <DemanToolForm
-                      skills={skills}
-                      jobTypes={allJobTypes}
-                      data={{...data, weekIndex: data.weekNumber - 1}}
-                      onChange={handleChange} />
-              }
-            </div>
-          : null
-      }
-    </div>
+    
+      <div className={cn(styles.container, {[styles.active]: Boolean(activeDemandId)})}>
+        {
+          activeDemandId
+            ? <ClickAwayListener onClickAway={handleClose}>
+                {
+                  data
+                    ? <div className={styles.content}>
+                        <div className={styles.editButton} onClick={toggleMode}>{mode === 'view' ? t('Edit') : t('Save & Close')}</div>
+                        <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').format(dateFormat)}</div>
+                        <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').locale(locale).format('dddd')}</div>
+                        <div className={styles.demandShiftsCount}>
+                          <div>{Object.values(data.jobTypes).reduce((acc, shifts) => acc + Object.keys(shifts).length, 0)}</div>
+                        </div>
+                        {
+                          mode === 'view'
+                            ? <DemandToolView
+                                skills={skills}
+                                jobTypes={allJobTypes}
+                                data={data} />
+                            : <DemanToolForm
+                                skills={skills}
+                                jobTypes={allJobTypes}
+                                data={{...data, weekIndex: data.weekNumber - 1}}
+                                onChange={handleChange} />
+                        }
+                      </div>
+                    : null
+                }
+              </ClickAwayListener>
+            : null
+        }
+      </div>
   )
 })
 

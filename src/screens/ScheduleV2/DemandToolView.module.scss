@@ -1,0 +1,193 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: auto;
+  height: calc(100vh - 269px);
+
+  .jobTypeSection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .jobTypeHeader {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #DBE0E4;
+      border-radius: 4px;
+      padding: 0px 12px;
+      font-family: "Helvetica Neue Medium";
+      font-size: 12px;
+      color: #333945;
+      cursor: pointer;
+    
+      .jobHeaderIcon {
+        transition: transform 0.2s ease-in-out;
+        transform: rotate(180deg);
+        
+        &.active {
+          transform: rotate(0deg);
+        }
+      }
+
+      .jobSectionButton {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+
+        .shiftCountContainer {
+          border: 1px solid #D9DFE3;
+          border-radius: 10px;
+          height: 24px;
+          padding: 0px 10px;
+          display: flex;
+          align-items: center;
+          font-family: "Helvetica Neue";
+          font-size: 14px;
+
+          &.filled {
+            color: #05BD12;
+          }
+          &.extra {
+            color: #FF8A04;
+          }
+          &.warning {
+            color: #FF0000;
+          }
+
+        }
+      }
+    }
+
+    .eventContainer {
+      display: flex;
+      gap: 12px;
+
+      .number {
+        color: #333945;
+        font-family: "Helvetica Neue";
+        font-size: 12px;
+        padding-top: 24px;
+
+        &.extra {
+          color: #FF8A04;
+        }
+
+        &.warning {
+          color: #FF0000;
+        }
+      }
+
+      .eventContent {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .eventHeader {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .timeType {
+            color: #A5A8B1;
+            font-family: "Helvetica Neue";
+            font-size: 12px;
+            margin-bottom: 3px;
+
+            &.warning {
+              color: #FF0000;
+            }
+
+            &.extraText {
+              color: #FF8A04;
+            }
+          }
+
+          .timeContainer {
+            border: 1px solid #D0D6DB;
+            border-radius: 4px;
+            padding: 0px 10px;
+            height: 32px;
+            font-family: "Helvetica Neue";
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+
+            &.warning {
+              border-color: #FF0000;
+            }
+
+            &.extraBorder {
+              border-color: #FF8A04;
+            }
+          }
+
+          .toolsIcon {
+            padding-top: 16px;
+
+            &.hidden {
+              visibility: hidden;
+            }
+          }
+
+          .noMatch {
+            background-color: #FF0000;
+            border-radius: 4px;
+            color: #333945;
+            font-family: "Helvetica Neue Medium";
+            font-size: 14px;
+            padding: 0px 10px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+          }
+
+          .extra {
+            background-color: #FF8A04;
+            border-radius: 4px;
+            color: #333945;
+            font-family: "Helvetica Neue Medium";
+            font-size: 14px;
+            padding: 0px 10px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+          }
+        }
+        .eventEmployee {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          .employeeImage {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .employeeName {
+            font-family: "Helvetica Neue Medium";
+            font-size: 14px;
+            color: #333945;
+          }
+          .employeeSkill {
+            font-family: "Helvetica Neue";
+            font-size: 12px;
+            color: #A5A8B1;
+          }
+        }
+      }
+    }
+  }
+}
