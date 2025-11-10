@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useState,
+  useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -104,7 +104,6 @@ let columnsWidth = {
   cost: 140,
   profit: 140,
 };
-
 const permissionsConfig = [
   {
     name: 'places',
@@ -238,10 +237,9 @@ export default () => {
   const { id: companyId } = useParams();
   const permissions = usePermissions(permissionsConfig);
 
-  const [workTime, setWorkTime] = useState([]);
-
   const [total, setTotal] = useState({ sallary: 0, cost: 0, profit: 0 });
   const [logbook_employee, setLogbookEmployee] = useState(!!user?.employee?.logbook_employee);
+  const [sortStatus, setSortStatus] = useState([]);
 
   moment.updateLocale('lt', {
     weekdays: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"],
@@ -253,36 +251,225 @@ export default () => {
 
   moment.locale(localStorage.getItem('i18nextLng') || 'en');
 
-  useEffect(() => {
-    const { cost: costEarning, profit: profitAccess } = permissions;
+  const { cost: costEarning, profit: profitAccess } = permissions
 
-    setWorkTime(wTime.map((day) => {
-      const { items } = day;
-      let cost = day.cost;
-      let charge = day.sallary;
-      let profit = day.profit;
-
-      const newDay = {
+  const workTime = useMemo(() => {
+    return wTime.map((day) => {
+      return {
         ...day,
-        items: items.map(({ profitability = {}, ...rest }) => {
+        items: day.items.map(({ profitability = {}, ...rest }) => {
           return {
             ...rest,
             ...profitability,
           };
         }),
+        ...costEarning ? { cost: day.cost } : {},
+        ...profitAccess ? { profit: day.profit, charge: day.sallary } : {},
       };
+    })
+  }, [profitAccess, costEarning, wTime])
 
+  useEffect(() => {
+    dispatch(getJobTypes(companyId));
+    dispatch(getPlaces(companyId));
+    dispatch(getSkills(companyId));
+    dispatch(loadLogbookJournal(companyId));
+    dispatch(loadEmployeesAll(companyId, {page: 'logbook'}));
+    dispatch(getCustomCategories(companyId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyId]);
 
+  useEffect(() => {
+    sendRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moment(dateRange.startDate).format('YYYY-MM-DD'), moment(dateRange.endDate).format('YYYY-MM-DD')]);
 
-      return {
-        ...newDay,
-        ...costEarning ? { cost } : {},
-        ...profitAccess ? { profit, charge } : {},
-      };
-    }));
-  }, [permissions, wTime]);
+  useEffect(() => {
+    if (Array.isArray(workTime)) {
+      if (logbook_employee) {
+        let newArrange = [];
+        let employeeDays = {};
 
-  const [sortStatus, setSortStatus] = useState([]);
+        const partFormat = getDateFormat({
+          'YY.MM.DD': 'YYYY. MMMM, DD',
+          'DD.MM.YY': 'DD. MMMM, YYYY',
+          'MM.DD.YY': 'MMMM. DD, YYYY',
+        });
+
+        const timeToMinutes = (time) => {
+          if (!time) return 0;
+          const [hours, minutes] = time.split(':');
+          return Number(hours) * 60 + Number(minutes);
+        }
+
+        const minutesToTime = (minutes) => {
+          const hours = Math.floor(minutes / 60);
+          const min = minutes % 60;
+          return `${String(hours).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+        }
+
+        workTime.map((item) => {
+          let { items } = item;
+          items.map((it) => {
+            if (!employeeDays[it.employee_id]) {
+              employeeDays[it.employee_id] = []
+            }
+
+            employeeDays[it.employee_id].push(
+              {
+                ...it,
+                date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`),
+                status: statusSelector(it.works[0].status, it?.stoped_by),
+              })
+
+            if (!newArrange.find((i) => i.employeeId === it.employee_id)) {
+              newArrange.push(
+                {
+                  ...item,
+                  employeeId: it.employee_id,
+                  label: it.employee
+                })
+            }
+
+            return it;
+          });
+
+          return item;
+        });
+
+        newArrange = newArrange.map((item) => {
+          return {
+            ...item,
+            duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.duration)*1; }, 0)),
+            working_hours: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.working_hours)*1; }, 0)),
+            break_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.break_time)*1; }, 0)),
+            holiday_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.holiday_time)*1; }, 0)),
+            night_duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.night_duration)*1; }, 0)),
+            cost: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.cost.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            charge: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.charge.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            profit: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.profit.replace(/,/g, ''))*1; }, 0)).toFixed(2),
+            items: [...employeeDays[item.employeeId]],
+          };
+        });
+
+        setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
+
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Employee') ? 'date' : item.field, label: (item.label === 'Employee') ? 'Date' : item.label } } ))
+      } else {
+        setItemsArray(workTime.map((item) => {
+          let { items } = item;
+
+          if (items?.length) {
+            items = items
+              .map((it) => ({ ...it, status: statusSelector(it.works[0].status, it?.stoped_by) }))
+              .filter((it) => !sortStatus.some((status) => 
+                status === it.status ||
+                (status === 'Pending' && it.status === 'Left geozone') ||
+                (status === 'Pending' && it.status === 'Out of Geozone') ||
+                (status === 'Pending' && it.status === 'Turned off geolocation') ||
+                (status === 'Pending' && it.status === 'Turned off internet or app') ||
+                (status === 'Pending' && it.status === 'Logged off the APP') ||
+                (status === 'Pending' && it.status === 'Stopped by System') ||
+                (status === 'Pending' && it.status === 'Stopped by Manager')
+            ));
+          }
+
+          const partFormat = getDateFormat({
+            'YY.MM.DD': 'YYYY. MMMM, DD',
+            'DD.MM.YY': 'DD. MMMM, YYYY',
+            'MM.DD.YY': 'MMMM. DD, YYYY',
+          });
+
+          let new_label = moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase();
+          if (new_label === 'INVALID DATE') {
+            new_label = moment(item.id).format(`dddd, ${partFormat}`).toUpperCase();
+          }
+          return {
+            ...item,
+            label: new_label === 'INVALID DATE' ? item.id : new_label,
+            items,
+          };
+        }).filter(({ items }) => items.length));
+
+        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Date') ? 'employee' : item.field, label: (item.label === 'Date') ? 'Employee' : item.label } } ))
+      }
+     
+      setColumnsWidthArray({...columnsWidth});
+      setTotal(getTotal);
+    }
+
+    // eslint-disable-next-line
+  }, [workTime, getTotal, sortStatus, logbook_employee]);
+
+  useEffect(() => {
+    let allColumnsArray = columns.filter((column) => {
+      switch (column.field) {
+        case 'place':
+          return permissions.places
+        case 'jobType':
+          return permissions.jobs
+        case 'charge':
+        case 'profit':
+          return permissions.profit
+        case 'cost':
+          return permissions.cost
+        case 'shift_name':
+          return !permissions.shift_name
+        case 'holiday_time':
+          return AdditionalRates.holiday
+        case 'night_duration':
+          return AdditionalRates.night_time && permissions.night_rates
+        case 'shift_name':
+          return permissions.schedule_simple || permissions.schedule_shift
+        case 'task_name':
+          return permissions.schedule_simple
+        case 'empty_hours':
+          return permissions.empty_hours_enabled
+        default:
+          return true;
+      }
+    });
+
+    if (permissions.custom_category) {
+      //need add it before 'start' column
+      const customCategories = allCustomCategories.map((category) => {
+        return {
+          label: category.name,
+          field: `custom_category_${category.id}`,
+          checked: true,
+        };
+      });
+
+      allColumnsArray = allColumnsArray.reduce((acc, item) => {
+        if (item.field === 'start') {
+          return [...acc, ...customCategories, item];
+        }
+        return [...acc, item];
+      }, []);
+    }
+
+    // eslint-disable-next-line
+    setColumnsArray(allColumnsArray);
+    // eslint-disable-next-line
+  }, [permissions, setColumnsArray, allCustomCategories, AdditionalRates]);
+
+  useEffect(() => {
+    setLoading(workTimeLoading);
+  }, [workTimeLoading]);
+
+  useEffect(() => {
+    if (Array.isArray(selectSkills)) {
+      setSkills(selectSkills);
+    }
+  }, [selectSkills]);
+
+  useEffect(() => {
+    if (Array.isArray(selectPlaces)) {
+      setPlaces(selectPlaces);
+    }
+  }, [selectPlaces]);
+  
+  
 
   const sorting = (status) => {
     setSortStatus((prevState) => {
@@ -426,18 +613,6 @@ export default () => {
     }
   };
 
-
-  useEffect(() => {
-    dispatch(getJobTypes(companyId));
-    dispatch(getPlaces(companyId));
-    // dispatch(getEmployees(companyId));
-    dispatch(getSkills(companyId));
-    dispatch(loadLogbookJournal(companyId));
-    dispatch(loadEmployeesAll(companyId, {page: 'logbook'}));
-    dispatch(getCustomCategories(companyId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const sendRequest = useCallback((props = {}) => {
     const { startDate, endDate } = dateRange;
     if (startDate && !endDate) return;
@@ -459,212 +634,6 @@ export default () => {
       setSelectedItem(null);
     });
   }, [checkedEmployees, checkedSkills, checkedPlaces, companyId, dateRange, dispatch, search]);
-
-  useEffect(() => {
-    sendRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateRange]);
-
-  useEffect(() => {
-    if (Array.isArray(workTime)) {
-      if (logbook_employee) {
-        let newArrange = [];
-        let employeeDays = {};
-
-        const partFormat = getDateFormat({
-          'YY.MM.DD': 'YYYY. MMMM, DD',
-          'DD.MM.YY': 'DD. MMMM, YYYY',
-          'MM.DD.YY': 'MMMM. DD, YYYY',
-        });
-
-        const timeToMinutes = (time) => {
-          if (!time) return 0;
-          const [hours, minutes] = time.split(':');
-          return Number(hours) * 60 + Number(minutes);
-        }
-
-        const minutesToTime = (minutes) => {
-          const hours = Math.floor(minutes / 60);
-          const min = minutes % 60;
-          return `${String(hours).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-        }
-
-        workTime.map((item) => {
-          let { items } = item;
-          items.map((it) => {
-            if (!employeeDays[it.employee_id]) {
-              employeeDays[it.employee_id] = []
-            }
-
-            employeeDays[it.employee_id].push(
-              {
-                ...it,
-                date: moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`),
-                status: statusSelector(it.works[0].status, it?.stoped_by),
-              })
-
-            if (!newArrange.find((i) => i.employeeId === it.employee_id)) {
-              newArrange.push(
-                {
-                  ...item,
-                  employeeId: it.employee_id,
-                  label: it.employee
-                })
-            }
-
-            return it;
-          });
-
-          return item;
-        });
-
-        newArrange = newArrange.map((item) => {
-          return {
-            ...item,
-            duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.duration)*1; }, 0)),
-            working_hours: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.working_hours)*1; }, 0)),
-            break_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.break_time)*1; }, 0)),
-            holiday_time: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.holiday_time)*1; }, 0)),
-            night_duration: minutesToTime([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + timeToMinutes(current.night_duration)*1; }, 0)),
-            cost: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.cost.replace(/,/g, ''))*1; }, 0)).toFixed(2),
-            charge: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.charge.replace(/,/g, ''))*1; }, 0)).toFixed(2),
-            profit: parseFloat([...employeeDays[item.employeeId]].reduce(function(sum, current) { return sum*1 + parseFloat(current.profit.replace(/,/g, ''))*1; }, 0)).toFixed(2),
-            items: [...employeeDays[item.employeeId]],
-          };
-        });
-
-        setItemsArray(newArrange ? newArrange.filter(({ items }) => items.length) : []);
-
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Employee') ? 'date' : item.field, label: (item.label === 'Employee') ? 'Date' : item.label } } ))
-      } else {
-        setItemsArray(workTime.map((item) => {
-          let { items } = item;
-
-          if (items?.length) {
-            items = items
-              .map((it) => ({ ...it, status: statusSelector(it.works[0].status, it?.stoped_by) }))
-              .filter((it) => !sortStatus.some((status) => 
-                status === it.status ||
-                (status === 'Pending' && it.status === 'Left geozone') ||
-                (status === 'Pending' && it.status === 'Out of Geozone') ||
-                (status === 'Pending' && it.status === 'Turned off geolocation') ||
-                (status === 'Pending' && it.status === 'Turned off internet or app') ||
-                (status === 'Pending' && it.status === 'Logged off the APP') ||
-                (status === 'Pending' && it.status === 'Stopped by System') ||
-                (status === 'Pending' && it.status === 'Stopped by Manager')
-            ));
-          }
-
-          const partFormat = getDateFormat({
-            'YY.MM.DD': 'YYYY. MMMM, DD',
-            'DD.MM.YY': 'DD. MMMM, YYYY',
-            'MM.DD.YY': 'MMMM. DD, YYYY',
-          });
-
-          let new_label = moment(item.id, 'dddd, DD, MMMM, YYYY').format(`dddd, ${partFormat}`).toUpperCase();
-          if (new_label === 'INVALID DATE') {
-            new_label = moment(item.id).format(`dddd, ${partFormat}`).toUpperCase();
-          }
-          return {
-            ...item,
-            label: new_label === 'INVALID DATE' ? item.id : new_label,
-            items,
-          };
-        }).filter(({ items }) => items.length));
-
-        setColumnsArray(columnsArray.map((item) => { return {...item, field: (item.label === 'Date') ? 'employee' : item.field, label: (item.label === 'Date') ? 'Employee' : item.label } } ))
-      }
-     
-      setColumnsWidthArray({...columnsWidth});
-      setTotal(getTotal);
-    }
-
-    // eslint-disable-next-line
-  }, [workTime, getTotal, sortStatus, logbook_employee]);
-
-  useEffect(() => {
-    let allColumnsArray = columns.filter((column) => {
-      if (!permissions.places && column.field === 'place') {
-        return false;
-      }
-      if (!permissions.jobs && column.field === 'jobType') {
-        return false;
-      }
-      if (!permissions.profit && (column.field === 'charge' || column.field === 'profit')) {
-        return false;
-      }
-      if (!permissions.cost && column.field === 'cost') {
-        return false;
-      }
-      if (permissions.shift_name && column.field === 'shift_name') {
-        return false;
-      }
-      if (!AdditionalRates.holiday && column.field === 'holiday_time') {
-        return false;
-      }
-      if ((!AdditionalRates.night_time || !permissions.night_rates) && column.field === 'night_duration') {
-        return false;
-      }
-      if ((!permissions.use_approval_flow || !journal.approve_flow) && column.field === 'status') {
-        //return false;
-      }
-      if ((!permissions.schedule_simple && !permissions.schedule_shift) && (column.field === 'shift_name' || column.field === 'task_name')) {
-        return false;
-      }
-
-      if (permissions.schedule_simple && column.field === 'shift_name') {
-        return false;
-      }
-
-      if (!permissions.schedule_simple && column.field === 'task_name') {
-        return false;
-      }
-
-      if (!permissions.empty_hours_enabled && column.field === 'empty_hours') {
-        return false;
-      }
-
-      return true;
-    });
-
-    if (permissions.custom_category) {
-      //need add it before 'start' column
-      const customCategories = allCustomCategories.map((category) => {
-        return {
-          label: category.name,
-          field: `custom_category_${category.id}`,
-          checked: true,
-        };
-      });
-
-      allColumnsArray = allColumnsArray.reduce((acc, item) => {
-        if (item.field === 'start') {
-          return [...acc, ...customCategories, item];
-        }
-        return [...acc, item];
-      }, []);
-    }
-
-    // eslint-disable-next-line
-    setColumnsArray(allColumnsArray);
-    // eslint-disable-next-line
-  }, [permissions, setColumnsArray, allCustomCategories, journal.approve_flow]);
-
-  useEffect(() => {
-    setLoading(workTimeLoading);
-  }, [workTimeLoading]);
-
-  useEffect(() => {
-    if (Array.isArray(selectSkills)) {
-      setSkills(selectSkills);
-    }
-  }, [selectSkills]);
-
-  useEffect(() => {
-    if (Array.isArray(selectPlaces)) {
-      setPlaces(selectPlaces);
-    }
-  }, [selectPlaces]);
 
   const selectionHandler = useCallback((itemId, value) => {
     const checkedItms = [];
@@ -689,6 +658,7 @@ export default () => {
     setItemsArray(setCheckedToAll);
     setCheckedItems(checkedItms);
   }, []);
+
   const sortHandler = useCallback((field, asc) => {
     const sortNumFunction = (a, b) => (asc ? (a[field] - b[field]) : (b[field] - a[field]));
     const sortFunction = (a, b) => {
@@ -1219,6 +1189,7 @@ export default () => {
     label: `${name} ${surname}`,
     // checked: checkedEmployees.some(({ id: employeeId }) => employeeId === id),
   }), []);
+
   const allSortedEmployees = useGroupingEmployees(employees, employToCheck);
 
   return (
