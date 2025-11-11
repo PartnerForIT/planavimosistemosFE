@@ -16,7 +16,7 @@ import useCompanyInfo from '../../hooks/useCompanyInfo'
 import { DemanToolForm } from '../Schedule/Shift/DemandToolForm'
 import DemandToolView from './DemandToolView'
 
-const DemandToolSidebar = forwardRef(({onClose}, ref) => {
+const DemandToolSidebar = forwardRef(({onSubmit}, ref) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { id: companyId } = useParams()
@@ -72,9 +72,9 @@ const DemandToolSidebar = forwardRef(({onClose}, ref) => {
         jobTypes: data.jobTypes,
       }
       const [shiftId] = activeDemandId.replace('demand_tool_', '').split('_')
-      console.log('post -> ', post)
-      const res = await updateDemandToolsForDate(companyId, shiftId, post)
-      console.log('updateDemandToolsForDate', res)
+      await updateDemandToolsForDate(companyId, shiftId, post)
+      onSubmit()
+      dispatch({type: 'SET_ACTIVE_DEMAND_ID', id: activeDemandId})
     }
     setMode(prev => prev === 'view' ? 'edit' : 'view')
   }
