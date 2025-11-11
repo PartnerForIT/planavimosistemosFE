@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useMemo } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,8 +7,6 @@ import Button from '../Core/Button/Button';
 import InputSelect from '../Core/InputSelect';
 import Input from '../Core/Input/Input';
 import SearchIcon from '../Icons/SearchIcon';
-import { getCompanies } from '../../store/organizationList/actions';
-import useDebounce from '../Helpers/useDebounce';
 
 import styles from './orgList.module.scss';
 
@@ -42,22 +39,13 @@ export default function Filter({
   selectedItem,
   enterOrganization,
   clearCheckbox,
+  query,
+  onChangeQuery,
 }) {
   const classes = useStyles();
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const [search, setSearch] = useState('');
+  const { t } = useTranslation();  
+  
   const [open, setOpen] = useState(false);
-
-  const debouncedSearchTerm = useDebounce(search, 500);
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      dispatch(getCompanies({ search }));
-    }
-    if (search === '') {
-      dispatch(getCompanies());
-    }
-  }, [debouncedSearchTerm, dispatch, search]);
 
   const handleClose = () => {
     clearCheckbox();
@@ -99,8 +87,8 @@ export default function Filter({
           <Input
             icon={<SearchIcon />}
             placeholder={`${t('Search')}...`}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={query}
+            onChange={(e) => onChangeQuery(e.target.value)}
           />
         </FormControl>
       </div>

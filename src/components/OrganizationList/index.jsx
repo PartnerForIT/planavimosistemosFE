@@ -83,6 +83,7 @@ export default function OrganizationList() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [totalDuration] = useState(null);
+  const [query, setQuery] = useState('')
 
   const countries = useSelector(countriesSelector);
   const companies = useSelector(companiesSelector);
@@ -94,13 +95,6 @@ export default function OrganizationList() {
     dispatch(getCompanies());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (organizations === 3) {
-      dispatch(getCompanies());
-    } else {
-      dispatch(getCompanies({ status: organizations }));
-    }
-  }, [dispatch, organizations]);
 
   const nameCountry = useCallback((row) => {
     const name = countries.filter((item) => item.code === row.country);
@@ -173,9 +167,11 @@ export default function OrganizationList() {
     const { value } = e.target;
     SetOrganizations(parseInt(value, 10));
   };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
     setInputValues({
@@ -189,6 +185,7 @@ export default function OrganizationList() {
       real_timezone: '',
     });
   };
+
   const handleCloseDeleteConfirm = () => {
     setOpenDeleteConfirm(false);
   };
@@ -196,6 +193,7 @@ export default function OrganizationList() {
   // Add new organization
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value)
     setInputValues({ ...inputValues, [name]: value });
     if (name === 'country') {
       const selectCounry = countries.filter((item) => item.code === value);
@@ -276,6 +274,22 @@ export default function OrganizationList() {
     win.focus();
   };
 
+  const filterByStatus = (item) => {
+    return organizations === 3 || item.status === organizations
+  }
+
+  const filterByQuery = (item) => {
+    if (!query) return true;
+
+    const lowerQuery = query.toLowerCase();
+
+    return item.name.toLowerCase().includes(lowerQuery) ||
+      item.contact_person_name.toLowerCase().includes(lowerQuery) ||
+      item.contact_person_email.toLowerCase().includes(lowerQuery);
+  }
+
+  const orgList = itemsArray.filter(item => filterByStatus(item) && filterByQuery(item))
+
   return (
     <MaynLayout>
       <TitleBlock
@@ -288,6 +302,8 @@ export default function OrganizationList() {
       </TitleBlock>
       <PageLayout>
         <Filter
+          query={query}
+          onChangeQuery={setQuery}
           handleChangeOrganizations={handleChangeOrganizations}
           organizations={organizations}
           changeStatusCompany={changeStatusCompany}
@@ -314,7 +330,7 @@ export default function OrganizationList() {
         />
 
         <DataTable
-          data={itemsArray || []}
+          data={orgList || []}
           columns={columnsArray || []}
           columnsWidth={columnsWidthArray || {}}
           onColumnsChange={setColumnsArray}

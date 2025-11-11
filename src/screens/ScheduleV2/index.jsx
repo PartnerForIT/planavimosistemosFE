@@ -755,20 +755,25 @@ const ScheduleV2 = () => {
         }
         return e
       })
-
       const workEvents = generateEvents(eventsWithRequests, res.markers, type, scheduleSettings, fromDateRef.current)
-      const demandToolsEvents = generateDemandToolsEvents(type, formDate, res.demand_tools, res.resources, events, res.demand_tools)
+      // const demandToolsEvents = generateDemandToolsEvents(type, formDate, res.demand_tools, res.resources, events, res.demand_tools)
       
       setSchedule(state => ({
         accumulatedHours: res.accumulatedHours,
         holidays: Object.keys(res.holidays).length ? res.holidays : state.holidays,
-        events: [...workEvents, ...demandToolsEvents],
+        events: [...workEvents, ...res.demand_tools_events], // , ...demandToolsEvents
         markers: res.markers,
         resources: res.resources,
         timesPanel: res.timesPanel,
         published: res.published,
         count_changes: res.count_changes,
-        demand_tools: res.demand_tools,
+        demand_tools: res.demand_tools_events.reduce((acc, event) => {
+          const shiftId = event.resourceId.split('_')[2]
+          return {
+            ...acc,
+            [shiftId]: true,
+          }
+        }, {}),
         loading: false,
       }))
     }
@@ -1875,7 +1880,8 @@ const ScheduleV2 = () => {
         />
       )}
       <DemandToolSidebar
-        ref={demandToolSidebarRef} />
+        ref={demandToolSidebarRef}
+        onSubmit={() => getSchedule({type: timeline, formDate: currentStartDate})} />
     </MainLayout>
   )
 }
