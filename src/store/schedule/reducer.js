@@ -38,6 +38,7 @@ const initialState = {
   published: false,
   count_changes: 0,
   activeDemandId: null,
+  aiEventGeneration: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -65,8 +66,9 @@ export const reducer = (state = initialState, action) => {
       };
     case GET_SCHEDULE_ERROR:
       return { ...state, loading: false };
+    case 'SET_AI_EVENT_GENERATION':
+      return { ...state, aiEventGeneration: action.payload };
     case SET_ACTIVE_DEMAND_ID:
-      console.log('SET_ACTIVE_DEMAND_ID', action.id)
       return { ...state, activeDemandId: state.activeDemandId === action.id ? null : action.id };
     case POST_SHIFT:
     case PUT_SHIFT:

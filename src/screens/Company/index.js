@@ -50,6 +50,7 @@ import pusher from '../../pusher';
 import getToken from '../../store/getToken';
 
 import styles from './Company.module.scss';
+import { uniqueId } from 'lodash';
 
 const permissionsConfig = [
   {
@@ -191,12 +192,19 @@ export default () => {
       dispatch(getOrganisationModules(companyId));
       dispatch(loadLogbookAdditionalRates(companyId));
       pusher.init(getToken(), (status) => {
-        console.log('Pusher connection status:', status);
         if (status.type === 'connected') {
-          console.log(user?.user?.id, 'Opening user channel after Pusher connected');
           pusher.openUserChannel(user?.user?.id)
           setTimeout(() => {
-            pusher.listenUserNotify(addNotification);
+            pusher.listenUserNotify(data => {
+              if (data.type === 'ai_generation_changes') {
+                dispatch({type: 'SET_AI_EVENT_GENERATION', payload: {
+                  ...data,
+                  uniqueId: uniqueId('ai_event_generation_')
+                }})
+                return
+              }
+              addNotification(data)
+            });
           }, 500);
         }
       });

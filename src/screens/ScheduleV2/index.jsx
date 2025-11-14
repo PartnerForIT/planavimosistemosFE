@@ -403,6 +403,7 @@ const ScheduleV2 = () => {
   const { users: employees } = useSelector(state => state.settings.employees)
   const user = useSelector(state => state.auth.user)
   const copyToolHistory = useSelector(state => state.copyTool.history)
+  const aiEventGeneration = useSelector(state => state.schedule.aiEventGeneration)
 
   const permissions = usePermissions(permissionsConfig)
   
@@ -644,6 +645,17 @@ const ScheduleV2 = () => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (aiEventGeneration) {
+      dispatch(dismissSnackbar())
+      dispatch(addSnackbar(aiEventGeneration.message, 'success'))
+      getSchedule({type: timeline, formDate: currentStartDate}).then(() => {
+        dispatch({type: 'SET_AI_EVENT_GENERATION', payload: null})
+        dispatch(dismissSnackbar())
+      })
+    }
+  }, [aiEventGeneration?.uniqueId, timeline, currentStartDate])
 
   useEffect(() => {
     if (companyId) {
