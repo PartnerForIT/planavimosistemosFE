@@ -190,13 +190,22 @@ export default () => {
       dispatch(getCompanyInfo(companyId, true));
       dispatch(getOrganisationModules(companyId));
       dispatch(loadLogbookAdditionalRates(companyId));
-      pusher.init(getToken(), (status) => {});
-      if (user?.user?.id) {
-        pusher.openUserChannel(user?.user?.id)
-        setTimeout(() => {
-          pusher.listenUserNotify(addNotification);
-        }, 500);
-      }
+      pusher.init(getToken(), (status) => {
+        console.log('Pusher connection status:', status);
+        if (status.type === 'connected') {
+          console.log(user?.user?.id, 'Opening user channel after Pusher connected');
+          pusher.openUserChannel(user?.user?.id)
+          setTimeout(() => {
+            pusher.listenUserNotify(addNotification);
+          }, 500);
+        }
+      });
+      // if (user?.user?.id) {
+      //   pusher.openUserChannel(user?.user?.id)
+      //   setTimeout(() => {
+      //     pusher.listenUserNotify(addNotification);
+      //   }, 500);
+      // }
     }
     // eslint-disable-next-line
   }, [companyId, user?.user?.id]);

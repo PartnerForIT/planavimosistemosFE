@@ -17,6 +17,7 @@ import { TIMELINE, COLORS_JOB_TYPE, COLORS_SHIFT } from '../../const'
 import useGroupingEmployees from '../../hooks/useGroupingEmployees'
 import { loadEmployeesAll } from '../../store/settings/actions'
 import { getShiftTypes } from '../../store/shiftsTypes/actions'
+import { addSnackbar, dismissSnackbar } from '../../store/organizationList/actions'
 import { getJobTypes } from '../../store/jobTypes/actions'
 import usePermissions from '../../components/Core/usePermissions'
 import { getCompanyTimeOffRequests, getCompanyTimeOffPolicies, publishSchedule, notifySchedule, scheduleChangesLog, generateAIShiftEvents } from '../../api'
@@ -1154,8 +1155,13 @@ const ScheduleV2 = () => {
       from_date: currentStartDate,
       type: timeline,
     })
+    if (res.message) {
+      dispatch(addSnackbar(res.message, 'success'))
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      dispatch(dismissSnackbar())
+    }
     console.log('generateAIEvents', res)
-    getSchedule({type: timeline, formDate: currentStartDate})
+    // getSchedule({type: timeline, formDate: currentStartDate})
   }
 
   const getShiftName = (id) => {

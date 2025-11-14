@@ -84,8 +84,6 @@ const DemandToolSidebar = forwardRef(({onSubmit}, ref) => {
     dispatch({type: 'SET_ACTIVE_DEMAND_ID', id: activeDemandId})
   }
 
-  console.log('activeDemandId', activeDemandId)
-
   return (
     
       <div className={cn(styles.container, {[styles.active]: Boolean(activeDemandId)})}>
@@ -95,7 +93,7 @@ const DemandToolSidebar = forwardRef(({onSubmit}, ref) => {
                 {
                   data
                     ? <div className={styles.content}>
-                        <div className={styles.editButton} onClick={toggleMode}>{mode === 'view' ? t('Edit') : t('Save & Close')}</div>
+                        {/* <div className={styles.editButton} onClick={toggleMode}>{mode === 'view' ? t('Edit') : t('Save & Close')}</div> */}
                         <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').format(dateFormat)}</div>
                         <div className={styles.title}>{moment(data.dateString, 'DD-MM-YYYY').locale(locale).format('dddd')}</div>
                         <div className={styles.demandShiftsCount}>

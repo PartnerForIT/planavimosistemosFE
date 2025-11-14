@@ -20,6 +20,7 @@ const pusher = {
       document.cookie = `token=${token.headers.Authorization.split(' ')[1]}; path=/; SameSite=Lax`;
       this.echo = new Echo({
         broadcaster: "socket.io",
+        // host: `${window.location.hostname === 'localhost' ? 'localhost:6001' : window.location.hostname}`,
         host: `${window.location.hostname === 'localhost' ? 'staging.grownu.com' : window.location.hostname}`,
         // host: `${window.location.hostname}`+ (window.location.hostname === 'localhost' ? `:${port}` : ''),
         auth: {
@@ -66,10 +67,10 @@ const pusher = {
 
   openCompanyChannel(companyId) {
     this.closeCompanyChannel()
-
+    
     if (this.echo) {
       this.companyChannel = this.echo.join(`company.${companyId}`)
-      //this.log(this.companyChannel, 'Company Channel was open')
+      // this.log(this.companyChannel, 'Company Channel was open')
       return this.companyChannel
     } else {
       //this.log('Echo is undefined during Open Company Channel')
