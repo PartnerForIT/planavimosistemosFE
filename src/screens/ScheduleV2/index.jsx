@@ -652,6 +652,7 @@ const ScheduleV2 = () => {
       dispatch(addSnackbar(aiEventGeneration.message, 'success'))
       getSchedule({type: timeline, formDate: currentStartDate}).then(() => {
         dispatch({type: 'SET_AI_EVENT_GENERATION', payload: null})
+        dispatch(dismissSnackbar())
       })
     }
   }, [aiEventGeneration?.uniqueId, timeline, currentStartDate])
