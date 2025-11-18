@@ -6,7 +6,7 @@
         left: 100%;
         transform: translateY(-50%);
         background: white;
-        border: 1px solid #0085FF;
+        border: 1px solid #FFBF23;
         border-radius: 4px;
         padding: 5px;
         margin-left: 6px;
@@ -41,13 +41,13 @@
             height: 0;
             border-style: solid;
             border-width: 9px 9px 9px 0;
-            border-color: transparent #0085FF transparent transparent;
+            border-color: transparent #FFBF23 transparent transparent;
             z-index: -1;
         }
     }
 
     &__button {
-        background: #0085FF;
+        background: #FFBF23;
         border-radius: 4px;
         color: white;
         border: none;

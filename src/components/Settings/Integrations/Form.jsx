@@ -29,7 +29,7 @@ export default ({
       <Switch
         onChange={(value) => { handleSystemChange(value, 'rivile') }}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         name='rivile'
@@ -137,7 +137,7 @@ export default ({
             <Switch
               onChange={(value) => { handleSystemChange(value, 'rivile_use_object') }}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               checked={integrationsData.rivile_use_object}
@@ -151,7 +151,7 @@ export default ({
             <Switch
               onChange={(value) => { handleSystemChange(value, 'rivile_use_places_unit') }}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               checked={integrationsData.rivile_use_places_unit}
@@ -252,7 +252,7 @@ export default ({
       <Switch
         onChange={(value) => { handleSystemChange(value, 'excel') }}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         name='excel'
@@ -383,7 +383,7 @@ export default ({
       <Switch
         onChange={(value) => { handleSystemChange(value, 'iiko') }}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         name='iiko'

@@ -172,7 +172,7 @@ export default function Sesurity() {
                     <Switch
                       onChange={handleChangeInvitation}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#FFBF23'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={invitation}

@@ -1,6 +1,7 @@
 import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 // import {
 //   makeStyles,
 // } from '@material-ui/core/styles';
@@ -41,6 +42,7 @@ export default function Filter({
   setSearch,
   search,
 }) {
+  const { id } = useParams();
   // const classes = useStyles();
   const { t } = useTranslation();
   // const [search, setSearch] = useState('');
@@ -129,13 +131,16 @@ export default function Filter({
         >
           {t('Activate')}
         </Button>
-        <Button
-          yellow
-          onClick={() => changeUserStatus('suspend')}
-          disabled={!checkedItems.length > 0 && !selectedItem.id}
-        >
-          {t('Suspend')}
-        </Button>
+        { id*1 !== 125 && (
+          <Button
+            yellow
+            onClick={() => changeUserStatus('suspend')}
+            disabled={!checkedItems.length > 0 && !selectedItem.id}
+          >
+            {t('Suspend')}
+          </Button>
+          )
+        }
         {
           withDeleteButton && (
             <Button

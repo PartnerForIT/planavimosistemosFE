@@ -28,7 +28,7 @@ export default function Form({
           <Switch
             onChange={() => handleInputChange({ target: { name: 'data_delete', value: !AutoDeleteData.data_delete, type: 'checkbox' } })}
             offColor='#808F94'
-            onColor='#0085FF'
+            onColor='#FFBF23'
             uncheckedIcon={false}
             checkedIcon={false}
             name='data_delete'

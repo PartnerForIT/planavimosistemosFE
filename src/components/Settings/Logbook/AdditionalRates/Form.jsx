@@ -13,7 +13,7 @@ const BlueRadio = withStyles({
   root: {
     color: '#ccc',
     '&$checked': {
-      color: '#0085FF',
+      color: '#FFBF23',
     },
   },
   checked: {},
@@ -38,7 +38,7 @@ export default function Form({
                 <Switch
                   onChange={() => handleChangeCalculation('night_time')}
                   offColor='#808F94'
-                  onColor='#0085FF'
+                  onColor='#FFBF23'
                   uncheckedIcon={false}
                   checkedIcon={false}
                   name='night_time'
@@ -176,7 +176,7 @@ export default function Form({
                 <Switch
                   onChange={() => handleChangeCalculation('holiday')}
                   offColor='#808F94'
-                  onColor='#0085FF'
+                  onColor='#FFBF23'
                   uncheckedIcon={false}
                   checkedIcon={false}
                   name='holiday'
@@ -197,7 +197,7 @@ export default function Form({
                   <Switch
                     onChange={() => handleChangeCalculation('holiday_company')}
                     offColor='#808F94'
-                    onColor='#0085FF'
+                    onColor='#FFBF23'
                     uncheckedIcon={false}
                     checkedIcon={false}
                     name='holiday_company'
@@ -212,7 +212,7 @@ export default function Form({
                   <Switch
                     onChange={() => handleChangeCalculation('ignore_holiday_night_time')}
                     offColor='#808F94'
-                    onColor='#0085FF'
+                    onColor='#FFBF23'
                     uncheckedIcon={false}
                     checkedIcon={false}
                     name='ignore_holiday_night_time'
