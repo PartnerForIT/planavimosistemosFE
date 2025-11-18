@@ -10,7 +10,7 @@ const CheckboxIcon = ({ className }) => (
         data-name='Rectangle 70645'
         transform='translate(1177 222)'
         fill='none'
-        stroke='#0087ff'
+        stroke='#FFBF23'
         strokeWidth='3'
       >
         <rect width='30' height='30' rx='4' stroke='none' />
@@ -29,7 +29,7 @@ const CheckboxIcon = ({ className }) => (
         d='M2360.908,1120.384l5.261,5.26,8.275-8.247'
         transform='translate(-1175.489 -884.518)'
         fill='none'
-        stroke='#0087ff'
+        stroke='#FFBF23'
         strokeLinecap='round'
         strokeLinejoin='round'
         strokeWidth='2'

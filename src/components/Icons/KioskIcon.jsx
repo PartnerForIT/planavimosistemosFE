@@ -13,7 +13,7 @@ const KioskIcon = ({ className }) => (
       id='Label'
       d='M0,2.49A8.53,8.53,0,0,0,8.467-5.977,8.531,8.531,0,0,0-.008-14.443,8.522,8.522,0,0,0-8.467-5.977,8.535,8.535,0,0,0,0,2.49Z'
       transform='translate(8.467 14.443)'
-      fill='#0085ff'
+      fill='#FFBF23'
     />
     <rect id='Изображение_16' x='3.96' y='2.46' data-name='Изображение 16' width='9' height='12' fill='url(#pattern)' />
   </SvgIcon>

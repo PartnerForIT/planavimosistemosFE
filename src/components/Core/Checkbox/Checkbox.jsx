@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 
   checkedIcon: {
     boxShadow: 'none !important',
-    backgroundColor: '#0085FF',
+    backgroundColor: '#FFBF23',
     backgroundImage: 'linear-gradient(180deg, hsla(0, 0%, 100%, 0.1), hsla(0, 0%, 100%, 0))',
 
     '&::before': {

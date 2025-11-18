@@ -931,7 +931,7 @@ export default () => {
             <Switch
               onChange={setCustomWorkingTime}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               checked={customWorkingTime}

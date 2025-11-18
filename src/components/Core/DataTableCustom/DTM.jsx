@@ -20,7 +20,7 @@ import {Tooltip as ReactTooltip} from 'react-tooltip';
 
 const useStyles = makeStyles({
   colorPrimary: {
-    color: '#0087ff',
+    color: '#FFBF23',
   },
 });
 

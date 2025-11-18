@@ -9,7 +9,7 @@ const ArrowIcon = ({ className }) => (
       d='M2360.908,1120.023l4.625,4.624,4.624-4.624'
       transform='translate(-2359.494 -1118.609)'
       fill='none'
-      stroke='#0085ff'
+      stroke='#FFBF23'
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth='2'

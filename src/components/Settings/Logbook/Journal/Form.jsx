@@ -36,7 +36,7 @@ const BlueRadio = withStyles({
   root: {
     color: '#ccc',
     '&$checked': {
-      color: '#0085FF',
+      color: '#FFBF23',
     },
   },
   checked: {},
@@ -186,7 +186,7 @@ export default ({
             <Switch
               onChange={handleChangeApproveFlow}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               name='approve_flow'
@@ -209,7 +209,7 @@ export default ({
               <Switch
                 onChange={handleChangeAutomaticApprove}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#FFBF23'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 name='approve_flow'
@@ -282,7 +282,7 @@ export default ({
       <Switch
         onChange={handleChangeAutomaticBreak}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         name='approve_flow'
@@ -323,7 +323,7 @@ export default ({
             <Switch
               onChange={handleChangeAutomaticBreak2}
               offColor='#808F94'
-              onColor='#0085FF'
+              onColor='#FFBF23'
               uncheckedIcon={false}
               checkedIcon={false}
               name='approve_flow'

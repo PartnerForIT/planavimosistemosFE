@@ -20,7 +20,7 @@ export default ({
       <Switch
         onChange={(checked) => { handleInputChange({ target: { name: 'use_accumulated', value: checked, type : 'checkbox' }}) }}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         checked={timeSheetData.use_accumulated || false}
@@ -34,7 +34,7 @@ export default ({
       <Switch
         onChange={(checked) => { handleInputChange({ target: { name: 'merge_timesheet_places', value: checked, type : 'checkbox' }}) }}
         offColor='#808F94'
-        onColor='#0085FF'
+        onColor='#FFBF23'
         uncheckedIcon={false}
         checkedIcon={false}
         checked={timeSheetData.merge_timesheet_places || false}

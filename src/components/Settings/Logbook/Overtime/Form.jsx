@@ -81,7 +81,7 @@ const BlueRadio = withStyles({
   root: {
     color: '#ccc',
     '&$checked': {
-      color: '#0085FF',
+      color: '#FFBF23',
     },
   },
   checked: {},
@@ -102,7 +102,7 @@ export default function Form({
         <Switch
           onChange={handleChangeCalculation}
           offColor='#808F94'
-          onColor='#0085FF'
+          onColor='#FFBF23'
           uncheckedIcon={false}
           checkedIcon={false}
           name='approve_flow'

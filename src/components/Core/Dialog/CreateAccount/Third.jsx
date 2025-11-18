@@ -21,7 +21,7 @@ const BlueRadio = withStyles({
   root: {
     color: '#ccc',
     '&$checked': {
-      color: '#0085FF',
+      color: '#FFBF23',
     },
   },
   checked: {},
