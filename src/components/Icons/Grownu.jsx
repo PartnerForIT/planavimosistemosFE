@@ -6,8 +6,8 @@ import classnames from 'classnames';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '1em',
-    height: '1em',
+    width: '50px',
+    height: '50px',
   },
 }));
 

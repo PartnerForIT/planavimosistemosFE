@@ -5,8 +5,8 @@ import PageLayout from '../../Core/PageLayout';
 import TimeOffIcon from '../../Icons/TimeOff';
 import TitleBackIcon from '../../Icons/TitleBackIcon';
 import ArrowRightButton from '../../Icons/ArrowRightButton';
-import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar';
-import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar';
+import GrownuAdminAvatar from '../../Icons/Grownu';
+import GrownuSystemAvatar from '../../Icons/Grownu';
 import avatar from '../../Icons/avatar.png';
 import useCompanyInfo from '../../../hooks/useCompanyInfo';
 import EditIconFixedFill from '../../Icons/EditIconFixedFill';
@@ -74,9 +74,9 @@ function EmployeeActivity({
             </div>
           </div>;
       case 'admin':
-        return <div className={classes.inlineBlock} data-tooltip-html={t('Grownu system')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>;
+        return <div className={classes.inlineBlock} data-tooltip-html={t('PS system')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>;
       case 'system':
-        return <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>;
+        return <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>;
       default:
         return null;
     }
@@ -141,14 +141,14 @@ function EmployeeActivity({
           return <div className={classes.approverBlock}>
             {!activity.approved_1 && !activity.approved_2 ? (
                 <>
-                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu system')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('PS system')} data-tooltip-id='emp_name'><GrownuSystemAvatar /></div>
                   <span className={classnames(classes.approverStatus, classes.approverStatusApproved)}>{t('Auto Approved')}</span>
                 </>
               ) : (
                 <>
                   {activity.approved_1 ? (
                     activity.approved_1.id === 'admin' ? (
-                      <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                      <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                     ) : (
                       <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-tooltip-id='emp_name'>
                         <img
@@ -161,7 +161,7 @@ function EmployeeActivity({
                   ) : null}
                   {activity.approved_2 ? (
                     activity.approved_2.id === 'admin' ? (
-                      <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                      <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                     ) : (
                       <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-tooltip-id='emp_name'>
                         <img
@@ -181,7 +181,7 @@ function EmployeeActivity({
               <div className={classes.approverBlock}>
               {activity.rejected_by ? (
                 activity.rejected_by.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
                   <div className={classes.approverAvatar} data-tooltip-html={`${activity?.rejected_by?.name} ${activity?.rejected_by?.surname}`} data-tooltip-id='emp_name'>
                     <img
@@ -202,7 +202,7 @@ function EmployeeActivity({
           return <div className={classes.approverBlock}>
             {activity.approved_1 ? (
               activity.approved_1.id === 'admin' ? (
-                <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
               ) : (
                 <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_1?.name} ${activity?.approved_1?.surname}`} data-tooltip-id='emp_name'>
                   <img
@@ -215,7 +215,7 @@ function EmployeeActivity({
             ) : 
               (activity.approver_1 ? (
                 activity.approver_1.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
                   <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tooltip-html={`${activity?.approver_1?.name} ${activity?.approver_1?.surname}`} data-tooltip-id='emp_name'>
                     <img
@@ -229,7 +229,7 @@ function EmployeeActivity({
             }
             {activity.approved_2 ? (
               activity.approved_2.id === 'admin' ? (
-                <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
               ) : (
                 <div className={classes.approverAvatar} data-tooltip-html={`${activity?.approved_2?.name} ${activity?.approved_2?.surname}`} data-tooltip-id='emp_name'>
                   <img
@@ -242,7 +242,7 @@ function EmployeeActivity({
             ) : 
               (activity.approver_2 ? (
                 activity.approver_2.id === 'admin' ? (
-                  <div className={classes.inlineBlock} data-tooltip-html={t('Grownu support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
+                  <div className={classes.inlineBlock} data-tooltip-html={t('PS support')} data-tooltip-id='emp_name'><GrownuAdminAvatar /></div>
                 ) : (
                   <div className={classnames(classes.approverAvatar, classes.approverAvatarPending)} data-tooltip-html={`${activity?.approver_2?.name} ${activity?.approver_2?.surname}`} data-tooltip-id='emp_name'>
                     <img
@@ -402,7 +402,7 @@ function EmployeeActivity({
                 <Switch
                   onChange={(checked) => setExclRejectedRequests(checked)}
                   offColor='#808F94'
-                  onColor='#0085FF'
+                  onColor='#FFBF23'
                   uncheckedIcon={false}
                   checkedIcon={false}
                   checked={exclRejectedRequests}

@@ -130,13 +130,13 @@ export default ({
         isLoading ? <Progress /> : (
           <div className={style.addOrg}>
             <div className={style.addOrg__inner2}>
-              <Checkbox
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.logbook}
                 label={t('Logbook')}
                 name='logbook'
-              />
-              <div className={style.marginLeft}>
+              /> */}
+              {/* <div className={style.marginLeft}>
                 <Checkbox
                   onChange={handleChange}
                   checked={modules.empty_hours_enabled}
@@ -144,25 +144,25 @@ export default ({
                   label={t('Use Empty hours')}
                   name='empty_hours_enabled'
                 />
-              </div>
-              <Checkbox
+              </div> */}
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.events}
                 label={t('Events')}
                 name='events'
-              />
+              /> */}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.reports}
                 label={t('Reports')}
                 name='reports'
               />
-              <Checkbox
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.schedule_simple}
                 label={t('Simple Schedule')}
                 name='schedule_simple'
-              />
+              /> */}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.schedule_shift}
@@ -236,7 +236,7 @@ export default ({
                 label={t('Can create Jobs')}
                 name='create_jobs'
               />
-              { modules.create_jobs && (
+              {/* { modules.create_jobs && (
               <div className={style.marginLeft}>
                 <Checkbox
                   onChange={handleChange}
@@ -245,31 +245,31 @@ export default ({
                   name='use_job_value'
                 />
               </div>
-              )}
-              <Checkbox
+              )} */}
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.custom_category}
                 label={t('Can create custom category')}
                 name='custom_category'
-              />
+              /> */}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.create_groups}
                 label={t('Can create Groups')}
                 name='create_groups'
               />
-              <Checkbox
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.use_manager_mobile}
                 label={t('Can use Manager Mobile View')}
                 name='use_manager_mobile'
-              />
-              <Checkbox
+              /> */}
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.use_approval_flow}
                 label={t('Can use Approval Flow in Logbook')}
                 name='use_approval_flow'
-              />
+              /> */}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.cost_earning}
@@ -277,25 +277,25 @@ export default ({
                 name='cost_earning'
                 disabled={modules.profitability}
               />
-              <Checkbox
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.profitability}
                 label={t('Can use Profitability feature')}
                 name='profitability'
-              />
-              <Checkbox
+              /> */}
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.comments_photo}
                 label={t('Can use Comments and Take Photo')}
                 name='comments_photo'
-              />
-              <Checkbox
+              /> */}
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.kiosk}
                 label={t('Can use Kiosk for identification')}
                 name='kiosk'
-              />
-              {
+              /> */}
+              {/* {
                 modules.kiosk && (
                   <div className={style.marginLeft}>
                     <Checkbox
@@ -306,7 +306,7 @@ export default ({
                     />
                   </div>
                 )
-              }
+              } */}
               <Checkbox
                 onChange={handleChange}
                 checked={modules.rates}
@@ -334,12 +334,12 @@ export default ({
                 )
               }
 
-              <Checkbox
+              {/* <Checkbox
                 onChange={handleChange}
                 checked={modules.use_geolocation}
                 label={t('Geolocation checking live')}
                 name='use_geolocation'
-              />
+              /> */}
 
               <div className={style.buttonBlock}>
                 <Button cancel size='big' onClick={handleClose}>{t('Cancel')}</Button>

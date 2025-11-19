@@ -151,7 +151,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ use_publish: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.use_publish || false}
@@ -197,7 +197,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.working_at_night || false}
@@ -227,7 +227,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ deduct_break: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.deduct_break || false}
@@ -252,7 +252,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ place_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.place_timeline || false}
@@ -265,7 +265,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ shift_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.shift_timeline || false}
@@ -278,7 +278,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ job_timeline: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.job_timeline || false}
@@ -292,7 +292,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ request_dayoff: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.request_dayoff || false}
@@ -309,7 +309,7 @@ export default function ActivityLog() {
                           <Switch
                             onChange={(checked) => { handleSetInputValues({ use_empty_hours: checked }); }}
                             offColor='#808F94'
-                            onColor='#0085FF'
+                            onColor='#ffcc4b'
                             uncheckedIcon={false}
                             checkedIcon={false}
                             checked={inputValues.use_empty_hours || false}
@@ -337,7 +337,7 @@ export default function ActivityLog() {
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ use_accumulated: checked }); }}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={inputValues.use_accumulated || false}

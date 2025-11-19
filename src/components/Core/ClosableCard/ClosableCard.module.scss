@@ -11,8 +11,8 @@
 }
 
 .cardSelected {
-  background-color: #097aff;
-  box-shadow: 0 3px 16px rgba(0, 135, 255, 0.33);
+  background-color: #ffcc4b;
+  box-shadow: 0 3px 16px #ffcc4b;
 }
 
 .leftSide {
@@ -90,6 +90,6 @@
 
   path,
   circle {
-    stroke: #097aff;
+    stroke: #ffcc4b;
   }
 }
