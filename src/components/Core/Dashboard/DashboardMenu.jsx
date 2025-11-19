@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
     padding: '0px 0px 10px 5px',
     height: '40px',
     minHeight: '40px !important',
-    color: '#4080fc',
+    color: '#ffcc4b',
     fontSize: '16px',
     fontWeight: '600',
   },
@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
     padding: 0,
   },
   activeIcon: {
-    fill: '#4080fc',
+    fill: '#ffcc4b',
   },
   icon: {
     fill: '#69767A',
@@ -268,11 +268,11 @@ export default function DashboardMenu() {
         });
       }
 
-      logbook_items.push({
-        to: `/${companyId}/settings/logbook/clock`,
-        name: 'clock',
-        title: t('Clock'),
-      });
+      // logbook_items.push({
+      //   to: `/${companyId}/settings/logbook/clock`,
+      //   name: 'clock',
+      //   title: t('Clock'),
+      // });
       
       nextMenuItems.push({
         icon: LogbookIcon,
@@ -423,7 +423,7 @@ export default function DashboardMenu() {
                   id={`panel${index + 1}-header`}
                 >
                   <IconWrapper>
-                    <item.icon fill={section === item.name ? '#4080fc' : '#69767A'} />
+                    <item.icon fill={section === item.name ? '#ffcc4b' : '#69767A'} />
                   </IconWrapper>
                   <span className={styles.menuText}>
                     {item.title}

@@ -147,7 +147,14 @@
   /* stylelint-disable no-descending-specificity */
   path {
     fill: $blue-2;
+    stroke: $blue-2;
   }
+
+  g {
+    stroke: $blue-2;
+  }
+
+   
 
   .taskerIcon {
     background-image: url('../../../assets/tasker-top-menu-selected.png');

@@ -824,7 +824,7 @@ export default () => {
                 <Switch
                   onChange={handleChangeDemandTool}
                   offColor='#808F94'
-                  onColor='#0085FF'
+                  onColor='#FFBF25'
                   uncheckedIcon={false}
                   checkedIcon={false}
                   name='demand_tool'
@@ -842,7 +842,7 @@ export default () => {
               <Switch
                 onChange={handleChangeTemplateSchedule}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#FFBF25'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 name='template_schedule'
@@ -890,7 +890,7 @@ export default () => {
               <Switch
                 onChange={handleChangeExcludeHolidays}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#FFBF25'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 name='exclude_holidays'
@@ -908,7 +908,7 @@ export default () => {
               <Switch
                 onChange={handleChangeMinusHour}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#FFBF25'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 name='minus_hour'
