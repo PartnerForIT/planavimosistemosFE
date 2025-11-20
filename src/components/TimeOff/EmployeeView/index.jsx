@@ -18,8 +18,8 @@ import PolicySymbol from '../PolicySymbol'
 import DescriptionIcon from '../../Icons/DescriptionIcon'
 import EmployeeActivity from '../EmployeeActivity'
 import TitleBackIcon from '../../Icons/TitleBackIcon'
-import GrownuSystemAvatar from '../../Icons/GrownuSystemAvatar'
-import GrownuAdminAvatar from '../../Icons/GrownuAdminAvatar'
+import GrownuSystemAvatar from '../../Icons/Grownu'
+import GrownuAdminAvatar from '../../Icons/Grownu'
 import avatar from '../../Icons/avatar.png'
 
 import { getEmployeePolicies, getTimeOffEmployeeRequests, updateRequest, createRequest, getPolicyEmployee, removePolicyActivity, updatePolicyActivity } from '../../../api'
@@ -131,28 +131,28 @@ const EmployeeView = ({ isMe, tab, companyId, timeOffId, policyId, employeeId, v
     if (request.status === 'rejected' && rejected_by) {
       avatars.push({
         image: rejected_by === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={request.rejected_by_avatar || avatar} alt='approver' className={styles.approverAvatar} />,
-        label: rejected_by === 'Super Admin' ? t('Grownu support') : request.rejected_by_name,
+        label: rejected_by === 'Super Admin' ? t('PS support') : request.rejected_by_name,
       })
       return avatars
     }
     if (!approver_1_name && !approver_2_name) {
       avatars.push({
         image: <GrownuSystemAvatar />,
-        label: t('Grownu support'),
+        label: t('PS support'),
       })
       return avatars
     }
     if (approver_1_name) {
       const avatar1 = {
         image: approver_1_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_1_avatar || avatar} alt='approver1' className={styles.approverAvatar} />,
-        label: approver_1_name === 'Super Admin' ? t('Grownu support') : approver_1_name,
+        label: approver_1_name === 'Super Admin' ? t('PS support') : approver_1_name,
       }
       avatars.push(avatar1)
     }
     if (approver_2_name) {
       const avatar2 = {
         image: approver_2_name === 'Super Admin' ? <GrownuAdminAvatar /> : <img src={approver_2_avatar || avatar} alt='approver2' className={styles.approverAvatar} />,
-        label: approver_2_name === 'Super Admin' ? t('Grownu support') : approver_2_name,
+        label: approver_2_name === 'Super Admin' ? t('PS support') : approver_2_name,
       }
       avatars.push(avatar2)
     }

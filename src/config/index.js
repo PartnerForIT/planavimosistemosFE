@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 export default {
   api: {
-    url: process.env.REACT_APP_BACKEND_URL || 'https://app.planavimosistemos.com/api',
+    url: process.env.REACT_APP_BACKEND_URL || 'https://stg.planavimosistemos.com/api',
   },
   pusher: {
     key: process.env.REACT_PUSHER_APP_KEY || 'app-key',
