@@ -68,7 +68,7 @@ const useStyles = makeStyles({
     },
 
     'input:hover ~ &': {
-      backgroundColor: '#006EFF',
+      backgroundColor: '#FFBF23',
     },
   },
 

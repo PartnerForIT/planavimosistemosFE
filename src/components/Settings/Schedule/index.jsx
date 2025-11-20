@@ -147,7 +147,7 @@ export default function ActivityLog() {
             isLoading ? <Progress />
               : (
                 <>
-                  <div className={styles.workAtNight}>
+                  {/* <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ use_publish: checked }); }}
                       offColor='#808F94'
@@ -159,9 +159,9 @@ export default function ActivityLog() {
                       width={40}
                     />
                     <Label text={t('Use publish month and change notifications')} />
-                  </div>
-                  <div className={styles.hr} />
-                  <div className={styles.clockInRestriction}>
+                  </div> */}
+                  {/* <div className={styles.hr} /> */}
+                  {/* <div className={styles.clockInRestriction}>
                     <Label text={t('Clock in restriction')} />
                     <Tooltip title={t('Clock in restriction')} />
                   </div>
@@ -191,8 +191,8 @@ export default function ActivityLog() {
                       name='ignore_clockin_restriction'
                       disabled={!inputValues.clock_in_restriction}
                     />
-                  </div>
-                  <div className={styles.hr} />
+                  </div> */}
+                  {/* <div className={styles.hr} /> */}
                   <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ working_at_night: checked }); }}
@@ -288,7 +288,7 @@ export default function ActivityLog() {
                     <Label text={t('Show job type timeline')} />
                   </div>
                   <div className={styles.hr} />
-                  <div className={styles.workAtNight}>
+                  {/* <div className={styles.workAtNight}>
                     <Switch
                       onChange={(checked) => { handleSetInputValues({ request_dayoff: checked }); }}
                       offColor='#808F94'
@@ -300,8 +300,8 @@ export default function ActivityLog() {
                       width={40}
                     />
                     <Label text={t('Use request day off mobile')} />
-                  </div>
-                  <div className={styles.hr} />
+                  </div> */}
+                  {/* <div className={styles.hr} /> */}
                   { 
                     permissions.empty_hours_enabled && (
                       <>

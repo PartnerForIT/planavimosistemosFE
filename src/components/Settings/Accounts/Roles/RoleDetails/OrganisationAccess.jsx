@@ -29,7 +29,9 @@ export default memo(({
   return (
     <Content tooltip='Tooltip' title={t('Organisation access')}>
       {
-        Object.keys(organisation)
+        Object.keys(organisation).filter(key => {
+          return key !== 'logbook'
+        })
           .map((key, i) => (
             <React.Fragment key={key + i.toString()}>
               {
