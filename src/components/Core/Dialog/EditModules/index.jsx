@@ -130,12 +130,12 @@ export default ({
         isLoading ? <Progress /> : (
           <div className={style.addOrg}>
             <div className={style.addOrg__inner2}>
-              {/* <Checkbox
+              <Checkbox
                 onChange={handleChange}
                 checked={modules.logbook}
                 label={t('Logbook')}
                 name='logbook'
-              /> */}
+              />
               {/* <div className={style.marginLeft}>
                 <Checkbox
                   onChange={handleChange}

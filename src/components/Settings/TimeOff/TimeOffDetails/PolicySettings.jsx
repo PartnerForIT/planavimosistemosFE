@@ -329,7 +329,7 @@ const PolicySettings = React.memo(({
               <Switch
                 onChange={(checked) => handleChange({ target: { name: 'use_approve_flow', value: checked } })}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#ffcc4b'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 checked={values.use_approve_flow || false}
@@ -347,7 +347,7 @@ const PolicySettings = React.memo(({
               <Switch
                 onChange={(checked) => handleChange({ target: { name: 'set_default', value: checked } })}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#ffcc4b'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 checked={values.set_default || false}
@@ -367,7 +367,7 @@ const PolicySettings = React.memo(({
               <Switch
                 onChange={(checked) => handleChange({ target: { name: 'private', value: checked } })}
                 offColor='#808F94'
-                onColor='#0085FF'
+                onColor='#ffcc4b'
                 uncheckedIcon={false}
                 checkedIcon={false}
                 checked={values.private || false}
@@ -586,7 +586,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'prorotate_based_on_em_status', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.prorotate_based_on_em_status || false}
@@ -766,7 +766,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'use_carryover_expiration_period', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.use_carryover_expiration_period || false}
@@ -819,7 +819,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'use_maximum_balance_capacity', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.use_maximum_balance_capacity || false}
@@ -873,7 +873,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'allow_negative_balance', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.allow_negative_balance || false}
@@ -929,7 +929,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'add_extra_amount_based_on_years_of_service', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.add_extra_amount_based_on_years_of_service || false}
@@ -1022,7 +1022,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'mark_in_time_sheet_excel', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.mark_in_time_sheet_excel || false}
@@ -1076,7 +1076,7 @@ const PolicySettings = React.memo(({
                     <Switch
                       onChange={(checked) => handleChange({ target: { name: 'mark_in_schedule_and_time_sheet', value: checked } })}
                       offColor='#808F94'
-                      onColor='#0085FF'
+                      onColor='#ffcc4b'
                       uncheckedIcon={false}
                       checkedIcon={false}
                       checked={values.mark_in_schedule_and_time_sheet || false}
